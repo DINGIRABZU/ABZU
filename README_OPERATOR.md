@@ -357,6 +357,17 @@ secure_communication("https://example.com/api", {"status": "ok"})
 `monitor_traffic()` captures a handful of packets while
 `secure_communication()` sends an HTTPS POST request with basic error handling.
 
+### Privacy considerations
+
+Packet captures and session recordings can reveal private details about network
+activity and spoken conversations. Always inform participants about what will be
+logged and obtain explicit consent before starting a capture or recording. The
+network utilities write PCAP files under `network_logs/` while audio clips are
+stored in `logs/audio/`. Delete these files when they are no longer needed.
+Use the `--output` or `--log-dir` options to redirect captures to a temporary
+location or disable the calls to `session_logger.log_audio()` and
+`session_logger.log_video()` if logging is unnecessary.
+
 
 ## Soul-Code Architecture
 
