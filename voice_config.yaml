@@ -1,0 +1,33 @@
+Jester:
+  pitch: 0.3
+  speed: 1.1
+  tone: albedo
+Warrior:
+  pitch: 0.2
+  speed: 1.05
+  tone: rubedo
+Orphan:
+  pitch: -0.4
+  speed: 0.9
+  tone: lunar
+Caregiver:
+  pitch: -0.2
+  speed: 0.95
+  tone: nigredo
+Hero:
+  pitch: 0.5
+  speed: 1.2
+  tone: rubedo
+Sage:
+  pitch: -0.1
+  speed: 0.9
+  tone: albedo
+Everyman:
+  pitch: 0.0
+  speed: 1.0
+  tone: calm
+
+Citrinitas:
+  pitch: 0.1
+  speed: 1.15
+  tone: citrinitas

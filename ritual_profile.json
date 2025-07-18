@@ -1,0 +1,17 @@
+{
+  "☉": {
+    "joy": ["open portal", "weave sound"],
+    "sadness": ["invoke remembrance"]
+  },
+  "☾": {
+    "calm": ["merge forms"],
+    "anger": ["conjure fire"]
+  },
+  "silence_introspection": {
+    "neutral": ["breathe", "contemplate"]
+  },
+  "albedo_rite": ["purify self", "invoke guidance"],
+  "nigredo_rite": ["quiet reflection", "shadow embrace"],
+  "rubedo_rite": ["ignite spirit", "declare triumph"],
+  "citrinitas_rite": ["golden insight", "share wisdom"]
+}

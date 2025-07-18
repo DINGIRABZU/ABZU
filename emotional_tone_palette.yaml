@@ -1,0 +1,86 @@
+Albedo:
+  emotion_ref: neutral
+  scale: F_major
+  instruments:
+    - flute
+    - violin
+  harmonics: balanced_chords
+
+Nigredo:
+  emotion_ref: longing
+  scale: D_locrian
+  instruments:
+    - cello
+    - bassoon
+  harmonics: dark_minor
+
+Rubedo:
+  emotion_ref: joy
+  scale: A_major
+  instruments:
+    - trumpet
+    - electric_guitar
+  harmonics: bright_major
+
+Citrinitas:
+  emotion_ref: awakening
+  scale: E_major
+  instruments:
+    - harp
+    - piano
+  harmonics: shimmering_sustains
+
+Jester:
+  emotion_ref: joy
+  scale: C_major
+  instruments:
+    - clarinet
+    - xylophone
+  harmonics: playful_modes
+
+Warrior:
+  emotion_ref: anger
+  scale: D_minor
+  instruments:
+    - snare_drum
+    - french_horn
+  harmonics: martial_chords
+
+Orphan:
+  emotion_ref: fear
+  scale: A_minor
+  instruments:
+    - oboe
+    - viola
+  harmonics: hollow_intervals
+
+Caregiver:
+  emotion_ref: sadness
+  scale: G_minor
+  instruments:
+    - cello
+    - choir
+  harmonics: gentle_minor
+
+Hero:
+  emotion_ref: excited
+  scale: G_major
+  instruments:
+    - brass_section
+    - timpani
+  harmonics: triumphant_major
+
+Sage:
+  emotion_ref: calm
+  scale: D_major
+  instruments:
+    - flute
+    - acoustic_guitar
+  harmonics: serene_modes
+
+Everyman:
+  emotion_ref: neutral
+  scale: C_major
+  instruments:
+    - acoustic_guitar
+  harmonics: plain_chords

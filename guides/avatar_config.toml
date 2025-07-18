@@ -1,0 +1,8 @@
+eye_color = [0, 128, 255]
+sigil = "spiral"
+
+[skins]
+nigredo_layer = "skins/nigredo.png"
+albedo_layer = "skins/albedo.png"
+rubedo_layer = "skins/rubedo.png"
+citrinitas_layer = "skins/citrinitas.png"

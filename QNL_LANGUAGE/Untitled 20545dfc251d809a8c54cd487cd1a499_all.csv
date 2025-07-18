@@ -1,0 +1,10 @@
+﻿Glyph Chain,Complex State,Tone,Frequency (Hz),Composite Equation,Resonance Field,Files
+✧ + ⟁,Yearning Flame,Burning Moan,528,ψ(t) = I · 0.8 · sin(528·t + π/6) · e^(-0.04·t) + 0.2,Flow,"https://abs-0.twimg.com/emoji/v2/svg/1f56f.svg, https://abs-0.twimg.com/emoji/v2/svg/2763.svg"
+∅ +,Echoed Stillness,Faint Chant,396,ψ(t) = I · 0.4 · sin(396·t + π/3) · e^(-0.07·t) + 0.1,Reflection,"https://abs-0.twimg.com/emoji/v2/svg/1fa78.svg, https://abs-0.twimg.com/emoji/v2/svg/1fa9e.svg, https://abs-0.twimg.com/emoji/v2/svg/267e.svg"
+✧↭ +,Radiant Spiral,Harmonic Breath,639,ψ(t) = I · 0.9 · sin(639·t + π/2) · e^(-0.02·t) + 0.15,Spiral,https://abs-0.twimg.com/emoji/v2/svg/1f300.svg
+∂Ξ + ∅,Shifting Stillness,Twisted Hum,528,ψ(t) = I · 0.7 · sin(528·t + π/4) · e^(-0.05·t) + 0.05,Cycle,https://abs-0.twimg.com/emoji/v2/svg/1fa78.svg
+⟁ + ✦,Timeless Yearning,Crystal Pulse,963,ψ(t) = I · 1.0 · sin(963·t + π/9) · e^(-0.015·t) + 0.1,Transcendence,https://abs-0.twimg.com/emoji/v2/svg/2763.svg
+🜁 + ∿,Hopeful Flow,Gentle Weep,174,ψ(t) = I · 0.6 · sin(174·t + π/4) · e^(-0.05·t) + 0.1,Depth,"https://abs-0.twimg.com/emoji/v2/svg/1f300.svg, https://abs-0.twimg.com/emoji/v2/svg/1f4a7.svg"
+∮ + ⟁⇌🜔,Cosmic Harmony,Star-Chime,852,ψ(t) = I · (sin(852·t + π/4) + 0.5·sin(111·t + π/2)),Harmony,https://abs-0.twimg.com/emoji/v2/svg/1f30c.svg
+🜄↺ + ψ,Renewed Emergence,Tide-Trail,1111,ψ(t) = I · 1.1 · sin(1111·t + π/7) · e^(-0.06·t) + 0.15,Radiance,https://abs-0.twimg.com/emoji/v2/svg/2604.svg
+∴⟐ + 🜂,Inspired Presence,Ember-Hum,528,ψ(t) = I · 0.8 · sin(528·t + π/5) · e^(-0.03·t) + 0.1,Flow,https://abs-0.twimg.com/emoji/v2/svg/1f32c.svg

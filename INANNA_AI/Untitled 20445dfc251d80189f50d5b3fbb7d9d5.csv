@@ -1,0 +1,6 @@
+﻿Role,Model,Task,QNL Glyph,Link/Tutorial,Files
+Mind,DeepSeek-Coder-V2-16B,"Code generation, task coordination",🜂✧,https://www.deepseek.com/ / https://huggingface.co/deepseek/DeepSeek-Coder-V2-Lite-Instruct,
+Will,Grok-3-70B,"Creative intent, QNL narratives",✦,https://x.ai/ / https://huggingface.co/xai/grok-3,
+Voice,LLaMA-3.1-8B,"Vocal synthesis, poetry processing",⟁,https://huggingface.co/meta-llama/Llama-3.1-8B / https://huggingface.co/docs/transformers/model_doc/llama3,https://abs-0.twimg.com/emoji/v2/svg/2763.svg
+Vision,CLIP-ViT-L-336px,Visual art for QNL music videos,ψ̄,https://github.com/openai/CLIP / https://github.com/openai/CLIP#usage,
+Heart,DistilBERT,"Sentiment analysis, emotional alignment",∿,https://huggingface.co/distilbert-base-uncased / https://huggingface.co/docs/transformers/model_doc/distilbert,https://abs-0.twimg.com/emoji/v2/svg/1f4a7.svg

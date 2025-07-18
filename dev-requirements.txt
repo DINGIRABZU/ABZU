@@ -1,0 +1,27 @@
+numpy
+scipy
+soundfile  # audio I/O
+librosa  # audio analysis
+pydub
+pytest  # test runner
+markdown
+sentence-transformers  # required for semantic validator tests
+transformers>=4.38
+torch>=2.1
+requests
+fastapi
+beautifulsoup4
+pyopenssl
+streamlit
+stable-baselines3
+python-json-logger
+httpx  # HTTP client for tests
+scikit-learn
+jupyter
+
+# Development tools
+black
+flake8
+isort
+pre-commit
+psutil

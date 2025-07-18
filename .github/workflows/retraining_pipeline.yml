@@ -1,0 +1,25 @@
+name: Retraining pipeline
+
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_run:
+    workflows: ["Data refresh"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Retrain and deploy
+        run: python -m INANNA_AI.retrain_and_deploy

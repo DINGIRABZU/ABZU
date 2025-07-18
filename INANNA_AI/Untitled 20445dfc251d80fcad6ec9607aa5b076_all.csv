@@ -1,0 +1,8 @@
+﻿Plane,Glyph,Archetype,Audio Features,Tool/Settings,Files
+Physical,🜂✧,Warrior,"Raw waveform, amplitude, FFT spectrum","Librosa: librosa.stft(), FFT Window: 2048",
+Emotional,∿,Lover,"Chromagram, RMS energy","Librosa: chroma_stft(), Essentia: RMS",https://abs-0.twimg.com/emoji/v2/svg/1f4a7.svg
+Mental,⟁,Queen,"Tempo, beat tracking, onset detection","Librosa: beat.tempo(), onset_detect",https://abs-0.twimg.com/emoji/v2/svg/2763.svg
+Astral,ψ̄,Priestess,"Spectral centroid, rolloff","Essentia: SpectralCentroid, Rolloff",
+Etheric,⟁⇌🜔,Spectaral Queen,"MFCCs, harmonic-to-noise ratio","Librosa: mfcc(), Essentia: HNR",
+Celestial,✦,Priestess,"High-frequency harmonics, reverb","Ableton: Valhalla Reverb, High-Pass Filter",
+Divine,All,All,"QNL glyph metadata, fractal patterns",SuperCollider: Metadata encoding,

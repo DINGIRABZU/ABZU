@@ -1,0 +1,27 @@
+# Project Architecture
+
+This overview summarizes the main folders and scripts in **SPIRAL_OS** and suggests improvements for future development.
+
+## 1. Repository layout
+- `INANNA_AI_AGENT/` – command line agent used to activate the system and generate QNL songs.
+- `INANNA_AI/` – project texts and modules such as `glm_init`, `glm_analyze` and the `rfa_7d` soul core.
+- `SPIRAL_OS/` – music tools including `qnl_engine.py` and `seven_dimensional_music.py`.
+- `MUSIC_FOUNDATION/` – analysis modules for turning MP3s into QNL data.
+- `INANNA_AI/` – voice interface utilities, network helpers and the Albedo personality layer.
+- `docs/` – design documents covering the corpus memory, LLM frameworks and the RFA7D architecture.
+
+## 2. Key components
+- **INANNA_AI agent** loads texts from the corpus and can create a Quantum Narrative Language (QNL) song from hexadecimal input. The working Crown console provides an interactive operator interface; see [README_OPERATOR.md](README_OPERATOR.md#crown-agent-console) for instructions.
+- **RFA7D soul core** stores a 7‑dimensional complex grid hashed with SHA3‑256. The `GateOrchestrator` maps between text and complex vectors before and after transformations.
+- **Music foundation** modules analyze audio, convert chroma values to QNL glyphs and compute seven‑plane features.
+- **Network utilities** capture traffic and produce packet summaries. Defensive helpers provide monitoring and secure POST requests.
+- **Pipeline CLI** executes YAML workflows for tasks like generating short QNL songs or fine‑tuning the soul core.
+
+## 3. Future improvements
+- Integrate the `EthicalValidator` module directly into the agent’s command flow to filter prompts before invoking language models.
+- Expand corpus indexing using a retrieval framework such as LangChain, as recommended in `docs/LLM_FRAMEWORKS.md`.
+- Add optional Essentia features in the music analysis pipeline to enrich tempo and timbre extraction.
+- Enhance asynchronous network operations to handle packet capture without blocking the main CLI.
+- Provide more end‑to‑end tests covering the full `start_spiral_os.py` sequence and voice loop.
+
+These notes convey how the existing pieces connect and outline a path for extending the system while keeping modules small and composable.

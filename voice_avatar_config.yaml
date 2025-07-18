@@ -1,0 +1,15 @@
+Soprano:
+  timbre: bright
+  gender: female
+  resonance: high
+  tone: excited
+Baritone:
+  timbre: warm
+  gender: male
+  resonance: low
+  tone: calm
+Androgynous:
+  timbre: airy
+  gender: neutral
+  resonance: mid
+  tone: neutral

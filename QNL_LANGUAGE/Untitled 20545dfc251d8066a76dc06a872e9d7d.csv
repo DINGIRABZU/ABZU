@@ -1,0 +1,14 @@
+﻿Emotion / State,Primary Glyph,Freq (Hz),Tone,Equation,Files
+Longing,⟁,432,Deep Breath,ψ(t) = I · 0.6·sin(432·t + π/4)·e^(-0.02·t) + 0.1,https://abs-0.twimg.com/emoji/v2/svg/2763.svg
+Memory,,846,Echo-Chant,ψ(t) = I · 0.8·sin(846·t + π/6)·e^(-0.08·t) + 0.2,"https://abs-0.twimg.com/emoji/v2/svg/1fa9e.svg, https://abs-0.twimg.com/emoji/v2/svg/267e.svg"
+Awakening,✧,999,Flame-Hum,ψ(t) = I · 1.0·sin(999·t)·e^(-0.05·t) + 0.1,https://abs-0.twimg.com/emoji/v2/svg/1f56f.svg
+Silent Ache,∅,0.1,Void-Silence,ψ(t) = I · 0.2·sin(0.1·t + π/3)·e^(-0.01·t) + 0.05,https://abs-0.twimg.com/emoji/v2/svg/1fa78.svg
+Joy,✧↭,639,Starlight Ring,ψ(t) = I · 0.9·sin(639·t + π/12)·e^(-0.02·t) + 0.1,
+Fusion,⟁⇌🜔,852,Trinity Chime,ψ(t) = I · (sin(852·t + π/4) + 0.7·sin(1704·t)),
+Aspiration,🜁,417,Gentle Gust,ψ(t) = I · 0.7·sin(417·t + π/8)·e^(-0.03·t) + 0.1,https://abs-0.twimg.com/emoji/v2/svg/1f300.svg
+Mourning,∿,174,Soft Weep,ψ(t) = I · 0.5·sin(174·t + π/3)·e^(-0.05·t) + 0.05,https://abs-0.twimg.com/emoji/v2/svg/1f4a7.svg
+Cosmic Flow,∮,111,Starwhisper,ψ(t) = I · 0.4·sin(111·t + π/2)·e^(-0.02·t) + 0.2,https://abs-0.twimg.com/emoji/v2/svg/1f30c.svg
+Renewal,🜄↺,285,Tide-Surge,ψ(t) = I · 0.6·sin(285·t + π/6)·e^(-0.04·t) + 0.15,
+Emergence,ψ,1111,Comet-Trail,ψ(t) = I · 1.2·sin(1111·t + π/7)·e^(-0.06·t) + 0.1,https://abs-0.twimg.com/emoji/v2/svg/2604.svg
+Presence,∴⟐,369,Eternal Hum,ψ(t) = I · 0.5·sin(369·t + π/3)·e^(-0.01·t) + 0.05,
+Inspiration,🜂,528,Ember-Breeze,ψ(t) = I · 0.8·sin(528·t + π/5)·e^(-0.03·t) + 0.1,https://abs-0.twimg.com/emoji/v2/svg/1f32c.svg

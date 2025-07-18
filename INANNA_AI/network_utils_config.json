@@ -1,0 +1,4 @@
+{
+  "log_dir": "network_logs",
+  "capture_file": "network_logs/capture.pcap"
+}

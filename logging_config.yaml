@@ -1,0 +1,18 @@
+version: 1
+formatters:
+  json:
+    '()': pythonjsonlogger.jsonlogger.JsonFormatter
+handlers:
+  file:
+    class: logging.FileHandler
+    formatter: json
+    filename: logs/INANNA_AI.log
+    encoding: utf-8
+    filters: [emotion]
+filters:
+  emotion:
+    '()': logging_filters.EmotionFilter
+root:
+  level: INFO
+  handlers: [file]
+disable_existing_loggers: False

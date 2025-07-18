@@ -1,0 +1,16 @@
+joy:
+  tempo: 140
+  scale: C_major
+  rhythm: syncopated
+sadness:
+  tempo: 70
+  scale: A_minor
+  rhythm: slow
+anger:
+  tempo: 150
+  scale: D_minor
+  rhythm: aggressive
+neutral:
+  tempo: 100
+  scale: C_major
+  rhythm: steady

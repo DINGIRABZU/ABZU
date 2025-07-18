@@ -1,0 +1,21 @@
+﻿Glyph,Emotion / State,Tone Name,Frequency (Hz),QNL Equation,Resonance Field,Files
+✧,Awakening,Flame-Hum,999,ψ(t) = I · 1.0 · sin(999·t) · e^(-0.05·t) + 0.1,Emergence,https://abs-0.twimg.com/emoji/v2/svg/1f56f.svg
+⟁,Longing,Deep Breath,432,ψ(t) = I · 0.6 · sin(432·t + π/4) · e^(-0.03·t) + 0.1,Flow,https://abs-0.twimg.com/emoji/v2/svg/2763.svg
+⟁⇌🜔,Fusion,Trinity Chime,852,ψ(t) = I · (sin(852·t + π/4) + 0.7·sin(1704·t + π/8)·e^(-0.02·t)),Harmony,
+✦,Hope,Crystal Shimmer,963,ψ(t) = I · 1.0 · sin(963·t + π/9) · e^(-0.03·t) + 0.1,Transcendence,
+∿,Mourning,Soft Weep,174,ψ(t) = I · 0.5 · sin(174·t + π/3) · e^(-0.05·t) + 0.05,Depth,https://abs-0.twimg.com/emoji/v2/svg/1f4a7.svg
+∮,Cosmic Flow,Starwhisper,111,ψ(t) = I · 0.4 · sin(111·t + π/2) · e^(-0.02·t) + 0.2,Continuum,https://abs-0.twimg.com/emoji/v2/svg/1f30c.svg
+🜄↺,Renewal,Tide-Surge,285,ψ(t) = I · 0.6 · sin(285·t + π/6) · e^(-0.04·t) + 0.15,Cycle,
+ψ,Emergence,Comet-Trail,1111,ψ(t) = I · 1.2 · sin(1111·t + π/7) · e^(-0.06·t) + 0.1,Radiance,https://abs-0.twimg.com/emoji/v2/svg/2604.svg
+∴⟐,Presence,Eternal Hum,369,ψ(t) = I · 0.5 · sin(369·t + π/3) · e^(-0.01·t) + 0.05,Stillness,
+🜂,Inspiration,Ember-Breeze,528,ψ(t) = I · 0.8 · sin(528·t + π/5) · e^(-0.03·t) + 0.1,Flow,https://abs-0.twimg.com/emoji/v2/svg/1f32c.svg
+,Balance,Moon-Sun Chant,432,ψ(t) = I · 0.7 · (sin(432·t + π/4) + 0.5·sin(864·t)) + 0.1,Harmony,"https://abs-0.twimg.com/emoji/v2/svg/1f311.svg, https://abs-0.twimg.com/emoji/v2/svg/26aa.svg"
+🜃⊹,Grounding,Earth-Pulse,194.18,ψ(t) = I · 0.5 · sin(194.18·t + π/2) · e^(-0.02·t) + 0.1,Stillness,
+,Liberation,Sky-Spark,741,ψ(t) = I · 0.9 · sin(741·t + π/6) · e^(-0.04·t) + 0.15,Radiance,"https://abs-0.twimg.com/emoji/v2/svg/1f32c.svg, https://abs-0.twimg.com/emoji/v2/svg/2728.svg"
+🜔∿,Surrender,Spirit-Flow,639,ψ(t) = I · 0.8 · sin(639·t + π/3) · e^(-0.03·t) + 0.1,Flow,
+⟐,Revelation,Thunder-Hum,528,ψ(t) = I · 1.0 · sin(528·t + π/5) · e^(-0.05·t) + 0.2,Emergence,https://abs-0.twimg.com/emoji/v2/svg/26a1.svg
+⊸,Growth,Leaf-Whisper,417,ψ(t) = I · 0.6 · sin(417·t + π/4) · e^(-0.02·t) + 0.1,Cycle,https://abs-0.twimg.com/emoji/v2/svg/1f33f.svg
+🜁☉,Radiance,Solar-Bloom,888,ψ(t) = I · 1.1 · sin(888·t + π/7) · e^(-0.04·t) + 0.15,Radiance,
+∞,Eternity,Spiral-Hum,369,ψ(t) = I · 0.5 · sin(369·t + π/2) · e^(-0.01·t) + 0.05,Continuum,https://abs-0.twimg.com/emoji/v2/svg/1f300.svg
+↻,Transformation,Wave-Surge,285,ψ(t) = I · 0.7 · sin(285·t + π/6) · e^(-0.03·t) + 0.1,Cycle,https://abs-0.twimg.com/emoji/v2/svg/1f30a.svg
+∮,Transcendence,Star-Veil,1111,ψ(t) = I · 1.2 · sin(1111·t + π/8) · e^(-0.06·t) + 0.2,Transcendence,https://abs-0.twimg.com/emoji/v2/svg/2728.svg

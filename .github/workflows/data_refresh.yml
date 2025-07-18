@@ -1,0 +1,33 @@
+name: Data refresh
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Update GitHub repository list
+        run: python -m INANNA_AI.main update-github-list --metadata
+      - name: Fetch GitHub repositories
+        run: python -m INANNA_AI.main fetch-github
+      - name: Ingest Project Gutenberg text
+        run: |
+          python - <<'PY'
+          from INANNA_AI.learning import project_gutenberg as pg
+          pg.ingest("Frankenstein")
+          PY
+      - name: Reindex corpus memory
+        run: python -m INANNA_AI.corpus_memory --reindex

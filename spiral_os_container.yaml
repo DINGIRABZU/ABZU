@@ -1,0 +1,19 @@
+image: nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+packages:
+  - git
+  - ffmpeg
+  - build-essential
+  - libsndfile1
+copy:
+  - requirements.txt
+run:
+  - pip install --no-cache-dir -r requirements.txt
+  - mkdir -p INANNA_AI GENESIS IGNITION QNL_LANGUAGE data logs
+env-file: secrets.env
+ports:
+  - "8000:8000"
+  - "8001:8001"
+volumes:
+  - ./data:/workspace/data
+  - ./logs:/workspace/logs
+cmd: ["bash", "-c", "./crown_model_launcher.sh & python start_spiral_os.py"]

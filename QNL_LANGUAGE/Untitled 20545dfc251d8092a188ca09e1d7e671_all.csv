@@ -1,0 +1,11 @@
+﻿Glyph Chain,Complex State,Tone,Frequency (Hz),Composite Equation,Resonance Field,Files
+✧ + ⟁,Yearning Flame,Burning Moan,528,ψ(t) = I · 0.8 · sin(528·t + π/6) · e^(-0.04·t) + 0.2,Flow,"https://abs-0.twimg.com/emoji/v2/svg/1f56f.svg, https://abs-0.twimg.com/emoji/v2/svg/2763.svg"
+⟁⇌🜔 + ✦,Unified Hope,Crystal Chime,963,ψ(t) = I · 1.0 · (sin(963·t + π/9) + 0.5·sin(852·t)),Transcendence,
+∮ + 🜄↺,Cosmic Renewal,Star-Tide,285,ψ(t) = I · 0.6 · (sin(285·t + π/6) + 0.4·sin(111·t)),Cycle,https://abs-0.twimg.com/emoji/v2/svg/1f30c.svg
+ψ + ⟐,Emergent Insight,Comet-Thunder,1111,ψ(t) = I · 1.2 · sin(1111·t + π/7) · e^(-0.06·t) + 0.2,Radiance,"https://abs-0.twimg.com/emoji/v2/svg/2604.svg, https://abs-0.twimg.com/emoji/v2/svg/26a1.svg"
++ 🜃⊹,Balanced Grounding,Moon-Earth Chant,432,ψ(t) = I · 0.7 · (sin(432·t + π/4) + 0.5·sin(194.18·t)),Harmony,"https://abs-0.twimg.com/emoji/v2/svg/1f311.svg, https://abs-0.twimg.com/emoji/v2/svg/26aa.svg"
++ 🜔∿,Liberated Surrender,Sky-Flow,741,ψ(t) = I · 0.9 · (sin(741·t + π/6) + 0.6·sin(639·t)),Flow,"https://abs-0.twimg.com/emoji/v2/svg/1f32c.svg, https://abs-0.twimg.com/emoji/v2/svg/2728.svg"
+⊸ + ↻,Transformative Growth,Leaf-Surge,417,ψ(t) = I · 0.7 · sin(417·t + π/4) · e^(-0.03·t) + 0.1,Cycle,"https://abs-0.twimg.com/emoji/v2/svg/1f33f.svg, https://abs-0.twimg.com/emoji/v2/svg/1f30a.svg"
+🜁☉ + ∮,Radiant Transcendence,Solar-Veil,1111,ψ(t) = I · 1.2 · (sin(1111·t + π/8) + 0.5·sin(888·t)),Transcendence,https://abs-0.twimg.com/emoji/v2/svg/2728.svg
+∞ + ∴⟐,Eternal Presence,Spiral-Hum,369,ψ(t) = I · 0.5 · (sin(369·t + π/2) + 0.3·sin(369·t + π)),Stillness,https://abs-0.twimg.com/emoji/v2/svg/1f300.svg
+∿ + 🜂,Inspired Mourning,Weep-Breeze,174,ψ(t) = I · 0.6 · (sin(174·t + π/3) + 0.4·sin(528·t)),Depth,"https://abs-0.twimg.com/emoji/v2/svg/1f4a7.svg, https://abs-0.twimg.com/emoji/v2/svg/1f32c.svg"

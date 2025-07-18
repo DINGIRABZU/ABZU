@@ -1,0 +1,18 @@
+# Crown agent configuration
+# Values can be overridden with the following environment variables:
+#   GLM_API_URL   -> glm_api_url
+#   GLM_API_KEY   -> glm_api_key
+#   MODEL_PATH    -> model_path
+#   MEMORY_DIR    -> memory_dir
+#   DEEPSEEK_URL  -> servant_models.deepseek
+#   MISTRAL_URL   -> servant_models.mistral
+#   KIMI_K2_URL   -> servant_models.kimi_k2
+
+glm_api_url: https://api.example.com/glm41v_9b
+glm_api_key: your-api-key
+model_path: INANNA_AI/models/GLM-4.1V-9B
+memory_dir: data/vector_memory
+servant_models:
+  deepseek: http://localhost:8002
+  mistral: http://localhost:8003
+  kimi_k2: http://localhost:8010

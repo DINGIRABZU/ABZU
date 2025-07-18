@@ -1,0 +1,24 @@
+# Ignore version control directory
+.git
+
+# Local logs and run artifacts
+logs/
+oracle_output/
+
+# Unit tests
+tests/
+
+# Python cache files
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Model weights directories
+**/models/
+
+# Secrets and local environment files
+OPENAI_API_KEY.env
+secrets.env
+
+# Misc
+*.log

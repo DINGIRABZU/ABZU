@@ -1,0 +1,12 @@
+__pycache__/
+
+oracle_output/
+
+OPENAI_API_KEY.env
+INANNA_AI/models/
+secrets.env
+logs/
+
+# Ignore Blender files
+*.blend
+!INANNA_AI/AVATAR/avatar_builder/rigging_config.blend

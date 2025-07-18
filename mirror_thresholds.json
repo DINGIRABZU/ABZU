@@ -1,0 +1,7 @@
+{
+  "_comment": "Tolerance per emotion for the reflection loop to trigger self-correction",
+  "default": 0.5,
+  "joy": 0.2,
+  "sadness": 0.3,
+  "citrinitas": 0.4
+}

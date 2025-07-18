@@ -1,0 +1,33 @@
+openai-whisper  # speech recognition
+TTS  # text-to-speech
+numpy
+scipy
+pandas
+librosa  # audio analysis
+huggingface-hub
+torch>=2.1
+transformers>=4.38
+sentencepiece
+accelerate
+einops
+scapy
+soundfile  # audio I/O
+opensmile==2.5.1  # emotion recognition
+EmotiVoice==0.2.0  # voice emotion features
+voicefixer==0.1.3  # speech cleanup
+pydub  # audio playback
+requests
+beautifulsoup4
+streamlit
+fastapi
+uvicorn
+sentence-transformers  # optional, for semantic validation
+stable-baselines3
+chromadb  # vector memory store
+mlflow  # experiment tracking
+python-json-logger
+aiortc
+wav2lip  # optional for lip-sync
+psutil
+scikit-learn
+jupyter

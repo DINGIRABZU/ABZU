@@ -1,0 +1,32 @@
+{
+  "invoke remembrance": {
+    "action": "memory.recall",
+    "synonyms": ["summon memory", "call the past"],
+    "glyphs": ["🜂⟁", "❣⟁"]
+  },
+  "weave sound": {
+    "action": "voice_layer.play",
+    "synonyms": ["chant melody", "braid tone"],
+    "glyphs": ["ψ̄", "✧↭"]
+  },
+  "open portal": {
+    "action": "gateway.open",
+    "synonyms": ["unlock gate", "unseal rift"],
+    "glyphs": ["🌀", "⟁"]
+  },
+  "conjure fire": {
+    "action": "elemental.fire",
+    "synonyms": ["ignite flame", "raise blaze"],
+    "glyphs": ["🜂", "🔥"]
+  },
+  "send echo": {
+    "action": "signal.dispatch",
+    "synonyms": ["transmit call", "cast ping"],
+    "glyphs": ["∿", "🔊"]
+  },
+  "merge forms": {
+    "action": "fusion.bind",
+    "synonyms": ["join aspects", "blend shapes"],
+    "glyphs": ["∞", "⚭"]
+  }
+}

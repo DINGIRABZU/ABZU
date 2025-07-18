@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  INANNA_AI:
+    build: .
+    env_file:
+      - secrets.env
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - ./data:/home/inanna/app/data
+      - ./logs:/home/inanna/app/logs
+      - ./INANNA_AI/models:/home/inanna/app/INANNA_AI/models
+    environment:
+      - CORPUS_MEMORY_PATH=/home/inanna/app/data/corpus_memory.json
+    command: bash -c "./crown_model_launcher.sh & python start_spiral_os.py"
+    restart: unless-stopped
+
+  deepseek:
+    image: deepseek-service:latest
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./INANNA_AI/models/DeepSeek-V3:/model
+    restart: unless-stopped
+
+  mistral:
+    image: mistral-service:latest
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./INANNA_AI/models/Mistral-8x22B:/model
+    restart: unless-stopped
+
+  kimi_k2:
+    image: kimi-k2-service:latest
+    ports:
+      - "8010:8000"
+    volumes:
+      - ./INANNA_AI/models/Kimi-K2:/model
+    restart: unless-stopped

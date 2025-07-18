@@ -1,0 +1,16 @@
+{
+  "_comment": "Aggregated success metrics guiding the reflection and learning cycle",
+  "_schema": {
+    "counts": {
+      "total": 0,
+      "success": 0,
+      "tones": {},
+      "emotions": {},
+      "responded_with": {}
+    },
+    "resonance_index": {},
+    "best_tone": "",
+    "action_success_rate": 0.0,
+    "last_updated": ""
+  }
+}
