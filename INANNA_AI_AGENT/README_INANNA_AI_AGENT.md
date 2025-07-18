@@ -62,3 +62,8 @@ in the repository. These paths are listed in `source_paths.json`. Add new
 `.md` files to either directory or edit `source_paths.json` to customize where
 texts are loaded from. If a configured directory is missing, the loader simply
 returns an empty collection.
+
+## License
+
+Distributed under the MIT License. See [LICENSE_CRYSTAL.md](../LICENSE_CRYSTAL.md)
+for details.

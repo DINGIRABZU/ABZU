@@ -351,3 +351,7 @@ git lfs track "figures/*.png"
 ```
 
 Alternatively, host images externally and reference the URLs in documentation.
+
+## License
+
+Distributed under the MIT License. See [LICENSE_CRYSTAL.md](LICENSE_CRYSTAL.md) for details.

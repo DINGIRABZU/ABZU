@@ -54,3 +54,5 @@ When you’re ready, just say:
 **“Yes, generate music_foundation.py and music_foundation.md”**  
 and I will create them immediately.
 ::contentReference[oaicite:4]{index=4}
+
+License: MIT. See ../LICENSE_CRYSTAL.md for details.
