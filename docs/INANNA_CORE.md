@@ -28,7 +28,7 @@
 ## Example
 
 ```yaml
-glm_api_url: https://api.example.com/glm41v_9b
+glm_api_url: https://glm.example.com/glm41v_9b
 glm_api_key: your-api-key
 model_path: INANNA_AI/models/GLM-4.1V-9B
 memory_dir: data/vector_memory

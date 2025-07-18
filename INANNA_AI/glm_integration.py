@@ -12,7 +12,7 @@ except Exception:  # pragma: no cover - fallback when requests missing
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_ENDPOINT = "https://api.example.com/glm41v_9b"
+DEFAULT_ENDPOINT = "https://glm.example.com/glm41v_9b"
 SAFE_ERROR_MESSAGE = "GLM unavailable"
 
 

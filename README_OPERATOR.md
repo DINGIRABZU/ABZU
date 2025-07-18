@@ -31,7 +31,8 @@ The requirements include common libraries like `numpy` and `scipy` as well as
 ### Environment variables
 
 Create a `secrets.env` file in the repository root and define the following
-variables used by the tools and Docker setup:
+variables used by the tools and Docker setup.  The helper scripts source this
+file so you don't need to export the variables manually:
 
 - `HF_TOKEN` – Hugging Face token for downloading models
 - `GITHUB_TOKEN` – optional GitHub token for scraping repositories
@@ -64,6 +65,9 @@ variables used by the tools and Docker setup:
   `docker-compose.yml`)
 - `TELEGRAM_BOT_TOKEN` – token for the Telegram bot
 - `DISCORD_BOT_TOKEN` – token for the Discord bot
+
+Provide `GLM_API_URL` and `GLM_API_KEY` in `secrets.env` to point to your
+production GLM service.  The helper scripts read these variables on startup.
 
 Configuration options for `config/INANNA_CORE.yaml` and the corresponding
 environment variables are explained in
@@ -144,7 +148,8 @@ background tasks.
    for example `./run_inanna.sh --model-dir INANNA_AI/models/gemma2`.
 4. Optionally configure `GLMIntegration` with your GLM endpoint and API key.  If
    no values are provided the class reads `GLM_API_URL` and `GLM_API_KEY` from
-   the environment and defaults to `https://api.example.com/glm41v_9b`.
+   the environment (for example via `secrets.env`) and defaults to
+   `https://glm.example.com/glm41v_9b`.
 
 ## Download Models
 

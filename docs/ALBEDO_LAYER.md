@@ -19,7 +19,7 @@ The **Albedo** layer introduces a stateful persona that drives responses through
 from INANNA_AI.glm_integration import GLMIntegration
 
 glm = GLMIntegration(
-    endpoint="https://api.example.com/glm41v_9b",
+    endpoint="https://glm.example.com/glm41v_9b",
     api_key="<your key>",
 )
 ```
@@ -34,7 +34,7 @@ To engage the Albedo personality, create the layer and pass it to the orchestrat
 
 ```bash
 export GLM_API_KEY=<your key>
-export GLM_API_URL=https://api.example.com/glm41v_9b
+export GLM_API_URL=https://glm.example.com/glm41v_9b
 python -m INANNA_AI.main --duration 3 --personality albedo
 ```
 
