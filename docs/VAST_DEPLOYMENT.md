@@ -72,7 +72,7 @@ cp secrets.env.example secrets.env
 # edit secrets.env
 ```
 
-Launch the stack with the helper script. Pass `--setup` on the first run to prepare directories:
+Launch the stack with the helper script. Pass `--setup` on the first run to perform the full initialization, installing packages and preparing directories:
 
 ```bash
 bash scripts/vast_start.sh --setup
