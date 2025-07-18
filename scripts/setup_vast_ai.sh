@@ -3,13 +3,16 @@
 set -e
 
 # install dependencies
-pip install -r requirements.txt
+if ! pip install -r requirements.txt; then
+    echo "Failed to install Python packages" >&2
+    exit 1
+fi
 
 # create directories for models and outputs
 mkdir -p INANNA_AI/models
 mkdir -p output
 
-# placeholder model download (optional)
+# optional model download
 if [ "$1" = "--download" ]; then
     python download_models.py deepseek || true
 fi
