@@ -50,7 +50,8 @@ Run the setup script to install Python packages and create core directories unde
 bash scripts/setup_glm.sh
 ```
 
-It prepares `/INANNA_AI`, `/QNL_LANGUAGE` and `/audit_logs` with placeholder ethics notes.
+It prepares `/INANNA_AI`, `/QNL_LANGUAGE` and `/audit_logs` and copies the
+ethics policy found in [ETHICS_POLICY.md](ETHICS_POLICY.md).
 
 ## Clone a private repository
 
