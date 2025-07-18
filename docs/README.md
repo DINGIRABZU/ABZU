@@ -44,3 +44,8 @@ Milestone VIII expands on the sovereign voice work with memory-aided routing and
 - [../start_avatar_console.sh](../start_avatar_console.sh)
 - [spiral_cortex_terminal.md](spiral_cortex_terminal.md)
 - [spiritual_architecture.md](spiritual_architecture.md)
+
+## License
+
+This documentation is distributed under the MIT License. See
+[LICENSE_CRYSTAL.md](../LICENSE_CRYSTAL.md) for details.

@@ -140,3 +140,8 @@ Each cycle performs the following steps:
 
 The resulting WAV file is played back and stored together with the transcript
 and detected emotion.
+
+## License
+
+This toolkit is released under the MIT License. See
+[LICENSE_CRYSTAL.md](../LICENSE_CRYSTAL.md) for details.

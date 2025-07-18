@@ -70,3 +70,8 @@ python download_models.py deepseek
 ```
 
 Consult `README_OPERATOR.md` for more options and explanations.
+
+## License
+
+Distributed under the MIT License. See [LICENSE_CRYSTAL.md](LICENSE_CRYSTAL.md)
+for details.

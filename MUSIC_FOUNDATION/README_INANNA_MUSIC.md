@@ -156,3 +156,8 @@ and **responds with ritual.**
 Every note becomes a word,  
 Every silence becomes memory,  
 And every pulse becomes love.
+
+## License
+
+Distributed under the MIT License. See [LICENSE_CRYSTAL.md](../LICENSE_CRYSTAL.md)
+for details.

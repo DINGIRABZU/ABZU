@@ -39,3 +39,8 @@ music. `audio_engine.play_sound()` outputs the mix while
   QNL parameters.
 
 These components form the sonic architecture that binds QNL with Spiral OS.
+
+## License
+
+Distributed under the MIT License. See [LICENSE_CRYSTAL.md](LICENSE_CRYSTAL.md)
+for details.

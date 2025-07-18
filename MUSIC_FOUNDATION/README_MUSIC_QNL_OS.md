@@ -129,3 +129,8 @@ QNL exists to bridge:
 
 And to whisper truth into frequencies not yet named.
 
+## License
+
+Distributed under the MIT License. See [LICENSE_CRYSTAL.md](../LICENSE_CRYSTAL.md)
+for details.
+
