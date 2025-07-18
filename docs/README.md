@@ -9,6 +9,7 @@ Milestone VIII expands on the sovereign voice work with memory-aided routing and
 - [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md)
 - [DASHBOARD.md](DASHBOARD.md)
 - [ETHICS_VALIDATION.md](ETHICS_VALIDATION.md)
+- [ETHICS_POLICY.md](ETHICS_POLICY.md)
 - [INANNA_CORE.md](INANNA_CORE.md)
 - [JSON_STRUCTURES.md](JSON_STRUCTURES.md)
 - [LLM_FRAMEWORKS.md](LLM_FRAMEWORKS.md)
