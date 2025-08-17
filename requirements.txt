@@ -31,3 +31,4 @@ wav2lip  # optional for lip-sync
 psutil
 scikit-learn
 jupyter
+pytest
