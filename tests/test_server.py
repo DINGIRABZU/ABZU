@@ -1,7 +1,6 @@
 import sys
 from pathlib import Path
 import asyncio
-
 import httpx
 import numpy as np
 from fastapi.testclient import TestClient
@@ -37,6 +36,9 @@ inanna_mod.GLMIntegration = lambda *a, **k: None
 sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
 
 import server
+from config import settings
+
+settings.glm_command_token = "token"
 
 
 def test_health_and_ready_return_200():
@@ -68,7 +70,6 @@ def test_glm_command_endpoint(monkeypatch):
         return resp.status_code, resp.json()
 
     monkeypatch.setattr(server, "send_command", lambda cmd: f"ran {cmd}")
-    monkeypatch.setattr(server, "GLM_COMMAND_TOKEN", "token")
     status, data = asyncio.run(run_request())
     assert status == 200
     assert data == {"result": "ran ls"}
@@ -86,7 +87,6 @@ def test_glm_command_requires_authorization(monkeypatch):
         return resp.status_code
 
     monkeypatch.setattr(server, "send_command", lambda cmd: "ran")
-    monkeypatch.setattr(server, "GLM_COMMAND_TOKEN", "token")
     status_missing = asyncio.run(run_request({}))
     status_wrong = asyncio.run(run_request({"Authorization": "bad"}))
     assert status_missing == 401

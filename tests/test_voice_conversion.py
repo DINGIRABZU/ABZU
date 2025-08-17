@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT))
 
 from tools import voice_conversion
 from INANNA_AI import speaking_engine
+from config import settings
 
 
 def test_apply_rvc_invokes_binary(monkeypatch, tmp_path):
@@ -67,8 +68,8 @@ def test_voicefix_invokes_binary(monkeypatch, tmp_path):
 
 def test_synthesize_applies_converters(monkeypatch, tmp_path):
     engine = speaking_engine.SpeakingEngine()
-    monkeypatch.setenv("RVC_PRESET", "demo")
-    monkeypatch.setenv("VOICEFIX", "1")
+    settings.rvc_preset = "demo"
+    settings.voicefix = True
 
     wav = tmp_path / "orig.wav"
     monkeypatch.setattr(speaking_engine, "synthesize_speech", lambda *a, **k: str(wav))
@@ -87,3 +88,5 @@ def test_synthesize_applies_converters(monkeypatch, tmp_path):
     assert calls["rvc"] == (wav, "demo")
     assert calls["vf"] == tmp_path / "rvc.wav"
     assert out == str(tmp_path / "final.wav")
+    settings.rvc_preset = None
+    settings.voicefix = False

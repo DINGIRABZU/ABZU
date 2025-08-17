@@ -43,6 +43,9 @@ sys.modules.setdefault("connectors", connectors_mod)
 sys.modules.setdefault("connectors.webrtc_connector", webrtc_stub)
 
 import server
+from config import settings
+
+settings.glm_command_token = "token"
 
 
 def test_health_and_ready():
@@ -57,7 +60,6 @@ def test_health_and_ready():
 
 def test_glm_command_authorized(monkeypatch):
     monkeypatch.setattr(server, "send_command", lambda c: f"ran {c}")
-    monkeypatch.setattr(server, "GLM_COMMAND_TOKEN", "token")
     with TestClient(server.app) as client:
         resp = client.post(
             "/glm-command",
@@ -70,7 +72,6 @@ def test_glm_command_authorized(monkeypatch):
 
 def test_glm_command_requires_authorization(monkeypatch):
     monkeypatch.setattr(server, "send_command", lambda c: "out")
-    monkeypatch.setattr(server, "GLM_COMMAND_TOKEN", "token")
     with TestClient(server.app) as client:
         missing = client.post("/glm-command", json={"command": "ls"})
         wrong = client.post(

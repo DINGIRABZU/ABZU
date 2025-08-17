@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-import os
 import tempfile
 from pathlib import Path
 from typing import Any, Dict, Iterable, Tuple
@@ -15,6 +14,7 @@ from .voice_evolution import get_voice_params, update_voice_from_history
 from . import tts_coqui, tts_tortoise, tts_bark, tts_xtts
 from .emotion_analysis import emotion_to_archetype
 from tools import voice_conversion
+from config import settings
 
 try:
     from gtts import gTTS
@@ -122,7 +122,7 @@ def synthesize_speech(
     timbre: str = "neutral",
 ) -> str:
     """Dispatch to the configured TTS backend."""
-    backend = os.getenv("CROWN_TTS_BACKEND", "gtts").lower()
+    backend = settings.crown_tts_backend.lower()
     if backend == "coqui":
         return tts_coqui.synthesize_speech(text, emotion)
     if backend == "tortoise":
@@ -156,13 +156,13 @@ class SpeakingEngine:
     ) -> str:
         """Return a path to synthesized speech for ``text``."""
         path = Path(synthesize_speech(text, emotion, history, timbre))
-        preset = os.getenv("RVC_PRESET")
+        preset = settings.rvc_preset
         if preset:
             try:  # pragma: no cover - external binary
                 path = voice_conversion.apply_rvc(path, preset)
             except Exception:
                 logger.exception("RVC conversion failed")
-        if os.getenv("VOICEFIX"):
+        if settings.voicefix:
             try:  # pragma: no cover - external binary
                 path = voice_conversion.voicefix(path)
             except Exception:

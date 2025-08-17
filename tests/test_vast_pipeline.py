@@ -37,6 +37,9 @@ import video_stream
 from connectors import webrtc_connector
 from orchestrator import MoGEOrchestrator
 from core import language_engine, context_tracker
+from config import settings
+
+settings.glm_command_token = "token"
 
 
 def test_hex_to_song_short_payload():

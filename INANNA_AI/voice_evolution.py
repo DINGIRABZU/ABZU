@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable
 from pathlib import Path
-import os
 import yaml
 
 from . import emotional_synaptic_engine
@@ -11,6 +10,7 @@ import emotional_state
 
 from . import db_storage
 import vector_memory
+from config import settings
 
 import numpy as np
 
@@ -29,7 +29,7 @@ SCALE_PITCH = {"C_major": 0.0, "A_minor": -3.0, "D_minor": 2.0}
 
 def load_voice_config(path: Path = CONFIG_PATH) -> Dict[str, Dict[str, Any]]:
     """Return archetype settings loaded from ``path`` if it exists."""
-    env_path = os.getenv("VOICE_AVATAR_CONFIG_PATH")
+    env_path = settings.voice_avatar_config_path
     if env_path:
         path = Path(env_path)
     if path.exists():
@@ -164,7 +164,7 @@ class VoiceEvolution:
                     "emotion": emotion,
                     "speed": style.get("speed", 1.0),
                     "pitch": style.get("pitch", 0.0),
-                    "model": os.getenv("CROWN_TTS_BACKEND", "gtts"),
+                    "model": settings.crown_tts_backend,
                 },
             )
         except Exception:

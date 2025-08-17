@@ -13,6 +13,9 @@ sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 
 import server
+from config import settings
+
+settings.glm_command_token = "token"
 
 
 def test_webrtc_offer(monkeypatch):

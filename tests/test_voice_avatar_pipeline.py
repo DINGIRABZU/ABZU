@@ -47,6 +47,7 @@ from INANNA_AI import speaking_engine
 from tools import voice_conversion
 from core import avatar_expression_engine, expressive_output
 import vector_memory
+from config import settings
 
 
 def test_voice_avatar_pipeline(tmp_path, monkeypatch):
@@ -82,8 +83,8 @@ def test_voice_avatar_pipeline(tmp_path, monkeypatch):
         return tmp_path / "final.wav"
     monkeypatch.setattr(voice_conversion, "apply_rvc", fake_rvc)
     monkeypatch.setattr(voice_conversion, "voicefix", fake_vf)
-    monkeypatch.setenv("RVC_PRESET", "demo")
-    monkeypatch.setenv("VOICEFIX", "1")
+    settings.rvc_preset = "demo"
+    settings.voicefix = True
 
     engine = speaking_engine.SpeakingEngine()
     out_path = Path(engine.synthesize("hello", "joy"))
@@ -110,3 +111,6 @@ def test_voice_avatar_pipeline(tmp_path, monkeypatch):
 
     logs = vector_memory.LOG_FILE.read_text(encoding="utf-8").splitlines()
     assert logs and '"operation": "add"' in logs[-1]
+
+    settings.rvc_preset = None
+    settings.voicefix = False

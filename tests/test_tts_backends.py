@@ -19,10 +19,11 @@ sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("EmotiVoice", types.ModuleType("EmotiVoice"))
 
 from INANNA_AI import speaking_engine, tts_coqui, tts_tortoise, tts_bark, tts_xtts
+from config import settings
 
 
 def _test_backend(monkeypatch, name, module, attr):
-    monkeypatch.setenv("CROWN_TTS_BACKEND", name)
+    settings.crown_tts_backend = name
     called = {}
     def fake(text: str, emotion: str) -> str:
         called["args"] = (text, emotion)
@@ -39,7 +40,7 @@ def _test_backend(monkeypatch, name, module, attr):
     assert path == f"{name}.wav"
     assert called.get("args") == ("hello", "joy")
     assert "gtts" not in called
-    monkeypatch.delenv("CROWN_TTS_BACKEND", raising=False)
+    settings.crown_tts_backend = "gtts"
 
 
 def test_backend_selection(monkeypatch):

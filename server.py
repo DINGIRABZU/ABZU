@@ -1,26 +1,23 @@
 """Simple FastAPI application for health checks."""
 from __future__ import annotations
 
-import os
 import logging
 import secrets
-from fastapi import FastAPI, Request, HTTPException
-from pydantic import BaseModel
-from fastapi.responses import JSONResponse
 import base64
 from io import BytesIO
 from typing import Iterator, Optional
+
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from PIL import Image
 import numpy as np
 
 from core import video_engine
 import video_stream
 from connectors import webrtc_connector
-
 from glm_shell import send_command
-
-# Token required to authorize access to /glm-command
-GLM_COMMAND_TOKEN = os.getenv("GLM_COMMAND_TOKEN")
+from config import settings, require
 
 app = FastAPI()
 app.include_router(video_stream.router)
@@ -29,8 +26,8 @@ app.include_router(webrtc_connector.router)
 
 @app.on_event("startup")
 async def _check_token() -> None:
-    if not GLM_COMMAND_TOKEN:
-        logging.warning("GLM_COMMAND_TOKEN is not set; /glm-command endpoint disabled")
+    """Ensure required configuration is present."""
+    require("glm_command_token")
 
 
 @app.on_event("shutdown")
@@ -59,12 +56,12 @@ class ShellCommand(BaseModel):
     command: str
 
 
-if GLM_COMMAND_TOKEN:
+if settings.glm_command_token:
     @app.post("/glm-command")
     def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str]:
         """Execute ``cmd.command`` via the GLM shell and return the result."""
         auth_header = request.headers.get("Authorization", "")
-        if not secrets.compare_digest(auth_header, GLM_COMMAND_TOKEN):
+        if not secrets.compare_digest(auth_header, settings.glm_command_token):
             raise HTTPException(status_code=401, detail="Unauthorized")
         result = send_command(cmd.command)
         return {"result": result}
