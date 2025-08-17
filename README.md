@@ -67,6 +67,12 @@ optionally download the default DeepSeek‑V3 model:
 ./scripts/easy_setup.sh
 ```
 
+Start the local environment and open the web console:
+
+```bash
+./scripts/start_local.sh
+```
+
 The manual steps are outlined below.
 
 1. Copy `secrets.env.example` to `secrets.env` and provide values for
