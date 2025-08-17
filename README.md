@@ -60,6 +60,14 @@ pip install .[dev]
 ```
 
 ## Local Usage
+Run the helper script to check prerequisites, configure `secrets.env`, and
+optionally download the default DeepSeek‑V3 model:
+
+```bash
+./scripts/easy_setup.sh
+```
+
+The manual steps are outlined below.
 
 1. Copy `secrets.env.example` to `secrets.env` and provide values for
    environment variables such as `HF_TOKEN`, `GITHUB_TOKEN`,
@@ -76,10 +84,10 @@ pip install .[dev]
 2. Download the required model weights before first launch:
 
    ```bash
-   python download_models.py deepseek
+   python download_models.py deepseek_v3
    ```
 
-   This saves `deepseek-ai/DeepSeek-R1` under `INANNA_AI/models/DeepSeek-R1/`.
+   This saves the DeepSeek‑V3 weights under `INANNA_AI/models/DeepSeek-V3/`.
 3. Start the INANNA chat agent via the helper script:
 
    ```bash
