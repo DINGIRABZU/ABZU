@@ -50,6 +50,7 @@ sys.modules.setdefault("gymnasium", gym_mod)
 
 from orchestrator import MoGEOrchestrator
 import orchestrator
+from config import settings
 
 
 def test_route_all_modalities(monkeypatch, tmp_path):
@@ -142,7 +143,7 @@ def test_expression_decision(monkeypatch, tmp_path):
     voice_path = tmp_path / "voice.wav"
     monkeypatch.setattr("INANNA_AI.tts_coqui.synthesize_speech", lambda *a, **k: str(voice_path))
     monkeypatch.setattr("orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
-    monkeypatch.setenv("CROWN_TTS_BACKEND", "gtts")
+    settings.crown_tts_backend = "gtts"
 
     monkeypatch.setattr(
         "orchestrator.crown_decider.decide_expression_options",
@@ -159,7 +160,7 @@ def test_expression_decision(monkeypatch, tmp_path):
     assert result["avatar_style"] == "Soprano"
     assert result["aura_amount"] == 0.3
     assert logged["tts_backend"] == "coqui"
-    assert os.getenv("CROWN_TTS_BACKEND") == "coqui"
+    assert settings.crown_tts_backend == "coqui"
 
 
 def test_memory_biases_model_choice(monkeypatch):

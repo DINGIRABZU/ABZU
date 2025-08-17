@@ -16,6 +16,9 @@ sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 
 import server
 import video_stream
+from config import settings
+
+settings.glm_command_token = "token"
 
 
 def test_avatar_audio_track(tmp_path):

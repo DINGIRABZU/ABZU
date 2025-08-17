@@ -14,7 +14,6 @@ from __future__ import annotations
 from pathlib import Path
 import tempfile
 from typing import Any, Dict, Deque, List, Callable
-import os
 from collections import deque
 import soundfile as sf
 from time import perf_counter
@@ -54,6 +53,7 @@ from tools import reflection_loop
 from INANNA_AI import listening_engine
 import vector_memory
 import archetype_shift_engine
+from config import settings
 
 # Emotion to model lookup derived from docs/crown_manifest.md
 _EMOTION_MODEL_MATRIX = {
@@ -279,7 +279,7 @@ class MoGEOrchestrator:
 
         if voice_modality:
             opts = crown_decider.decide_expression_options(emotion)
-            os.environ["CROWN_TTS_BACKEND"] = opts.get("tts_backend", "gtts")
+            settings.crown_tts_backend = opts.get("tts_backend", "gtts")
             result.update(
                 {
                     "tts_backend": opts.get("tts_backend"),
