@@ -1,6 +1,7 @@
 # Agents
 
-This repository currently defines a single command line agent called **INANNA_AI**.
+This repository defines the command line agent **INANNA_AI** and a lightweight
+development agent cycle for planning, coding and review.
 
 ## INANNA_AI
 
@@ -36,9 +37,33 @@ python download_models.py mistral_8x22b --int8  # Mistral 8x22B
 
 See [README_OPERATOR.md](README_OPERATOR.md#download-models) for details.
 
-## Other Agents
+## Development Agents
 
-No other agents are currently defined.
+The development workflow spawns three collaborating roles:
+
+- **Planner** – breaks the objective into actionable steps.
+- **Coder** – implements each step suggested by the planner.
+- **Reviewer** – provides concise feedback on the generated code.
+
+These agents rely on the existing GLM interface and require access to a
+supported model. Specify the model with ``--planner-model`` or the
+``PLANNER_MODEL`` environment variable when launching the cycle.
+
+### Usage
+
+```bash
+python start_dev_agents.py --objective "Refactor audio engine" --planner-model glm-4.1
+```
+
+The script writes interaction records to ``data/interactions.jsonl`` and a run
+log to ``logs/dev_agent.log``.
+
+Optional frameworks such as **langchain** and **autogen** enhance the
+orchestrator. Install development extras with:
+
+```bash
+pip install .[dev]
+```
 
 ## Available Components
 
