@@ -7,6 +7,7 @@ from types import ModuleType
 import numpy as np
 from fastapi.testclient import TestClient
 from fastapi import APIRouter
+import importlib
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -28,7 +29,7 @@ video_stream_stub.close_peers = _close_peers
 video_stream_stub.start_stream = (
     lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
 )
-sys.modules.setdefault("video_stream", video_stream_stub)
+sys.modules["video_stream"] = video_stream_stub
 
 connectors_mod = ModuleType("connectors")
 webrtc_stub = ModuleType("webrtc_connector")
@@ -39,13 +40,12 @@ async def _wc_close(*a, **k) -> None:
 
 webrtc_stub.close_peers = _wc_close
 connectors_mod.webrtc_connector = webrtc_stub
-sys.modules.setdefault("connectors", connectors_mod)
-sys.modules.setdefault("connectors.webrtc_connector", webrtc_stub)
+sys.modules["connectors"] = connectors_mod
+sys.modules["connectors.webrtc_connector"] = webrtc_stub
 
-import server
 from config import settings
-
 settings.glm_command_token = "token"
+import server
 
 
 def test_health_and_ready():
