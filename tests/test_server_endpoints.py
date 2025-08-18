@@ -22,8 +22,10 @@ sys.modules.setdefault("core.video_engine", video_engine_stub)
 video_stream_stub = ModuleType("video_stream")
 video_stream_stub.router = APIRouter()
 
+closed_vs: list[str] = []
+
 async def _close_peers(*a, **k) -> None:
-    pass
+    closed_vs.append("v")
 
 video_stream_stub.close_peers = _close_peers
 video_stream_stub.start_stream = (
@@ -35,20 +37,35 @@ connectors_mod = ModuleType("connectors")
 webrtc_stub = ModuleType("webrtc_connector")
 webrtc_stub.router = APIRouter()
 webrtc_stub.start_call = lambda *a, **k: None
+closed_wc: list[str] = []
+
 async def _wc_close(*a, **k) -> None:
-    pass
+    closed_wc.append("w")
 
 webrtc_stub.close_peers = _wc_close
 connectors_mod.webrtc_connector = webrtc_stub
 sys.modules["connectors"] = connectors_mod
 sys.modules["connectors.webrtc_connector"] = webrtc_stub
 
+init_crown_stub = ModuleType("init_crown_agent")
+init_crown_stub.initialize_crown = lambda *a, **k: None
+sys.modules.setdefault("init_crown_agent", init_crown_stub)
+
+inanna_mod = ModuleType("INANNA_AI.glm_integration")
+inanna_mod.GLMIntegration = lambda *a, **k: None
+sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
+
 from config import settings
 settings.glm_command_token = "token"
-import server
+import importlib
+
+def _load_server():
+    import server
+    return importlib.reload(server)
 
 
 def test_health_and_ready():
+    server = _load_server()
     with TestClient(server.app) as client:
         health = client.get("/health")
         ready = client.get("/ready")
@@ -59,6 +76,7 @@ def test_health_and_ready():
 
 
 def test_glm_command_authorized(monkeypatch):
+    server = _load_server()
     monkeypatch.setattr(server, "send_command", lambda c: f"ran {c}")
     with TestClient(server.app) as client:
         resp = client.post(
@@ -71,6 +89,7 @@ def test_glm_command_authorized(monkeypatch):
 
 
 def test_glm_command_requires_authorization(monkeypatch):
+    server = _load_server()
     monkeypatch.setattr(server, "send_command", lambda c: "out")
     with TestClient(server.app) as client:
         missing = client.post("/glm-command", json={"command": "ls"})
@@ -81,3 +100,12 @@ def test_glm_command_requires_authorization(monkeypatch):
         )
     assert missing.status_code == 401
     assert wrong.status_code == 401
+
+
+def test_shutdown_closes_streams():
+    server = _load_server()
+    closed_vs.clear()
+    closed_wc.clear()
+    with TestClient(server.app):
+        pass
+    assert "v" in closed_vs and "w" in closed_wc
