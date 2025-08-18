@@ -19,6 +19,8 @@ from connectors import webrtc_connector
 from glm_shell import send_command
 from config import settings
 
+logger = logging.getLogger(__name__)
+
 app = FastAPI()
 app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
@@ -55,11 +57,13 @@ if token:
     @app.post("/glm-command")
     def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str]:
         """Execute ``cmd.command`` via the GLM shell and return the result."""
-        auth_header = request.headers.get("Authorization")
-        if not auth_header or not secrets.compare_digest(auth_header, token):
+        auth_header = request.headers.get("Authorization") or ""
+        if not secrets.compare_digest(auth_header, token):
             raise HTTPException(status_code=401, detail="Unauthorized")
         result = send_command(cmd.command)
         return {"result": result}
+else:
+    logger.warning("GLM_COMMAND_TOKEN not set; /glm-command endpoint disabled")
 
 
 @app.get("/avatar-frame")
