@@ -8,7 +8,11 @@ import subprocess
 import tempfile
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     from pydub import AudioSegment
@@ -34,6 +38,8 @@ except Exception:  # pragma: no cover - optional dependency
 
 def _apply_ffmpeg_filter(data: np.ndarray, sr: int, filters: str) -> Tuple[np.ndarray, int]:
     """Run ``filters`` on ``data`` using ``ffmpeg``."""
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as inp:
         sf.write(inp.name, data, sr)
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as out:

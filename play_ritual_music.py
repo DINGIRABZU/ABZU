@@ -10,7 +10,11 @@ import base64
 from io import BytesIO
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 from MUSIC_FOUNDATION import layer_generators
 from MUSIC_FOUNDATION.synthetic_stego_engine import encode_phrase
@@ -48,6 +52,8 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
 
     data = ARCHETYPE_MIXES.get(archetype.lower())
     if data:
+        if sf is None:
+            raise RuntimeError("soundfile library not installed")
         raw = base64.b64decode(data)
         wave, _ = sf.read(BytesIO(raw), dtype="float32")
         return wave.astype(np.float32)
@@ -105,6 +111,8 @@ def compose_ritual_music(
         max_val = np.max(np.abs(wave))
         if max_val > 0:
             wave /= max_val
+        if sf is None:
+            raise RuntimeError("soundfile library not installed")
         sf.write(out_path, wave, 44100)
 
     if hide:
@@ -118,6 +126,8 @@ def compose_ritual_music(
             max_val = np.max(np.abs(mixed))
             if max_val > 0:
                 mixed /= max_val
+            if sf is None:
+                raise RuntimeError("soundfile library not installed")
             sf.write(out_path, mixed, 44100)
     Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
     return out_path

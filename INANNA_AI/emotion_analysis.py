@@ -44,9 +44,17 @@ _CURRENT_STATE = {
     "weight": EMOTION_WEIGHT["neutral"],
 }
 
-import librosa
 import numpy as np
-import opensmile
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    import opensmile
+except Exception:  # pragma: no cover - optional dependency
+    opensmile = None  # type: ignore
 
 
 
@@ -58,6 +66,8 @@ def analyze_audio_emotion(audio_path: str) -> Dict[str, Any]:
     valence scores. A basic rule-based classifier then derives a discrete
     emotion label from these values.
     """
+    if librosa is None or opensmile is None:
+        raise RuntimeError("librosa and opensmile libraries are required")
     wave, sr = librosa.load(audio_path, sr=None, mono=True)
 
     f0 = librosa.yin(

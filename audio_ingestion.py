@@ -6,7 +6,11 @@ from pathlib import Path
 from typing import Tuple
 
 import numpy as np
-import librosa
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import essentia.standard as ess
@@ -24,11 +28,15 @@ except Exception:  # pragma: no cover - optional dependency
 
 def load_audio(path: Path, sr: int = 44100) -> Tuple[np.ndarray, int]:
     """Load audio using :func:`librosa.load`."""
+    if librosa is None:
+        raise RuntimeError("librosa library not installed")
     return librosa.load(path, sr=sr, mono=True)
 
 
 def extract_mfcc(samples: np.ndarray, sr: int) -> np.ndarray:
     """Return MFCC features for ``samples``."""
+    if librosa is None:
+        raise RuntimeError("librosa library not installed")
     return librosa.feature.mfcc(y=samples, sr=sr)
 
 
@@ -43,6 +51,8 @@ def extract_key(samples: np.ndarray) -> str | None:
 def extract_tempo(samples: np.ndarray, sr: int) -> float:
     """Return tempo estimated by Essentia when present or Librosa fallback."""
     if ess is None:
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         tempo = librosa.beat.tempo(y=samples, sr=sr)
         return float(np.atleast_1d(tempo)[0])
     tempo, _ = ess.RhythmExtractor2013(method="multifeature")(samples)

@@ -56,6 +56,8 @@ def compose_human_layer(
         wave = wave / max_val
 
     if wav_path:
+        if sf is None:
+            raise RuntimeError("soundfile library not installed")
         os.makedirs(os.path.dirname(wav_path) or ".", exist_ok=True)
         sf.write(wav_path, wave, sample_rate)
     return wave
@@ -92,6 +94,8 @@ def add_crystal_layer(
         combined /= max_val
 
     if wav_path:
+        if sf is None:
+            raise RuntimeError("soundfile library not installed")
         os.makedirs(os.path.dirname(wav_path) or ".", exist_ok=True)
         sf.write(wav_path, combined, sample_rate)
 

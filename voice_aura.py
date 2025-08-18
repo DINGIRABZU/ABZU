@@ -9,7 +9,11 @@ import subprocess
 import tempfile
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 from dsp_engine import rave_morph, nsynth_interpolate
 import emotional_state
@@ -83,6 +87,8 @@ def apply_voice_aura(
     else:  # pragma: no cover - no processing possible
         shutil.copy(path, out_path)
 
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
     if rave_checkpoint is not None:
         data, sr = sf.read(out_path, dtype="float32")
         data, sr = rave_morph(data, data, sr, amount, rave_checkpoint)

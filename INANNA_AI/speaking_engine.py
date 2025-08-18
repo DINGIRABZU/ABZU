@@ -7,7 +7,11 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Tuple
 
 import numpy as np
-import librosa
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
 
 from .utils import save_wav, load_audio, sentiment_score
 from .voice_evolution import get_voice_params, update_voice_from_history
@@ -53,6 +57,8 @@ def convert_voice(wave: np.ndarray, sr: int, timbre: str) -> np.ndarray:
             logger.warning("OpenVoice conversion failed: %s", exc)
     shift = {"soft": -2, "bright": 2}.get(timbre, 0)
     if shift:
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         wave = librosa.effects.pitch_shift(wave, sr=sr, n_steps=shift)
     return wave
 
@@ -62,8 +68,12 @@ def _apply_style(wave: np.ndarray, sr: int, style: Dict[str, float]) -> np.ndarr
     pitch = style.get("pitch", 0.0)
     speed = style.get("speed", 1.0)
     if pitch:
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         wave = librosa.effects.pitch_shift(wave, sr=sr, n_steps=pitch)
     if speed and speed != 1.0:
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         wave = librosa.effects.time_stretch(wave, rate=speed)
     return wave
 
@@ -96,6 +106,8 @@ def _synthesize_gtts(
             mp3_b = out_path.with_suffix(".text.mp3")
             gTTS(text=archetype).save(str(mp3_a))
             gTTS(text=text).save(str(mp3_b))
+            if librosa is None:
+                raise RuntimeError("librosa library not installed")
             wave_a, sr = librosa.load(str(mp3_a), sr=None, mono=True)
             wave_b, sr_b = librosa.load(str(mp3_b), sr=None, mono=True)
             mp3_a.unlink(missing_ok=True)

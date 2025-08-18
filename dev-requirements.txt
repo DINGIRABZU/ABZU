@@ -4,3 +4,8 @@ flake8==7.3.0
 isort==6.0.1
 pre-commit==4.3.0
 pytest==8.4.1
+opencv-python
+librosa
+soundfile
+openai-whisper
+opensmile

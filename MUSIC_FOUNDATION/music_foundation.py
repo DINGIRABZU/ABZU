@@ -9,9 +9,17 @@ Requirements:
     pip install librosa soundfile numpy scipy
 """
 
-import librosa
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 import os
 
 class MusicInterpreter:
@@ -24,16 +32,22 @@ class MusicInterpreter:
         self.chromagram = None
 
     def load_audio(self):
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         self.waveform, self.sample_rate = librosa.load(self.file_path, sr=None, mono=True)
         print(f"✅ Audio loaded: {self.file_path}")
         print(f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec")
 
     def analyze_rhythm(self):
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         self.tempo, self.beats = librosa.beat.beat_track(y=self.waveform, sr=self.sample_rate)
         print(f"🕒 Estimated Tempo: {self.tempo:.2f} BPM")
         return self.tempo, self.beats
 
     def analyze_harmony(self):
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         chroma = librosa.feature.chroma_stft(y=self.waveform, sr=self.sample_rate)
         self.chromagram = chroma
         avg_chroma = np.mean(chroma, axis=1)

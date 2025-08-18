@@ -7,7 +7,11 @@ import json
 from pathlib import Path
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
 def embedding_to_params(_emb):
@@ -36,6 +40,8 @@ def generate_quantum_music(context: str, emotion: str, *, output_dir: Path = Pat
     t = np.linspace(0, duration, int(sr * duration), endpoint=False)
     wave = 0.5 * np.sin(2 * np.pi * 220 * t)
     out = Path(output_dir) / "quantum.wav"
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
     sf.write(out, wave, sr, subtype="PCM_16")
     planes = analyze_seven_planes(wave, sr)
     planes.setdefault("physical", {})["element"] = "bass"
