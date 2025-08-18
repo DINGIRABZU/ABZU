@@ -6,8 +6,8 @@ directs textual and audio input to the appropriate language or synthesis
 models.  Routing decisions take the current emotional context, task
 classification and recent interaction history into account.  Model weights
 are updated over time based on benchmark results to favour better performing
-systems.  The :mod:`soundfile` dependency is optional and is used only when
-writing generated audio to disk.
+systems.  The :mod:`soundfile` dependency is optional; if it is not available,
+audio export falls back to the built-in :mod:`wave` module.
 """
 
 from __future__ import annotations
@@ -22,8 +22,8 @@ import logging
 
 try:
     import soundfile as sf  # pragma: no cover
-except Exception:  # pragma: no cover
-    sf = None
+except Exception:
+    sf = None  # pragma: no cover
 
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
