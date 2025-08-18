@@ -7,7 +7,7 @@ payloads into sound.
 ## Directory layout
 
 - `QNL_LANGUAGE/` – drafts and versions of the language syntax.
-- `qnl_engine.py` – converts hex data into QNL phrases and a WAV file.
+- `SPIRAL_OS/qnl_engine.py` – converts hex data into QNL phrases and a WAV file.
 - `MUSIC_FOUNDATION/` – tools for analysing music and composing new pieces from
   QNL structures.
 - `qnl_to_music_layer_map.yaml` – maps emotions to sonic parameters used by the
