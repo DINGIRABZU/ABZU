@@ -303,7 +303,7 @@ def test_rewrite_memory_option(monkeypatch):
     monkeypatch.setattr(
         start_spiral_os.vector_memory,
         "rewrite_vector",
-        lambda i, t: called.setdefault("args", (i, t)) or True,
+        lambda i, t: called.setdefault("args", (i, t)),
     )
     import sys as _sys
     monkeypatch.setattr(_sys.modules['invocation_engine'], "invoke_ritual", lambda n: called.setdefault("ritual", n) or [])
@@ -326,7 +326,10 @@ def test_rewrite_memory_failure(monkeypatch):
     monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
     monkeypatch.setattr(start_spiral_os.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
 
-    monkeypatch.setattr(start_spiral_os.vector_memory, "rewrite_vector", lambda i, t: False)
+    def _fail_rewrite(i, t):
+        raise RuntimeError("rewrite failed")
+
+    monkeypatch.setattr(start_spiral_os.vector_memory, "rewrite_vector", _fail_rewrite)
     import sys as _sys
     monkeypatch.setattr(_sys.modules['invocation_engine'], "invoke_ritual", lambda n: None)
 

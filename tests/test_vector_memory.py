@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import importlib
 import numpy as np
 import logging
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -75,9 +76,9 @@ def test_rewrite_vector_delete_failure(monkeypatch, caplog):
 
     monkeypatch.setattr(vector_memory, "_get_collection", lambda: DummyCollection())
     monkeypatch.setattr(vector_memory.qnl_utils, "quantum_embed", lambda t: np.zeros(1))
-    with caplog.at_level(logging.WARNING):
-        ok = vector_memory.rewrite_vector("old", "new")
-    assert ok is False
+    with caplog.at_level(logging.ERROR):
+        with pytest.raises(RuntimeError):
+            vector_memory.rewrite_vector("old", "new")
     assert "Failed to delete vector old" in caplog.text
 
 
