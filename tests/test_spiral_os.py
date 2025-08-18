@@ -1,7 +1,10 @@
 import sys
 from pathlib import Path
 import builtins
+import subprocess
+
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -73,3 +76,39 @@ steps:
     cmd, kwargs = calls[0]
     assert cmd.strip().split() == ["echo", "hello", "world"]
     assert kwargs["shell"] is True and kwargs["check"] is True
+
+
+def test_deploy_pipeline_invalid_yaml(tmp_path, caplog):
+    pipeline = tmp_path / "p.yaml"
+    pipeline.write_text(":: not yaml ::")
+
+    with caplog.at_level("ERROR"):
+        with pytest.raises(yaml.YAMLError):
+            spiral_os.deploy_pipeline(pipeline)
+
+    assert "Failed to parse pipeline YAML" in caplog.text
+
+
+def test_deploy_pipeline_command_failure(monkeypatch, tmp_path, caplog):
+    yaml_text = """
+steps:
+  - run: ok
+  - run: bad
+"""
+    pipeline = tmp_path / "p.yaml"
+    pipeline.write_text(yaml_text)
+
+    def fake_run(cmd, **kwargs):
+        if cmd.strip() == "bad":
+            raise subprocess.CalledProcessError(1, cmd)
+        class Result:
+            returncode = 0
+        return Result()
+
+    monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)
+
+    with caplog.at_level("ERROR"):
+        with pytest.raises(subprocess.CalledProcessError):
+            spiral_os.deploy_pipeline(pipeline)
+
+    assert "Command failed" in caplog.text

@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import subprocess
 import sys
 from pathlib import Path
 
 import yaml
+
+
+logger = logging.getLogger(__name__)
 
 
 def deploy_pipeline(path: str | Path) -> None:
@@ -18,11 +22,26 @@ def deploy_pipeline(path: str | Path) -> None:
     Commands are executed sequentially using :func:`subprocess.run`.
     """
     path = Path(path)
-    data = yaml.safe_load(path.read_text()) or {}
-    for step in data.get("steps", []):
+    try:
+        data = yaml.safe_load(path.read_text()) or {}
+    except yaml.YAMLError as exc:
+        logger.error("Failed to parse pipeline YAML %s: %s", path, exc)
+        raise
+
+    steps = data.get("steps")
+    if not isinstance(steps, list):
+        raise ValueError("Pipeline YAML must contain a top-level 'steps' list")
+
+    for step in steps:
         command = step if isinstance(step, str) else step.get("run")
         if command:
-            subprocess.run(command, shell=True, check=True)
+            try:
+                subprocess.run(command, shell=True, check=True)
+            except subprocess.CalledProcessError as exc:
+                logger.error(
+                    "Command failed with exit code %s: %s", exc.returncode, command
+                )
+                raise
 
 
 def main(argv: list[str]) -> int:
