@@ -2,6 +2,8 @@ import sys
 from pathlib import Path
 import types
 
+from tests.helpers import emotion_stub
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -9,12 +11,13 @@ sys.path.insert(0, str(ROOT))
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 fake_pkg = types.ModuleType("INANNA_AI")
-fake_emotion = types.ModuleType("emotion_analysis")
-fake_emotion.analyze_audio_emotion = lambda p: {}
-fake_emotion.emotion_to_archetype = lambda e: "Everyman"
-setattr(fake_pkg, "emotion_analysis", fake_emotion)
+setattr(fake_pkg, "emotion_analysis", emotion_stub)
 sys.modules.setdefault("INANNA_AI", fake_pkg)
-sys.modules.setdefault("INANNA_AI.emotion_analysis", fake_emotion)
+sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
+
+config_mod = types.ModuleType("config")
+config_mod.settings = types.SimpleNamespace(vector_db_path=Path("/tmp"))
+sys.modules.setdefault("config", config_mod)
 
 # Minimal play_ritual_music stub
 fake_play = types.ModuleType("play_ritual_music")
