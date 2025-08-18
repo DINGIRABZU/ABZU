@@ -10,13 +10,14 @@ from pathlib import Path
 import yaml
 
 
-def deploy_pipeline(path: Path) -> None:
+def deploy_pipeline(path: str | Path) -> None:
     """Execute each step listed in a pipeline YAML file.
 
     The YAML must contain a top-level ``steps`` sequence. Each step can be a
     string command or a mapping with a ``run`` key specifying the command.
     Commands are executed sequentially using :func:`subprocess.run`.
     """
+    path = Path(path)
     data = yaml.safe_load(path.read_text()) or {}
     for step in data.get("steps", []):
         command = step if isinstance(step, str) else step.get("run")
