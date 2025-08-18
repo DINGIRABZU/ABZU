@@ -63,6 +63,10 @@ the project metadata:
 pip install .[dev]
 ```
 
+Core multimedia features rely on `opencv-python`, `librosa`, `soundfile`,
+`openai-whisper`, and `opensmile`. These packages are included in the
+project requirements and will be installed automatically.
+
 For a reproducible environment based on the pinned versions, install from the
 lock file:
 

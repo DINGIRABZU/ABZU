@@ -7,7 +7,11 @@ from pathlib import Path
 from typing import Dict
 
 import numpy as np
-import librosa
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import sounddevice as sd
@@ -33,6 +37,8 @@ def detect_emotion(wave: np.ndarray, sr: int) -> Dict[str, float | str]:
     if len(wave) == 0:
         return {"emotion": "neutral", "pitch": 0.0, "tempo": 0.0}
 
+    if librosa is None:
+        raise RuntimeError("librosa library not installed")
     f0 = librosa.yin(wave, fmin=librosa.note_to_hz("C2"), fmax=librosa.note_to_hz("C7"), sr=sr)
     pitch = float(np.nanmean(f0))
     tempo, _ = librosa.beat.beat_track(y=wave, sr=sr)

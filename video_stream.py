@@ -10,7 +10,11 @@ from pathlib import Path
 from typing import Optional, Set
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 from fastapi import APIRouter, Request
 from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
@@ -32,6 +36,8 @@ class AvatarAudioTrack(AudioStreamTrack):
     def __init__(self, audio_path: Optional[Path] = None) -> None:
         super().__init__()
         if audio_path is not None:
+            if sf is None:
+                raise RuntimeError("soundfile library not installed")
             data, self._sr = sf.read(str(audio_path), dtype="int16")
             if data.ndim > 1:
                 data = data.mean(axis=1)

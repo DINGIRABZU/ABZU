@@ -6,12 +6,18 @@ import argparse
 from pathlib import Path
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
 
 
 def _load(path: Path) -> tuple[np.ndarray, int]:
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
     data, sr = sf.read(path, always_2d=False)
     return np.asarray(data, dtype=float), sr
 
@@ -45,6 +51,8 @@ def main(args: list[str] | None = None) -> None:
         quantum_embed(opts.qnl_text)
 
     mix, sr = mix_audio([Path(f) for f in opts.files])
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
     sf.write(opts.output, mix, sr, subtype="PCM_16")
     if opts.preview:
         dur = int(sr * opts.preview_duration)

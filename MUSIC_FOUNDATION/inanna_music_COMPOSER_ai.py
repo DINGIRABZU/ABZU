@@ -22,9 +22,17 @@ import json
 from pathlib import Path
 
 import yaml
-import librosa
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 import emotional_state
 from . import layer_generators
@@ -97,14 +105,20 @@ class InannaMusicInterpreter:
 
     def load_audio(self):
         """Load MP3 and convert to mono waveform using Librosa."""
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         self.waveform, self.sample_rate = librosa.load(self.path, sr=None, mono=True)
         print(f"🎧 Audio loaded: {self.path}")
         print(f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec")
 
     def analyze(self):
         """Analyze tempo and pitch chroma."""
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         tempo, _ = librosa.beat.beat_track(y=self.waveform, sr=self.sample_rate)
         self.tempo = float(np.atleast_1d(tempo)[0])
+        if librosa is None:
+            raise RuntimeError("librosa library not installed")
         self.chroma = librosa.feature.chroma_stft(y=self.waveform, sr=self.sample_rate)
         avg_chroma = np.mean(self.chroma, axis=1)
         print(f"🕒 Tempo: {self.tempo:.1f} BPM")

@@ -8,7 +8,11 @@ from typing import Iterator
 import logging
 
 import numpy as np
-import librosa
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
 
 from . import video_engine
 from .facial_expression_controller import apply_expression
@@ -36,6 +40,8 @@ def stream_avatar_audio(audio_path: Path, fps: int = 15) -> Iterator[np.ndarray]
     frames directly from the speech sample. Otherwise a simple mouth overlay is
     applied based on audio amplitude.
     """
+    if librosa is None:
+        raise RuntimeError("librosa library not installed")
     wave, sr = librosa.load(str(audio_path), sr=None, mono=True)
     step = max(1, sr // fps)
 

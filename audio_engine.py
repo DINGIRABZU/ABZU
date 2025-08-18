@@ -11,7 +11,11 @@ from io import BytesIO
 import base64
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 from MUSIC_FOUNDATION.layer_generators import generate_tone
 from dsp_engine import (
     pitch_shift,
@@ -58,6 +62,8 @@ def get_asset_path(
 
     tmp = Path(tempfile.gettempdir()) / name
     if not tmp.exists():
+        if sf is None:
+            raise RuntimeError("soundfile library not installed")
         tone = generate_tone(frequency, duration)
         sf.write(tmp, tone, 44100)
     return tmp
