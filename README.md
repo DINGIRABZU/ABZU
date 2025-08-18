@@ -63,6 +63,19 @@ the project metadata:
 pip install .[dev]
 ```
 
+For a reproducible environment based on the pinned versions, install from the
+lock file:
+
+```bash
+pip install -r requirements.lock
+```
+
+Regenerate the lock file after editing `pyproject.toml` with:
+
+```bash
+uv pip compile --no-deps pyproject.toml -o requirements.lock
+```
+
 ## Local Usage
 Run the helper script to check prerequisites, configure `secrets.env`, and
 optionally download the default DeepSeek‑V3 model:
