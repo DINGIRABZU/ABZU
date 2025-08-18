@@ -139,9 +139,21 @@ def play_wav(path: str) -> None:
     if sd is None:
         logger.warning("sounddevice library not installed; cannot play audio")
         return
-    wave, sr = load_audio(path, sr=None, mono=True)
-    sd.play(wave, sr)
-    sd.wait()
+    try:
+        wave, sr = load_audio(path, sr=None, mono=True)
+    except Exception as exc:  # pragma: no cover - IO may fail
+        logger.error("failed to load audio: %s", exc)
+        return
+    try:  # pragma: no cover - backend setup may fail
+        sd.check_output_settings(channels=1, samplerate=sr)
+    except Exception as exc:
+        logger.error("audio backend initialization failed: %s", exc)
+        return
+    try:
+        sd.play(wave, sr)
+        sd.wait()
+    except Exception as exc:  # pragma: no cover - playback may fail
+        logger.error("audio playback failed: %s", exc)
 
 
 class SpeakingEngine:

@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     voicefix: bool = Field(False, env="VOICEFIX")
     glm_shell_url: AnyHttpUrl | None = Field(None, env="GLM_SHELL_URL")
     glm_shell_key: str | None = Field(None, env="GLM_SHELL_KEY")
+    animation_service_url: AnyHttpUrl | None = Field(
+        None, env="ANIMATION_SERVICE_URL"
+    )
     llm_rotation_period: int = Field(300, env="LLM_ROTATION_PERIOD")
     llm_max_failures: int = Field(3, env="LLM_MAX_FAILURES")
     feedback_novelty_threshold: float = Field(

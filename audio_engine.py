@@ -117,8 +117,8 @@ def stop_all() -> None:
     for pb in list(_playbacks):
         try:
             pb.stop()
-        except Exception:  # pragma: no cover - optional playback object
-            pass
+        except Exception as exc:  # pragma: no cover - optional playback object
+            logger.debug("playback object lacks stop(): %s", exc)
     _playbacks.clear()
     for thread in list(_loops):
         thread.join(timeout=0.1)
