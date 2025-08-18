@@ -77,11 +77,21 @@ def main(argv: list[str] | None = None) -> None:
         webrtc_connector.start_call(path)
 
     if args.play or args.stream:
-        for frame in avatar_expression_engine.stream_avatar_audio(Path(path)):
-            if args.play:
-                play_frame(frame)
-            if args.stream:
-                send_frame(frame)
+        try:
+            for frame in avatar_expression_engine.stream_avatar_audio(Path(path)):
+                if args.play:
+                    try:
+                        play_frame(frame)
+                    except Exception as exc:  # pragma: no cover - optional backend
+                        logger.error("audio playback failed: %s", exc)
+                        break
+                if args.stream:
+                    try:
+                        send_frame(frame)
+                    except Exception as exc:  # pragma: no cover - network may fail
+                        logger.error("frame forward failed: %s", exc)
+        except Exception as exc:  # pragma: no cover - backend may be missing
+            logger.error("audio backend initialization failed: %s", exc)
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry
