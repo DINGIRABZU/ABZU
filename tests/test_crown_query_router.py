@@ -23,7 +23,7 @@ sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 
 import crown_query_router as cqr
-import rag_retriever
+from rag import retriever as rag_retriever
 
 
 def test_route_query_selects_store(monkeypatch):

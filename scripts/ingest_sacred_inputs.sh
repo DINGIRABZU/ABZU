@@ -7,7 +7,7 @@ ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
 TMP_FILE="$(mktemp)"
 
-python "$ROOT_DIR/rag_parser.py" --dir "$ROOT_DIR/sacred_inputs" > "$TMP_FILE"
+python -m rag.parser --dir "$ROOT_DIR/sacred_inputs" > "$TMP_FILE"
 python "$ROOT_DIR/spiral_embedder.py" --in "$TMP_FILE"
 
 rm -f "$TMP_FILE"

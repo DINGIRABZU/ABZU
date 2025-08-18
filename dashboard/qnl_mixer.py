@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
-from SPIRAL_OS.mix_tracks import apply_audio_params, embedding_to_params
+from audio.mix_tracks import apply_audio_params, embedding_to_params
 
 st.set_page_config(page_title="QNL Mixer")
 

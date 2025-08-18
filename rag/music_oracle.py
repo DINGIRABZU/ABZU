@@ -6,9 +6,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Optional
 import argparse
 
-import rag_engine
+from . import engine as rag_engine
 from INANNA_AI import emotion_analysis
-import play_ritual_music
+from audio import play_ritual_music
 
 
 def analyze_audio(path: Path) -> Dict[str, Any]:

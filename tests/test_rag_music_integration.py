@@ -11,8 +11,16 @@ sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 
 from SPIRAL_OS import qnl_engine
-import rag_music_oracle as rmo
 import vector_memory
+
+audio_pkg = types.ModuleType("audio")
+fake_play = types.ModuleType("play_ritual_music")
+fake_play.compose_ritual_music = lambda *a, **k: Path("out.wav")
+audio_pkg.play_ritual_music = fake_play
+sys.modules.setdefault("audio", audio_pkg)
+sys.modules.setdefault("audio.play_ritual_music", fake_play)
+
+from rag import music_oracle as rmo
 
 
 def test_rag_music_pipeline(tmp_path, monkeypatch):

@@ -17,7 +17,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 from MUSIC_FOUNDATION.layer_generators import generate_tone
-from dsp_engine import (
+from audio.dsp_engine import (
     pitch_shift,
     time_stretch,
     compress,

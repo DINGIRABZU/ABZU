@@ -22,11 +22,14 @@ config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
 
 # Minimal play_ritual_music stub
+audio_pkg = types.ModuleType("audio")
 fake_play = types.ModuleType("play_ritual_music")
 fake_play.compose_ritual_music = lambda *a, **k: Path("out.wav")
-sys.modules.setdefault("play_ritual_music", fake_play)
+audio_pkg.play_ritual_music = fake_play
+sys.modules.setdefault("audio", audio_pkg)
+sys.modules.setdefault("audio.play_ritual_music", fake_play)
 
-import rag_music_oracle as rmo
+from rag import music_oracle as rmo
 
 
 def test_answer_with_audio(tmp_path, monkeypatch):

@@ -72,7 +72,7 @@ dummy_np.pi = 3.14159
 dummy_np.float32 = float
 sys.modules.setdefault("numpy", dummy_np)
 
-import console_interface
+from cli import console_interface
 from tools import session_logger
 
 

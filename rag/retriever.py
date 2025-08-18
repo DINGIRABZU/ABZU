@@ -15,7 +15,7 @@ except Exception:  # pragma: no cover - optional dependency
     chromadb = None  # type: ignore
     Collection = object  # type: ignore
 
-import rag_embedder
+from . import embedder as rag_embedder
 from INANNA_AI.utils import sentiment_score
 import spiral_cortex_memory
 

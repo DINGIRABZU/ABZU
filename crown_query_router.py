@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import List, Dict
 
-import rag_retriever
+from rag import retriever as rag_retriever
 
 _STORE_MAP = {
     "sage": "tech",

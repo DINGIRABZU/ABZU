@@ -13,7 +13,7 @@ sys.modules.setdefault("gtts", types.ModuleType("gtts"))
 sys.modules.setdefault("openvoice", types.ModuleType("openvoice"))
 sys.modules.setdefault("sounddevice", types.ModuleType("sounddevice"))
 
-import play_ritual_music as prm
+import audio.play_ritual_music as prm
 
 
 

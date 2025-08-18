@@ -15,7 +15,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-from dsp_engine import rave_morph, nsynth_interpolate
+from audio.dsp_engine import rave_morph, nsynth_interpolate
 import emotional_state
 
 try:  # pragma: no cover - optional dependency

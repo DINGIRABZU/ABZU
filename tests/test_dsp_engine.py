@@ -7,7 +7,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import dsp_engine
+from audio import dsp_engine
 
 
 def test_pitch_shift_calls_ffmpeg(monkeypatch):

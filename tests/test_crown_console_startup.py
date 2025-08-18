@@ -26,7 +26,7 @@ def test_crown_console_startup(monkeypatch):
                     "crown_model_launcher",
                     "launch_servants",
                     "nc -z localhost 8000",
-                    "python console_interface.py",
+                    "python -m cli.console_interface",
                 ]
             )
         return subprocess.CompletedProcess(cmd, 0, "", "")
@@ -43,10 +43,10 @@ def test_crown_console_startup(monkeypatch):
     assert result.returncode == 0
     assert "crown_model_launcher" in calls
     assert "launch_servants" in calls
-    assert "python console_interface.py" in calls
+    assert "python -m cli.console_interface" in calls
     launcher_idx = calls.index("crown_model_launcher")
     servants_idx = calls.index("launch_servants")
-    console_idx = calls.index("python console_interface.py")
+    console_idx = calls.index("python -m cli.console_interface")
 
     assert launcher_idx < servants_idx
     assert servants_idx < console_idx

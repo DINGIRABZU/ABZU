@@ -27,7 +27,7 @@ sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import rag_retriever
+from rag import retriever as rag_retriever
 import spiral_cortex_memory as scm
 import ritual_trainer
 import auto_retrain
