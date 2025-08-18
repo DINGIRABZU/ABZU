@@ -1,7 +1,9 @@
-"""Application configuration loaded from environment variables."""
 from __future__ import annotations
 
-from pydantic import BaseSettings, Field
+"""Application configuration loaded from environment variables."""
+from pathlib import Path
+
+from pydantic import AnyHttpUrl, BaseSettings, Field
 
 
 class Settings(BaseSettings):
@@ -13,11 +15,25 @@ class Settings(BaseSettings):
 
     glm_command_token: str | None = Field(None, env="GLM_COMMAND_TOKEN")
     crown_tts_backend: str = Field("gtts", env="CROWN_TTS_BACKEND")
-    voice_avatar_config_path: str | None = Field(
+    voice_avatar_config_path: Path | None = Field(
         None, env="VOICE_AVATAR_CONFIG_PATH"
     )
     rvc_preset: str | None = Field(None, env="RVC_PRESET")
     voicefix: bool = Field(False, env="VOICEFIX")
+    glm_shell_url: AnyHttpUrl | None = Field(None, env="GLM_SHELL_URL")
+    glm_shell_key: str | None = Field(None, env="GLM_SHELL_KEY")
+    llm_rotation_period: int = Field(300, env="LLM_ROTATION_PERIOD")
+    llm_max_failures: int = Field(3, env="LLM_MAX_FAILURES")
+    feedback_novelty_threshold: float = Field(
+        0.3, env="FEEDBACK_NOVELTY_THRESHOLD"
+    )
+    feedback_coherence_threshold: float = Field(
+        0.7, env="FEEDBACK_COHERENCE_THRESHOLD"
+    )
+    vector_db_path: Path = Field(
+        Path(__file__).resolve().parent / "data" / "vector_memory",
+        env="VECTOR_DB_PATH",
+    )
 
     class Config:
         case_sensitive = True

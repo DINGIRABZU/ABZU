@@ -5,12 +5,13 @@ from __future__ import annotations
 from pathlib import Path
 import json
 import logging
-import os
 from typing import Any, List
 
+from config import settings
+
 LOG_FILE = Path("data/feedback.json")
-NOVELTY_THRESHOLD = float(os.getenv("FEEDBACK_NOVELTY_THRESHOLD", "0.3"))
-COHERENCE_THRESHOLD = float(os.getenv("FEEDBACK_COHERENCE_THRESHOLD", "0.7"))
+NOVELTY_THRESHOLD = settings.feedback_novelty_threshold
+COHERENCE_THRESHOLD = settings.feedback_coherence_threshold
 
 logger = logging.getLogger(__name__)
 

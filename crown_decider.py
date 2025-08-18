@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from typing import Any, Dict
 from statistics import mean
-import os
 import time
 
 from task_profiling import classify_task
@@ -13,8 +12,12 @@ import emotional_state
 import vector_memory
 import voice_aura
 
-_ROTATION_PERIOD = int(os.getenv("LLM_ROTATION_PERIOD", "300"))
-_MAX_FAILURES = int(os.getenv("LLM_MAX_FAILURES", "3"))
+import config
+
+
+config.reload()
+_ROTATION_PERIOD = config.settings.llm_rotation_period
+_MAX_FAILURES = config.settings.llm_max_failures
 
 _FAIL_COUNTS: dict[str, int] = {}
 _DISABLED_UNTIL: dict[str, float] = {}
