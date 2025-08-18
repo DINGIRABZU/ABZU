@@ -12,7 +12,7 @@ sf_stub.write = lambda *a, **k: None
 sf_stub.read = lambda *a, **k: (np.zeros(1), 44100)
 sys.modules.setdefault("soundfile", sf_stub)
 
-import qnl_engine
+from SPIRAL_OS import qnl_engine
 import audio_ingestion
 import dsp_engine
 import music_generation
