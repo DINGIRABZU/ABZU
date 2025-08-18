@@ -35,12 +35,15 @@ sys.modules.setdefault("scipy.io.wavfile", wavfile_mod)
 sys.modules.setdefault("SPIRAL_OS", types.ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))
 sys.modules.setdefault("SPIRAL_OS.symbolic_parser", types.ModuleType("symbolic_parser"))
+sb3_mod = types.ModuleType("stable_baselines3")
+sb3_mod.PPO = lambda *a, **k: object()
+sys.modules.setdefault("stable_baselines3", sb3_mod)
 
 import orchestrator
 from orchestrator import MoGEOrchestrator
 
 
-def test_suggestions_logged_and_returned(monkeypatch, caplog):
+def test_suggestions_logged_and_returned(monkeypatch, caplog, capsys):
     orch = MoGEOrchestrator()
     orch._interaction_count = 19
     monkeypatch.setattr(orchestrator.learning_mutator, "propose_mutations", lambda insights: ["alpha"])
@@ -62,5 +65,10 @@ def test_suggestions_logged_and_returned(monkeypatch, caplog):
             music_modality=False,
         )
 
+    captured = capsys.readouterr()
+    assert captured.out == ""
     assert result["suggestions"] == ["alpha"]
-    assert any(isinstance(r.msg, dict) and r.msg.get("suggestion") == "alpha" for r in caplog.records)
+    assert any(
+        isinstance(r.msg, dict) and r.msg.get("suggestion") == "alpha"
+        for r in caplog.records
+    )
