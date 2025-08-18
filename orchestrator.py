@@ -29,7 +29,7 @@ import numpy as np
 
 from task_profiling import classify_task, ritual_action_sequence
 
-from INANNA_AI import response_manager, emotion_analysis, db_storage
+from INANNA_AI import response_manager, emotion_analysis
 from INANNA_AI.personality_layers import (
     AlbedoPersonality,
     REGISTRY as PERSONALITY_REGISTRY,
@@ -42,11 +42,9 @@ from SPIRAL_OS import qnl_engine, symbolic_parser
 import invocation_engine
 import emotional_state
 import training_guide
-from corpus_memory_logging import (
-    log_interaction,
-    load_interactions,
-    log_ritual_result,
-)
+from core.emotion_analyzer import EmotionAnalyzer
+from core.model_selector import ModelSelector
+from core.memory_logger import MemoryLogger
 from insight_compiler import update_insights, load_insights
 import learning_mutator
 from tools import reflection_loop
@@ -54,17 +52,6 @@ from INANNA_AI import listening_engine
 import vector_memory
 import archetype_shift_engine
 from config import settings
-
-# Emotion to model lookup derived from docs/crown_manifest.md
-_EMOTION_MODEL_MATRIX = {
-    "joy": "deepseek",
-    "excited": "deepseek",
-    "stress": "mistral",
-    "fear": "mistral",
-    "sad": "mistral",
-    "calm": "glm",
-    "neutral": "glm",
-}
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +72,9 @@ class MoGEOrchestrator:
         *,
         albedo_layer: AlbedoPersonality | None = None,
         db_path: Path | None = None,
+        emotion_analyzer: EmotionAnalyzer | None = None,
+        model_selector: ModelSelector | None = None,
+        memory_logger: MemoryLogger | None = None,
     ) -> None:
         self._responder = response_manager.ResponseManager()
         self._albedo = albedo_layer
@@ -94,15 +84,11 @@ class MoGEOrchestrator:
             self._embedder = SentenceTransformer("all-MiniLM-L6-v2")
         else:  # pragma: no cover - fallback when dependency missing
             self._embedder = None
-        self._model_weights = {"glm": 1.0, "deepseek": 1.0, "mistral": 1.0}
-        self._alpha = 0.1
-        self._db_path = db_path or db_storage.DB_PATH
-        db_storage.init_db(self._db_path)
-        self._mood_alpha = 0.2
-        self.mood_state: Dict[str, float] = {
-            e: (1.0 if e == "neutral" else 0.0)
-            for e in emotion_analysis.EMOTION_WEIGHT
-        }
+        self._model_selector = model_selector or ModelSelector(db_path=db_path)
+        self._emotion_analyzer = emotion_analyzer or EmotionAnalyzer()
+        self._memory_logger = memory_logger or MemoryLogger()
+        self._model_weights = self._model_selector.model_weights
+        self.mood_state = self._emotion_analyzer.mood_state
         self._interaction_count = 0
         self._invocation_engine = invocation_engine
 
@@ -113,70 +99,6 @@ class MoGEOrchestrator:
             return "ascension"
         return "underworld"
 
-    @staticmethod
-    def _coherence(text: str) -> float:
-        """Return a simple coherence score for ``text``."""
-        words = text.split()
-        if not words:
-            return 0.0
-        return len(set(words)) / len(words)
-
-    @staticmethod
-    def _relevance(source: str, generated: str) -> float:
-        """Return a Jaccard similarity between ``source`` and ``generated``."""
-        src = set(source.split())
-        gen = set(generated.split())
-        if not src or not gen:
-            return 0.0
-        return len(src & gen) / len(src | gen)
-
-    def _update_weights(self, model: str, rt: float, coh: float, rel: float) -> None:
-        reward = coh + rel - 0.1 * rt
-        current = self._model_weights.get(model, 1.0)
-        self._model_weights[model] = (1 - self._alpha) * current + self._alpha * reward
-
-    def _update_mood(self, emotion: str) -> None:
-        """Update ``mood_state`` using an exponential moving average."""
-        for key in list(self.mood_state):
-            target = 1.0 if key.lower() == emotion.lower() else 0.0
-            self.mood_state[key] = (1 - self._mood_alpha) * self.mood_state.get(key, 0.0) + self._mood_alpha * target
-
-    def _benchmark(self, model: str, prompt: str, output: str, elapsed: float) -> None:
-        coh = self._coherence(output)
-        rel = self._relevance(prompt, output)
-        db_storage.log_benchmark(model, elapsed, coh, rel, db_path=self._db_path)
-        self._update_weights(model, elapsed, coh, rel)
-
-    @staticmethod
-    def _model_from_emotion(emotion: str) -> str:
-        """Return preferred model for the given emotion."""
-        return _EMOTION_MODEL_MATRIX.get(emotion.lower(), "glm")
-
-    def _choose_model(
-        self,
-        task: str,
-        weight: float,
-        history: List[str],
-        *,
-        weights: Dict[str, float] | None = None,
-    ) -> str:
-        """Return LLM name based on task, ``weight`` and ``history``."""
-        emotional_ratio = 0.0
-        if history:
-            emotional_ratio = history.count("emotional") / len(history)
-
-        base = {"glm": 0.0, "deepseek": 0.0, "mistral": 0.0}
-
-        if weight > 0.8 or emotional_ratio > 0.5 or task == "philosophical":
-            base["mistral"] = 1.0
-        if task == "instructional":
-            base["deepseek"] = 1.0
-        if not any(base.values()):
-            base["glm"] = 1.0
-
-        effective = weights or self._model_weights
-        scores = {m: base[m] * effective.get(m, 1.0) for m in base}
-        return max(scores, key=scores.get)
 
     def route(
         self,
@@ -234,10 +156,10 @@ class MoGEOrchestrator:
             if m in mem_weights:
                 mem_weights[m] += 0.1
 
-        emotion_model = self._model_from_emotion(emotion)
+        emotion_model = self._model_selector.model_from_emotion(emotion)
         mem_weights[emotion_model] = mem_weights.get(emotion_model, 1.0) + 0.2
 
-        candidate = self._choose_model(
+        candidate = self._model_selector.choose(
             task,
             weight,
             history_tasks,
@@ -327,13 +249,13 @@ class MoGEOrchestrator:
 
         elapsed = perf_counter() - start
         if text_modality and "text" in result:
-            self._benchmark(model, text, result["text"], elapsed)
+            self._model_selector.benchmark(model, text, result["text"], elapsed)
 
         self._interaction_count += 1
-        log_interaction(text, {"intents": intents or []}, result, "ok")
+        self._memory_logger.log_interaction(text, {"intents": intents or []}, result, "ok")
 
         if self._interaction_count % 20 == 0:
-            entries = load_interactions()
+            entries = self._memory_logger.load_interactions()
             update_insights(entries)
             suggestions = learning_mutator.propose_mutations(load_insights())
             for s in suggestions:
@@ -350,7 +272,7 @@ class MoGEOrchestrator:
                 context_tracker.state.avatar_loaded = True
                 emotion = emotional_state.get_last_emotion() or "neutral"
                 opts = crown_decider.decide_expression_options(emotion)
-                log_interaction(
+                self._memory_logger.log_interaction(
                     text,
                     {"action": "show_avatar"},
                     {
@@ -380,10 +302,8 @@ class MoGEOrchestrator:
             )
             training_guide.log_result(intent, success, qnl_data.get("tone"), res)
         emotion = qnl_data.get("tone", "neutral")
-        self._update_mood(emotion)
-        dominant = max(self.mood_state, key=self.mood_state.get)
-        emotional_state.set_last_emotion(dominant)
-        emotional_state.set_resonance_level(self.mood_state[dominant])
+        emotion_data = self._emotion_analyzer.analyze(emotion)
+        dominant = emotion_data["emotion"]
 
         try:
             thresholds = reflection_loop.load_thresholds()
@@ -405,11 +325,6 @@ class MoGEOrchestrator:
         for act in tasks:
             symbolic_parser.parse_intent({"text": act, "tone": dominant})
 
-        emotion_data = {
-            "emotion": dominant,
-            "archetype": emotion_analysis.emotion_to_archetype(dominant),
-            "weight": emotion_analysis.emotion_weight(dominant),
-        }
         result = self.route(text, emotion_data, qnl_data=qnl_data)
         if self._active_layer_name:
             emotional_state.set_current_layer(self._active_layer_name)
@@ -424,7 +339,7 @@ class MoGEOrchestrator:
             meaning = state.get("silence_meaning", "")
             if "Extended" in meaning:
                 steps = self._invocation_engine.invoke_ritual("silence_introspection")
-                log_ritual_result("silence_introspection", steps)
+                self._memory_logger.log_ritual_result("silence_introspection", steps)
         except Exception:
             pass
 
