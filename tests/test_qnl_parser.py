@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "SPIRAL_OS"))
 
-from qnl_engine import parse_input
+from SPIRAL_OS.qnl_engine import parse_input
 
 
 def test_parse_input_keyword_low_urgency():

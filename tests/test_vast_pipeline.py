@@ -20,7 +20,7 @@ yaml_mod = types.ModuleType("yaml")
 yaml_mod.safe_load = lambda *a, **k: {}
 sys.modules.setdefault("yaml", yaml_mod)
 
-import qnl_engine
+from SPIRAL_OS import qnl_engine
 
 sp_mod = sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_engine", qnl_engine)

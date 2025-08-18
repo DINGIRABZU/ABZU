@@ -125,7 +125,7 @@ def list_sources() -> None:
 
 def run_qnl(hex_input: str, wav: str = "qnl_hex_song.wav", json_file: str = "qnl_hex_song.json") -> None:
     """Invoke the existing QNL engine to create a song from hex input."""
-    import qnl_engine
+    from SPIRAL_OS import qnl_engine
 
     phrases, waveform = qnl_engine.hex_to_song(hex_input)
     qnl_engine.write(wav, 44100, waveform)
