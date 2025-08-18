@@ -20,17 +20,22 @@ settings.glm_command_token = "token"
 
 def test_webrtc_offer(monkeypatch):
     class DummyPC:
+        """Minimal RTCPeerConnection substitute tracking state."""
+
+        instances = []
+
         def __init__(self) -> None:
             self.localDescription = RTCSessionDescription(sdp="x", type="answer")
-
-        def addTransceiver(self, kind):
-            pass
+            self.remoteDescription = None
+            self.tracks = []
+            self.closed = False
+            DummyPC.instances.append(self)
 
         def addTrack(self, track):
-            pass
+            self.tracks.append(type(track))
 
         async def setRemoteDescription(self, desc):
-            pass
+            self.remoteDescription = desc
 
         async def createOffer(self):
             return RTCSessionDescription(sdp="o", type="offer")
@@ -42,7 +47,7 @@ def test_webrtc_offer(monkeypatch):
             self.localDescription = desc
 
         async def close(self):
-            pass
+            self.closed = True
 
     monkeypatch.setattr(server.video_stream, "RTCPeerConnection", DummyPC)
 
@@ -61,5 +66,18 @@ def test_webrtc_offer(monkeypatch):
                 )
                 await pc.close()
                 return resp.status_code
+
     status = asyncio.run(run())
+    # Close server-side peer to test cleanup side effects
+    asyncio.run(server.video_stream.close_peers())
+
     assert status == 200
+    assert len(DummyPC.instances) == 1
+    pc_state = DummyPC.instances[0]
+    # Remote description from the offer should be recorded
+    assert pc_state.remoteDescription and pc_state.remoteDescription.type == "offer"
+    # Server should attach both video and audio tracks
+    assert server.video_stream.AvatarVideoTrack in pc_state.tracks
+    assert server.video_stream.AvatarAudioTrack in pc_state.tracks
+    # Peer connection should be closed after calling close_peers
+    assert pc_state.closed

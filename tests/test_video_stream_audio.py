@@ -32,20 +32,28 @@ def test_avatar_audio_track(tmp_path):
     assert frame.sample_rate == 8000
     arr = frame.to_ndarray()
     assert arr.shape[1] == int(8000 * AUDIO_PTIME)
+    # Ensure one frame worth of samples was consumed
+    assert track._index == track._samples
 
 
 def test_offer_adds_audio_track(monkeypatch):
-    added = []
-
     class DummyPC:
+        """Track operations and state for the WebRTC peer."""
+
+        instances = []
+
         def __init__(self) -> None:
             self.localDescription = RTCSessionDescription(sdp="x", type="answer")
+            self.remoteDescription = None
+            self.tracks = []
+            self.closed = False
+            DummyPC.instances.append(self)
 
         def addTrack(self, track):
-            added.append(type(track))
+            self.tracks.append(type(track))
 
         async def setRemoteDescription(self, desc):
-            pass
+            self.remoteDescription = desc
 
         async def createAnswer(self):
             return self.localDescription
@@ -54,7 +62,7 @@ def test_offer_adds_audio_track(monkeypatch):
             self.localDescription = desc
 
         async def close(self):
-            pass
+            self.closed = True
 
     monkeypatch.setattr(video_stream, "RTCPeerConnection", DummyPC)
 
@@ -66,9 +74,16 @@ def test_offer_adds_audio_track(monkeypatch):
                 return resp.status_code
 
     status = asyncio.run(run())
+    asyncio.run(video_stream.close_peers())
+
     assert status == 200
-    assert video_stream.AvatarVideoTrack in added
-    assert video_stream.AvatarAudioTrack in added
+    assert len(DummyPC.instances) == 1
+    pc_state = DummyPC.instances[0]
+    assert video_stream.AvatarVideoTrack in pc_state.tracks
+    assert video_stream.AvatarAudioTrack in pc_state.tracks
+    assert pc_state.remoteDescription and pc_state.remoteDescription.type == "offer"
+    assert pc_state.localDescription.type == "answer"
+    assert pc_state.closed
 
 
 def test_server_shutdown_closes_peers(monkeypatch):
