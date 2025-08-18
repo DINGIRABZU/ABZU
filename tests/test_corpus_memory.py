@@ -1,4 +1,5 @@
 import sys
+import logging
 import numpy as np
 from pathlib import Path
 
@@ -67,7 +68,7 @@ def test_cli_search(tmp_path, monkeypatch, capsys):
     dummy_chroma = types.SimpleNamespace(PersistentClient=lambda path: shared_client)
     monkeypatch.setattr(corpus_memory, "chromadb", dummy_chroma)
 
-    corpus_memory.reindex_corpus()
+    assert corpus_memory.reindex_corpus()
 
     monkeypatch.setattr(
         corpus_memory.vector_memory,
@@ -91,6 +92,7 @@ def test_cli_reindex_runs(monkeypatch):
 
     def dummy_reindex():
         called["reindex"] = True
+        return True
 
     monkeypatch.setattr(corpus_memory, "reindex_corpus", dummy_reindex)
 
@@ -107,7 +109,7 @@ def test_cli_reindex_runs(monkeypatch):
 def test_cli_reindex_with_search(monkeypatch):
     called = {"reindex": False, "search": False}
 
-    monkeypatch.setattr(corpus_memory, "reindex_corpus", lambda: called.__setitem__("reindex", True))
+    monkeypatch.setattr(corpus_memory, "reindex_corpus", lambda: called.__setitem__("reindex", True) or True)
     monkeypatch.setattr(
         corpus_memory,
         "search_corpus",
@@ -127,3 +129,32 @@ def test_cli_reindex_with_search(monkeypatch):
         sys.argv = argv_backup
 
     assert called["reindex"] and called["search"]
+
+
+def test_reindex_delete_failure(monkeypatch, tmp_path, caplog):
+    d = tmp_path / "INANNA_AI"
+    d.mkdir()
+    (d / "a.md").write_text("text", encoding="utf-8")
+    monkeypatch.setattr(corpus_memory, "MEMORY_DIRS", [d])
+    monkeypatch.setattr(corpus_memory, "CHROMA_DIR", tmp_path / "chroma")
+
+    class DummyModel:
+        def __init__(self, name):
+            pass
+
+    monkeypatch.setattr(corpus_memory, "SentenceTransformer", lambda name: DummyModel(name))
+
+    class DummyClient:
+        def __init__(self, path):
+            pass
+
+        def delete_collection(self, name):
+            raise RuntimeError("delete failed")
+
+    dummy_chroma = types.SimpleNamespace(PersistentClient=lambda path: DummyClient(path))
+    monkeypatch.setattr(corpus_memory, "chromadb", dummy_chroma)
+
+    with caplog.at_level(logging.WARNING):
+        ok = corpus_memory.reindex_corpus()
+    assert ok is False
+    assert "Failed to delete collection" in caplog.text

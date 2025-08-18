@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime
+import logging
 import os
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
@@ -87,6 +88,8 @@ def add_embeddings(
         metadatas=metadatas,
     )
 
+logger = logging.getLogger(__name__)
+
 
 def reindex_corpus(
     dirs: Iterable[Path] | None = None,
@@ -94,13 +97,17 @@ def reindex_corpus(
     model_name: str = "all-MiniLM-L6-v2",
     name: str = "corpus",
     dir_path: Path = CHROMA_DIR,
-) -> None:
-    """Rebuild the Chroma collection from Markdown sources."""
+) -> bool:
+    """Rebuild the Chroma collection from Markdown sources.
+
+    Returns ``True`` on success, ``False`` if the existing collection could not
+    be removed.
+    """
     if dirs is None:
         dirs = MEMORY_DIRS
     texts = scan_memory(dirs)
     if not texts:
-        return
+        return True
     if SentenceTransformer is None:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
     if chromadb is None:  # pragma: no cover - optional dependency
@@ -110,9 +117,11 @@ def reindex_corpus(
     try:
         client.delete_collection(name)
     except Exception:
-        pass
+        logger.warning("Failed to delete collection %s", name, exc_info=True)
+        return False
     collection = client.create_collection(name)
     add_embeddings(collection, texts, model)
+    return True
 
 
 def search_corpus(
@@ -185,7 +194,8 @@ def main(argv: List[str] | None = None) -> None:
     args = parser.parse_args(argv)
 
     if args.reindex:
-        reindex_corpus()
+        if not reindex_corpus():
+            raise SystemExit("Failed to reindex corpus")
 
     if args.add:
         add_entry(args.add, args.tone)

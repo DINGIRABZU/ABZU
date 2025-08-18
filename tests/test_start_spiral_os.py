@@ -4,6 +4,8 @@ from importlib.machinery import SourceFileLoader
 from pathlib import Path
 import builtins
 import types
+import pytest
+import os
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -43,6 +45,43 @@ sys.modules.setdefault("SPIRAL_OS", types.ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))
 sys.modules.setdefault("SPIRAL_OS.symbolic_parser", types.ModuleType("symbolic_parser"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", types.ModuleType("qnl_utils"))
+sys.modules.setdefault("psutil", types.ModuleType("psutil"))
+pydantic_mod = types.ModuleType("pydantic")
+pydantic_mod.BaseSettings = object
+pydantic_mod.Field = lambda *a, **k: None
+pydantic_mod.AnyHttpUrl = str
+sys.modules.setdefault("pydantic", pydantic_mod)
+config_mod = types.ModuleType("config")
+config_mod.settings = types.SimpleNamespace(vector_db_path="/tmp")
+sys.modules.setdefault("config", config_mod)
+orch_mod = types.ModuleType("orchestrator")
+orch_mod.MoGEOrchestrator = lambda *a, **k: types.SimpleNamespace(handle_input=lambda self, text: None)
+sys.modules.setdefault("orchestrator", orch_mod)
+tools_mod = types.ModuleType("tools")
+reflection_mod = types.ModuleType("reflection_loop")
+reflection_mod.load_thresholds = lambda: {"default": 0.0}
+reflection_mod.run_reflection_loop = lambda *a, **k: None
+tools_mod.reflection_loop = reflection_mod
+sys.modules.setdefault("tools", tools_mod)
+sys.modules.setdefault("tools.reflection_loop", reflection_mod)
+sys.modules.setdefault("server", types.ModuleType("server"))
+core_mod = types.ModuleType("core")
+core_mod.self_correction_engine = types.ModuleType("self_correction_engine")
+core_mod.language_engine = types.ModuleType("language_engine")
+sys.modules.setdefault("core", core_mod)
+sys.modules.setdefault("core.self_correction_engine", core_mod.self_correction_engine)
+sys.modules.setdefault("core.language_engine", core_mod.language_engine)
+connectors_mod = types.ModuleType("connectors")
+webrtc_mod = types.ModuleType("webrtc_connector")
+webrtc_mod.router = object()
+webrtc_mod.start_call = lambda *a, **k: None
+webrtc_mod.close_peers = lambda *a, **k: None
+connectors_mod.webrtc_connector = webrtc_mod
+sys.modules.setdefault("connectors", connectors_mod)
+sys.modules.setdefault("connectors.webrtc_connector", webrtc_mod)
+os.environ.setdefault("GLM_API_URL", "dummy")
+os.environ.setdefault("GLM_API_KEY", "dummy")
+os.environ.setdefault("HF_TOKEN", "dummy")
 
 start_path = ROOT / "start_spiral_os.py"
 loader = SourceFileLoader("start_spiral_os", str(start_path))
@@ -261,7 +300,11 @@ def test_rewrite_memory_option(monkeypatch):
     monkeypatch.setattr(start_spiral_os.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
 
     called = {}
-    monkeypatch.setattr(start_spiral_os.vector_memory, "rewrite_vector", lambda i, t: called.setdefault("args", (i, t)))
+    monkeypatch.setattr(
+        start_spiral_os.vector_memory,
+        "rewrite_vector",
+        lambda i, t: called.setdefault("args", (i, t)) or True,
+    )
     import sys as _sys
     monkeypatch.setattr(_sys.modules['invocation_engine'], "invoke_ritual", lambda n: called.setdefault("ritual", n) or [])
 
@@ -269,4 +312,24 @@ def test_rewrite_memory_option(monkeypatch):
 
     assert called["args"] == ("x", "y")
     assert called["ritual"] == "x"
+
+
+def test_rewrite_memory_failure(monkeypatch):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
+    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
+    monkeypatch.setattr(start_spiral_os.uvicorn, "run", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
+
+    monkeypatch.setattr(start_spiral_os.vector_memory, "rewrite_vector", lambda i, t: False)
+    import sys as _sys
+    monkeypatch.setattr(_sys.modules['invocation_engine'], "invoke_ritual", lambda n: None)
+
+    with pytest.raises(SystemExit):
+        _run_main(["--rewrite-memory", "x", "y"])
 
