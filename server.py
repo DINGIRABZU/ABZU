@@ -52,13 +52,12 @@ class ShellCommand(BaseModel):
     command: str
 
 
-token = settings.glm_command_token
-if token:
+if settings.glm_command_token:
     @app.post("/glm-command")
     def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str]:
         """Execute ``cmd.command`` via the GLM shell and return the result."""
         auth_header = request.headers.get("Authorization") or ""
-        if not secrets.compare_digest(auth_header, token):
+        if not secrets.compare_digest(auth_header, settings.glm_command_token):
             raise HTTPException(status_code=401, detail="Unauthorized")
         result = send_command(cmd.command)
         return {"result": result}

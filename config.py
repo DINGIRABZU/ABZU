@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     animation_service_url: AnyHttpUrl | None = Field(
         None, env="ANIMATION_SERVICE_URL"
     )
+    embed_model_path: str = Field("all-MiniLM-L6-v2", env="EMBED_MODEL_PATH")
+    retrain_threshold: int = Field(10, env="RETRAIN_THRESHOLD")
     llm_rotation_period: int = Field(300, env="LLM_ROTATION_PERIOD")
     llm_max_failures: int = Field(3, env="LLM_MAX_FAILURES")
     feedback_novelty_threshold: float = Field(
