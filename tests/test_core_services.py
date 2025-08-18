@@ -7,26 +7,35 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+config_mod = types.ModuleType("config")
+config_mod.settings = types.SimpleNamespace(
+    vector_db_path=Path("/tmp"),
+    crown_tts_backend="gtts",
+    voice_avatar_config_path=None,
+    llm_rotation_period=300,
+    llm_max_failures=3,
+)
+config_mod.reload = lambda: None
+sys.modules.setdefault("config", config_mod)
+
+import INANNA_AI as ia_pkg
+
 stub_emotion_analysis = types.SimpleNamespace(
     emotion_to_archetype=lambda e: "hero",
     emotion_weight=lambda e: 0.5,
     EMOTION_WEIGHT={"joy": 1.0, "neutral": 0.0},
+    get_emotional_weight=lambda: 0.5,
+    get_emotion_and_tone=lambda emotion=None: (emotion or "joy", "Radiant"),
 )
-pkg = types.ModuleType("INANNA_AI")
-pkg.emotion_analysis = stub_emotion_analysis
-sys.modules.setdefault("INANNA_AI", pkg)
+ia_pkg.emotion_analysis = stub_emotion_analysis
 sys.modules["INANNA_AI.emotion_analysis"] = stub_emotion_analysis
 sys.modules["emotional_state"] = types.SimpleNamespace(
     set_last_emotion=lambda e: None,
     set_resonance_level=lambda v: None,
+    get_current_layer=lambda: None,
+    set_current_layer=lambda layer: None,
+    get_last_emotion=lambda: None,
 )
-stub_db_storage = types.SimpleNamespace(
-    DB_PATH=Path("/tmp/test.db"),
-    init_db=lambda path: None,
-    log_benchmark=lambda *a, **k: None,
-)
-pkg.db_storage = stub_db_storage
-sys.modules["INANNA_AI.db_storage"] = stub_db_storage
 
 from core.emotion_analyzer import EmotionAnalyzer
 from core.model_selector import ModelSelector
@@ -45,6 +54,15 @@ def test_model_selector_choose(tmp_path: Path):
     selector = ModelSelector(db_path=db)
     choice = selector.choose("instructional", 0.2, [])
     assert choice == "deepseek"
+
+
+def test_model_selector_select_model(monkeypatch):
+    monkeypatch.setattr(
+        "core.model_selector.vector_memory.query_vectors", lambda **kw: []
+    )
+    selector = ModelSelector()
+    model = selector.select_model("instructional", "neutral", 0.2, [])
+    assert model == "glm"
 
 
 def test_memory_logger(monkeypatch):
