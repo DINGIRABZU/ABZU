@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 import builtins
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -15,7 +16,8 @@ spiral_os = importlib.util.module_from_spec(spec)
 loader.exec_module(spiral_os)
 
 
-def test_deploy_pipeline_runs_commands(monkeypatch, tmp_path):
+@pytest.mark.parametrize("as_str", [True, False])
+def test_deploy_pipeline_runs_commands(monkeypatch, tmp_path, as_str):
     # create simple pipeline YAML
     yaml_text = """
 steps:
@@ -27,20 +29,24 @@ steps:
 
     calls = []
 
-    def fake_run(args, check):
-        calls.append(args)
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
         class Result:
             returncode = 0
         return Result()
 
     monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)
 
-    spiral_os.deploy_pipeline(str(pipeline))
+    path_arg = str(pipeline) if as_str else pipeline
+    spiral_os.deploy_pipeline(path_arg)
 
-    assert calls == [["echo", "hello"]]
+    cmd, kwargs = calls[0]
+    assert cmd.strip().split() == ["echo", "hello"]
+    assert kwargs["shell"] is True and kwargs["check"] is True
 
 
-def test_deploy_pipeline_multiline(monkeypatch, tmp_path):
+@pytest.mark.parametrize("as_str", [True, False])
+def test_deploy_pipeline_multiline(monkeypatch, tmp_path, as_str):
     yaml_text = """
 steps:
   - name: multi
@@ -53,14 +59,17 @@ steps:
 
     calls = []
 
-    def fake_run(args, check):
-        calls.append(args)
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
         class Result:
             returncode = 0
         return Result()
 
     monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)
 
-    spiral_os.deploy_pipeline(str(pipeline))
+    path_arg = str(pipeline) if as_str else pipeline
+    spiral_os.deploy_pipeline(path_arg)
 
-    assert calls == [["echo", "hello", "world"]]
+    cmd, kwargs = calls[0]
+    assert cmd.strip().split() == ["echo", "hello", "world"]
+    assert kwargs["shell"] is True and kwargs["check"] is True
