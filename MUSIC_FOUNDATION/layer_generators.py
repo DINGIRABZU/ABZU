@@ -12,9 +12,17 @@ from __future__ import annotations
 import os
 from typing import Sequence, Union
 
-import librosa
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 NoteLike = Union[str, float, int]
 
@@ -23,6 +31,8 @@ def _note_to_freq(note: NoteLike) -> float:
     """Convert a note specification to a frequency in Hz."""
     if isinstance(note, (float, int)):
         return float(note)
+    if librosa is None:
+        raise RuntimeError("librosa library not installed")
     return float(librosa.note_to_hz(str(note)))
 
 

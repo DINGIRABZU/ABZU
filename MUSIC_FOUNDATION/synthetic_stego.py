@@ -5,7 +5,11 @@ from __future__ import annotations
 from typing import Tuple
 
 import numpy as np
-import soundfile as sf
+
+try:  # pragma: no cover - optional dependency
+    import soundfile as sf
+except Exception:  # pragma: no cover - optional dependency
+    sf = None  # type: ignore
 
 
 def _to_int16(data: np.ndarray) -> np.ndarray:
@@ -17,6 +21,8 @@ def _to_int16(data: np.ndarray) -> np.ndarray:
 
 def embed_data(input_wav: str, output_wav: str, message: str) -> None:
     """Embed ``message`` inside ``input_wav`` and write to ``output_wav``."""
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
     data, sr = sf.read(input_wav, always_2d=False)
     samples = _to_int16(data)
 
@@ -43,6 +49,8 @@ def embed_data(input_wav: str, output_wav: str, message: str) -> None:
 
 def extract_data(wav_path: str) -> str:
     """Extract a hidden message from ``wav_path``."""
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
     data, _ = sf.read(wav_path, always_2d=False, dtype="int16")
     flat = data.reshape(-1)
     bits = [int(sample & 1) for sample in flat]

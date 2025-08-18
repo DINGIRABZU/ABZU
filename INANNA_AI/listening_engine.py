@@ -11,7 +11,11 @@ import asyncio
 import json
 
 import numpy as np
-import librosa
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
 
 try:
     import opensmile
@@ -60,6 +64,8 @@ def _get_smile() -> opensmile.Smile | None:
 
 def _extract_features(wave: np.ndarray, sr: int) -> Dict[str, float]:
     """Return pitch, tempo, emotion and other features for ``wave``."""
+    if librosa is None:
+        raise RuntimeError("librosa library not installed")
     if len(wave) == 0:
         return {
             "emotion": "neutral",
