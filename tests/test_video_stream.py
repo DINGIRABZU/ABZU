@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 
 import httpx
+import numpy as np
 from fastapi.testclient import TestClient
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from types import ModuleType
@@ -12,10 +13,11 @@ sys.path.insert(0, str(ROOT))
 sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 
-import server
 from config import settings
 
 settings.glm_command_token = "token"
+
+import server
 
 
 def test_webrtc_offer(monkeypatch):
@@ -81,3 +83,28 @@ def test_webrtc_offer(monkeypatch):
     assert server.video_stream.AvatarAudioTrack in pc_state.tracks
     # Peer connection should be closed after calling close_peers
     assert pc_state.closed
+
+
+def test_avatar_video_track_frames(monkeypatch):
+    """AvatarVideoTrack should yield frames from the video engine."""
+
+    frames = [
+        np.zeros((1, 1, 3), dtype=np.uint8),
+        np.ones((1, 1, 3), dtype=np.uint8),
+    ]
+    calls = {"n": 0}
+
+    def fake_stream():
+        calls["n"] += 1
+        for f in frames:
+            yield f
+
+    monkeypatch.setattr(server.video_stream.video_engine, "generate_avatar_stream", fake_stream)
+
+    track = server.video_stream.AvatarVideoTrack()
+    frame1 = asyncio.run(track.recv()).to_ndarray()
+    frame2 = asyncio.run(track.recv()).to_ndarray()
+
+    assert calls["n"] == 1  # stream created once
+    assert np.array_equal(frame1, frames[0])
+    assert np.array_equal(frame2, frames[1])

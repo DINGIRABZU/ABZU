@@ -12,23 +12,25 @@ class DummyNode:
     def __init__(self, val):
         self.val = val
         self.children = []
+        self.calls: list[str] = []
 
     def ask(self):
-        pass
+        self.calls.append("ask")
 
     def feel(self):
-        pass
+        self.calls.append("feel")
 
     def symbolize(self):
-        pass
+        self.calls.append("symbolize")
 
     def pause(self):
-        pass
+        self.calls.append("pause")
 
     def reflect(self):
-        pass
+        self.calls.append("reflect")
 
     def decide(self):
+        self.calls.append("decide")
         return {"action": self.val}
 
 
@@ -37,8 +39,14 @@ def test_record_and_query(tmp_path, monkeypatch):
     monkeypatch.setattr(cortex_memory, "CORTEX_MEMORY_FILE", log_file)
 
     node = DummyNode("A")
+    for method in ["ask", "feel", "symbolize", "pause", "reflect", "decide"]:
+        getattr(node, method)()
     cortex_memory.record_spiral(node, {"emotion": "joy", "action": "run"})
     cortex_memory.record_spiral(node, {"emotion": "calm", "action": "rest"})
+
+    lines = log_file.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 2
+    assert node.calls == ["ask", "feel", "symbolize", "pause", "reflect", "decide"]
 
     # append invalid line
     log_file.write_text(log_file.read_text(encoding="utf-8") + "{\n", encoding="utf-8")

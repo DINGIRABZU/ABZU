@@ -70,3 +70,28 @@ def test_start_call_sends_audio(tmp_path):
                 await pc.close()
     asyncio.run(run())
     assert messages and messages[0] == audio.read_bytes()
+
+
+def test_close_peers_clears_state():
+    class DummyPC:
+        def __init__(self):
+            self.closed = False
+
+        async def close(self):
+            self.closed = True
+
+    class DummyChannel:
+        def __init__(self):
+            self.sent = []
+
+        async def send(self, data):  # pragma: no cover - not used
+            self.sent.append(data)
+
+    pc = DummyPC()
+    ch = DummyChannel()
+    webrtc_connector._pcs = {pc}
+    webrtc_connector._channels = {ch}
+    asyncio.run(webrtc_connector.close_peers())
+
+    assert pc.closed
+    assert not webrtc_connector._pcs and not webrtc_connector._channels
