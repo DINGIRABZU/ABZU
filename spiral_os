@@ -7,7 +7,6 @@ import subprocess
 import shlex
 import textwrap
 from pathlib import Path
-from typing import List
 
 import yaml
 
@@ -29,7 +28,7 @@ def deploy_pipeline(pipeline_path: str) -> None:
             _run_command(run)
 
 
-def main(argv: List[str]) -> int:
+def main(argv: list[str]) -> int:
     """Entry point for CLI subcommands."""
     if len(argv) >= 3 and argv[0] == "pipeline" and argv[1] == "deploy":
         deploy_pipeline(argv[2])
@@ -39,4 +38,4 @@ def main(argv: List[str]) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    main(sys.argv[1:])
