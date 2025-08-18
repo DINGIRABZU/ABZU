@@ -29,7 +29,7 @@ import numpy as np
 
 from core.task_profiler import TaskProfiler
 
-from INANNA_AI import response_manager, emotion_analysis
+from INANNA_AI import response_manager
 from INANNA_AI.personality_layers import (
     AlbedoPersonality,
     REGISTRY as PERSONALITY_REGISTRY,
@@ -89,7 +89,6 @@ class MoGEOrchestrator:
         self._emotion_analyzer = emotion_analyzer or EmotionAnalyzer()
         self._memory_logger = memory_logger or MemoryLogger()
         self._task_profiler = task_profiler or TaskProfiler()
-        self._model_weights = self._model_selector.model_weights
         self.mood_state = self._emotion_analyzer.mood_state
         self._interaction_count = 0
         self._invocation_engine = invocation_engine
@@ -114,10 +113,12 @@ class MoGEOrchestrator:
     ) -> Dict[str, Any]:
         """Process ``text`` with models based on ``emotion_data`` and flags."""
         emotion = emotion_data.get("emotion", "neutral")
-        archetype = emotion_data.get("archetype") or emotion_analysis.emotion_to_archetype(emotion)
-        weight = emotion_data.get("weight")
-        if weight is None:
-            weight = emotion_analysis.emotion_weight(emotion)
+        if "archetype" not in emotion_data or "weight" not in emotion_data:
+            enriched = self._emotion_analyzer.analyze(emotion)
+            emotion_data = {**emotion_data, **enriched}
+            emotion = emotion_data["emotion"]
+        archetype = emotion_data["archetype"]
+        weight = emotion_data["weight"]
         plane = self._select_plane(weight, archetype)
 
         tone = None
@@ -144,33 +145,7 @@ class MoGEOrchestrator:
         task = self._task_profiler.classify(text)
         history_tasks = [c["task"] for c in self._context]
 
-        # Adjust model weights using vector memory history
-        try:
-            records = vector_memory.query_vectors(
-                filter={"type": "routing_decision", "emotion": emotion}, limit=10
-            )
-        except Exception:
-            records = []
-
-        mem_weights = dict(self._model_weights)
-        for rec in records:
-            m = rec.get("selected_model")
-            if m in mem_weights:
-                mem_weights[m] += 0.1
-
-        emotion_model = self._model_selector.model_from_emotion(emotion)
-        mem_weights[emotion_model] = mem_weights.get(emotion_model, 1.0) + 0.2
-
-        candidate = self._model_selector.choose(
-            task,
-            weight,
-            history_tasks,
-            weights=mem_weights,
-        )
-        if mem_weights.get(candidate, 0.0) > mem_weights.get(emotion_model, 0.0):
-            model = candidate
-        else:
-            model = emotion_model
+        model = self._model_selector.select_model(task, emotion, weight, history_tasks)
 
         start = perf_counter()
         result: Dict[str, Any] = {

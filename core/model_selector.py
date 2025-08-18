@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from INANNA_AI import db_storage
+import vector_memory
 
 # Emotion to model lookup derived from docs/crown_manifest.md
 _EMOTION_MODEL_MATRIX = {
@@ -82,4 +83,34 @@ class ModelSelector:
         rel = self._relevance(prompt, output)
         db_storage.log_benchmark(model, elapsed, coh, rel, db_path=self.db_path)
         self._update_weights(model, elapsed, coh, rel)
+
+    def select_model(
+        self,
+        task: str,
+        emotion: str,
+        weight: float,
+        history: List[str],
+    ) -> str:
+        """Return the model best suited for the given context."""
+        try:
+            records = vector_memory.query_vectors(
+                filter={"type": "routing_decision", "emotion": emotion},
+                limit=10,
+            )
+        except Exception:
+            records = []
+
+        mem_weights = dict(self.model_weights)
+        for rec in records:
+            m = rec.get("selected_model")
+            if m in mem_weights:
+                mem_weights[m] += 0.1
+
+        emotion_model = self.model_from_emotion(emotion)
+        mem_weights[emotion_model] = mem_weights.get(emotion_model, 1.0) + 0.2
+
+        candidate = self.choose(task, weight, history, weights=mem_weights)
+        if mem_weights.get(candidate, 0.0) > mem_weights.get(emotion_model, 0.0):
+            return candidate
+        return emotion_model
 
