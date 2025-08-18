@@ -1,22 +1,25 @@
 # Architecture Overview
 
-This guide surveys the major pieces of Spiral OS in everyday engineering terms.
+This guide explains in plain language how a request travels through Spiral OS. For a chakra‑oriented map of the codebase, see [spiritual_architecture.md](spiritual_architecture.md).
 
-## Request Flow
+### Request Flow
 
 ```mermaid
 flowchart LR
-    A[API request] --> B[Orchestrator]
-    B --> C[Model]
-    C --> D[Response]
+    U[User request] --> O[Orchestrator]
+    O --> R[LLM router]
+    R --> M[Model registry]
+    M --> L[Selected model]
+    L --> A[Audio pipeline]
+    A --> S[Avatar or text response]
 ```
 
-## LLM Router
-The LLM router decides which language model and voice pathway should handle a message. `crown_router.py` calls the `MoGEOrchestrator` and considers recent emotional context from `vector_memory`. It returns a model choice along with recommendations for text‑to‑speech and avatar style so the reply matches the current mood.
+### LLM Router
+The LLM router acts as a traffic controller for prompts. When a message arrives, `crown_router.py` checks recent emotion stored in `vector_memory` and chooses a language model and voice that fit the conversation. It returns both the model choice and hints for speech style so replies stay in tune with the current mood.
 
-## Audio Pipeline
-Audio flows through two main modules. `audio_ingestion.py` loads samples and can extract features such as MFCCs, musical key, tempo and CLAP embeddings. `audio_engine.py` applies DSP effects, plays ritual loops and can synthesise tones when assets are missing. Together they cover capture, analysis and playback.
+### Model Registry
+`servant_model_manager.py` is a catalogue of helper models. Each servant registers a name and how to run it—either as a Python function or an external process. The orchestrator asks this registry to invoke a model by name, making it straightforward to plug in new specialised tools.
 
-## Model Registry
-`servant_model_manager.py` keeps a registry of helper models. Handlers may be native Python functions or subprocesses, and the Kimi‑K2 servant registers here by default. The orchestrator can invoke a model by name through a uniform `invoke` API, simplifying the addition of new specialised models.
+### Audio Pipeline
+The audio pipeline has two stops. `audio_ingestion.py` brings in clips and analyses features such as tempo, key and CLAP embeddings. `audio_engine.py` then plays the sound, adds effects or synthesises missing notes. Together they handle capture, analysis and playback.
 

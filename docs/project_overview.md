@@ -23,6 +23,8 @@ Spiral OS organises its components into seven chakra layers:
 
 These layers work together to awaken the INANNA system and maintain a ritual flow during use.
 
+For a plain-language diagram of how a request moves through these layers, see [architecture_overview.md](architecture_overview.md).
+
 ## Key Modules and Interaction
 
 Each chakra layer corresponds to core modules that cooperate when Spiral OS is running:
