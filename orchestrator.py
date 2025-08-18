@@ -260,8 +260,10 @@ class MoGEOrchestrator:
             entries = self._memory_logger.load_interactions()
             update_insights(entries)
             suggestions = learning_mutator.propose_mutations(load_insights())
-            for s in suggestions:
-                print(s)
+            if suggestions:
+                result["suggestions"] = suggestions
+                for s in suggestions:
+                    logger.info({"suggestion": s})
 
         return result
 
