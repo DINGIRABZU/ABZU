@@ -18,23 +18,25 @@ class DummyNode:
     def __init__(self, event=""):
         self.event = event
         self.children = []
+        self.calls = []
 
     def ask(self):
-        pass
+        self.calls.append("ask")
 
     def feel(self):
-        pass
+        self.calls.append("feel")
 
     def symbolize(self):
-        pass
+        self.calls.append("symbolize")
 
     def pause(self):
-        pass
+        self.calls.append("pause")
 
     def reflect(self):
-        pass
+        self.calls.append("reflect")
 
     def decide(self):
+        self.calls.append("decide")
         return {"event": self.event}
 
 
@@ -45,9 +47,29 @@ def test_interpret_sigils():
 
 def test_router_sigil_integration(monkeypatch):
     node = DummyNode("do 🜁")
-    monkeypatch.setattr(rer.vector_memory, "add_vector", lambda *a, **k: None)
-    monkeypatch.setattr(rer.cortex_memory, "record_spiral", lambda *a, **k: None)
+    stages: list[str] = []
+
+    def add_vector(_, meta):
+        stages.append(meta["stage"])
+
+    logged = []
+
+    def record_spiral(node, result):
+        logged.append((node, result))
+
+    monkeypatch.setattr(rer.vector_memory, "add_vector", add_vector)
+    monkeypatch.setattr(rer.cortex_memory, "record_spiral", record_spiral)
 
     res = rer.route(node)
 
-    assert res["sigil_triggers"] == ["calm"]
+    # All stages should have been invoked in order on the node
+    assert node.calls == list(stages) == [
+        "ask",
+        "feel",
+        "symbolize",
+        "pause",
+        "reflect",
+        "decide",
+    ]
+    # Cortex memory should receive the final decision with sigil triggers
+    assert logged and logged[0][1]["sigil_triggers"] == ["calm"]
