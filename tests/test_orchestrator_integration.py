@@ -114,10 +114,10 @@ def setup_module(module):
     archetype_shift_engine.EMOTION_LAYER_MAP = {}
     sys.modules["archetype_shift_engine"] = archetype_shift_engine
 
-    config = types.ModuleType("config")
-    config.settings = build_settings()
-    config.reload = lambda: None
-    sys.modules["config"] = config
+    config_mod = types.ModuleType("config")
+    config_mod.settings = build_settings()
+    config_mod.reload = lambda: None
+    sys.modules.setdefault("config", config_mod)
 
 
 def test_orchestrator_integration():

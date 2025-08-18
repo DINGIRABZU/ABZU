@@ -53,7 +53,7 @@ sys.modules["INANNA_AI.db_storage"].save_interaction = lambda *a, **k: None
 config_mod = types.ModuleType("config")
 config_mod.settings = build_settings()
 config_mod.reload = lambda: None
-sys.modules["config"] = config_mod
+sys.modules.setdefault("config", config_mod)
 
 from INANNA_AI import main as voice_main
 
