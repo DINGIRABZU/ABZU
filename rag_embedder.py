@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Iterable, List, Dict, Any
 import argparse
 import json
-import os
 
 import numpy as np
 
@@ -16,6 +15,7 @@ except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
 from INANNA_AI.utils import sentiment_score
+from config import settings
 
 _MODEL: Any | None = None
 
@@ -25,7 +25,7 @@ def _get_model() -> Any:
     global _MODEL
     if _MODEL is not None:
         return _MODEL
-    model_path = os.getenv("EMBED_MODEL_PATH", "all-MiniLM-L6-v2")
+    model_path = settings.embed_model_path
     if SentenceTransformer is not None:
         _MODEL = SentenceTransformer(model_path)
     else:  # pragma: no cover - fallback for tests

@@ -14,12 +14,12 @@ following keys:
 from pathlib import Path
 from datetime import datetime
 import json
-import os
 
 from INANNA_AI import db_storage
 import auto_retrain
+from config import settings
 
-AUTO_RETRAIN_THRESHOLD = int(os.getenv("RETRAIN_THRESHOLD", "10"))
+AUTO_RETRAIN_THRESHOLD = settings.retrain_threshold
 
 
 def evaluate_action(intent: dict, result: dict) -> dict:

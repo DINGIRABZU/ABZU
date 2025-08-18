@@ -203,7 +203,9 @@ class MoGEOrchestrator:
 
         if voice_modality:
             opts = crown_decider.decide_expression_options(emotion)
-            settings.crown_tts_backend = opts.get("tts_backend", "gtts")
+            settings.crown_tts_backend = (
+                opts.get("tts_backend") or settings.crown_tts_backend
+            )
             result.update(
                 {
                     "tts_backend": opts.get("tts_backend"),
