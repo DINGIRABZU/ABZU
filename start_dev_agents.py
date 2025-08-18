@@ -7,7 +7,7 @@ import logging
 import os
 from pathlib import Path
 
-from tools.dev_orchestrator import run_dev_cycle
+from tools.dev_orchestrator import DevAssistantService, run_dev_cycle
 
 
 def load_env(path: Path) -> None:
@@ -25,9 +25,17 @@ def load_env(path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run development agents")
-    parser.add_argument("--objective", required=True, help="Objective for the cycle")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--objective", help="Objective for a single run")
+    group.add_argument("--watch", action="store_true", help="Watch logs and run cycles")
+    group.add_argument(
+        "--stop", action="store_true", help="Signal a running watcher to stop"
+    )
     parser.add_argument(
         "--planner-model", help="LLM or endpoint used by the planner agent"
+    )
+    parser.add_argument(
+        "--log-path", default="logs/dev_agent.log", help="Log file monitored"
     )
     args = parser.parse_args()
 
@@ -35,7 +43,7 @@ def main() -> int:
     if args.planner_model:
         os.environ["PLANNER_MODEL"] = args.planner_model
 
-    log_path = Path("logs/dev_agent.log")
+    log_path = Path(args.log_path)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(
         level=logging.INFO,
@@ -46,6 +54,22 @@ def main() -> int:
         ],
     )
     logger = logging.getLogger("dev_agent_runner")
+
+    if args.stop:
+        stop_file = log_path.with_suffix(".stop")
+        stop_file.touch()
+        logger.info("Stop signal written to %s", stop_file)
+        return 0
+
+    if args.watch:
+        service = DevAssistantService(repo=Path.cwd(), log_path=log_path)
+        logger.info("Starting watcher; press Ctrl+C or run with --stop to end")
+        try:
+            service.run_forever()
+        except KeyboardInterrupt:
+            logger.info("Watcher interrupted by user")
+        return 0
+
     logger.info("Starting development cycle: %s", args.objective)
 
     result = run_dev_cycle(args.objective, repo=Path.cwd())
