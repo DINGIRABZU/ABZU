@@ -39,6 +39,9 @@ class Settings(BaseSettings):
         Path(__file__).resolve().parent / "data" / "vector_memory",
         env="VECTOR_DB_PATH",
     )
+    neo4j_uri: str = Field("bolt://localhost:7687", env="NEO4J_URI")
+    neo4j_user: str = Field("neo4j", env="NEO4J_USER")
+    neo4j_password: str = Field("password", env="NEO4J_PASSWORD")
 
     class Config:
         case_sensitive = True
