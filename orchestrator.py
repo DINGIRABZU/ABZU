@@ -6,7 +6,8 @@ directs textual and audio input to the appropriate language or synthesis
 models.  Routing decisions take the current emotional context, task
 classification and recent interaction history into account.  Model weights
 are updated over time based on benchmark results to favour better performing
-systems.
+systems.  The :mod:`soundfile` dependency is optional and is used only when
+writing generated audio to disk.
 """
 
 from __future__ import annotations
@@ -15,10 +16,14 @@ from pathlib import Path
 import tempfile
 from typing import Any, Dict, Deque, List, Callable
 from collections import deque
-import soundfile as sf
 from time import perf_counter
 import threading
 import logging
+
+try:
+    import soundfile as sf  # pragma: no cover
+except Exception:  # pragma: no cover
+    sf = None
 
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
@@ -215,7 +220,18 @@ class MoGEOrchestrator:
             hex_input = text.encode("utf-8").hex()
             phrases, wave = qnl_engine.hex_to_song(hex_input, duration_per_byte=0.05)
             wav_path = Path(tempfile.gettempdir()) / f"qnl_{abs(hash(hex_input))}.wav"
-            sf.write(wav_path, wave, 44100)
+            if sf is None:
+                import wave as wave_module
+
+                wav_data = np.clip(wave, -1.0, 1.0)
+                wav_data = (wav_data * 32767).astype(np.int16)
+                with wave_module.open(str(wav_path), "wb") as wf:
+                    wf.setnchannels(1)
+                    wf.setsampwidth(2)
+                    wf.setframerate(44100)
+                    wf.writeframes(wav_data.tobytes())
+            else:
+                sf.write(wav_path, wave, 44100)
             result["music_path"] = str(wav_path)
             result["qnl_phrases"] = phrases
 
