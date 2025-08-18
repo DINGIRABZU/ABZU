@@ -11,7 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 REQUIRED_MODULES = [
-    "qnl_engine",
+    "SPIRAL_OS.qnl_engine",
     "audio_engine",
     "vector_memory",
 ]
@@ -24,9 +24,10 @@ def _parse_missing_dep(error: ModuleNotFoundError) -> str:
 def check_module(name: str) -> List[str]:
     """Return a list of warnings for the given module name."""
     warnings: List[str] = []
-    module_path = PROJECT_ROOT / f"{name}.py"
+    module_path = PROJECT_ROOT / Path(name.replace(".", "/")).with_suffix(".py")
     if not module_path.exists():
-        warnings.append(f"{name}.py not found")
+        rel_path = module_path.relative_to(PROJECT_ROOT)
+        warnings.append(f"{rel_path} not found")
         return warnings
     try:
         importlib.import_module(name)

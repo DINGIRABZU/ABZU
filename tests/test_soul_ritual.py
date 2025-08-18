@@ -23,7 +23,6 @@ sys.modules["torch.nn"].Module = object
 
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules["librosa"].load = lambda *a, **k: ([], 0)
-sys.modules.setdefault("qnl_engine", types.ModuleType("qnl_engine"))
 
 sys.modules.setdefault("orchestrator", types.ModuleType("orchestrator"))
 sys.modules["orchestrator"].MoGEOrchestrator = lambda: None

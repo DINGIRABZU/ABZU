@@ -36,6 +36,7 @@ Milestone VIII expands on the sovereign voice work with memory-aided routing and
 - [psychic_loop.md](psychic_loop.md)
 - [rag_music_oracle.md](rag_music_oracle.md)
 - [rag_pipeline.md](rag_pipeline.md)
+- [release_notes.md](release_notes.md)
 - [scripts/ingest_sacred_inputs.sh](../scripts/ingest_sacred_inputs.sh)
 - [ritual_manifesto.md](ritual_manifesto.md)
 - [root_chakra_overview.md](root_chakra_overview.md)

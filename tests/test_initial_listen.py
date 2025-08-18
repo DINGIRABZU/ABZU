@@ -48,8 +48,6 @@ sys.modules.setdefault("SPIRAL_OS", types.ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))
 sys.modules.setdefault("SPIRAL_OS.symbolic_parser", types.ModuleType("symbolic_parser"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", types.ModuleType("qnl_utils"))
-sys.modules.setdefault("qnl_engine", types.ModuleType("qnl_engine"))
-sys.modules.setdefault("symbolic_parser", types.ModuleType("symbolic_parser"))
 req_mod = types.ModuleType("requests")
 req_mod.post = lambda *a, **k: types.SimpleNamespace(json=lambda: {}, text="", raise_for_status=lambda: None)
 req_mod.RequestException = Exception
