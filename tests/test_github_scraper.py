@@ -14,6 +14,12 @@ sys.modules.setdefault("bs4", bs4_mod)
 numpy_mod = types.ModuleType("numpy")
 numpy_mod.ndarray = object
 sys.modules.setdefault("numpy", numpy_mod)
+pydantic_mod = types.ModuleType("pydantic")
+pydantic_mod.BaseSettings = object
+pydantic_mod.Field = lambda default=None, *a, **k: default
+pydantic_mod.AnyHttpUrl = str
+sys.modules.setdefault("pydantic", pydantic_mod)
+sys.modules.setdefault("vector_memory", types.ModuleType("vector_memory"))
 
 from INANNA_AI.learning import github_scraper as gs
 
