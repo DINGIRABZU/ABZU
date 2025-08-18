@@ -10,7 +10,7 @@ sys.path.insert(0, str(ROOT))
 def test_voice_cli_invokes_engines(tmp_path, monkeypatch):
     audio = tmp_path / "voice.wav"
     audio.write_text("x", encoding="utf-8")
-    events = {}
+    events = {"play": [], "send": []}
 
     class DummySpeaker:
         def synthesize(self, text: str, emotion: str, history=None, timbre="neutral"):
@@ -46,6 +46,8 @@ def test_voice_cli_invokes_engines(tmp_path, monkeypatch):
     monkeypatch.setitem(sys.modules, "connectors", connectors_pkg)
 
     mod = importlib.import_module("inanna_voice")
+    monkeypatch.setattr(mod, "play_frame", lambda f: events["play"].append(f))
+    monkeypatch.setattr(mod, "send_frame", lambda f: events["send"].append(f))
     argv_backup = sys.argv.copy()
     sys.argv = [
         "inanna_voice.py",
@@ -63,3 +65,5 @@ def test_voice_cli_invokes_engines(tmp_path, monkeypatch):
     assert events["synth"] == ("hello", "joy")
     assert events["call"] == str(audio)
     assert events["stream"] == audio
+    assert events["play"] == [b"f"]
+    assert events["send"] == [b"f"]
