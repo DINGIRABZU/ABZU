@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Shared utilities for converting music analysis into QNL data."""
 
 import numpy as np

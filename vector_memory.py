@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 import json
 import logging
-import os
 import uuid
 import math
 
@@ -26,12 +25,11 @@ except Exception:  # pragma: no cover - optional dependency
     chromadb = None  # type: ignore
     Collection = object  # type: ignore
 
+from config import settings
 from MUSIC_FOUNDATION import qnl_utils
 
 
-_DEFAULT_PATH = Path(__file__).resolve().parent / "data" / "vector_memory"
-_VECTOR_URI = os.getenv("VECTOR_DB_PATH", str(_DEFAULT_PATH))
-_DIR = Path(_VECTOR_URI)
+_DIR = Path(settings.vector_db_path)
 
 _COLLECTION_NAME = "memory"
 _DECAY_SECONDS = 86_400.0  # one day

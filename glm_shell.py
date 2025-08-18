@@ -7,7 +7,8 @@ Usage:
 """
 
 import argparse
-import os
+
+from config import require, settings
 
 from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown
@@ -19,9 +20,10 @@ def send_command(command: str) -> str:
     Set ``GLM_SHELL_URL`` and ``GLM_SHELL_KEY`` to target a dedicated
     shell endpoint. Defaults to the main Crown configuration.
     """
-    url = os.getenv("GLM_SHELL_URL")
-    key = os.getenv("GLM_SHELL_KEY")
+    url = settings.glm_shell_url
+    key = settings.glm_shell_key
     if url or key:
+        require("glm_shell_url", "glm_shell_key")
         glm = GLMIntegration(endpoint=url, api_key=key)
     else:
         glm = initialize_crown()
