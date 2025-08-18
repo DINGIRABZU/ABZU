@@ -45,6 +45,12 @@ def test_interpret_sigils():
     assert csl.interpret_sigils("none") == []
 
 
+def test_interpret_multiple_sigils():
+    """Order and duplicates should be preserved when multiple sigils appear."""
+    text = "🜂🜁🜂"
+    assert csl.interpret_sigils(text) == ["anger", "calm", "anger"]
+
+
 def test_router_sigil_integration(monkeypatch):
     node = DummyNode("do 🜁")
     stages: list[str] = []
@@ -73,3 +79,33 @@ def test_router_sigil_integration(monkeypatch):
     ]
     # Cortex memory should receive the final decision with sigil triggers
     assert logged and logged[0][1]["sigil_triggers"] == ["calm"]
+
+
+def test_router_without_sigil(monkeypatch):
+    """Routing text lacking sigils should not produce trigger metadata."""
+
+    node = DummyNode("plain text")
+    stages: list[str] = []
+
+    def add_vector(_, meta):
+        stages.append(meta["stage"])
+
+    logged = []
+
+    def record_spiral(node, result):
+        logged.append((node, result))
+
+    monkeypatch.setattr(rer.vector_memory, "add_vector", add_vector)
+    monkeypatch.setattr(rer.cortex_memory, "record_spiral", record_spiral)
+
+    res = rer.route(node)
+
+    assert node.calls == list(stages) == [
+        "ask",
+        "feel",
+        "symbolize",
+        "pause",
+        "reflect",
+        "decide",
+    ]
+    assert logged and "sigil_triggers" not in logged[0][1]
