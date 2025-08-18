@@ -99,3 +99,5 @@ past events. The feedback loop analyses this memory via
 new archetype layer when certain emotions or ritual sigils dominate. This links
 the decision router, memory system and archetype engine into a continuous code
 cortex.
+
+For a plain engineering map of these components, see [docs/architecture_overview.md](docs/architecture_overview.md).

@@ -27,3 +27,5 @@ The orchestrator exposes a lookup table called `_EMOTION_MODEL_MATRIX` which mat
 | neutral | glm             |
 
 The selected model also determines the text-to-speech backend used when voice output is enabled. `decide_expression_options()` inspects recent vector memory records to choose between Google TTS, Bark or Coqui. Frequent entries of the same emotion are logged as `routing_decision` records and gradually bias future model selection toward the most successful choice.
+
+For a neutral summary of the router and related modules, see [architecture_overview.md](architecture_overview.md).

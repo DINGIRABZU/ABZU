@@ -32,7 +32,7 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
   [guides/visual_customization.md](guides/visual_customization.md).
 - For the metaphysical blueprint of the chakra-based code layout, see
   [docs/spiritual_architecture.md](docs/spiritual_architecture.md).
-- For a pragmatic overview of core components like the LLM router, audio pipeline, and model registry, see
+- For a pragmatic overview of core components like the LLM router, audio pipeline, model registry, and a request flow diagram, see
   [docs/architecture_overview.md](docs/architecture_overview.md).
 - For how archetypal states shape personality behavior, read
   [docs/archetype_logic.md](docs/archetype_logic.md).
