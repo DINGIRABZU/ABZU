@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 import sys
 
@@ -20,3 +21,17 @@ def test_emotional_overload_shift(monkeypatch):
     monkeypatch.setattr(emotion_registry, "get_current_layer", lambda: "albedo")
     layer = ase.maybe_shift_archetype("hello", "anger")
     assert layer == "nigredo_layer"
+
+
+def test_failed_update_logs_exception(monkeypatch, caplog):
+    monkeypatch.setattr(emotion_registry, "get_resonance_level", lambda: 0.9)
+    monkeypatch.setattr(emotion_registry, "get_current_layer", lambda: None)
+
+    def boom(layer: str) -> None:  # pragma: no cover - raising for test
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(ase.soul_state_manager, "update_archetype", boom)
+    with caplog.at_level(logging.ERROR):
+        layer = ase.maybe_shift_archetype("hello", "anger")
+    assert layer == "nigredo_layer"
+    assert any("Failed to update archetype" in r.message for r in caplog.records)

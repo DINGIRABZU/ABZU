@@ -47,7 +47,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
         try:
             soul_state_manager.update_archetype(layer)
         except Exception:
-            logger.exception("failed to update archetype")
+            logger.exception("Failed to update archetype")
         return layer
 
     resonance = emotion_registry.get_resonance_level()
@@ -58,7 +58,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
             try:
                 soul_state_manager.update_archetype(layer)
             except Exception:
-                logger.exception("failed to update archetype")
+                logger.exception("Failed to update archetype")
             return layer
     return None
 
