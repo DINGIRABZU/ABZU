@@ -1,27 +1,27 @@
-numpy
-scipy
-soundfile  # audio I/O
-librosa  # audio analysis
-pydub
-pytest  # test runner
-markdown
-sentence-transformers  # required for semantic validator tests
-transformers>=4.38
-torch>=2.1
-requests
-fastapi
-beautifulsoup4
-pyopenssl
-streamlit
-stable-baselines3
-python-json-logger
-httpx  # HTTP client for tests
-scikit-learn
-jupyter
+numpy==2.2.6
+scipy==1.16.1
+soundfile==0.13.1  # audio I/O
+librosa==0.11.0  # audio analysis
+pydub==0.25.1
+pytest==8.4.1  # test runner
+markdown==3.8.2
+sentence-transformers==5.1.0  # required for semantic validator tests
+transformers==4.55.2
+torch==2.8.0
+requests==2.32.4
+fastapi==0.116.1
+beautifulsoup4==4.13.4
+pyopenssl==25.1.0
+streamlit==1.48.1
+stable-baselines3==2.7.0
+python-json-logger==3.3.0
+httpx==0.28.1  # HTTP client for tests
+scikit-learn==1.7.1
+jupyter==1.1.1
 
 # Development tools
-black
-flake8
-isort
-pre-commit
-psutil
+black==25.1.0
+flake8==7.3.0
+isort==6.0.1
+pre-commit==4.3.0
+psutil==7.0.0

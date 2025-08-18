@@ -1,34 +1,34 @@
-openai-whisper  # speech recognition
-TTS  # text-to-speech
-numpy
-scipy
-pandas
-librosa  # audio analysis
-huggingface-hub
-torch>=2.1
-transformers>=4.38
-sentencepiece
-accelerate
-einops
-scapy
-soundfile  # audio I/O
+openai-whisper==20231117  # speech recognition
+TTS==0.22.0; python_version<'3.12'  # text-to-speech
+numpy==2.2.6
+scipy==1.16.1
+pandas==2.3.1
+librosa==0.11.0  # audio analysis
+huggingface-hub==0.34.4
+torch==2.8.0
+transformers==4.55.2
+sentencepiece==0.2.1
+accelerate==1.10.0
+einops==0.8.1
+scapy==2.6.1
+soundfile==0.13.1  # audio I/O
 opensmile==2.5.1  # emotion recognition
 EmotiVoice==0.2.0  # voice emotion features
 voicefixer==0.1.3  # speech cleanup
-pydub  # audio playback
-requests
-beautifulsoup4
-streamlit
-fastapi
-uvicorn
-sentence-transformers  # optional, for semantic validation
-stable-baselines3
-chromadb  # vector memory store
-mlflow  # experiment tracking
-python-json-logger
-aiortc
-wav2lip  # optional for lip-sync
-psutil
-scikit-learn
-jupyter
-pytest
+pydub==0.25.1  # audio playback
+requests==2.32.4
+beautifulsoup4==4.13.4
+streamlit==1.48.1
+fastapi==0.116.1
+uvicorn==0.35.0
+sentence-transformers==5.1.0  # optional, for semantic validation
+stable-baselines3==2.7.0
+chromadb==1.0.17  # vector memory store
+mlflow==3.2.0  # experiment tracking
+python-json-logger==3.3.0
+aiortc==1.13.0
+wav2lip==1.2.4  # optional for lip-sync
+psutil==7.0.0
+scikit-learn==1.7.1
+jupyter==1.1.1
+pytest==8.4.1
