@@ -6,7 +6,7 @@ from .alchemical_persona import AlchemicalPersona, State
 from .glm_integration import GLMIntegration
 from . import state_contexts
 from ...emotion_analysis import get_emotion_and_tone
-import qnl_engine
+from SPIRAL_OS import qnl_engine
 
 
 class AlbedoPersonality:

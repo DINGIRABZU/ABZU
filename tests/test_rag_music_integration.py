@@ -10,7 +10,7 @@ sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 
-import qnl_engine
+from SPIRAL_OS import qnl_engine
 import rag_music_oracle as rmo
 import vector_memory
 
