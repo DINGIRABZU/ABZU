@@ -17,7 +17,6 @@ sys.modules.setdefault("config", config_mod)
 
 import INANNA_AI as ia_pkg
 
-ia_pkg.emotion_analysis = emotion_stub
 sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 sys.modules["emotional_state"] = types.SimpleNamespace(
     set_last_emotion=lambda e: None,
