@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Command-line utility for simple pipeline deployment."""
+from __future__ import annotations
+
+import sys
+import subprocess
+import shlex
+import textwrap
+from pathlib import Path
+from typing import List
+
+import yaml
+
+
+def _run_command(command: str) -> None:
+    """Run a shell command string using subprocess."""
+    # Normalize multiline commands with line-continuation backslashes
+    normalized = textwrap.dedent(command).replace("\\\n", " ")
+    args = shlex.split(normalized.strip())
+    subprocess.run(args, check=True)
+
+
+def deploy_pipeline(pipeline_path: str) -> None:
+    """Execute each step defined in a pipeline YAML file."""
+    data = yaml.safe_load(Path(pipeline_path).read_text()) or {}
+    for step in data.get("steps", []):
+        run = step.get("run")
+        if run:
+            _run_command(run)
+
+
+def main(argv: List[str]) -> int:
+    """Entry point for CLI subcommands."""
+    if len(argv) >= 3 and argv[0] == "pipeline" and argv[1] == "deploy":
+        deploy_pipeline(argv[2])
+        return 0
+    print("Usage: spiral_os pipeline deploy <yaml>", file=sys.stderr)
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
