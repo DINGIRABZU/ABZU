@@ -3,6 +3,7 @@ from pathlib import Path
 import types
 
 from tests.helpers import emotion_stub
+from tests.helpers.config_stub import build_settings
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -16,7 +17,8 @@ sys.modules.setdefault("INANNA_AI", fake_pkg)
 sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 
 config_mod = types.ModuleType("config")
-config_mod.settings = types.SimpleNamespace(vector_db_path=Path("/tmp"))
+config_mod.settings = build_settings()
+config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
 
 # Minimal play_ritual_music stub
