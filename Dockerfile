@@ -7,6 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 COPY requirements.txt .
+# Install requests ahead of wheel build
 RUN pip install --no-cache-dir requests
 RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
