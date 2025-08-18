@@ -2,11 +2,11 @@ from __future__ import annotations
 
 """Determine when to switch personality layers based on ritual cues or emotion."""
 
+import logging
 from typing import Iterable
 
-import soul_state_manager
-
 import emotion_registry
+import soul_state_manager
 
 # Words or glyphs that signal a ritual transition
 RITUAL_KEYWORDS: set[str] = {
@@ -37,6 +37,9 @@ def _contains_keyword(text: str, keywords: Iterable[str]) -> bool:
     return any(k in lowered for k in keywords)
 
 
+logger = logging.getLogger(__name__)
+
+
 def maybe_shift_archetype(event: str, emotion: str) -> str | None:
     """Return a new layer if ``event`` or ``emotion`` triggers a shift."""
     if _contains_keyword(event, RITUAL_KEYWORDS):
@@ -44,7 +47,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
         try:
             soul_state_manager.update_archetype(layer)
         except Exception:
-            pass
+            logger.exception("failed to update archetype")
         return layer
 
     resonance = emotion_registry.get_resonance_level()
@@ -55,7 +58,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
             try:
                 soul_state_manager.update_archetype(layer)
             except Exception:
-                pass
+                logger.exception("failed to update archetype")
             return layer
     return None
 
