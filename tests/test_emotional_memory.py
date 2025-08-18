@@ -17,6 +17,9 @@ sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from tests.helpers import emotion_stub
+sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
+
 import INANNA_AI.emotional_memory as em
 
 

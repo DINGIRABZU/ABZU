@@ -14,6 +14,13 @@ yaml_mod = types.ModuleType("yaml")
 yaml_mod.safe_load = lambda *a, **k: {}
 sys.modules.setdefault("yaml", yaml_mod)
 
+from tests.helpers import emotion_stub
+sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
+
+ve_mod = types.ModuleType("voice_evolution")
+ve_mod.update_voice_from_history = lambda history: None
+sys.modules["INANNA_AI.voice_evolution"] = ve_mod
+
 from INANNA_AI import speech_loopback_reflector
 
 
