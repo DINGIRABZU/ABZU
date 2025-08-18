@@ -41,6 +41,8 @@ def test_play_wav(monkeypatch):
             played["sr"] = sr
         def wait(self):
             played["waited"] = True
+        def check_output_settings(self, channels=1, samplerate=22050):
+            played["checked"] = (channels, samplerate)
 
     monkeypatch.setattr(speaking_engine, "sd", DummySD())
     monkeypatch.setattr(speaking_engine, "load_audio", dummy_load)

@@ -17,11 +17,12 @@ def test_voice_cli_invokes_engines(tmp_path, monkeypatch):
             events["synth"] = (text, emotion)
             return str(audio)
 
-    monkeypatch.setitem(
-        sys.modules,
-        "INANNA_AI.speaking_engine",
-        types.SimpleNamespace(SpeakingEngine=lambda: DummySpeaker()),
+    pkg = types.ModuleType("INANNA_AI")
+    pkg.speaking_engine = types.SimpleNamespace(
+        SpeakingEngine=lambda: DummySpeaker()
     )
+    monkeypatch.setitem(sys.modules, "INANNA_AI", pkg)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.speaking_engine", pkg.speaking_engine)
 
     def fake_stream(path: Path):
         events["stream"] = path
@@ -55,6 +56,7 @@ def test_voice_cli_invokes_engines(tmp_path, monkeypatch):
         "--emotion",
         "joy",
         "--play",
+        "--stream",
         "--call",
     ]
     try:
