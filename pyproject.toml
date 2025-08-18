@@ -60,6 +60,11 @@ llm = [
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
 dev = [
+    "numpy==2.2.6",
+    "scipy==1.16.1",
+    "soundfile==0.13.1",
+    "librosa==0.11.0",
+    "pydub==0.25.1",
     "pytest==8.4.1",
     "markdown==3.8.2",
     "requests==2.32.4",
@@ -67,7 +72,10 @@ dev = [
     "beautifulsoup4==4.13.4",
     "pyopenssl==25.1.0",
     "streamlit==1.48.1",
+    "python-json-logger==3.3.0",
     "httpx==0.28.1",
+    "scikit-learn==1.7.1",
+    "jupyter==1.1.1",
     "black==25.1.0",
     "flake8==7.3.0",
     "isort==6.0.1",
