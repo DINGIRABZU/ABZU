@@ -27,7 +27,7 @@ except Exception:  # pragma: no cover - optional dependency
 
 import numpy as np
 
-from task_profiling import classify_task, ritual_action_sequence
+from core.task_profiler import TaskProfiler
 
 from INANNA_AI import response_manager, emotion_analysis
 from INANNA_AI.personality_layers import (
@@ -75,6 +75,7 @@ class MoGEOrchestrator:
         emotion_analyzer: EmotionAnalyzer | None = None,
         model_selector: ModelSelector | None = None,
         memory_logger: MemoryLogger | None = None,
+        task_profiler: TaskProfiler | None = None,
     ) -> None:
         self._responder = response_manager.ResponseManager()
         self._albedo = albedo_layer
@@ -87,6 +88,7 @@ class MoGEOrchestrator:
         self._model_selector = model_selector or ModelSelector(db_path=db_path)
         self._emotion_analyzer = emotion_analyzer or EmotionAnalyzer()
         self._memory_logger = memory_logger or MemoryLogger()
+        self._task_profiler = task_profiler or TaskProfiler()
         self._model_weights = self._model_selector.model_weights
         self.mood_state = self._emotion_analyzer.mood_state
         self._interaction_count = 0
@@ -139,7 +141,7 @@ class MoGEOrchestrator:
                         self._active_layer_name = name
                         break
 
-        task = classify_task(text)
+        task = self._task_profiler.classify(text)
         history_tasks = [c["task"] for c in self._context]
 
         # Adjust model weights using vector memory history
@@ -318,7 +320,7 @@ class MoGEOrchestrator:
                 emotional_state.set_current_layer(layer)
 
         symbols = self._invocation_engine._extract_symbols(text)
-        tasks = ritual_action_sequence(symbols, dominant)
+        tasks = self._task_profiler.ritual_action_sequence(symbols, dominant)
         for res in self._invocation_engine.invoke(f"{symbols} [{dominant}]", self):
             if isinstance(res, list):
                 tasks.extend(res)
