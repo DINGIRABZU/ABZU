@@ -42,6 +42,8 @@ pytesseract==0.3.13
     # via spiral-os (pyproject.toml)
 python-json-logger==3.3.0
     # via spiral-os (pyproject.toml)
+pyyaml==6.0.2
+    # via spiral-os (pyproject.toml)
 requests==2.32.4
     # via spiral-os (pyproject.toml)
 scapy==2.6.1

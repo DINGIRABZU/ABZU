@@ -1,12 +1,11 @@
 # This file is auto-generated from pyproject.toml; do not edit manually.
-EmotiVoice==0.2.0
-TTS==0.22.0; python_version<'3.12'
 accelerate==1.10.0
 aiortc==1.13.0
 beautifulsoup4==4.13.4
 black==25.1.0
 chromadb==1.0.17
 einops==0.8.1
+emotivoice==0.2.0
 fastapi==0.116.1
 flake8==7.3.0
 httpx==0.28.1
@@ -30,6 +29,7 @@ pyopenssl==25.1.0
 pytesseract==0.3.13
 pytest==8.4.1
 python-json-logger==3.3.0
+pyyaml==6.0.2
 requests==2.32.4
 scapy==2.6.1
 scikit-learn==1.7.1
@@ -42,6 +42,7 @@ stable-baselines3==2.7.0
 streamlit==1.48.1
 torch==2.8.0
 transformers==4.55.2
+tts==0.22.0
 ultralytics==8.3.179
 uvicorn==0.35.0
 voicefixer==0.1.3
