@@ -1,5 +1,9 @@
 import numpy as np
-import librosa
+
+try:  # pragma: no cover - optional dependency
+    import librosa
+except Exception:  # pragma: no cover - optional dependency
+    librosa = None  # type: ignore
 
 try:
     import essentia.standard as ess
@@ -11,6 +15,8 @@ from .inanna_music_COMPOSER_ai import chroma_to_qnl
 
 def analyze_seven_planes(waveform: np.ndarray, sample_rate: int) -> dict:
     """Compute musical features mapped to seven metaphysical planes."""
+    if librosa is None:
+        raise RuntimeError("librosa library not installed")
     planes = {}
 
     # Physical plane: amplitude and spectral energy
