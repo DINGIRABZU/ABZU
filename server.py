@@ -17,17 +17,11 @@ from core import video_engine
 import video_stream
 from connectors import webrtc_connector
 from glm_shell import send_command
-from config import settings, require
+from config import settings
 
 app = FastAPI()
 app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
-
-
-@app.on_event("startup")
-async def _check_token() -> None:
-    """Ensure required configuration is present."""
-    require("glm_command_token")
 
 
 @app.on_event("shutdown")
@@ -56,12 +50,13 @@ class ShellCommand(BaseModel):
     command: str
 
 
-if settings.glm_command_token:
+token = settings.glm_command_token
+if token:
     @app.post("/glm-command")
     def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str]:
         """Execute ``cmd.command`` via the GLM shell and return the result."""
-        auth_header = request.headers.get("Authorization", "")
-        if not secrets.compare_digest(auth_header, settings.glm_command_token):
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not secrets.compare_digest(auth_header, token):
             raise HTTPException(status_code=401, detail="Unauthorized")
         result = send_command(cmd.command)
         return {"result": result}

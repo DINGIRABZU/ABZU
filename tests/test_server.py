@@ -5,6 +5,7 @@ import httpx
 import numpy as np
 from fastapi.testclient import TestClient
 from types import ModuleType
+import importlib
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -17,14 +18,18 @@ sys.modules.setdefault("core.video_engine", video_engine_stub)
 from fastapi import APIRouter
 video_stream_stub = ModuleType("video_stream")
 video_stream_stub.router = APIRouter()
-video_stream_stub.close_peers = lambda *a, **k: None
+async def _close_vs(*a, **k) -> None:
+    pass
+video_stream_stub.close_peers = _close_vs
 video_stream_stub.start_stream = lambda: iter([np.zeros((1,1,3), dtype=np.uint8)])
 sys.modules.setdefault("video_stream", video_stream_stub)
 connectors_mod = ModuleType("connectors")
 webrtc_stub = ModuleType("webrtc_connector")
 webrtc_stub.router = APIRouter()
 webrtc_stub.start_call = lambda *a, **k: None
-webrtc_stub.close_peers = lambda *a, **k: None
+async def _close_wc(*a, **k) -> None:
+    pass
+webrtc_stub.close_peers = _close_wc
 connectors_mod.webrtc_connector = webrtc_stub
 sys.modules.setdefault("connectors", connectors_mod)
 sys.modules.setdefault("connectors.webrtc_connector", webrtc_stub)
@@ -35,10 +40,9 @@ inanna_mod = ModuleType("INANNA_AI.glm_integration")
 inanna_mod.GLMIntegration = lambda *a, **k: None
 sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
 
-import server
 from config import settings
-
 settings.glm_command_token = "token"
+import server
 
 
 def test_health_and_ready_return_200():
@@ -91,6 +95,26 @@ def test_glm_command_requires_authorization(monkeypatch):
     status_wrong = asyncio.run(run_request({"Authorization": "bad"}))
     assert status_missing == 401
     assert status_wrong == 401
+
+
+def test_glm_command_unavailable_without_token():
+    """/glm-command should be unreachable when no token is configured."""
+
+    global server
+    settings.glm_command_token = None
+    server = importlib.reload(server)
+
+    async def run_request() -> int:
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+            resp = await client.post("/glm-command", json={"command": "ls"})
+        return resp.status_code
+
+    status = asyncio.run(run_request())
+    assert status == 404
+
+    settings.glm_command_token = "token"
+    server = importlib.reload(server)
 
 
 def test_avatar_frame_endpoint(monkeypatch):
