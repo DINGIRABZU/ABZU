@@ -128,8 +128,12 @@ def search(query: str, filter: Optional[Dict[str, Any]] = None, *, k: int = 5) -
     return results[:k]
 
 
-def rewrite_vector(old_id: str, new_text: str) -> None:
-    """Replace the entry ``old_id`` with ``new_text`` preserving metadata."""
+def rewrite_vector(old_id: str, new_text: str) -> bool:
+    """Replace the entry ``old_id`` with ``new_text`` preserving metadata.
+
+    Returns ``True`` on success. If a failure occurs that prevents rewriting, a
+    warning is logged and ``False`` is returned so callers can react.
+    """
     col = _get_collection()
     emb = qnl_utils.quantum_embed(new_text)
     try:
@@ -146,9 +150,11 @@ def rewrite_vector(old_id: str, new_text: str) -> None:
         try:
             col.delete(ids=[old_id])
         except Exception:
-            pass
+            logger.warning("Failed to delete vector %s", old_id, exc_info=True)
+            return False
         col.add(ids=[old_id], embeddings=[emb.tolist()], metadatas=[meta])
     _log("rewrite", new_text, meta)
+    return True
 
 
 def query_vectors(filter: Optional[Dict[str, Any]] = None, *, limit: int = 10) -> List[Dict[str, Any]]:

@@ -4,6 +4,7 @@ from types import SimpleNamespace, ModuleType
 from datetime import datetime, timedelta
 import importlib
 import numpy as np
+import logging
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -56,5 +57,27 @@ def test_add_and_search(monkeypatch, tmp_path):
 
     res = vector_memory.search("aaaaa", filter={"emotion": "joy"}, k=2)
     assert [r["text"] for r in res] == ["aaa", "aaaa"]
+
+
+def test_rewrite_vector_delete_failure(monkeypatch, caplog):
+    class DummyCollection:
+        def get(self, ids):
+            return {"metadatas": [[{}]]}
+
+        def update(self, ids, embeddings, metadatas):
+            raise RuntimeError("update failed")
+
+        def delete(self, ids):
+            raise RuntimeError("delete failed")
+
+        def add(self, ids, embeddings, metadatas):
+            pass
+
+    monkeypatch.setattr(vector_memory, "_get_collection", lambda: DummyCollection())
+    monkeypatch.setattr(vector_memory.qnl_utils, "quantum_embed", lambda t: np.zeros(1))
+    with caplog.at_level(logging.WARNING):
+        ok = vector_memory.rewrite_vector("old", "new")
+    assert ok is False
+    assert "Failed to delete vector old" in caplog.text
 
 
