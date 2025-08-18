@@ -4,6 +4,7 @@ import sys
 
 import httpx
 import numpy as np
+import pytest
 from fastapi.testclient import TestClient
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from types import ModuleType
@@ -83,6 +84,8 @@ def test_webrtc_offer(monkeypatch):
     assert server.video_stream.AvatarAudioTrack in pc_state.tracks
     # Peer connection should be closed after calling close_peers
     assert pc_state.closed
+    # All peer connections should be cleared from the registry
+    assert not server.video_stream._pcs
 
 
 def test_avatar_video_track_frames(monkeypatch):
@@ -108,3 +111,6 @@ def test_avatar_video_track_frames(monkeypatch):
     assert calls["n"] == 1  # stream created once
     assert np.array_equal(frame1, frames[0])
     assert np.array_equal(frame2, frames[1])
+    # No more frames should remain in the stream
+    with pytest.raises(RuntimeError):
+        asyncio.run(track.recv())
