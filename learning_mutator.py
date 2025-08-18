@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from pathlib import Path
 from typing import Any, Dict, List
 
 import emotion_registry
+
+logger = logging.getLogger(__name__)
 
 INSIGHT_FILE = Path(__file__).resolve().parent / "insight_matrix.json"
 INTENT_FILE = Path(__file__).resolve().parent / "intent_matrix.json"
@@ -78,7 +81,7 @@ def propose_mutations(insight_matrix: dict) -> List[str]:
     return proposals
 
 
-def main(argv: List[str] | None = None) -> None:
+def main(argv: List[str] | None = None) -> List[str]:
     parser = argparse.ArgumentParser(description="Suggest intent mutations")
     parser.add_argument(
         "--run",
@@ -96,15 +99,17 @@ def main(argv: List[str] | None = None) -> None:
     suggestions = propose_mutations(insights)
     if args.activate:
         emotion_registry.set_current_layer(args.activate)
-        print(f"Activated {args.activate}")
-        return
-    if args.run:
+        logger.info("Activated %s", args.activate)
+    elif args.run:
         MUTATION_FILE.parent.mkdir(parents=True, exist_ok=True)
         MUTATION_FILE.write_text("\n".join(suggestions), encoding="utf-8")
-        print(f"Wrote {len(suggestions)} suggestions to {MUTATION_FILE}")
+        logger.info("Wrote %d suggestions to %s", len(suggestions), MUTATION_FILE)
     else:
-        for s in suggestions:
-            print(s)
+        if suggestions:
+            logger.info("Mutation suggestions:\n%s", "\n".join(suggestions))
+        else:
+            logger.info("No mutation suggestions found")
+    return suggestions
 
 
 if __name__ == "__main__":
