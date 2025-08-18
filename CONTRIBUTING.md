@@ -21,3 +21,14 @@ download size:
 ./scripts/install_test_deps.sh
 ```
 
+## Dependency lock file
+
+Runtime dependencies are pinned in `requirements.lock` which is generated from
+`pyproject.toml`.
+
+After modifying dependencies, refresh the lock file and commit the result:
+
+```bash
+uv pip compile --no-deps pyproject.toml -o requirements.lock
+```
+
