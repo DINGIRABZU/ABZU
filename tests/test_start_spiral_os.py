@@ -51,8 +51,12 @@ pydantic_mod.BaseSettings = object
 pydantic_mod.Field = lambda *a, **k: None
 pydantic_mod.AnyHttpUrl = str
 sys.modules.setdefault("pydantic", pydantic_mod)
+
+from tests.helpers.config_stub import build_settings
+
 config_mod = types.ModuleType("config")
-config_mod.settings = types.SimpleNamespace(vector_db_path="/tmp")
+config_mod.settings = build_settings()
+config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
 orch_mod = types.ModuleType("orchestrator")
 orch_mod.MoGEOrchestrator = lambda *a, **k: types.SimpleNamespace(handle_input=lambda self, text: None)
