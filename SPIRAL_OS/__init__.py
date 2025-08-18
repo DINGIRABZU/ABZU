@@ -4,7 +4,7 @@ from pathlib import Path
 import importlib.util
 import sys
 
-from . import qnl_engine
+from . import qnl_engine, symbolic_parser
 
 # Expose modules from repository root so tests can import `SPIRAL_OS.xxx`.
 _repo_root = Path(__file__).resolve().parents[1]
@@ -14,4 +14,4 @@ for name in ["mix_tracks", "seven_dimensional_music"]:
     spec.loader.exec_module(module)  # type: ignore
     sys.modules[f"SPIRAL_OS.{name}"] = module
 
-__all__ = ["qnl_engine", "mix_tracks", "seven_dimensional_music"]
+__all__ = ["qnl_engine", "symbolic_parser", "mix_tracks", "seven_dimensional_music"]
