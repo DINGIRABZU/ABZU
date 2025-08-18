@@ -1,39 +1,47 @@
 #!/usr/bin/env python3
-"""Command-line utility for simple pipeline deployment."""
+"""Command-line utility for running simple pipeline deployments."""
 from __future__ import annotations
 
-import sys
+import argparse
 import subprocess
-import shlex
-import textwrap
+import sys
 from pathlib import Path
 
 import yaml
 
 
-def _run_command(command: str) -> None:
-    """Run a shell command string using subprocess."""
-    # Normalize multiline commands with line-continuation backslashes
-    normalized = textwrap.dedent(command).replace("\\\n", " ")
-    args = shlex.split(normalized.strip())
-    subprocess.run(args, check=True)
+def deploy_pipeline(path: Path) -> None:
+    """Execute each step listed in a pipeline YAML file.
 
-
-def deploy_pipeline(pipeline_path: str) -> None:
-    """Execute each step defined in a pipeline YAML file."""
-    data = yaml.safe_load(Path(pipeline_path).read_text()) or {}
+    The YAML must contain a top-level ``steps`` sequence. Each step can be a
+    string command or a mapping with a ``run`` key specifying the command.
+    Commands are executed sequentially using :func:`subprocess.run`.
+    """
+    data = yaml.safe_load(path.read_text()) or {}
     for step in data.get("steps", []):
-        run = step.get("run")
-        if run:
-            _run_command(run)
+        command = step if isinstance(step, str) else step.get("run")
+        if command:
+            subprocess.run(command, shell=True, check=True)
 
 
 def main(argv: list[str]) -> int:
-    """Entry point for CLI subcommands."""
-    if len(argv) >= 3 and argv[0] == "pipeline" and argv[1] == "deploy":
-        deploy_pipeline(argv[2])
+    """Entry point for the ``spiral_os`` command line interface."""
+    parser = argparse.ArgumentParser(prog="spiral_os")
+    subparsers = parser.add_subparsers(dest="command")
+
+    pipeline_parser = subparsers.add_parser("pipeline", help="Pipeline operations")
+    pipeline_sub = pipeline_parser.add_subparsers(dest="pipeline_cmd")
+
+    deploy_parser = pipeline_sub.add_parser("deploy", help="Run steps from a YAML file")
+    deploy_parser.add_argument("yaml", type=Path, help="Path to pipeline YAML file")
+
+    args = parser.parse_args(argv)
+
+    if args.command == "pipeline" and args.pipeline_cmd == "deploy":
+        deploy_pipeline(args.yaml)
         return 0
-    print("Usage: spiral_os pipeline deploy <yaml>", file=sys.stderr)
+
+    parser.print_usage()
     return 1
 
 
