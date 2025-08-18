@@ -4,6 +4,8 @@ import sys
 import types
 from pathlib import Path
 
+from tests.helpers.config_stub import build_settings
+
 
 def setup_module(module):
     pkg = types.ModuleType("INANNA_AI")
@@ -21,6 +23,7 @@ def setup_module(module):
     emotion_analysis = types.ModuleType("emotion_analysis")
     emotion_analysis.emotion_to_archetype = lambda e: "hero"
     emotion_analysis.emotion_weight = lambda e: 0.5
+    emotion_analysis.EMOTION_WEIGHT = {"joy": 1.0, "neutral": 0.0}
     pkg.emotion_analysis = emotion_analysis
     sys.modules["INANNA_AI.emotion_analysis"] = emotion_analysis
 
@@ -115,7 +118,8 @@ def setup_module(module):
     sys.modules["archetype_shift_engine"] = archetype_shift_engine
 
     config = types.ModuleType("config")
-    config.settings = types.SimpleNamespace()
+    config.settings = build_settings()
+    config.reload = lambda: None
     sys.modules["config"] = config
 
 

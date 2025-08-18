@@ -30,14 +30,10 @@ sys.modules.setdefault("scipy.io", scipy_io)
 sys.modules.setdefault("scipy.signal", signal_mod)
 sys.modules.setdefault("scipy.io.wavfile", wavfile_mod)
 
+from tests.helpers.config_stub import build_settings
+
 config_mod = types.ModuleType("config")
-config_mod.settings = types.SimpleNamespace(
-    vector_db_path=Path("/tmp"),
-    crown_tts_backend="gtts",
-    voice_avatar_config_path=None,
-    llm_rotation_period=300,
-    llm_max_failures=3,
-)
+config_mod.settings = build_settings()
 config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
 

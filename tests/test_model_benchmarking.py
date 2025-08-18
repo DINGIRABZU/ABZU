@@ -5,14 +5,10 @@ import types
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from tests.helpers.config_stub import build_settings
+
 config_mod = types.ModuleType("config")
-config_mod.settings = types.SimpleNamespace(
-    vector_db_path=Path("/tmp"),
-    crown_tts_backend="gtts",
-    voice_avatar_config_path=None,
-    llm_rotation_period=300,
-    llm_max_failures=3,
-)
+config_mod.settings = build_settings()
 config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
 
