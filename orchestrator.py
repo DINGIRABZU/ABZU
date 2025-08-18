@@ -265,6 +265,7 @@ class MoGEOrchestrator:
             if suggestions:
                 result["suggestions"] = suggestions
                 for s in suggestions:
+                    # structured logging instead of printing to stdout
                     logger.info({"suggestion": s})
 
         return result
