@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from tests.helpers.config_stub import build_settings
+from tests.helpers import emotion_stub
 
 config_mod = types.ModuleType("config")
 config_mod.settings = build_settings()
@@ -16,15 +17,8 @@ sys.modules.setdefault("config", config_mod)
 
 import INANNA_AI as ia_pkg
 
-stub_emotion_analysis = types.SimpleNamespace(
-    emotion_to_archetype=lambda e: "hero",
-    emotion_weight=lambda e: 0.5,
-    EMOTION_WEIGHT={"joy": 1.0, "neutral": 0.0},
-    get_emotional_weight=lambda: 0.5,
-    get_emotion_and_tone=lambda emotion=None: (emotion or "joy", "Radiant"),
-)
-ia_pkg.emotion_analysis = stub_emotion_analysis
-sys.modules["INANNA_AI.emotion_analysis"] = stub_emotion_analysis
+ia_pkg.emotion_analysis = emotion_stub
+sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 sys.modules["emotional_state"] = types.SimpleNamespace(
     set_last_emotion=lambda e: None,
     set_resonance_level=lambda v: None,

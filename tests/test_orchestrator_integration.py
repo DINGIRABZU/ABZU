@@ -5,6 +5,7 @@ import types
 from pathlib import Path
 
 from tests.helpers.config_stub import build_settings
+from tests.helpers import emotion_stub
 
 
 def setup_module(module):
@@ -20,12 +21,8 @@ def setup_module(module):
     pkg.response_manager = response_manager
     sys.modules["INANNA_AI.response_manager"] = response_manager
 
-    emotion_analysis = types.ModuleType("emotion_analysis")
-    emotion_analysis.emotion_to_archetype = lambda e: "hero"
-    emotion_analysis.emotion_weight = lambda e: 0.5
-    emotion_analysis.EMOTION_WEIGHT = {"joy": 1.0, "neutral": 0.0}
-    pkg.emotion_analysis = emotion_analysis
-    sys.modules["INANNA_AI.emotion_analysis"] = emotion_analysis
+    pkg.emotion_analysis = emotion_stub
+    sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 
     personality_layers = types.ModuleType("personality_layers")
     class AlbedoPersonality:
