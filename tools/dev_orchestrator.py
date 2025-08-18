@@ -19,6 +19,7 @@ from pathlib import Path
 import subprocess
 from typing import Any, Dict, List
 import logging
+import time
 
 from corpus_memory_logging import log_interaction
 from INANNA_AI.glm_integration import GLMIntegration
@@ -138,6 +139,62 @@ def _commit(repo: Path, message: str) -> None:
     )
 
 
+class DevAssistantService:
+    """Long-running assistant that monitors logs and schedules dev cycles.
+
+    The service watches a log file for trigger phrases defined in ``objectives``.
+    When a trigger is detected the mapped objective is fed to
+    :func:`run_dev_cycle`. Results are logged as suggestions to the operator.
+    """
+
+    def __init__(
+        self,
+        *,
+        repo: Path,
+        log_path: Path,
+        objectives: Dict[str, str] | None = None,
+        poll_interval: float = 30.0,
+    ) -> None:
+        self.repo = repo
+        self.log_path = log_path
+        self.poll_interval = poll_interval
+        self.objectives = objectives or {"FAILED": "repair failing tests"}
+        self.logger = logging.getLogger("dev_assistant_service")
+        self._stop_path = self.log_path.with_suffix(".stop")
+
+    def _suggest(self, objective: str, result: Dict[str, Any]) -> None:
+        plan = result.get("plan") or []
+        if plan:
+            suggestion = "; ".join(plan)
+            self.logger.info("Suggestions for %s: %s", objective, suggestion)
+        else:
+            self.logger.info("No suggestions produced for %s", objective)
+
+    def run_forever(self) -> None:
+        """Monitor ``log_path`` until a stop file appears."""
+        last_size = 0
+        self.logger.info("Watching %s", self.log_path)
+        while True:
+            if self._stop_path.exists():
+                self.logger.info("Stop signal detected; exiting")
+                self._stop_path.unlink(missing_ok=True)
+                break
+            if self.log_path.is_file():
+                text = self.log_path.read_text()
+                new_text = text[last_size:]
+                last_size = len(text)
+                for marker, objective in self.objectives.items():
+                    if marker in new_text:
+                        self.logger.info(
+                            "Trigger '%s' found; running objective '%s'",
+                            marker,
+                            objective,
+                        )
+                        result = run_dev_cycle(objective, repo=self.repo)
+                        self._suggest(objective, result)
+            time.sleep(self.poll_interval)
+
+
 def run_dev_cycle(objective: str, *, repo: str | Path | None = None) -> Dict[str, Any]:
     """Coordinate planning, coding, review, testing and commit for ``objective``."""
     queue: Queue[str] = Queue()
@@ -169,5 +226,12 @@ def run_dev_cycle(objective: str, *, repo: str | Path | None = None) -> Dict[str
     }
 
 
-__all__ = ["run_dev_cycle", "Planner", "Coder", "Reviewer", "DevAgent"]
+__all__ = [
+    "run_dev_cycle",
+    "Planner",
+    "Coder",
+    "Reviewer",
+    "DevAgent",
+    "DevAssistantService",
+]
 

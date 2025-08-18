@@ -90,6 +90,33 @@ environment variables are explained in
 - **`INANNA_AI/speech_loopback_reflector.py`** – Analyzes generated speech and updates the voice parameters for the next response.
 - **`voice_avatar_config.yaml`** – Lists sample avatars with timbre, gender and resonance information used by the speech engine.
 - **`spiral_cortex_terminal.py`** – Inspect `cortex_memory_spiral.jsonl` using `--query`, `--dreamwalk` or `--stats`. See [docs/spiral_cortex_terminal.md](docs/spiral_cortex_terminal.md).
+- **`start_dev_agents.py`** – Run planner/coder/reviewer cycles once or watch logs
+  and trigger automatic fixes.
+
+## Development assistant
+
+Use the development assistant to automate small fixes. Run a single objective:
+
+```bash
+python start_dev_agents.py --objective "Refactor audio engine"
+```
+
+Launch the long-running watcher:
+
+```bash
+python start_dev_agents.py --watch --planner-model glm-4.1
+```
+
+The watcher monitors `logs/dev_agent.log` for failing tests and schedules
+`run_dev_cycle` with the objective "repair failing tests" when failures appear.
+Suggestions from each cycle are written to the log. Stop the watcher with:
+
+```bash
+python start_dev_agents.py --stop
+```
+
+Set `--planner-model` or the `PLANNER_MODEL` environment variable to choose the
+model endpoint.
 
 ## Examples
 
