@@ -38,6 +38,7 @@ def _contains_keyword(text: str, keywords: Iterable[str]) -> bool:
 
 
 logger = logging.getLogger(__name__)
+# Module-level logger
 
 
 def maybe_shift_archetype(event: str, emotion: str) -> str | None:
@@ -46,7 +47,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
         layer = "citrinitas_layer"
         try:
             soul_state_manager.update_archetype(layer)
-        except Exception:
+        except Exception as exc:
             logger.exception("Failed to update archetype")
         return layer
 
@@ -57,7 +58,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
         if layer and layer != current:
             try:
                 soul_state_manager.update_archetype(layer)
-            except Exception:
+            except Exception as exc:
                 logger.exception("Failed to update archetype")
             return layer
     return None
