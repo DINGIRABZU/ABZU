@@ -69,4 +69,4 @@ for url in "${DEEPSEEK_URL:-}" "${MISTRAL_URL:-}" "${KIMI_K2_URL:-}"; do
     fi
 done
 
-python console_interface.py
+python -m cli.console_interface

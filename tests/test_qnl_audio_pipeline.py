@@ -31,8 +31,7 @@ setattr(gym_mod, "spaces", spaces_mod)
 sys.modules.setdefault("gymnasium", gym_mod)
 
 from INANNA_AI_AGENT import INANNA_AI
-import audio_ingestion
-import dsp_engine
+from audio import audio_ingestion, dsp_engine
 import vector_memory
 
 

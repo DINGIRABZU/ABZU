@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import rag_parser
+from rag import parser as rag_parser
 
 
 def test_load_inputs_chunking(tmp_path):

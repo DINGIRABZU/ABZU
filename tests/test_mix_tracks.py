@@ -6,7 +6,7 @@ import soundfile as sf
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from SPIRAL_OS.mix_tracks import main
+from audio.mix_tracks import main
 
 
 def test_mix_tracks_cli(tmp_path):
@@ -55,7 +55,7 @@ def test_mix_tracks_with_qnl_text(tmp_path, monkeypatch):
 
     out = tmp_path / "final.wav"
 
-    from SPIRAL_OS import mix_tracks as mt
+    import audio.mix_tracks as mt
 
     monkeypatch.setattr(mt, "quantum_embed", lambda text: np.array([0.5, -0.5, 0]))
 

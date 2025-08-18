@@ -5,4 +5,4 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-python spiral_cortex_terminal.py "$@"
+python -m cli.spiral_cortex_terminal "$@"

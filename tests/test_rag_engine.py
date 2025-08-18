@@ -8,9 +8,9 @@ sys.path.insert(0, str(ROOT))
 
 def _reload(monkeypatch):
     monkeypatch.setattr(importlib.util, "find_spec", lambda name: None)
-    if "rag_engine" in sys.modules:
-        del sys.modules["rag_engine"]
-    return importlib.import_module("rag_engine")
+    if "rag.engine" in sys.modules:
+        del sys.modules["rag.engine"]
+    return importlib.import_module("rag.engine")
 
 
 def test_query_filters_and_scores(monkeypatch):

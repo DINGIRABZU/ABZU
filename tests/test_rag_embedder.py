@@ -5,7 +5,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import rag_embedder
+from rag import embedder as rag_embedder
 
 
 class DummyModel:

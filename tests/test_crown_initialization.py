@@ -76,7 +76,7 @@ yaml_mod.safe_load = lambda *a, **k: {}
 sys.modules.setdefault("yaml", yaml_mod)
 import pytest
 import init_crown_agent
-import console_interface
+from cli import console_interface
 import INANNA_AI.glm_integration as gi
 
 

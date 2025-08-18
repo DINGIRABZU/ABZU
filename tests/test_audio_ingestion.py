@@ -23,7 +23,7 @@ setattr(ess_mod, "RhythmExtractor2013", DummyRhythmExtractor)
 sys.modules.setdefault("essentia", ess_pkg)
 sys.modules.setdefault("essentia.standard", ess_mod)
 
-import audio_ingestion
+from audio import audio_ingestion
 
 
 def test_load_audio(monkeypatch):

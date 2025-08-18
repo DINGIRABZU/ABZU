@@ -29,7 +29,7 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
                 calls.append("nc -z localhost 8000")
             else:
                 calls.append("python socket_check")
-            calls.append("python console_interface.py")
+            calls.append("python -m cli.console_interface")
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     def fake_system(cmd):

@@ -31,9 +31,9 @@ sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import rag_parser
-import rag_embedder
-import rag_retriever
+from rag import parser as rag_parser
+from rag import embedder as rag_embedder
+from rag import retriever as rag_retriever
 import crown_query_router
 
 
