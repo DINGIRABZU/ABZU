@@ -111,8 +111,10 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     if args.rewrite_memory:
         from invocation_engine import invoke_ritual
-        if not vector_memory.rewrite_vector(args.rewrite_memory[0], args.rewrite_memory[1]):
-            raise SystemExit("Failed to rewrite memory")
+        try:
+            vector_memory.rewrite_vector(args.rewrite_memory[0], args.rewrite_memory[1])
+        except Exception as exc:
+            raise SystemExit(f"Failed to rewrite memory: {exc}") from exc
         invoke_ritual(args.rewrite_memory[0])
         return
 
