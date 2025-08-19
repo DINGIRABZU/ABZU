@@ -46,7 +46,21 @@ import crown_decider
 import voice_aura
 from core import task_parser, context_tracker, language_engine
 from SPIRAL_OS import qnl_engine, symbolic_parser
-import invocation_engine
+
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except Exception:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
+
+try:  # pragma: no cover - optional dependency
+    import invocation_engine as _invocation_engine
+except Exception:  # pragma: no cover - optional dependency
+    _invocation_engine = None  # type: ignore[assignment]
+invocation_engine = _invocation_engine
+"""Optional invocation engine subsystem; ``None`` if unavailable."""
+
 import emotional_state
 import training_guide
 from core.emotion_analyzer import EmotionAnalyzer
@@ -56,13 +70,14 @@ from insight_compiler import update_insights, load_insights
 import learning_mutator
 from tools import reflection_loop
 from INANNA_AI import listening_engine
-import vector_memory
 import archetype_shift_engine
 from config import settings
-
-# Re-export commonly used subsystems for external consumers.
-vector_memory = vector_memory
-invocation_engine = invocation_engine
+from corpus_memory_logging import (
+    load_interactions,
+    log_interaction,
+    log_ritual_result,
+)
+from task_profiling import ritual_action_sequence
 
 logger = logging.getLogger(__name__)
 
@@ -99,6 +114,9 @@ class MoGEOrchestrator:
         self._model_selector = model_selector or ModelSelector(db_path=db_path)
         self._emotion_analyzer = emotion_analyzer or EmotionAnalyzer()
         self._memory_logger = memory_logger or MemoryLogger()
+        self._memory_logger.log_interaction = log_interaction
+        self._memory_logger.load_interactions = load_interactions
+        self._memory_logger.log_ritual_result = log_ritual_result
         self._task_profiler = task_profiler or TaskProfiler()
         self.mood_state = self._emotion_analyzer.mood_state
         self._interaction_count = 0
@@ -326,7 +344,7 @@ class MoGEOrchestrator:
                 emotional_state.set_current_layer(layer)
 
         symbols = self._invocation_engine._extract_symbols(text)
-        tasks = self._task_profiler.ritual_action_sequence(symbols, dominant)
+        tasks = ritual_action_sequence(symbols, dominant)
         for res in self._invocation_engine.invoke(f"{symbols} [{dominant}]", self):
             if isinstance(res, list):
                 tasks.extend(res)
@@ -364,6 +382,8 @@ def schedule_action(func: Callable[[], Any], delay: float) -> threading.Timer:
 __all__ = [
     "MoGEOrchestrator",
     "schedule_action",
-    "vector_memory",
-    "invocation_engine",
 ]
+if vector_memory is not None:
+    __all__.append("vector_memory")
+if invocation_engine is not None:
+    __all__.append("invocation_engine")
