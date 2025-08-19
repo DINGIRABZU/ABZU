@@ -8,9 +8,18 @@ import time
 from pathlib import Path
 
 from dotenv import load_dotenv
+import emotional_state
 
 
 ROOT = Path(__file__).resolve().parent
+
+_GLYPHS = {
+    "joy": "🌀😊",
+    "sadness": "🌀😢",
+    "anger": "🌀😠",
+    "fear": "🌀😨",
+    "neutral": "🌀",
+}
 
 
 def main() -> None:
@@ -34,8 +43,14 @@ def main() -> None:
     signal.signal(signal.SIGINT, _terminate)
     signal.signal(signal.SIGTERM, _terminate)
 
+    last_emotion: str | None = None
     try:
         while any(p.poll() is None for p in procs):
+            emotion = emotional_state.get_last_emotion() or "neutral"
+            if emotion != last_emotion:
+                glyph = _GLYPHS.get(emotion, _GLYPHS["neutral"])
+                print(f"{glyph} {emotion}")
+                last_emotion = emotion
             time.sleep(0.5)
     finally:
         _terminate()

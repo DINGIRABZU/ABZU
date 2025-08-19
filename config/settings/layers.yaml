@@ -1,0 +1,5 @@
+layers:
+  albedo: true
+  nigredo_layer: true
+  rubedo_layer: true
+  citrinitas_layer: true

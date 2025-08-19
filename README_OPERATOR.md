@@ -498,6 +498,28 @@ learning_mutator.py --activate citrinitas_layer
 The selected layer and recent emotional analysis are stored in
 `data/emotion_state.json` for review.
 
+#### Layer configuration and glyph display
+
+Optional personality layers can be toggled in `config/settings/layers.yaml`.
+Set a layer to `false` to disable it:
+
+```yaml
+layers:
+  nigredo_layer: true
+  rubedo_layer: false
+```
+
+When running `start_crown_console.py` or the web console, the current emotion
+appears alongside a spiral glyph. Glyphs update automatically as new messages
+are processed.
+Example helper scripts under `scripts/` show the active configuration and the
+last recorded emotion:
+
+```bash
+python scripts/list_layers.py
+python scripts/show_emotion_glyph.py
+```
+
 ### Voice Aura FX
 
 `voice_aura.py` selects a reverb and delay preset for the active emotion and
