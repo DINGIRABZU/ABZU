@@ -29,6 +29,8 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     Image = None  # type: ignore
 
+from aspect_processor import analyze_phonetic, analyze_semantic
+
 SACRED_DIR = Path(__file__).resolve().parent / "data" / "sacred"
 SACRED_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -136,6 +138,9 @@ def generate_sacred_glyph(inputs: Dict[str, Iterable[float]]) -> Tuple[Path, str
 
     phrase = f"Glyph born of latent norm {z.norm().item():.2f}"
     phrase_path.write_text(phrase, encoding="utf-8")
+
+    analyze_phonetic(phrase)
+    analyze_semantic(phrase)
 
     return image_path, phrase
 

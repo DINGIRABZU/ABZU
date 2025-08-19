@@ -8,6 +8,8 @@ from pathlib import Path
 import json
 from typing import Any, Dict, Iterable, Protocol, List
 
+from aspect_processor import analyze_phonetic, analyze_semantic
+
 
 class SpiralNode(Protocol):
     """Protocol describing the minimal spiral node interface."""
@@ -50,9 +52,12 @@ def _state_text(node: SpiralNode) -> str:
 
 def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
     """Append ``node`` state and ``decision`` to :data:`CORTEX_MEMORY_FILE`."""
+    state = _state_text(node)
+    analyze_phonetic(state)
+    analyze_semantic(json.dumps(decision))
     entry = {
         "timestamp": datetime.utcnow().isoformat(),
-        "state": _state_text(node),
+        "state": state,
         "decision": decision,
     }
     CORTEX_MEMORY_FILE.parent.mkdir(parents=True, exist_ok=True)

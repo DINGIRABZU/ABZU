@@ -14,6 +14,7 @@ except Exception:  # pragma: no cover - optional dependency
     Driver = object  # type: ignore
 
 from config import settings
+from aspect_processor import analyze_phonetic, analyze_semantic
 
 try:  # pragma: no cover - optional dependencies
     import numpy as np
@@ -132,6 +133,8 @@ def _update_rl(context: Dict[str, Any], reward: float) -> None:
 def record_task_flow(task_id: str, context: Dict[str, Any], reward: float = 0.0) -> None:
     """Record a task execution and optionally update the RL model."""
 
+    analyze_phonetic(task_id)
+    analyze_semantic(json.dumps(context))
     ctx = json.dumps(context)
     driver = _get_driver()
     with driver.session() as session:

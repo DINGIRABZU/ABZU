@@ -11,6 +11,8 @@ from pathlib import Path
 import sqlite3
 from typing import Optional
 
+from aspect_processor import analyze_phonetic, analyze_semantic
+
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "data" / "ontology.db"
 SCHEMA_PATH = BASE_DIR / "data" / "ontology_schema.sql"
@@ -50,6 +52,8 @@ def set_event_symbol(
 ) -> None:
     """Store or update the symbol associated with ``event``."""
 
+    analyze_phonetic(event)
+    analyze_semantic(symbol)
     own_conn = conn is None
     conn = conn or get_connection()
     try:
@@ -68,6 +72,8 @@ def get_event_symbol(
 ) -> Optional[str]:
     """Return the symbol associated with ``event`` or ``None``."""
 
+    analyze_phonetic(event)
+    analyze_semantic(event)
     own_conn = conn is None
     conn = conn or get_connection()
     try:
