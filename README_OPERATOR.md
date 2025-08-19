@@ -41,6 +41,8 @@ file so you don't need to export the variables manually:
 - `GLM_API_KEY` – API key for the GLM service
 - `GLM_SHELL_URL` – URL for the shell service
 - `GLM_SHELL_KEY` – API key for the shell service
+- `PLANNER_MODEL`, `CODER_MODEL`, `REVIEWER_MODEL` – optional per-agent
+  endpoints for the development assistant
 - `DEEPSEEK_URL` – optional endpoint for the DeepSeek servant model
 - `MISTRAL_URL` – optional endpoint for the Mistral servant model
 - `KIMI_K2_URL` – optional endpoint for the Kimi-K2 servant model
@@ -104,19 +106,23 @@ python start_dev_agents.py --objective "Refactor audio engine"
 Launch the long-running watcher:
 
 ```bash
-python start_dev_agents.py --watch --planner-model glm-4.1
+python start_dev_agents.py --watch \
+    --planner-model https://glm.example.com/planner \
+    --coder-model https://glm.example.com/coder \
+    --reviewer-model https://glm.example.com/reviewer
 ```
 
 The watcher monitors `logs/dev_agent.log` for failing tests and schedules
 `run_dev_cycle` with the objective "repair failing tests" when failures appear.
-Suggestions from each cycle are written to the log. Stop the watcher with:
+Suggestions from each cycle are written to the log for operator review. Stop the watcher with:
 
 ```bash
 python start_dev_agents.py --stop
 ```
 
-Set `--planner-model` or the `PLANNER_MODEL` environment variable to choose the
-model endpoint.
+Set `--planner-model`, `--coder-model` or `--reviewer-model` to point each agent
+at a specific model endpoint. These values override the `PLANNER_MODEL`,
+`CODER_MODEL` and `REVIEWER_MODEL` environment variables when provided.
 
 ## Examples
 
