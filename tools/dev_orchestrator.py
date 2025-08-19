@@ -19,6 +19,7 @@ from pathlib import Path
 import subprocess
 from typing import Any, Dict, List
 import logging
+import os
 import time
 
 from corpus_memory_logging import log_interaction
@@ -167,8 +168,20 @@ class DevAssistantService:
         if plan:
             suggestion = "; ".join(plan)
             self.logger.info("Suggestions for %s: %s", objective, suggestion)
+            log_interaction(
+                "suggestion",
+                {"agent": "dev_assistant", "objective": objective},
+                {"suggestion": suggestion},
+                "ok",
+            )
         else:
             self.logger.info("No suggestions produced for %s", objective)
+            log_interaction(
+                "suggestion",
+                {"agent": "dev_assistant", "objective": objective},
+                {"suggestion": ""},
+                "empty",
+            )
 
     def run_forever(self) -> None:
         """Monitor ``log_path`` until a stop file appears."""
@@ -195,14 +208,23 @@ class DevAssistantService:
             time.sleep(self.poll_interval)
 
 
+def _glm_from_env(var: str) -> GLMIntegration:
+    """Return a :class:`GLMIntegration` using ``var`` as endpoint override."""
+    return GLMIntegration(endpoint=os.getenv(var))
+
+
 def run_dev_cycle(objective: str, *, repo: str | Path | None = None) -> Dict[str, Any]:
     """Coordinate planning, coding, review, testing and commit for ``objective``."""
     queue: Queue[str] = Queue()
-    glm = GLMIntegration()
     repo_path = Path(repo) if repo is not None else None
-    planner = Planner("planner", "Plan development tasks", glm, objective, queue)
-    coder = Coder("coder", "Write code", glm, objective, queue)
-    reviewer = Reviewer("reviewer", "Review code", glm, objective, queue)
+
+    planner_glm = _glm_from_env("PLANNER_MODEL")
+    coder_glm = _glm_from_env("CODER_MODEL")
+    reviewer_glm = _glm_from_env("REVIEWER_MODEL")
+
+    planner = Planner("planner", "Plan development tasks", planner_glm, objective, queue)
+    coder = Coder("coder", "Write code", coder_glm, objective, queue)
+    reviewer = Reviewer("reviewer", "Review code", reviewer_glm, objective, queue)
 
     plan_steps = planner.plan()
     results: List[Dict[str, str]] = []

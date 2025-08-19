@@ -32,7 +32,13 @@ def main() -> int:
         "--stop", action="store_true", help="Signal a running watcher to stop"
     )
     parser.add_argument(
-        "--planner-model", help="LLM or endpoint used by the planner agent"
+        "--planner-model", help="Endpoint used by the planner agent"
+    )
+    parser.add_argument(
+        "--coder-model", help="Endpoint used by the coder agent",
+    )
+    parser.add_argument(
+        "--reviewer-model", help="Endpoint used by the reviewer agent",
     )
     parser.add_argument(
         "--log-path", default="logs/dev_agent.log", help="Log file monitored"
@@ -42,6 +48,10 @@ def main() -> int:
     load_env(Path("secrets.env"))
     if args.planner_model:
         os.environ["PLANNER_MODEL"] = args.planner_model
+    if args.coder_model:
+        os.environ["CODER_MODEL"] = args.coder_model
+    if args.reviewer_model:
+        os.environ["REVIEWER_MODEL"] = args.reviewer_model
 
     log_path = Path(args.log_path)
     log_path.parent.mkdir(parents=True, exist_ok=True)
