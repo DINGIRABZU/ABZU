@@ -9,6 +9,8 @@ from typing import Any, Optional
 import json
 import logging
 
+from aspect_processor import analyze_phonetic, analyze_semantic
+
 try:  # pragma: no cover - optional
     import cv2  # type: ignore
 except Exception:  # pragma: no cover - optional
@@ -31,10 +33,13 @@ _DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "physical"
 
 @dataclass
 class PhysicalEvent:
-    """Container for raw physical inputs."""
+    """Container for raw physical inputs.
+
+    ``data`` may contain arrays for audio/video or plain text for ``text`` events.
+    """
 
     modality: str
-    data: Any
+    data: Any | str
     sample_rate: Optional[int] = None
 
 
@@ -78,6 +83,14 @@ def store_physical_event(event: PhysicalEvent) -> Path:
                 meta["transcription"] = result.get("text", "").strip()
             except Exception:  # pragma: no cover - optional
                 logger.exception("Whisper transcription failed")
+    elif event.modality == "text":
+        if not isinstance(event.data, str):
+            raise ValueError("text events require string data")
+        file_path = _DATA_DIR / f"{base}.txt"
+        file_path.write_text(event.data, encoding="utf-8")
+        meta["file"] = file_path.name
+        analyze_phonetic(event.data)
+        analyze_semantic(event.data)
     else:
         raise ValueError(f"Unknown modality: {event.modality}")
 
