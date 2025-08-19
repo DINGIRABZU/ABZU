@@ -16,7 +16,7 @@ except Exception:  # pragma: no cover - optional dependency
 
 from . import video_engine
 from .facial_expression_controller import apply_expression
-import audio_engine
+from audio import engine as audio_engine
 import emotional_state
 
 

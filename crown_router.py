@@ -7,7 +7,7 @@ from typing import Any, Dict
 import emotional_state
 import vector_memory
 
-from orchestrator import MoGEOrchestrator
+from rag.orchestrator import MoGEOrchestrator
 from crown_decider import decide_expression_options
 
 

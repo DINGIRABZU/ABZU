@@ -7,7 +7,7 @@ sys.path.insert(0, str(ROOT))
 
 from core import avatar_expression_engine as aee
 from core import video_engine
-import audio_engine
+from audio import engine as audio_engine
 import emotional_state
 
 

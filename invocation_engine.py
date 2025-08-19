@@ -11,7 +11,7 @@ import re
 import vector_memory
 
 if TYPE_CHECKING:  # pragma: no cover - avoid circular import at runtime
-    from orchestrator import MoGEOrchestrator
+    from rag.orchestrator import MoGEOrchestrator
 
 
 logger = logging.getLogger(__name__)

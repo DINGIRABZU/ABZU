@@ -121,7 +121,7 @@ def setup_module(module):
 
 
 def test_orchestrator_integration():
-    from orchestrator import MoGEOrchestrator
+    from rag.orchestrator import MoGEOrchestrator
     from core.task_profiler import TaskProfiler
     from core.emotion_analyzer import EmotionAnalyzer
     from core.model_selector import ModelSelector

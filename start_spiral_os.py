@@ -26,7 +26,7 @@ from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI import defensive_network_utils as dnu
 from INANNA_AI.personality_layers import REGISTRY, list_personalities
 from INANNA_AI import listening_engine
-from orchestrator import MoGEOrchestrator
+from rag.orchestrator import MoGEOrchestrator
 from archetype_shift_engine import maybe_shift_archetype
 from tools import reflection_loop
 import server

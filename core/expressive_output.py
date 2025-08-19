@@ -9,7 +9,7 @@ from typing import Callable
 import numpy as np
 
 from . import language_engine, avatar_expression_engine
-import audio_engine
+from audio import engine as audio_engine
 
 FrameCallback = Callable[[np.ndarray], None]
 

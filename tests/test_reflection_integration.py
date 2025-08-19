@@ -35,8 +35,8 @@ sys.modules.setdefault("scipy.io", scipy_io)
 sys.modules.setdefault("scipy.signal", signal_mod)
 sys.modules.setdefault("scipy.io.wavfile", wavfile_mod)
 
-import orchestrator
-from orchestrator import MoGEOrchestrator, context_tracker
+from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator, context_tracker
 
 # Disable invocation engine side effects
 orchestrator.invocation_engine.invoke = lambda *a, **k: []

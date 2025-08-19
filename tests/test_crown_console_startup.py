@@ -14,7 +14,11 @@ def test_crown_console_startup(monkeypatch):
     dummy_av = types.SimpleNamespace(stream_avatar_audio=lambda p: iter(()))
     dummy_speak = types.SimpleNamespace(play_wav=lambda p: None)
 
-    monkeypatch.setitem(sys.modules, "orchestrator", types.SimpleNamespace(MoGEOrchestrator=lambda: dummy_orch))
+    rag_pkg = types.ModuleType("rag")
+    monkeypatch.setitem(sys.modules, "rag", rag_pkg)
+    orch_ns = types.SimpleNamespace(MoGEOrchestrator=lambda: dummy_orch)
+    rag_pkg.orchestrator = orch_ns
+    monkeypatch.setitem(sys.modules, "rag.orchestrator", orch_ns)
     monkeypatch.setitem(sys.modules, "core.avatar_expression_engine", dummy_av)
     monkeypatch.setitem(sys.modules, "INANNA_AI.speaking_engine", dummy_speak)
 

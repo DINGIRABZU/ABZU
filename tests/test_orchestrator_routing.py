@@ -48,8 +48,8 @@ gym_mod.spaces = types.SimpleNamespace(Box=lambda **k: None)
 sys.modules.setdefault("stable_baselines3", stable_mod)
 sys.modules.setdefault("gymnasium", gym_mod)
 
-from orchestrator import MoGEOrchestrator
-import orchestrator
+from rag.orchestrator import MoGEOrchestrator
+from rag import orchestrator
 from config import settings
 
 
@@ -62,15 +62,15 @@ def test_route_all_modalities(monkeypatch, tmp_path):
         lambda *a, **k: [("p", "snippet")],
     )
 
-    monkeypatch.setattr("orchestrator.vector_memory.add_vector", lambda *a, **k: None)
-    monkeypatch.setattr("orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
+    monkeypatch.setattr("rag.orchestrator.vector_memory.add_vector", lambda *a, **k: None)
+    monkeypatch.setattr("rag.orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
 
     voice_path = tmp_path / "voice.wav"
     monkeypatch.setattr(
         "INANNA_AI.tts_coqui.synthesize_speech",
         lambda text, emotion: str(voice_path),
     )
-    monkeypatch.setattr("orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
+    monkeypatch.setattr("rag.orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
 
     dummy_wave = np.zeros(10, dtype=np.int16)
     monkeypatch.setattr(
@@ -84,7 +84,7 @@ def test_route_all_modalities(monkeypatch, tmp_path):
         written["path"] = path
         written["wave"] = wave
         written["sr"] = sr
-    monkeypatch.setattr("orchestrator.sf.write", fake_write)
+    monkeypatch.setattr("rag.orchestrator.sf.write", fake_write)
 
     result = orch.route(
         "hello",
@@ -109,8 +109,8 @@ def test_emotion_matrix_routing(monkeypatch):
 
     monkeypatch.setattr("INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")])
     logs = {}
-    monkeypatch.setattr("orchestrator.vector_memory.add_vector", lambda t, m: logs.setdefault("model", m["selected_model"]))
-    monkeypatch.setattr("orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
+    monkeypatch.setattr("rag.orchestrator.vector_memory.add_vector", lambda t, m: logs.setdefault("model", m["selected_model"]))
+    monkeypatch.setattr("rag.orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
 
     result = orch.route("hello", info)
 
@@ -127,8 +127,8 @@ def test_fallback_to_glm(monkeypatch):
     info = {"emotion": "joy"}
 
     monkeypatch.setattr("INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")])
-    monkeypatch.setattr("orchestrator.vector_memory.add_vector", lambda *a, **k: None)
-    monkeypatch.setattr("orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
+    monkeypatch.setattr("rag.orchestrator.vector_memory.add_vector", lambda *a, **k: None)
+    monkeypatch.setattr("rag.orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
 
     result = orch.route("hello", info, text_modality=True)
 
@@ -142,17 +142,17 @@ def test_expression_decision(monkeypatch, tmp_path):
     monkeypatch.setattr("INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")])
     voice_path = tmp_path / "voice.wav"
     monkeypatch.setattr("INANNA_AI.tts_coqui.synthesize_speech", lambda *a, **k: str(voice_path))
-    monkeypatch.setattr("orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
+    monkeypatch.setattr("rag.orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
     settings.crown_tts_backend = "gtts"
 
     monkeypatch.setattr(
-        "orchestrator.crown_decider.decide_expression_options",
+        "rag.orchestrator.crown_decider.decide_expression_options",
         lambda e: {"tts_backend": "coqui", "avatar_style": "Soprano", "aura_amount": 0.3, "soul_state": "awakened"},
     )
 
     logged = {}
-    monkeypatch.setattr("orchestrator.vector_memory.add_vector", lambda t, m: logged.update(m))
-    monkeypatch.setattr("orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
+    monkeypatch.setattr("rag.orchestrator.vector_memory.add_vector", lambda t, m: logged.update(m))
+    monkeypatch.setattr("rag.orchestrator.vector_memory.query_vectors", lambda *a, **k: [])
 
     result = orch.route("hello", info, text_modality=True, voice_modality=True)
 
@@ -172,8 +172,8 @@ def test_memory_biases_model_choice(monkeypatch):
         {"selected_model": "mistral", "emotion": "joy"},
     ]
 
-    monkeypatch.setattr("orchestrator.vector_memory.query_vectors", lambda *a, **k: history)
-    monkeypatch.setattr("orchestrator.vector_memory.add_vector", lambda *a, **k: None)
+    monkeypatch.setattr("rag.orchestrator.vector_memory.query_vectors", lambda *a, **k: history)
+    monkeypatch.setattr("rag.orchestrator.vector_memory.add_vector", lambda *a, **k: None)
     monkeypatch.setattr("INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")])
 
     result = orch.route("hello", info)

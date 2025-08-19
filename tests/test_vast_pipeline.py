@@ -35,7 +35,7 @@ setattr(sp_mod, "symbolic_parser", sym_stub)
 import server
 import video_stream
 from connectors import webrtc_connector
-from orchestrator import MoGEOrchestrator
+from rag.orchestrator import MoGEOrchestrator
 from core import language_engine, context_tracker
 from config import settings
 
@@ -105,17 +105,17 @@ def test_start_call_triggered(monkeypatch):
 
     monkeypatch.setattr(language_engine.tts_coqui, "synthesize_speech", lambda t, e: f"/tmp/{e}.wav")
     monkeypatch.setattr("INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")])
-    monkeypatch.setattr("orchestrator.vector_memory.add_vector", lambda *a, **k: None)
-    monkeypatch.setattr("orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
-    monkeypatch.setattr("orchestrator.qnl_engine.hex_to_song", lambda *a, **k: ([], np.zeros(1, dtype=np.int16)))
-    monkeypatch.setattr("orchestrator.qnl_engine.parse_input", lambda t: {"tone": "neutral"})
-    monkeypatch.setattr("orchestrator.symbolic_parser.parse_intent", lambda d: [])
-    monkeypatch.setattr("orchestrator.reflection_loop.run_reflection_loop", lambda *a, **k: None)
-    monkeypatch.setattr("orchestrator.log_interaction", lambda *a, **k: None)
-    monkeypatch.setattr("orchestrator.load_interactions", lambda: [])
-    monkeypatch.setattr("orchestrator.update_insights", lambda logs: None)
-    monkeypatch.setattr("orchestrator.load_insights", lambda: {})
-    monkeypatch.setattr("orchestrator.learning_mutator.propose_mutations", lambda d: [])
+    monkeypatch.setattr("rag.orchestrator.vector_memory.add_vector", lambda *a, **k: None)
+    monkeypatch.setattr("rag.orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
+    monkeypatch.setattr("rag.orchestrator.qnl_engine.hex_to_song", lambda *a, **k: ([], np.zeros(1, dtype=np.int16)))
+    monkeypatch.setattr("rag.orchestrator.qnl_engine.parse_input", lambda t: {"tone": "neutral"})
+    monkeypatch.setattr("rag.orchestrator.symbolic_parser.parse_intent", lambda d: [])
+    monkeypatch.setattr("rag.orchestrator.reflection_loop.run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr("rag.orchestrator.log_interaction", lambda *a, **k: None)
+    monkeypatch.setattr("rag.orchestrator.load_interactions", lambda: [])
+    monkeypatch.setattr("rag.orchestrator.update_insights", lambda logs: None)
+    monkeypatch.setattr("rag.orchestrator.load_insights", lambda: {})
+    monkeypatch.setattr("rag.orchestrator.learning_mutator.propose_mutations", lambda d: [])
 
     orch = MoGEOrchestrator()
     orch.handle_input("initiate sacred communion")
