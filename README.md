@@ -72,6 +72,13 @@ manually use:
 pip install opencv-python librosa soundfile openai-whisper opensmile
 ```
 
+Run `./scripts/setup_audio_env.sh` to install a pinned set of audio
+dependencies. Verify the environment with:
+
+```bash
+python -m audio.check_env
+```
+
 For a reproducible environment based on the pinned versions, install from the
 lock file:
 
