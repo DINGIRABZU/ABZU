@@ -60,6 +60,10 @@ import vector_memory
 import archetype_shift_engine
 from config import settings
 
+# Re-export commonly used subsystems for external consumers.
+vector_memory = vector_memory
+invocation_engine = invocation_engine
+
 logger = logging.getLogger(__name__)
 
 
@@ -357,4 +361,9 @@ def schedule_action(func: Callable[[], Any], delay: float) -> threading.Timer:
     return timer
 
 
-__all__ = ["MoGEOrchestrator", "schedule_action"]
+__all__ = [
+    "MoGEOrchestrator",
+    "schedule_action",
+    "vector_memory",
+    "invocation_engine",
+]
