@@ -55,6 +55,73 @@ def test_essentia_features():
     assert audio_ingestion.extract_tempo(wave, 44100) == 130.0
 
 
+def test_extract_chroma(monkeypatch):
+    feats = np.ones((12, 2))
+    monkeypatch.setattr(
+        audio_ingestion.librosa.feature, "chroma_cqt", lambda y, sr: feats
+    )
+    out = audio_ingestion.extract_chroma(np.zeros(10), 44100)
+    assert out is feats
+
+
+def test_extract_spectral_centroid(monkeypatch):
+    feats = np.ones((1, 3))
+    monkeypatch.setattr(
+        audio_ingestion.librosa.feature, "spectral_centroid", lambda y, sr: feats
+    )
+    out = audio_ingestion.extract_spectral_centroid(np.zeros(10), 44100)
+    assert out is feats
+
+
+def test_extract_chords(monkeypatch):
+    chroma = np.zeros((12, 1))
+    chroma[0] = chroma[4] = chroma[7] = 1.0
+    monkeypatch.setattr(
+        audio_ingestion.librosa.feature, "chroma_cqt", lambda y, sr: chroma
+    )
+    chords = audio_ingestion.extract_chords(np.zeros(10), 44100)
+    assert chords == ["C:maj"]
+
+
+def test_separate_sources_spleeter(monkeypatch):
+    class DummySep:
+        def __init__(self, cfg):
+            self.cfg = cfg
+
+        def separate(self, waveform):
+            return {"vocals": waveform, "accompaniment": waveform}
+
+    spleeter_mod = types.SimpleNamespace(separator=types.SimpleNamespace(Separator=DummySep))
+    monkeypatch.setitem(sys.modules, "spleeter", spleeter_mod)
+    monkeypatch.setitem(sys.modules, "spleeter.separator", spleeter_mod.separator)
+    samples = np.zeros(5)
+    out = audio_ingestion.separate_sources(samples, 44100, library="spleeter")
+    assert set(out.keys()) == {"vocals", "accompaniment"}
+    for arr in out.values():
+        assert arr.shape == (5,)
+
+
+def test_extract_features(monkeypatch):
+    monkeypatch.setattr(audio_ingestion, "load_audio", lambda p, sr=44100: (np.zeros(5), sr))
+    monkeypatch.setattr(audio_ingestion, "extract_mfcc", lambda s, sr: np.array([1]))
+    monkeypatch.setattr(audio_ingestion, "extract_key", lambda s: "C:maj")
+    monkeypatch.setattr(audio_ingestion, "extract_tempo", lambda s, sr: 120.0)
+    monkeypatch.setattr(audio_ingestion, "extract_chroma", lambda s, sr: np.array([2]))
+    monkeypatch.setattr(audio_ingestion, "extract_chords", lambda s, sr: ["C:maj"])
+    monkeypatch.setattr(
+        audio_ingestion, "extract_spectral_centroid", lambda s, sr: np.array([3])
+    )
+    monkeypatch.setattr(
+        audio_ingestion,
+        "separate_sources",
+        lambda s, sr, lib: {"vocals": np.array([4])},
+    )
+    feats = audio_ingestion.extract_features(Path("x.wav"), separate="spleeter")
+    assert feats["mfcc"].tolist() == [1]
+    assert feats["chords"] == ["C:maj"]
+    assert feats["sources"]["vocals"].tolist() == [4]
+
+
 def test_embed_clap(monkeypatch):
     class DummyProc:
         @classmethod
