@@ -10,3 +10,6 @@ logs/
 # Ignore Blender files
 *.blend
 !INANNA_AI/AVATAR/avatar_builder/rigging_config.blend
+
+# Database files
+*.db
