@@ -18,6 +18,7 @@ Milestone VIII expands on the sovereign voice work with memory-aided routing and
 - [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md)
 - [archetype_logic.md](archetype_logic.md)
 - [audio_ingestion.md](audio_ingestion.md)
+- [mix_tracks.md](mix_tracks.md)
 - [avatar_ethics.md](avatar_ethics.md)
 - [avatar_pipeline.md](avatar_pipeline.md)
 - [cloud_deployment.md](cloud_deployment.md)
