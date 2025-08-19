@@ -9,16 +9,15 @@ import os
 import json
 import requests
 
-from .. import corpus_memory
-from . import github_metadata
-import insight_compiler
-
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
 except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
-from .. import config
+from .. import corpus_memory
+from . import github_metadata
+import insight_compiler
+import config
 
 _LIST_FILE = Path(__file__).resolve().parents[2] / "learning_sources" / "github_repos.txt"
 _API_BASE = "https://api.github.com/repos/"

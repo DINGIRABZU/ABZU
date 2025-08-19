@@ -8,13 +8,13 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from .. import corpus_memory
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
 except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
-from .. import config
+from .. import corpus_memory
+import config
 
 _SEARCH_URL = "https://www.gutenberg.org/ebooks/search/?query={query}"
 _TEXT_PATTERNS = ["-0.txt", "-8.txt", ".txt"]
