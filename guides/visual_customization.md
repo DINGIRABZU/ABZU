@@ -32,3 +32,25 @@ sigil = "spiral"
 
 Save the file after editing and restart any running scripts to apply the new
 traits.
+
+## 4. Asset requirements
+
+The avatar pipeline expects a small set of support assets:
+
+- **Skins and overlays** – additional PNG images or CSS classes can be
+  referenced from `avatar_config.toml` under the `skins` table. Place image
+  files alongside your model in `INANNA_AI/AVATAR/`.
+- **Style cues** – real‑time style changes sent by the language model or audio
+  mixer are mapped to CSS classes named `style-<cue>` in the web console. Add
+  matching rules to your console stylesheet or provide overlay images.
+- **Audio hooks** – when streaming audio with `stream_avatar_audio` the engine
+  analyses tempo and intensity to drive mouth motion and visual bars. Ensure
+  the WAV file is available on disk before starting playback.
+
+## 5. Real‑time configuration
+
+`video_stream.AvatarVideoTrack` accepts an optional `asyncio.Queue[str]` of
+style cues. Push short tokens such as `"glitch"` or `"calm"` to the queue to
+change the avatar's appearance while streaming. The web console listens for
+these cues over the WebRTC data channel and updates the video element's CSS
+class accordingly.

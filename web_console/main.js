@@ -15,6 +15,19 @@ const GLYPHS = {
     neutral: '🌀'
 };
 
+function applyStyle(style) {
+    const video = document.getElementById('avatar');
+    let overlay = document.getElementById('style-indicator');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'style-indicator';
+        overlay.style.marginTop = '0.5rem';
+        video.insertAdjacentElement('afterend', overlay);
+    }
+    overlay.textContent = style ? `Style: ${style}` : '';
+    video.className = style ? `style-${style}` : '';
+}
+
 document.getElementById('send-btn').addEventListener('click', sendCommand);
 document.getElementById('command-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -40,6 +53,9 @@ function sendCommand() {
             const emotion = data.emotion || 'neutral';
             document.getElementById('emotion').textContent = emotion;
             document.getElementById('glyph').textContent = GLYPHS[emotion] || GLYPHS.neutral;
+            if (data.style) {
+                applyStyle(data.style);
+            }
         })
         .catch((err) => {
             document.getElementById('output').textContent = 'Error: ' + err;
@@ -67,7 +83,17 @@ async function startStream() {
 
     pc.ondatachannel = (ev) => {
         ev.channel.onmessage = (msg) => {
-            document.getElementById('transcript').textContent = msg.data;
+            try {
+                const payload = JSON.parse(msg.data);
+                if (payload.transcript) {
+                    document.getElementById('transcript').textContent = payload.transcript;
+                }
+                if (payload.style) {
+                    applyStyle(payload.style);
+                }
+            } catch (e) {
+                document.getElementById('transcript').textContent = msg.data;
+            }
         };
     };
 
