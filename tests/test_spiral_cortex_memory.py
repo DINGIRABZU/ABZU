@@ -27,6 +27,12 @@ sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from tests.helpers.config_stub import build_settings
+
+config = types.ModuleType("config")
+config.settings = build_settings()
+sys.modules.setdefault("config", config)
+
 from rag import retriever as rag_retriever
 import spiral_cortex_memory as scm
 import ritual_trainer

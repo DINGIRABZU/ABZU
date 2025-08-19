@@ -1,10 +1,17 @@
 import json
 import sys
+import types
 from pathlib import Path
 from types import SimpleNamespace
 
+from tests.helpers.config_stub import build_settings
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+config = types.ModuleType("config")
+config.settings = build_settings()
+sys.modules.setdefault("config", config)
 
 import auto_retrain
 
@@ -22,10 +29,11 @@ def test_main_triggers_finetune(tmp_path, monkeypatch):
     fb.write_text(json.dumps(feedback), encoding="utf-8")
 
     monkeypatch.setattr(auto_retrain, "INSIGHT_FILE", ins)
-    monkeypatch.setattr(auto_retrain, "FEEDBACK_FILE", fb)
+    monkeypatch.setattr(auto_retrain.feedback_logging, "LOG_FILE", fb)
     monkeypatch.setattr(auto_retrain, "NOVELTY_THRESHOLD", 0.3)
     monkeypatch.setattr(auto_retrain, "COHERENCE_THRESHOLD", 0.7)
     monkeypatch.setattr(auto_retrain, "system_idle", lambda: True)
+    monkeypatch.setattr(auto_retrain, "_load_vector_logs", lambda: [{}])
 
     captured = {}
 
