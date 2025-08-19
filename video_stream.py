@@ -78,15 +78,44 @@ class AvatarAudioTrack(AudioStreamTrack):
 class AvatarVideoTrack(VideoStreamTrack):
     """Video track producing frames from ``avatar_expression_engine``."""
 
-    def __init__(self, audio_path: Optional[Path] = None) -> None:
+    def __init__(
+        self,
+        audio_path: Optional[Path] = None,
+        cues: Optional[asyncio.Queue[str]] = None,
+    ) -> None:
         super().__init__()
         if audio_path is not None:
             self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
         else:
             self._frames = video_engine.generate_avatar_stream()
+        self._cues = cues
+        self._style: str | None = None
+
+    def _cue_colour(self, text: str) -> np.ndarray:
+        value = abs(hash(text)) & 0xFFFFFF
+        return np.array(
+            [(value >> 16) & 255, (value >> 8) & 255, value & 255], dtype=np.uint8
+        )
+
+    def _apply_cue(self, frame: np.ndarray) -> np.ndarray:
+        if not self._style:
+            return frame
+        result = frame.copy()
+        color = self._cue_colour(self._style)
+        h, w, _ = result.shape
+        result[:10, :10] = color
+        result[h - 10 :, w - 10 :] = color
+        return result
 
     async def recv(self) -> VideoFrame:
+        if self._cues is not None:
+            try:
+                while True:
+                    self._style = self._cues.get_nowait()
+            except asyncio.QueueEmpty:
+                pass
         frame = next(self._frames)
+        frame = self._apply_cue(frame)
         video = VideoFrame.from_ndarray(frame, format="rgb24")
         video.pts, video.time_base = await self.next_timestamp()
         return video
