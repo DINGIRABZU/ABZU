@@ -45,8 +45,8 @@ sys.modules.setdefault("SPIRAL_OS.symbolic_parser", sym_mod)
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", types.ModuleType("qnl_utils"))
 
 
-import orchestrator
-from orchestrator import MoGEOrchestrator
+from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 
 # Disable invocation engine side effects
 orchestrator.invocation_engine.invoke = lambda *a, **k: []

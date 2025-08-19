@@ -46,12 +46,12 @@ def test_voice_cli_invokes_engines(tmp_path, monkeypatch):
     monkeypatch.setitem(sys.modules, "connectors.webrtc_connector", webrtc_stub)
     monkeypatch.setitem(sys.modules, "connectors", connectors_pkg)
 
-    mod = importlib.import_module("inanna_voice")
+    mod = importlib.import_module("cli.voice")
     monkeypatch.setattr(mod, "play_frame", lambda f: events["play"].append(f))
     monkeypatch.setattr(mod, "send_frame", lambda f: events["send"].append(f))
     argv_backup = sys.argv.copy()
     sys.argv = [
-        "inanna_voice.py",
+        "voice.py",
         "hello",
         "--emotion",
         "joy",

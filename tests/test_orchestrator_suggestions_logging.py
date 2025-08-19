@@ -39,8 +39,8 @@ sb3_mod = types.ModuleType("stable_baselines3")
 sb3_mod.PPO = lambda *a, **k: object()
 sys.modules.setdefault("stable_baselines3", sb3_mod)
 
-import orchestrator
-from orchestrator import MoGEOrchestrator
+from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 
 
 def test_suggestions_logged_and_returned(monkeypatch, caplog, capsys):

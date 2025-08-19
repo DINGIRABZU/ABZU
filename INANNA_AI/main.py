@@ -10,7 +10,7 @@ conversation flow.
 
 import argparse
 import numpy as np
-from orchestrator import MoGEOrchestrator
+from rag.orchestrator import MoGEOrchestrator
 from crown_router import route_decision
 from .personality_layers import REGISTRY, list_personalities
 from .rfa_7d import RFA7D

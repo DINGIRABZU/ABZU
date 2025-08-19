@@ -27,11 +27,11 @@ sys.modules["SPIRAL_OS.qnl_engine"] = sp_pkg.qnl_engine
 sys.modules["SPIRAL_OS.symbolic_parser"] = sp_pkg.symbolic_parser
 sys.modules.setdefault("training_guide", types.SimpleNamespace(log_result=lambda *a, **k: None))
 
-from orchestrator import MoGEOrchestrator
+from rag.orchestrator import MoGEOrchestrator
 from INANNA_AI import db_storage
 from INANNA_AI import gate_orchestrator
 from INANNA_AI import response_manager
-import orchestrator as orch_mod
+import rag.orchestrator as orch_mod
 import core.model_selector as ms_mod
 
 orch_mod.vector_memory.add_vector = lambda *a, **k: None

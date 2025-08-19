@@ -52,8 +52,8 @@ sys.modules["SPIRAL_OS.qnl_engine"] = sp_pkg.qnl_engine
 sys.modules["SPIRAL_OS.symbolic_parser"] = sp_pkg.symbolic_parser
 sys.modules.setdefault("training_guide", types.SimpleNamespace(log_result=lambda *a, **k: None))
 
-import orchestrator
-from orchestrator import MoGEOrchestrator
+from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 import crown_decider
 import core.model_selector as ms_mod
 

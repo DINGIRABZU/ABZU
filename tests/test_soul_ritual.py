@@ -24,8 +24,11 @@ sys.modules["torch.nn"].Module = object
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules["librosa"].load = lambda *a, **k: ([], 0)
 
-sys.modules.setdefault("orchestrator", types.ModuleType("orchestrator"))
-sys.modules["orchestrator"].MoGEOrchestrator = lambda: None
+rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
+orch_stub = types.ModuleType("rag.orchestrator")
+orch_stub.MoGEOrchestrator = lambda: None
+rag_pkg.orchestrator = orch_stub
+sys.modules["rag.orchestrator"] = orch_stub
 
 sys.modules.setdefault("INANNA_AI.response_manager", types.ModuleType("response_manager"))
 sys.modules.setdefault("INANNA_AI.tts_coqui", types.ModuleType("tts_coqui"))

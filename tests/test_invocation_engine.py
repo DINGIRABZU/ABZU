@@ -13,12 +13,14 @@ setattr(ql_mod, "quantum_embed", lambda t: [0.0])
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ql_mod)
 
 # Stub heavy orchestrator dependencies before importing module
-stub_orch = types.ModuleType("orchestrator")
+rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
+stub_orch = types.ModuleType("rag.orchestrator")
 class StubMoGE:
     def __init__(self):
         pass
 stub_orch.MoGEOrchestrator = StubMoGE
-sys.modules.setdefault("orchestrator", stub_orch)
+rag_pkg.orchestrator = stub_orch
+sys.modules.setdefault("rag.orchestrator", stub_orch)
 
 import invocation_engine
 

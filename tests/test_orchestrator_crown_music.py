@@ -39,8 +39,8 @@ sp_mod = sys.modules["SPIRAL_OS"]
 setattr(sp_mod, "qnl_engine", qnl_stub)
 setattr(sp_mod, "symbolic_parser", sym_stub)
 
-import orchestrator
-from orchestrator import MoGEOrchestrator
+from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 
 
 def test_crown_music_path(monkeypatch, tmp_path):

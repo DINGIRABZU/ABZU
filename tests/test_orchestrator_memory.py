@@ -48,8 +48,8 @@ gym_mod.spaces = types.SimpleNamespace(Box=lambda **k: None)
 sys.modules.setdefault("stable_baselines3", stable_mod)
 sys.modules.setdefault("gymnasium", gym_mod)
 
-from orchestrator import MoGEOrchestrator
-import orchestrator
+from rag.orchestrator import MoGEOrchestrator
+from rag import orchestrator
 
 
 def test_voice_modality_records_memory(monkeypatch, tmp_path):

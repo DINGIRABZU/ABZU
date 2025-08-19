@@ -18,14 +18,16 @@ sys.modules.setdefault("MUSIC_FOUNDATION", types.ModuleType("MUSIC_FOUNDATION"))
 sys.modules["MUSIC_FOUNDATION"].qnl_utils = qlm_mod
 
 # Provide a lightweight orchestrator before importing crown_router
-orch_mod = types.ModuleType("orchestrator")
+rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
+orch_mod = types.ModuleType("rag.orchestrator")
 
 class DummyOrchestrator:
     def route(self, *a, **k):
         return {"model": "glm"}
 
 orch_mod.MoGEOrchestrator = DummyOrchestrator
-sys.modules.setdefault("orchestrator", orch_mod)
+rag_pkg.orchestrator = orch_mod
+sys.modules.setdefault("rag.orchestrator", orch_mod)
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))

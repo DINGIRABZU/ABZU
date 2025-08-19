@@ -14,8 +14,8 @@ yaml_mod = types.ModuleType("yaml")
 yaml_mod.safe_load = lambda *a, **k: {}
 sys.modules.setdefault("yaml", yaml_mod)
 
-import orchestrator
-from orchestrator import MoGEOrchestrator
+from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 from core import context_tracker, language_engine
 
 

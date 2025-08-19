@@ -102,11 +102,11 @@ sf_stub.read = lambda *a, **k: (np.zeros(1, dtype=np.int16), 8000)
 sf_stub.write = lambda *a, **k: None
 sys.modules.setdefault("soundfile", sf_stub)
 
-from orchestrator import MoGEOrchestrator
-import orchestrator
+from rag.orchestrator import MoGEOrchestrator
+from rag import orchestrator
 from INANNA_AI import tts_xtts, tts_coqui
 from core import avatar_expression_engine, video_engine
-import audio_engine
+from audio import engine as audio_engine
 import server
 import vector_memory
 import crown_decider

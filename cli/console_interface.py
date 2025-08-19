@@ -11,7 +11,7 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.patch_stdout import patch_stdout
 
 from init_crown_agent import initialize_crown
-from orchestrator import MoGEOrchestrator
+from rag.orchestrator import MoGEOrchestrator
 from core import context_tracker, avatar_expression_engine
 from INANNA_AI import speaking_engine
 from tools import session_logger

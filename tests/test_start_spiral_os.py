@@ -58,9 +58,11 @@ config_mod = types.ModuleType("config")
 config_mod.settings = build_settings()
 config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
-orch_mod = types.ModuleType("orchestrator")
+rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
+orch_mod = types.ModuleType("rag.orchestrator")
 orch_mod.MoGEOrchestrator = lambda *a, **k: types.SimpleNamespace(handle_input=lambda self, text: None)
-sys.modules.setdefault("orchestrator", orch_mod)
+rag_pkg.orchestrator = orch_mod
+sys.modules.setdefault("rag.orchestrator", orch_mod)
 tools_mod = types.ModuleType("tools")
 reflection_mod = types.ModuleType("reflection_loop")
 reflection_mod.load_thresholds = lambda: {"default": 0.0}
