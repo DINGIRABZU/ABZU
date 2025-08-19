@@ -1,9 +1,16 @@
 from pathlib import Path
 import json
 import sys
+import types
+
+from tests.helpers.config_stub import build_settings
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+config = types.ModuleType("config")
+config.settings = build_settings()
+sys.modules.setdefault("config", config)
 
 import training_guide
 
