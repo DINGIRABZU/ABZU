@@ -345,6 +345,13 @@ walks through events in sequence. The archetype feedback loop analyses this
 memory with `archetype_feedback_loop.evaluate_archetype` and suggests when the
 system should shift personality layers.
 
+### Ontology Database
+
+`memory_spiritual.py` maintains an event-to-symbol mapping in `data/ontology.db`.
+The database is generated automatically from `data/ontology_schema.sql` when the
+module loads, so database files no longer need to be checked into version
+control.
+
 ### Running `learning_mutator.py`
 
 `learning_mutator.py` analyses `insight_matrix.json` and proposes changes to the
