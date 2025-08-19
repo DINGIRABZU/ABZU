@@ -29,8 +29,10 @@ try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
 except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
-
-import numpy as np
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
 
 from core.task_profiler import TaskProfiler
 
@@ -216,7 +218,7 @@ class MoGEOrchestrator:
                 )
             )
 
-        if music_modality:
+        if music_modality and np is not None:
             hex_input = text.encode("utf-8").hex()
             phrases, wave = qnl_engine.hex_to_song(hex_input, duration_per_byte=0.05)
             wav_path = Path(tempfile.gettempdir()) / f"qnl_{abs(hash(hex_input))}.wav"
@@ -234,12 +236,16 @@ class MoGEOrchestrator:
                 sf.write(wav_path, wave, 44100)
             result["music_path"] = str(wav_path)
             result["qnl_phrases"] = phrases
+        elif music_modality:
+            logger.warning("NumPy not available; music generation skipped")
 
         # Update lightweight context memory
-        if self._embedder is not None:
+        if self._embedder is not None and np is not None:
             emb = np.asarray(self._embedder.encode([text]))[0]
-        else:
+        elif np is not None:
             emb = np.array([len(text)], dtype=float)
+        else:
+            emb = [float(len(text))]
         self._context.append({"text": text, "task": task, "embedding": emb})
 
         elapsed = perf_counter() - start
