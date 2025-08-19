@@ -21,11 +21,15 @@ def log_interaction(
     source_type: str | None = None,
     genre: str | None = None,
     instrument: str | None = None,
+    feedback: str | None = None,
+    rating: float | None = None,
 ) -> None:
     """Append ``input_text`` and ``result`` details to :data:`INTERACTIONS_FILE`.
 
     Additional metadata can be provided via ``source_type`` , ``genre`` and
-    ``instrument`` which will be stored alongside the interaction.
+    ``instrument`` which will be stored alongside the interaction. Optional
+    ``feedback`` text and numeric ``rating`` values are also persisted when
+    supplied.
     """
     entry = {
         "timestamp": datetime.utcnow().isoformat(),
@@ -43,6 +47,10 @@ def log_interaction(
         entry["genre"] = genre
     if instrument is not None:
         entry["instrument"] = instrument
+    if feedback is not None:
+        entry["feedback"] = feedback
+    if rating is not None:
+        entry["rating"] = rating
     INTERACTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
     with INTERACTIONS_FILE.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False))

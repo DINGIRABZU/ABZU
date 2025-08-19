@@ -20,3 +20,12 @@ The script performs the following steps:
 
 The JSON printed to `stdout` combines the analysis with the LLM response, making
 it easy to feed musical context into higher level agents or pipelines.
+
+## Evaluation Workflow
+
+Music prompts submitted through the web console are logged via
+`corpus_memory_logging.log_interaction` together with any user supplied
+feedback. A lightweight Streamlit dashboard under `dashboard/usage.py` summarises
+interaction counts and feedback entries to help operators review generation
+quality. These records can further feed the training guides and retraining
+scripts to refine future models.
