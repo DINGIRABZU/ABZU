@@ -35,6 +35,43 @@ document.getElementById('command-input').addEventListener('keydown', (e) => {
     }
 });
 
+// Music generation elements
+const musicContainer = document.createElement('div');
+musicContainer.style.marginTop = '1rem';
+
+const musicInput = document.createElement('input');
+musicInput.id = 'music-prompt';
+musicInput.placeholder = 'Describe music';
+musicContainer.appendChild(musicInput);
+
+const musicBtn = document.createElement('button');
+musicBtn.id = 'music-btn';
+musicBtn.textContent = 'Generate Music';
+musicContainer.appendChild(musicBtn);
+
+const feedbackInput = document.createElement('input');
+feedbackInput.id = 'music-feedback';
+feedbackInput.placeholder = 'Feedback';
+feedbackInput.style.marginLeft = '0.5rem';
+musicContainer.appendChild(feedbackInput);
+
+const ratingInput = document.createElement('input');
+ratingInput.id = 'music-rating';
+ratingInput.type = 'number';
+ratingInput.min = '0';
+ratingInput.max = '5';
+ratingInput.placeholder = 'Rating';
+ratingInput.style.marginLeft = '0.5rem';
+musicContainer.appendChild(ratingInput);
+
+const downloadLink = document.createElement('a');
+downloadLink.id = 'music-download';
+downloadLink.style.display = 'block';
+downloadLink.style.marginTop = '0.5rem';
+musicContainer.appendChild(downloadLink);
+
+document.body.appendChild(musicContainer);
+
 function sendCommand() {
     const input = document.getElementById('command-input');
     const command = input.value.trim();
@@ -61,6 +98,39 @@ function sendCommand() {
             document.getElementById('output').textContent = 'Error: ' + err;
         });
 }
+
+function generateMusic() {
+    const prompt = musicInput.value.trim();
+    if (!prompt) {
+        return;
+    }
+    const feedback = feedbackInput.value.trim();
+    const ratingVal = parseFloat(ratingInput.value);
+    const payload = { prompt };
+    if (feedback) {
+        payload.feedback = feedback;
+    }
+    if (!isNaN(ratingVal)) {
+        payload.rating = ratingVal;
+    }
+    fetch(`${BASE_URL}/music`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then((resp) => resp.json())
+        .then((data) => {
+            if (data.wav) {
+                downloadLink.href = data.wav;
+                downloadLink.textContent = 'Download WAV';
+            }
+        })
+        .catch((err) => {
+            downloadLink.textContent = 'Error: ' + err;
+        });
+}
+
+musicBtn.addEventListener('click', generateMusic);
 
 async function startStream() {
     const local = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
