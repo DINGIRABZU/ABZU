@@ -21,3 +21,16 @@ def mock_emotion_state(tmp_path, monkeypatch):
     emotional_state.set_last_emotion("longing")
     emotional_state.set_resonance_level(0.75)
     return state_file
+
+
+# ---------------------------------------------------------------------------
+# Test isolation helpers
+
+
+def pytest_collectstart(collector):
+    """Ensure stubbed ``rag`` modules from other tests do not leak."""
+    sys.modules.pop("rag", None)
+    sys.modules.pop("rag.orchestrator", None)
+    sys.modules.pop("SPIRAL_OS", None)
+    sys.modules.pop("SPIRAL_OS.qnl_engine", None)
+    sys.modules.pop("SPIRAL_OS.symbolic_parser", None)
