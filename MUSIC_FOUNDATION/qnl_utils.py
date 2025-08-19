@@ -2,7 +2,12 @@ from __future__ import annotations
 
 """Shared utilities for converting music analysis into QNL data."""
 
-import numpy as np
+from typing import Sequence
+
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
 except Exception:  # pragma: no cover - optional dependency
@@ -36,6 +41,10 @@ def _get_model(name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
 
 def quantum_embed(text: str) -> np.ndarray:
     """Return embedding for ``text`` as a NumPy array."""
+    if np is None:
+        raise RuntimeError("numpy library not installed")
+    if SentenceTransformer is None:
+        raise RuntimeError("sentence-transformers library not installed")
     model = _get_model()
     emb = model.encode(text)
     return np.asarray(emb, dtype=np.float32)
@@ -50,9 +59,13 @@ def note_index_to_name(index: int) -> str:
     return scale[index % 12]
 
 
-def chroma_to_qnl(chroma_vector: np.ndarray) -> list[dict]:
+def chroma_to_qnl(chroma_vector: "Sequence[float] | np.ndarray") -> list[dict]:
     """Convert a chroma vector into QNL phrases for the dominant notes."""
-    top_indices = np.argsort(chroma_vector)[-4:][::-1]
+    if np is not None:
+        top_indices = np.argsort(chroma_vector)[-4:][::-1]
+    else:
+        sorted_indices = sorted(range(len(chroma_vector)), key=lambda i: chroma_vector[i])
+        top_indices = list(reversed(sorted_indices[-4:]))
     phrases = []
     for idx in top_indices:
         note = note_index_to_name(idx)
@@ -68,7 +81,13 @@ def chroma_to_qnl(chroma_vector: np.ndarray) -> list[dict]:
     return phrases
 
 
-def generate_qnl_structure(chroma_vector: np.ndarray, tempo: float, metadata=None, *, planes=None) -> dict:
+def generate_qnl_structure(
+    chroma_vector: "Sequence[float] | np.ndarray",
+    tempo: float,
+    metadata=None,
+    *,
+    planes=None,
+) -> dict:
     """Create a complete QNL data structure from analysis results."""
     if metadata is None:
         metadata = {}
