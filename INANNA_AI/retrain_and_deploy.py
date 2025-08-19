@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import argparse
 import os
 import shutil
-import argparse
-
-from . import train_soul
-from .corpus_memory import CHROMA_DIR
-from . import config
 
 import mlflow
+
+import config
+from . import train_soul
+from .corpus_memory import CHROMA_DIR
 
 # Location of versioned soul artifacts and metadata
 SOUL_DIR = config.MODELS_DIR / "soul"

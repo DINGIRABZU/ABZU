@@ -9,11 +9,6 @@ import os
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
-from . import config
-from MUSIC_FOUNDATION import qnl_utils
-import vector_memory
-import corpus_memory_logging
-
 import numpy as np
 try:
     import chromadb
@@ -25,6 +20,11 @@ try:
     from sentence_transformers import SentenceTransformer
 except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
+
+import config
+from MUSIC_FOUNDATION import qnl_utils
+import corpus_memory_logging
+import vector_memory
 
 # Location of the repository root
 _REPO_ROOT = Path(__file__).resolve().parents[1]
