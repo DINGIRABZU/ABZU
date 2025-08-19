@@ -128,6 +128,8 @@ def run_qnl(hex_input: str, wav: str = "qnl_hex_song.wav", json_file: str = "qnl
     from SPIRAL_OS import qnl_engine
 
     phrases, waveform = qnl_engine.hex_to_song(hex_input)
+    if qnl_engine.write is None:
+        raise ImportError("scipy is required to write WAV files; please install scipy.")
     qnl_engine.write(wav, 44100, waveform)
     metadata = qnl_engine.generate_qnl_metadata(phrases)
     Path(json_file).write_text(json.dumps(metadata, indent=2, ensure_ascii=False), encoding="utf-8")

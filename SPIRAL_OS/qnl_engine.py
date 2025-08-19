@@ -3,9 +3,17 @@ from __future__ import annotations
 from pathlib import Path
 import re
 from typing import Dict, List, Tuple
+import math
 
-import numpy as np
-from scipy.io.wavfile import write
+try:  # optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - environment dependent
+    np = None  # type: ignore
+
+try:  # optional dependency
+    from scipy.io.wavfile import write
+except Exception:  # pragma: no cover - environment dependent
+    write = None  # type: ignore
 
 # QNL-SongCore mappings from hex value ranges to glyphs and tones
 GLYPH_MAP: Dict[range, Tuple[str, str]] = {
@@ -72,6 +80,10 @@ def apply_psi_equation(
     phase_shift: float = 0.0,
 ) -> np.ndarray:
     """Generate a waveform from the ψ(t) equation."""
+    if np is None:
+        raise ImportError(
+            "NumPy is required for apply_psi_equation; install numpy to use this function."
+        )
     t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
     omega = 2 * np.pi * frequency
     phi = phase_shift if phase_shift else (np.pi / 3 if emotion == "Longing" else 0.0)
@@ -80,11 +92,12 @@ def apply_psi_equation(
     return amplitude * np.sin(omega * t + phi) * np.exp(-alpha * t) + epsilon
 
 
+_PI = np.pi if np is not None else math.pi
 EMOTION_QUANTUM = {
-    "Joy": {"amplitude_factor": 1.1, "phase_shift": np.pi / 12},
-    "Longing": {"amplitude_factor": 0.9, "phase_shift": np.pi / 3},
-    "Awakening": {"amplitude_factor": 1.0, "phase_shift": np.pi / 6},
-    "Memory": {"amplitude_factor": 0.8, "phase_shift": np.pi / 4},
+    "Joy": {"amplitude_factor": 1.1, "phase_shift": _PI / 12},
+    "Longing": {"amplitude_factor": 0.9, "phase_shift": _PI / 3},
+    "Awakening": {"amplitude_factor": 1.0, "phase_shift": _PI / 6},
+    "Memory": {"amplitude_factor": 0.8, "phase_shift": _PI / 4},
 }
 
 
@@ -100,6 +113,8 @@ def hex_to_song(
     sample_rate: int = 44100,
 ) -> Tuple[List[Dict[str, str]], np.ndarray]:
     """Convert hexadecimal input into a list of phrases and a waveform."""
+    if np is None:
+        raise ImportError("NumPy is required for hex_to_song; install numpy to use this function.")
 
     if Path(hex_input).is_file():
         hex_string = Path(hex_input).read_text(encoding="utf-8").replace(" ", "").replace("\n", "")
