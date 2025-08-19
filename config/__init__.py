@@ -3,7 +3,11 @@ from __future__ import annotations
 """Application configuration loaded from environment variables."""
 from pathlib import Path
 
-from pydantic import AnyHttpUrl, BaseSettings, Field
+from pydantic import AnyHttpUrl, Field
+from pydantic_settings import BaseSettings
+
+# ``config`` is now a package; resolve paths relative to the repository root.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
@@ -36,7 +40,7 @@ class Settings(BaseSettings):
         0.7, env="FEEDBACK_COHERENCE_THRESHOLD"
     )
     vector_db_path: Path = Field(
-        Path(__file__).resolve().parent / "data" / "vector_memory",
+        BASE_DIR / "data" / "vector_memory",
         env="VECTOR_DB_PATH",
     )
     neo4j_uri: str = Field("bolt://localhost:7687", env="NEO4J_URI")
