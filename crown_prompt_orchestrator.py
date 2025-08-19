@@ -4,16 +4,26 @@ from __future__ import annotations
 
 from typing import Any, Dict
 import asyncio
+import logging
+from importlib import import_module
 
 from state_transition_engine import StateTransitionEngine
 
+from INANNA_AI import emotion_analysis, emotional_memory
 from INANNA_AI.glm_integration import GLMIntegration
-from INANNA_AI import emotion_analysis
-from task_profiling import classify_task
+import emotional_state
 from corpus_memory_logging import load_interactions, log_interaction
-import servant_model_manager as smm
-from INANNA_AI import emotional_memory
+
+try:
+    _settings_mod = import_module("config.settings")
+    is_layer_enabled = getattr(_settings_mod, "is_layer_enabled", lambda name: True)
+except Exception:  # pragma: no cover - missing config
+    def is_layer_enabled(name: str) -> bool:  # type: ignore
+        return True
+
 import crown_decider
+from task_profiling import classify_task
+import servant_model_manager as smm
 
 
 _EMOTION_KEYS = list(emotion_analysis.EMOTION_ARCHETYPES.keys())
@@ -44,6 +54,30 @@ async def _delegate(prompt: str, glm: GLMIntegration) -> str:
 
 
 
+def _apply_layer(message: str) -> tuple[str | None, str | None]:
+    """Return layer-transformed text and model name if a layer is active."""
+    layer_name = emotional_state.get_current_layer()
+    if not layer_name or not is_layer_enabled(layer_name):
+        return None, None
+    try:
+        layers_mod = import_module("INANNA_AI.personality_layers")
+        registry = getattr(layers_mod, "REGISTRY", {})
+    except Exception:
+        return None, None
+    cls = registry.get(layer_name)
+    if cls is None:
+        return None, None
+    try:
+        layer = cls()
+        if hasattr(layer, "generate_response"):
+            return str(layer.generate_response(message)), layer_name
+        if hasattr(layer, "speak"):
+            return str(layer.speak(message)), layer_name
+    except Exception:
+        logging.exception("layer %s failed", layer_name)
+    return None, None
+
+
 def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, Any]:
     """Return GLM or servant model reply with metadata."""
     emotion = _detect_emotion(message)
@@ -53,6 +87,8 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
     context = _build_context()
     prompt_body = f"{context}\n{message}" if context else message
     prompt = f"[{state}]\n{prompt_body}"
+
+    layer_text, layer_model = _apply_layer(message)
 
     async def _process() -> tuple[str, str]:
         task_type = classify_task(message)
@@ -86,7 +122,10 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
             crown_decider.record_result(model, True)
         return text, model
 
-    text, model = asyncio.run(_process())
+    if layer_text is not None:
+        text, model = layer_text, layer_model or "layer"
+    else:
+        text, model = asyncio.run(_process())
 
     return {
         "text": text,

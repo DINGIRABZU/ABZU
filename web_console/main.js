@@ -7,6 +7,14 @@ const API_URL =
 const BASE_URL = API_URL.replace(/\/[a-zA-Z_-]+$/, '');
 const OFFER_URL = `${BASE_URL}/offer`;
 
+const GLYPHS = {
+    joy: '🌀😊',
+    sadness: '🌀😢',
+    anger: '🌀😠',
+    fear: '🌀😨',
+    neutral: '🌀'
+};
+
 document.getElementById('send-btn').addEventListener('click', sendCommand);
 document.getElementById('command-input').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -29,6 +37,9 @@ function sendCommand() {
         .then((resp) => resp.json())
         .then((data) => {
             document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+            const emotion = data.emotion || 'neutral';
+            document.getElementById('emotion').textContent = emotion;
+            document.getElementById('glyph').textContent = GLYPHS[emotion] || GLYPHS.neutral;
         })
         .catch((err) => {
             document.getElementById('output').textContent = 'Error: ' + err;
