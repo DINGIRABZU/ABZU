@@ -4,11 +4,21 @@ import json
 from pathlib import Path
 import numpy as np
 import soundfile as sf
+import types
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from tests.helpers import emotion_stub
+sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
+stego_mod = types.ModuleType("synthetic_stego")
+stego_mod.embed_data = lambda p, m: Path(p).write_text(m, encoding="utf-8")
+stego_mod.extract_data = lambda p: Path(p).read_text(encoding="utf-8")
+sys.modules["MUSIC_FOUNDATION.synthetic_stego"] = stego_mod
+
 from SPIRAL_OS import seven_dimensional_music as sdm
+sdm.emotion_analysis = emotion_stub
+sdm.qnl_engine = types.SimpleNamespace(hex_to_song=lambda *a, **k: ([], np.ones(1, dtype=np.int16)))
 
 DUMMY_PLANES = {
     "physical": {},
@@ -114,8 +124,12 @@ def test_quantum_music_changes_with_context(tmp_path, monkeypatch):
     monkeypatch.setattr(sdm, "analyze_seven_planes", lambda *a, **k: DUMMY_PLANES)
     monkeypatch.setattr(sdm.emotion_analysis, "emotion_weight", lambda e: 0.5)
 
-    p1 = sdm.generate_quantum_music("alpha", "joy", output_dir=tmp_path)
-    p2 = sdm.generate_quantum_music("beta", "sad", output_dir=tmp_path)
+    out1 = tmp_path / "a"
+    out2 = tmp_path / "b"
+    out1.mkdir()
+    out2.mkdir()
+    p1 = sdm.generate_quantum_music("alpha", "joy", output_dir=out1)
+    p2 = sdm.generate_quantum_music("beta", "sad", output_dir=out2)
     assert p1 != p2
     w1, _ = sf.read(p1, always_2d=False)
     w2, _ = sf.read(p2, always_2d=False)
