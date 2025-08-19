@@ -22,11 +22,25 @@ MODEL_IDS = {
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 
 
-def generate_from_text(prompt: str, model: str = "musicgen") -> Path:
-    """Generate audio from ``prompt`` and return the file path."""
+def generate_from_text(
+    prompt: str,
+    model: str = "musicgen",
+    emotion: str | None = None,
+    tempo: int | None = None,
+) -> Path:
+    """Generate audio from ``prompt`` and return the file path.
+
+    ``emotion`` and ``tempo`` are appended to the text prompt when provided so
+    downstream models can adapt the generation.
+    """
     model_id = MODEL_IDS.get(model)
     if not model_id:
         raise ValueError(f"Unsupported model '{model}'")
+
+    if emotion:
+        prompt = f"{prompt} in a {emotion} mood"
+    if tempo:
+        prompt = f"{prompt} at {tempo} BPM"
 
     if hf_pipeline is None:
         raise ImportError("transformers is required for music generation")
@@ -52,8 +66,10 @@ def main(argv: list[str] | None = None) -> None:
         default="musicgen",
         help="Model to use (default: musicgen)",
     )
+    parser.add_argument("--emotion", help="Optional emotion to guide style")
+    parser.add_argument("--tempo", type=int, help="Optional tempo in BPM")
     args = parser.parse_args(argv)
-    path = generate_from_text(args.prompt, args.model)
+    path = generate_from_text(args.prompt, args.model, args.emotion, args.tempo)
     print(path)
 
 
