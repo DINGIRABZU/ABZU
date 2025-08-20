@@ -183,14 +183,15 @@ class MoGEOrchestrator:
             "weight": weight,
             "model": model,
         }
-        vector_memory.add_vector(
-            text,
-            {
-                "type": "routing_decision",
-                "selected_model": model,
-                "emotion": emotion,
-            },
-        )
+        if vector_memory is not None:
+            vector_memory.add_vector(
+                text,
+                {
+                    "type": "routing_decision",
+                    "selected_model": model,
+                    "emotion": emotion,
+                },
+            )
         if intents is not None:
             result["qnl_intents"] = intents
 
@@ -217,17 +218,18 @@ class MoGEOrchestrator:
                     "aura_amount": opts.get("aura_amount"),
                 }
             )
-            vector_memory.add_vector(
-                text,
-                {
-                    "type": "expression_decision",
-                    "tts_backend": opts.get("tts_backend"),
-                    "avatar_style": opts.get("avatar_style"),
-                    "aura_amount": opts.get("aura_amount"),
-                    "emotion": emotion,
-                    "soul_state": opts.get("soul_state"),
-                },
-            )
+            if vector_memory is not None:
+                vector_memory.add_vector(
+                    text,
+                    {
+                        "type": "expression_decision",
+                        "tts_backend": opts.get("tts_backend"),
+                        "avatar_style": opts.get("avatar_style"),
+                        "aura_amount": opts.get("aura_amount"),
+                        "emotion": emotion,
+                        "soul_state": opts.get("soul_state"),
+                    },
+                )
 
             speech_input = result.get("text", text)
             if tone is not None:
@@ -343,13 +345,18 @@ class MoGEOrchestrator:
             if layer and layer != current:
                 emotional_state.set_current_layer(layer)
 
-        symbols = self._invocation_engine._extract_symbols(text)
-        tasks = ritual_action_sequence(symbols, dominant)
-        for res in self._invocation_engine.invoke(f"{symbols} [{dominant}]", self):
-            if isinstance(res, list):
-                tasks.extend(res)
-        for act in tasks:
-            symbolic_parser.parse_intent({"text": act, "tone": dominant})
+        if self._invocation_engine is not None:
+            symbols = self._invocation_engine._extract_symbols(text)
+            tasks = ritual_action_sequence(symbols, dominant)
+            for res in self._invocation_engine.invoke(f"{symbols} [{dominant}]", self):
+                if isinstance(res, list):
+                    tasks.extend(res)
+            for act in tasks:
+                symbolic_parser.parse_intent({"text": act, "tone": dominant})
+        else:
+            tasks = ritual_action_sequence("", dominant)
+            for act in tasks:
+                symbolic_parser.parse_intent({"text": act, "tone": dominant})
 
         result = self.route(text, emotion_data, qnl_data=qnl_data)
         if self._active_layer_name:
@@ -363,7 +370,7 @@ class MoGEOrchestrator:
         try:
             _, state = listening_engine.analyze_audio(0.5)
             meaning = state.get("silence_meaning", "")
-            if "Extended" in meaning:
+            if "Extended" in meaning and self._invocation_engine is not None:
                 steps = self._invocation_engine.invoke_ritual("silence_introspection")
                 self._memory_logger.log_ritual_result("silence_introspection", steps)
         except Exception:

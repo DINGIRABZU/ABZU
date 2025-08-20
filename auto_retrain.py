@@ -9,7 +9,12 @@ from pathlib import Path
 from typing import Any, Iterable, List, Dict
 
 import feedback_logging
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 INSIGHT_FILE = Path("insight_matrix.json")
 
@@ -69,6 +74,8 @@ def build_dataset(feedback: Iterable[dict]) -> list[dict]:
 
 
 def _load_vector_logs() -> List[Dict[str, Any]]:
+    if vector_memory is None:
+        return []
     if not vector_memory.LOG_FILE.exists():
         return []
     entries = []

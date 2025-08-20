@@ -9,7 +9,12 @@ from task_profiling import classify_task
 import servant_model_manager as smm
 from INANNA_AI import emotional_memory
 import emotional_state
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 import voice_aura
 
 import config
@@ -91,9 +96,12 @@ def recommend_llm(task_type: str, emotion: str) -> str:
 def decide_expression_options(emotion: str) -> Dict[str, Any]:
     """Return TTS backend, avatar style and aura amount."""
     soul = (emotional_state.get_soul_state() or "").lower()
-    try:
-        history = vector_memory.query_vectors(filter={"type": "emotion"}, limit=10)
-    except Exception:
+    if vector_memory is not None:
+        try:
+            history = vector_memory.query_vectors(filter={"type": "emotion"}, limit=10)
+        except Exception:
+            history = []
+    else:
         history = []
 
     valences = [float(h.get("valence", 0.5)) for h in history if h.get("valence") is not None]

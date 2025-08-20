@@ -24,7 +24,12 @@ except Exception:  # pragma: no cover - optional dependency
 import config
 from MUSIC_FOUNDATION import qnl_utils
 import corpus_memory_logging
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 # Location of the repository root
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -161,7 +166,10 @@ def add_entry(text: str, tone: str | None, *, metadata: dict | None = None) -> d
         meta["tone"] = tone
     if metadata:
         meta.update(metadata)
-    vector_memory.add_vector(text, meta)
+    if vector_memory is not None:
+        vector_memory.add_vector(text, meta)
+    else:  # pragma: no cover - optional dependency missing
+        logger.warning("Vector memory module missing; entry not stored")
     corpus_memory_logging.log_interaction(text, {"tone": tone}, meta, "stored")
     return meta
 
@@ -175,7 +183,10 @@ def search(
     """Search stored entries and return matching metadata."""
 
     filt = {"tone": emotion} if emotion is not None else None
-    results = vector_memory.search(query, filter=filt, k=10)
+    if vector_memory is not None:
+        results = vector_memory.search(query, filter=filt, k=10)
+    else:
+        results = []
     return results
 
 

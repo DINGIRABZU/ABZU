@@ -6,7 +6,12 @@ import argparse
 from pathlib import Path
 from typing import List, Dict
 
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 try:  # pragma: no cover - optional dependency
     from unstructured.partition.text import partition_text
@@ -48,6 +53,8 @@ def _chunk(text: str, max_words: int = 200) -> List[str]:
 
 
 def ingest(path: Path, metadata: Dict[str, str]) -> None:
+    if vector_memory is None:
+        raise RuntimeError("vector_memory module not available")
     ext = path.suffix.lower()
     if ext == ".pdf":
         text = _read_pdf(path)

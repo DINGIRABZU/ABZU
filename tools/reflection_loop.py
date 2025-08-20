@@ -16,7 +16,12 @@ except Exception:  # pragma: no cover - optional dependency
 import numpy as np
 
 from core import video_engine, self_correction_engine
-from invocation_engine import invoke_ritual
+try:  # pragma: no cover - optional dependency
+    from invocation_engine import invoke_ritual as _invoke_ritual
+except ImportError:  # pragma: no cover - optional dependency
+    _invoke_ritual = None  # type: ignore[assignment]
+invoke_ritual = _invoke_ritual
+"""Optional ritual invocation; ``None`` if invocation engine is unavailable."""
 from corpus_memory_logging import log_ritual_result
 import emotional_state
 from INANNA_AI import adaptive_learning
@@ -74,7 +79,7 @@ def run_reflection_loop(iterations: int = 10) -> None:
         if detected == "citrinitas":
             citrinitas_count += 1
             tol = thresholds.get("citrinitas", thresholds.get("default", 0.0))
-            if citrinitas_count > tol:
+            if citrinitas_count > tol and invoke_ritual is not None:
                 steps = invoke_ritual("citrinitas_rite")
                 log_ritual_result("citrinitas_rite", steps)
                 citrinitas_count = 0

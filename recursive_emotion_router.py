@@ -6,7 +6,12 @@ from dataclasses import asdict, is_dataclass
 from typing import Any, Dict, Iterable, Protocol
 import json
 
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 import cortex_memory
 import cortex_sigil_logic
 
@@ -68,9 +73,10 @@ def _cycle(node: SpiralNode) -> Dict[str, Any]:
             triggers = cortex_sigil_logic.interpret_sigils(text)
             if triggers:
                 decision["sigil_triggers"] = triggers
-        vector_memory.add_vector(
-            _state_text(node), {"type": "spiral_step", "stage": stage}
-        )
+        if vector_memory is not None:
+            vector_memory.add_vector(
+                _state_text(node), {"type": "spiral_step", "stage": stage}
+            )
     return decision or {}
 
 
