@@ -8,7 +8,9 @@ from pathlib import Path
 import logging
 import sqlite3
 from statistics import mean
-from typing import List, Sequence
+from typing import Iterable, List, Mapping, Sequence
+
+from memory_sacred import generate_sacred_glyph
 
 try:  # pragma: no cover - optional dependency
     import torch
@@ -32,10 +34,20 @@ def _connect(db_path: Path) -> sqlite3.Connection:
         CREATE TABLE IF NOT EXISTS events (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp TEXT,
-            event TEXT
+            event TEXT,
+            glyph_path TEXT,
+            phrase TEXT
         )
         """
     )
+    try:
+        cols = {row[1] for row in conn.execute("PRAGMA table_info(events)")}
+        if "glyph_path" not in cols:
+            conn.execute("ALTER TABLE events ADD COLUMN glyph_path TEXT")
+        if "phrase" not in cols:
+            conn.execute("ALTER TABLE events ADD COLUMN phrase TEXT")
+    except Exception:  # pragma: no cover - best effort
+        pass
     return conn
 
 
@@ -95,21 +107,41 @@ class SpiralMemory:
         return [mean(values) for values in acc]
 
     # ------------------------------------------------------------ event loggers
-    def register_event(self, event: str) -> None:
-        """Record a major event in the fractal registry."""
+    def register_event(
+        self, event: str, layers: Mapping[str, Iterable[float]] | None = None
+    ) -> None:
+        """Record a major event in the fractal registry.
+
+        Parameters
+        ----------
+        event:
+            Description of the event.
+        layers:
+            Optional mapping of layer embeddings to generate a sacred glyph.
+        """
+
+        glyph_path: str | None = None
+        phrase: str | None = None
+        if layers:
+            try:
+                path, phrase = generate_sacred_glyph(layers)
+                glyph_path = str(path)
+            except Exception as exc:  # pragma: no cover - best effort
+                logger.exception("glyph generation failed: %s", exc)
 
         with _connect(self.db_path) as conn:
             conn.execute(
-                "INSERT INTO events (timestamp, event) VALUES (?, ?)",
-                (datetime.utcnow().isoformat(), event),
+                "INSERT INTO events (timestamp, event, glyph_path, phrase) VALUES (?, ?, ?, ?)",
+                (datetime.utcnow().isoformat(), event, glyph_path, phrase),
             )
 
-    def _load_events(self, limit: int = 50) -> List[str]:
+    def _load_events(self, limit: int = 50) -> List[tuple[str, str | None, str | None]]:
         with _connect(self.db_path) as conn:
             cur = conn.execute(
-                "SELECT event FROM events ORDER BY id DESC LIMIT ?", (limit,)
+                "SELECT event, glyph_path, phrase FROM events ORDER BY id DESC LIMIT ?",
+                (limit,),
             )
-            return [row[0] for row in cur.fetchall()]
+            return [(row[0], row[1], row[2]) for row in cur.fetchall()]
 
     # ----------------------------------------------------------------- recall
     def recall(self, query: str) -> str:
@@ -117,7 +149,14 @@ class SpiralMemory:
 
         events = self._load_events()
         agg = self.aggregate()
-        insight = " | ".join(events)
+        parts: List[str] = []
+        for event, glyph, phrase in events:
+            extras = [e for e in (glyph, phrase) if e]
+            if extras:
+                parts.append(f"{event} ({' | '.join(extras)})")
+            else:
+                parts.append(event)
+        insight = " | ".join(parts)
         if agg:
             vector = ", ".join(f"{v:.2f}" for v in agg)
             insight = f"{insight} || signal [{vector}]"
