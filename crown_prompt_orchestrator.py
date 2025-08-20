@@ -4,10 +4,20 @@ from __future__ import annotations
 
 from typing import Any, Dict
 import asyncio
+from datetime import datetime
+import json
 import logging
+import sqlite3
 from importlib import import_module
+from pathlib import Path
 
 from state_transition_engine import StateTransitionEngine
+
+from core.memory_physical import PhysicalEvent, store_physical_event
+from memory_mental import record_task_flow
+from memory_spiritual import set_event_symbol
+from memory_sacred import generate_sacred_glyph
+from spiral_memory import REGISTRY_DB, spiral_recall
 
 from INANNA_AI import emotion_analysis, emotional_memory
 from INANNA_AI.glm_integration import GLMIntegration
@@ -88,6 +98,89 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
     prompt_body = f"{context}\n{message}" if context else message
     prompt = f"[{state}]\n{prompt_body}"
 
+    # ----------------------------------------------- cross-layer integrations
+    try:
+        store_physical_event(PhysicalEvent("text", message))
+    except Exception:
+        logging.exception("physical store failed")
+
+    try:
+        record_task_flow(f"msg_{abs(hash(message))}", {"message": message, "emotion": emotion})
+    except Exception:
+        logging.exception("task flow logging failed")
+
+    symbols = [
+        "☉",
+        "☾",
+        "⚚",
+        "♇",
+        "♈",
+        "♉",
+        "♊",
+        "♋",
+        "♌",
+        "♍",
+        "♎",
+        "♏",
+        "♐",
+        "♑",
+        "♒",
+        "♓",
+    ]
+    symbol = symbols[abs(hash(message)) % len(symbols)]
+    try:
+        set_event_symbol(message, symbol)
+    except Exception:
+        logging.exception("symbol mapping failed")
+
+    glyph_path: str | None = None
+    glyph_phrase: str | None = None
+    layers = {
+        "physical": [float(len(message))],
+        "mental": [float(weight)],
+        "emotional": [float(weight)],
+        "spiritual": [float(ord(symbol[0]))],
+    }
+    try:
+        path, glyph_phrase = generate_sacred_glyph(layers)
+        glyph_path = str(path)
+        conn = sqlite3.connect(REGISTRY_DB)
+        with conn:
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT,
+                    event TEXT,
+                    glyph_path TEXT,
+                    phrase TEXT
+                )
+                """
+            )
+            conn.execute(
+                "INSERT INTO events (timestamp, event, glyph_path, phrase) VALUES (?, ?, ?, ?)",
+                (datetime.utcnow().isoformat(), message, glyph_path, glyph_phrase),
+            )
+    except Exception:
+        logging.exception("glyph generation failed")
+
+    try:
+        recall = spiral_recall(message)
+    except Exception:
+        logging.exception("spiral recall failed")
+        recall = ""
+
+    if glyph_path:
+        meta_file = Path(__file__).resolve().parent / "data" / "last_glyph.json"
+        try:
+            meta_file.parent.mkdir(parents=True, exist_ok=True)
+            meta_file.write_text(
+                json.dumps({"path": glyph_path, "phrase": glyph_phrase}),
+                encoding="utf-8",
+            )
+        except Exception:
+            logging.exception("failed to write glyph metadata")
+
     layer_text, layer_model = _apply_layer(message)
 
     async def _process() -> tuple[str, str]:
@@ -135,6 +228,10 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
         "weight": weight,
         "state": state,
         "context_used": context,
+        "symbol": symbol,
+        "glyph_path": glyph_path,
+        "glyph_phrase": glyph_phrase,
+        "spiral_recall": recall,
     }
 
 

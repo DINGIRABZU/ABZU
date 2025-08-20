@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Run Crown services and video stream with graceful shutdown."""
 from __future__ import annotations
+import json
 import signal
 import subprocess
 import sys
@@ -12,6 +13,8 @@ import emotional_state
 
 
 ROOT = Path(__file__).resolve().parent
+
+GLYPH_META = ROOT / "data" / "last_glyph.json"
 
 _GLYPHS = {
     "joy": "🌀😊",
@@ -44,6 +47,7 @@ def main() -> None:
     signal.signal(signal.SIGTERM, _terminate)
 
     last_emotion: str | None = None
+    last_glyph: dict[str, str] | None = None
     try:
         while any(p.poll() is None for p in procs):
             emotion = emotional_state.get_last_emotion() or "neutral"
@@ -51,6 +55,14 @@ def main() -> None:
                 glyph = _GLYPHS.get(emotion, _GLYPHS["neutral"])
                 print(f"{glyph} {emotion}")
                 last_emotion = emotion
+            if GLYPH_META.exists():
+                try:
+                    data = json.loads(GLYPH_META.read_text(encoding="utf-8"))
+                except Exception:
+                    data = {}
+                if data and data != last_glyph:
+                    print(f"glyph: {data.get('path')} :: {data.get('phrase')}")
+                    last_glyph = data
             time.sleep(0.5)
     finally:
         _terminate()
