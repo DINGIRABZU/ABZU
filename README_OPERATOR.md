@@ -172,7 +172,7 @@ background tasks.
 
 ## INANNA_AI DeepSeek-R1 Integration
 
-1. Copy `secrets.env.example` to `secrets.env` at the project root and fill in
+1. Copy `secrets.env.template` to `secrets.env` at the project root and fill in
    values like `HF_TOKEN`, `GITHUB_TOKEN`, `OPENAI_API_KEY`, `GLM_API_URL`,
    `GLM_API_KEY`, `GLM_SHELL_URL`, `GLM_SHELL_KEY`, `REFLECTION_INTERVAL`,
    `CORPUS_PATH`, `QNL_MODEL_PATH` and `VOICE_TONE_PATH`.
@@ -201,7 +201,7 @@ these steps to place the model under `INANNA_AI/models`.
 2. Copy the example secrets file to the project root:
 
    ```bash
-   cp secrets.env.example secrets.env  # run from the repository root
+   cp secrets.env.template secrets.env  # run from the repository root
    # edit secrets.env and provide your tokens and paths
    ```
 

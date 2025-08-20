@@ -11,7 +11,7 @@ if [ -f "secrets.env" ]; then
     source "secrets.env"
     set +a
 else
-    echo "secrets.env not found" >&2
+    echo "secrets.env not found. Copy secrets.env.template to secrets.env and provide your values." >&2
     exit 1
 fi
 

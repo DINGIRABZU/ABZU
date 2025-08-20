@@ -4,7 +4,7 @@ This guide shows how to build the GPU enabled container and deploy Spiral OS on 
 
 ## Configure secrets
 
-Copy `secrets.env.example` to `secrets.env` and fill out the variables required by the container and manifests:
+Copy `secrets.env.template` to `secrets.env` and fill out the variables required by the container and manifests:
 
 - `HF_TOKEN` – Hugging Face token for model downloads
 - `GITHUB_TOKEN` – optional token for scraping GitHub repositories

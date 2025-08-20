@@ -4,7 +4,7 @@ This repository preserves several collections of source texts used by the music 
 
 ## INANNA_AI
 
-`INANNA_AI` holds the "growth" chronicles, code fragments and guiding letters for the INANNA project. Files are primarily Markdown with descriptive titles followed by a unique hash, for example `INANNA GROWTH #2 20645dfc251d80fdac0cc1db79e5e516.md`. Additional helper files like `secrets.env.example` and summary CSVs may also appear.
+`INANNA_AI` holds the "growth" chronicles, code fragments and guiding letters for the INANNA project. Files are primarily Markdown with descriptive titles followed by a unique hash, for example `INANNA GROWTH #2 20645dfc251d80fdac0cc1db79e5e516.md`. Additional helper files like `secrets.env.template` and summary CSVs may also appear.
 
 ## GENESIS
 

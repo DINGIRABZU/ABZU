@@ -117,7 +117,7 @@ Start the local environment and open the web console:
 
 The manual steps are outlined below.
 
-1. Copy `secrets.env.example` to `secrets.env` and provide values for
+1. Copy `secrets.env.template` to `secrets.env` and provide values for
    environment variables such as `HF_TOKEN`, `GITHUB_TOKEN`,
    `OPENAI_API_KEY`, `GLM_API_URL`, `GLM_API_KEY`, `GLM_SHELL_URL`,
    `GLM_SHELL_KEY`, `REFLECTION_INTERVAL`, `CORPUS_PATH`,
@@ -277,7 +277,7 @@ Spiral OS ships with a compose file that launches the service in one command.
 The stack reads environment variables from `secrets.env` so create it first:
 
 ```bash
-cp secrets.env.example secrets.env
+cp secrets.env.template secrets.env
 # edit secrets.env and provide your API keys
 ```
 
