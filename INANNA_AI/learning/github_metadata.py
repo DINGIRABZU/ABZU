@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 import requests
 
-from .. import config
+import config
 
 _API_BASE = "https://api.github.com/repos/"
 
