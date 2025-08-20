@@ -155,6 +155,7 @@ class DevAssistantService:
         log_path: Path,
         objectives: Dict[str, str] | None = None,
         poll_interval: float = 30.0,
+        suggestion_path: Path | None = None,
     ) -> None:
         self.repo = repo
         self.log_path = log_path
@@ -162,12 +163,21 @@ class DevAssistantService:
         self.objectives = objectives or {"FAILED": "repair failing tests"}
         self.logger = logging.getLogger("dev_assistant_service")
         self._stop_path = self.log_path.with_suffix(".stop")
+        self.suggestion_path = suggestion_path or self.log_path.with_suffix(
+            ".suggestions"
+        )
 
     def _suggest(self, objective: str, result: Dict[str, Any]) -> None:
         plan = result.get("plan") or []
         if plan:
             suggestion = "; ".join(plan)
             self.logger.info("Suggestions for %s: %s", objective, suggestion)
+            try:
+                timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+                with self.suggestion_path.open("a", encoding="utf-8") as fh:
+                    fh.write(f"{timestamp}\t{objective}: {suggestion}\n")
+            except Exception:  # pragma: no cover - best effort logging
+                self.logger.debug("Failed writing suggestion file", exc_info=True)
             log_interaction(
                 "suggestion",
                 {"agent": "dev_assistant", "objective": objective},

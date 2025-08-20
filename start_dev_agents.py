@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import logging
 import os
+import json
 from pathlib import Path
 
 from tools.dev_orchestrator import DevAssistantService, run_dev_cycle
@@ -43,6 +44,10 @@ def main() -> int:
     parser.add_argument(
         "--log-path", default="logs/dev_agent.log", help="Log file monitored"
     )
+    parser.add_argument(
+        "--objective-map",
+        help="JSON file mapping log markers to objectives for --watch",
+    )
     args = parser.parse_args()
 
     load_env(Path("secrets.env"))
@@ -72,7 +77,15 @@ def main() -> int:
         return 0
 
     if args.watch:
-        service = DevAssistantService(repo=Path.cwd(), log_path=log_path)
+        objectives = None
+        if args.objective_map:
+            try:
+                objectives = json.loads(Path(args.objective_map).read_text())
+            except Exception as exc:  # pragma: no cover - best effort
+                logger.error("Failed to load objective map: %s", exc)
+        service = DevAssistantService(
+            repo=Path.cwd(), log_path=log_path, objectives=objectives
+        )
         logger.info("Starting watcher; press Ctrl+C or run with --stop to end")
         try:
             service.run_forever()
