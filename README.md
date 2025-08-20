@@ -182,9 +182,32 @@ The manual steps are outlined below.
    from pathlib import Path
    from core.avatar_expression_engine import stream_avatar_audio
 
-   for _ in stream_avatar_audio(Path("qnl_hex_song.wav")):
-       pass
-   ```
+    for _ in stream_avatar_audio(Path("qnl_hex_song.wav")):
+        pass
+    ```
+
+### GLM model launcher
+
+Start the standalone GLM service before other components by running:
+
+```bash
+bash crown_model_launcher.sh > glm_launch.log 2>&1 &
+```
+
+The script downloads weights if missing and serves a health endpoint on
+`http://localhost:8001/health`. When weights are already present the endpoint
+typically reports ready within ~30 seconds, though the initial download can take
+several minutes.
+
+Verify startup by polling the health route:
+
+```bash
+until curl -sf http://localhost:8001/health; do sleep 2; done
+```
+
+Review `glm_launch.log` for details. A message such as
+`jq: error (at <stdin>:1): Cannot iterate over null` usually indicates an invalid
+or missing `HF_TOKEN` in `secrets.env` or a network connectivity issue.
 
 `start_spiral_os.py` launches the **MoGEOrchestrator** which routes text
 commands to the available models.  Start it with an optional network
