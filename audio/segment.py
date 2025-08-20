@@ -15,7 +15,7 @@ from pathlib import Path
 import os
 import numpy as np
 
-_backend = os.environ.get("AUDIO_BACKEND", "pydub").lower()
+_backend = os.environ.get("AUDIO_BACKEND", "numpy").lower()
 if _backend != "numpy":
     try:  # pragma: no cover - optional dependency
         from pydub import AudioSegment as _PydubSegment  # type: ignore
