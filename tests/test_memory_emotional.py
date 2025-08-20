@@ -4,14 +4,18 @@ import pytest
 
 def test_log_and_fetch(tmp_path):
     db_path = tmp_path / "emotions.db"
-    conn = me.get_connection(db_path)
-    try:
-        e1 = me.log_emotion([0.1, 0.2], conn)
-        e2 = me.log_emotion([0.3, 0.4], conn)
-        history = me.fetch_emotion_history(10**6, conn)
-        assert [e.vector for e in history] == [e1.vector, e2.vector]
-    finally:
-        conn.close()
+    e1 = me.log_emotion([0.1, 0.2], db_path=db_path)
+    e2 = me.log_emotion([0.3, 0.4], db_path=db_path)
+    history = me.fetch_emotion_history(10**6, db_path=db_path)
+    assert [e.vector for e in history] == [e1.vector, e2.vector]
+
+
+def test_env_var_db_path(tmp_path, monkeypatch):
+    db_path = tmp_path / "emotions_env.db"
+    monkeypatch.setenv("EMOTION_DB_PATH", str(db_path))
+    entry = me.log_emotion([0.5, 0.6])
+    history = me.fetch_emotion_history(10**6)
+    assert history and history[0].vector == entry.vector
 
 
 def test_without_optional_dependencies(tmp_path, monkeypatch):
