@@ -8,6 +8,7 @@ import os
 import time
 from pathlib import Path
 
+import requests
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.patch_stdout import patch_stdout
@@ -33,13 +34,18 @@ HISTORY_FILE = Path("data/console_history.txt")
 def _wait_for_glm_ready(retries: int = 3, delay: float = 5.0) -> GLMIntegration:
     """Return a GLMIntegration once the service is reachable."""
     endpoint = os.getenv("GLM_API_URL", "http://localhost:8000")
+    health_url = endpoint.rstrip("/") + "/health"
     for attempt in range(1, retries + 1):
         try:
+            resp = requests.get(health_url, timeout=5)
+            resp.raise_for_status()
             return initialize_crown()
-        except SystemExit:
+        except (requests.RequestException, SystemExit) as exc:
             print(
-                f"Unable to reach GLM service at {endpoint}. "
-                "Ensure the server is running and GLM_API_URL is correct. "
+                f"Unable to reach GLM service at {health_url}: {exc}. "
+                "Ensure the model server is running "
+                "(e.g., 'bash crown_model_launcher.sh') and GLM_API_URL points "
+                "to the correct endpoint. "
                 f"Retrying in {delay} seconds (attempt {attempt}/{retries})."
             )
             if attempt < retries:
