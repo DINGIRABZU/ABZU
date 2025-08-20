@@ -19,6 +19,11 @@ Copy `secrets.env.template` to `secrets.env` and provide values for the required
   export MISTRAL_URL=http://localhost:8003
   ```
 
+The variable can be defined in `secrets.env` or exported in the shell. Each
+entry maps a short name to the model's base URL. `launch_servants.sh` reads this
+configuration and starts the corresponding Docker or vLLM processes. If the
+variable is unset the script warns and skips launching servants.
+
 See `secrets.env.template` for the full list.
 
 ## Download model weights

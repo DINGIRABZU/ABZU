@@ -32,6 +32,9 @@ Copy `secrets.env.template` to `secrets.env` and fill out the variables required
   export DEEPSEEK_URL=http://localhost:8002
   export MISTRAL_URL=http://localhost:8003
   ```
+Define `SERVANT_MODELS` in `secrets.env` or export it before invoking
+`launch_servants.sh`. The script reads this mapping and launches the referenced
+models. When unset it will emit a warning and skip servant startup.
 - `LLM_ROTATION_PERIOD` – rotation period for active models
 - `LLM_MAX_FAILURES` – allowed failures before rotation
 - `ARCHETYPE_STATE` – starting archetype layer
