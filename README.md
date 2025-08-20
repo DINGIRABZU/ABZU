@@ -60,6 +60,18 @@ For a short deployment overview covering Vast.ai and local Docker Compose, see [
 
 Ensure required system tools are available before running the setup scripts.
 
+Required packages:
+
+- Docker
+- SoX
+- FFmpeg
+
+Verify installation with:
+
+```bash
+./scripts/check_requirements.sh
+```
+
 1. **Docker**
 
    ```bash
@@ -78,9 +90,6 @@ Ensure required system tools are available before running the setup scripts.
    ```bash
    sudo apt-get install -y ffmpeg
    ```
-
-After installation, verify that these tools are available by running
-`./scripts/check_requirements.sh` before proceeding with the rest of the setup.
 
 Install the runtime dependencies and optional development tools using
 the project metadata:
