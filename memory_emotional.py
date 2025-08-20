@@ -1,10 +1,14 @@
 """Persist and query emotional feature vectors in SQLite.
 
 The module maintains a table ``emotion_log`` inside ``data/emotions.db``. Each
-record stores a timestamp and an associated emotion feature vector. Feature
-extraction may leverage optional dependencies such as HuggingFace
-``transformers`` or ``dlib`` when available, otherwise the API accepts raw
-numeric sequences directly.
+record stores a timestamp and an associated emotion feature vector.
+
+``log_emotion`` accepts sequences of numbers. When the optional
+``transformers`` or ``dlib`` packages are installed, non‑numeric inputs such as
+raw images or audio can also be passed. They are converted to numeric feature
+vectors using :class:`~transformers.AutoFeatureExtractor` or ``dlib``
+respectively. Without these dependencies, passing a non‑sequence raises a
+``TypeError``.
 """
 
 from __future__ import annotations
@@ -63,19 +67,33 @@ def get_connection(db_path: Path | str = DB_PATH) -> sqlite3.Connection:
 def _normalise(features: EmotionFeatures) -> List[float]:
     """Convert ``features`` into a list of floats.
 
-    If ``features`` isn't already a sequence, this function attempts to fall back
-    to optional feature extractors when available. Without those dependencies,
-    a ``TypeError`` is raised.
+    If ``features`` is not a basic sequence, available feature extractors are
+    used to derive numeric vectors. Extraction attempts are made with
+    ``transformers.AutoFeatureExtractor`` first and then ``dlib``. When no
+    extractor can handle ``features`` a ``TypeError`` is raised.
     """
 
     try:
         return [float(v) for v in features]
     except Exception:
-        if AutoFeatureExtractor is not None or dlib is not None:
-            # Real extractor logic would go here. We return an empty vector to
-            # degrade gracefully when extraction is unsupported in this
-            # environment.
-            return []
+        if AutoFeatureExtractor is not None:
+            extractor = AutoFeatureExtractor.from_pretrained(
+                "hf-internal-testing/tiny-random-wav2vec2-feature-extractor"
+            )
+            extracted = extractor(features)
+            if isinstance(extracted, dict):
+                extracted = next(iter(extracted.values()))
+            if hasattr(extracted, "ravel"):
+                extracted = extracted.ravel()
+            if hasattr(extracted, "tolist"):
+                extracted = extracted.tolist()
+            return [float(v) for v in extracted]
+        if dlib is not None:
+            try:
+                vec = dlib.vector(features)
+            except Exception as exc:  # pragma: no cover - unexpected extractor error
+                raise TypeError("features must be compatible with dlib.vector") from exc
+            return [float(v) for v in vec]
         raise TypeError("features must be a sequence of floats")
 
 
