@@ -14,6 +14,8 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
   [docs/LLM_FRAMEWORKS.md](docs/LLM_FRAMEWORKS.md).
 - For a list of available language models, see
   [docs/LLM_MODELS.md](docs/LLM_MODELS.md).
+- For an overview of repository health and open issues, see
+  [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
 - For details on the RFA7D core and the seven gate interface, see
   [docs/SOUL_CODE.md](docs/SOUL_CODE.md).
 - For JSON layout details and invocation examples, see
