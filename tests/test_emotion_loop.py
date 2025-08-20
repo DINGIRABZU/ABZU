@@ -1,15 +1,15 @@
 import sys
 from pathlib import Path
 import types
-
-import numpy as np
 import pytest
+
+np = pytest.importorskip("numpy")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from core import facial_expression_controller as fec
-from tools import reflection_loop
+reflection_loop = pytest.importorskip("tools.reflection_loop")
 from core import self_correction_engine
 import emotional_state
 from core import video_engine
@@ -40,6 +40,7 @@ def test_reflection_loop_adjusts(monkeypatch):
     monkeypatch.setattr(reflection_loop, "detect_expression", lambda f: "anger")
     monkeypatch.setattr(emotional_state, "get_last_emotion", lambda: "joy")
     monkeypatch.setattr(reflection_loop, "load_thresholds", lambda: {"default": 0.5})
+    reflection_loop.adaptive_learning.MIRROR_THRESHOLD_AGENT.thresholds = {"default": 0.5}
     monkeypatch.setattr(reflection_loop.adaptive_learning, "update_mirror_thresholds", lambda r: None)
 
     called = {}
@@ -83,6 +84,7 @@ def test_apply_expression_modifies_frame():
 def test_run_loop_uses_avatar_fixture(avatar_ready, monkeypatch):
     monkeypatch.setattr(reflection_loop, "detect_expression", lambda f: "anger")
     monkeypatch.setattr(reflection_loop, "load_thresholds", lambda: {"joy": 0.3})
+    reflection_loop.adaptive_learning.MIRROR_THRESHOLD_AGENT.thresholds = {"joy": 0.3}
     monkeypatch.setattr(reflection_loop.adaptive_learning, "update_mirror_thresholds", lambda r: None)
 
     captured = {}

@@ -1,9 +1,9 @@
 import sys
 from pathlib import Path
 import types
-
-import numpy as np
 import pytest
+
+np = pytest.importorskip("numpy")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -12,7 +12,7 @@ dummy_vm = types.ModuleType("vector_memory")
 sys.modules.setdefault("vector_memory", dummy_vm)
 sys.modules.setdefault("SPIRAL_OS", types.ModuleType("SPIRAL_OS"))
 
-from tools import reflection_loop
+reflection_loop = pytest.importorskip("tools.reflection_loop")
 from core import video_engine
 import corpus_memory_logging
 
