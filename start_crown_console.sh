@@ -20,8 +20,15 @@ fi
 
 ./crown_model_launcher.sh
 
+SERVANT_ENDPOINTS_FILE="$(mktemp)"
+export SERVANT_ENDPOINTS_FILE
 if [ -f "launch_servants.sh" ]; then
     ./launch_servants.sh
+    if [ -f "$SERVANT_ENDPOINTS_FILE" ]; then
+        SERVANT_MODELS="$(paste -sd, "$SERVANT_ENDPOINTS_FILE")"
+        export SERVANT_MODELS
+        rm -f "$SERVANT_ENDPOINTS_FILE"
+    fi
 fi
 
 if command -v nc >/dev/null 2>&1; then
@@ -63,10 +70,13 @@ parse_port() {
 main_port=$(parse_port "$GLM_API_URL")
 wait_port "$main_port"
 
-for url in "${DEEPSEEK_URL:-}" "${MISTRAL_URL:-}" "${KIMI_K2_URL:-}"; do
+IFS=','
+for item in ${SERVANT_MODELS:-}; do
+    url="${item#*=}"
     if [[ "$url" == http://localhost:* || "$url" == http://127.0.0.1:* ]]; then
         wait_port "$(parse_port "$url")"
     fi
 done
+unset IFS
 
 python -m cli.console_interface
