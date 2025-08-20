@@ -9,6 +9,7 @@ import logging
 import tempfile
 from io import BytesIO
 import base64
+import shutil
 
 import numpy as np
 
@@ -35,6 +36,11 @@ except Exception:  # pragma: no cover - optional dependency
     _play_with_simpleaudio = None  # type: ignore
 
 logger = logging.getLogger(__name__)
+
+
+def _has_ffmpeg() -> bool:
+    """Return ``True`` when ``ffmpeg`` is available on the system path."""
+    return shutil.which("ffmpeg") is not None
 
 _loops: list[Thread] = []
 _playbacks: list[Any] = []
@@ -101,6 +107,9 @@ def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> N
     """
     if AudioSegment is None or _play_with_simpleaudio is None:
         logger.warning("pydub not installed; cannot play audio")
+        return
+    if not _has_ffmpeg():
+        logger.warning("ffmpeg not installed; cannot play audio")
         return
     audio = AudioSegment.from_file(path)
     if loop:

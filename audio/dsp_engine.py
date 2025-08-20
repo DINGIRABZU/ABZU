@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Tuple
 import subprocess
 import tempfile
+import shutil
 
 import numpy as np
 
@@ -36,8 +37,15 @@ except Exception:  # pragma: no cover - optional dependency
 # ffmpeg based helpers
 # ---------------------------------------------------------------------------
 
+def _has_ffmpeg() -> bool:
+    """Return ``True`` when ``ffmpeg`` is available on the system path."""
+    return shutil.which("ffmpeg") is not None
+
+
 def _apply_ffmpeg_filter(data: np.ndarray, sr: int, filters: str) -> Tuple[np.ndarray, int]:
     """Run ``filters`` on ``data`` using ``ffmpeg``."""
+    if not _has_ffmpeg():
+        raise RuntimeError("ffmpeg not installed")
     if sf is None:
         raise RuntimeError("soundfile library not installed")
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as inp:
