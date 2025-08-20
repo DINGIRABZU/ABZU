@@ -16,9 +16,11 @@ else
 fi
 
 if [ -z "${SERVANT_MODELS:-}" ]; then
-    echo "Warning: SERVANT_MODELS is not set; no servant models will be launched." >&2
-    echo "Set it before running, for example:" >&2
-    echo "  export SERVANT_MODELS=\"deepseek=http://localhost:8002,mistral=http://localhost:8003\"" >&2
+    cat <<'EOF' >&2
+Warning: SERVANT_MODELS is not set; no servant models will be launched.
+Define SERVANT_MODELS in secrets.env or export it before running. Example:
+  export SERVANT_MODELS="deepseek=http://localhost:8002,mistral=http://localhost:8003"
+EOF
 fi
 
 launch_model() {
