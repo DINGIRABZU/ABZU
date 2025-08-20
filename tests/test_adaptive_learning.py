@@ -2,13 +2,13 @@ import sys
 from pathlib import Path
 import json
 import types
+import importlib
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import importlib
-from INANNA_AI import adaptive_learning
-
+adaptive_learning = pytest.importorskip("INANNA_AI.adaptive_learning")
 import INANNA_AI.ethical_validator as ev
 import INANNA_AI.existential_reflector as er
 

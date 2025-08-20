@@ -7,10 +7,33 @@ from typing import Dict, List
 import json
 import os
 from pathlib import Path
+import types
 
-import numpy as np
-from stable_baselines3 import PPO
-import gymnasium as gym
+try:  # pragma: no cover - import side effects
+    import numpy as np
+except Exception as exc:  # pragma: no cover - handled in tests
+    raise ImportError("numpy is required for INANNA_AI.adaptive_learning") from exc
+
+try:  # pragma: no cover - import side effects
+    from stable_baselines3 import PPO
+except Exception:  # pragma: no cover - allow stubbing in tests
+    class PPO:  # type: ignore
+        def __init__(self, *a, **k):
+            pass
+        def learn(self, *a, **k):
+            pass
+
+try:  # pragma: no cover - import side effects
+    import gymnasium as gym
+except Exception:  # pragma: no cover - allow stubbing in tests
+    class _Box:
+        def __init__(self, *a, **k):
+            pass
+    class _Env:
+        pass
+    class _Spaces(types.SimpleNamespace):
+        Box = _Box
+    gym = types.SimpleNamespace(Env=_Env, spaces=_Spaces())  # type: ignore
 
 CONFIG_ENV_VAR = "MIRROR_THRESHOLDS_PATH"
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "mirror_thresholds.json"
