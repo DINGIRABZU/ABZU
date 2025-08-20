@@ -14,6 +14,8 @@ emotivoice==0.2.0
     # via spiral-os (pyproject.toml)
 fastapi==0.116.1
     # via spiral-os (pyproject.toml)
+ffmpeg-python==0.2.0
+    # via spiral-os (pyproject.toml)
 huggingface-hub==0.34.4
     # via spiral-os (pyproject.toml)
 langchain==0.3.27

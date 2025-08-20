@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
+import time
 from pathlib import Path
 
 from prompt_toolkit import PromptSession
@@ -11,6 +13,7 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.patch_stdout import patch_stdout
 
 from init_crown_agent import initialize_crown
+from INANNA_AI.glm_integration import GLMIntegration
 from rag.orchestrator import MoGEOrchestrator
 from core import context_tracker, avatar_expression_engine
 from INANNA_AI import speaking_engine
@@ -27,6 +30,24 @@ logger = logging.getLogger(__name__)
 HISTORY_FILE = Path("data/console_history.txt")
 
 
+def _wait_for_glm_ready(retries: int = 3, delay: float = 5.0) -> GLMIntegration:
+    """Return a GLMIntegration once the service is reachable."""
+    endpoint = os.getenv("GLM_API_URL", "http://localhost:8000")
+    for attempt in range(1, retries + 1):
+        try:
+            return initialize_crown()
+        except SystemExit:
+            print(
+                f"Unable to reach GLM service at {endpoint}. "
+                "Ensure the server is running and GLM_API_URL is correct. "
+                f"Retrying in {delay} seconds (attempt {attempt}/{retries})."
+            )
+            if attempt < retries:
+                time.sleep(delay)
+    print("GLM service is still unreachable. Please start the server and try again.")
+    raise SystemExit(1)
+
+
 def run_repl(argv: list[str] | None = None) -> None:
     """Start the interactive console."""
     parser = argparse.ArgumentParser(description="Crown agent console")
@@ -37,7 +58,10 @@ def run_repl(argv: list[str] | None = None) -> None:
     )
     args = parser.parse_args(argv)
 
-    glm = initialize_crown()
+    try:
+        glm = _wait_for_glm_ready()
+    except SystemExit:
+        return
     orch = MoGEOrchestrator()
     speak = args.speak
     session = PromptSession(history=FileHistory(str(HISTORY_FILE)))
