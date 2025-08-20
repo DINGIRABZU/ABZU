@@ -8,7 +8,7 @@ from pathlib import Path
 import json
 from typing import Any, Dict, Iterable, Protocol, List
 
-from aspect_processor import analyze_phonetic, analyze_semantic
+from aspect_processor import analyze_phonetic, analyze_semantic, analyze_temporal
 
 
 class SpiralNode(Protocol):
@@ -55,6 +55,7 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
     state = _state_text(node)
     analyze_phonetic(state)
     analyze_semantic(json.dumps(decision))
+    analyze_temporal(datetime.utcnow().isoformat())
     entry = {
         "timestamp": datetime.utcnow().isoformat(),
         "state": state,

@@ -21,6 +21,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence
 
+from aspect_processor import analyze_emotional
+
 try:  # Optional dependency
     from transformers import AutoFeatureExtractor  # type: ignore
 except Exception:  # pragma: no cover - dependency may be missing
@@ -113,6 +115,7 @@ def log_emotion(
     """Persist ``features`` and return the stored :class:`EmotionEntry`."""
 
     vector = _normalise(features)
+    analyze_emotional(vector)
     timestamp = time.time()
     entry = EmotionEntry(timestamp=timestamp, vector=vector)
     own_conn = conn is None

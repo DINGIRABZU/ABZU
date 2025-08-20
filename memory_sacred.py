@@ -29,7 +29,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     Image = None  # type: ignore
 
-from aspect_processor import analyze_phonetic, analyze_semantic
+from aspect_processor import analyze_phonetic, analyze_semantic, analyze_spatial
 
 SACRED_DIR = Path(__file__).resolve().parent / "data" / "sacred"
 SACRED_DIR.mkdir(parents=True, exist_ok=True)
@@ -124,6 +124,7 @@ def generate_sacred_glyph(inputs: Dict[str, Iterable[float]]) -> Tuple[Path, str
     x = torch.cat(vectors)
     model = _get_model(len(x))
     recon, _, _, z = model(x)
+    analyze_spatial(z.detach().cpu().tolist())
 
     ts = _dt.datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
     latent_path = SACRED_DIR / f"latent_{ts}.pt"

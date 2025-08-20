@@ -9,7 +9,7 @@ from typing import Any, Optional
 import json
 import logging
 
-from aspect_processor import analyze_phonetic, analyze_semantic
+from aspect_processor import analyze_phonetic, analyze_semantic, analyze_spatial
 
 try:  # pragma: no cover - optional
     import cv2  # type: ignore
@@ -91,6 +91,7 @@ def store_physical_event(event: PhysicalEvent) -> Path:
         meta["file"] = file_path.name
         analyze_phonetic(event.data)
         analyze_semantic(event.data)
+        analyze_spatial(event.data)
     else:
         raise ValueError(f"Unknown modality: {event.modality}")
 

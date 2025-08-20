@@ -11,7 +11,7 @@ from pathlib import Path
 import sqlite3
 from typing import Optional
 
-from aspect_processor import analyze_phonetic, analyze_semantic
+from aspect_processor import analyze_phonetic, analyze_ritual, analyze_semantic
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "data" / "ontology.db"
@@ -54,6 +54,7 @@ def set_event_symbol(
 
     analyze_phonetic(event)
     analyze_semantic(symbol)
+    analyze_ritual(f"{event}:{symbol}")
     own_conn = conn is None
     conn = conn or get_connection()
     try:
@@ -74,6 +75,7 @@ def get_event_symbol(
 
     analyze_phonetic(event)
     analyze_semantic(event)
+    analyze_ritual(event)
     own_conn = conn is None
     conn = conn or get_connection()
     try:
