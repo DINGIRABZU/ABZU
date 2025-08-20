@@ -1,7 +1,20 @@
+import os
 import sys
 from pathlib import Path
 
 import pytest
+
+
+# Default to NumPy audio backend unless pydub and audioop are fully available
+if "AUDIO_BACKEND" not in os.environ:
+    try:  # pragma: no cover - optional dependency
+        import pydub  # type: ignore
+        import audioop  # type: ignore
+    except Exception:  # pragma: no cover - missing deps
+        pass
+    else:  # pragma: no cover - both deps present
+        os.environ["AUDIO_BACKEND"] = "pydub"
+
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
