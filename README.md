@@ -326,6 +326,28 @@ the FastAPI endpoint at `http://localhost:8000/glm-command`.
 For instructions on building the GPU container and deploying the Kubernetes
 manifests see [docs/cloud_deployment.md](docs/cloud_deployment.md).
 
+## GLM Model Launcher
+
+The `crown_model_launcher.sh` script downloads the GLM-4.1V-9B weights and
+starts a model server on port `8001`. When the weights are already present the
+`/health` endpoint should return `200` within roughly **30 seconds**. The first
+run may take several minutes while the weights download.
+
+Startup output is written to `glm_launch.log`:
+
+```bash
+bash crown_model_launcher.sh > glm_launch.log 2>&1
+```
+
+### Troubleshooting
+
+- Ensure `secrets.env` contains valid values for `HF_TOKEN`, `GLM_API_URL` and
+  `GLM_API_KEY`.
+- Poll the server with
+  `curl -s -o /dev/null -w "%{http_code}" http://localhost:8001/health`. A
+  non-`200` response or connection error indicates the model failed to start;
+  inspect `glm_launch.log` for details.
+
 ## Codex GPU Deployment
 
 A container spec `spiral_os_container.yaml` is provided for running the tools with CUDA support. It loads environment variables from `secrets.env`, exposes ports `8000` and `8001`, and mounts `data` and `logs`. Build and launch it with:
