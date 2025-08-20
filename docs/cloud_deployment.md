@@ -24,6 +24,8 @@ Copy `secrets.env.template` to `secrets.env` and fill out the variables required
 - `VOICE_CONFIG_PATH` – override path to `voice_config.yaml`
 - `EMOTION_STATE_PATH` – file used to persist emotion state
 - `KIMI_K2_URL` – optional Kimi-K2 servant endpoint
+- `SERVANT_MODELS` – optional comma-separated list of servant model endpoints
+  (e.g. `deepseek=http://localhost:8002,mistral=http://localhost:8003`)
 - `LLM_ROTATION_PERIOD` – rotation period for active models
 - `LLM_MAX_FAILURES` – allowed failures before rotation
 - `ARCHETYPE_STATE` – starting archetype layer

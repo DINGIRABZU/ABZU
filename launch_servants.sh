@@ -15,6 +15,11 @@ else
     exit 1
 fi
 
+if [ -z "${SERVANT_MODELS:-}" ]; then
+    echo "SERVANT_MODELS is not set. Example:" >&2
+    echo "  export SERVANT_MODELS=\"deepseek=http://localhost:8002,mistral=http://localhost:8003\"" >&2
+fi
+
 launch_model() {
     local name="$1"
     local url="$2"
