@@ -65,6 +65,9 @@ sudo apt-get update
 sudo apt-get install -y docker.io sox ffmpeg
 ```
 
+After installation, verify that these tools are available by running
+`./scripts/check_requirements.sh` before proceeding with the rest of the setup.
+
 Install the runtime dependencies and optional development tools using
 the project metadata:
 
