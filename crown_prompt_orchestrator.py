@@ -15,7 +15,7 @@ from state_transition_engine import StateTransitionEngine
 
 from core.memory_physical import PhysicalEvent, store_physical_event
 from memory_mental import record_task_flow
-from memory_spiritual import set_event_symbol
+from memory_spiritual import map_to_symbol
 from memory_sacred import generate_sacred_glyph
 from spiral_memory import REGISTRY_DB, spiral_recall
 
@@ -129,7 +129,7 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
     ]
     symbol = symbols[abs(hash(message)) % len(symbols)]
     try:
-        set_event_symbol(message, symbol)
+        map_to_symbol((message, symbol))
     except Exception:
         logging.exception("symbol mapping failed")
 
