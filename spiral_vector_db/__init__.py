@@ -6,8 +6,12 @@ from pathlib import Path
 from typing import Iterable, Any, Dict
 import os
 import uuid
+import math
 
-import numpy as np
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import chromadb
@@ -59,7 +63,10 @@ def insert_embeddings(data: Iterable[dict]) -> None:
         emb = item.get("embedding")
         if emb is None:
             emb = qnl_utils.quantum_embed(item.get("text", ""))
-        emb = np.asarray(emb, dtype=float).tolist()
+        if np is not None:
+            emb = np.asarray(emb, dtype=float).tolist()
+        else:
+            emb = [float(x) for x in emb]
         embeddings.append(emb)
         meta = {k: v for k, v in item.items() if k not in {"embedding", "id"}}
         metadatas.append(meta)
@@ -68,11 +75,18 @@ def insert_embeddings(data: Iterable[dict]) -> None:
 
 def query_embeddings(text: str, top_k: int = 5, filters: dict | None = None) -> list[dict]:
     """Return ``top_k`` matches for ``text`` ordered by cosine similarity."""
-    qvec = np.asarray(qnl_utils.quantum_embed(text), dtype=float)
+    qvec_raw = qnl_utils.quantum_embed(text)
+    if np is not None:
+        qvec = np.asarray(qvec_raw, dtype=float)
+    else:
+        qvec = [float(x) for x in qvec_raw]
     col = _get_collection()
-    res = col.query(query_embeddings=[qvec.tolist()], n_results=max(top_k * 5, top_k))
+    res = col.query(query_embeddings=[list(qvec)], n_results=max(top_k * 5, top_k))
     metas = res.get("metadatas", [[]])[0]
-    embs = [np.asarray(e, dtype=float) for e in res.get("embeddings", [[]])[0]]
+    if np is not None:
+        embs = [np.asarray(e, dtype=float) for e in res.get("embeddings", [[]])[0]]
+    else:
+        embs = [[float(x) for x in e] for e in res.get("embeddings", [[]])[0]]
 
     results: list[dict] = []
     for emb, meta in zip(embs, metas):
@@ -86,8 +100,15 @@ def query_embeddings(text: str, top_k: int = 5, filters: dict | None = None) -> 
                 continue
         if getattr(emb, "size", len(emb)) == 0:
             continue
-        dot = sum(float(a) * float(b) for a, b in zip(emb, qvec))
-        sim = float(dot / ((np.linalg.norm(emb) * np.linalg.norm(qvec)) + 1e-8))
+        if np is not None:
+            dot = float(emb @ qvec)
+            norm_emb = float(np.linalg.norm(emb))
+            norm_q = float(np.linalg.norm(qvec))
+        else:
+            dot = sum(float(a) * float(b) for a, b in zip(emb, qvec))
+            norm_emb = math.sqrt(sum(float(x) ** 2 for x in emb))
+            norm_q = math.sqrt(sum(float(x) ** 2 for x in qvec))
+        sim = float(dot / ((norm_emb * norm_q) + 1e-8))
         rec = dict(meta)
         rec["score"] = sim
         results.append(rec)

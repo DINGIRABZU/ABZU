@@ -7,7 +7,10 @@ from typing import Iterable, List, Dict, Any
 import argparse
 import json
 
-import numpy as np
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
@@ -49,10 +52,14 @@ def embed_chunks(chunks: Iterable[dict]) -> list[dict]:
     for chunk, emb in zip(items, embeddings):
         sent = sentiment_score(chunk.get("text", ""))
         tag = "positive" if sent > 0 else "negative" if sent < 0 else "neutral"
+        if np is not None:
+            flat = np.asarray(emb).flatten().tolist()
+        else:
+            flat = [float(x) for x in (emb if isinstance(emb, (list, tuple)) else [emb])]
         record = {
             "text": chunk.get("text", ""),
             "source_path": chunk.get("source_path", ""),
-            "embedding": list(map(float, np.asarray(emb).flatten().tolist())),
+            "embedding": [float(x) for x in flat],
             "sentiment": tag,
         }
         if "archetype" in chunk:

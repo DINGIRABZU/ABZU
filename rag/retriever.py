@@ -5,8 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List, Dict, Any
 import logging
+import math
 
-import numpy as np
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import chromadb
@@ -41,16 +45,31 @@ def get_collection(name: str) -> Collection:
 def retrieve_top(question: str, top_n: int = 5, *, collection: str = "tech") -> List[Dict[str, Any]]:
     """Return ranked snippets for ``question`` from ``collection``."""
     model = rag_embedder._get_model()
-    query_emb = np.asarray(model.encode([question])[0], dtype=float)
+    q_raw = model.encode([question])[0]
+    if np is not None:
+        query_emb = np.asarray(q_raw, dtype=float)
+    else:
+        query_emb = [float(x) for x in q_raw]
     col = get_collection(collection)
-    res = col.query(query_embeddings=[query_emb.tolist()], n_results=max(top_n * 5, top_n))
+    res = col.query(query_embeddings=[list(query_emb)], n_results=max(top_n * 5, top_n))
     metas = res.get("metadatas", [[]])[0]
-    embs = [np.asarray(e, dtype=float) for e in res.get("embeddings", [[]])[0]]
+    if np is not None:
+        embs = [np.asarray(e, dtype=float) for e in res.get("embeddings", [[]])[0]]
+    else:
+        embs = [[float(x) for x in e] for e in res.get("embeddings", [[]])[0]]
     results: list[Dict[str, Any]] = []
     for emb, meta in zip(embs, metas):
         if getattr(emb, "size", len(emb)) == 0:
             continue
-        sim = float(emb @ query_emb / ((np.linalg.norm(emb) * np.linalg.norm(query_emb)) + 1e-8))
+        if np is not None:
+            dot = float(emb @ query_emb)
+            norm_emb = float(np.linalg.norm(emb))
+            norm_q = float(np.linalg.norm(query_emb))
+        else:
+            dot = sum(float(a) * float(b) for a, b in zip(emb, query_emb))
+            norm_emb = math.sqrt(sum(float(x) ** 2 for x in emb))
+            norm_q = math.sqrt(sum(float(x) ** 2 for x in query_emb))
+        sim = float(dot / ((norm_emb * norm_q) + 1e-8))
         rec = dict(meta)
         rec["score"] = sim
         results.append(rec)
