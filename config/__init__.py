@@ -7,7 +7,7 @@ from pathlib import Path
 from pydantic import AnyHttpUrl, Field
 
 try:  # pragma: no cover - optional dependency
-    from pydantic_settings import BaseSettings
+    from pydantic_settings import BaseSettings, SettingsConfigDict
 except Exception:  # pragma: no cover - fallback when dependency missing
 
     class BaseSettings:  # type: ignore[override]
@@ -47,6 +47,9 @@ except Exception:  # pragma: no cover - fallback when dependency missing
                     else:
                         value = raw
                 setattr(self, name, value)
+
+    def SettingsConfigDict(**kwargs):  # type: ignore[misc]
+        return kwargs
 
 # ``config`` is now a package; resolve paths relative to the repository root.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -105,38 +108,98 @@ class Settings(BaseSettings):
     standard mapping rules (``field_name" -> "FIELD_NAME").
     """
 
-    glm_command_token: str | None = Field(None, env="GLM_COMMAND_TOKEN")
-    crown_tts_backend: str = Field("gtts", env="CROWN_TTS_BACKEND")
+    glm_command_token: str | None = Field(
+        None,
+        validation_alias="GLM_COMMAND_TOKEN",
+        json_schema_extra={"env": "GLM_COMMAND_TOKEN"},
+    )
+    crown_tts_backend: str = Field(
+        "gtts",
+        validation_alias="CROWN_TTS_BACKEND",
+        json_schema_extra={"env": "CROWN_TTS_BACKEND"},
+    )
     voice_avatar_config_path: Path | None = Field(
-        None, env="VOICE_AVATAR_CONFIG_PATH"
+        None,
+        validation_alias="VOICE_AVATAR_CONFIG_PATH",
+        json_schema_extra={"env": "VOICE_AVATAR_CONFIG_PATH"},
     )
-    rvc_preset: str | None = Field(None, env="RVC_PRESET")
-    voicefix: bool = Field(False, env="VOICEFIX")
-    glm_shell_url: AnyHttpUrl | None = Field(None, env="GLM_SHELL_URL")
-    glm_shell_key: str | None = Field(None, env="GLM_SHELL_KEY")
+    rvc_preset: str | None = Field(
+        None,
+        validation_alias="RVC_PRESET",
+        json_schema_extra={"env": "RVC_PRESET"},
+    )
+    voicefix: bool = Field(
+        False,
+        validation_alias="VOICEFIX",
+        json_schema_extra={"env": "VOICEFIX"},
+    )
+    glm_shell_url: AnyHttpUrl | None = Field(
+        None,
+        validation_alias="GLM_SHELL_URL",
+        json_schema_extra={"env": "GLM_SHELL_URL"},
+    )
+    glm_shell_key: str | None = Field(
+        None,
+        validation_alias="GLM_SHELL_KEY",
+        json_schema_extra={"env": "GLM_SHELL_KEY"},
+    )
     animation_service_url: AnyHttpUrl | None = Field(
-        None, env="ANIMATION_SERVICE_URL"
+        None,
+        validation_alias="ANIMATION_SERVICE_URL",
+        json_schema_extra={"env": "ANIMATION_SERVICE_URL"},
     )
-    embed_model_path: str = Field("all-MiniLM-L6-v2", env="EMBED_MODEL_PATH")
-    retrain_threshold: int = Field(10, env="RETRAIN_THRESHOLD")
-    llm_rotation_period: int = Field(300, env="LLM_ROTATION_PERIOD")
-    llm_max_failures: int = Field(3, env="LLM_MAX_FAILURES")
+    embed_model_path: str = Field(
+        "all-MiniLM-L6-v2",
+        validation_alias="EMBED_MODEL_PATH",
+        json_schema_extra={"env": "EMBED_MODEL_PATH"},
+    )
+    retrain_threshold: int = Field(
+        10,
+        validation_alias="RETRAIN_THRESHOLD",
+        json_schema_extra={"env": "RETRAIN_THRESHOLD"},
+    )
+    llm_rotation_period: int = Field(
+        300,
+        validation_alias="LLM_ROTATION_PERIOD",
+        json_schema_extra={"env": "LLM_ROTATION_PERIOD"},
+    )
+    llm_max_failures: int = Field(
+        3,
+        validation_alias="LLM_MAX_FAILURES",
+        json_schema_extra={"env": "LLM_MAX_FAILURES"},
+    )
     feedback_novelty_threshold: float = Field(
-        0.3, env="FEEDBACK_NOVELTY_THRESHOLD"
+        0.3,
+        validation_alias="FEEDBACK_NOVELTY_THRESHOLD",
+        json_schema_extra={"env": "FEEDBACK_NOVELTY_THRESHOLD"},
     )
     feedback_coherence_threshold: float = Field(
-        0.7, env="FEEDBACK_COHERENCE_THRESHOLD"
+        0.7,
+        validation_alias="FEEDBACK_COHERENCE_THRESHOLD",
+        json_schema_extra={"env": "FEEDBACK_COHERENCE_THRESHOLD"},
     )
     vector_db_path: Path = Field(
         BASE_DIR / "data" / "vector_memory",
-        env="VECTOR_DB_PATH",
+        validation_alias="VECTOR_DB_PATH",
+        json_schema_extra={"env": "VECTOR_DB_PATH"},
     )
-    neo4j_uri: str = Field("bolt://localhost:7687", env="NEO4J_URI")
-    neo4j_user: str = Field("neo4j", env="NEO4J_USER")
-    neo4j_password: str = Field("password", env="NEO4J_PASSWORD")
+    neo4j_uri: str = Field(
+        "bolt://localhost:7687",
+        validation_alias="NEO4J_URI",
+        json_schema_extra={"env": "NEO4J_URI"},
+    )
+    neo4j_user: str = Field(
+        "neo4j",
+        validation_alias="NEO4J_USER",
+        json_schema_extra={"env": "NEO4J_USER"},
+    )
+    neo4j_password: str = Field(
+        "password",
+        validation_alias="NEO4J_PASSWORD",
+        json_schema_extra={"env": "NEO4J_PASSWORD"},
+    )
 
-    class Config:
-        case_sensitive = True
+    model_config = SettingsConfigDict(case_sensitive=True, env_prefix="")
 
 
 settings = Settings()
