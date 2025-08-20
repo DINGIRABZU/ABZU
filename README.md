@@ -368,6 +368,11 @@ bash crown_model_launcher.sh > glm_launch.log 2>&1
   `curl -s -o /dev/null -w "%{http_code}" http://localhost:8001/health`. A
   non-`200` response or connection error indicates the model failed to start;
   inspect `glm_launch.log` for details.
+- If `glm_launch.log` shows `jq: error (at <stdin>:1): Cannot iterate over null`,
+  the metadata request to Hugging Face failed. Verify the `HF_TOKEN` value and
+  that your network connection is active.
+- Confirm port `8001` is free before launching; an existing process on that port
+  prevents the health endpoint from becoming ready.
 
 ## Codex GPU Deployment
 
