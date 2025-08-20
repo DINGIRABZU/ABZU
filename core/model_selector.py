@@ -6,7 +6,12 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from INANNA_AI import db_storage
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 # Emotion to model lookup derived from docs/crown_manifest.md
 _EMOTION_MODEL_MATRIX = {
@@ -92,12 +97,15 @@ class ModelSelector:
         history: List[str],
     ) -> str:
         """Return the model best suited for the given context."""
-        try:
-            records = vector_memory.query_vectors(
-                filter={"type": "routing_decision", "emotion": emotion},
-                limit=10,
-            )
-        except Exception:
+        if vector_memory is not None:
+            try:
+                records = vector_memory.query_vectors(
+                    filter={"type": "routing_decision", "emotion": emotion},
+                    limit=10,
+                )
+            except Exception:
+                records = []
+        else:
             records = []
 
         mem_weights = dict(self.model_weights)

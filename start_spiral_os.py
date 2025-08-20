@@ -35,7 +35,18 @@ import emotion_registry
 import emotional_state
 from core import self_correction_engine, language_engine
 from connectors import webrtc_connector
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
+try:  # pragma: no cover - optional dependency
+    import invocation_engine as _invocation_engine
+except ImportError:  # pragma: no cover - optional dependency
+    _invocation_engine = None  # type: ignore[assignment]
+invocation_engine = _invocation_engine
+"""Optional invocation engine subsystem; ``None`` if unavailable."""
 
 logger = logging.getLogger(__name__)
 
@@ -48,14 +59,20 @@ def main(argv: Optional[List[str]] = None) -> None:
         Path("logs").mkdir(exist_ok=True)
         stats = system_monitor.collect_stats()
         (Path("logs") / "system_status.json").write_text(json.dumps(stats))
-        vector_memory.add_vector(json.dumps(stats), {"type": "system_status"})
+        if vector_memory is not None:
+            vector_memory.add_vector(json.dumps(stats), {"type": "system_status"})
+        else:  # pragma: no cover - optional dependency missing
+            logger.warning("Vector memory module missing; system status not stored")
         logging.config.dictConfig(config)
     else:  # pragma: no cover - default fallback
         logging.basicConfig(level=logging.INFO)
         Path("logs").mkdir(exist_ok=True)
         stats = system_monitor.collect_stats()
         (Path("logs") / "system_status.json").write_text(json.dumps(stats))
-        vector_memory.add_vector(json.dumps(stats), {"type": "system_status"})
+        if vector_memory is not None:
+            vector_memory.add_vector(json.dumps(stats), {"type": "system_status"})
+        else:  # pragma: no cover - optional dependency missing
+            logger.warning("Vector memory module missing; system status not stored")
     parser = argparse.ArgumentParser(description="Start Spiral OS rituals")
     parser.add_argument("--interface", help="Interface to monitor")
     parser.add_argument(
@@ -110,17 +127,19 @@ def main(argv: Optional[List[str]] = None) -> None:
     args = parser.parse_args(argv)
 
     if args.rewrite_memory:
-        from invocation_engine import invoke_ritual
+        if vector_memory is None or invocation_engine is None:
+            raise SystemExit("Memory rewrite unavailable: missing dependencies")
         try:
             vector_memory.rewrite_vector(args.rewrite_memory[0], args.rewrite_memory[1])
         except Exception as exc:
             raise SystemExit(f"Failed to rewrite memory: {exc}") from exc
-        invoke_ritual(args.rewrite_memory[0])
+        invocation_engine.invoke_ritual(args.rewrite_memory[0])
         return
 
     if args.invoke_ritual:
-        from invocation_engine import invoke_ritual
-        steps = invoke_ritual(args.invoke_ritual)
+        if invocation_engine is None:
+            raise SystemExit("Invocation engine unavailable")
+        steps = invocation_engine.invoke_ritual(args.invoke_ritual)
         for step in steps:
             print(step)
         return
@@ -156,7 +175,10 @@ def main(argv: Optional[List[str]] = None) -> None:
     inanna_ai.display_welcome_message()
     audio, _ = listening_engine.capture_audio(3.0)
     features = listening_engine._extract_features(audio, 44100)
-    vector_memory.add_vector("initial_listen", features)
+    if vector_memory is not None:
+        vector_memory.add_vector("initial_listen", features)
+    else:  # pragma: no cover - optional dependency missing
+        logger.warning("Vector memory module missing; initial listen not stored")
     emotional_state.set_last_emotion(features.get("emotion"))
     summary = glm_init.summarize_purpose()
     logger.info("Project summary: %s", summary)

@@ -6,7 +6,11 @@ from typing import Any, Dict, List, Optional
 import argparse
 import importlib.util
 
-from vector_memory import search as vm_search
+try:  # pragma: no cover - optional dependency
+    from vector_memory import search as vm_search  # type: ignore[assignment]
+except ImportError:  # pragma: no cover - optional dependency
+    vm_search = None  # type: ignore[assignment]
+"""Optional vector memory search function; ``None`` if unavailable."""
 _HAYSTACK_AVAILABLE = importlib.util.find_spec("haystack") is not None
 _LLAMA_AVAILABLE = importlib.util.find_spec("llama_index") is not None or importlib.util.find_spec("llamaindex") is not None
 
@@ -40,6 +44,8 @@ def _get_score(item: Any) -> float:
 
 def query(text: str, filters: Optional[Dict[str, Any]] = None, *, top_n: int = 5) -> List[Any]:
     """Return ranked snippets for ``text``."""
+    if vm_search is None:
+        return []
     res = vm_search(text, filter=filters, k=top_n)
     items = [_make_item(r.get("text", ""), r, r.get("score", 0.0)) for r in res]
     items.sort(key=_get_score, reverse=True)

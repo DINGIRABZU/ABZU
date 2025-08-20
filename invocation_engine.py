@@ -8,7 +8,12 @@ import logging
 from pathlib import Path
 import re
 
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 if TYPE_CHECKING:  # pragma: no cover - avoid circular import at runtime
     from rag.orchestrator import MoGEOrchestrator

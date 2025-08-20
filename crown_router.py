@@ -5,7 +5,12 @@ from __future__ import annotations
 from typing import Any, Dict
 
 import emotional_state
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 from rag.orchestrator import MoGEOrchestrator
 from crown_decider import decide_expression_options
@@ -54,13 +59,16 @@ def route_decision(
     opts = decide_expression_options(emotion)
 
     soul = emotional_state.get_soul_state()
-    try:
-        records = vector_memory.search(
-            "",
-            filter={"type": "expression_decision", "emotion": emotion},
-            k=20,
-        )
-    except Exception:
+    if vector_memory is not None:
+        try:
+            records = vector_memory.search(
+                "",
+                filter={"type": "expression_decision", "emotion": emotion},
+                k=20,
+            )
+        except Exception:
+            records = []
+    else:
         records = []
 
     backend_weights: Dict[str, float] = {opts.get("tts_backend", ""): 1.0}

@@ -13,7 +13,12 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 from MUSIC_FOUNDATION import qnl_utils
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 _OUTPUT_PATH = Path(__file__).resolve().parents[1] / "data" / "archetype_clusters.json"
 
@@ -24,6 +29,8 @@ def _tokenize(text: str) -> Iterable[str]:
 
 def cluster_vectors(k: int = 5, limit: int = 100) -> list[dict[str, Any]]:
     """Cluster recent vectors and return summary data."""
+    if vector_memory is None:
+        return []
     records = vector_memory.query_vectors(limit=limit)
     if not records:
         return []

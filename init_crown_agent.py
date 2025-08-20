@@ -10,7 +10,12 @@ import yaml
 
 from INANNA_AI.glm_integration import GLMIntegration
 from INANNA_AI import glm_integration as gi
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 from INANNA_AI import corpus_memory
 import servant_model_manager as smm
 try:  # pragma: no cover - optional dependency
@@ -70,11 +75,14 @@ def _init_memory(cfg: dict) -> None:
 
         os.environ["VECTOR_DB_PATH"] = str(vec_path)
         logger.info("initializing vector memory at %s", vec_path)
-        try:
-            vector_memory._get_collection()
-            logger.info("Vector memory loaded from %s", vec_path)
-        except Exception as exc:  # pragma: no cover - optional deps
-            logger.warning("Vector memory unavailable: %s", exc)
+        if vector_memory is not None:
+            try:
+                vector_memory._get_collection()
+                logger.info("Vector memory loaded from %s", vec_path)
+            except Exception as exc:  # pragma: no cover - optional deps
+                logger.warning("Vector memory unavailable: %s", exc)
+        else:  # pragma: no cover - optional dependency missing
+            logger.warning("Vector memory module missing; related features disabled")
 
         corpus_memory.CHROMA_DIR = corpus_path
         logger.info("initializing corpus memory at %s", corpus_path)

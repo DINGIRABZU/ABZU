@@ -9,7 +9,12 @@ from . import emotional_synaptic_engine
 import emotional_state
 
 from . import db_storage
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 from config import settings
 
 import numpy as np
@@ -95,10 +100,11 @@ class VoiceEvolution:
         database via :func:`db_storage.save_voice_profiles`.
         """
         records = []
-        try:
-            records = vector_memory.query_vectors(filter={"type": "emotion"}, limit=20)
-        except Exception:
-            records = []
+        if vector_memory is not None:
+            try:
+                records = vector_memory.query_vectors(filter={"type": "emotion"}, limit=20)
+            except Exception:
+                records = []
         if history is not None:
             records.extend(list(history))
 
@@ -136,9 +142,12 @@ class VoiceEvolution:
 
     def evolve_with_memory(self) -> None:
         """Update styles based on recent memory and log result."""
-        try:
-            history = vector_memory.query_vectors(filter={"type": "emotion"}, limit=20)
-        except Exception:
+        if vector_memory is not None:
+            try:
+                history = vector_memory.query_vectors(filter={"type": "emotion"}, limit=20)
+            except Exception:
+                history = []
+        else:
             history = []
         if history:
             update_voice_from_history(history)
@@ -157,18 +166,19 @@ class VoiceEvolution:
         if "pitch" in filters:
             style["pitch"] = float(filters["pitch"])
 
-        try:
-            vector_memory.add_vector(
-                f"voice_profile_{emotion}",
-                {
-                    "emotion": emotion,
-                    "speed": style.get("speed", 1.0),
-                    "pitch": style.get("pitch", 0.0),
-                    "model": settings.crown_tts_backend,
-                },
-            )
-        except Exception:
-            pass
+        if vector_memory is not None:
+            try:
+                vector_memory.add_vector(
+                    f"voice_profile_{emotion}",
+                    {
+                        "emotion": emotion,
+                        "speed": style.get("speed", 1.0),
+                        "pitch": style.get("pitch", 0.0),
+                        "model": settings.crown_tts_backend,
+                    },
+                )
+            except Exception:
+                pass
 
     def reset(self) -> None:
         """Reset styles to the default values."""

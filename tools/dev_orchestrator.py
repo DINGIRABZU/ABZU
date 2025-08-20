@@ -24,7 +24,12 @@ import time
 
 from corpus_memory_logging import log_interaction
 from INANNA_AI.glm_integration import GLMIntegration
-import vector_memory
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 try:  # pragma: no cover - optional dependency
     from autogen import AssistantAgent  # type: ignore
@@ -52,14 +57,17 @@ class DevAgent:
             )
 
     def _context(self, text: str) -> str:
+        if vector_memory is None:
+            return ""
         hits = vector_memory.search(text, filter={"objective": self.objective})
         return "\n".join(h.get("text", "") for h in hits)
 
     def _log(self, prompt: str, response: str) -> None:
-        vector_memory.add_vector(
-            prompt,
-            {"agent": self.name, "objective": self.objective, "response": response},
-        )
+        if vector_memory is not None:
+            vector_memory.add_vector(
+                prompt,
+                {"agent": self.name, "objective": self.objective, "response": response},
+            )
         log_interaction(
             prompt,
             {"agent": self.name, "objective": self.objective},
