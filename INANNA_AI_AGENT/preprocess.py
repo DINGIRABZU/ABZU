@@ -1,10 +1,15 @@
+from __future__ import annotations
+
 import json
 import re
 from pathlib import Path
 from typing import Dict, List
 
-import numpy as np
-try:
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
+try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
 except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
@@ -92,6 +97,10 @@ def generate_embeddings(
     cache_dir = Path(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
 
+    if np is None:
+        raise ImportError(
+            "NumPy is required for generate_embeddings; install numpy to use this function."
+        )
     if SentenceTransformer is None:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
     model = SentenceTransformer(model_name)
