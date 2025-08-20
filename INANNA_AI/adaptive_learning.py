@@ -11,11 +11,23 @@ import types
 
 try:  # pragma: no cover - import side effects
     import numpy as np
-except Exception as exc:  # pragma: no cover - handled in tests
-    raise ImportError("numpy is required for INANNA_AI.adaptive_learning") from exc
+except Exception:  # pragma: no cover - allow stubbing in tests
+    def _zeros(shape, dtype=float):
+        size = shape[0] if isinstance(shape, tuple) else int(shape)
+        return [dtype(0)] * size
+
+    def _clip(x, a, b):
+        if isinstance(x, (list, tuple)):
+            return [max(a, min(b, v)) for v in x]
+        return max(a, min(b, x))
+
+    np = types.SimpleNamespace(float32=float, zeros=_zeros, clip=_clip)  # type: ignore
 
 try:  # pragma: no cover - import side effects
-    from stable_baselines3 import PPO
+    from stable_baselines3 import PPO as _PPO
+    if isinstance(np, types.SimpleNamespace):
+        raise RuntimeError("NumPy stub in use")
+    PPO = _PPO
 except Exception:  # pragma: no cover - allow stubbing in tests
     class PPO:  # type: ignore
         def __init__(self, *a, **k):
