@@ -126,13 +126,20 @@ The manual steps are outlined below.
    `GLM_SHELL_KEY`, `REFLECTION_INTERVAL`, `CORPUS_PATH`,
    `QNL_EMBED_MODEL`, `QNL_MODEL_PATH`, `EMBED_MODEL_PATH`, `VOICE_TONE_PATH`,
    `VECTOR_DB_PATH`, `WEB_CONSOLE_API_URL`, `KIMI_K2_URL`,
-   `SERVANT_MODELS` (`QNL_EMBED_MODEL` is the
-   SentenceTransformer used for QNL embeddings). `VECTOR_DB_PATH`
+   `SERVANT_MODELS` (e.g. `deepseek=http://localhost:8002,mistral=http://localhost:8003`;
+   `QNL_EMBED_MODEL` is the SentenceTransformer used for QNL embeddings). `VECTOR_DB_PATH`
    points to the ChromaDB directory used for document storage.
   `WEB_CONSOLE_API_URL` points the web console at the FastAPI endpoint. Set it
   to the base URL such as `http://localhost:8000/glm-command` – the operator
   console automatically strips the trailing path when establishing WebRTC and
-  REST connections. See `secrets.env.template` for the full list.
+  REST connections. See `secrets.env.template` for the full list. To enable
+  local servant models during development, you can use:
+
+  ```bash
+  export SERVANT_MODELS="deepseek=http://localhost:8002,mistral=http://localhost:8003"
+  export DEEPSEEK_URL=http://localhost:8002
+  export MISTRAL_URL=http://localhost:8003
+  ```
 2. Download the required model weights before first launch:
 
    ```bash

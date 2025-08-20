@@ -16,7 +16,8 @@ else
 fi
 
 if [ -z "${SERVANT_MODELS:-}" ]; then
-    echo "SERVANT_MODELS is not set. Example:" >&2
+    echo "Warning: SERVANT_MODELS is not set; no servant models will be launched." >&2
+    echo "Set it before running, for example:" >&2
     echo "  export SERVANT_MODELS=\"deepseek=http://localhost:8002,mistral=http://localhost:8003\"" >&2
 fi
 

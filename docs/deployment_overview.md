@@ -10,8 +10,14 @@ Copy `secrets.env.template` to `secrets.env` and provide values for the required
 - `OPENAI_API_KEY` – optional OpenAI key
 - `GLM_API_URL` / `GLM_API_KEY` – GLM service endpoint and key
 - `GLM_SHELL_URL` / `GLM_SHELL_KEY` – shell service endpoint and key
-- `SERVANT_MODELS` – optional comma‑separated list of servant model endpoints
-  (e.g. `deepseek=http://localhost:8002,mistral=http://localhost:8003`)
+- `SERVANT_MODELS` – optional comma‑separated list of servant model endpoints,
+  written as `name=url`. To launch local servants, set for example:
+
+  ```bash
+  export SERVANT_MODELS="deepseek=http://localhost:8002,mistral=http://localhost:8003"
+  export DEEPSEEK_URL=http://localhost:8002
+  export MISTRAL_URL=http://localhost:8003
+  ```
 
 See `secrets.env.template` for the full list.
 
