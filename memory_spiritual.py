@@ -3,6 +3,11 @@
 On import the module ensures ``data/ontology.db`` exists, creating it from
 ``data/ontology_schema.sql`` if necessary. This keeps the ontology database
 out of version control while providing a lightweight persistent mapping.
+
+Legacy helpers :func:`set_event_symbol` and :func:`get_event_symbol` are kept
+for backward compatibility. The specification-aligned names are
+``map_to_symbol`` for storing mappings and ``lookup_symbol_history`` for
+querying the reverse direction.
 """
 
 from __future__ import annotations
@@ -50,7 +55,10 @@ def get_connection(db_path: Path | str = DB_PATH) -> sqlite3.Connection:
 def set_event_symbol(
     event: str, symbol: str, conn: Optional[sqlite3.Connection] = None
 ) -> None:
-    """Store or update the symbol associated with ``event``."""
+    """Legacy name for storing the symbol associated with ``event``.
+
+    The specification refers to this operation as :func:`map_to_symbol`.
+    """
 
     analyze_phonetic(event)
     analyze_semantic(symbol)
@@ -68,10 +76,37 @@ def set_event_symbol(
             conn.close()
 
 
+def map_to_symbol(
+    event_metadata: tuple[str, str] | dict[str, str],
+    conn: Optional[sqlite3.Connection] = None,
+) -> None:
+    """Spec-aligned wrapper around :func:`set_event_symbol`.
+
+    Parameters
+    ----------
+    event_metadata:
+        Either a ``(event, symbol)`` tuple or a mapping with ``"event"`` and
+        ``"symbol"`` keys.
+    conn:
+        Optional SQLite connection to use.
+    """
+
+    if isinstance(event_metadata, dict):
+        event = event_metadata["event"]
+        symbol = event_metadata["symbol"]
+    else:
+        event, symbol = event_metadata
+    set_event_symbol(event, symbol, conn=conn)
+
+
 def get_event_symbol(
     event: str, conn: Optional[sqlite3.Connection] = None
 ) -> Optional[str]:
-    """Return the symbol associated with ``event`` or ``None``."""
+    """Legacy lookup returning the symbol associated with ``event``.
+
+    This direction is retained for backward compatibility; the specification
+    adds :func:`lookup_symbol_history` for reverse queries.
+    """
 
     analyze_phonetic(event)
     analyze_semantic(event)
@@ -89,6 +124,29 @@ def get_event_symbol(
             conn.close()
 
 
+def lookup_symbol_history(
+    symbol: str, conn: Optional[sqlite3.Connection] = None
+) -> list[str]:
+    """Return all events previously mapped to ``symbol``.
+
+    This is the specification-aligned inverse of :func:`get_event_symbol`.
+    """
+
+    analyze_phonetic(symbol)
+    analyze_semantic(symbol)
+    analyze_ritual(symbol)
+    own_conn = conn is None
+    conn = conn or get_connection()
+    try:
+        cur = conn.execute(
+            "SELECT event FROM event_symbol WHERE symbol = ?", (symbol,)
+        )
+        return [row[0] for row in cur.fetchall()]
+    finally:
+        if own_conn:
+            conn.close()
+
+
 # Ensure DB exists when module is imported
 _ensure_db_file()
 
@@ -96,7 +154,9 @@ _ensure_db_file()
 __all__ = [
     "get_connection",
     "set_event_symbol",
+    "map_to_symbol",
     "get_event_symbol",
+    "lookup_symbol_history",
     "DB_PATH",
     "SCHEMA_PATH",
 ]

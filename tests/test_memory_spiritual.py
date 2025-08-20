@@ -2,8 +2,9 @@
 
 from memory_spiritual import (
     get_connection,
-    set_event_symbol,
+    map_to_symbol,
     get_event_symbol,
+    lookup_symbol_history,
 )
 
 
@@ -22,7 +23,8 @@ def test_event_symbol_roundtrip():
     """Storing and retrieving a symbol works with in-memory DB."""
 
     conn = get_connection(":memory:")
-    set_event_symbol("rain", "☔", conn=conn)
+    map_to_symbol(("rain", "☔"), conn=conn)
     assert get_event_symbol("rain", conn=conn) == "☔"
+    assert lookup_symbol_history("☔", conn=conn) == ["rain"]
     conn.close()
 
