@@ -58,12 +58,26 @@ For a short deployment overview covering Vast.ai and local Docker Compose, see [
 
 ## Installation
 
-Ensure required system tools are available before running the setup scripts. Install Docker, SoX, and FFmpeg using your package manager (Debian/Ubuntu example):
+Ensure required system tools are available before running the setup scripts.
 
-```bash
-sudo apt-get update
-sudo apt-get install -y docker.io sox ffmpeg
-```
+1. **Docker**
+
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y docker.io
+   ```
+
+2. **SoX**
+
+   ```bash
+   sudo apt-get install -y sox
+   ```
+
+3. **FFmpeg**
+
+   ```bash
+   sudo apt-get install -y ffmpeg
+   ```
 
 After installation, verify that these tools are available by running
 `./scripts/check_requirements.sh` before proceeding with the rest of the setup.
