@@ -6,6 +6,7 @@ import secrets
 import base64
 from io import BytesIO
 from typing import Iterator, Optional
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse, FileResponse
@@ -24,15 +25,17 @@ import feedback_logging
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-app.include_router(video_stream.router)
-app.include_router(webrtc_connector.router)
 
-
-@app.on_event("shutdown")
-async def _close_peers() -> None:
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
     await video_stream.close_peers()
     await webrtc_connector.close_peers()
+
+
+app = FastAPI(lifespan=lifespan)
+app.include_router(video_stream.router)
+app.include_router(webrtc_connector.router)
 
 _avatar_stream: Optional[Iterator[np.ndarray]] = None
 
