@@ -109,12 +109,15 @@ Launch the long-running watcher:
 python start_dev_agents.py --watch \
     --planner-model https://glm.example.com/planner \
     --coder-model https://glm.example.com/coder \
-    --reviewer-model https://glm.example.com/reviewer
+    --reviewer-model https://glm.example.com/reviewer \
+    --objective-map docs/objectives.json
 ```
 
 The watcher monitors `logs/dev_agent.log` for failing tests and schedules
 `run_dev_cycle` with the objective "repair failing tests" when failures appear.
-Suggestions from each cycle are written to the log for operator review. Stop the watcher with:
+Use `--objective-map` to supply a JSON mapping of log markers to objectives if you
+wish to trigger additional actions. Suggestions from each cycle are written to the
+log and appended to `logs/dev_agent.suggestions` for operator review. Stop the watcher with:
 
 ```bash
 python start_dev_agents.py --stop
