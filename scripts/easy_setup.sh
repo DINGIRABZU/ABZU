@@ -8,7 +8,7 @@ cd "$ROOT_DIR"
 "$SCRIPT_DIR/check_prereqs.sh"
 
 if [ ! -f secrets.env ]; then
-    cp secrets.env.example secrets.env
+    cp secrets.env.template secrets.env
     echo "Configuring secrets.env"
     read -p "Enter HF_TOKEN: " HF_TOKEN
     read -p "Enter GLM_API_URL: " GLM_API_URL

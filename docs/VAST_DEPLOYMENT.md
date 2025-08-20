@@ -68,7 +68,7 @@ The script clones the repository to `/INANNA_AI/repo` and writes `confirmation.t
 Create a `secrets.env` file or copy the example and fill in the API keys:
 
 ```bash
-cp secrets.env.example secrets.env
+cp secrets.env.template secrets.env
 # edit secrets.env
 ```
 

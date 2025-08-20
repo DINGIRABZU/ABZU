@@ -4,14 +4,14 @@ This guide summarises how to launch Spiral OS on a Vast.ai server and how to run
 
 ## Configure environment variables
 
-Copy `secrets.env.example` to `secrets.env` and provide values for the required tokens and URLs:
+Copy `secrets.env.template` to `secrets.env` and provide values for the required tokens and URLs:
 
 - `HF_TOKEN` – Hugging Face token for downloading models
 - `OPENAI_API_KEY` – optional OpenAI key
 - `GLM_API_URL` / `GLM_API_KEY` – GLM service endpoint and key
 - `GLM_SHELL_URL` / `GLM_SHELL_KEY` – shell service endpoint and key
 
-See `secrets.env.example` for the full list.
+See `secrets.env.template` for the full list.
 
 ## Download model weights
 
