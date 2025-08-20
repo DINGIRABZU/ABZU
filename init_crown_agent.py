@@ -48,6 +48,18 @@ def _load_config() -> dict:
             logger.info("%s loaded from env %s", key, env)
 
     servant = cfg.get("servant_models", {})
+    env_servants = os.getenv("SERVANT_MODELS")
+    if env_servants:
+        for item in env_servants.split(","):
+            name, _, url = item.partition("=")
+            if name and url:
+                servant[name.strip()] = url.strip()
+        if servant:
+            cfg["servant_models"] = servant
+            logger.info(
+                "servant models loaded from SERVANT_MODELS: %s",
+                ", ".join(servant),
+            )
     for name, env in (
         ("deepseek", "DEEPSEEK_URL"),
         ("mistral", "MISTRAL_URL"),

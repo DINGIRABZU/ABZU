@@ -7,6 +7,7 @@
 #   DEEPSEEK_URL  -> servant_models.deepseek
 #   MISTRAL_URL   -> servant_models.mistral
 #   KIMI_K2_URL   -> servant_models.kimi_k2
+#   SERVANT_MODELS -> servant_models
 
 glm_api_url: https://glm.example.com/glm41v_9b
 glm_api_key: your-api-key

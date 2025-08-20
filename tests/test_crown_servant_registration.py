@@ -41,3 +41,28 @@ def test_crown_servant_registration(monkeypatch, tmp_path):
     init_crown_agent.initialize_crown()
     models = smm.list_models()
     assert set(["deepseek", "mistral", "kimi_k2"]).issubset(models)
+
+
+def test_servant_models_env(monkeypatch, tmp_path):
+    cfg = tmp_path / "cfg.yaml"
+    cfg.write_text("", encoding="utf-8")
+    import yaml
+    monkeypatch.setattr(yaml, "safe_load", lambda f: {}, raising=False)
+
+    monkeypatch.setattr(init_crown_agent, "CONFIG_FILE", cfg)
+    monkeypatch.setattr(init_crown_agent, "_check_glm", lambda i: None)
+
+    dummy = ModuleType("requests")
+    dummy.post = lambda *a, **k: type(
+        "R", (), {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}}
+    )()
+    dummy.RequestException = Exception
+
+    monkeypatch.setattr(gi, "requests", dummy)
+    monkeypatch.setattr(init_crown_agent, "requests", dummy)
+
+    smm._REGISTRY.clear()
+    monkeypatch.setenv("SERVANT_MODELS", "alpha=http://a,beta=http://b")
+    init_crown_agent.initialize_crown()
+    models = smm.list_models()
+    assert set(["alpha", "beta"]).issubset(models)
