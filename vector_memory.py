@@ -16,7 +16,10 @@ import uuid
 import math
 
 
-import numpy as np
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import chromadb
@@ -74,10 +77,14 @@ def add_vector(text: str, metadata: Dict[str, Any]) -> None:
     meta.setdefault("text", text)
     meta.setdefault("timestamp", datetime.utcnow().isoformat())
     col = _get_collection()
-    emb = qnl_utils.quantum_embed(text)
+    emb_raw = qnl_utils.quantum_embed(text)
+    if np is not None:
+        emb = np.asarray(emb_raw, dtype=float).tolist()
+    else:
+        emb = [float(x) for x in emb_raw]
     col.add(
         ids=[uuid.uuid4().hex],
-        embeddings=[emb.tolist()],
+        embeddings=[emb],
         metadatas=[meta],
     )
     _log("add", text, meta)
@@ -95,11 +102,18 @@ def _decay(ts: str) -> float:
 def search(query: str, filter: Optional[Dict[str, Any]] = None, *, k: int = 5) -> List[Dict[str, Any]]:
     """Return ``k`` fuzzy matches for ``query`` ordered by decayed similarity."""
 
-    qvec = qnl_utils.quantum_embed(query)
+    qvec_raw = qnl_utils.quantum_embed(query)
+    if np is not None:
+        qvec = np.asarray(qvec_raw, dtype=float)
+    else:
+        qvec = [float(x) for x in qvec_raw]
     col = _get_collection()
-    res = col.query(query_embeddings=[qvec.tolist()], n_results=max(k * 5, k))
+    res = col.query(query_embeddings=[list(qvec)], n_results=max(k * 5, k))
     metas = res.get("metadatas", [[]])[0]
-    embs = [np.asarray(e, dtype=float) for e in res.get("embeddings", [[]])[0]]
+    if np is not None:
+        embs = [np.asarray(e, dtype=float) for e in res.get("embeddings", [[]])[0]]
+    else:
+        embs = [[float(x) for x in e] for e in res.get("embeddings", [[]])[0]]
 
     results: List[Dict[str, Any]] = []
     for emb, meta in zip(embs, metas):
@@ -111,11 +125,17 @@ def search(query: str, filter: Optional[Dict[str, Any]] = None, *, k: int = 5) -
                     break
             if skip:
                 continue
-        if not emb.size:
+        if getattr(emb, "size", len(emb)) == 0:
             continue
-        sim = float(
-            emb @ qvec / ((np.linalg.norm(emb) * np.linalg.norm(qvec)) + 1e-8)
-        )
+        if np is not None:
+            dot = float(emb @ qvec)
+            norm_emb = float(np.linalg.norm(emb))
+            norm_q = float(np.linalg.norm(qvec))
+        else:
+            dot = sum(float(a) * float(b) for a, b in zip(emb, qvec))
+            norm_emb = math.sqrt(sum(float(x) ** 2 for x in emb))
+            norm_q = math.sqrt(sum(float(x) ** 2 for x in qvec))
+        sim = float(dot / ((norm_emb * norm_q) + 1e-8))
         weight = _decay(meta.get("timestamp", ""))
         score = sim * weight
         out = dict(meta)
@@ -134,7 +154,7 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
     retry.
     """
     col = _get_collection()
-    emb = qnl_utils.quantum_embed(new_text)
+    emb_raw = qnl_utils.quantum_embed(new_text)
     try:
         rec = col.get(ids=[old_id])
         meta_list = rec.get("metadatas", [[]])[0]
@@ -144,7 +164,11 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
     meta.setdefault("timestamp", datetime.utcnow().isoformat())
     meta["text"] = new_text
     try:
-        col.update(ids=[old_id], embeddings=[emb.tolist()], metadatas=[meta])
+        if np is not None:
+            emb_list = np.asarray(emb_raw, dtype=float).tolist()
+        else:
+            emb_list = [float(x) for x in emb_raw]
+        col.update(ids=[old_id], embeddings=[emb_list], metadatas=[meta])
     except Exception:
         try:
             col.delete(ids=[old_id])
@@ -152,7 +176,7 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
             logger.exception("Failed to delete vector %s", old_id)
             raise
         try:
-            col.add(ids=[old_id], embeddings=[emb.tolist()], metadatas=[meta])
+            col.add(ids=[old_id], embeddings=[emb_list], metadatas=[meta])
         except Exception:
             logger.exception("Failed to add vector %s during rewrite", old_id)
             raise

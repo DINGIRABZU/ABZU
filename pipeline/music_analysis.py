@@ -7,7 +7,10 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-import numpy as np
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - optional dependency
+    np = None  # type: ignore
 
 from audio.audio_ingestion import (
     load_audio,
@@ -27,9 +30,11 @@ class MusicAnalysisResult:
     metadata: Dict[str, Any]
 
 
-def extract_high_level_features(samples: np.ndarray, sr: int) -> Dict[str, Any]:
+def extract_high_level_features(samples: "np.ndarray", sr: int) -> Dict[str, Any]:
     """Return a dictionary of high-level audio features."""
 
+    if np is None:
+        raise RuntimeError("numpy library not installed")
     mfcc = extract_mfcc(samples, sr).mean(axis=1).tolist()
     key = extract_key(samples)
     tempo = extract_tempo(samples, sr)
