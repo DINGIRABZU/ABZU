@@ -48,15 +48,15 @@ def main() -> int:
         "--objective-map",
         help="JSON file mapping log markers to objectives for --watch",
     )
+    parser.add_argument(
+        "--max-iterations", type=int, help="Limit on tasks executed",
+    )
+    parser.add_argument(
+        "--config", help="Path to JSON config with environment settings",
+    )
     args = parser.parse_args()
 
     load_env(Path("secrets.env"))
-    if args.planner_model:
-        os.environ["PLANNER_MODEL"] = args.planner_model
-    if args.coder_model:
-        os.environ["CODER_MODEL"] = args.coder_model
-    if args.reviewer_model:
-        os.environ["REVIEWER_MODEL"] = args.reviewer_model
 
     log_path = Path(args.log_path)
     log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -69,6 +69,21 @@ def main() -> int:
         ],
     )
     logger = logging.getLogger("dev_agent_runner")
+
+    if args.config:
+        try:
+            data = json.loads(Path(args.config).read_text())
+            for key, value in data.items():
+                os.environ[key.upper()] = str(value)
+        except Exception as exc:  # pragma: no cover - best effort
+            logger.error("Failed to load config: %s", exc)
+
+    if args.planner_model:
+        os.environ["PLANNER_MODEL"] = args.planner_model
+    if args.coder_model:
+        os.environ["CODER_MODEL"] = args.coder_model
+    if args.reviewer_model:
+        os.environ["REVIEWER_MODEL"] = args.reviewer_model
 
     if args.stop:
         stop_file = log_path.with_suffix(".stop")
@@ -95,7 +110,9 @@ def main() -> int:
 
     logger.info("Starting development cycle: %s", args.objective)
 
-    result = run_dev_cycle(args.objective, repo=Path.cwd())
+    result = run_dev_cycle(
+        args.objective, repo=Path.cwd(), max_iterations=args.max_iterations
+    )
 
     for step in result.get("plan", []):
         logger.info("Planned step: %s", step)

@@ -231,8 +231,17 @@ def _glm_from_env(var: str) -> GLMIntegration:
     return GLMIntegration(endpoint=os.getenv(var))
 
 
-def run_dev_cycle(objective: str, *, repo: str | Path | None = None) -> Dict[str, Any]:
-    """Coordinate planning, coding, review, testing and commit for ``objective``."""
+def run_dev_cycle(
+    objective: str,
+    *,
+    repo: str | Path | None = None,
+    max_iterations: int | None = None,
+) -> Dict[str, Any]:
+    """Coordinate planning, coding, review, testing and commit for ``objective``.
+
+    Processing stops when all planned tasks are handled or ``max_iterations``
+    is reached.
+    """
     queue: Queue[str] = Queue()
     repo_path = Path(repo) if repo is not None else None
 
@@ -246,11 +255,18 @@ def run_dev_cycle(objective: str, *, repo: str | Path | None = None) -> Dict[str
 
     plan_steps = planner.plan()
     results: List[Dict[str, str]] = []
-    while not queue.empty():
+    iterations = 0
+    while not queue.empty() and (max_iterations is None or iterations < max_iterations):
         task = queue.get()
+        logger.info("Executing task %s", task)
         code = coder.code(task)
         review = reviewer.review(task, code)
         results.append({"task": task, "code": code, "review": review})
+        logger.info("Completed task %s", task)
+        iterations += 1
+
+    if not queue.empty():
+        logger.info("Max iterations reached with %s tasks remaining", queue.qsize())
 
     test_result: Dict[str, Any] | None = None
     if repo_path is not None:
