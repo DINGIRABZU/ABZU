@@ -14,6 +14,7 @@ respectively. Without these dependencies, passing a non‑sequence raises a
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import time
 from dataclasses import dataclass
@@ -32,6 +33,7 @@ except Exception:  # pragma: no cover - dependency may be missing
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "data" / "emotions.db"
+DB_ENV_VAR = "EMOTION_DB_PATH"
 
 
 @dataclass
@@ -54,10 +56,16 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
     )
 
 
-def get_connection(db_path: Path | str = DB_PATH) -> sqlite3.Connection:
-    """Return a connection to the emotion database, creating directories as needed."""
+def get_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
+    """Return a connection to the emotion database.
 
-    path = Path(db_path)
+    The path can be supplied via ``db_path`` or the ``EMOTION_DB_PATH``
+    environment variable. When neither is provided the module default
+    ``DB_PATH`` is used. Required directories are created automatically and the
+    schema is ensured to exist.
+    """
+
+    path = Path(db_path or os.getenv(DB_ENV_VAR, DB_PATH))
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(path)
     _ensure_schema(conn)
@@ -98,7 +106,9 @@ def _normalise(features: EmotionFeatures) -> List[float]:
 
 
 def log_emotion(
-    features: EmotionFeatures, conn: Optional[sqlite3.Connection] = None
+    features: EmotionFeatures,
+    conn: Optional[sqlite3.Connection] = None,
+    db_path: Path | str | None = None,
 ) -> EmotionEntry:
     """Persist ``features`` and return the stored :class:`EmotionEntry`."""
 
@@ -106,7 +116,7 @@ def log_emotion(
     timestamp = time.time()
     entry = EmotionEntry(timestamp=timestamp, vector=vector)
     own_conn = conn is None
-    conn = conn or get_connection()
+    conn = conn or get_connection(db_path)
     try:
         with conn:
             conn.execute(
@@ -120,13 +130,15 @@ def log_emotion(
 
 
 def fetch_emotion_history(
-    window: int, conn: Optional[sqlite3.Connection] = None
+    window: int,
+    conn: Optional[sqlite3.Connection] = None,
+    db_path: Path | str | None = None,
 ) -> List[EmotionEntry]:
     """Return logged entries from the last ``window`` seconds."""
 
     since = max(0.0, time.time() - float(window))
     own_conn = conn is None
-    conn = conn or get_connection()
+    conn = conn or get_connection(db_path)
     try:
         cur = conn.execute(
             "SELECT timestamp, vector FROM emotion_log WHERE timestamp >= ? ORDER BY timestamp ASC",
