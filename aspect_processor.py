@@ -49,4 +49,80 @@ def analyze_semantic(text: str) -> Dict[str, Any]:
     return analysis
 
 
-__all__ = ["analyze_phonetic", "analyze_semantic", "ASPECT_LOG_DIR"]
+def analyze_geometric(data: Any) -> Dict[str, Any]:
+    """Analyze simple geometric properties of ``data`` and log them."""
+
+    try:
+        size = len(data)  # type: ignore[arg-type]
+    except Exception:
+        size = len(str(data))
+    analysis = {"data": str(data), "dimensions": size}
+    _log("geometric", analysis)
+    return analysis
+
+
+def analyze_emotional(data: Any) -> Dict[str, Any]:
+    """Basic emotional analysis for sequences or text."""
+
+    try:
+        values = [float(v) for v in data]  # type: ignore[iteration-over-obj]
+        mean = sum(values) / len(values) if values else 0.0
+        analysis = {"mean": mean, "count": len(values)}
+    except Exception:
+        text = str(data)
+        analysis = {"text": text, "length": len(text)}
+    _log("emotional", analysis)
+    return analysis
+
+
+def analyze_temporal(value: Any) -> Dict[str, Any]:
+    """Record temporal metrics for ``value`` and log them."""
+
+    try:
+        dt = datetime.fromisoformat(str(value))
+    except Exception:
+        try:
+            dt = datetime.utcfromtimestamp(float(value))
+        except Exception:
+            dt = datetime.utcnow()
+    analysis = {"value": str(value), "hour": dt.hour, "weekday": dt.weekday()}
+    _log("temporal", analysis)
+    return analysis
+
+
+def analyze_spatial(data: Any) -> Dict[str, Any]:
+    """Analyze simple spatial characteristics and log them."""
+
+    try:
+        values = [float(v) for v in data]  # type: ignore[iteration-over-obj]
+        analysis = {
+            "count": len(values),
+            "min": min(values) if values else 0.0,
+            "max": max(values) if values else 0.0,
+        }
+    except Exception:
+        text = str(data)
+        analysis = {"text": text, "length": len(text)}
+    _log("spatial", analysis)
+    return analysis
+
+
+def analyze_ritual(text: str) -> Dict[str, Any]:
+    """Perform a minimal ritual analysis of ``text`` and log it."""
+
+    words = text.split()
+    analysis = {"text": text, "word_count": len(words)}
+    _log("ritual", analysis)
+    return analysis
+
+
+__all__ = [
+    "analyze_phonetic",
+    "analyze_semantic",
+    "analyze_geometric",
+    "analyze_emotional",
+    "analyze_temporal",
+    "analyze_spatial",
+    "analyze_ritual",
+    "ASPECT_LOG_DIR",
+]

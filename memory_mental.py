@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 import logging
+from datetime import datetime
 from typing import Any, Dict, List
 
 try:  # pragma: no cover - optional dependency
@@ -14,7 +15,12 @@ except Exception:  # pragma: no cover - optional dependency
     Driver = object  # type: ignore
 
 from config import settings
-from aspect_processor import analyze_phonetic, analyze_semantic
+from aspect_processor import (
+    analyze_geometric,
+    analyze_phonetic,
+    analyze_semantic,
+    analyze_temporal,
+)
 
 try:  # pragma: no cover - optional dependencies
     import numpy as np
@@ -135,6 +141,8 @@ def record_task_flow(task_id: str, context: Dict[str, Any], reward: float = 0.0)
 
     analyze_phonetic(task_id)
     analyze_semantic(json.dumps(context))
+    analyze_geometric(context)
+    analyze_temporal(datetime.utcnow().isoformat())
     ctx = json.dumps(context)
     driver = _get_driver()
     with driver.session() as session:
