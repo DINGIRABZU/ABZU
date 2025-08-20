@@ -45,11 +45,11 @@ def _wait_for_glm_ready(retries: int = 3, delay: float = 5.0) -> GLMIntegration:
                 f"Unable to reach GLM service at {health_url}: {exc}. "
                 "Ensure the model server is running "
                 "(e.g., 'bash crown_model_launcher.sh') and GLM_API_URL points "
-                "to the correct endpoint. "
-                f"Retrying in {delay} seconds (attempt {attempt}/{retries})."
+                "to the correct endpoint."
             )
-            if attempt < retries:
-                time.sleep(delay)
+        if attempt < retries:
+            print(f"Retrying in {delay} seconds (attempt {attempt}/{retries}).")
+            time.sleep(delay)
     print("GLM service is still unreachable. Please start the server and try again.")
     raise SystemExit(1)
 
