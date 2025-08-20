@@ -20,26 +20,47 @@ fi
 : "${GLM_API_KEY?GLM_API_KEY not set}"
 
 MODEL_DIR="INANNA_AI/models/GLM-4.1V-9B"
-if [ ! -d "$MODEL_DIR" ]; then
-    python download_models.py glm41v_9b --int8
+mkdir -p "$MODEL_DIR"
+
+# Locate an existing weight file, if any
+WEIGHT_FILE=$(find "$MODEL_DIR" -type f \( -name '*.bin' -o -name '*.safetensors' \) | head -n 1)
+
+if [ -z "$WEIGHT_FILE" ]; then
+    echo "GLM weights not found. Fetching metadata…" >&2
+    META=$(curl -sL -H "Authorization: Bearer $HF_TOKEN" \
+        https://huggingface.co/api/models/THUDM/glm-4.1v-9b)
+    FILE=$(echo "$META" | jq -r '.siblings[] | select(.rfilename|test("safetensors$|bin$")) | .rfilename' | head -n1)
+    SHA256=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.sha256")
+    SIZE=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.size")
+    URL="https://huggingface.co/THUDM/glm-4.1v-9b/resolve/main/$FILE"
+    echo "Downloading $FILE…" >&2
+    if command -v aria2c >/dev/null 2>&1; then
+        aria2c --header "Authorization: Bearer $HF_TOKEN" -d "$MODEL_DIR" -o "$FILE" "$URL"
+    else
+        wget --header "Authorization: Bearer $HF_TOKEN" -O "$MODEL_DIR/$FILE" "$URL"
+    fi
+    WEIGHT_FILE="$MODEL_DIR/$FILE"
+else
+    FILE="$(basename "$WEIGHT_FILE")"
+    META=$(curl -sL -H "Authorization: Bearer $HF_TOKEN" \
+        https://huggingface.co/api/models/THUDM/glm-4.1v-9b)
+    SHA256=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.sha256")
+    SIZE=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.size")
 fi
 
-WEIGHT_FILE=$(find "$MODEL_DIR" -type f \( -name '*.bin' -o -name '*.safetensors' \) | sort | head -n 1)
-if [ -z "$WEIGHT_FILE" ]; then
-    echo "No weights found in $MODEL_DIR" >&2
+# Validate checksum and size
+calc_sha=$(sha256sum "$WEIGHT_FILE" | awk '{print $1}')
+if [ "$calc_sha" != "$SHA256" ]; then
+    echo "Checksum mismatch for $WEIGHT_FILE" >&2
+    exit 1
+fi
+calc_size=$(stat -c%s "$WEIGHT_FILE")
+if [ "$calc_size" != "$SIZE" ]; then
+    echo "Size mismatch for $WEIGHT_FILE" >&2
     exit 1
 fi
 
-if [ -n "${GLM_SHA256:-}" ]; then
-    calc=$(sha256sum "$WEIGHT_FILE" | awk '{print $1}')
-    if [ "$calc" != "$GLM_SHA256" ]; then
-        echo "Checksum mismatch for $WEIGHT_FILE" >&2
-        exit 1
-    fi
-else
-    echo "GLM_SHA256 not set; skipping checksum validation" >&2
-fi
-
+# Start the model server
 if command -v docker >/dev/null 2>&1; then
     docker run -d --rm -v "$MODEL_DIR":/model -p 8001:8000 \
         -e GLM_API_URL="$GLM_API_URL" -e GLM_API_KEY="$GLM_API_KEY" \
@@ -47,5 +68,18 @@ if command -v docker >/dev/null 2>&1; then
 else
     python -m vllm.entrypoints.openai.api_server --model "$MODEL_DIR" --port 8001 &
 fi
+
+# Wait for health endpoint
+for i in {1..30}; do
+    if curl -sf http://localhost:8001/health >/dev/null; then
+        break
+    fi
+    sleep 1
+done
+
+curl -sf http://localhost:8001/health >/dev/null || {
+    echo "Model server failed health check" >&2
+    exit 1
+}
 
 printf '%s\n' "$MODEL_DIR"
