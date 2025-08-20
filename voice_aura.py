@@ -19,7 +19,7 @@ from audio.dsp_engine import rave_morph, nsynth_interpolate
 import emotional_state
 
 try:  # pragma: no cover - optional dependency
-    from pydub import AudioSegment
+    from audio.segment import AudioSegment
 except Exception:  # pragma: no cover - optional dependency
     AudioSegment = None  # type: ignore
 
@@ -43,8 +43,8 @@ def sox_available() -> bool:
     return shutil.which("sox") is not None
 
 
-def _apply_pydub_effects(seg: AudioSegment, reverb_ms: int, delay_ms: int) -> AudioSegment:
-    """Apply simple delay/reverb effects using :mod:`pydub`."""
+def _apply_segment_effects(seg: AudioSegment, reverb_ms: int, delay_ms: int) -> AudioSegment:
+    """Apply simple delay/reverb effects on an :class:`AudioSegment`."""
     if delay_ms > 0:
         seg = seg.overlay(seg - 6, position=delay_ms)
     if reverb_ms > 0:
@@ -82,7 +82,7 @@ def apply_voice_aura(
         subprocess.run(cmd, check=True)
     elif AudioSegment is not None:  # pragma: no cover - fallback path
         seg = AudioSegment.from_file(path)
-        seg = _apply_pydub_effects(seg, params["reverb"], params["delay"])
+        seg = _apply_segment_effects(seg, params["reverb"], params["delay"])
         seg.export(out_path, format="wav")
     else:  # pragma: no cover - no processing possible
         shutil.copy(path, out_path)

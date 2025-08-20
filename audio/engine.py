@@ -29,11 +29,20 @@ from audio.dsp_engine import (
 )
 
 try:  # pragma: no cover - optional dependency
-    from pydub import AudioSegment
-    from pydub.playback import _play_with_simpleaudio
+    from audio.segment import AudioSegment, NpAudioSegment
 except Exception:  # pragma: no cover - optional dependency
     AudioSegment = None  # type: ignore
+    NpAudioSegment = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    from pydub.playback import _play_with_simpleaudio
+except Exception:  # pragma: no cover - optional dependency
     _play_with_simpleaudio = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    import simpleaudio as sa
+except Exception:  # pragma: no cover - optional dependency
+    sa = None  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +87,7 @@ def get_asset_path(
 def _loop_play(audio: Any) -> None:
     """Continuously play ``audio`` until ``stop_all`` is called."""
     while not _stop_event.is_set():
-        pb = _play_with_simpleaudio(audio)
+        pb = _play_segment(audio)
         _playbacks.append(pb)
         pb.wait_done()
 
@@ -88,9 +97,23 @@ def _loop_play_n(audio: Any, loops: int) -> None:
     for _ in range(loops):
         if _stop_event.is_set():
             break
-        pb = _play_with_simpleaudio(audio)
+        pb = _play_segment(audio)
         _playbacks.append(pb)
         pb.wait_done()
+
+
+def _play_segment(seg: Any) -> Any:
+    """Play ``seg`` using the appropriate backend."""
+    if _play_with_simpleaudio is not None and not hasattr(seg, "data"):
+        return _play_with_simpleaudio(seg)
+    if sa is None:
+        raise RuntimeError("simpleaudio library not installed")
+    if not hasattr(seg, "data"):
+        raise TypeError("unsupported audio segment type")
+    data = seg.data
+    sr = seg.frame_rate
+    arr = np.int16(np.clip(data, -1, 1) * 32767)
+    return sa.play_buffer(arr, arr.shape[1], 2, sr)
 
 
 def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> None:
@@ -105,8 +128,8 @@ def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> N
     loops:
         Number of times to play the sample. Ignored when ``loop`` is ``True``.
     """
-    if AudioSegment is None or _play_with_simpleaudio is None:
-        logger.warning("pydub not installed; cannot play audio")
+    if AudioSegment is None:
+        logger.warning("audio backend not available; cannot play audio")
         return
     if not _has_ffmpeg():
         logger.warning("ffmpeg not installed; cannot play audio")
@@ -121,7 +144,7 @@ def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> N
         _loops.append(thread)
         thread.start()
     else:
-        pb = _play_with_simpleaudio(audio)
+        pb = _play_segment(audio)
         _playbacks.append(pb)
         pb.wait_done()
 

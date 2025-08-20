@@ -70,7 +70,7 @@ def test_rave_timbre_blend(monkeypatch, tmp_path):
 
     calls = {}
     monkeypatch.setattr(voice_aura, "AudioSegment", types.SimpleNamespace(from_file=fake_from_file))
-    monkeypatch.setattr(voice_aura, "_apply_pydub_effects", lambda seg, r, d: seg)
+    monkeypatch.setattr(voice_aura, "_apply_segment_effects", lambda seg, r, d: seg)
     monkeypatch.setattr(voice_aura.tempfile, "NamedTemporaryFile", lambda **k: DummyTmp(out))
     monkeypatch.setattr(voice_aura.emotional_state, "get_last_emotion", lambda: "sad")
 
