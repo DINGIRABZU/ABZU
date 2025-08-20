@@ -11,7 +11,7 @@ if [ -f "secrets.env" ]; then
     source "secrets.env"
     set +a
 else
-    echo "secrets.env not found. Copy secrets.env.template to secrets.env and provide your API keys and URLs." >&2
+    echo "secrets.env not found. Create it by copying secrets.env.template: cp secrets.env.template secrets.env, then edit it with your API keys and URLs." >&2
     exit 1
 fi
 
