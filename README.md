@@ -125,13 +125,14 @@ The manual steps are outlined below.
    `OPENAI_API_KEY`, `GLM_API_URL`, `GLM_API_KEY`, `GLM_SHELL_URL`,
    `GLM_SHELL_KEY`, `REFLECTION_INTERVAL`, `CORPUS_PATH`,
    `QNL_EMBED_MODEL`, `QNL_MODEL_PATH`, `EMBED_MODEL_PATH`, `VOICE_TONE_PATH`,
-   `VECTOR_DB_PATH`, `WEB_CONSOLE_API_URL` (`QNL_EMBED_MODEL` is the
+   `VECTOR_DB_PATH`, `WEB_CONSOLE_API_URL`, `KIMI_K2_URL`,
+   `SERVANT_MODELS` (`QNL_EMBED_MODEL` is the
    SentenceTransformer used for QNL embeddings). `VECTOR_DB_PATH`
    points to the ChromaDB directory used for document storage.
   `WEB_CONSOLE_API_URL` points the web console at the FastAPI endpoint. Set it
   to the base URL such as `http://localhost:8000/glm-command` – the operator
   console automatically strips the trailing path when establishing WebRTC and
-  REST connections.
+  REST connections. See `secrets.env.template` for the full list.
 2. Download the required model weights before first launch:
 
    ```bash
