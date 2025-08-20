@@ -29,7 +29,7 @@ def test_play_sound_uses_pydub(monkeypatch, tmp_path):
         return DummyPB()
 
     monkeypatch.setattr(audio_engine, 'AudioSegment', types.SimpleNamespace(from_file=dummy_from_file))
-    monkeypatch.setattr(audio_engine, '_play_with_simpleaudio', dummy_play)
+    monkeypatch.setattr(audio_engine, '_play_segment', dummy_play)
     monkeypatch.setattr(audio_engine, '_has_ffmpeg', lambda: True)
 
     audio_engine.play_sound(tmp_path / 'x.wav')

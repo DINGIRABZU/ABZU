@@ -7,7 +7,7 @@ from typing import Dict, Iterable, List
 import shutil
 
 try:  # pragma: no cover - optional dependency
-    from pydub import AudioSegment
+    from audio.segment import AudioSegment
 except Exception:  # pragma: no cover - optional dependency
     AudioSegment = None  # type: ignore
 

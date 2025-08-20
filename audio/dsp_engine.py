@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Basic audio DSP utilities using ffmpeg and pydub."""
+"""Basic audio DSP utilities primarily using ffmpeg."""
 
 from pathlib import Path
 from typing import Tuple
@@ -15,10 +15,6 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-try:  # pragma: no cover - optional dependency
-    from pydub import AudioSegment
-except Exception:  # pragma: no cover - optional dependency
-    AudioSegment = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import rave
