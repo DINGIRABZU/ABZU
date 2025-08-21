@@ -55,6 +55,7 @@ def pytest_collectstart(collector):
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
 ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_adaptive_learning_stub.py"),
+    str(ROOT / "tests" / "test_env_validation.py"),
 }
 
 

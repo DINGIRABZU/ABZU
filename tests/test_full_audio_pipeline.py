@@ -1,4 +1,3 @@
-import shutil
 import sys
 from pathlib import Path
 
@@ -15,8 +14,11 @@ sf_stub.write = lambda *a, **k: None
 sf_stub.read = lambda *a, **k: (np.zeros(1), 44100)
 sys.modules.setdefault("soundfile", sf_stub)
 
+import env_validation
+
 pytestmark = pytest.mark.skipif(
-    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+    not env_validation.check_audio_binaries(require=False),
+    reason="audio tools not installed",
 )
 
 import music_generation

@@ -1,4 +1,3 @@
-import shutil
 import sys
 import types
 from pathlib import Path
@@ -10,8 +9,11 @@ sys.path.insert(0, str(ROOT))
 
 import modulation_arrangement as ma
 
+import env_validation
+
 pytestmark = pytest.mark.skipif(
-    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+    not env_validation.check_audio_binaries(require=False),
+    reason="audio tools not installed",
 )
 
 

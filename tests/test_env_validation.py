@@ -55,3 +55,17 @@ def test_check_required_binaries_missing(monkeypatch):
     with pytest.raises(SystemExit) as exc:
         env_validation.check_required_binaries(["ffmpeg", "sox"])
     assert "ffmpeg, sox" in str(exc.value)
+
+
+def test_check_audio_binaries_required(monkeypatch):
+    monkeypatch.setattr(env_validation.shutil, "which", lambda n: None)
+    with pytest.raises(SystemExit):
+        env_validation.check_audio_binaries(require=True)
+
+
+def test_check_audio_binaries_optional(monkeypatch, caplog):
+    monkeypatch.setattr(env_validation.shutil, "which", lambda n: None)
+    with caplog.at_level(logging.WARNING):
+        ok = env_validation.check_audio_binaries(require=False)
+    assert not ok
+    assert "Missing optional audio" in caplog.text
