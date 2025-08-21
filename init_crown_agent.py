@@ -49,21 +49,6 @@ def _load_config() -> dict:
             logger.info("%s loaded from env %s", key, env)
 
     servant = dict(cfg.get("servant_models", {}))
-    env_servants = parse_servant_models(require=True)
-    if env_servants:
-        for name, url in env_servants.items():
-            if name in servant:
-                logger.warning(
-                    "Duplicate servant model name '%s' in SERVANT_MODELS; keeping existing",
-                    name,
-                )
-                continue
-            servant[name] = url
-        cfg["servant_models"] = servant
-        logger.info(
-            "servant models loaded from SERVANT_MODELS: %s",
-            ", ".join(env_servants),
-        )
     for name, env in (
         ("deepseek", "DEEPSEEK_URL"),
         ("mistral", "MISTRAL_URL"),
@@ -155,9 +140,50 @@ def _init_servants(cfg: dict) -> None:
         _register_http_servant(name, url)
 
 
+def _verify_servant_health(servants: dict) -> None:
+    """Check that each servant model responds to a health request."""
+    if not servants:
+        return
+    if requests is None:
+        logger.warning("requests library not available; skipping servant health checks")
+        return
+    failed: list[str] = []
+    for name, url in servants.items():
+        health_url = url.rstrip("/") + "/health"
+        try:
+            if hasattr(requests, "get"):
+                resp = requests.get(health_url, timeout=5)
+            else:  # pragma: no cover - fallback when get unavailable
+                resp = requests.post(health_url, timeout=5)
+            resp.raise_for_status()
+            logger.info("Servant %s healthy at %s", name, health_url)
+        except Exception as exc:  # pragma: no cover - network errors
+            logger.error("Servant %s health check failed: %s", name, exc)
+            failed.append(name)
+    if failed:
+        raise SystemExit(f"Unavailable servant models: {', '.join(failed)}")
+
+
 def initialize_crown() -> GLMIntegration:
     """Return a :class:`GLMIntegration` instance configured from YAML."""
     cfg = _load_config()
+    servants = dict(cfg.get("servant_models") or {})
+    env_servants = parse_servant_models(require=True)
+    if env_servants:
+        for name, url in env_servants.items():
+            if name in servants:
+                logger.warning(
+                    "Duplicate servant model name '%s' in SERVANT_MODELS; keeping existing",
+                    name,
+                )
+                continue
+            servants[name] = url
+        cfg["servant_models"] = servants
+        logger.info(
+            "servant models loaded from SERVANT_MODELS: %s",
+            ", ".join(env_servants),
+        )
+
     integration = GLMIntegration(
         endpoint=cfg.get("glm_api_url"),
         api_key=cfg.get("glm_api_key"),
@@ -167,10 +193,13 @@ def initialize_crown() -> GLMIntegration:
     _init_memory(cfg)
     _init_servants(cfg)
     try:
+        _verify_servant_health(cfg.get("servant_models", {}))
         _check_glm(integration)
     except RuntimeError as exc:
         logger.error("%s", exc)
         raise SystemExit(1)
+    except SystemExit:
+        raise
     return integration
 
 
