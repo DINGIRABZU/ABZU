@@ -37,6 +37,7 @@ graph TD
 
 - `core.emotion_analyzer.EmotionAnalyzer` – classify mood of incoming text.
 - `core.model_selector.ModelSelector` – choose the appropriate language model.
+- `core.memory_logger.MemoryLogger` – persist events to the memory stores.
 - `memory.cortex` – `record_spiral` / `query_spirals` for spiral decisions.
 - `memory.spiral_cortex` – `log_insight` / `load_insights` for retrieval traces.
 - `labs.cortex_sigil` – `interpret_sigils` to extract symbolic triggers.
@@ -68,5 +69,5 @@ The LLM router acts as a traffic controller for prompts. When a message arrives,
 `servant_model_manager.py` is a catalogue of helper models. Each servant registers a name and how to run it—either as a Python function or an external process. The orchestrator asks this registry to invoke a model by name, making it straightforward to plug in new specialised tools.
 
 ### Audio Pipeline
-The audio pipeline has two stops. `audio_ingestion.py` brings in clips and analyses features such as tempo, key and CLAP embeddings. `audio_engine.py` then plays the sound, adds effects or synthesises missing notes. Together they handle capture, analysis and playback.
+The audio pipeline has two stops. `audio/audio_ingestion.py` brings in clips and analyses features such as tempo, key and CLAP embeddings. `audio/engine.py` then plays the sound, adds effects or synthesises missing notes. Together they handle capture, analysis and playback.
 
