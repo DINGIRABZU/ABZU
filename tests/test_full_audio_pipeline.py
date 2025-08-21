@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 import numpy as np
+import shutil
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -11,6 +13,10 @@ sf_stub = types.ModuleType("soundfile")
 sf_stub.write = lambda *a, **k: None
 sf_stub.read = lambda *a, **k: (np.zeros(1), 44100)
 sys.modules.setdefault("soundfile", sf_stub)
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+)
 
 from SPIRAL_OS import qnl_engine
 from audio import audio_ingestion, dsp_engine

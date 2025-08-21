@@ -5,6 +5,7 @@ import sys
 import httpx
 import numpy as np
 import pytest
+import shutil
 from fastapi.testclient import TestClient
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from types import ModuleType
@@ -17,6 +18,10 @@ sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 from crown_config import settings
 
 settings.glm_command_token = "token"
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+)
 
 import server
 

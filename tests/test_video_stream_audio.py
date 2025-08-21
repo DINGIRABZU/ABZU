@@ -6,6 +6,7 @@ from types import ModuleType
 import httpx
 import numpy as np
 import pytest
+import shutil
 from aiortc import RTCSessionDescription
 from aiortc.mediastreams import AUDIO_PTIME
 from fastapi.testclient import TestClient
@@ -20,6 +21,10 @@ import video_stream  # noqa: E402
 from crown_config import settings  # noqa: E402
 
 settings.glm_command_token = "token"
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+)
 
 
 def test_avatar_audio_track(tmp_path):

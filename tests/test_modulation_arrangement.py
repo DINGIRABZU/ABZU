@@ -1,11 +1,17 @@
 import sys
 import types
 from pathlib import Path
+import shutil
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import modulation_arrangement as ma
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+)
 
 
 class DummySeg:
