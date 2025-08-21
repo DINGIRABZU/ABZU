@@ -8,9 +8,22 @@ from typing import Any, Dict, List, Tuple
 import numpy as np
 
 try:  # pragma: no cover - optional dependency
-    import librosa
+    import librosa  # type: ignore
 except Exception:  # pragma: no cover - optional dependency
-    librosa = None  # type: ignore
+    # Provide a very small stub so tests can monkeypatch the expected
+    # functions without requiring the heavy librosa dependency or its
+    # compiled stack.  Any direct use without patching will raise a
+    # descriptive error.
+    import types
+
+    def _missing(*_a, **_k):  # pragma: no cover - helper
+        raise RuntimeError("librosa library not installed")
+
+    librosa = types.SimpleNamespace(  # type: ignore[assignment]
+        load=_missing,
+        feature=types.SimpleNamespace(),
+        beat=types.SimpleNamespace(tempo=_missing),
+    )
 
 try:  # pragma: no cover - optional dependency
     import essentia.standard as ess
