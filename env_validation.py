@@ -50,12 +50,37 @@ def check_required_binaries(binaries: Iterable[str]) -> None:
         raise SystemExit(f"Missing required binar{plural}: {names}")
 
 
-def check_audio_binaries() -> None:
-    """Verify that common audio tools are installed."""
-    check_required_binaries(["ffmpeg", "sox"])
+def check_audio_binaries(*, require: bool = True) -> bool:
+    """Verify that common audio tools are installed.
+
+    Parameters
+    ----------
+    require:
+        When ``True``, missing binaries raise :class:`SystemExit`. When
+        ``False``, a warning is logged and ``False`` is returned.
+
+    Returns
+    -------
+    bool
+        ``True`` if all binaries are available, ``False`` otherwise.
+    """
+
+    binaries = ["ffmpeg", "sox"]
+    missing = [name for name in binaries if shutil.which(name) is None]
+    if not missing:
+        return True
+
+    names = ", ".join(missing)
+    plural = "ies" if len(missing) > 1 else "y"
+    if require:
+        raise SystemExit(f"Missing required audio binar{plural}: {names}")
+    logger.warning("Missing audio binar%s: %s", plural, names)
+    return False
 
 
-def parse_servant_models(env: str | None = None, *, require: bool = False) -> Dict[str, str]:
+def parse_servant_models(
+    env: str | None = None, *, require: bool = False
+) -> Dict[str, str]:
     """Return a mapping parsed from ``SERVANT_MODELS``.
 
     Parameters
@@ -108,8 +133,6 @@ def parse_servant_models(env: str | None = None, *, require: bool = False) -> Di
         servants[name] = url
 
     if require and env and not servants:
-        raise SystemExit(
-            "SERVANT_MODELS is set but contains no valid name=url pairs"
-        )
+        raise SystemExit("SERVANT_MODELS is set but contains no valid name=url pairs")
 
     return servants
