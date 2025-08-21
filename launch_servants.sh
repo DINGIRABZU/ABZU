@@ -107,13 +107,13 @@ launch_model() {
         if [ -n "$model_dir" ]; then
             if command -v docker >/dev/null 2>&1; then
                 docker pull "$image" >/dev/null 2>&1 || true
-                local cmd="docker run -d --rm -v \"$model_dir\":/model -p \"$port\":8000 --name \"${name}_service\" \"$image\""
-                log "$cmd"
-                eval "$cmd"
+                local cmd=(docker run -d --rm -v "$model_dir":/model -p "$port":8000 --name "${name}_service" "$image")
+                log "${cmd[*]}"
+                "${cmd[@]}"
             else
-                local cmd="python -m vllm.entrypoints.openai.api_server --model \"$model_dir\" --port \"$port\""
-                log "$cmd"
-                eval "$cmd &"
+                local cmd=(python -m vllm.entrypoints.openai.api_server --model "$model_dir" --port "$port")
+                log "${cmd[*]}"
+                "${cmd[@]}" &
             fi
         fi
     else
