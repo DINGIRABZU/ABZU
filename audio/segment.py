@@ -13,6 +13,7 @@ fades directly on arrays.
 import logging
 import os
 import shutil
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -24,9 +25,21 @@ logger = logging.getLogger(__name__)
 
 
 def has_ffmpeg() -> bool:
-    """Return ``True`` if the ``ffmpeg`` binary is available."""
+    """Return ``True`` if the ``ffmpeg`` binary is available and executable."""
 
-    return shutil.which("ffmpeg") is not None
+    path = shutil.which("ffmpeg")
+    if not path:
+        return False
+    try:  # pragma: no cover - runtime environment check
+        subprocess.run(
+            [path, "-version"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+        )
+    except Exception:
+        return False
+    return True
 
 
 _backend = os.environ.get("AUDIO_BACKEND", "numpy").lower()

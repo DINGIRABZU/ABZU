@@ -56,6 +56,7 @@ def pytest_collectstart(collector):
 ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_adaptive_learning_stub.py"),
     str(ROOT / "tests" / "test_env_validation.py"),
+    str(ROOT / "tests" / "test_crown_config.py"),
 }
 
 

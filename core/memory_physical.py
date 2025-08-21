@@ -9,22 +9,24 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
-from aspect_processor import (analyze_phonetic, analyze_semantic,
-                              analyze_spatial)
+from aspect_processor import (
+    analyze_phonetic,
+    analyze_semantic,
+    analyze_spatial,
+)
 
-try:  # pragma: no cover - optional
-    import cv2  # type: ignore
-except Exception:  # pragma: no cover - optional
+from core.utils.optional_deps import lazy_import
+
+cv2 = lazy_import("cv2")
+if getattr(cv2, "__stub__", False):  # pragma: no cover - optional
     cv2 = None  # type: ignore
 
-try:  # pragma: no cover - optional
-    import librosa  # type: ignore
-except Exception:  # pragma: no cover - optional
+librosa = lazy_import("librosa")
+if getattr(librosa, "__stub__", False):  # pragma: no cover - optional
     librosa = None  # type: ignore
 
-try:  # pragma: no cover - optional
-    import whisper  # type: ignore
-except Exception:  # pragma: no cover - optional
+whisper = lazy_import("whisper")
+if getattr(whisper, "__stub__", False):  # pragma: no cover - optional
     whisper = None  # type: ignore
 
 

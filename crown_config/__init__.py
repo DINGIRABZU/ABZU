@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from pydantic import AnyHttpUrl, Field
+from pydantic import AliasChoices, AnyHttpUrl, Field
 
 try:  # pragma: no cover - optional dependency
     from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -26,11 +26,13 @@ except Exception:  # pragma: no cover - fallback when dependency missing
             for name, default in self.__class__.__dict__.items():
                 if name.startswith("_") or callable(default):
                     continue
-                env_name = getattr(default, "alias", None) or getattr(
+                alias_obj = getattr(default, "alias", None) or getattr(
                     default, "validation_alias", None
                 )
+                if alias_obj is not None and not isinstance(alias_obj, str):
+                    alias_obj = getattr(alias_obj, "choices", [alias_obj])[0]
                 default_val = getattr(default, "default", default)
-                raw = os.getenv(env_name or name.upper())
+                raw = os.getenv(str(alias_obj) if alias_obj else name.upper())
                 if raw is None:
                     value = default_val
                 else:
@@ -109,33 +111,58 @@ class Settings(BaseSettings):
 
     glm_command_token: str | None = Field(
         None,
-        alias="GLM_COMMAND_TOKEN",
+        validation_alias=AliasChoices("GLM_COMMAND_TOKEN"),
     )
-    crown_tts_backend: str = Field("gtts", alias="CROWN_TTS_BACKEND")
+    crown_tts_backend: str = Field(
+        "gtts", validation_alias=AliasChoices("CROWN_TTS_BACKEND")
+    )
     voice_avatar_config_path: Path | None = Field(
-        None, alias="VOICE_AVATAR_CONFIG_PATH"
+        None, validation_alias=AliasChoices("VOICE_AVATAR_CONFIG_PATH")
     )
-    rvc_preset: str | None = Field(None, alias="RVC_PRESET")
-    voicefix: bool = Field(False, alias="VOICEFIX")
-    glm_shell_url: AnyHttpUrl | None = Field(None, alias="GLM_SHELL_URL")
-    glm_shell_key: str | None = Field(None, alias="GLM_SHELL_KEY")
+    rvc_preset: str | None = Field(
+        None, validation_alias=AliasChoices("RVC_PRESET")
+    )
+    voicefix: bool = Field(False, validation_alias=AliasChoices("VOICEFIX"))
+    glm_shell_url: AnyHttpUrl | None = Field(
+        None, validation_alias=AliasChoices("GLM_SHELL_URL")
+    )
+    glm_shell_key: str | None = Field(
+        None, validation_alias=AliasChoices("GLM_SHELL_KEY")
+    )
     animation_service_url: AnyHttpUrl | None = Field(
-        None, alias="ANIMATION_SERVICE_URL"
+        None, validation_alias=AliasChoices("ANIMATION_SERVICE_URL")
     )
-    embed_model_path: str = Field("all-MiniLM-L6-v2", alias="EMBED_MODEL_PATH")
-    retrain_threshold: int = Field(10, alias="RETRAIN_THRESHOLD")
-    llm_rotation_period: int = Field(300, alias="LLM_ROTATION_PERIOD")
-    llm_max_failures: int = Field(3, alias="LLM_MAX_FAILURES")
-    feedback_novelty_threshold: float = Field(0.3, alias="FEEDBACK_NOVELTY_THRESHOLD")
+    embed_model_path: str = Field(
+        "all-MiniLM-L6-v2", validation_alias=AliasChoices("EMBED_MODEL_PATH")
+    )
+    retrain_threshold: int = Field(
+        10, validation_alias=AliasChoices("RETRAIN_THRESHOLD")
+    )
+    llm_rotation_period: int = Field(
+        300, validation_alias=AliasChoices("LLM_ROTATION_PERIOD")
+    )
+    llm_max_failures: int = Field(
+        3, validation_alias=AliasChoices("LLM_MAX_FAILURES")
+    )
+    feedback_novelty_threshold: float = Field(
+        0.3, validation_alias=AliasChoices("FEEDBACK_NOVELTY_THRESHOLD")
+    )
     feedback_coherence_threshold: float = Field(
-        0.7, alias="FEEDBACK_COHERENCE_THRESHOLD"
+        0.7, validation_alias=AliasChoices("FEEDBACK_COHERENCE_THRESHOLD")
     )
     vector_db_path: Path = Field(
-        BASE_DIR / "data" / "vector_memory", alias="VECTOR_DB_PATH"
+        BASE_DIR / "data" / "vector_memory",
+        validation_alias=AliasChoices("VECTOR_DB_PATH"),
     )
-    neo4j_uri: str = Field("bolt://localhost:7687", alias="NEO4J_URI")
-    neo4j_user: str = Field("neo4j", alias="NEO4J_USER")
-    neo4j_password: str = Field("password", alias="NEO4J_PASSWORD")
+    neo4j_uri: str = Field(
+        "bolt://localhost:7687", validation_alias=AliasChoices("NEO4J_URI")
+    )
+    neo4j_user: str = Field(
+        "neo4j", validation_alias=AliasChoices("NEO4J_USER")
+    )
+    neo4j_password: str = Field(
+        "password", validation_alias=AliasChoices("NEO4J_PASSWORD")
+    )
 
     model_config = SettingsConfigDict(
         case_sensitive=True, env_prefix="", populate_by_name=True

@@ -9,9 +9,10 @@ from typing import Iterator
 
 import numpy as np
 
-try:  # pragma: no cover - optional dependency
-    import librosa
-except Exception:  # pragma: no cover - optional dependency
+from core.utils.optional_deps import lazy_import
+
+librosa = lazy_import("librosa")
+if getattr(librosa, "__stub__", False):  # pragma: no cover - optional dependency
     librosa = None  # type: ignore
 
 import emotional_state
