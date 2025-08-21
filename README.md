@@ -360,9 +360,7 @@ manifests see [docs/cloud_deployment.md](docs/cloud_deployment.md).
 ## GLM Model Launcher
 
 The `crown_model_launcher.sh` script downloads the GLM-4.1V-9B weights and
-starts a model server on port `8001`. When the weights are already present the
-`/health` endpoint should return `200` within roughly **30 seconds**. The first
-run may take several minutes while the weights download.
+starts a model server on port `8001`.
 
 Startup output is written to `glm_launch.log`:
 
@@ -370,8 +368,16 @@ Startup output is written to `glm_launch.log`:
 bash crown_model_launcher.sh > glm_launch.log 2>&1
 ```
 
+### Expected Startup Time
+
+- When the weights are already present the `/health` endpoint usually returns
+  `200` in about **30 seconds**.
+- The first run may take several minutes while the weights download.
+
 ### Troubleshooting
 
+- If `glm_launch.log` reports `secrets.env not found`, copy
+  `secrets.env.template` to `secrets.env` and populate the required values.
 - Ensure `secrets.env` contains valid values for `HF_TOKEN`, `GLM_API_URL` and
   `GLM_API_KEY`.
 - Poll the server with
