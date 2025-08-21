@@ -65,6 +65,13 @@ For a short deployment overview covering Vast.ai and local Docker Compose, see [
 
 ## Installation
 
+For a one-command setup that creates a virtual environment, installs
+development dependencies, and validates the environment, run:
+
+```bash
+./scripts/bootstrap.sh
+```
+
 Ensure required system tools are available before running the setup scripts.
 
 Required packages:
