@@ -2,11 +2,17 @@ import sys
 from pathlib import Path
 import types
 import numpy as np
+import shutil
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import voice_aura
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+)
 
 
 def test_sox_effect_chain(monkeypatch, tmp_path):

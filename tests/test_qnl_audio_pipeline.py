@@ -2,9 +2,15 @@ import sys
 from pathlib import Path
 import types
 import numpy as np
+import shutil
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+)
 
 yaml_mod = types.ModuleType("yaml")
 yaml_mod.safe_load = lambda *a, **k: {"version": 1, "handlers": {}, "root": {"level": "INFO"}}
