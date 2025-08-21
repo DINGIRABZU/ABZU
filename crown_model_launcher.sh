@@ -19,15 +19,21 @@ fi
 : "${GLM_API_URL?GLM_API_URL not set}"
 : "${GLM_API_KEY?GLM_API_KEY not set}"
 
-if ! command -v jq >/dev/null 2>&1; then
-    echo "jq is required but not installed. Please install jq." >&2
-    exit 1
-fi
+# Ensure required tools are available
+for cmd in jq curl; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        echo "$cmd is required but not installed. Please install $cmd." >&2
+        exit 1
+    fi
+done
 
 parse_port() {
     local url=$1
-    local port="${url##*:}"
-    echo "${port%%/*}"
+    if [[ $url =~ :([0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+    else
+        echo "8000"
+    fi
 }
 
 MODEL_PORT=$(parse_port "$GLM_API_URL")
