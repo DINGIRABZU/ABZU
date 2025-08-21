@@ -63,8 +63,13 @@ Ensure required system tools are available before running the setup scripts.
 Required packages:
 
 - Docker
+- Netcat (`nc`)
 - SoX
 - FFmpeg
+- curl
+- jq
+- wget
+- aria2c
 
 Verify installation with:
 
@@ -79,16 +84,46 @@ Verify installation with:
    sudo apt-get install -y docker.io
    ```
 
-2. **SoX**
+2. **Netcat**
+
+   ```bash
+   sudo apt-get install -y netcat
+   ```
+
+3. **SoX**
 
    ```bash
    sudo apt-get install -y sox
    ```
 
-3. **FFmpeg**
+4. **FFmpeg**
 
    ```bash
    sudo apt-get install -y ffmpeg
+   ```
+
+5. **curl**
+
+   ```bash
+   sudo apt-get install -y curl
+   ```
+
+6. **jq**
+
+   ```bash
+   sudo apt-get install -y jq
+   ```
+
+7. **wget**
+
+   ```bash
+   sudo apt-get install -y wget
+   ```
+
+8. **aria2c**
+
+   ```bash
+   sudo apt-get install -y aria2
    ```
 
 Install the runtime dependencies and optional development tools using
