@@ -16,13 +16,13 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-from fastapi import APIRouter, Request
 from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
-from aiortc.mediastreams import AudioStreamTrack, AUDIO_PTIME, MediaStreamError
+from aiortc.mediastreams import AUDIO_PTIME, AudioStreamTrack, MediaStreamError
 from av import VideoFrame
 from av.audio.frame import AudioFrame
+from fastapi import APIRouter, Request
 
-from core import video_engine, avatar_expression_engine
+from core import avatar_expression_engine, video_engine
 
 logger = logging.getLogger(__name__)
 
@@ -60,15 +60,21 @@ class AvatarAudioTrack(AudioStreamTrack):
         else:
             self._timestamp += self._samples
             wait = self._start + (self._timestamp / self._sr) - time.time()
-            await asyncio.sleep(wait)
+            await asyncio.sleep(max(0, wait))
 
         end = self._index + self._samples
-        chunk = self._data[self._index:end]
+        chunk = self._data[self._index : end]  # noqa: E203
         self._index = end
         if len(chunk) < self._samples:
-            chunk = np.pad(chunk, (0, self._samples - len(chunk)), constant_values=0)
+            chunk = np.pad(
+                chunk,
+                (0, self._samples - len(chunk)),
+                constant_values=0,
+            )
 
-        frame = AudioFrame.from_ndarray(chunk.reshape(1, -1), format="s16", layout="mono")
+        frame = AudioFrame.from_ndarray(
+            chunk.reshape(1, -1), format="s16", layout="mono"
+        )
         frame.pts = self._timestamp
         frame.sample_rate = self._sr
         frame.time_base = fractions.Fraction(1, self._sr)
@@ -85,7 +91,9 @@ class AvatarVideoTrack(VideoStreamTrack):
     ) -> None:
         super().__init__()
         if audio_path is not None:
-            self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
+            self._frames = avatar_expression_engine.stream_avatar_audio(
+                audio_path,
+            )
         else:
             self._frames = video_engine.generate_avatar_stream()
         self._cues = cues
@@ -94,7 +102,8 @@ class AvatarVideoTrack(VideoStreamTrack):
     def _cue_colour(self, text: str) -> np.ndarray:
         value = abs(hash(text)) & 0xFFFFFF
         return np.array(
-            [(value >> 16) & 255, (value >> 8) & 255, value & 255], dtype=np.uint8
+            [(value >> 16) & 255, (value >> 8) & 255, value & 255],
+            dtype=np.uint8,
         )
 
     def _apply_cue(self, frame: np.ndarray) -> np.ndarray:
@@ -104,7 +113,7 @@ class AvatarVideoTrack(VideoStreamTrack):
         color = self._cue_colour(self._style)
         h, w, _ = result.shape
         result[:10, :10] = color
-        result[h - 10 :, w - 10 :] = color
+        result[h - 10 :, w - 10 :] = color  # noqa: E203
         return result
 
     async def recv(self) -> VideoFrame:
