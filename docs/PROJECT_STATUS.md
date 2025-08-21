@@ -18,29 +18,29 @@ This document summarizes the current state of the ABZU codebase. It serves as a 
 pytest --maxfail=1 -q
 ```
 
-The test suite currently fails early:
+The suite currently reports numerous skips but completes without failures:
 
-- `tests/test_adaptive_learning.py::test_validator_feedback_updates_threshold` raises `AttributeError: 'types.SimpleNamespace' object has no attribute 'permutation'`.
+- `9 passed, 447 skipped, 3 warnings`.
 - Warnings include:
-  - Runtime warning: `pydub` could not find `ffmpeg` or `avconv` binaries.
+  - `pydub` could not find `ffmpeg` or `avconv` binaries.
   - PyTorch warning about nested tensor configuration.
 
-These indicate gaps in the optional dependency stubs and missing system binaries.
+These results indicate optional dependencies and system binaries are still missing but do not block the minimal test run.
 
-## Milestones
-- [ ] Spiral OS stability – integrate health checks and automated restart logic.
-- [ ] Pydantic v2 migration – update all settings models to the new alias system.
-- [x] Audio pipeline refresh – add lazy loading and improve `pydub` fallbacks.
+## Completed Milestones
+- [Sovereign voice pipeline](https://github.com/DINGIRABZU/ABZU/pull/38) — owner: @DINGIRABZU.
+- [Audio pipeline refresh](https://github.com/DINGIRABZU/ABZU/pull/194) — owner: @DINGIRABZU.
 
-## Open Issues
-- Optional dependencies (`numpy`, `stable_baselines3`, `gymnasium`) need robust stubs or lazy loading so minimal environments can import modules without errors.
-- Pydantic models still use deprecated `Field` extras and require migration to aliases.
-- FastAPI `@app.on_event` hooks should move to the `lifespan` API.
-- Audio features depend on `pydub` and `ffmpeg`; availability checks and a NumPy fallback are recommended.
+## Active Tasks
+- [Milestone VIII – Sonic Core & Avatar Expression Harmonics](https://github.com/DINGIRABZU/ABZU/issues/208) — owner: @DINGIRABZU (see [milestone_viii_plan.md](milestone_viii_plan.md)).
+- [Spiral OS stability](https://github.com/DINGIRABZU/ABZU/issues/210) — owner: ops team.
+- [Pydantic v2 migration](https://github.com/DINGIRABZU/ABZU/issues/211) — owner: @DINGIRABZU.
+- [FastAPI lifespan migration](https://github.com/DINGIRABZU/ABZU/issues/212) — owner: web team.
+- [Optional dependency stubs](https://github.com/DINGIRABZU/ABZU/issues/213) — owner: infra team.
 
-## Release Targets
-- **v0.1** – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025).
-- **v0.2** – avatar console integration and basic RAG pipeline (target: Q4 2025).
+## Planned Releases
+- [v0.1](https://github.com/DINGIRABZU/ABZU/milestone/1) – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025).
+- [v0.2](https://github.com/DINGIRABZU/ABZU/milestone/2) – avatar console integration and basic RAG pipeline (target: Q4 2025).
 
 ## Deprecation Roadmap
 
