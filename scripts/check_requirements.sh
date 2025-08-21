@@ -15,7 +15,7 @@ fi
 
 missing=0
 
-for cmd in docker nc sox ffmpeg; do
+for cmd in docker nc sox ffmpeg curl jq wget aria2c; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
         echo "Requirement missing: $cmd is not installed or not in PATH." >&2
         missing=1
