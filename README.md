@@ -4,6 +4,8 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 - For a quick start geared toward non-technical users, see
   [docs/quick_start_non_technical.md](docs/quick_start_non_technical.md).
+- For required system packages and environment variables, see
+  [docs/setup.md](docs/setup.md).
 - For an orientation covering the chakra layers, key modules and milestone history, see
   [docs/project_overview.md](docs/project_overview.md).
 - For a map of each script's role and the libraries it calls upon, see
