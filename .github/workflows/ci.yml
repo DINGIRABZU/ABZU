@@ -19,6 +19,8 @@ jobs:
             pyproject.toml
             requirements.txt
             dev-requirements.txt
+      - name: Bootstrap
+        run: bash scripts/bootstrap.sh
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
