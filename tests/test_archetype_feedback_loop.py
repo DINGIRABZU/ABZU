@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import archetype_feedback_loop as afl
-import cortex_memory
+from memory import cortex as cortex_memory
 import archetype_shift_engine
 
 

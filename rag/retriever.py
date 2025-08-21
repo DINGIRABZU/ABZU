@@ -21,7 +21,7 @@ except Exception:  # pragma: no cover - optional dependency
 
 from . import embedder as rag_embedder
 from INANNA_AI.utils import sentiment_score
-import spiral_cortex_memory
+from memory import spiral_cortex
 
 _DB_DIR = Path("data") / "crown_queries"
 _COLLECTION_CACHE: dict[str, Collection] = {}
@@ -78,7 +78,7 @@ def retrieve_top(question: str, top_n: int = 5, *, collection: str = "tech") -> 
 
     try:
         sent = sentiment_score(question)
-        spiral_cortex_memory.log_insight(question, top, sent)
+        spiral_cortex.log_insight(question, top, sent)
     except Exception:
         logger.exception("failed to log retrieval")
 

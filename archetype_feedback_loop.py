@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from typing import List
 
-import cortex_memory
+from memory import cortex as cortex_memory
 import archetype_shift_engine
 
 _SIGILS = archetype_shift_engine.RITUAL_KEYWORDS

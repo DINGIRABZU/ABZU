@@ -10,7 +10,7 @@ ql_stub = ModuleType("qnl_utils")
 setattr(ql_stub, "quantum_embed", lambda t: [0.0])
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ql_stub)
 
-import cortex_sigil_logic as csl
+from labs import cortex_sigil as csl
 import recursive_emotion_router as rer
 
 

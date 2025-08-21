@@ -12,8 +12,8 @@ except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-import cortex_memory
-import cortex_sigil_logic
+from memory import cortex as cortex_memory
+from labs import cortex_sigil
 
 
 class SpiralNode(Protocol):
@@ -70,7 +70,7 @@ def _cycle(node: SpiralNode) -> Dict[str, Any]:
         if stage == "decide":
             decision = result if isinstance(result, dict) else node.decide()
             text = str(decision.get("event") or decision.get("text") or "")
-            triggers = cortex_sigil_logic.interpret_sigils(text)
+            triggers = cortex_sigil.interpret_sigils(text)
             if triggers:
                 decision["sigil_triggers"] = triggers
         if vector_memory is not None:

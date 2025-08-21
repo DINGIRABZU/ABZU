@@ -1,5 +1,5 @@
-import memory_emotional as me
 import pytest
+from memory import emotional as me
 
 
 def test_log_and_fetch(tmp_path):
