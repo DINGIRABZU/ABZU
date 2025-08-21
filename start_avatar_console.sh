@@ -52,9 +52,16 @@ python video_stream.py "${ARGS[@]}" &
 STREAM_PID=$!
 
 LOG_FILE="logs/INANNA_AI.log"
-while [ ! -f "$LOG_FILE" ]; do
+LOG_TIMEOUT=${LOG_TIMEOUT:-30}
+elapsed=0
+while [[ ! -f "$LOG_FILE" && $elapsed -lt $LOG_TIMEOUT ]]; do
     sleep 1
+    elapsed=$((elapsed + 1))
 done
+if [[ ! -f "$LOG_FILE" ]]; then
+    echo "Log file $LOG_FILE not found after $LOG_TIMEOUT seconds" >&2
+    exit 1
+fi
 
 tail -f "$LOG_FILE" &
 TAIL_PID=$!
