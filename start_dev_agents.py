@@ -3,43 +3,67 @@ from __future__ import annotations
 """Command line launcher for the development agent cycle."""
 
 import argparse
+import json
 import logging
 import os
-import json
 from pathlib import Path
 
+from env_validation import check_required
 from tools.dev_orchestrator import DevAssistantService, run_dev_cycle
 
 
 def load_env(path: Path) -> None:
-    """Load environment variables from ``path`` if it exists."""
+    """Load environment variables from ``path`` if it exists.
+
+    Lines without ``=`` or with empty keys are logged and ignored. Loaded
+    variables are exported so that spawned subprocesses inherit them.
+    """
+
+    logger = logging.getLogger(__name__)
+
     if not path.is_file():
         return
+
     for line in path.read_text().splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
             continue
-        if "=" in line:
-            key, value = line.split("=", 1)
-            os.environ[key.strip()] = value.strip()
+        if "=" not in line:
+            logger.warning("Skipping malformed line without '=': %s", line)
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if not key:
+            logger.warning("Skipping line with empty key: %s", line)
+            continue
+        value = value.strip()
+        os.environ[key] = value
+        os.putenv(key, value)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run development agents")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--objective", help="Objective for a single run")
-    group.add_argument("--watch", action="store_true", help="Watch logs and run cycles")
+    group.add_argument(
+        "--watch",
+        action="store_true",
+        help="Watch logs and run cycles",
+    )
     group.add_argument(
         "--stop", action="store_true", help="Signal a running watcher to stop"
     )
     parser.add_argument(
-        "--planner-model", help="Endpoint used by the planner agent"
+        "--planner-model",
+        help="Endpoint used by the planner agent",
     )
     parser.add_argument(
-        "--coder-model", help="Endpoint used by the coder agent",
+        "--coder-model",
+        help="Endpoint used by the coder agent",
     )
     parser.add_argument(
-        "--reviewer-model", help="Endpoint used by the reviewer agent",
+        "--reviewer-model",
+        help="Endpoint used by the reviewer agent",
     )
     parser.add_argument(
         "--log-path", default="logs/dev_agent.log", help="Log file monitored"
@@ -49,10 +73,13 @@ def main() -> int:
         help="JSON file mapping log markers to objectives for --watch",
     )
     parser.add_argument(
-        "--max-iterations", type=int, help="Limit on tasks executed",
+        "--max-iterations",
+        type=int,
+        help="Limit on tasks executed",
     )
     parser.add_argument(
-        "--config", help="Path to JSON config with environment settings",
+        "--config",
+        help="Path to JSON config with environment settings",
     )
     args = parser.parse_args()
 
@@ -90,6 +117,8 @@ def main() -> int:
         stop_file.touch()
         logger.info("Stop signal written to %s", stop_file)
         return 0
+
+    check_required(["PLANNER_MODEL", "CODER_MODEL", "REVIEWER_MODEL"])
 
     if args.watch:
         objectives = None
