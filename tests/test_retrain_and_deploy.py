@@ -1,8 +1,8 @@
-import sys
-from types import SimpleNamespace, ModuleType
-from datetime import datetime, timedelta
 import os
+import sys
+from datetime import datetime, timedelta
 from pathlib import Path
+from types import ModuleType, SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -20,18 +20,22 @@ pad.PKCS1v15 = object
 rsa_mod = ModuleType("rsa")
 rsa_mod.generate_private_key = lambda *a, **k: None
 ser = ModuleType("ser")
-ser.load_pem_private_key = lambda *a, **k: SimpleNamespace(sign=lambda *a, **k: b"", public_key=lambda: None)
+ser.load_pem_private_key = lambda *a, **k: SimpleNamespace(
+    sign=lambda *a, **k: b"", public_key=lambda: None
+)
 ser.load_pem_public_key = lambda *a, **k: SimpleNamespace(verify=lambda *a, **k: None)
 ser.Encoding = ser.PrivateFormat = ser.PublicFormat = ser.NoEncryption = object
-sys.modules.update({
-    "cryptography": crypto,
-    "cryptography.hazmat": hazmat,
-    "cryptography.hazmat.primitives": primitives,
-    "cryptography.hazmat.primitives.asymmetric": asym,
-    "cryptography.hazmat.primitives.asymmetric.padding": pad,
-    "cryptography.hazmat.primitives.asymmetric.rsa": rsa_mod,
-    "cryptography.hazmat.primitives.serialization": ser,
-})
+sys.modules.update(
+    {
+        "cryptography": crypto,
+        "cryptography.hazmat": hazmat,
+        "cryptography.hazmat.primitives": primitives,
+        "cryptography.hazmat.primitives.asymmetric": asym,
+        "cryptography.hazmat.primitives.asymmetric.padding": pad,
+        "cryptography.hazmat.primitives.asymmetric.rsa": rsa_mod,
+        "cryptography.hazmat.primitives.serialization": ser,
+    }
+)
 
 mlflow_dummy = SimpleNamespace(
     start_run=lambda: None,
@@ -41,8 +45,7 @@ mlflow_dummy = SimpleNamespace(
 )
 sys.modules["mlflow"] = mlflow_dummy
 
-from INANNA_AI import retrain_and_deploy
-from INANNA_AI import train_soul
+from INANNA_AI import retrain_and_deploy, train_soul
 
 
 def _prepare(tmp_path, monkeypatch):
@@ -60,10 +63,16 @@ def _prepare(tmp_path, monkeypatch):
     monkeypatch.setattr(retrain_and_deploy.config, "MODELS_DIR", model_dir)
     monkeypatch.setattr(retrain_and_deploy, "SOUL_DIR", soul_dir)
     monkeypatch.setattr(retrain_and_deploy, "SOUL_FILE", dummy_soul)
-    monkeypatch.setattr(retrain_and_deploy, "LAST_TRAIN_FILE", soul_dir / "last_trained.txt")
+    monkeypatch.setattr(
+        retrain_and_deploy, "LAST_TRAIN_FILE", soul_dir / "last_trained.txt"
+    )
 
     calls = {}
-    monkeypatch.setattr(train_soul, "train_soul", lambda log, iterations: calls.setdefault("trained", iterations))
+    monkeypatch.setattr(
+        train_soul,
+        "train_soul",
+        lambda log, iterations: calls.setdefault("trained", iterations),
+    )
     ml = SimpleNamespace(
         start_run=lambda: calls.setdefault("start", True),
         log_param=lambda *a, **k: calls.setdefault("param", a),
@@ -95,4 +104,3 @@ def test_skip_when_no_new_embeddings(tmp_path, monkeypatch):
     retrain_and_deploy.retrain_and_deploy(iterations=1)
 
     assert "trained" not in calls
-

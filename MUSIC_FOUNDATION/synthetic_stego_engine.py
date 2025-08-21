@@ -6,7 +6,6 @@ from typing import Sequence
 
 import numpy as np
 
-
 DEFAULT_BASE_FREQ = 440.0
 DEFAULT_DELTA_FREQ = 40.0
 DEFAULT_BIT_DURATION = 0.05

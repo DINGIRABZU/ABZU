@@ -20,23 +20,24 @@ def test_schedule_capture(monkeypatch):
             self.delay = delay
             self.func = func
             timers.append(self)
+
         def start(self):
             # do nothing
             pass
+
         def cancel(self):
             pass
 
-    monkeypatch.setattr('INANNA_AI.network_utils.threading.Timer', DummyTimer)
-    monkeypatch.setattr('INANNA_AI.network_utils.capture_packets', capture)
+    monkeypatch.setattr("INANNA_AI.network_utils.threading.Timer", DummyTimer)
+    monkeypatch.setattr("INANNA_AI.network_utils.capture_packets", capture)
 
-    timer = schedule_capture('eth0', 2)
+    timer = schedule_capture("eth0", 2)
     assert isinstance(timer, DummyTimer)
     assert timer.delay == 2
     # manually invoke to simulate timer firing
     timer.func()
 
-    assert calls == ['eth0']
+    assert calls == ["eth0"]
     # second timer scheduled
     assert len(timers) == 2
     assert timers[1].delay == 2
-

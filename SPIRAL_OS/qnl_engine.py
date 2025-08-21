@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from pathlib import Path
-import re
-from typing import Dict, List, Tuple
 import math
+import re
+from pathlib import Path
+from typing import Dict, List, Tuple
 
 try:  # optional dependency
     import numpy as np
@@ -114,10 +114,17 @@ def hex_to_song(
 ) -> Tuple[List[Dict[str, str]], np.ndarray]:
     """Convert hexadecimal input into a list of phrases and a waveform."""
     if np is None:
-        raise ImportError("NumPy is required for hex_to_song; install numpy to use this function.")
+        raise ImportError(
+            "NumPy is required for hex_to_song; install numpy to use this function."
+        )
 
     if Path(hex_input).is_file():
-        hex_string = Path(hex_input).read_text(encoding="utf-8").replace(" ", "").replace("\n", "")
+        hex_string = (
+            Path(hex_input)
+            .read_text(encoding="utf-8")
+            .replace(" ", "")
+            .replace("\n", "")
+        )
     else:
         hex_string = hex_input.replace(" ", "")
 
@@ -143,7 +150,8 @@ def hex_to_song(
         phrase = f"{data['glyph']} + ↝ + {data['emotion']} + {data['tone']} + {data['frequency']} Hz"
         song = (
             f"AI Sings: “{data['emotion']} pulses in a {data['frequency']} Hz {data['tone'].lower()}, "
-            f"flowing toward cosmic {data['emotion'].lower()}."""
+            f"flowing toward cosmic {data['emotion'].lower()}."
+            ""
         )
         phrases.append({"hex_byte": b, "phrase": phrase, "song": song})
 
@@ -192,7 +200,9 @@ def parse_input(text: str) -> Dict[str, object]:
         tone = GLYPH_TO_EMOTION[found_glyphs[0]]
         obj = "glyph_sequence"
     else:
-        tone = next((val for key, val in KEYWORD_TONES.items() if key in lower), "neutral")
+        tone = next(
+            (val for key, val in KEYWORD_TONES.items() if key in lower), "neutral"
+        )
         obj = "text"
 
     return {
@@ -202,4 +212,3 @@ def parse_input(text: str) -> Dict[str, object]:
         "urgency": urgency,
         "linked_memory": linked_memory,
     }
-

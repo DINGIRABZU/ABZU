@@ -1,13 +1,14 @@
 import sys
 import types
 from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from core import video_engine, avatar_expression_engine, context_tracker
 import emotional_state
+from core import avatar_expression_engine, context_tracker, video_engine
 
 
 def test_sadtalker_pipeline(monkeypatch):
@@ -37,10 +38,7 @@ def test_controlnet_gesture(monkeypatch):
 
 def test_load_traits_with_skins(tmp_path, monkeypatch):
     cfg = tmp_path / "cfg.toml"
-    cfg.write_text(
-        """eye_color=[1,2,3]\nsigil='x'\n[skins]\nalbedo_layer='skin.png'"""
-    )
+    cfg.write_text("""eye_color=[1,2,3]\nsigil='x'\n[skins]\nalbedo_layer='skin.png'""")
     monkeypatch.setattr(video_engine, "_CONFIG_PATH", cfg)
     traits = video_engine._load_traits()
     assert traits.skins["albedo_layer"] == "skin.png"
-

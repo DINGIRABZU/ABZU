@@ -1,6 +1,6 @@
+import logging
 import sys
 import types
-import logging
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,9 +15,13 @@ sys.modules.setdefault("SPIRAL_OS.qnl_utils", ql_mod)
 # Stub heavy orchestrator dependencies before importing module
 rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
 stub_orch = types.ModuleType("rag.orchestrator")
+
+
 class StubMoGE:
     def __init__(self):
         pass
+
+
 stub_orch.MoGEOrchestrator = StubMoGE
 rag_pkg.orchestrator = stub_orch
 sys.modules.setdefault("rag.orchestrator", stub_orch)
@@ -35,7 +39,9 @@ class DummyOrchestrator:
 
 
 def test_known_invocation(monkeypatch):
-    monkeypatch.setattr(invocation_engine.vector_memory, "add_vector", lambda *a, **k: None)
+    monkeypatch.setattr(
+        invocation_engine.vector_memory, "add_vector", lambda *a, **k: None
+    )
     invocation_engine.clear_registry()
 
     called = []
@@ -54,7 +60,9 @@ def test_known_invocation(monkeypatch):
 
 def test_fuzzy_invocation(monkeypatch):
     invocation_engine.clear_registry()
-    monkeypatch.setattr(invocation_engine.vector_memory, "add_vector", lambda *a, **k: None)
+    monkeypatch.setattr(
+        invocation_engine.vector_memory, "add_vector", lambda *a, **k: None
+    )
 
     called = []
 
@@ -77,7 +85,9 @@ def test_fuzzy_invocation(monkeypatch):
 
 def test_orchestrator_hook(monkeypatch):
     invocation_engine.clear_registry()
-    monkeypatch.setattr(invocation_engine.vector_memory, "add_vector", lambda *a, **k: None)
+    monkeypatch.setattr(
+        invocation_engine.vector_memory, "add_vector", lambda *a, **k: None
+    )
 
     orch = DummyOrchestrator()
     invocation_engine.register_invocation("∞", None, hook="mystic")

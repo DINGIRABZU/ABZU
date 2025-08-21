@@ -1,10 +1,11 @@
-import sys
-from pathlib import Path
-from types import SimpleNamespace, ModuleType
-from datetime import datetime, timedelta
 import importlib
-import numpy as np
 import logging
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+from types import ModuleType, SimpleNamespace
+
+import numpy as np
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,7 +28,10 @@ def test_add_and_search(monkeypatch, tmp_path):
 
         def query(self, query_embeddings, n_results, **_):
             q = np.asarray(query_embeddings[0], dtype=float)
-            sims = [float(e @ q / ((np.linalg.norm(e) * np.linalg.norm(q)) + 1e-8)) for e, _ in records]
+            sims = [
+                float(e @ q / ((np.linalg.norm(e) * np.linalg.norm(q)) + 1e-8))
+                for e, _ in records
+            ]
             order = np.argsort(sims)[::-1][:n_results]
             return {
                 "embeddings": [[records[i][0].tolist() for i in order]],
@@ -52,7 +56,9 @@ def test_add_and_search(monkeypatch, tmp_path):
     monkeypatch.setattr(vector_memory.qnl_utils, "quantum_embed", fake_embed)
 
     now = datetime.utcnow()
-    vector_memory.add_vector("aaaa", {"emotion": "joy", "timestamp": (now - timedelta(days=1)).isoformat()})
+    vector_memory.add_vector(
+        "aaaa", {"emotion": "joy", "timestamp": (now - timedelta(days=1)).isoformat()}
+    )
     vector_memory.add_vector("aaa", {"emotion": "joy", "timestamp": now.isoformat()})
     vector_memory.add_vector("bbb", {"emotion": "sad", "timestamp": now.isoformat()})
 
@@ -80,5 +86,3 @@ def test_rewrite_vector_delete_failure(monkeypatch, caplog):
         with pytest.raises(RuntimeError):
             vector_memory.rewrite_vector("old", "new")
     assert "Failed to delete vector old" in caplog.text
-
-

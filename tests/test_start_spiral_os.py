@@ -1,11 +1,12 @@
-import sys
+import builtins
 import importlib.util
+import os
+import sys
+import types
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
-import builtins
-import types
+
 import pytest
-import os
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -60,7 +61,9 @@ config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
 rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
 orch_mod = types.ModuleType("rag.orchestrator")
-orch_mod.MoGEOrchestrator = lambda *a, **k: types.SimpleNamespace(handle_input=lambda self, text: None)
+orch_mod.MoGEOrchestrator = lambda *a, **k: types.SimpleNamespace(
+    handle_input=lambda self, text: None
+)
 rag_pkg.orchestrator = orch_mod
 sys.modules.setdefault("rag.orchestrator", orch_mod)
 tools_mod = types.ModuleType("tools")
@@ -109,24 +112,48 @@ def _run_main(args):
 def test_sequence_with_network(monkeypatch):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     events = []
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: events.append("welcome"))
-    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: events.append("summary") or "sum")
-    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: events.append("analyze") or "ana")
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: events.append("suggest") or [])
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: events.append("reflect") or "id")
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai,
+        "display_welcome_message",
+        lambda: events.append("welcome"),
+    )
+    monkeypatch.setattr(
+        start_spiral_os.glm_init,
+        "summarize_purpose",
+        lambda: events.append("summary") or "sum",
+    )
+    monkeypatch.setattr(
+        start_spiral_os.glm_analyze,
+        "analyze_code",
+        lambda: events.append("analyze") or "ana",
+    )
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai,
+        "suggest_enhancement",
+        lambda: events.append("suggest") or [],
+    )
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai,
+        "reflect_existence",
+        lambda: events.append("reflect") or "id",
+    )
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
 
     calls = {}
+
     def fake_monitor(interface, packet_count=5):
         events.append("network")
         calls["iface"] = interface
+
     monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", fake_monitor)
 
     class DummyOrch:
         def handle_input(self, text):
             events.append(text)
 
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch())
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
 
     inputs = iter(["hi", ""])
     monkeypatch.setattr(builtins, "input", lambda _="": next(inputs))
@@ -148,30 +175,62 @@ def test_sequence_with_network(monkeypatch):
 def test_sequence_skip_network(monkeypatch):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     events = []
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: events.append("welcome"))
-    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: events.append("summary") or "sum")
-    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: events.append("analyze") or "ana")
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: events.append("suggest") or [])
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: events.append("reflect") or "id")
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai,
+        "display_welcome_message",
+        lambda: events.append("welcome"),
+    )
+    monkeypatch.setattr(
+        start_spiral_os.glm_init,
+        "summarize_purpose",
+        lambda: events.append("summary") or "sum",
+    )
+    monkeypatch.setattr(
+        start_spiral_os.glm_analyze,
+        "analyze_code",
+        lambda: events.append("analyze") or "ana",
+    )
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai,
+        "suggest_enhancement",
+        lambda: events.append("suggest") or [],
+    )
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai,
+        "reflect_existence",
+        lambda: events.append("reflect") or "id",
+    )
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
-    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda interface, packet_count=5: events.append("network"))
+    monkeypatch.setattr(
+        start_spiral_os.dnu,
+        "monitor_traffic",
+        lambda interface, packet_count=5: events.append("network"),
+    )
 
     class DummyOrch:
         def handle_input(self, text):
             events.append(text)
 
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch())
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
 
-    inputs = iter(["",])
+    inputs = iter(
+        [
+            "",
+        ]
+    )
     monkeypatch.setattr(builtins, "input", lambda _="": next(inputs))
 
-    _run_main([
-        "--skip-network",
-        "--interface",
-        "eth0",
-        "--no-server",
-        "--no-reflection",
-    ])
+    _run_main(
+        [
+            "--skip-network",
+            "--interface",
+            "eth0",
+            "--no-server",
+            "--no-reflection",
+        ]
+    )
 
     assert events == ["welcome", "summary", "analyze", "suggest", "reflect"]
 
@@ -179,7 +238,9 @@ def test_sequence_skip_network(monkeypatch):
 def test_command_parsing(monkeypatch):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     events = []
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
@@ -190,7 +251,9 @@ def test_command_parsing(monkeypatch):
         def handle_input(self, text):
             events.append(text)
 
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch())
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
     monkeypatch.setattr(builtins, "input", lambda _="": "")
 
     _run_main(["--command", "hello world", "--no-server", "--no-reflection"])
@@ -202,7 +265,9 @@ def test_server_and_reflection_run(monkeypatch):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     calls = {"server": False, "reflect": 0}
 
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
@@ -214,13 +279,17 @@ def test_server_and_reflection_run(monkeypatch):
         def handle_input(self, text):
             return {}
 
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch())
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
     monkeypatch.setattr(builtins, "input", lambda _="": "")
 
     def fake_run_reflection_loop():
         calls["reflect"] += 1
 
-    monkeypatch.setattr(start_spiral_os.reflection_loop, "run_reflection_loop", fake_run_reflection_loop)
+    monkeypatch.setattr(
+        start_spiral_os.reflection_loop, "run_reflection_loop", fake_run_reflection_loop
+    )
 
     def fake_uvicorn_run(app, host="0.0.0.0", port=8000):
         calls["server"] = True
@@ -247,15 +316,19 @@ def test_validator_blocks_prompt(monkeypatch):
             events.append(f"orch:{text}")
 
     monkeypatch.setattr(start_spiral_os, "EthicalValidator", lambda: DummyValidator())
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch())
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
 
-    inputs = iter(["banned words", "clean", ""]) 
+    inputs = iter(["banned words", "clean", ""])
     monkeypatch.setattr(builtins, "input", lambda _="": next(inputs))
 
     _run_main(["--no-server", "--no-reflection"])
@@ -277,9 +350,13 @@ def test_no_validator_option(monkeypatch):
             events.append(f"orch:{text}")
 
     monkeypatch.setattr(start_spiral_os, "EthicalValidator", lambda: DummyValidator())
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch())
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
@@ -296,14 +373,18 @@ def test_no_validator_option(monkeypatch):
 def test_rewrite_memory_option(monkeypatch):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
     monkeypatch.setattr(start_spiral_os.uvicorn, "run", lambda *a, **k: None)
     monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
-    monkeypatch.setattr(start_spiral_os.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr(
+        start_spiral_os.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
 
     called = {}
     monkeypatch.setattr(
@@ -312,7 +393,12 @@ def test_rewrite_memory_option(monkeypatch):
         lambda i, t: called.setdefault("args", (i, t)),
     )
     import sys as _sys
-    monkeypatch.setattr(_sys.modules['invocation_engine'], "invoke_ritual", lambda n: called.setdefault("ritual", n) or [])
+
+    monkeypatch.setattr(
+        _sys.modules["invocation_engine"],
+        "invoke_ritual",
+        lambda n: called.setdefault("ritual", n) or [],
+    )
 
     _run_main(["--rewrite-memory", "x", "y"])
 
@@ -323,22 +409,28 @@ def test_rewrite_memory_option(monkeypatch):
 def test_rewrite_memory_failure(monkeypatch):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
     monkeypatch.setattr(start_spiral_os.uvicorn, "run", lambda *a, **k: None)
     monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
-    monkeypatch.setattr(start_spiral_os.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr(
+        start_spiral_os.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
 
     def _fail_rewrite(i, t):
         raise RuntimeError("rewrite failed")
 
     monkeypatch.setattr(start_spiral_os.vector_memory, "rewrite_vector", _fail_rewrite)
     import sys as _sys
-    monkeypatch.setattr(_sys.modules['invocation_engine'], "invoke_ritual", lambda n: None)
+
+    monkeypatch.setattr(
+        _sys.modules["invocation_engine"], "invoke_ritual", lambda n: None
+    )
 
     with pytest.raises(SystemExit):
         _run_main(["--rewrite-memory", "x", "y"])
-

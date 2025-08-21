@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Helpers for optional dependencies with lightweight stubs."""
 
-from importlib import import_module
 import logging
 import random as _random
 import types
+from importlib import import_module
 from typing import Any, Callable, Dict
 
 logger = logging.getLogger(__name__)

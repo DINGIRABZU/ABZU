@@ -1,6 +1,6 @@
+import json
 import sys
 import types
-import json
 from pathlib import Path
 
 # stub heavy optional dependencies
@@ -71,7 +71,9 @@ def test_query_filters_and_handles_invalid(tmp_path, monkeypatch):
 
 
 def test_score_affect_defaults(monkeypatch):
-    monkeypatch.setattr(em.emotion_analysis, "get_emotion_and_tone", lambda: ("calm", ""))
+    monkeypatch.setattr(
+        em.emotion_analysis, "get_emotion_and_tone", lambda: ("calm", "")
+    )
     monkeypatch.setattr(em.emotion_analysis, "emotion_weight", lambda e: 0.4)
     res = em.score_affect("I love this good day")
     assert res["joy"] > 0
@@ -107,6 +109,8 @@ def test_record_interaction_jsonl(tmp_path, monkeypatch):
 
 
 def test_score_affect_returns_keys(monkeypatch):
-    monkeypatch.setattr(em.emotion_analysis, "get_emotion_and_tone", lambda: ("neutral", ""))
+    monkeypatch.setattr(
+        em.emotion_analysis, "get_emotion_and_tone", lambda: ("neutral", "")
+    )
     result = em.score_affect("ok")
     assert set(result) == {"joy", "trust", "friction"}

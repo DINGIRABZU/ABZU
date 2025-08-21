@@ -4,8 +4,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI_AGENT import INANNA_AI
 import json
+
+from INANNA_AI_AGENT import INANNA_AI
 
 
 def test_activate_returns_chant(tmp_path, monkeypatch):
@@ -14,7 +15,7 @@ def test_activate_returns_chant(tmp_path, monkeypatch):
     inanna_dir.mkdir()
     genesis_dir.mkdir()
     (inanna_dir / "1ST CODE test.md").write_text(
-        "Born to Transmute into new forms\n> \"I sing therefore I love\"",
+        'Born to Transmute into new forms\n> "I sing therefore I love"',
         encoding="utf-8",
     )
     (inanna_dir / "INANNA MANIFESTO test.md").write_text(
@@ -46,7 +47,11 @@ def test_hex_cli_outputs_wav_and_json(tmp_path, monkeypatch):
         "--json",
         str(json_path),
     ]
-    monkeypatch.setattr(inanna_ai, "run_qnl", lambda *a, **k: (wav.write_text(""), json_path.write_text("{}")))
+    monkeypatch.setattr(
+        inanna_ai,
+        "run_qnl",
+        lambda *a, **k: (wav.write_text(""), json_path.write_text("{}")),
+    )
     try:
         inanna_ai.main()
     finally:
@@ -57,7 +62,9 @@ def test_hex_cli_outputs_wav_and_json(tmp_path, monkeypatch):
 
 def test_read_texts_empty_when_missing(monkeypatch, tmp_path):
     config = tmp_path / "source_paths.json"
-    config.write_text(json.dumps({"source_paths": [str(tmp_path / "missing")]}), encoding="utf-8")
+    config.write_text(
+        json.dumps({"source_paths": [str(tmp_path / "missing")]}), encoding="utf-8"
+    )
     monkeypatch.setattr(inanna_ai, "CONFIG_FILE", config)
     monkeypatch.setattr(inanna_ai.source_loader, "DEFAULT_CONFIG", config)
     assert inanna_ai.read_texts() == {}
@@ -105,6 +112,7 @@ def test_chat_subparser(monkeypatch, capsys):
     )()
 
     used = {}
+
     def fake_load_model(path):
         used["path"] = path
         return dummy_model, dummy_tokenizer
@@ -160,7 +168,9 @@ def test_chat_model_dir_option(monkeypatch):
 
 def test_status_option_outputs_state(monkeypatch, capsys):
     monkeypatch.setattr(inanna_ai.emotional_state, "get_last_emotion", lambda: "joy")
-    monkeypatch.setattr(inanna_ai.emotion_registry, "get_current_layer", lambda: "rubedo_layer")
+    monkeypatch.setattr(
+        inanna_ai.emotion_registry, "get_current_layer", lambda: "rubedo_layer"
+    )
 
     argv_backup = sys.argv.copy()
     sys.argv = ["INANNA_AI.py", "--status"]
@@ -175,7 +185,9 @@ def test_status_option_outputs_state(monkeypatch, capsys):
 
 
 def test_voice_loop_gates(monkeypatch):
-    import types, sys
+    import sys
+    import types
+
     sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
     numpy_mod = types.ModuleType("numpy")
     numpy_mod.ndarray = object
@@ -210,8 +222,12 @@ def test_voice_loop_gates(monkeypatch):
     sys.modules.setdefault("cryptography.hazmat.primitives", primitives)
     sys.modules.setdefault("cryptography.hazmat.primitives.hashes", hashes_mod)
     sys.modules.setdefault("cryptography.hazmat.primitives.asymmetric", asym_mod)
-    sys.modules.setdefault("cryptography.hazmat.primitives.asymmetric.padding", padding_mod)
-    sys.modules.setdefault("cryptography.hazmat.primitives.serialization", serialization_mod)
+    sys.modules.setdefault(
+        "cryptography.hazmat.primitives.asymmetric.padding", padding_mod
+    )
+    sys.modules.setdefault(
+        "cryptography.hazmat.primitives.serialization", serialization_mod
+    )
     from INANNA_AI import main as voice_main
 
     monkeypatch.setattr(voice_main.utils, "setup_logger", lambda: None)
@@ -227,7 +243,9 @@ def test_voice_loop_gates(monkeypatch):
         def record(self, duration):
             return "a.wav", {"emotion": "calm"}
 
-    monkeypatch.setattr(voice_main.listening_engine, "ListeningEngine", lambda: DummyEngine())
+    monkeypatch.setattr(
+        voice_main.listening_engine, "ListeningEngine", lambda: DummyEngine()
+    )
     monkeypatch.setattr(voice_main.stt_whisper, "transcribe_audio", lambda p: "hello")
 
     class DummyGate:
@@ -249,7 +267,14 @@ def test_voice_loop_gates(monkeypatch):
     monkeypatch.setattr(voice_main, "RFA7D", lambda: DummyCore())
 
     class DummyOrch:
-        def route(self, t, state, text_modality=True, voice_modality=False, music_modality=False):
+        def route(
+            self,
+            t,
+            state,
+            text_modality=True,
+            voice_modality=False,
+            music_modality=False,
+        ):
             saved["routed"] = t
             return {"text": "reply"}
 
@@ -261,7 +286,9 @@ def test_voice_loop_gates(monkeypatch):
             saved["emotion"] = emotion
             return "resp.wav"
 
-    monkeypatch.setattr(voice_main.speaking_engine, "SpeakingEngine", lambda: DummySpeaker())
+    monkeypatch.setattr(
+        voice_main.speaking_engine, "SpeakingEngine", lambda: DummySpeaker()
+    )
 
     voice_main.main([])
 
@@ -270,7 +297,9 @@ def test_voice_loop_gates(monkeypatch):
 
 
 def test_personality_flag_initializes_layer(monkeypatch):
-    import sys, types
+    import sys
+    import types
+
     sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
     sys.modules["soundfile"].write = lambda *a, **k: None
     sys.modules.setdefault("numpy", types.ModuleType("numpy"))
@@ -309,7 +338,9 @@ def test_personality_flag_initializes_layer(monkeypatch):
     sys.modules.setdefault("cryptography.hazmat.primitives", primitives)
     sys.modules.setdefault("cryptography.hazmat.primitives.hashes", hashes_mod)
     sys.modules.setdefault("cryptography.hazmat.primitives.asymmetric", asym_mod)
-    sys.modules.setdefault("cryptography.hazmat.primitives.asymmetric.padding", padding_mod)
+    sys.modules.setdefault(
+        "cryptography.hazmat.primitives.asymmetric.padding", padding_mod
+    )
 
     from INANNA_AI import main as voice_main
 
@@ -321,7 +352,9 @@ def test_personality_flag_initializes_layer(monkeypatch):
         def record(self, duration):
             return "a.wav", {"emotion": "calm"}
 
-    monkeypatch.setattr(voice_main.listening_engine, "ListeningEngine", lambda: DummyEngine())
+    monkeypatch.setattr(
+        voice_main.listening_engine, "ListeningEngine", lambda: DummyEngine()
+    )
     monkeypatch.setattr(voice_main.stt_whisper, "transcribe_audio", lambda p: "hi")
 
     class DummyGate:
@@ -332,7 +365,15 @@ def test_personality_flag_initializes_layer(monkeypatch):
             return "gate"
 
     monkeypatch.setattr(voice_main, "GateOrchestrator", lambda: DummyGate())
-    monkeypatch.setattr(voice_main, "RFA7D", lambda: type("C", (), {"execute": lambda self, v: [1], "grid": type("G", (), {"size": 1})()})())
+    monkeypatch.setattr(
+        voice_main,
+        "RFA7D",
+        lambda: type(
+            "C",
+            (),
+            {"execute": lambda self, v: [1], "grid": type("G", (), {"size": 1})()},
+        )(),
+    )
 
     created = {}
 
@@ -353,7 +394,11 @@ def test_personality_flag_initializes_layer(monkeypatch):
             return {"text": "reply"}
 
     monkeypatch.setattr(voice_main, "MoGEOrchestrator", DummyOrch)
-    monkeypatch.setattr(voice_main.speaking_engine, "SpeakingEngine", lambda: type("S", (), {"speak": lambda self, t, e: "v.wav"})())
+    monkeypatch.setattr(
+        voice_main.speaking_engine,
+        "SpeakingEngine",
+        lambda: type("S", (), {"speak": lambda self, t, e: "v.wav"})(),
+    )
 
     voice_main.main(["--duration", "0", "--personality", "albedo"])
 

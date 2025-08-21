@@ -12,6 +12,7 @@ from .voice_evolution import get_voice_params
 
 try:  # pragma: no cover - optional dependency
     from bark import generate_audio, preload_models
+
     preload_models()
 except Exception:  # pragma: no cover - optional dependency
     generate_audio = None  # type: ignore

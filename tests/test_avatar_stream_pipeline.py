@@ -1,6 +1,7 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
+
 import numpy as np
 from fastapi.testclient import TestClient
 
@@ -9,35 +10,54 @@ sys.path.insert(0, str(ROOT))
 
 # Patch heavy optional dependencies before importing modules
 aiortc_stub = types.ModuleType("aiortc")
+
+
 class DummyDesc:
     def __init__(self, sdp: str, type: str) -> None:
         self.sdp = sdp
         self.type = type
+
+
 class DummyPC:
     def __init__(self) -> None:
         self.localDescription = DummyDesc("ans", "answer")
+
     def addTransceiver(self, kind: str) -> None:
         pass
+
     def addTrack(self, track: object) -> None:
         pass
+
     async def setRemoteDescription(self, desc: DummyDesc) -> None:
         pass
+
     async def createOffer(self) -> DummyDesc:
         return DummyDesc("off", "offer")
+
     async def createAnswer(self) -> DummyDesc:
         return self.localDescription
+
     async def setLocalDescription(self, desc: DummyDesc) -> None:
         self.localDescription = desc
+
     async def close(self) -> None:
         pass
+
+
 class VideoStreamTrack:
     kind = "video"
+
     async def recv(self):
         pass
+
+
 class AudioStreamTrack:
     kind = "audio"
+
     async def recv(self):
         pass
+
+
 AUDIO_PTIME = 0.02
 aiortc_stub.RTCPeerConnection = DummyPC
 aiortc_stub.RTCSessionDescription = DummyDesc
@@ -88,11 +108,18 @@ sys.modules.setdefault("gymnasium", gym_mod)
 
 tts_mod = types.ModuleType("TTS")
 api_mod = types.ModuleType("api")
+
+
 class DummyTTS:
     def __init__(self, *a, **k) -> None:
         pass
-    def tts_to_file(self, text: str, file_path: str, speaker: str = "random", speed: float = 1.0) -> None:
+
+    def tts_to_file(
+        self, text: str, file_path: str, speaker: str = "random", speed: float = 1.0
+    ) -> None:
         Path(file_path).write_bytes(b"dummy")
+
+
 api_mod.TTS = DummyTTS
 tts_mod.api = api_mod
 sys.modules.setdefault("TTS", tts_mod)
@@ -102,16 +129,16 @@ sf_stub.read = lambda *a, **k: (np.zeros(1, dtype=np.int16), 8000)
 sf_stub.write = lambda *a, **k: None
 sys.modules.setdefault("soundfile", sf_stub)
 
-from rag.orchestrator import MoGEOrchestrator
-from rag import orchestrator
-from INANNA_AI import tts_xtts, tts_coqui
-from core import avatar_expression_engine, video_engine
-from audio import engine as audio_engine
+import crown_decider
 import server
 import vector_memory
-import crown_decider
 import voice_aura
+from audio import engine as audio_engine
+from core import avatar_expression_engine, video_engine
 from crown_config import settings
+from INANNA_AI import tts_coqui, tts_xtts
+from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 
 settings.glm_command_token = "token"
 
@@ -123,22 +150,42 @@ def test_avatar_stream_pipeline(tmp_path, monkeypatch):
     def fake_synth(text: str, emotion: str) -> str:
         wav.write_bytes(b"RIFF00")
         return str(wav)
+
     monkeypatch.setattr(tts_xtts, "synthesize", fake_synth)
     monkeypatch.setattr(tts_coqui, "synthesize_speech", fake_synth)
 
     # Stub other components
     monkeypatch.setattr(audio_engine, "play_sound", lambda p, loop=False: None)
-    monkeypatch.setattr(video_engine, "start_stream", lambda lip_sync_audio=None: iter([np.zeros((1, 1, 3), dtype=np.uint8)]))
-    monkeypatch.setattr(avatar_expression_engine.emotional_state, "get_last_emotion", lambda: "joy")
+    monkeypatch.setattr(
+        video_engine,
+        "start_stream",
+        lambda lip_sync_audio=None: iter([np.zeros((1, 1, 3), dtype=np.uint8)]),
+    )
+    monkeypatch.setattr(
+        avatar_expression_engine.emotional_state, "get_last_emotion", lambda: "joy"
+    )
     monkeypatch.setattr(voice_aura, "apply_voice_aura", lambda p, **k: p)
-    monkeypatch.setattr(crown_decider, "decide_expression_options", lambda e: {"tts_backend": "xtts", "avatar_style": "A", "aura_amount": 0.1, "soul_state": "awakened"})
+    monkeypatch.setattr(
+        crown_decider,
+        "decide_expression_options",
+        lambda e: {
+            "tts_backend": "xtts",
+            "avatar_style": "A",
+            "aura_amount": 0.1,
+            "soul_state": "awakened",
+        },
+    )
 
     logs = []
-    monkeypatch.setattr(vector_memory, "add_vector", lambda text, meta: logs.append(meta))
+    monkeypatch.setattr(
+        vector_memory, "add_vector", lambda text, meta: logs.append(meta)
+    )
     monkeypatch.setattr(vector_memory, "query_vectors", lambda *a, **k: [])
 
     orch = MoGEOrchestrator()
-    result = orch.route("hello", {"emotion": "joy"}, text_modality=False, voice_modality=True)
+    result = orch.route(
+        "hello", {"emotion": "joy"}, text_modality=False, voice_modality=True
+    )
 
     voice_path = Path(result["voice_path"])
     assert voice_path.exists()

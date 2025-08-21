@@ -1,9 +1,9 @@
 """Defensive network helpers for monitoring and secure POST requests."""
+
 from __future__ import annotations
 
 import logging
 from pathlib import Path
-
 from typing import Any
 
 try:  # pragma: no cover - optional dependency

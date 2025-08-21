@@ -2,11 +2,11 @@ from __future__ import annotations
 
 """Cross-layer spiral memory with recursive recall and event registry."""
 
+import logging
+import sqlite3
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-import logging
-import sqlite3
 from statistics import mean
 from typing import Iterable, List, Mapping, Sequence
 

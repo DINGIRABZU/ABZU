@@ -1,15 +1,15 @@
 import os
+import shutil
 import sys
 from pathlib import Path
-import shutil
 
 import pytest
-
 
 # Default to NumPy audio backend unless pydub and ffmpeg are fully available
 if "AUDIO_BACKEND" not in os.environ:
     try:  # pragma: no cover - optional dependency
         import pydub  # type: ignore
+
         if shutil.which("ffmpeg") is None:
             raise RuntimeError("ffmpeg not found")
     except Exception:  # pragma: no cover - missing deps
@@ -21,8 +21,9 @@ if "AUDIO_BACKEND" not in os.environ:
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import emotional_state
 import emotion_registry
+import emotional_state
+
 
 @pytest.fixture()
 def mock_emotion_state(tmp_path, monkeypatch):

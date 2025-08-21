@@ -1,11 +1,11 @@
+import base64
 import sys
 from pathlib import Path
-import base64
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI import stt_whisper, emotion_analysis, utils
+from INANNA_AI import emotion_analysis, stt_whisper, utils
 from INANNA_AI.listening_engine import _extract_features
 from tests.data.test1_wav_base64 import TEST1_WAV_BASE64
 
@@ -22,6 +22,7 @@ def test_transcribe_audio(tmp_path, monkeypatch):
     class DummyModel:
         def __init__(self):
             self.path = None
+
         def transcribe(self, path: str):
             self.path = path
             return {"text": "hello"}
@@ -63,12 +64,20 @@ def test_extract_features(tmp_path):
 
     wave, sr = librosa.load(audio_path, sr=None, mono=True)
     info = _extract_features(wave, sr)
-    assert set(info) == {"emotion", "pitch", "tempo", "classification", "dialect", "weight"}
+    assert set(info) == {
+        "emotion",
+        "pitch",
+        "tempo",
+        "classification",
+        "dialect",
+        "weight",
+    }
 
 
 def _save_sine(tmp_path: Path, freq: float, amp: float) -> Path:
     """Create a 1 second sine wave at ``freq`` Hz and ``amp`` amplitude."""
     import numpy as np
+
     from INANNA_AI import utils
 
     sr = 22050

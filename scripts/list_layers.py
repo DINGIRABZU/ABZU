@@ -6,7 +6,9 @@ from pathlib import Path
 
 import yaml
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "settings" / "layers.yaml"
+CONFIG_PATH = (
+    Path(__file__).resolve().parent.parent / "config" / "settings" / "layers.yaml"
+)
 
 
 def main() -> None:

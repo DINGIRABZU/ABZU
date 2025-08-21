@@ -1,16 +1,18 @@
-import types
 import sys
+import types
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI import main as voice_main
 import pytest
+
+from INANNA_AI import main as voice_main
 
 
 class DummyLayerA:
     pass
+
 
 class DummyLayerB:
     pass
@@ -25,7 +27,9 @@ def setup_basic(monkeypatch):
         def record(self, duration):
             return "a.wav", {"emotion": "calm"}
 
-    monkeypatch.setattr(voice_main.listening_engine, "ListeningEngine", lambda: DummyEngine())
+    monkeypatch.setattr(
+        voice_main.listening_engine, "ListeningEngine", lambda: DummyEngine()
+    )
     monkeypatch.setattr(voice_main.stt_whisper, "transcribe_audio", lambda p: "hi")
 
     class DummyGate:
@@ -39,7 +43,11 @@ def setup_basic(monkeypatch):
     monkeypatch.setattr(
         voice_main,
         "RFA7D",
-        lambda: type("C", (), {"execute": lambda self, v: [1], "grid": type("G", (), {"size": 1})()})(),
+        lambda: type(
+            "C",
+            (),
+            {"execute": lambda self, v: [1], "grid": type("G", (), {"size": 1})()},
+        )(),
     )
     monkeypatch.setattr(
         voice_main.speaking_engine,
@@ -88,7 +96,7 @@ def test_help_lists_layers(monkeypatch, capsys):
 
 
 def test_list_personalities_sorted():
-    from INANNA_AI.personality_layers import list_personalities, REGISTRY
+    from INANNA_AI.personality_layers import REGISTRY, list_personalities
 
     original = REGISTRY.copy()
     try:

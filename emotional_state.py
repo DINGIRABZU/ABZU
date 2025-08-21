@@ -148,7 +148,13 @@ def set_resonance_pairs(pairs: List[Tuple[float, float]]) -> None:
     """Persist ``pairs`` of resonance frequencies."""
     _STATE["resonance_pairs"] = [[float(a), float(b)] for a, b in pairs]
     _save_state()
-    logger.info("resonance_pairs set", extra={"emotion": _STATE.get("last_emotion"), "resonance": _STATE.get("resonance_level")})
+    logger.info(
+        "resonance_pairs set",
+        extra={
+            "emotion": _STATE.get("last_emotion"),
+            "resonance": _STATE.get("resonance_level"),
+        },
+    )
 
 
 def get_soul_state() -> str | None:

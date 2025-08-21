@@ -1,11 +1,13 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from MUSIC_FOUNDATION.synthetic_stego_engine import encode_phrase, decode_waveform
+from MUSIC_FOUNDATION.synthetic_stego_engine import (decode_waveform,
+                                                     encode_phrase)
 
 
 def test_round_trip_encoding():

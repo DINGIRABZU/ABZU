@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -46,13 +46,22 @@ orchestrator.invocation_engine._extract_symbols = lambda text: ""
 def test_reflection_runs_when_avatar_loaded(monkeypatch):
     called = {"reflect": 0}
 
-    monkeypatch.setattr(orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"})
+    monkeypatch.setattr(
+        orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"}
+    )
     monkeypatch.setattr(orchestrator.symbolic_parser, "parse_intent", lambda d: [])
-    monkeypatch.setattr(MoGEOrchestrator, "route", lambda self, text, emotion_data, *, qnl_data=None, **kw: {})
+    monkeypatch.setattr(
+        MoGEOrchestrator,
+        "route",
+        lambda self, text, emotion_data, *, qnl_data=None, **kw: {},
+    )
 
     def fake_reflect(*args, **kwargs):
         called["reflect"] += 1
-    monkeypatch.setattr(orchestrator.reflection_loop, "run_reflection_loop", fake_reflect)
+
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "run_reflection_loop", fake_reflect
+    )
 
     context_tracker.state.avatar_loaded = True
 

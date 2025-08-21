@@ -1,8 +1,9 @@
 from __future__ import annotations
-import sys
-from pathlib import Path
+
 import importlib.util
+import sys
 from importlib.machinery import SourceFileLoader
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -29,8 +30,10 @@ steps:
 
     def fake_run(args, check=True):
         calls.append(args)
+
         class Result:
             returncode = 0
+
         return Result()
 
     monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)

@@ -2,15 +2,17 @@ from __future__ import annotations
 
 """State machine tracking alchemical progress and emotional metrics."""
 
-from dataclasses import dataclass, field
-from enum import Enum
 import random
 import re
+from dataclasses import dataclass, field
+from enum import Enum
 from typing import Callable, Dict, Iterable, Set, Tuple
 
 import numpy as np
-from ...emotion_analysis import get_emotional_weight
+
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
+
+from ...emotion_analysis import get_emotional_weight
 
 
 class State(Enum):
@@ -29,9 +31,7 @@ TriggerSet = Set[str]
 class AlchemicalPersona:
     """Track alchemical state, entanglement and shadow balance."""
 
-    weights: Dict[State, float] = field(
-        default_factory=lambda: {s: 1.0 for s in State}
-    )
+    weights: Dict[State, float] = field(default_factory=lambda: {s: 1.0 for s in State})
     shadow_balance: float = 0.0
     entanglement: float = 0.0
     state: State = State.NIGREDO

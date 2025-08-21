@@ -16,8 +16,8 @@ except Exception:  # pragma: no cover - optional dependency
 import matplotlib.pyplot as plt
 import streamlit as st
 
-from MUSIC_FOUNDATION.qnl_utils import quantum_embed
 from audio.mix_tracks import apply_audio_params, embedding_to_params
+from MUSIC_FOUNDATION.qnl_utils import quantum_embed
 
 st.set_page_config(page_title="QNL Mixer")
 
@@ -42,7 +42,6 @@ if uploaded is not None:
     ax.set(title="Spectrogram")
     fig.colorbar(img, ax=ax, format="%+2.f dB")
     st.pyplot(fig)
-        buf = io.BytesIO()
-        sf.write(buf, data, sr, format="WAV")
-        st.audio(buf.getvalue(), format="audio/wav")
-
+    buf = io.BytesIO()
+    sf.write(buf, data, sr, format="WAV")
+    st.audio(buf.getvalue(), format="audio/wav")

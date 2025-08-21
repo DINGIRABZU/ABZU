@@ -9,4 +9,5 @@ class LoveMatrix:
         "razazar",
     }
 
+
 __all__ = ["LoveMatrix"]

@@ -22,5 +22,3 @@ def test_map_emotion_to_sound_defaults():
     assert data["scale"] == "F_major"
     assert data["timbre"] == ["flute", "violin"]
     assert data["harmonics"] == "balanced_chords"
-
-

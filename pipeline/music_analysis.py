@@ -2,8 +2,8 @@ from __future__ import annotations
 
 """High-level music analysis pipeline combining feature and emotion extraction."""
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -12,12 +12,8 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     np = None  # type: ignore
 
-from audio.audio_ingestion import (
-    load_audio,
-    extract_mfcc,
-    extract_key,
-    extract_tempo,
-)
+from audio.audio_ingestion import (extract_key, extract_mfcc, extract_tempo,
+                                   load_audio)
 from INANNA_AI.emotion_analysis import analyze_audio_emotion
 
 

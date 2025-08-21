@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import logging
+
 import corpus_memory_logging as cml
 
 
@@ -22,7 +23,14 @@ def test_log_and_load(tmp_path, monkeypatch, caplog):
     first = json.loads(lines[0])
     assert first["input"] == "hello" and first["emotion"] == "joy"
 
-    assert sum(1 for r in caplog.records if r.levelno == logging.INFO and "logged interaction" in r.message) == 2
+    assert (
+        sum(
+            1
+            for r in caplog.records
+            if r.levelno == logging.INFO and "logged interaction" in r.message
+        )
+        == 2
+    )
 
     all_entries = cml.load_interactions()
     assert len(all_entries) == 2

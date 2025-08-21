@@ -4,8 +4,8 @@ import sys
 import types
 from pathlib import Path
 
-from tests.helpers.config_stub import build_settings
 from tests.helpers import emotion_stub
+from tests.helpers.config_stub import build_settings
 
 
 def setup_module(module):
@@ -25,9 +25,11 @@ def setup_module(module):
     sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 
     personality_layers = types.ModuleType("personality_layers")
+
     class AlbedoPersonality:
         def generate_response(self, text):
             return "persona"
+
     personality_layers.AlbedoPersonality = AlbedoPersonality
     personality_layers.REGISTRY = {}
     pkg.personality_layers = personality_layers
@@ -54,7 +56,9 @@ def setup_module(module):
     pkg.db_storage = db_storage
     sys.modules["INANNA_AI.db_storage"] = db_storage
 
-    sys.modules["crown_decider"] = types.SimpleNamespace(decide_expression_options=lambda e: {})
+    sys.modules["crown_decider"] = types.SimpleNamespace(
+        decide_expression_options=lambda e: {}
+    )
     sys.modules["voice_aura"] = types.ModuleType("voice_aura")
 
     spiral_pkg = types.ModuleType("SPIRAL_OS")
@@ -121,11 +125,11 @@ def setup_module(module):
 
 
 def test_orchestrator_integration():
-    from rag.orchestrator import MoGEOrchestrator
-    from core.task_profiler import TaskProfiler
     from core.emotion_analyzer import EmotionAnalyzer
-    from core.model_selector import ModelSelector
     from core.memory_logger import MemoryLogger
+    from core.model_selector import ModelSelector
+    from core.task_profiler import TaskProfiler
+    from rag.orchestrator import MoGEOrchestrator
 
     class StubTaskProfiler(TaskProfiler):
         def __init__(self):
@@ -155,4 +159,3 @@ def test_orchestrator_integration():
 
     assert tp.seen == ["hello"]
     assert res["model"] in {"glm", "deepseek", "mistral"}
-

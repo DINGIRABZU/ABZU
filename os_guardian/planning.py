@@ -7,8 +7,8 @@ using the perception and action modules as tools. Generated plans are stored in 
 vector store so future instructions may reference past context.
 """
 
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Sequence
 
@@ -36,7 +36,11 @@ _MEMORY_DIR = Path("data/os_guardian_memory")
 
 def _load_memory(path: Path = _MEMORY_DIR) -> VectorStoreRetrieverMemory | None:
     """Return a vector memory instance stored at ``path`` if possible."""
-    if FAISS is None or HuggingFaceEmbeddings is None or VectorStoreRetrieverMemory is None:
+    if (
+        FAISS is None
+        or HuggingFaceEmbeddings is None
+        or VectorStoreRetrieverMemory is None
+    ):
         return None
     path.mkdir(parents=True, exist_ok=True)
     emb = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")

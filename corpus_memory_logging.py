@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Append and read JSONL interaction records for corpus memory usage."""
 
-from pathlib import Path
-from datetime import datetime
 import json
 import logging
+from datetime import datetime
+from pathlib import Path
 from typing import Any, List
 
 INTERACTIONS_FILE = Path("data/interactions.jsonl")

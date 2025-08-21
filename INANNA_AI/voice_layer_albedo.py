@@ -20,7 +20,10 @@ for info in voice_evolution.VOICE_CONFIG.values():
     if tone:
         TONE_PRESETS.setdefault(
             tone.lower(),
-            {"speed": float(info.get("speed", 1.0)), "pitch": float(info.get("pitch", 0.0))},
+            {
+                "speed": float(info.get("speed", 1.0)),
+                "pitch": float(info.get("pitch", 0.0)),
+            },
         )
 
 
@@ -36,6 +39,7 @@ def _ensure_preset(tone: str, preset: Dict[str, float] | None = None) -> None:
 # Load presets when this module is imported
 for _name, _preset in TONE_PRESETS.items():
     _ensure_preset(_name, _preset)
+
 
 def modulate_voice(text: str, tone: str) -> str:
     """Synthesize ``text`` using the style defined by ``tone``."""

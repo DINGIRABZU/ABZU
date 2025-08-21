@@ -15,9 +15,7 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("satisfaction", type=float, help="Satisfaction score")
     parser.add_argument("alignment", type=float, help="Ethical alignment score")
     parser.add_argument("clarity", type=float, help="Existential clarity score")
-    parser.add_argument(
-        "--db", default=str(db_storage.DB_PATH), help="Database path"
-    )
+    parser.add_argument("--db", default=str(db_storage.DB_PATH), help="Database path")
     args = parser.parse_args(argv)
 
     db_storage.log_feedback(

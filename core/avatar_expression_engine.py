@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Synchronise avatar expressions with audio playback."""
 
+import logging
 from pathlib import Path
 from threading import Thread
 from typing import Iterator
-import logging
 
 import numpy as np
 
@@ -14,10 +14,11 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     librosa = None  # type: ignore
 
+import emotional_state
+from audio import engine as audio_engine
+
 from . import video_engine
 from .facial_expression_controller import apply_expression
-from audio import engine as audio_engine
-import emotional_state
 
 
 def _apply_mouth(frame: np.ndarray, ratio: float) -> np.ndarray:
@@ -73,7 +74,10 @@ def stream_avatar_audio(audio_path: Path, fps: int = 15) -> Iterator[np.ndarray]
     thread = Thread(target=audio_engine.play_sound, args=(audio_path,))
     thread.start()
 
-    advanced = video_engine.SadTalkerPipeline is not None or video_engine.Wav2LipPredictor is not None
+    advanced = (
+        video_engine.SadTalkerPipeline is not None
+        or video_engine.Wav2LipPredictor is not None
+    )
     if advanced:
         stream = video_engine.start_stream(lip_sync_audio=audio_path)
     else:
@@ -85,7 +89,7 @@ def stream_avatar_audio(audio_path: Path, fps: int = 15) -> Iterator[np.ndarray]
         except StopIteration:
             break
         segment = wave[start : start + step]
-        intensity = float(np.sqrt(np.mean(segment ** 2))) if len(segment) else 0.0
+        intensity = float(np.sqrt(np.mean(segment**2))) if len(segment) else 0.0
         if not advanced:
             amplitude = float(np.abs(segment).mean())
             frame = apply_expression(frame, emotional_state.get_last_emotion())

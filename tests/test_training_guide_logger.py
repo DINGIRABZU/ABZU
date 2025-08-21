@@ -1,7 +1,7 @@
-from pathlib import Path
 import json
 import sys
 import types
+from pathlib import Path
 
 from tests.helpers.config_stub import build_settings
 

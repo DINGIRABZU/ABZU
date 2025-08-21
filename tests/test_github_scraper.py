@@ -1,8 +1,8 @@
-import sys
-import json
-from pathlib import Path
 import base64
+import json
+import sys
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -55,7 +55,11 @@ def test_fetch_repo_fetches_and_embeds(monkeypatch, tmp_path):
 
     monkeypatch.setattr(gs, "_headers", lambda: {})
     monkeypatch.setattr(gs, "requests", types.SimpleNamespace(get=dummy_get))
-    monkeypatch.setattr(gs.github_metadata, "fetch_repo_metadata", lambda repo: {"stars": 5, "updated": "2023-12-30"})
+    monkeypatch.setattr(
+        gs.github_metadata,
+        "fetch_repo_metadata",
+        lambda repo: {"stars": 5, "updated": "2023-12-30"},
+    )
 
     added = {}
 
@@ -64,7 +68,13 @@ def test_fetch_repo_fetches_and_embeds(monkeypatch, tmp_path):
 
     monkeypatch.setattr(gs.corpus_memory, "add_embeddings", dummy_add)
     monkeypatch.setattr(gs.corpus_memory, "create_collection", lambda: "COL")
-    monkeypatch.setattr(gs, "SentenceTransformer", lambda name: types.SimpleNamespace(encode=lambda t, convert_to_numpy=True: [[0.1]] * len(t)))
+    monkeypatch.setattr(
+        gs,
+        "SentenceTransformer",
+        lambda name: types.SimpleNamespace(
+            encode=lambda t, convert_to_numpy=True: [[0.1]] * len(t)
+        ),
+    )
 
     paths = gs.fetch_repo("psf/requests", dest_dir=tmp_path)
 
@@ -87,6 +97,7 @@ def test_fetch_all_uses_repo_list(monkeypatch, tmp_path):
     monkeypatch.setattr(gs, "load_repo_list", lambda p=None: repos)
 
     saved = []
+
     def dummy_fetch_repo(repo, dest_dir=None, labels=None):
         paths = []
         for suffix in ["README.md", "COMMITS.txt", "metadata.json"]:

@@ -9,20 +9,17 @@ conversation flow.
 """
 
 import argparse
+
 import numpy as np
-from rag.orchestrator import MoGEOrchestrator
+
 from crown_router import route_decision
-from .personality_layers import REGISTRY, list_personalities
-from .rfa_7d import RFA7D
+from rag.orchestrator import MoGEOrchestrator
+
+from . import db_storage, listening_engine, speaking_engine, stt_whisper, utils
 from .gate_orchestrator import GateOrchestrator
 from .love_matrix import LoveMatrix
-from . import (
-    utils,
-    stt_whisper,
-    listening_engine,
-    speaking_engine,
-    db_storage,
-)
+from .personality_layers import REGISTRY, list_personalities
+from .rfa_7d import RFA7D
 
 
 def soul_ritual(audio_state: dict, external_outputs: list[str]) -> str:
@@ -50,7 +47,9 @@ def main(argv: list[str] | None = None) -> None:
     parser.set_defaults(command="voice")
 
     voice_p = sub.add_parser("voice", help="Run voice loop")
-    voice_p.add_argument("--duration", type=float, default=3.0, help="Recording length in seconds")
+    voice_p.add_argument(
+        "--duration", type=float, default=3.0, help="Recording length in seconds"
+    )
     voice_p.add_argument(
         "--personality",
         choices=list_personalities(),
@@ -103,10 +102,16 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.command == "update-github-list":
         from pathlib import Path
-        from .learning.training_guide import parse_training_guide, write_repo_list
-        from .learning import github_metadata as gm
 
-        guide = Path(__file__).resolve().parent / "learning" / "INANNA_AI_ME_TRAINING_GUIDE.md"
+        from .learning import github_metadata as gm
+        from .learning.training_guide import (parse_training_guide,
+                                              write_repo_list)
+
+        guide = (
+            Path(__file__).resolve().parent
+            / "learning"
+            / "INANNA_AI_ME_TRAINING_GUIDE.md"
+        )
         base = Path(__file__).resolve().parents[1]
         dest = base / "learning_sources" / "github_repos.txt"
         mapping = parse_training_guide(guide)
@@ -131,7 +136,9 @@ def main(argv: list[str] | None = None) -> None:
 
     ritual_outputs: list[str] = []
     ritual_text = ""
-    if any(name.lower() in transcript.lower() for name in LoveMatrix.great_mother_names):
+    if any(
+        name.lower() in transcript.lower() for name in LoveMatrix.great_mother_names
+    ):
         ritual_text = soul_ritual(audio_state, ritual_outputs)
 
     encoded = gate.process_inward(transcript)

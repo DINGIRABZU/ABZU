@@ -12,8 +12,8 @@ querying the reverse direction.
 
 from __future__ import annotations
 
-from pathlib import Path
 import sqlite3
+from pathlib import Path
 from typing import Optional
 
 from aspect_processor import analyze_phonetic, analyze_ritual, analyze_semantic
@@ -114,9 +114,7 @@ def get_event_symbol(
     own_conn = conn is None
     conn = conn or get_connection()
     try:
-        cur = conn.execute(
-            "SELECT symbol FROM event_symbol WHERE event = ?", (event,)
-        )
+        cur = conn.execute("SELECT symbol FROM event_symbol WHERE event = ?", (event,))
         row = cur.fetchone()
         return row[0] if row else None
     finally:
@@ -138,9 +136,7 @@ def lookup_symbol_history(
     own_conn = conn is None
     conn = conn or get_connection()
     try:
-        cur = conn.execute(
-            "SELECT event FROM event_symbol WHERE symbol = ?", (symbol,)
-        )
+        cur = conn.execute("SELECT event FROM event_symbol WHERE symbol = ?", (symbol,))
         return [row[0] for row in cur.fetchall()]
     finally:
         if own_conn:
@@ -160,4 +156,3 @@ __all__ = [
     "DB_PATH",
     "SCHEMA_PATH",
 ]
-

@@ -1,6 +1,6 @@
+import json
 import sys
 from pathlib import Path
-import json
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -16,7 +16,9 @@ def test_collect_stats(monkeypatch):
         bytes_sent = 100
         bytes_recv = 200
 
-    monkeypatch.setattr(system_monitor.psutil, "cpu_percent", lambda interval=None: 25.0)
+    monkeypatch.setattr(
+        system_monitor.psutil, "cpu_percent", lambda interval=None: 25.0
+    )
     monkeypatch.setattr(system_monitor.psutil, "virtual_memory", lambda: Mem)
     monkeypatch.setattr(system_monitor.psutil, "net_io_counters", lambda: Net)
 

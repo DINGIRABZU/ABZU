@@ -5,8 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from cli import console_interface
 import emotional_state
+from cli import console_interface
 
 
 class DummySession:
@@ -30,8 +30,16 @@ class DummyContext:
 def test_console_reflection_updates_state(monkeypatch):
     glm = object()
     monkeypatch.setattr(console_interface, "initialize_crown", lambda: glm)
-    monkeypatch.setattr(console_interface, "crown_prompt_orchestrator", lambda m, g: {"text": "ok", "emotion": "joy"})
-    monkeypatch.setattr(console_interface, "PromptSession", lambda history=None: DummySession(["hi", "/exit"]))
+    monkeypatch.setattr(
+        console_interface,
+        "crown_prompt_orchestrator",
+        lambda m, g: {"text": "ok", "emotion": "joy"},
+    )
+    monkeypatch.setattr(
+        console_interface,
+        "PromptSession",
+        lambda history=None: DummySession(["hi", "/exit"]),
+    )
     monkeypatch.setattr(console_interface, "patch_stdout", lambda: DummyContext())
 
     dummy_orch = types.SimpleNamespace(route=lambda *a, **k: {"voice_path": "out.wav"})
@@ -39,9 +47,15 @@ def test_console_reflection_updates_state(monkeypatch):
     dummy_stream = types.SimpleNamespace(stream_avatar_audio=lambda p: iter(()))
 
     monkeypatch.setattr(console_interface, "MoGEOrchestrator", lambda: dummy_orch)
-    monkeypatch.setattr(console_interface, "speaking_engine", types.SimpleNamespace(play_wav=lambda p: None))
+    monkeypatch.setattr(
+        console_interface,
+        "speaking_engine",
+        types.SimpleNamespace(play_wav=lambda p: None),
+    )
     monkeypatch.setitem(sys.modules, "core.avatar_expression_engine", dummy_stream)
-    monkeypatch.setitem(sys.modules, "INANNA_AI.speech_loopback_reflector", dummy_reflector)
+    monkeypatch.setitem(
+        sys.modules, "INANNA_AI.speech_loopback_reflector", dummy_reflector
+    )
 
     captured = {}
 

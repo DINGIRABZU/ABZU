@@ -2,12 +2,13 @@ from __future__ import annotations
 
 """Avatar video generation utilities."""
 
+import logging
+import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterator, Optional
-import logging
+
 import numpy as np
-import tomllib
 
 try:  # pragma: no cover - optional
     import cv2  # type: ignore
@@ -29,9 +30,10 @@ try:  # pragma: no cover - optional
 except Exception:  # pragma: no cover - optional
     librosa = None  # type: ignore
 
-from .facial_expression_controller import apply_expression
 import emotional_state
+
 from . import context_tracker
+from .facial_expression_controller import apply_expression
 
 try:  # pragma: no cover - optional dependency
     import mediapipe as mp
@@ -100,7 +102,9 @@ def _upscale(frame: np.ndarray, scale: int) -> np.ndarray:
 def _skin_color(name: str) -> np.ndarray:
     """Return a deterministic RGB colour derived from ``name``."""
     value = abs(hash(name)) & 0xFFFFFF
-    return np.array([(value >> 16) & 255, (value >> 8) & 255, value & 255], dtype=np.uint8)
+    return np.array(
+        [(value >> 16) & 255, (value >> 8) & 255, value & 255], dtype=np.uint8
+    )
 
 
 def generate_avatar_stream(

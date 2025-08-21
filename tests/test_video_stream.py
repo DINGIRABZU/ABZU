@@ -1,14 +1,14 @@
 import asyncio
-from pathlib import Path
+import shutil
 import sys
+from pathlib import Path
+from types import ModuleType
 
 import httpx
 import numpy as np
 import pytest
-import shutil
-from fastapi.testclient import TestClient
 from aiortc import RTCPeerConnection, RTCSessionDescription
-from types import ModuleType
+from fastapi.testclient import TestClient
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -62,7 +62,9 @@ def test_webrtc_offer(monkeypatch):
     async def run() -> int:
         with TestClient(server.app) as test_client:
             transport = httpx.ASGITransport(app=test_client.app)
-            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+            async with httpx.AsyncClient(
+                transport=transport, base_url="http://testserver"
+            ) as client:
                 pc = RTCPeerConnection()
                 pc.addTransceiver("video")
                 pc.addTransceiver("audio")
@@ -70,7 +72,10 @@ def test_webrtc_offer(monkeypatch):
                 await pc.setLocalDescription(offer)
                 resp = await client.post(
                     "/offer",
-                    json={"sdp": pc.localDescription.sdp, "type": pc.localDescription.type},
+                    json={
+                        "sdp": pc.localDescription.sdp,
+                        "type": pc.localDescription.type,
+                    },
                 )
                 await pc.close()
                 return resp.status_code
@@ -107,7 +112,9 @@ def test_avatar_video_track_frames(monkeypatch):
         for f in frames:
             yield f
 
-    monkeypatch.setattr(server.video_stream.video_engine, "generate_avatar_stream", fake_stream)
+    monkeypatch.setattr(
+        server.video_stream.video_engine, "generate_avatar_stream", fake_stream
+    )
 
     track = server.video_stream.AvatarVideoTrack()
     frame1 = asyncio.run(track.recv()).to_ndarray()

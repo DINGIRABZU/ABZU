@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -57,18 +57,24 @@ gym_mod.spaces = types.SimpleNamespace(Box=lambda **k: None)
 sys.modules.setdefault("stable_baselines3", stable_mod)
 sys.modules.setdefault("gymnasium", gym_mod)
 
-from rag.orchestrator import MoGEOrchestrator
 from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 
 
 def test_avatar_state_logging(monkeypatch):
     orch = MoGEOrchestrator()
 
-    monkeypatch.setattr(orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
-    monkeypatch.setattr(orchestrator.listening_engine, "analyze_audio", lambda d: (None, {}))
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
+    monkeypatch.setattr(
+        orchestrator.listening_engine, "analyze_audio", lambda d: (None, {})
+    )
     monkeypatch.setattr(orchestrator.vector_memory, "add_vector", lambda *a, **k: None)
     monkeypatch.setattr(orchestrator.vector_memory, "query_vectors", lambda *a, **k: [])
-    monkeypatch.setattr("INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "snippet")])
+    monkeypatch.setattr(
+        "INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "snippet")]
+    )
     monkeypatch.setattr(
         orchestrator.crown_decider,
         "decide_expression_options",

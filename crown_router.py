@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Dict
 
 import emotional_state
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
@@ -12,8 +13,8 @@ except ImportError:  # pragma: no cover - optional dependency
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 
-from rag.orchestrator import MoGEOrchestrator
 from crown_decider import decide_expression_options
+from rag.orchestrator import MoGEOrchestrator
 
 
 def route_decision(

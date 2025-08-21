@@ -1,27 +1,28 @@
 """Simple FastAPI application for health checks."""
+
 from __future__ import annotations
 
+import base64
 import logging
 import secrets
-import base64
+from contextlib import asynccontextmanager
 from io import BytesIO
 from typing import Iterator, Optional
-from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse, FileResponse
-from pydantic import BaseModel
-from PIL import Image
 import numpy as np
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse
+from PIL import Image
+from pydantic import BaseModel
 
-from core import video_engine
-import video_stream
-from connectors import webrtc_connector
-from glm_shell import send_command
-from crown_config import settings
-import music_generation
 import corpus_memory_logging
 import feedback_logging
+import music_generation
+import video_stream
+from connectors import webrtc_connector
+from core import video_engine
+from crown_config import settings
+from glm_shell import send_command
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +60,7 @@ class ShellCommand(BaseModel):
 
 
 if settings.glm_command_token:
+
     @app.post("/glm-command")
     def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str]:
         """Execute ``cmd.command`` via the GLM shell and return the result."""
@@ -67,6 +69,7 @@ if settings.glm_command_token:
             raise HTTPException(status_code=401, detail="Unauthorized")
         result = send_command(cmd.command)
         return {"result": result}
+
 else:
     logger.warning("GLM_COMMAND_TOKEN not set; /glm-command endpoint disabled")
 
@@ -98,9 +101,7 @@ class MusicRequest(BaseModel):
 def generate_music(req: MusicRequest) -> dict[str, str]:
     """Generate music from ``req.prompt`` and return a download path."""
     try:
-        path = music_generation.generate_from_text(
-            req.prompt, req.model or "musicgen"
-        )
+        path = music_generation.generate_from_text(req.prompt, req.model or "musicgen")
         corpus_memory_logging.log_interaction(
             req.prompt,
             {"intent": "music_generation", "model": req.model or "musicgen"},

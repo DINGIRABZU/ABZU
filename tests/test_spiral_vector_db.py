@@ -1,32 +1,41 @@
+import importlib
 import sys
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
-import importlib
 
 # provide minimal numpy stub
 dummy_np = ModuleType("numpy")
+
 
 class NPArray(list):
     def tolist(self):
         return list(self)
 
+
 def _arr(x, dtype=None):
     return NPArray(x)
 
+
 dummy_np.array = _arr
+
 
 def _asarray(x, dtype=None):
     return NPArray(x)
 
+
 dummy_np.asarray = _asarray
+
 
 def _argsort(arr):
     return sorted(range(len(arr)), key=lambda i: arr[i])
 
+
 dummy_np.argsort = _argsort
+
 
 def _norm(v):
     return sum(i * i for i in v) ** 0.5
+
 
 dummy_np.linalg = SimpleNamespace(norm=_norm)
 sys.modules.setdefault("numpy", dummy_np)
@@ -59,11 +68,12 @@ def test_insert_and_query(tmp_path, monkeypatch):
         def query(self, query_embeddings, n_results, **_):
             q = np.asarray(query_embeddings[0])
             sims = [
-                sum(a * b for a, b in zip(e, q)) /
-                ((_norm(e) * _norm(q)) + 1e-8)
+                sum(a * b for a, b in zip(e, q)) / ((_norm(e) * _norm(q)) + 1e-8)
                 for e, _ in self.records
             ]
-            order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[:n_results]
+            order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[
+                :n_results
+            ]
             return {
                 "embeddings": [[self.records[i][0] for i in order]],
                 "metadatas": [[self.records[i][1] for i in order]],

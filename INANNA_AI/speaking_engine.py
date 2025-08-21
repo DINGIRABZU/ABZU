@@ -1,4 +1,5 @@
 """Generate speech using gTTS with emotion-based style adjustments."""
+
 from __future__ import annotations
 
 import logging
@@ -13,12 +14,13 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     librosa = None  # type: ignore
 
-from .utils import save_wav, load_audio, sentiment_score
-from .voice_evolution import get_voice_params, update_voice_from_history
-from . import tts_coqui, tts_tortoise, tts_bark, tts_xtts
-from .emotion_analysis import emotion_to_archetype
-from tools import voice_conversion
 from crown_config import settings
+from tools import voice_conversion
+
+from . import tts_bark, tts_coqui, tts_tortoise, tts_xtts
+from .emotion_analysis import emotion_to_archetype
+from .utils import load_audio, save_wav, sentiment_score
+from .voice_evolution import get_voice_params, update_voice_from_history
 
 try:
     from gtts import gTTS

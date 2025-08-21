@@ -3,16 +3,16 @@ from __future__ import annotations
 """Train and apply a simple emotion classifier using scikit-learn."""
 
 from pathlib import Path
-from typing import Tuple, Iterable, List, Dict
+from typing import Dict, Iterable, List, Tuple
 
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.base import ClassifierMixin
 import joblib
+import numpy as np
+from sklearn.base import ClassifierMixin
+from sklearn.ensemble import RandomForestClassifier
 
-from INANNA_AI import listening_engine
-import emotional_state
 import corpus_memory_logging
+import emotional_state
+from INANNA_AI import listening_engine
 
 MODEL_PATH = Path("models/emotion_clf.joblib")
 _MODEL: ClassifierMixin | None = None
@@ -39,7 +39,9 @@ def collect_samples_from_microphone(
         _, info = listening_engine.analyze_audio(duration, sr)
         pitch = float(info.get("pitch", 0.0))
         tempo = float(info.get("tempo", 0.0))
-        emotion = emotional_state.get_last_emotion() or str(info.get("emotion", "neutral"))
+        emotion = emotional_state.get_last_emotion() or str(
+            info.get("emotion", "neutral")
+        )
         feats.append(np.array([pitch, tempo], dtype=float))
         labels.append(emotion)
     return np.vstack(feats), np.array(labels, dtype=str)

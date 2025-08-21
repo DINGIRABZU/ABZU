@@ -21,9 +21,11 @@ sys.modules["MUSIC_FOUNDATION"].qnl_utils = qlm_mod
 rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
 orch_mod = types.ModuleType("rag.orchestrator")
 
+
 class DummyOrchestrator:
     def route(self, *a, **k):
         return {"model": "glm"}
+
 
 orch_mod.MoGEOrchestrator = DummyOrchestrator
 rag_pkg.orchestrator = orch_mod
@@ -35,10 +37,13 @@ sys.path.insert(0, str(ROOT))
 
 def test_expression_memory_influences_choice(monkeypatch):
     import crown_router
+
     importlib.reload(crown_router)
 
     # MoGEOrchestrator is provided by the stub module above
-    monkeypatch.setattr(crown_router.emotional_state, "get_soul_state", lambda: "awakened")
+    monkeypatch.setattr(
+        crown_router.emotional_state, "get_soul_state", lambda: "awakened"
+    )
     monkeypatch.setattr(
         crown_router,
         "decide_expression_options",
@@ -74,4 +79,3 @@ def test_expression_memory_influences_choice(monkeypatch):
     res2 = crown_router.route_decision("hi", {"emotion": "joy"})
     assert res2["tts_backend"] == "gtts"
     assert res2["avatar_style"] == "Baritone"
-

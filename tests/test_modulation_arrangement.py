@@ -1,7 +1,8 @@
+import shutil
 import sys
 import types
 from pathlib import Path
-import shutil
+
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]

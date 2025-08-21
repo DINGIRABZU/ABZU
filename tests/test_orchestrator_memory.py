@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -48,8 +48,8 @@ gym_mod.spaces = types.SimpleNamespace(Box=lambda **k: None)
 sys.modules.setdefault("stable_baselines3", stable_mod)
 sys.modules.setdefault("gymnasium", gym_mod)
 
-from rag.orchestrator import MoGEOrchestrator
 from rag import orchestrator
+from rag.orchestrator import MoGEOrchestrator
 
 
 def test_voice_modality_records_memory(monkeypatch, tmp_path):
@@ -72,16 +72,20 @@ def test_voice_modality_records_memory(monkeypatch, tmp_path):
     logged = {}
 
     def fake_log(input_text: str, intent: dict, result: dict, outcome: str) -> None:
-        logged.update({
-            "input": input_text,
-            "intent": intent,
-            "result": result,
-            "outcome": outcome,
-        })
+        logged.update(
+            {
+                "input": input_text,
+                "intent": intent,
+                "result": result,
+                "outcome": outcome,
+            }
+        )
 
     monkeypatch.setattr(orchestrator, "log_interaction", fake_log)
     voice_path = tmp_path / "voice.wav"
-    monkeypatch.setattr(orchestrator.language_engine, "synthesize_speech", lambda t, e: str(voice_path))
+    monkeypatch.setattr(
+        orchestrator.language_engine, "synthesize_speech", lambda t, e: str(voice_path)
+    )
     monkeypatch.setattr(orchestrator.voice_aura, "apply_voice_aura", lambda p, **k: p)
     monkeypatch.setattr(
         orchestrator.crown_decider,
@@ -107,12 +111,18 @@ def test_voice_modality_records_memory(monkeypatch, tmp_path):
 def test_show_avatar_logging(monkeypatch):
     orch = MoGEOrchestrator()
 
-    monkeypatch.setattr(orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"})
+    monkeypatch.setattr(
+        orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"}
+    )
     monkeypatch.setattr(orchestrator.symbolic_parser, "parse_intent", lambda d: [])
     monkeypatch.setattr(orchestrator.symbolic_parser, "_gather_text", lambda d: "")
     monkeypatch.setattr(orchestrator.symbolic_parser, "_INTENTS", {})
-    monkeypatch.setattr(orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
-    monkeypatch.setattr(orchestrator.listening_engine, "analyze_audio", lambda d: (None, {}))
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
+    monkeypatch.setattr(
+        orchestrator.listening_engine, "analyze_audio", lambda d: (None, {})
+    )
 
     logged = {}
 

@@ -1,12 +1,13 @@
 """Simple gate orchestrator translating text to/from complex vectors."""
+
 from __future__ import annotations
 
-from typing import Deque, Sequence, List
-import numpy as np
+from collections import deque
 from pathlib import Path
 from time import perf_counter
-from collections import deque
+from typing import Deque, List, Sequence
 
+import numpy as np
 import torch
 from torch import nn
 
@@ -16,12 +17,16 @@ from . import db_storage
 class _ModelPredictor(nn.Module):
     """Tiny LSTM model predicting the best LLM."""
 
-    def __init__(self, num_features: int = 4, hidden_size: int = 16, num_models: int = 3) -> None:
+    def __init__(
+        self, num_features: int = 4, hidden_size: int = 16, num_models: int = 3
+    ) -> None:
         super().__init__()
         self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
         self.fc = nn.Linear(hidden_size, num_models)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:  # pragma: no cover - depends on torch
+    def forward(
+        self, x: torch.Tensor
+    ) -> torch.Tensor:  # pragma: no cover - depends on torch
         out, _ = self.lstm(x)
         return self.fc(out[:, -1])
 
@@ -67,7 +72,9 @@ class GateOrchestrator:
             return 0.0
         return len(src & gen) / len(src | gen)
 
-    def _load_training_data(self) -> tuple[torch.Tensor, torch.Tensor] | tuple[None, None]:
+    def _load_training_data(
+        self,
+    ) -> tuple[torch.Tensor, torch.Tensor] | tuple[None, None]:
         metrics = db_storage.fetch_benchmarks(limit=50, db_path=self._db_path)
         interactions = db_storage.fetch_interactions(limit=50, db_path=self._db_path)
         n = min(len(metrics), len(interactions))
@@ -84,7 +91,9 @@ class GateOrchestrator:
             for j in range(i - self._seq_len, i):
                 m = metrics[j]
                 length = len(interactions[j]["transcript"])
-                seq.append([m["response_time"], m["coherence"], m["relevance"], float(length)])
+                seq.append(
+                    [m["response_time"], m["coherence"], m["relevance"], float(length)]
+                )
             seqs.append(seq)
             labels.append(model_to_idx.get(metrics[i]["model"], 0))
 
@@ -119,20 +128,30 @@ class GateOrchestrator:
         for _ in range(5):  # pragma: no cover - short GA loop
             fitness = []
             for w in pop:
-                logits = self._predictor(self._train_x) * torch.tensor(w, dtype=torch.float32)
+                logits = self._predictor(self._train_x) * torch.tensor(
+                    w, dtype=torch.float32
+                )
                 loss = loss_fn(logits, self._train_y)
                 fitness.append(-loss.item())
-            ranked = [w for _, w in sorted(zip(fitness, pop), key=lambda t: t[0], reverse=True)]
+            ranked = [
+                w
+                for _, w in sorted(zip(fitness, pop), key=lambda t: t[0], reverse=True)
+            ]
             parents = ranked[:2]
-            pop = parents + [np.clip((parents[0] + parents[1]) / 2 + np.random.randn(3) * 0.1, 0, 2) for _ in range(4)]
+            pop = parents + [
+                np.clip((parents[0] + parents[1]) / 2 + np.random.randn(3) * 0.1, 0, 2)
+                for _ in range(4)
+            ]
         self._selection_weights = ranked[0]
 
     def predict_best_llm(self) -> str:
         if len(self._context) < self._seq_len:
             return "glm"
-        seq = torch.tensor([list(self._context)[-self._seq_len:]], dtype=torch.float32)
+        seq = torch.tensor([list(self._context)[-self._seq_len :]], dtype=torch.float32)
         with torch.no_grad():
-            logits = self._predictor(seq)[0] * torch.tensor(self._selection_weights, dtype=torch.float32)
+            logits = self._predictor(seq)[0] * torch.tensor(
+                self._selection_weights, dtype=torch.float32
+            )
             idx = int(torch.argmax(logits))
         mapping = {0: "glm", 1: "deepseek", 2: "mistral"}
         return mapping.get(idx, "glm")

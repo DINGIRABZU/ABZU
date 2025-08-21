@@ -36,7 +36,9 @@ def test_query_filters_and_scores(monkeypatch):
         assert item["snippet"] == "A"
         assert abs(item["score"] - 0.9) < 1e-6
     else:
-        text = getattr(item, "content", getattr(getattr(item, "node", None), "text", ""))
+        text = getattr(
+            item, "content", getattr(getattr(item, "node", None), "text", "")
+        )
         score = getattr(item, "score", 0.0)
         assert text == "A"
         assert abs(score - 0.9) < 1e-6

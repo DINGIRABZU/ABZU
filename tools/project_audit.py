@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Simple project audit for Spiral OS."""
 
-from pathlib import Path
 import importlib
 import sys
+from pathlib import Path
 from typing import List
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

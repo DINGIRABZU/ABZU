@@ -8,9 +8,9 @@ appending the same information to an aspect-specific log file for
 auditing and cross-layer referencing.
 """
 
+import json
 from datetime import datetime
 from pathlib import Path
-import json
 from typing import Any, Dict
 
 ASPECT_LOG_DIR = Path(__file__).resolve().parent / "data" / "aspects"

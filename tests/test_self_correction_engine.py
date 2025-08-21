@@ -22,7 +22,9 @@ def test_adjust_updates_voice_and_layer(monkeypatch):
 
     self_correction_engine.adjust("sad", "joy", 0.3)
 
-    assert called["h"] == [{"emotion": "joy", "arousal": 0.5, "valence": 0.5, "sentiment": 0.0}]
+    assert called["h"] == [
+        {"emotion": "joy", "arousal": 0.5, "valence": 0.5, "sentiment": 0.0}
+    ]
     assert called["layer"] == "joy"
 
 
@@ -65,5 +67,6 @@ def test_archetype_conflict_tunes_voice(monkeypatch):
 
     self_correction_engine.adjust("anger", "joy", 0.3)
 
-    assert [{"emotion": "anger", "arousal": 0.5, "valence": 0.5, "sentiment": 0.0}] in entries
-
+    assert [
+        {"emotion": "anger", "arousal": 0.5, "valence": 0.5, "sentiment": 0.0}
+    ] in entries

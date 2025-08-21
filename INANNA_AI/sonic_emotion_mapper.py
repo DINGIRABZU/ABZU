@@ -7,7 +7,6 @@ from typing import Any, Dict
 
 import yaml
 
-
 _PALETTE_PATH = Path(__file__).resolve().parents[1] / "emotional_tone_palette.yaml"
 _MUSIC_MAP_PATH = Path(__file__).resolve().parents[1] / "emotion_music_map.yaml"
 _QNL_MAP_PATH = Path(__file__).resolve().parents[1] / "qnl_to_music_layer_map.yaml"
@@ -40,7 +39,9 @@ def map_emotion_to_sound(emotion: str, archetype: str) -> Dict[str, Any]:
     timbre = list(palette.get("instruments", []))
     harmonics = palette.get("harmonics")
 
-    qnl_params = QNL_LAYER_MAP.get(emotion_ref.lower(), QNL_LAYER_MAP.get("neutral", {}))
+    qnl_params = QNL_LAYER_MAP.get(
+        emotion_ref.lower(), QNL_LAYER_MAP.get("neutral", {})
+    )
 
     return {
         "tempo": tempo,
@@ -57,4 +58,3 @@ __all__ = [
     "EMOTION_MUSIC_MAP",
     "QNL_LAYER_MAP",
 ]
-

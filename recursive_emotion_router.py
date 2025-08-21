@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Recursive cycle through emotional processing stages."""
 
+import json
 from dataclasses import asdict, is_dataclass
 from typing import Any, Dict, Iterable, Protocol
-import json
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -12,8 +12,8 @@ except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-from memory import cortex as cortex_memory
 from labs import cortex_sigil
+from memory import cortex as cortex_memory
 
 
 class SpiralNode(Protocol):
@@ -21,23 +21,17 @@ class SpiralNode(Protocol):
 
     children: Iterable["SpiralNode"]
 
-    def ask(self) -> None:
-        ...
+    def ask(self) -> None: ...
 
-    def feel(self) -> None:
-        ...
+    def feel(self) -> None: ...
 
-    def symbolize(self) -> None:
-        ...
+    def symbolize(self) -> None: ...
 
-    def pause(self) -> None:
-        ...
+    def pause(self) -> None: ...
 
-    def reflect(self) -> None:
-        ...
+    def reflect(self) -> None: ...
 
-    def decide(self) -> Dict[str, Any]:
-        ...
+    def decide(self) -> Dict[str, Any]: ...
 
 
 def _state_text(node: SpiralNode) -> str:

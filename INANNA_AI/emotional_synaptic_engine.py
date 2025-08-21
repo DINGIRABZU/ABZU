@@ -2,10 +2,11 @@ from __future__ import annotations
 
 """Simple emotion-to-filter mapping with memory adjustment."""
 
-from typing import Iterable, Dict, Any
+from typing import Any, Dict, Iterable
+
+import corpus_memory_logging
 
 from . import voice_evolution
-import corpus_memory_logging
 
 # Base filter parameters for supported emotions
 _EMOTION_FILTERS: Dict[str, Dict[str, Any]] = {
@@ -38,9 +39,15 @@ def map_emotion_to_filters(
     return params
 
 
-def adjust_from_memory(history: Iterable[Dict[str, Any]] | None = None) -> Dict[str, Any]:
+def adjust_from_memory(
+    history: Iterable[Dict[str, Any]] | None = None,
+) -> Dict[str, Any]:
     """Update voice profiles from ``history`` and return filters for the last emotion."""
-    entries = list(history) if history is not None else corpus_memory_logging.load_interactions()
+    entries = (
+        list(history)
+        if history is not None
+        else corpus_memory_logging.load_interactions()
+    )
     if not entries:
         return {}
 

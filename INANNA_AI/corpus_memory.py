@@ -3,17 +3,19 @@ from __future__ import annotations
 """Simple embedding-based search across the corpus memory directories."""
 
 import argparse
-from datetime import datetime
 import logging
 import os
+import types
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
-import types
+
 try:
     import chromadb
     from chromadb.api import Collection
+
     _HAVE_CHROMADB = True
 except ImportError:  # pragma: no cover - optional dependency
     _HAVE_CHROMADB = False
@@ -36,6 +38,7 @@ except ImportError:  # pragma: no cover - optional dependency
     Collection = _Collection  # type: ignore
 try:
     from sentence_transformers import SentenceTransformer
+
     _HAVE_SENTENCE_TRANSFORMER = True
 except ImportError:  # pragma: no cover - optional dependency
     _HAVE_SENTENCE_TRANSFORMER = False
@@ -48,9 +51,11 @@ except ImportError:  # pragma: no cover - optional dependency
 
         return types.SimpleNamespace(encode=_encode)
 
+
+import corpus_memory_logging
 import crown_config
 from MUSIC_FOUNDATION import qnl_utils
-import corpus_memory_logging
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
@@ -111,7 +116,10 @@ def add_embeddings(
     paths = list(texts.keys())
     emb = _build_embeddings(list(texts.values()), model)
     metadatas = [
-        {"path": p, "timestamp": datetime.fromtimestamp(os.path.getmtime(p)).isoformat()}
+        {
+            "path": p,
+            "timestamp": datetime.fromtimestamp(os.path.getmtime(p)).isoformat(),
+        }
         for p in paths
     ]
     collection.add(
@@ -119,6 +127,7 @@ def add_embeddings(
         embeddings=[e.tolist() for e in emb],
         metadatas=metadatas,
     )
+
 
 logger = logging.getLogger(__name__)
 

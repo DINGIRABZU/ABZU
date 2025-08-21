@@ -5,14 +5,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI.personality_layers.albedo import (
-    AlbedoPersonality,
-    AlchemicalPersona,
-    GLMIntegration,
-    State,
-    glm_integration,
-    state_contexts,
-)
+from INANNA_AI.personality_layers.albedo import (AlbedoPersonality,
+                                                 AlchemicalPersona,
+                                                 GLMIntegration, State,
+                                                 glm_integration,
+                                                 state_contexts)
 
 
 class DummyResponse:

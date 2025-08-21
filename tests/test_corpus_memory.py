@@ -1,13 +1,15 @@
-import sys
 import logging
-import numpy as np
+import sys
 from pathlib import Path
+
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI import corpus_memory
 import types
+
+from INANNA_AI import corpus_memory
 
 
 def test_cli_search(tmp_path, monkeypatch, capsys):
@@ -29,11 +31,14 @@ def test_cli_search(tmp_path, monkeypatch, capsys):
         def encode(self, texts, convert_to_numpy=True):
             def vec(t):
                 return np.array([t.lower().count("unicorn")], dtype=float)
+
             if isinstance(texts, list):
                 return np.array([vec(t) for t in texts])
             return vec(texts)
 
-    monkeypatch.setattr(corpus_memory, "SentenceTransformer", lambda name: DummyModel(name))
+    monkeypatch.setattr(
+        corpus_memory, "SentenceTransformer", lambda name: DummyModel(name)
+    )
 
     class DummyCollection:
         def __init__(self) -> None:
@@ -46,7 +51,10 @@ def test_cli_search(tmp_path, monkeypatch, capsys):
 
         def query(self, query_embeddings, n_results):
             q = np.array(query_embeddings[0])
-            sims = [float(e @ q / ((np.linalg.norm(e) * np.linalg.norm(q)) + 1e-8)) for e in self.embeddings]
+            sims = [
+                float(e @ q / ((np.linalg.norm(e) * np.linalg.norm(q)) + 1e-8))
+                for e in self.embeddings
+            ]
             order = np.argsort(sims)[::-1][:n_results]
             return {"ids": [[self.ids[i] for i in order]]}
 
@@ -73,7 +81,9 @@ def test_cli_search(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         corpus_memory.vector_memory,
         "search",
-        lambda q, filter=None, k=10: [{"text": "A magical unicorn appears.", "tone": ""}],
+        lambda q, filter=None, k=10: [
+            {"text": "A magical unicorn appears.", "tone": ""}
+        ],
     )
 
     argv_backup = sys.argv.copy()
@@ -109,7 +119,11 @@ def test_cli_reindex_runs(monkeypatch):
 def test_cli_reindex_with_search(monkeypatch):
     called = {"reindex": False, "search": False}
 
-    monkeypatch.setattr(corpus_memory, "reindex_corpus", lambda: called.__setitem__("reindex", True) or True)
+    monkeypatch.setattr(
+        corpus_memory,
+        "reindex_corpus",
+        lambda: called.__setitem__("reindex", True) or True,
+    )
     monkeypatch.setattr(
         corpus_memory,
         "search_corpus",
@@ -118,7 +132,8 @@ def test_cli_reindex_with_search(monkeypatch):
     monkeypatch.setattr(
         corpus_memory,
         "search",
-        lambda *a, **k: called.__setitem__("search", True) or [{"text": "x", "tone": ""}],
+        lambda *a, **k: called.__setitem__("search", True)
+        or [{"text": "x", "tone": ""}],
     )
 
     argv_backup = sys.argv.copy()
@@ -142,7 +157,9 @@ def test_reindex_delete_failure(monkeypatch, tmp_path, caplog):
         def __init__(self, name):
             pass
 
-    monkeypatch.setattr(corpus_memory, "SentenceTransformer", lambda name: DummyModel(name))
+    monkeypatch.setattr(
+        corpus_memory, "SentenceTransformer", lambda name: DummyModel(name)
+    )
 
     class DummyClient:
         def __init__(self, path):
@@ -151,7 +168,9 @@ def test_reindex_delete_failure(monkeypatch, tmp_path, caplog):
         def delete_collection(self, name):
             raise RuntimeError("delete failed")
 
-    dummy_chroma = types.SimpleNamespace(PersistentClient=lambda path: DummyClient(path))
+    dummy_chroma = types.SimpleNamespace(
+        PersistentClient=lambda path: DummyClient(path)
+    )
     monkeypatch.setattr(corpus_memory, "chromadb", dummy_chroma)
 
     with caplog.at_level(logging.WARNING):

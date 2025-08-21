@@ -6,9 +6,10 @@ import argparse
 import json
 import logging
 from pathlib import Path
-from typing import Any, Iterable, List, Dict
+from typing import Any, Dict, Iterable, List
 
 import feedback_logging
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
@@ -58,15 +59,13 @@ def build_dataset(feedback: Iterable[dict]) -> list[dict]:
     try:
         dataset = []
         for entry in feedback:
-            if (
-                entry.get("success")
-                and entry.get("intent")
-                and entry.get("action")
-            ):
-                dataset.append({
-                    "prompt": entry["intent"],
-                    "completion": entry["action"],
-                })
+            if entry.get("success") and entry.get("intent") and entry.get("action"):
+                dataset.append(
+                    {
+                        "prompt": entry["intent"],
+                        "completion": entry["action"],
+                    }
+                )
         return dataset
     except Exception:
         logger.exception("failed to build dataset")

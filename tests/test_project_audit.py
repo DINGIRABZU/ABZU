@@ -19,4 +19,3 @@ def test_check_module_missing_dependency(tmp_path, monkeypatch):
     finally:
         sys.path.remove(str(tmp_path))
     assert errors == ["Missing dependency 'nonexistent_dep' required by temp_mod"]
-

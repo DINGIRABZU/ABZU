@@ -1,6 +1,7 @@
 import sys
 import types
 from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,14 +11,21 @@ sys.path.insert(0, str(ROOT))
 ess_mod = types.ModuleType("essentia.standard")
 ess_pkg = types.ModuleType("essentia")
 setattr(ess_pkg, "standard", ess_mod)
+
+
 class DummyKeyExtractor:
     def __call__(self, samples):
         return ("C", "major", 1.0)
+
+
 class DummyRhythmExtractor:
     def __init__(self, method="multifeature"):
         pass
+
     def __call__(self, samples):
         return (130.0, 0.9)
+
+
 setattr(ess_mod, "KeyExtractor", DummyKeyExtractor)
 setattr(ess_mod, "RhythmExtractor2013", DummyRhythmExtractor)
 sys.modules.setdefault("essentia", ess_pkg)
@@ -28,11 +36,13 @@ from audio import audio_ingestion
 
 def test_load_audio(monkeypatch):
     calls = {}
+
     def dummy_load(path, sr=44100, mono=True):
         calls["path"] = path
         calls["sr"] = sr
         calls["mono"] = mono
         return np.zeros(10), sr
+
     monkeypatch.setattr(audio_ingestion.librosa, "load", dummy_load)
 
     wave, sr = audio_ingestion.load_audio(Path("x.wav"), sr=22050)
@@ -91,7 +101,9 @@ def test_separate_sources_spleeter(monkeypatch):
         def separate(self, waveform):
             return {"vocals": waveform, "accompaniment": waveform}
 
-    spleeter_mod = types.SimpleNamespace(separator=types.SimpleNamespace(Separator=DummySep))
+    spleeter_mod = types.SimpleNamespace(
+        separator=types.SimpleNamespace(Separator=DummySep)
+    )
     monkeypatch.setitem(sys.modules, "spleeter", spleeter_mod)
     monkeypatch.setitem(sys.modules, "spleeter.separator", spleeter_mod.separator)
     samples = np.zeros(5)
@@ -102,7 +114,9 @@ def test_separate_sources_spleeter(monkeypatch):
 
 
 def test_extract_features(monkeypatch):
-    monkeypatch.setattr(audio_ingestion, "load_audio", lambda p, sr=44100: (np.zeros(5), sr))
+    monkeypatch.setattr(
+        audio_ingestion, "load_audio", lambda p, sr=44100: (np.zeros(5), sr)
+    )
     monkeypatch.setattr(audio_ingestion, "extract_mfcc", lambda s, sr: np.array([1]))
     monkeypatch.setattr(audio_ingestion, "extract_key", lambda s: "C:maj")
     monkeypatch.setattr(audio_ingestion, "extract_tempo", lambda s, sr: 120.0)
@@ -127,16 +141,20 @@ def test_embed_clap(monkeypatch):
         @classmethod
         def from_pretrained(cls, *a, **k):
             return cls()
+
         def __call__(self, audios, sampling_rate=None, return_tensors=None):
             return {"audios": audios}
 
     class DummyFeat:
         def __init__(self):
             self.data = np.array([1.0, 2.0, 3.0])
+
         def squeeze(self):
             return self
+
         def cpu(self):
             return self
+
         def numpy(self):
             return self.data
 
@@ -144,6 +162,7 @@ def test_embed_clap(monkeypatch):
         @classmethod
         def from_pretrained(cls, *a, **k):
             return cls()
+
         def get_audio_features(self, **inputs):
             return DummyFeat()
 
@@ -151,8 +170,10 @@ def test_embed_clap(monkeypatch):
         class _Ctx:
             def __enter__(self):
                 return None
+
             def __exit__(self, exc_type, exc, tb):
                 return False
+
         def no_grad(self):
             return self._Ctx()
 
@@ -163,4 +184,3 @@ def test_embed_clap(monkeypatch):
     emb = audio_ingestion.embed_clap(np.zeros(10), 44100)
     assert emb.shape == (3,)
     assert np.allclose(emb, [1.0, 2.0, 3.0])
-

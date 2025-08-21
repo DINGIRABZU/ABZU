@@ -5,8 +5,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import archetype_feedback_loop as afl
-from memory import cortex as cortex_memory
 import archetype_shift_engine
+from memory import cortex as cortex_memory
 
 
 def test_clustered_emotions(monkeypatch):

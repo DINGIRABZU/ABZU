@@ -1,4 +1,5 @@
 """Text-to-speech helpers using the Coqui TTS library."""
+
 from __future__ import annotations
 
 import tempfile
@@ -48,10 +49,13 @@ def synthesize_speech(text: str, emotion: str) -> str:
 
     if CoquiTTS is not None:
         tts = _get_tts()
-        tts.tts_to_file(text=text, file_path=str(out_path), speed=style.get("speed", 1.0))
+        tts.tts_to_file(
+            text=text, file_path=str(out_path), speed=style.get("speed", 1.0)
+        )
     else:  # pragma: no cover - optional dependency missing
         _sine_placeholder(text, style, out_path)
 
     return str(out_path)
+
 
 __all__ = ["synthesize_speech"]

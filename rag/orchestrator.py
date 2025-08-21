@@ -12,13 +12,13 @@ audio export falls back to the built-in :mod:`wave` module.
 
 from __future__ import annotations
 
-from pathlib import Path
-import tempfile
-from typing import Any, Dict, Deque, List, Callable
-from collections import deque
-from time import perf_counter
-import threading
 import logging
+import tempfile
+import threading
+from collections import deque
+from pathlib import Path
+from time import perf_counter
+from typing import Any, Callable, Deque, Dict, List
 
 try:
     import soundfile as sf  # pragma: no cover
@@ -34,17 +34,13 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     np = None  # type: ignore
 
-from core.task_profiler import TaskProfiler
-
-from INANNA_AI import response_manager
-from INANNA_AI.personality_layers import (
-    AlbedoPersonality,
-    REGISTRY as PERSONALITY_REGISTRY,
-)
-from INANNA_AI import voice_layer_albedo
 import crown_decider
 import voice_aura
-from core import task_parser, context_tracker, language_engine
+from core import context_tracker, language_engine, task_parser
+from core.task_profiler import TaskProfiler
+from INANNA_AI import response_manager, voice_layer_albedo
+from INANNA_AI.personality_layers import REGISTRY as PERSONALITY_REGISTRY
+from INANNA_AI.personality_layers import AlbedoPersonality
 from SPIRAL_OS import qnl_engine, symbolic_parser
 
 try:  # pragma: no cover - optional dependency
@@ -61,23 +57,20 @@ except Exception:  # pragma: no cover - optional dependency
 invocation_engine = _invocation_engine
 """Optional invocation engine subsystem; ``None`` if unavailable."""
 
+import archetype_shift_engine
 import emotional_state
+import learning_mutator
 import training_guide
 from core.emotion_analyzer import EmotionAnalyzer
-from core.model_selector import ModelSelector
 from core.memory_logger import MemoryLogger
-from insight_compiler import update_insights, load_insights
-import learning_mutator
-from tools import reflection_loop
-from INANNA_AI import listening_engine
-import archetype_shift_engine
+from core.model_selector import ModelSelector
+from corpus_memory_logging import (load_interactions, log_interaction,
+                                   log_ritual_result)
 from crown_config import settings
-from corpus_memory_logging import (
-    load_interactions,
-    log_interaction,
-    log_ritual_result,
-)
+from INANNA_AI import listening_engine
+from insight_compiler import load_insights, update_insights
 from task_profiling import ritual_action_sequence
+from tools import reflection_loop
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +121,6 @@ class MoGEOrchestrator:
         if weight >= 0.6 or archetype.lower() in {"hero", "sage", "jester"}:
             return "ascension"
         return "underworld"
-
 
     def route(
         self,
@@ -277,7 +269,9 @@ class MoGEOrchestrator:
             self._model_selector.benchmark(model, text, result["text"], elapsed)
 
         self._interaction_count += 1
-        self._memory_logger.log_interaction(text, {"intents": intents or []}, result, "ok")
+        self._memory_logger.log_interaction(
+            text, {"intents": intents or []}, result, "ok"
+        )
 
         if self._interaction_count % 20 == 0:
             entries = self._memory_logger.load_interactions()
@@ -325,8 +319,7 @@ class MoGEOrchestrator:
                 intents.append(intent)
         for intent, res in zip(intents, results):
             success = not (
-                isinstance(res, dict)
-                and res.get("status") in {"unhandled", "todo"}
+                isinstance(res, dict) and res.get("status") in {"unhandled", "todo"}
             )
             training_guide.log_result(intent, success, qnl_data.get("tone"), res)
         emotion = qnl_data.get("tone", "neutral")

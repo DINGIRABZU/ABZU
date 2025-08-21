@@ -1,11 +1,12 @@
+import asyncio
+import importlib
 import sys
 from pathlib import Path
-import asyncio
+from types import ModuleType
+
 import httpx
 import numpy as np
 from fastapi.testclient import TestClient
-from types import ModuleType
-import importlib
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -13,22 +14,31 @@ sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 sys.modules.setdefault("core", ModuleType("core"))
 video_engine_stub = ModuleType("video_engine")
-video_engine_stub.start_stream = lambda: iter([np.zeros((1,1,3), dtype=np.uint8)])
+video_engine_stub.start_stream = lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
 sys.modules.setdefault("core.video_engine", video_engine_stub)
 from fastapi import APIRouter
+
 video_stream_stub = ModuleType("video_stream")
 video_stream_stub.router = APIRouter()
+
+
 async def _close_vs(*a, **k) -> None:
     pass
+
+
 video_stream_stub.close_peers = _close_vs
-video_stream_stub.start_stream = lambda: iter([np.zeros((1,1,3), dtype=np.uint8)])
+video_stream_stub.start_stream = lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
 sys.modules.setdefault("video_stream", video_stream_stub)
 connectors_mod = ModuleType("connectors")
 webrtc_stub = ModuleType("webrtc_connector")
 webrtc_stub.router = APIRouter()
 webrtc_stub.start_call = lambda *a, **k: None
+
+
 async def _close_wc(*a, **k) -> None:
     pass
+
+
 webrtc_stub.close_peers = _close_wc
 connectors_mod.webrtc_connector = webrtc_stub
 sys.modules.setdefault("connectors", connectors_mod)
@@ -41,6 +51,7 @@ inanna_mod.GLMIntegration = lambda *a, **k: None
 sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
 
 from crown_config import settings
+
 settings.glm_command_token = "token"
 import server
 
@@ -50,7 +61,9 @@ def test_health_and_ready_return_200():
 
     async def run_requests() -> tuple[int, int]:
         transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
             health = await client.get("/health")
             ready = await client.get("/ready")
         return health.status_code, ready.status_code
@@ -65,7 +78,9 @@ def test_glm_command_endpoint(monkeypatch):
 
     async def run_request() -> tuple[int, dict[str, str]]:
         transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
             resp = await client.post(
                 "/glm-command",
                 json={"command": "ls"},
@@ -84,7 +99,9 @@ def test_glm_command_requires_authorization(monkeypatch):
 
     async def run_request(headers) -> int:
         transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
             resp = await client.post(
                 "/glm-command", json={"command": "ls"}, headers=headers
             )
@@ -106,7 +123,9 @@ def test_glm_command_unavailable_without_token():
 
     async def run_request() -> int:
         transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
             resp = await client.post("/glm-command", json={"command": "ls"})
         return resp.status_code
 
@@ -122,7 +141,9 @@ def test_avatar_frame_endpoint(monkeypatch):
 
     async def run_request() -> tuple[int, dict[str, str]]:
         transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
             resp = await client.get("/avatar-frame")
         return resp.status_code, resp.json()
 

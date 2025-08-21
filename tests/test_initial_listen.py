@@ -1,10 +1,10 @@
-import sys
+import builtins
 import importlib.util
+import os
+import sys
+import types
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
-import types
-import builtins
-import os
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -49,17 +49,27 @@ sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))
 sys.modules.setdefault("SPIRAL_OS.symbolic_parser", types.ModuleType("symbolic_parser"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", types.ModuleType("qnl_utils"))
 req_mod = types.ModuleType("requests")
-req_mod.post = lambda *a, **k: types.SimpleNamespace(json=lambda: {}, text="", raise_for_status=lambda: None)
+req_mod.post = lambda *a, **k: types.SimpleNamespace(
+    json=lambda: {}, text="", raise_for_status=lambda: None
+)
 req_mod.RequestException = Exception
 sys.modules.setdefault("requests", req_mod)
 psutil_mod = types.ModuleType("psutil")
 psutil_mod.cpu_percent = lambda interval=None: 0.0
+
+
 class _Mem:
     percent = 0.0
+
+
 psutil_mod.virtual_memory = lambda: _Mem
+
+
 class _Net:
     bytes_sent = 0
     bytes_recv = 0
+
+
 psutil_mod.net_io_counters = lambda: _Net
 sys.modules.setdefault("psutil", psutil_mod)
 srv_mod = types.ModuleType("server")
@@ -100,20 +110,34 @@ def test_initial_listen_logged(monkeypatch, tmp_path, mock_emotion_state):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     captured = {}
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
-    monkeypatch.setattr(start_spiral_os.self_correction_engine, "adjust", lambda *a, **k: None)
+    monkeypatch.setattr(
+        start_spiral_os.self_correction_engine, "adjust", lambda *a, **k: None
+    )
     monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: types.SimpleNamespace(handle_input=lambda t: None))
+    monkeypatch.setattr(
+        start_spiral_os,
+        "MoGEOrchestrator",
+        lambda *a, **k: types.SimpleNamespace(handle_input=lambda t: None),
+    )
     monkeypatch.setattr(builtins, "input", lambda _="": "")
     features = {"emotion": "joy"}
-    monkeypatch.setattr(start_spiral_os.listening_engine, "capture_audio", lambda d: ([], False))
-    monkeypatch.setattr(start_spiral_os.listening_engine, "_extract_features", lambda a, sr: features)
+    monkeypatch.setattr(
+        start_spiral_os.listening_engine, "capture_audio", lambda d: ([], False)
+    )
+    monkeypatch.setattr(
+        start_spiral_os.listening_engine, "_extract_features", lambda a, sr: features
+    )
+
     def fake_add(text, meta):
         captured[text] = meta
+
     monkeypatch.setattr(start_spiral_os.vector_memory, "add_vector", fake_add)
 
     _run_main(["--no-server", "--no-reflection"])

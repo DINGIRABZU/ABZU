@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import soundfile as sf
 
-from audio.mix_tracks import main, dsp_engine
+from audio.mix_tracks import dsp_engine, main
 
 
 def test_mix_tracks_json_instructions(tmp_path, monkeypatch):
@@ -19,7 +19,12 @@ def test_mix_tracks_json_instructions(tmp_path, monkeypatch):
 
     instructions = {
         "stems": [
-            {"file": str(wav1), "pitch": 1.0, "time": 1.0, "compress": {"threshold": -20}},
+            {
+                "file": str(wav1),
+                "pitch": 1.0,
+                "time": 1.0,
+                "compress": {"threshold": -20},
+            },
             {"file": str(wav2), "pitch": -1.0},
         ],
         "output": "final.wav",
@@ -44,4 +49,3 @@ def test_mix_tracks_json_instructions(tmp_path, monkeypatch):
     out_dir = tmp_path / "output"
     assert (out_dir / "final.wav").exists()
     assert (out_dir / "preview.wav").exists()
-

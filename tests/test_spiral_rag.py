@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 dummy_np = types.ModuleType("numpy")
 
@@ -31,10 +31,10 @@ sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from rag import parser as rag_parser
-from rag import embedder as rag_embedder
-from rag import retriever as rag_retriever
 import crown_query_router
+from rag import embedder as rag_embedder
+from rag import parser as rag_parser
+from rag import retriever as rag_retriever
 
 
 class DummyModel:
@@ -55,7 +55,9 @@ class DummyCollection:
     def query(self, query_embeddings, n_results, **_):
         q = query_embeddings[0]
         sims = [float(sum(a * b for a, b in zip(e, q))) for e, _ in self.records]
-        order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[:n_results]
+        order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[
+            :n_results
+        ]
         return {
             "embeddings": [[self.records[i][0] for i in order]],
             "metadatas": [[self.records[i][1] for i in order]],
@@ -77,7 +79,11 @@ def test_spiral_rag_pipeline(tmp_path, monkeypatch):
     monkeypatch.setattr(rag_retriever, "get_collection", lambda name: col)
     monkeypatch.setattr(rag_retriever.rag_embedder, "_get_model", lambda: DummyModel())
 
-    col.add(["1"], [embedded[0]["embedding"]], [{k: v for k, v in embedded[0].items() if k != "embedding"}])
+    col.add(
+        ["1"],
+        [embedded[0]["embedding"]],
+        [{k: v for k, v in embedded[0].items() if k != "embedding"}],
+    )
 
     res = crown_query_router.route_query("hello", "Sage")
     assert res

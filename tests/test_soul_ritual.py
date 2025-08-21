@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 from tests.helpers import emotion_stub
 from tests.helpers.config_stub import build_settings
@@ -30,7 +30,9 @@ orch_stub.MoGEOrchestrator = lambda: None
 rag_pkg.orchestrator = orch_stub
 sys.modules["rag.orchestrator"] = orch_stub
 
-sys.modules.setdefault("INANNA_AI.response_manager", types.ModuleType("response_manager"))
+sys.modules.setdefault(
+    "INANNA_AI.response_manager", types.ModuleType("response_manager")
+)
 sys.modules.setdefault("INANNA_AI.tts_coqui", types.ModuleType("tts_coqui"))
 sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))

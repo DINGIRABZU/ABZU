@@ -5,10 +5,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import soul_state_manager
-import emotional_state
 import archetype_shift_engine as ase
 import emotion_registry
+import emotional_state
+import soul_state_manager
 
 
 def test_state_persistence(tmp_path, monkeypatch):
@@ -62,6 +62,3 @@ def test_archetype_shift_integration(tmp_path, monkeypatch):
 
     assert layer == "nigredo_layer"
     assert data["archetype"] == "nigredo_layer"
-
-
-

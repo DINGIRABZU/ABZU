@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
@@ -19,7 +19,7 @@ sys.modules.setdefault("MUSIC_FOUNDATION.qnl_utils", qlm_mod)
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI import db_storage, voice_evolution, utils
+from INANNA_AI import db_storage, utils, voice_evolution
 
 voice_evolution.vector_memory.query_vectors = lambda *a, **k: []
 
@@ -35,7 +35,9 @@ def test_voice_profile_storage(tmp_path):
 
 def test_update_with_sentiment(monkeypatch):
     evol = voice_evolution.VoiceEvolution({"joy": {"speed": 1.0, "pitch": 0.0}})
-    monkeypatch.setattr(voice_evolution.db_storage, "save_voice_profiles", lambda *a, **k: None)
+    monkeypatch.setattr(
+        voice_evolution.db_storage, "save_voice_profiles", lambda *a, **k: None
+    )
     score = utils.sentiment_score("I love this good day")
     history = [{"emotion": "joy", "arousal": 0.6, "valence": 0.8, "sentiment": score}]
     evol.update_from_history(history)
@@ -57,4 +59,3 @@ def test_store_and_load_profiles(tmp_path):
     other = voice_evolution.VoiceEvolution()
     other.load_profiles(db)
     assert other.styles["calm"]["speed"] == 0.8
-

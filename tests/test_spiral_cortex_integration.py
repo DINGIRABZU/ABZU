@@ -1,8 +1,8 @@
 import json
 import sys
+import types
 from dataclasses import dataclass, field
 from pathlib import Path
-import types
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -14,10 +14,10 @@ np_mod.int16 = "int16"
 np_mod.random = types.SimpleNamespace(rand=lambda *a, **k: 0)
 sys.modules.setdefault("numpy", np_mod)
 
-import recursive_emotion_router as rer
-from memory import cortex as cortex_memory
 import archetype_feedback_loop as afl
 import archetype_shift_engine
+import recursive_emotion_router as rer
+from memory import cortex as cortex_memory
 
 
 @dataclass

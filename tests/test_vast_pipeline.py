@@ -1,13 +1,13 @@
-from pathlib import Path
 import asyncio
 import sys
-from types import ModuleType
 import types
+from pathlib import Path
+from types import ModuleType
 
-import numpy as np
 import httpx
-from fastapi.testclient import TestClient
+import numpy as np
 from aiortc import RTCPeerConnection, RTCSessionDescription
+from fastapi.testclient import TestClient
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -35,15 +35,17 @@ setattr(sp_mod, "symbolic_parser", sym_stub)
 import server
 import video_stream
 from connectors import webrtc_connector
-from rag.orchestrator import MoGEOrchestrator
-from core import language_engine, context_tracker
+from core import context_tracker, language_engine
 from crown_config import settings
+from rag.orchestrator import MoGEOrchestrator
 
 settings.glm_command_token = "token"
 
 
 def test_hex_to_song_short_payload():
-    phrases, wave = qnl_engine.hex_to_song("deadbeef", duration_per_byte=0.01, sample_rate=8000)
+    phrases, wave = qnl_engine.hex_to_song(
+        "deadbeef", duration_per_byte=0.01, sample_rate=8000
+    )
     assert phrases
     assert isinstance(wave, np.ndarray)
     assert wave.dtype == np.int16
@@ -80,7 +82,9 @@ def test_offer_returns_json_answer(monkeypatch):
     async def run() -> dict:
         with TestClient(server.app) as test_client:
             transport = httpx.ASGITransport(app=test_client.app)
-            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+            async with httpx.AsyncClient(
+                transport=transport, base_url="http://testserver"
+            ) as client:
                 pc = RTCPeerConnection()
                 pc.addTransceiver("video")
                 pc.addTransceiver("audio")
@@ -88,7 +92,10 @@ def test_offer_returns_json_answer(monkeypatch):
                 await pc.setLocalDescription(offer)
                 resp = await client.post(
                     "/offer",
-                    json={"sdp": pc.localDescription.sdp, "type": pc.localDescription.type},
+                    json={
+                        "sdp": pc.localDescription.sdp,
+                        "type": pc.localDescription.type,
+                    },
                 )
                 await pc.close()
                 return resp.json()
@@ -103,19 +110,36 @@ def test_start_call_triggered(monkeypatch):
     monkeypatch.setattr(webrtc_connector, "start_call", lambda p: calls.append(p))
     language_engine.register_connector(webrtc_connector)
 
-    monkeypatch.setattr(language_engine.tts_coqui, "synthesize_speech", lambda t, e: f"/tmp/{e}.wav")
-    monkeypatch.setattr("INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")])
-    monkeypatch.setattr("rag.orchestrator.vector_memory.add_vector", lambda *a, **k: None)
-    monkeypatch.setattr("rag.orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p)
-    monkeypatch.setattr("rag.orchestrator.qnl_engine.hex_to_song", lambda *a, **k: ([], np.zeros(1, dtype=np.int16)))
-    monkeypatch.setattr("rag.orchestrator.qnl_engine.parse_input", lambda t: {"tone": "neutral"})
+    monkeypatch.setattr(
+        language_engine.tts_coqui, "synthesize_speech", lambda t, e: f"/tmp/{e}.wav"
+    )
+    monkeypatch.setattr(
+        "INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")]
+    )
+    monkeypatch.setattr(
+        "rag.orchestrator.vector_memory.add_vector", lambda *a, **k: None
+    )
+    monkeypatch.setattr(
+        "rag.orchestrator.voice_aura.apply_voice_aura", lambda p, **k: p
+    )
+    monkeypatch.setattr(
+        "rag.orchestrator.qnl_engine.hex_to_song",
+        lambda *a, **k: ([], np.zeros(1, dtype=np.int16)),
+    )
+    monkeypatch.setattr(
+        "rag.orchestrator.qnl_engine.parse_input", lambda t: {"tone": "neutral"}
+    )
     monkeypatch.setattr("rag.orchestrator.symbolic_parser.parse_intent", lambda d: [])
-    monkeypatch.setattr("rag.orchestrator.reflection_loop.run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr(
+        "rag.orchestrator.reflection_loop.run_reflection_loop", lambda *a, **k: None
+    )
     monkeypatch.setattr("rag.orchestrator.log_interaction", lambda *a, **k: None)
     monkeypatch.setattr("rag.orchestrator.load_interactions", lambda: [])
     monkeypatch.setattr("rag.orchestrator.update_insights", lambda logs: None)
     monkeypatch.setattr("rag.orchestrator.load_insights", lambda: {})
-    monkeypatch.setattr("rag.orchestrator.learning_mutator.propose_mutations", lambda d: [])
+    monkeypatch.setattr(
+        "rag.orchestrator.learning_mutator.propose_mutations", lambda d: []
+    )
 
     orch = MoGEOrchestrator()
     orch.handle_input("initiate sacred communion")

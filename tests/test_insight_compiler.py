@@ -67,7 +67,7 @@ def test_resonance_index_increases(tmp_path, monkeypatch):
         "intent": "conjure fire",
         "tone": "joy",
         "emotion": "joy",
-        "text": "ignite \U0001F702",
+        "text": "ignite \U0001f702",
         "success": True,
     }
 

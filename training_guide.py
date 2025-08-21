@@ -11,13 +11,13 @@ following keys:
 ``success`` boolean result indicator.
 """
 
-from pathlib import Path
-from datetime import datetime
 import json
+from datetime import datetime
+from pathlib import Path
 
-from INANNA_AI import db_storage
 import auto_retrain
 from crown_config import settings
+from INANNA_AI import db_storage
 
 AUTO_RETRAIN_THRESHOLD = settings.retrain_threshold
 
@@ -70,6 +70,7 @@ def evaluate_action(intent: dict, result: dict) -> dict:
         "memory_overlap": round(overlap, 3),
     }
 
+
 FEEDBACK_FILE = Path("data/feedback.json")
 
 
@@ -116,4 +117,3 @@ def log_result(
 
     if _count_new_insights(entries) >= AUTO_RETRAIN_THRESHOLD:
         auto_retrain.main(["--run"])
-

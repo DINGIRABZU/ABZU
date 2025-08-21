@@ -20,8 +20,8 @@ sys.modules.setdefault("scipy.io.wavfile", wavfile_mod)
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 
-from INANNA_AI.personality_layers.nigredo_layer import NigredoPersonality
 from INANNA_AI.personality_layers import REGISTRY
+from INANNA_AI.personality_layers.nigredo_layer import NigredoPersonality
 
 
 def test_nigredo_methods_and_registry():

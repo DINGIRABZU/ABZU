@@ -1,24 +1,24 @@
 """Heuristics for selecting a language model in the Crown agent."""
+
 from __future__ import annotations
 
-from typing import Any, Dict
-from statistics import mean
 import time
+from statistics import mean
+from typing import Any, Dict
 
-from task_profiling import classify_task
+import emotional_state
 import servant_model_manager as smm
 from INANNA_AI import emotional_memory
-import emotional_state
+from task_profiling import classify_task
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-import voice_aura
-
 import crown_config
-
+import voice_aura
 
 crown_config.reload()
 _ROTATION_PERIOD = crown_config.settings.llm_rotation_period
@@ -69,11 +69,7 @@ def recommend_llm(task_type: str, emotion: str) -> str:
         if not _enabled(name):
             continue
         history = emotional_memory.query_history(name)
-        relevant = [
-            node
-            for node in history
-            if classify_task(node.prompt) == task_type
-        ]
+        relevant = [node for node in history if classify_task(node.prompt) == task_type]
         if len(relevant) < 3:
             continue
 
@@ -104,8 +100,12 @@ def decide_expression_options(emotion: str) -> Dict[str, Any]:
     else:
         history = []
 
-    valences = [float(h.get("valence", 0.5)) for h in history if h.get("valence") is not None]
-    arousals = [float(h.get("arousal", 0.5)) for h in history if h.get("arousal") is not None]
+    valences = [
+        float(h.get("valence", 0.5)) for h in history if h.get("valence") is not None
+    ]
+    arousals = [
+        float(h.get("arousal", 0.5)) for h in history if h.get("arousal") is not None
+    ]
     avg_valence = mean(valences) if valences else 0.5
     avg_arousal = mean(arousals) if arousals else 0.5
 
@@ -124,7 +124,9 @@ def decide_expression_options(emotion: str) -> Dict[str, Any]:
         avatar = "Androgynous"
 
     aura_amount = max(0.0, min(1.0, 0.5 + (avg_arousal - 0.5)))
-    aura = voice_aura.EFFECT_PRESETS.get(emotion.lower(), voice_aura.EFFECT_PRESETS["neutral"])
+    aura = voice_aura.EFFECT_PRESETS.get(
+        emotion.lower(), voice_aura.EFFECT_PRESETS["neutral"]
+    )
 
     return {
         "tts_backend": backend,

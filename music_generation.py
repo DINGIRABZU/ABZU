@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Generate music from a text prompt using various models."""
 
-from pathlib import Path
 import argparse
 import logging
+from pathlib import Path
 
 try:  # pragma: no cover - optional dependency
     from transformers import pipeline as hf_pipeline

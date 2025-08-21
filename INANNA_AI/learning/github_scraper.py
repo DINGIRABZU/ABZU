@@ -2,16 +2,18 @@ from __future__ import annotations
 
 """Fetch README files from GitHub repositories."""
 
-from pathlib import Path
-from typing import List, Dict, Any
 import base64
-import os
 import json
+import os
 import types
+from pathlib import Path
+from typing import Any, Dict, List
+
 import requests
 
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
+
     _HAVE_SENTENCE_TRANSFORMER = True
 except ImportError:  # pragma: no cover - optional dependency
     _HAVE_SENTENCE_TRANSFORMER = False
@@ -24,12 +26,16 @@ except ImportError:  # pragma: no cover - optional dependency
 
         return types.SimpleNamespace(encode=_encode)
 
+
+import crown_config
+import insight_compiler
+
 from .. import corpus_memory
 from . import github_metadata
-import insight_compiler
-import crown_config
 
-_LIST_FILE = Path(__file__).resolve().parents[2] / "learning_sources" / "github_repos.txt"
+_LIST_FILE = (
+    Path(__file__).resolve().parents[2] / "learning_sources" / "github_repos.txt"
+)
 _API_BASE = "https://api.github.com/repos/"
 _INSIGHT_FILE = insight_compiler.INSIGHT_FILE
 
@@ -83,9 +89,7 @@ def fetch_repo(
     r = requests.get(readme_url, headers=_headers(), timeout=10)
     r.raise_for_status()
     data = r.json()
-    readme_text = base64.b64decode(data.get("content", "")).decode(
-        "utf-8", "ignore"
-    )
+    readme_text = base64.b64decode(data.get("content", "")).decode("utf-8", "ignore")
     readme_path = dest_dir / f"{owner_repo.replace('/', '_')}_README.md"
     readme_path.write_text(readme_text, encoding="utf-8")
 
@@ -157,4 +161,3 @@ def fetch_all(
         except Exception:
             continue
     return files
-

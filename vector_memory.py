@@ -7,14 +7,13 @@ can be overridden by setting the ``VECTOR_DB_PATH`` environment variable.  Each
 stored entry is timestamped so query results decay in relevance over time.
 """
 
+import json
+import logging
+import math
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-import json
-import logging
-import uuid
-import math
-
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -30,7 +29,6 @@ except Exception:  # pragma: no cover - optional dependency
 
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
-
 
 _DIR = Path(settings.vector_db_path)
 
@@ -99,7 +97,9 @@ def _decay(ts: str) -> float:
     return math.exp(-age / _DECAY_SECONDS)
 
 
-def search(query: str, filter: Optional[Dict[str, Any]] = None, *, k: int = 5) -> List[Dict[str, Any]]:
+def search(
+    query: str, filter: Optional[Dict[str, Any]] = None, *, k: int = 5
+) -> List[Dict[str, Any]]:
     """Return ``k`` fuzzy matches for ``query`` ordered by decayed similarity."""
 
     qvec_raw = qnl_utils.quantum_embed(query)
@@ -184,7 +184,9 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
     return True
 
 
-def query_vectors(filter: Optional[Dict[str, Any]] = None, *, limit: int = 10) -> List[Dict[str, Any]]:
+def query_vectors(
+    filter: Optional[Dict[str, Any]] = None, *, limit: int = 10
+) -> List[Dict[str, Any]]:
     """Return recent stored entries matching ``filter``."""
     return search("", filter=filter, k=limit)
 
@@ -196,4 +198,3 @@ __all__ = [
     "query_vectors",
     "LOG_FILE",
 ]
-

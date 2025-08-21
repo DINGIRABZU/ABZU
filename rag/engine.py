@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Retrieval helper for vector memory documents."""
 
-from typing import Any, Dict, List, Optional
 import argparse
 import importlib.util
+from typing import Any, Dict, List, Optional
 
 try:  # pragma: no cover - optional dependency
     from vector_memory import search as vm_search  # type: ignore[assignment]
@@ -12,7 +12,10 @@ except ImportError:  # pragma: no cover - optional dependency
     vm_search = None  # type: ignore[assignment]
 """Optional vector memory search function; ``None`` if unavailable."""
 _HAYSTACK_AVAILABLE = importlib.util.find_spec("haystack") is not None
-_LLAMA_AVAILABLE = importlib.util.find_spec("llama_index") is not None or importlib.util.find_spec("llamaindex") is not None
+_LLAMA_AVAILABLE = (
+    importlib.util.find_spec("llama_index") is not None
+    or importlib.util.find_spec("llamaindex") is not None
+)
 
 
 def _make_item(text: str, meta: Dict[str, Any], score: float) -> Any:
@@ -27,7 +30,7 @@ def _make_item(text: str, meta: Dict[str, Any], score: float) -> Any:
             return doc
     if _LLAMA_AVAILABLE:
         try:
-            from llama_index.core.schema import TextNode, NodeWithScore
+            from llama_index.core.schema import NodeWithScore, TextNode
         except Exception:  # pragma: no cover - optional dep missing at runtime
             pass
         else:
@@ -42,7 +45,9 @@ def _get_score(item: Any) -> float:
     return float(getattr(item, "score", 0.0))
 
 
-def query(text: str, filters: Optional[Dict[str, Any]] = None, *, top_n: int = 5) -> List[Any]:
+def query(
+    text: str, filters: Optional[Dict[str, Any]] = None, *, top_n: int = 5
+) -> List[Any]:
     """Return ranked snippets for ``text``."""
     if vm_search is None:
         return []

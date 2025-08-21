@@ -1,9 +1,11 @@
 """Summarize project purpose using a placeholder GLM endpoint."""
+
 from __future__ import annotations
 
 import logging
-from pathlib import Path
 import os
+from pathlib import Path
+
 from INANNA_AI.glm_integration import GLMIntegration
 
 try:  # pragma: no cover - optional dependency

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Discord bot that forwards messages to the `/glm-command` endpoint."""
 
-from pathlib import Path
-import os
 import logging
+import os
+from pathlib import Path
 from typing import Any
 
 import requests

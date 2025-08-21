@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Mood tracking and emotion analysis utilities."""
 
-from typing import Dict, Any
+from typing import Any, Dict
 
-from INANNA_AI import emotion_analysis
 import emotional_state
+from INANNA_AI import emotion_analysis
 
 
 class EmotionAnalyzer:
@@ -18,18 +18,16 @@ class EmotionAnalyzer:
     def __init__(self, mood_alpha: float = 0.2) -> None:
         self.mood_alpha = mood_alpha
         self.mood_state: Dict[str, float] = {
-            e: 1.0 if e == "neutral" else 0.0
-            for e in emotion_analysis.EMOTION_WEIGHT
+            e: 1.0 if e == "neutral" else 0.0 for e in emotion_analysis.EMOTION_WEIGHT
         }
 
     def update_mood(self, emotion: str) -> None:
         """Update the internal ``mood_state`` for ``emotion``."""
         for key in list(self.mood_state):
             target = 1.0 if key.lower() == emotion.lower() else 0.0
-            self.mood_state[key] = (
-                (1 - self.mood_alpha) * self.mood_state.get(key, 0.0)
-                + self.mood_alpha * target
-            )
+            self.mood_state[key] = (1 - self.mood_alpha) * self.mood_state.get(
+                key, 0.0
+            ) + self.mood_alpha * target
 
     def analyze(self, emotion: str) -> Dict[str, Any]:
         """Return enriched data for ``emotion`` and update ``mood_state``."""
@@ -42,4 +40,3 @@ class EmotionAnalyzer:
             "archetype": emotion_analysis.emotion_to_archetype(dominant),
             "weight": emotion_analysis.emotion_weight(dominant),
         }
-

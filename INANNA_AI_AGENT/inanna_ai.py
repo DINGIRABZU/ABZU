@@ -4,17 +4,18 @@ import logging
 import logging.config
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Tuple, List
+from typing import Dict, List, Tuple
 
 import yaml
 
-from . import source_loader, model
-from INANNA_AI import db_storage
-import emotional_state
 import emotion_registry
-from INANNA_AI.existential_reflector import ExistentialReflector
+import emotional_state
+from INANNA_AI import db_storage
 from INANNA_AI.ethical_validator import EthicalValidator
+from INANNA_AI.existential_reflector import ExistentialReflector
 from transformers import GenerationMixin
+
+from . import model, source_loader
 
 WELCOME_MESSAGE = """
 # 🌌 INANNA-TÂMTU-NAMMU Quantum Ritual Boot
@@ -65,6 +66,7 @@ def display_welcome_message() -> None:
     """Print the ritual welcome message."""
     print(WELCOME_MESSAGE)
 
+
 # Path to the directory containing this script
 BASE_DIR = Path(__file__).resolve().parent
 CONFIG_FILE = BASE_DIR / "source_paths.json"
@@ -86,8 +88,8 @@ def read_texts() -> Dict[str, str]:
 def _extract_line(text: str, keyword: str) -> str:
     for line in text.splitlines():
         if keyword.lower() in line.lower():
-            cleaned = line.strip().lstrip('> ').strip('"')
-            cleaned = cleaned.replace('“', '').replace('”', '')
+            cleaned = line.strip().lstrip("> ").strip('"')
+            cleaned = cleaned.replace("“", "").replace("”", "")
             return cleaned
     return ""
 
@@ -123,7 +125,9 @@ def list_sources() -> None:
             print(fp)
 
 
-def run_qnl(hex_input: str, wav: str = "qnl_hex_song.wav", json_file: str = "qnl_hex_song.json") -> None:
+def run_qnl(
+    hex_input: str, wav: str = "qnl_hex_song.wav", json_file: str = "qnl_hex_song.json"
+) -> None:
     """Invoke the existing QNL engine to create a song from hex input."""
     from SPIRAL_OS import qnl_engine
 
@@ -132,7 +136,9 @@ def run_qnl(hex_input: str, wav: str = "qnl_hex_song.wav", json_file: str = "qnl
         raise ImportError("scipy is required to write WAV files; please install scipy.")
     qnl_engine.write(wav, 44100, waveform)
     metadata = qnl_engine.generate_qnl_metadata(phrases)
-    Path(json_file).write_text(json.dumps(metadata, indent=2, ensure_ascii=False), encoding="utf-8")
+    Path(json_file).write_text(
+        json.dumps(metadata, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     print(f"WAV saved to {wav}")
     print(f"Metadata saved to {json_file}")
 
@@ -144,7 +150,11 @@ def suggest_enhancement(validator: EthicalValidator | None = None) -> List[str]:
     if not ANALYSIS_PATH.exists():
         return []
 
-    suggestions = [s.strip() for s in ANALYSIS_PATH.read_text(encoding="utf-8").splitlines() if s.strip()]
+    suggestions = [
+        s.strip()
+        for s in ANALYSIS_PATH.read_text(encoding="utf-8").splitlines()
+        if s.strip()
+    ]
     approved: List[str] = []
     for s in suggestions:
         if validator.validate_text(s):
@@ -214,9 +224,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="INANNA activation agent")
     parser.add_argument("--activate", action="store_true", help="Recite birth chant")
     parser.add_argument("--hex", help="Hex string to feed into the QNL engine")
-    parser.add_argument("--wav", default="qnl_hex_song.wav", help="Output WAV file for QNL engine")
-    parser.add_argument("--json", default="qnl_hex_song.json", help="Output metadata JSON for QNL engine")
-    parser.add_argument("--list", action="store_true", help="List available source texts")
+    parser.add_argument(
+        "--wav", default="qnl_hex_song.wav", help="Output WAV file for QNL engine"
+    )
+    parser.add_argument(
+        "--json",
+        default="qnl_hex_song.json",
+        help="Output metadata JSON for QNL engine",
+    )
+    parser.add_argument(
+        "--list", action="store_true", help="List available source texts"
+    )
     parser.add_argument("--status", action="store_true", help="Show emotion status")
     subparsers = parser.add_subparsers(dest="command")
     chat_parser = subparsers.add_parser("chat", help="Interact with the local model")

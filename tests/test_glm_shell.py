@@ -1,7 +1,7 @@
-import sys
-from types import ModuleType
-from pathlib import Path
 import importlib
+import sys
+from pathlib import Path
+from types import ModuleType
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))

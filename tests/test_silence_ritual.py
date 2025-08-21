@@ -1,6 +1,6 @@
+import json
 import sys
 import types
-import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,23 +40,38 @@ sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))
 sys.modules.setdefault("SPIRAL_OS.symbolic_parser", types.ModuleType("symbolic_parser"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", types.ModuleType("qnl_utils"))
 
+import corpus_memory_logging as cml
 from rag import orchestrator
 from rag.orchestrator import MoGEOrchestrator
-import corpus_memory_logging as cml
 
 
 def test_silence_ritual_logged(monkeypatch, tmp_path, mock_emotion_state):
     log_path = tmp_path / "corpus_memory.json"
     monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
 
-    monkeypatch.setattr(orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"}, raising=False)
-    monkeypatch.setattr(orchestrator.symbolic_parser, "parse_intent", lambda d: [], raising=False)
-    monkeypatch.setattr(orchestrator.symbolic_parser, "_gather_text", lambda d: "", raising=False)
+    monkeypatch.setattr(
+        orchestrator.qnl_engine,
+        "parse_input",
+        lambda t: {"tone": "neutral"},
+        raising=False,
+    )
+    monkeypatch.setattr(
+        orchestrator.symbolic_parser, "parse_intent", lambda d: [], raising=False
+    )
+    monkeypatch.setattr(
+        orchestrator.symbolic_parser, "_gather_text", lambda d: "", raising=False
+    )
     monkeypatch.setattr(orchestrator.symbolic_parser, "_INTENTS", {}, raising=False)
-    monkeypatch.setattr(MoGEOrchestrator, "route", lambda self, text, emotion_data, qnl_data=None: {})
-    monkeypatch.setattr(orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr(
+        MoGEOrchestrator, "route", lambda self, text, emotion_data, qnl_data=None: {}
+    )
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
     monkeypatch.setattr(orchestrator.invocation_engine, "invoke", lambda *a, **k: [])
-    monkeypatch.setattr(orchestrator.invocation_engine, "_extract_symbols", lambda t: "")
+    monkeypatch.setattr(
+        orchestrator.invocation_engine, "_extract_symbols", lambda t: ""
+    )
     monkeypatch.setattr(orchestrator, "ritual_action_sequence", lambda s, e: [])
 
     def fake_analyze(duration):

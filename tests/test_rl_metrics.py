@@ -1,7 +1,7 @@
-import sys
-from pathlib import Path
 import importlib
+import sys
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -13,9 +13,14 @@ def test_rl_metrics_module(monkeypatch):
     class DummyPPO:
         def __init__(self, *a, **k):
             pass
+
         def learn(self, *a, **k):
             pass
-    monkeypatch.setitem(sys.modules, "stable_baselines3", types.SimpleNamespace(PPO=DummyPPO))
+
+    monkeypatch.setitem(
+        sys.modules, "stable_baselines3", types.SimpleNamespace(PPO=DummyPPO)
+    )
+
     class DummyBox:
         def __init__(self, *a, **k):
             pass
@@ -52,4 +57,3 @@ def test_rl_metrics_module(monkeypatch):
 
     mod = importlib.import_module("dashboard.rl_metrics")
     assert mod is not None
-

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Utility functions to log session audio and video."""
 
-from pathlib import Path
-from datetime import datetime
 import logging
 import shutil
+from datetime import datetime
+from pathlib import Path
 from typing import Iterable
 
 try:  # pragma: no cover - optional dependency

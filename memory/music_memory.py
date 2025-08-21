@@ -9,14 +9,13 @@ label. The data is persisted in a local SQLite database so it survives between
 runs and may be used for retrieval‑augmented generation or mixing decisions.
 """
 
-from pathlib import Path
-from typing import Any, Dict, List, Optional
 import json
 import sqlite3
 import uuid
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 import numpy as np
-
 
 _DEFAULT_DB = Path("data/music_memory.db")
 
@@ -137,12 +136,14 @@ def query_tracks(
             continue
         score = float(emb @ qvec / ((np.linalg.norm(emb) + 1e-8) * qnorm))
         meta = json.loads(meta_json) if meta_json else {}
-        results.append({
-            "id": rid,
-            "emotion": emo,
-            "metadata": meta,
-            "score": score,
-        })
+        results.append(
+            {
+                "id": rid,
+                "emotion": emo,
+                "metadata": meta,
+                "score": score,
+            }
+        )
     results.sort(key=lambda m: m["score"], reverse=True)
     return results[:k]
 

@@ -8,10 +8,10 @@ from pathlib import Path
 
 import numpy as np
 
-from INANNA_AI import speaking_engine
-from core import avatar_expression_engine
 from connectors import webrtc_connector
+from core import avatar_expression_engine
 from crown_config import settings
+from INANNA_AI import speaking_engine
 
 logger = logging.getLogger(__name__)
 

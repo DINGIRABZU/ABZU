@@ -1,8 +1,9 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 dummy_np = types.ModuleType("numpy")
+
 
 class NPArray(list):
     def tolist(self):
@@ -11,8 +12,10 @@ class NPArray(list):
     def __matmul__(self, other):
         return sum(a * b for a, b in zip(self, other))
 
+
 def _arr(x, dtype=None):
     return NPArray(x)
+
 
 dummy_np.array = _arr
 dummy_np.asarray = _arr
@@ -44,8 +47,13 @@ class DummyCollection:
 
     def query(self, query_embeddings, n_results, **_):
         q = np.asarray(query_embeddings[0])
-        sims = [float(e @ q / ((np.linalg.norm(e) * np.linalg.norm(q)) + 1e-8)) for e, _ in self.records]
-        order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[:n_results]
+        sims = [
+            float(e @ q / ((np.linalg.norm(e) * np.linalg.norm(q)) + 1e-8))
+            for e, _ in self.records
+        ]
+        order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[
+            :n_results
+        ]
         return {
             "embeddings": [[self.records[i][0] for i in order]],
             "metadatas": [[self.records[i][1] for i in order]],

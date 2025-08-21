@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Command line wrappers for voice conversion tools."""
 
-from pathlib import Path
 import subprocess
 import tempfile
+from pathlib import Path
 
 
 def apply_rvc(input_wav: Path, preset: str) -> Path:

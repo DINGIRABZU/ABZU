@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from INANNA_AI import db_storage
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
@@ -32,7 +33,11 @@ class ModelSelector:
         self.db_path = db_path or db_storage.DB_PATH
         db_storage.init_db(self.db_path)
         self._alpha = alpha
-        self.model_weights: Dict[str, float] = {"glm": 1.0, "deepseek": 1.0, "mistral": 1.0}
+        self.model_weights: Dict[str, float] = {
+            "glm": 1.0,
+            "deepseek": 1.0,
+            "mistral": 1.0,
+        }
 
     @staticmethod
     def model_from_emotion(emotion: str) -> str:
@@ -121,4 +126,3 @@ class ModelSelector:
         if mem_weights.get(candidate, 0.0) > mem_weights.get(emotion_model, 0.0):
             return candidate
         return emotion_model
-

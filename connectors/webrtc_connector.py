@@ -7,8 +7,8 @@ import logging
 from pathlib import Path
 from typing import Set
 
-from fastapi import APIRouter, Request
 from aiortc import RTCPeerConnection, RTCSessionDescription
+from fastapi import APIRouter, Request
 
 logger = logging.getLogger(__name__)
 

@@ -1,16 +1,23 @@
 """Network monitoring utilities."""
+
 from __future__ import annotations
 
-from pathlib import Path
 import json
-from importlib import resources
 import threading
-
+from importlib import resources
+from pathlib import Path
 from typing import Optional
 
-CONFIG_FILE = Path(__file__).resolve().parents[2] / "INANNA_AI_AGENT" / "network_utils_config.json"
+CONFIG_FILE = (
+    Path(__file__).resolve().parents[2]
+    / "INANNA_AI_AGENT"
+    / "network_utils_config.json"
+)
 
-_DEFAULT_CONFIG = {"log_dir": "network_logs", "capture_file": "network_logs/capture.pcap"}
+_DEFAULT_CONFIG = {
+    "log_dir": "network_logs",
+    "capture_file": "network_logs/capture.pcap",
+}
 
 
 def load_config() -> dict:
@@ -46,8 +53,8 @@ def schedule_capture(interface: str, period: float) -> threading.Timer:
     return timer
 
 
-from .capture import capture_packets
 from .analysis import analyze_capture
+from .capture import capture_packets
 
 __all__ = [
     "capture_packets",

@@ -14,6 +14,8 @@ except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
+
+
 def embedding_to_params(_emb):
     """Return pitch, tempo and volume from embedding."""
     return 0.0, 1.0, 1.0
@@ -32,7 +34,9 @@ def analyze_seven_planes(*_args, **_kwargs) -> dict:
     }
 
 
-def generate_quantum_music(context: str, emotion: str, *, output_dir: Path = Path(".")) -> Path:
+def generate_quantum_music(
+    context: str, emotion: str, *, output_dir: Path = Path(".")
+) -> Path:
     embed = quantum_embed(context)
     _pitch, _tempo, _vol = embedding_to_params(embed)
     sr = 44100
@@ -45,7 +49,9 @@ def generate_quantum_music(context: str, emotion: str, *, output_dir: Path = Pat
     sf.write(out, wave, sr, subtype="PCM_16")
     planes = analyze_seven_planes(wave, sr)
     planes.setdefault("physical", {})["element"] = "bass"
-    (out.with_suffix(".json")).write_text(json.dumps({"planes": planes}), encoding="utf-8")
+    (out.with_suffix(".json")).write_text(
+        json.dumps({"planes": planes}), encoding="utf-8"
+    )
     return out
 
 
@@ -61,11 +67,14 @@ def main(args: list[str] | None = None) -> None:
 
     if opts.secret:
         from MUSIC_FOUNDATION.synthetic_stego import embed_data
+
         embed_data(Path("human_layer.wav"), opts.secret)
 
     planes = analyze_seven_planes(data, sr)
     planes.setdefault("physical", {})["element"] = "bass"
-    Path(opts.output).with_suffix(".json").write_text(json.dumps({"planes": planes}), encoding="utf-8")
+    Path(opts.output).with_suffix(".json").write_text(
+        json.dumps({"planes": planes}), encoding="utf-8"
+    )
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 """Route questions to the appropriate vector collection."""
 
-from typing import List, Dict
+from typing import Dict, List
 
 from rag import retriever as rag_retriever
 

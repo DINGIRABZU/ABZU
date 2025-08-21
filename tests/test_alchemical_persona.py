@@ -1,6 +1,7 @@
-from pathlib import Path
 import sys
 import types
+from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,4 +52,3 @@ def test_four_state_cycle():
         State.CITRINITAS,
         State.NIGREDO,
     ]
-

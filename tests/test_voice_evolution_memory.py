@@ -1,6 +1,6 @@
+import json
 import sys
 import types
-import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,9 +13,9 @@ dummy_np.mean = lambda arr: sum(arr) / len(arr)
 dummy_np.ndarray = object
 sys.modules.setdefault("numpy", dummy_np)
 
-from INANNA_AI import voice_evolution
 import corpus_memory_logging
 import emotional_state
+from INANNA_AI import voice_evolution
 
 
 def test_evolve_with_memory_updates_styles(tmp_path, monkeypatch, mock_emotion_state):
@@ -95,4 +95,3 @@ def test_evolve_with_vector_memory(monkeypatch, mock_emotion_state):
     assert added["emotion"] == "joy"
     assert added["speed"] == exp_speed
     assert added["pitch"] == exp_pitch
-

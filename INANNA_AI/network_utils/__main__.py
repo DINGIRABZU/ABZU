@@ -1,13 +1,14 @@
 """Command line entry for network utilities."""
+
 from __future__ import annotations
 
 import argparse
 import logging
 import time
 
-from .capture import capture_packets
-from .analysis import analyze_capture
 from . import schedule_capture
+from .analysis import analyze_capture
+from .capture import capture_packets
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -28,7 +29,9 @@ def main(argv: list[str] | None = None) -> None:
     sched.add_argument("--period", type=float, default=60.0)
 
     args = parser.parse_args(argv)
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+    )
 
     if args.cmd == "capture":
         capture_packets(args.interface, count=args.count, output=args.output)
@@ -36,9 +39,7 @@ def main(argv: list[str] | None = None) -> None:
         analyze_capture(args.pcap, log_dir=args.log_dir)
     elif args.cmd == "schedule":
         schedule_capture(args.interface, args.period)
-        print(
-            f"Scheduled capture on {args.interface} every {args.period} seconds."
-        )
+        print(f"Scheduled capture on {args.interface} every {args.period} seconds.")
         try:
             while True:
                 time.sleep(1)

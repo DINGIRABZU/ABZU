@@ -7,9 +7,9 @@ import json
 import shutil
 from pathlib import Path
 
+from INANNA_AI import corpus_memory
 from INANNA_AI.learning import github_scraper as gs
 from INANNA_AI.learning import project_gutenberg as pg
-from INANNA_AI import corpus_memory
 
 _ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = _ROOT / "learning_sources"

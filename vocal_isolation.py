@@ -2,18 +2,17 @@ from __future__ import annotations
 
 """Helpers for isolating vocals and other stems using external tools."""
 
-from pathlib import Path
-from typing import Dict, Optional
 import subprocess
 import tempfile
-
+from pathlib import Path
+from typing import Dict, Optional
 
 _DEF_AUDIO_EXTS = {".wav", ".mp3", ".flac", ".ogg", ".m4a"}
 
 
 def _collect_stems(out_dir: Path) -> Dict[str, Path]:
     stems: Dict[str, Path] = {}
-    for file in out_dir.rglob('*'):
+    for file in out_dir.rglob("*"):
         if file.suffix.lower() in _DEF_AUDIO_EXTS:
             stems[file.stem] = file
     return stems
@@ -39,13 +38,23 @@ def separate_stems(
     Dict[str, Path]
         Mapping of stem name to file path in a temporary directory.
     """
-    out_dir = Path(tempfile.mkdtemp(prefix="stems_")) if output_dir is None else output_dir
+    out_dir = (
+        Path(tempfile.mkdtemp(prefix="stems_")) if output_dir is None else output_dir
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
 
     if method == "demucs":
         cmd = ["python3", "-m", "demucs.separate", "-o", str(out_dir), str(path)]
     elif method == "spleeter":
-        cmd = ["spleeter", "separate", "-p", "spleeter:5stems", "-o", str(out_dir), str(path)]
+        cmd = [
+            "spleeter",
+            "separate",
+            "-p",
+            "spleeter:5stems",
+            "-o",
+            str(out_dir),
+            str(path),
+        ]
     elif method == "umx":
         cmd = ["umx", str(path), "--outdir", str(out_dir)]
     else:

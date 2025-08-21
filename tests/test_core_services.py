@@ -7,8 +7,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from tests.helpers.config_stub import build_settings
 from tests.helpers import emotion_stub
+from tests.helpers.config_stub import build_settings
 
 config_mod = types.ModuleType("config")
 config_mod.settings = build_settings()
@@ -27,8 +27,8 @@ sys.modules["emotional_state"] = types.SimpleNamespace(
 )
 
 from core.emotion_analyzer import EmotionAnalyzer
-from core.model_selector import ModelSelector
 from core.memory_logger import MemoryLogger
+from core.model_selector import ModelSelector
 
 
 def test_emotion_analyzer_updates_mood():
@@ -78,4 +78,3 @@ def test_memory_logger(monkeypatch):
     assert logger.load_interactions() == [{"input": "x"}]
     logger.log_ritual_result("rit", ["step"])
     assert logged["ritual"] == ("rit", ["step"])
-

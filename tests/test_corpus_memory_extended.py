@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,8 +13,8 @@ def test_add_entry_logs_and_stores(monkeypatch, tmp_path):
     added = {}
 
     def dummy_add_vector(text, metadata):
-        added['text'] = text
-        added['meta'] = metadata
+        added["text"] = text
+        added["meta"] = metadata
 
     log_calls = {}
 
@@ -60,4 +61,3 @@ def test_prioritize_by_tone():
     ]
     out = corpus_memory.prioritize_by_tone(items, "joy")
     assert [i["text"] for i in out[:2]] == ["b", "c"]
-

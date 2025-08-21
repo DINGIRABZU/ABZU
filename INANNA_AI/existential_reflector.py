@@ -1,9 +1,10 @@
 """Generate a short self-description using a placeholder GLM endpoint."""
+
 from __future__ import annotations
 
 import logging
-from pathlib import Path
 import os
+from pathlib import Path
 
 try:  # pragma: no cover - optional dependency
     import requests
@@ -21,7 +22,7 @@ ENDPOINT = os.getenv("GLM_API_URL", "https://glm.example.com/glm")
 API_KEY = os.getenv("GLM_API_KEY")
 HEADERS = {"Authorization": f"Bearer {API_KEY}"} if API_KEY else None
 
-from . import emotion_analysis, context, adaptive_learning
+from . import adaptive_learning, context, emotion_analysis
 
 
 class ExistentialReflector:

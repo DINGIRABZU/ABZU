@@ -1,8 +1,8 @@
-import sys
-import json
-from pathlib import Path
 import base64
+import json
+import sys
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -98,4 +98,3 @@ def test_fetch_all_filters_using_insight(monkeypatch, tmp_path):
             "intent_pattern": "beta",
         }
     ]
-

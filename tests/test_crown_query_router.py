@@ -8,12 +8,15 @@ import types
 
 dummy_np = types.ModuleType("numpy")
 
+
 class NPArray(list):
     def tolist(self):
         return list(self)
 
+
 def _arr(x, dtype=None):
     return NPArray(x)
+
 
 dummy_np.array = _arr
 dummy_np.asarray = _arr
@@ -28,6 +31,7 @@ from rag import retriever as rag_retriever
 
 def test_route_query_selects_store(monkeypatch):
     called = {}
+
     def fake_retrieve(q, top_n=5, collection="tech"):
         called["store"] = collection
         return []

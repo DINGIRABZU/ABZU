@@ -9,16 +9,18 @@ from pathlib import Path
 import yaml
 
 from env_validation import parse_servant_models
-from INANNA_AI.glm_integration import GLMIntegration
 from INANNA_AI import glm_integration as gi
+from INANNA_AI.glm_integration import GLMIntegration
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-from INANNA_AI import corpus_memory
 import servant_model_manager as smm
+from INANNA_AI import corpus_memory
+
 try:  # pragma: no cover - optional dependency
     import requests
 except Exception:  # pragma: no cover - optional dependency

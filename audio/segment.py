@@ -118,7 +118,11 @@ class NpAudioSegment:
         if not isinstance(item, slice):  # pragma: no cover - defensive
             raise TypeError("slice expected")
         start_ms = 0 if item.start is None else int(item.start)
-        end_ms = (self.data.shape[0] * 1000 // self.frame_rate if item.stop is None else int(item.stop))
+        end_ms = (
+            self.data.shape[0] * 1000 // self.frame_rate
+            if item.stop is None
+            else int(item.stop)
+        )
         start = int(start_ms * self.frame_rate / 1000)
         end = int(end_ms * self.frame_rate / 1000)
         return NpAudioSegment(self.data[start:end], self.frame_rate)
@@ -126,7 +130,7 @@ class NpAudioSegment:
 
 # Resolve backend -------------------------------------------------------------
 
-_use_pydub = (_backend != "numpy" and _PydubSegment is not None)
+_use_pydub = _backend != "numpy" and _PydubSegment is not None
 
 if _use_pydub:
     AudioSegment = _PydubSegment  # type: ignore

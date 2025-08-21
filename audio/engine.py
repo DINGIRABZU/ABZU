@@ -2,14 +2,14 @@ from __future__ import annotations
 
 """Simple playback engine for ritual loops and voice audio."""
 
+import base64
+import logging
+import shutil
+import tempfile
+from io import BytesIO
 from pathlib import Path
 from threading import Event, Thread
 from typing import Any
-import logging
-import tempfile
-from io import BytesIO
-import base64
-import shutil
 
 import numpy as np
 
@@ -17,16 +17,10 @@ try:  # pragma: no cover - optional dependency
     import soundfile as sf
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
+from audio.dsp_engine import (compress, nsynth_interpolate, pitch_shift,
+                              rave_decode, rave_encode, rave_morph,
+                              time_stretch)
 from MUSIC_FOUNDATION.layer_generators import generate_tone
-from audio.dsp_engine import (
-    pitch_shift,
-    time_stretch,
-    compress,
-    rave_encode,
-    rave_decode,
-    rave_morph,
-    nsynth_interpolate,
-)
 
 try:  # pragma: no cover - optional dependency
     from audio.segment import AudioSegment, NpAudioSegment
@@ -50,6 +44,7 @@ logger = logging.getLogger(__name__)
 def _has_ffmpeg() -> bool:
     """Return ``True`` when ``ffmpeg`` is available on the system path."""
     return shutil.which("ffmpeg") is not None
+
 
 _loops: list[Thread] = []
 _playbacks: list[Any] = []

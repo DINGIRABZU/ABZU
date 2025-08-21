@@ -35,7 +35,9 @@ def _print_stats_loop(interval: float) -> None:
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="System monitor")
-    parser.add_argument("--watch", action="store_true", help="continuously display stats")
+    parser.add_argument(
+        "--watch", action="store_true", help="continuously display stats"
+    )
     parser.add_argument(
         "--interval", type=float, default=1.0, help="refresh interval when watching"
     )
