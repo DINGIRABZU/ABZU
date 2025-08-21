@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib
 import logging
 import os
+import shutil
 from typing import Dict, Iterable
 
 
@@ -38,6 +39,20 @@ def check_optional_packages(packages: Iterable[str]) -> None:
             importlib.import_module(name)
         except Exception as exc:  # pragma: no cover - import errors vary
             logger.warning("Optional package %s not available: %s", name, exc)
+
+
+def check_required_binaries(binaries: Iterable[str]) -> None:
+    """Ensure that required external binaries are available on ``PATH``."""
+    missing = [name for name in binaries if shutil.which(name) is None]
+    if missing:
+        names = ", ".join(missing)
+        plural = "ies" if len(missing) > 1 else "y"
+        raise SystemExit(f"Missing required binar{plural}: {names}")
+
+
+def check_audio_binaries() -> None:
+    """Verify that common audio tools are installed."""
+    check_required_binaries(["ffmpeg", "sox"])
 
 
 def parse_servant_models(env: str | None = None, *, require: bool = False) -> Dict[str, str]:

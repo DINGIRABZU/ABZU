@@ -43,3 +43,15 @@ def test_check_optional_packages_ok(monkeypatch, caplog):
     with caplog.at_level(logging.WARNING):
         env_validation.check_optional_packages(["a", "b"])
     assert not caplog.records
+
+
+def test_check_required_binaries_ok(monkeypatch):
+    monkeypatch.setattr(env_validation.shutil, "which", lambda n: "/usr/bin/" + n)
+    env_validation.check_required_binaries(["ffmpeg", "sox"])
+
+
+def test_check_required_binaries_missing(monkeypatch):
+    monkeypatch.setattr(env_validation.shutil, "which", lambda n: None)
+    with pytest.raises(SystemExit) as exc:
+        env_validation.check_required_binaries(["ffmpeg", "sox"])
+    assert "ffmpeg, sox" in str(exc.value)
