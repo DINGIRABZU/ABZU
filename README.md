@@ -71,6 +71,8 @@ Required packages:
 - wget
 - aria2c
 
+Before running the check, copy `secrets.env.template` to `secrets.env` and fill in `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY`. `scripts/check_requirements.sh` sources `secrets.env` automatically so the variables are loaded during verification.
+
 Verify installation with:
 
 ```bash
