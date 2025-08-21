@@ -1,5 +1,4 @@
 import asyncio
-import shutil
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -19,8 +18,11 @@ from crown_config import settings
 
 settings.glm_command_token = "token"
 
+import env_validation
+
 pytestmark = pytest.mark.skipif(
-    shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
+    not env_validation.check_audio_binaries(require=False),
+    reason="audio tools not installed",
 )
 
 import server

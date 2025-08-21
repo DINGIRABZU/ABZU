@@ -66,15 +66,16 @@ def check_audio_binaries(*, require: bool = True) -> bool:
 
     binaries = ["ffmpeg", "sox"]
     missing = [name for name in binaries if shutil.which(name) is None]
-    if not missing:
-        return True
-
-    names = ", ".join(missing)
-    plural = "ies" if len(missing) > 1 else "y"
-    if require:
-        raise SystemExit(f"Missing required audio binar{plural}: {names}")
-    logger.warning("Missing audio binar%s: %s", plural, names)
-    return False
+    if missing:
+        names = ", ".join(missing)
+        plural = "ies" if len(missing) > 1 else "y"
+        if require:
+            raise SystemExit(
+                f"Missing required audio binar{plural}: {names}"
+            )
+        logger.warning("Missing optional audio binar%s: %s", plural, names)
+        return False
+    return True
 
 
 def parse_servant_models(
