@@ -50,7 +50,7 @@ sys.modules.setdefault("gymnasium", gym_mod)
 
 from rag.orchestrator import MoGEOrchestrator
 from rag import orchestrator
-from config import settings
+from crown_config import settings
 
 
 def test_route_all_modalities(monkeypatch, tmp_path):

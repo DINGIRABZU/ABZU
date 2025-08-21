@@ -14,7 +14,7 @@ except Exception:  # pragma: no cover - optional dependency
     GraphDatabase = None  # type: ignore
     Driver = object  # type: ignore
 
-from config import settings
+from crown_config import settings
 from aspect_processor import (
     analyze_geometric,
     analyze_phonetic,

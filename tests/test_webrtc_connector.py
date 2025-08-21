@@ -16,7 +16,7 @@ sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 import server
 from connectors import webrtc_connector
 from tests.data.short_wav_base64 import SHORT_WAV_BASE64
-from config import settings
+from crown_config import settings
 
 settings.glm_command_token = "token"
 

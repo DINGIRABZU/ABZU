@@ -17,7 +17,7 @@ except Exception:  # pragma: no cover - optional dependency
 from .. import corpus_memory
 from . import github_metadata
 import insight_compiler
-import config
+import crown_config
 
 _LIST_FILE = Path(__file__).resolve().parents[2] / "learning_sources" / "github_repos.txt"
 _API_BASE = "https://api.github.com/repos/"
@@ -35,7 +35,7 @@ def load_repo_list(path: Path | None = None) -> List[str]:
 
 
 def _headers() -> dict:
-    token = config.GITHUB_TOKEN
+    token = crown_config.GITHUB_TOKEN
     if not token:
         token = os.getenv("GITHUB_TOKEN", "")
     if token:
@@ -64,7 +64,7 @@ def fetch_repo(
     ``labels`` are additional metadata fields written to the JSON file.
     """
     if dest_dir is None:
-        dest_dir = config.GITHUB_DIR
+        dest_dir = crown_config.GITHUB_DIR
     dest_dir.mkdir(parents=True, exist_ok=True)
     owner_repo = repo.strip()
 

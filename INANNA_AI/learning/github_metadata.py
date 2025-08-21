@@ -7,13 +7,13 @@ import os
 from pathlib import Path
 import requests
 
-import config
+import crown_config
 
 _API_BASE = "https://api.github.com/repos/"
 
 
 def _headers() -> dict:
-    token = config.GITHUB_TOKEN or os.getenv("GITHUB_TOKEN", "")
+    token = crown_config.GITHUB_TOKEN or os.getenv("GITHUB_TOKEN", "")
     if token:
         return {"Authorization": f"token {token}"}
     return {}

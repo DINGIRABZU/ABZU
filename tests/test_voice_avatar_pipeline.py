@@ -47,7 +47,7 @@ from INANNA_AI import speaking_engine
 from tools import voice_conversion
 from core import avatar_expression_engine, expressive_output
 import vector_memory
-from config import settings
+from crown_config import settings
 
 
 def test_voice_avatar_pipeline(tmp_path, monkeypatch):

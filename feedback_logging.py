@@ -8,7 +8,7 @@ import json
 import logging
 from typing import Any, List
 
-from config import settings
+from crown_config import settings
 
 LOG_FILE = Path("data/feedback.json")
 NOVELTY_THRESHOLD = settings.feedback_novelty_threshold

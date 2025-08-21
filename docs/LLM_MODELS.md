@@ -84,7 +84,7 @@ to favour consistently strong performers over time.
 
 ## Configuration
 
-The Crown agent loads settings from `config/INANNA_CORE.yaml`. Each option can
+The Crown agent loads settings from `crown_config/INANNA_CORE.yaml`. Each option can
 be overridden with environment variables:
 
 - `GLM_API_URL` – URL of the GLM service used by `GLMIntegration`.

@@ -6,7 +6,7 @@ try:
 except Exception:  # pragma: no cover - optional dependency
     whisper = None  # type: ignore
 
-from config import WHISPER_MODEL, WHISPER_MODEL_DIR
+from crown_config import WHISPER_MODEL, WHISPER_MODEL_DIR
 
 # Lazily loaded Whisper model instance
 _model: whisper.model.Whisper | None = None

@@ -8,7 +8,7 @@ Usage:
 
 import argparse
 
-from config import require, settings
+from crown_config import require, settings
 
 from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown

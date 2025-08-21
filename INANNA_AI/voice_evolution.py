@@ -15,7 +15,7 @@ except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-from config import settings
+from crown_config import settings
 
 import numpy as np
 

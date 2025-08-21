@@ -55,7 +55,7 @@ inanna_mod = ModuleType("INANNA_AI.glm_integration")
 inanna_mod.GLMIntegration = lambda *a, **k: None
 sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
 
-from config import settings
+from crown_config import settings
 settings.glm_command_token = "token"
 import importlib
 

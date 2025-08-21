@@ -21,7 +21,7 @@ try:
 except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
-import config
+import crown_config
 from MUSIC_FOUNDATION import qnl_utils
 import corpus_memory_logging
 try:  # pragma: no cover - optional dependency
@@ -40,7 +40,7 @@ MEMORY_DIRS: List[Path] = [
     _REPO_ROOT / "GENESIS",
     _REPO_ROOT / "IGNITION",
     _REPO_ROOT / "QNL_LANGUAGE",
-    config.GITHUB_DIR,
+    crown_config.GITHUB_DIR,
 ]
 
 # Directory for the persistent Chroma collection

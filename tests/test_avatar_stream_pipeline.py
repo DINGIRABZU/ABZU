@@ -111,7 +111,7 @@ import server
 import vector_memory
 import crown_decider
 import voice_aura
-from config import settings
+from crown_config import settings
 
 settings.glm_command_token = "token"
 
