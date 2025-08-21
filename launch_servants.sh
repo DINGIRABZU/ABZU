@@ -21,9 +21,11 @@ SERVANTS_FILE="${SERVANT_ENDPOINTS_FILE:-$ROOT/servant_endpoints.tmp}"
 if [ -z "${SERVANT_MODELS:-}" ]; then
     cat <<'EOF' >&2
 Warning: SERVANT_MODELS is not set; no servant models will be launched.
-Define SERVANT_MODELS in secrets.env or export it before running. Example:
+Define SERVANT_MODELS in secrets.env or export it before running.
+Example:
   export SERVANT_MODELS="deepseek=http://localhost:8002,mistral=http://localhost:8003"
 EOF
+    exit 0
 fi
 
 wait_health() {
