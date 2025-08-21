@@ -7,7 +7,7 @@ import argparse
 import time
 from typing import Dict, Iterable
 
-import cortex_memory
+from memory import cortex as cortex_memory
 from archetype_feedback_loop import evaluate_archetype
 
 

@@ -2,6 +2,44 @@
 
 This guide explains in plain language how a request travels through Spiral OS. For a chakra‑oriented map of the codebase, see [spiritual_architecture.md](spiritual_architecture.md).
 
+## Canonical Diagram
+
+```mermaid
+graph TD
+    subgraph Core
+        Router
+        "Emotion Analyzer"
+        "Model Selector"
+        "Memory Logger"
+    end
+    subgraph Memory
+        "memory.cortex"
+        "memory.spiral_cortex"
+        "memory.emotional"
+    end
+    subgraph Labs
+        "labs.cortex_sigil"
+    end
+    Router --> "Emotion Analyzer" --> "Model Selector" --> "Memory Logger"
+    "Memory Logger" --> "memory.cortex"
+    "Memory Logger" --> "memory.spiral_cortex"
+    Router --> "labs.cortex_sigil"
+```
+
+### Service Contracts
+
+- `core.emotion_analyzer.EmotionAnalyzer` – classify mood of incoming text.
+- `core.model_selector.ModelSelector` – choose the appropriate language model.
+- `memory.cortex` – `record_spiral` / `query_spirals` for spiral decisions.
+- `memory.spiral_cortex` – `log_insight` / `load_insights` for retrieval traces.
+- `labs.cortex_sigil` – `interpret_sigils` to extract symbolic triggers.
+
+### Inter-module Dependencies
+
+- `recursive_emotion_router` persists results via `memory.cortex` and augments decisions with `labs.cortex_sigil`.
+- `crown_prompt_orchestrator` maps experiences with `memory.mental`, `memory.spiritual`, and `memory.sacred`.
+- `rag.retriever` records search context to `memory.spiral_cortex`.
+
 ### Request Flow
 
 ```mermaid

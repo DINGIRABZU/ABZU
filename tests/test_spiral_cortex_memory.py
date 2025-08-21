@@ -34,7 +34,7 @@ config.settings = build_settings()
 sys.modules.setdefault("config", config)
 
 from rag import retriever as rag_retriever
-import spiral_cortex_memory as scm
+from memory import spiral_cortex as scm
 import ritual_trainer
 import auto_retrain
 
@@ -66,7 +66,7 @@ class DummyCollection:
 def test_retrieval_logs_insight(tmp_path, monkeypatch):
     log_file = tmp_path / "mem.jsonl"
     monkeypatch.setattr(scm, "INSIGHT_FILE", log_file)
-    monkeypatch.setattr(rag_retriever, "spiral_cortex_memory", scm)
+    monkeypatch.setattr(rag_retriever, "spiral_cortex", scm)
     monkeypatch.setattr(rag_retriever.rag_embedder, "_get_model", lambda: DummyModel())
     monkeypatch.setattr(rag_retriever, "get_collection", lambda n: DummyCollection())
 

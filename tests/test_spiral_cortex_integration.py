@@ -15,7 +15,7 @@ np_mod.random = types.SimpleNamespace(rand=lambda *a, **k: 0)
 sys.modules.setdefault("numpy", np_mod)
 
 import recursive_emotion_router as rer
-import cortex_memory
+from memory import cortex as cortex_memory
 import archetype_feedback_loop as afl
 import archetype_shift_engine
 

@@ -10,7 +10,7 @@ import sqlite3
 from statistics import mean
 from typing import Iterable, List, Mapping, Sequence
 
-from memory_sacred import generate_sacred_glyph
+from memory.sacred import generate_sacred_glyph
 
 try:  # pragma: no cover - optional dependency
     import torch

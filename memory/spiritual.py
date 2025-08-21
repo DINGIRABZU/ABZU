@@ -18,7 +18,7 @@ from typing import Optional
 
 from aspect_processor import analyze_phonetic, analyze_ritual, analyze_semantic
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parents[1]
 DB_PATH = BASE_DIR / "data" / "ontology.db"
 SCHEMA_PATH = BASE_DIR / "data" / "ontology_schema.sql"
 

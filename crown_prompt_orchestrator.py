@@ -14,9 +14,9 @@ from pathlib import Path
 from state_transition_engine import StateTransitionEngine
 
 from core.memory_physical import PhysicalEvent, store_physical_event
-from memory_mental import record_task_flow
-from memory_spiritual import map_to_symbol
-from memory_sacred import generate_sacred_glyph
+from memory.mental import record_task_flow
+from memory.spiritual import map_to_symbol
+from memory.sacred import generate_sacred_glyph
 from spiral_memory import REGISTRY_DB, spiral_recall
 
 from INANNA_AI import emotion_analysis, emotional_memory

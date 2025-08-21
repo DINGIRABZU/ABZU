@@ -475,7 +475,7 @@ reflects the latest feedback.
 
 Spiral cycles processed by `recursive_emotion_router.route` are also logged to
 `data/cortex_memory_spiral.jsonl`. Each line captures the serialized node state
-and the decision returned from the cycle. Use `cortex_memory.query_spirals()` to
+and the decision returned from the cycle. Use `memory.cortex.query_spirals()` to
 inspect these records.
 
 The collection of spiral entries forms the **Spiral Code Cortex**. Operators can
@@ -486,7 +486,7 @@ system should shift personality layers.
 
 ### Ontology Database
 
-`memory_spiritual.py` maintains an event-to-symbol mapping in `data/ontology.db`.
+`memory/spiritual.py` maintains an event-to-symbol mapping in `data/ontology.db`.
 The database is generated automatically from `data/ontology_schema.sql` when the
 module loads, so database files no longer need to be checked into version
 control.

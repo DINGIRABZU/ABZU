@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Iterable, List
 
 import auto_retrain
-import spiral_cortex_memory
+from memory import spiral_cortex
 
 STATE_FILE = Path("data/ritual_trainer_state.json")
 THRESHOLD = 10
@@ -41,7 +41,7 @@ def build_dataset(entries: Iterable[dict[str, Any]]) -> List[dict[str, Any]]:
 
 
 def run_training(run: bool) -> None:
-    entries = spiral_cortex_memory.load_insights()
+    entries = spiral_cortex.load_insights()
     processed = _load_state()
     new_entries = entries[processed:]
     if len(new_entries) >= THRESHOLD and auto_retrain.system_idle():
