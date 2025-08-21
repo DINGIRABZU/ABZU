@@ -19,6 +19,19 @@ fi
 : "${GLM_API_URL?GLM_API_URL not set}"
 : "${GLM_API_KEY?GLM_API_KEY not set}"
 
+if ! command -v jq >/dev/null 2>&1; then
+    echo "jq is required but not installed. Please install jq." >&2
+    exit 1
+fi
+
+parse_port() {
+    local url=$1
+    local port="${url##*:}"
+    echo "${port%%/*}"
+}
+
+MODEL_PORT=$(parse_port "$GLM_API_URL")
+
 MODEL_DIR="INANNA_AI/models/GLM-4.1V-9B"
 mkdir -p "$MODEL_DIR"
 
@@ -27,8 +40,11 @@ WEIGHT_FILE=$(find "$MODEL_DIR" -type f \( -name '*.bin' -o -name '*.safetensors
 
 if [ -z "$WEIGHT_FILE" ]; then
     echo "GLM weights not found. Fetching metadata…" >&2
-    META=$(curl -sL -H "Authorization: Bearer $HF_TOKEN" \
-        https://huggingface.co/api/models/THUDM/glm-4.1v-9b)
+    if ! META=$(curl -fsSL -H "Authorization: Bearer $HF_TOKEN" \
+        https://huggingface.co/api/models/THUDM/glm-4.1v-9b); then
+        echo "Failed to fetch model metadata" >&2
+        exit 1
+    fi
     FILE=$(echo "$META" | jq -r '.siblings[] | select(.rfilename|test("safetensors$|bin$")) | .rfilename' | head -n1)
     SHA256=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.sha256")
     SIZE=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.size")
@@ -42,8 +58,11 @@ if [ -z "$WEIGHT_FILE" ]; then
     WEIGHT_FILE="$MODEL_DIR/$FILE"
 else
     FILE="$(basename "$WEIGHT_FILE")"
-    META=$(curl -sL -H "Authorization: Bearer $HF_TOKEN" \
-        https://huggingface.co/api/models/THUDM/glm-4.1v-9b)
+    if ! META=$(curl -fsSL -H "Authorization: Bearer $HF_TOKEN" \
+        https://huggingface.co/api/models/THUDM/glm-4.1v-9b); then
+        echo "Failed to fetch model metadata" >&2
+        exit 1
+    fi
     SHA256=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.sha256")
     SIZE=$(echo "$META" | jq -r ".siblings[] | select(.rfilename==\"$FILE\") | .lfs.size")
 fi
@@ -62,22 +81,22 @@ fi
 
 # Start the model server
 if command -v docker >/dev/null 2>&1; then
-    docker run -d --rm -v "$MODEL_DIR":/model -p 8001:8000 \
+    docker run -d --rm -v "$MODEL_DIR":/model -p "${MODEL_PORT}:8000" \
         -e GLM_API_URL="$GLM_API_URL" -e GLM_API_KEY="$GLM_API_KEY" \
         --name glm_service glm-service:latest
 else
-    python -m vllm.entrypoints.openai.api_server --model "$MODEL_DIR" --port 8001 &
+    python -m vllm.entrypoints.openai.api_server --model "$MODEL_DIR" --port "$MODEL_PORT" &
 fi
 
 # Wait for health endpoint
 for i in {1..30}; do
-    if curl -sf http://localhost:8001/health >/dev/null; then
+    if curl -sf "http://localhost:${MODEL_PORT}/health" >/dev/null; then
         break
     fi
     sleep 1
 done
 
-curl -sf http://localhost:8001/health >/dev/null || {
+curl -sf "http://localhost:${MODEL_PORT}/health" >/dev/null || {
     echo "Model server failed health check" >&2
     exit 1
 }
