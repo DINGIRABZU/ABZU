@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from . import (github_metadata, github_scraper, project_gutenberg,
-               training_guide)
+from . import github_metadata, github_scraper, project_gutenberg, training_guide
 
 __all__ = [
     "project_gutenberg",

@@ -60,7 +60,6 @@ sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
 from crown_config import settings
 
 settings.glm_command_token = "token"
-import importlib
 
 
 def _load_server():

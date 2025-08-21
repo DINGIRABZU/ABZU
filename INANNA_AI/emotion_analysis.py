@@ -168,8 +168,6 @@ def analyze_audio_emotion(
     arousal = max(0.0, min(1.0, (loudness + 60.0) / 60.0))
     valence = max(0.0, min(1.0, (hnr + 20.0) / 40.0))
 
-    energy = float(np.mean(np.abs(wave)))
-
     emotion = _rule_based_classify(pitch, tempo, arousal, valence)
 
     probs: Dict[str, float] | None = None

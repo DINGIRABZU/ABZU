@@ -4,7 +4,6 @@
 forwarded to the HTTP payload.
 """
 
-from ...glm_integration import (DEFAULT_ENDPOINT, SAFE_ERROR_MESSAGE,
-                                GLMIntegration)
+from ...glm_integration import DEFAULT_ENDPOINT, SAFE_ERROR_MESSAGE, GLMIntegration
 
 __all__ = ["GLMIntegration", "DEFAULT_ENDPOINT", "SAFE_ERROR_MESSAGE"]

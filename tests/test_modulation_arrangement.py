@@ -7,9 +7,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import modulation_arrangement as ma
-
 import env_validation
+import modulation_arrangement as ma
 
 pytestmark = pytest.mark.skipif(
     not env_validation.check_audio_binaries(require=False),
@@ -81,7 +80,7 @@ def test_layer_stems(monkeypatch):
 def test_slice_and_fade(monkeypatch):
     seg = DummySeg()
     events.clear()
-    out = ma.slice_loop(seg, 0.5, 1.0)
+    ma.slice_loop(seg, 0.5, 1.0)
     assert seg.slice == slice(500, 1500)
     monkeypatch.setattr(ma, "AudioSegment", types.SimpleNamespace())
     faded = ma.apply_fades(seg, 100, 200)

@@ -8,8 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from INANNA_AI import defensive_network_utils as dnu
-from INANNA_AI.defensive_network_utils import (monitor_traffic,
-                                               secure_communication)
+from INANNA_AI.defensive_network_utils import monitor_traffic, secure_communication
 
 
 def test_monitor_traffic(tmp_path, monkeypatch):

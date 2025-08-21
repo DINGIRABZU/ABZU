@@ -9,12 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
-from aspect_processor import (
-    analyze_phonetic,
-    analyze_semantic,
-    analyze_spatial,
-)
-
+from aspect_processor import analyze_phonetic, analyze_semantic, analyze_spatial
 from core.utils.optional_deps import lazy_import
 
 cv2 = lazy_import("cv2")

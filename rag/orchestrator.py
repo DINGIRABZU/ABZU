@@ -64,8 +64,7 @@ import training_guide
 from core.emotion_analyzer import EmotionAnalyzer
 from core.memory_logger import MemoryLogger
 from core.model_selector import ModelSelector
-from corpus_memory_logging import (load_interactions, log_interaction,
-                                   log_ritual_result)
+from corpus_memory_logging import load_interactions, log_interaction, log_ritual_result
 from crown_config import settings
 from INANNA_AI import listening_engine
 from insight_compiler import load_insights, update_insights

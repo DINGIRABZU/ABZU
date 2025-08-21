@@ -10,8 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (InannaMusicInterpreter,
-                                                       export_qnl)
+from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import InannaMusicInterpreter, export_qnl
 from MUSIC_FOUNDATION.qnl_utils import generate_qnl_structure
 
 CONFIG_PATH = Path(__file__).resolve().parent / "voice_config.yaml"

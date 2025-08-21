@@ -5,8 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI.network_utils import (analyze_capture, capture_packets,
-                                     load_config)
+from INANNA_AI.network_utils import analyze_capture, capture_packets, load_config
 
 
 def _dummy_packet(proto: str, src: str | None = None):

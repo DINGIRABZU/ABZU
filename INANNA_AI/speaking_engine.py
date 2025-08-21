@@ -24,11 +24,7 @@ from .utils import load_audio, save_wav, sentiment_score
 from .voice_evolution import get_voice_params, update_voice_from_history
 
 gtts_mod = lazy_import("gtts")
-gTTS = (
-    None
-    if getattr(gtts_mod, "__stub__", False)
-    else getattr(gtts_mod, "gTTS", None)
-)
+gTTS = None if getattr(gtts_mod, "__stub__", False) else getattr(gtts_mod, "gTTS", None)
 
 openvoice = lazy_import("openvoice")
 if getattr(openvoice, "__stub__", False):  # pragma: no cover - optional dependency

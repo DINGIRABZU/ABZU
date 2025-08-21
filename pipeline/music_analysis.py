@@ -12,8 +12,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     np = None  # type: ignore
 
-from audio.audio_ingestion import (extract_key, extract_mfcc, extract_tempo,
-                                   load_audio)
+from audio.audio_ingestion import extract_key, extract_mfcc, extract_tempo, load_audio
 from INANNA_AI.emotion_analysis import analyze_audio_emotion
 
 

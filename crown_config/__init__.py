@@ -119,9 +119,7 @@ class Settings(BaseSettings):
     voice_avatar_config_path: Path | None = Field(
         None, validation_alias=AliasChoices("VOICE_AVATAR_CONFIG_PATH")
     )
-    rvc_preset: str | None = Field(
-        None, validation_alias=AliasChoices("RVC_PRESET")
-    )
+    rvc_preset: str | None = Field(None, validation_alias=AliasChoices("RVC_PRESET"))
     voicefix: bool = Field(False, validation_alias=AliasChoices("VOICEFIX"))
     glm_shell_url: AnyHttpUrl | None = Field(
         None, validation_alias=AliasChoices("GLM_SHELL_URL")
@@ -141,9 +139,7 @@ class Settings(BaseSettings):
     llm_rotation_period: int = Field(
         300, validation_alias=AliasChoices("LLM_ROTATION_PERIOD")
     )
-    llm_max_failures: int = Field(
-        3, validation_alias=AliasChoices("LLM_MAX_FAILURES")
-    )
+    llm_max_failures: int = Field(3, validation_alias=AliasChoices("LLM_MAX_FAILURES"))
     feedback_novelty_threshold: float = Field(
         0.3, validation_alias=AliasChoices("FEEDBACK_NOVELTY_THRESHOLD")
     )
@@ -157,9 +153,7 @@ class Settings(BaseSettings):
     neo4j_uri: str = Field(
         "bolt://localhost:7687", validation_alias=AliasChoices("NEO4J_URI")
     )
-    neo4j_user: str = Field(
-        "neo4j", validation_alias=AliasChoices("NEO4J_USER")
-    )
+    neo4j_user: str = Field("neo4j", validation_alias=AliasChoices("NEO4J_USER"))
     neo4j_password: str = Field(
         "password", validation_alias=AliasChoices("NEO4J_PASSWORD")
     )

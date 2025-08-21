@@ -19,9 +19,11 @@ except Exception:  # pragma: no cover - optional dependency
 from core import expressive_output
 from INANNA_AI import emotion_analysis, sonic_emotion_mapper
 from MUSIC_FOUNDATION import layer_generators
-from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (SCALE_MELODIES,
-                                                       load_emotion_music_map,
-                                                       select_music_params)
+from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (
+    SCALE_MELODIES,
+    load_emotion_music_map,
+    select_music_params,
+)
 from MUSIC_FOUNDATION.synthetic_stego_engine import encode_phrase
 
 EMOTION_MAP = Path(__file__).resolve().parent / "emotion_music_map.yaml"
@@ -149,7 +151,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--output", default="ritual.wav", help="Output WAV path")
     args = parser.parse_args(argv)
 
-    out = compose_ritual_music(
+    compose_ritual_music(
         args.emotion, args.ritual, hide=args.stego, out_path=Path(args.output)
     )
     # Playback handled inside compose_ritual_music
