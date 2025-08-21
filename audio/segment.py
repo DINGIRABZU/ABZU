@@ -18,24 +18,29 @@ from pathlib import Path
 
 import numpy as np
 
+from core.utils.optional_deps import lazy_import
+
 logger = logging.getLogger(__name__)
+
+
+def has_ffmpeg() -> bool:
+    """Return ``True`` if the ``ffmpeg`` binary is available."""
+
+    return shutil.which("ffmpeg") is not None
+
 
 _backend = os.environ.get("AUDIO_BACKEND", "numpy").lower()
 if _backend != "numpy":
-    try:  # pragma: no cover - optional dependency
-        from pydub import AudioSegment as _PydubSegment  # type: ignore
-        if shutil.which("ffmpeg") is None:  # pragma: no cover - optional dependency
-            logger.warning("ffmpeg not found; falling back to NumPy audio backend")
-            _PydubSegment = None  # type: ignore
-    except Exception:  # pragma: no cover - optional dependency
-        logger.warning("pydub unavailable; using NumPy audio backend")
+    pydub = lazy_import("pydub")
+    _PydubSegment = getattr(pydub, "AudioSegment", None)
+    if getattr(pydub, "__stub__", False) or not has_ffmpeg():
+        logger.warning("pydub or ffmpeg unavailable; using NumPy audio backend")
         _PydubSegment = None  # type: ignore
 else:  # pragma: no cover - respect backend choice
     _PydubSegment = None  # type: ignore
 
-try:  # pragma: no cover - optional dependency
-    import soundfile as sf  # type: ignore
-except Exception:  # pragma: no cover - optional dependency
+sf = lazy_import("soundfile")
+if getattr(sf, "__stub__", False):
     sf = None  # type: ignore
 
 
@@ -128,4 +133,4 @@ if _use_pydub:
 else:
     AudioSegment = NpAudioSegment
 
-__all__ = ["AudioSegment", "NpAudioSegment"]
+__all__ = ["AudioSegment", "NpAudioSegment", "has_ffmpeg"]

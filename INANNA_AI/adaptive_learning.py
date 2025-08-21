@@ -4,96 +4,16 @@ from __future__ import annotations
 
 import json
 import os
-import random as _random
-import types
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
 
-try:  # pragma: no cover - import side effects
-    import numpy as np
-except Exception:  # pragma: no cover - allow stubbing in tests
+from core.utils.optional_deps import lazy_import
 
-    def _zeros(shape, dtype=float):
-        size = shape[0] if isinstance(shape, tuple) else int(shape)
-        return [dtype(0)] * size
-
-    def _clip(x, a, b):
-        if isinstance(x, (list, tuple)):
-            return [max(a, min(b, v)) for v in x]
-        return max(a, min(b, x))
-
-    def _rand(size: int | None = None):
-        if size is None:
-            return _random.random()
-        return [_random.random() for _ in range(size)]
-
-    def _randint(low: int, high: int | None = None, size: int | None = None):
-        if high is None:
-            high = low
-            low = 0
-
-        def _one():
-            return _random.randint(low, high - 1)
-
-        if size is None:
-            return _one()
-        return [_one() for _ in range(size)]
-
-    def _permutation(x):
-        arr = list(range(x)) if isinstance(x, int) else list(x)
-        _random.shuffle(arr)
-        return arr
-
-    def _seed(seed: int | None = None):
-        _random.seed(seed)
-
-    _rng = types.SimpleNamespace(
-        rand=_rand,
-        random=_rand,
-        randint=_randint,
-        permutation=_permutation,
-        seed=_seed,
-    )
-
-    np = types.SimpleNamespace(
-        float32=float,
-        zeros=_zeros,
-        clip=_clip,
-        random=_rng,
-    )  # type: ignore
-
-try:  # pragma: no cover - import side effects
-    from stable_baselines3 import PPO as _PPO
-
-    if isinstance(np, types.SimpleNamespace):
-        raise ImportError("NumPy stub in use")
-    PPO = _PPO
-except ImportError:  # pragma: no cover - allow stubbing in tests
-
-    class PPO:  # type: ignore
-        def __init__(self, *a, **k):
-            pass
-
-        def learn(self, *a, **k):
-            pass
-
-
-try:  # pragma: no cover - import side effects
-    import gymnasium as gym
-except ImportError:  # pragma: no cover - allow stubbing in tests
-
-    class _Box:
-        def __init__(self, *a, **k):
-            pass
-
-    class _Env:
-        pass
-
-    class _Spaces(types.SimpleNamespace):
-        Box = _Box
-
-    gym = types.SimpleNamespace(Env=_Env, spaces=_Spaces())  # type: ignore
+np = lazy_import("numpy")
+sb3 = lazy_import("stable_baselines3")
+gym = lazy_import("gymnasium")
+PPO = getattr(sb3, "PPO", None)
 
 CONFIG_ENV_VAR = "MIRROR_THRESHOLDS_PATH"
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "mirror_thresholds.json"

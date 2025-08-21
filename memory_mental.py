@@ -8,11 +8,15 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List
 
-try:  # pragma: no cover - optional dependency
-    from neo4j import Driver, GraphDatabase
-except Exception:  # pragma: no cover - optional dependency
+from core.utils.optional_deps import lazy_import
+
+neo4j = lazy_import("neo4j")
+if getattr(neo4j, "__stub__", False):
     GraphDatabase = None  # type: ignore
     Driver = object  # type: ignore
+else:  # pragma: no cover - imported dependency
+    GraphDatabase = neo4j.GraphDatabase
+    Driver = neo4j.Driver  # type: ignore[attr-defined]
 
 from crown_config import settings
 from aspect_processor import (
@@ -22,13 +26,15 @@ from aspect_processor import (
     analyze_temporal,
 )
 
-try:  # pragma: no cover - optional dependencies
-    import numpy as np
-    import gymnasium as gym
-    from stable_baselines3 import DQN
-except Exception:  # pragma: no cover - optional dependencies
+np = lazy_import("numpy")
+gym = lazy_import("gymnasium")
+sb3 = lazy_import("stable_baselines3")
+DQN = getattr(sb3, "DQN", None)
+if getattr(np, "__stub__", False):
     np = None  # type: ignore
+if getattr(gym, "__stub__", False):
     gym = None  # type: ignore
+if getattr(sb3, "__stub__", False):
     DQN = None  # type: ignore
 
 

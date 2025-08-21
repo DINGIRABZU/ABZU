@@ -4,7 +4,7 @@ The Sonic Core layers audio synthesis and expression modules on top of Spiral OS
 
 ## Modules
 
-- `audio_engine.py` – plays WAV files and loops samples via an `AudioSegment` abstraction. By default it uses a lightweight NumPy backend. Set `AUDIO_BACKEND=pydub` when `pydub` and its `audioop` dependency are installed to enable the full backend. `play_sound(path, loop=False, loops=None)` repeats the sample `loops` times or indefinitely when `loop=True`.
+- `audio_engine.py` – plays WAV files and loops samples via an `AudioSegment` abstraction. By default it uses a lightweight NumPy backend. Set `AUDIO_BACKEND=pydub` when `pydub` and the `ffmpeg` binary are installed to enable the full backend. `play_sound(path, loop=False, loops=None)` repeats the sample `loops` times or indefinitely when `loop=True`.
 - `MUSIC_FOUNDATION/inanna_music_COMPOSER_ai.py` – converts music into QNL structures and exports preview audio.
 - `MUSIC_FOUNDATION/seven_plane_analyzer.py` – maps musical features to seven metaphysical planes.
 - `core/avatar_expression_engine.py` – streams avatar frames in time with audio playback.
@@ -17,7 +17,7 @@ The Sonic Core layers audio synthesis and expression modules on top of Spiral OS
 - `librosa` for audio analysis
 - `soundfile` for WAV I/O
 - `opensmile` and `EmotiVoice` for emotion detection
-- Optional: `pydub` with the standard library `audioop` module for the full `AudioSegment` backend. Set `AUDIO_BACKEND=pydub` to enable it when both are available.
+- Optional: `pydub` and the `ffmpeg` binary for the full `AudioSegment` backend. Set `AUDIO_BACKEND=pydub` when both are available.
 
 ## From QNL Phrase to Sound
 
