@@ -22,7 +22,6 @@ The test suite currently fails early:
 
 - `tests/test_adaptive_learning.py::test_validator_feedback_updates_threshold` raises `AttributeError: 'types.SimpleNamespace' object has no attribute 'permutation'`.
 - Warnings include:
-  - Deprecation warning: `audioop` is deprecated and slated for removal in Python 3.13.
   - Runtime warning: `pydub` could not find `ffmpeg` or `avconv` binaries.
   - PyTorch warning about nested tensor configuration.
 
@@ -34,7 +33,14 @@ These indicate gaps in the optional dependency stubs and missing system binaries
 - Pydantic models still use deprecated `Field` extras and require migration to aliases.
 - FastAPI `@app.on_event` hooks should move to the `lifespan` API.
 - Audio features depend on `pydub` and `ffmpeg`; availability checks and a NumPy fallback are recommended.
-- Upcoming Python releases will remove `audioop`; the audio pipeline must migrate away from this module.
+
+## Deprecation Roadmap
+
+- **Pydantic field aliases** – migrate remaining models away from deprecated
+  `Field` parameters and switch to explicit `alias` and
+  `populate_by_name` configuration.
+- **FastAPI lifespan** – replace `@app.on_event` startup and shutdown hooks
+  with the `lifespan` context manager before the old API is removed.
 
 ## Getting Started
 
