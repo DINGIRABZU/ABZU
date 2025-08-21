@@ -3,6 +3,7 @@ __pycache__/
 oracle_output/
 
 OPENAI_API_KEY.env
+secrets.env
 INANNA_AI/models/
 logs/
 
