@@ -1,6 +1,6 @@
-from pathlib import Path
 import sys
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -11,8 +11,8 @@ bs4_mod = types.ModuleType("bs4")
 bs4_mod.BeautifulSoup = lambda *a, **k: None
 sys.modules.setdefault("bs4", bs4_mod)
 
-from INANNA_AI.learning import training_guide as tg
 from INANNA_AI.learning import github_metadata as gm
+from INANNA_AI.learning import training_guide as tg
 
 SAMPLE_GUIDE = """## 𒀭 ME – NAMMU
 - https://github.com/HuangOwen/Awesome-LLM-Compression
@@ -46,11 +46,13 @@ EXPECTED_MAPPING = {
     ],
 }
 
+
 def test_parse_training_guide_sample(tmp_path):
     guide = tmp_path / "guide.md"
     guide.write_text(SAMPLE_GUIDE, encoding="utf-8")
     mapping = tg.parse_training_guide(guide)
     assert mapping == EXPECTED_MAPPING
+
 
 def test_write_repo_list_dedupe(tmp_path):
     guide = tmp_path / "guide.md"
@@ -67,11 +69,16 @@ def test_write_repo_list_dedupe(tmp_path):
         "ashishb/android-security-awesome",
     ]
 
+
 def test_build_metadata_offline(tmp_path, monkeypatch):
     guide = tmp_path / "guide.md"
     guide.write_text(SAMPLE_GUIDE, encoding="utf-8")
     mapping = tg.parse_training_guide(guide)
-    monkeypatch.setattr(gm, "fetch_repo_metadata", lambda repo: {"stars": 1, "updated": repo})
+    monkeypatch.setattr(
+        gm, "fetch_repo_metadata", lambda repo: {"stars": 1, "updated": repo}
+    )
     meta = gm.build_metadata(mapping)
-    assert meta["𒀭 ME – NAMMU"]["HuangOwen/Awesome-LLM-Compression"] == {"stars": 1, "updated": "HuangOwen/Awesome-LLM-Compression"}
-
+    assert meta["𒀭 ME – NAMMU"]["HuangOwen/Awesome-LLM-Compression"] == {
+        "stars": 1,
+        "updated": "HuangOwen/Awesome-LLM-Compression",
+    }

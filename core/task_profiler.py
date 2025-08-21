@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Task profiling helpers."""
 
-from pathlib import Path
 import json
-from typing import Dict, List, Any
+from pathlib import Path
+from typing import Any, Dict, List
 
 INSTRUCTION_KEYWORDS = {
     "how to",
@@ -46,12 +46,16 @@ _RITUAL_FILE = Path(__file__).resolve().parents[1] / "ritual_profile.json"
 class TaskProfiler:
     """Classify text inputs and map ritual action sequences."""
 
-    def __init__(self, *, ritual_profile: Dict[str, Dict[str, List[str]]] | None = None) -> None:
+    def __init__(
+        self, *, ritual_profile: Dict[str, Dict[str, List[str]]] | None = None
+    ) -> None:
         if ritual_profile is not None:
             self._ritual_profile = ritual_profile
         else:
             try:
-                self._ritual_profile = json.loads(_RITUAL_FILE.read_text(encoding="utf-8"))
+                self._ritual_profile = json.loads(
+                    _RITUAL_FILE.read_text(encoding="utf-8")
+                )
             except Exception:  # pragma: no cover - missing file
                 self._ritual_profile = {}
 

@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -50,12 +50,14 @@ sp_pkg.symbolic_parser = types.SimpleNamespace(
 sys.modules.setdefault("SPIRAL_OS", sp_pkg)
 sys.modules["SPIRAL_OS.qnl_engine"] = sp_pkg.qnl_engine
 sys.modules["SPIRAL_OS.symbolic_parser"] = sp_pkg.symbolic_parser
-sys.modules.setdefault("training_guide", types.SimpleNamespace(log_result=lambda *a, **k: None))
+sys.modules.setdefault(
+    "training_guide", types.SimpleNamespace(log_result=lambda *a, **k: None)
+)
 
+import core.model_selector as ms_mod
+import crown_decider
 from rag import orchestrator
 from rag.orchestrator import MoGEOrchestrator
-import crown_decider
-import core.model_selector as ms_mod
 
 # Disable invocation engine side effects for tests
 orchestrator.invocation_engine.invoke = lambda *a, **k: []
@@ -72,7 +74,9 @@ def test_route_text_only(tmp_path, monkeypatch):
         "INANNA_AI.corpus_memory.search_corpus",
         lambda *a, **k: [("p", "snippet")],
     )
-    result = orch.route("hello", info, text_modality=True, voice_modality=False, music_modality=False)
+    result = orch.route(
+        "hello", info, text_modality=True, voice_modality=False, music_modality=False
+    )
     assert result["plane"] == "ascension"
     assert "text" in result and result["text"]
     assert result["model"]
@@ -80,11 +84,20 @@ def test_route_text_only(tmp_path, monkeypatch):
 
 def test_route_voice(tmp_path, monkeypatch):
     monkeypatch.setattr(
-        crown_decider, "decide_expression_options", lambda e: {"tts_backend": "gtts", "avatar_style": "a", "aura_amount": 0.5, "soul_state": ""}
+        crown_decider,
+        "decide_expression_options",
+        lambda e: {
+            "tts_backend": "gtts",
+            "avatar_style": "a",
+            "aura_amount": 0.5,
+            "soul_state": "",
+        },
     )
     orch = MoGEOrchestrator()
     info = {"emotion": "calm"}
-    result = orch.route("hi", info, text_modality=False, voice_modality=True, music_modality=False)
+    result = orch.route(
+        "hi", info, text_modality=False, voice_modality=True, music_modality=False
+    )
     assert result["plane"] == "ascension"
     assert Path(result["voice_path"]).exists()
 
@@ -92,7 +105,9 @@ def test_route_voice(tmp_path, monkeypatch):
 def test_route_music(tmp_path):
     orch = MoGEOrchestrator()
     info = {"emotion": "joy"}
-    result = orch.route("hi", info, text_modality=False, voice_modality=False, music_modality=True)
+    result = orch.route(
+        "hi", info, text_modality=False, voice_modality=False, music_modality=True
+    )
     assert Path(result["music_path"]).exists()
     assert result["qnl_phrases"]
 
@@ -119,7 +134,12 @@ def test_route_qnl_voice(monkeypatch):
     monkeypatch.setattr(
         crown_decider,
         "decide_expression_options",
-        lambda e: {"tts_backend": "gtts", "avatar_style": "a", "aura_amount": 0.5, "soul_state": ""},
+        lambda e: {
+            "tts_backend": "gtts",
+            "avatar_style": "a",
+            "aura_amount": 0.5,
+            "soul_state": "",
+        },
     )
     result = orch.route(
         "hi",
@@ -146,9 +166,12 @@ def test_route_with_albedo_layer(monkeypatch):
     layer = DummyLayer()
     orch = MoGEOrchestrator(albedo_layer=layer)
     info = {"emotion": "joy"}
-    result = orch.route("hello", info, text_modality=True, voice_modality=False, music_modality=False)
+    result = orch.route(
+        "hello", info, text_modality=True, voice_modality=False, music_modality=False
+    )
     assert result["text"] == "albedo:hello"
     assert layer.calls == ["hello"]
+
 
 def test_context_model_selection(monkeypatch):
     orch = MoGEOrchestrator()
@@ -179,7 +202,9 @@ def test_handle_input_parses_and_routes(monkeypatch):
     monkeypatch.setattr(orchestrator.qnl_engine, "parse_input", fake_parse)
     monkeypatch.setattr(orchestrator.symbolic_parser, "parse_intent", fake_intent)
     monkeypatch.setattr(MoGEOrchestrator, "route", fake_route)
-    monkeypatch.setattr(orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
 
     orch = MoGEOrchestrator()
     out = orch.handle_input("hello")

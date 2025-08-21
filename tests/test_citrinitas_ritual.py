@@ -1,6 +1,7 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
+
 import pytest
 
 np = pytest.importorskip("numpy")
@@ -13,8 +14,8 @@ sys.modules.setdefault("vector_memory", dummy_vm)
 sys.modules.setdefault("SPIRAL_OS", types.ModuleType("SPIRAL_OS"))
 
 reflection_loop = pytest.importorskip("tools.reflection_loop")
-from core import video_engine
 import corpus_memory_logging
+from core import video_engine
 
 
 def test_citrinitas_ritual_invoked(monkeypatch):
@@ -23,7 +24,9 @@ def test_citrinitas_ritual_invoked(monkeypatch):
     monkeypatch.setattr(reflection_loop, "detect_expression", lambda f: "citrinitas")
     monkeypatch.setattr(reflection_loop, "load_thresholds", lambda: {"citrinitas": 2})
     monkeypatch.setattr(reflection_loop, "cv2", None)
-    monkeypatch.setattr(reflection_loop.adaptive_learning, "update_mirror_thresholds", lambda r: None)
+    monkeypatch.setattr(
+        reflection_loop.adaptive_learning, "update_mirror_thresholds", lambda r: None
+    )
 
     called = {}
 

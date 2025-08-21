@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -14,8 +14,8 @@ vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 
 try:  # pragma: no cover - optional dependency
-    from unstructured.partition.text import partition_text
     from unstructured.partition.epub import partition_epub
+    from unstructured.partition.text import partition_text
 except Exception:  # pragma: no cover - optional dependency
     partition_text = None  # type: ignore
     partition_epub = None  # type: ignore
@@ -96,4 +96,3 @@ def main(argv: List[str] | None = None) -> None:
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry
     main()
-

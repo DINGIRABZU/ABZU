@@ -13,13 +13,13 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.patch_stdout import patch_stdout
 
-from init_crown_agent import initialize_crown
-from INANNA_AI.glm_integration import GLMIntegration
-from rag.orchestrator import MoGEOrchestrator
-from core import context_tracker, avatar_expression_engine
-from INANNA_AI import speaking_engine
-from tools import session_logger
 import emotional_state
+from core import avatar_expression_engine, context_tracker
+from INANNA_AI import speaking_engine
+from INANNA_AI.glm_integration import GLMIntegration
+from init_crown_agent import initialize_crown
+from rag.orchestrator import MoGEOrchestrator
+from tools import session_logger
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
@@ -130,7 +130,9 @@ def run_repl(argv: list[str] | None = None) -> None:
                     speaking_engine.play_wav(voice_path)
                     frames = []
                     if context_tracker.state.avatar_loaded:
-                        for frame in avatar_expression_engine.stream_avatar_audio(Path(voice_path)):
+                        for frame in avatar_expression_engine.stream_avatar_audio(
+                            Path(voice_path)
+                        ):
                             frames.append(frame)
                     if frames:
                         session_logger.log_video(frames)

@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -14,9 +14,9 @@ yaml_mod = types.ModuleType("yaml")
 yaml_mod.safe_load = lambda *a, **k: {}
 sys.modules.setdefault("yaml", yaml_mod)
 
+from core import context_tracker, language_engine
 from rag import orchestrator
 from rag.orchestrator import MoGEOrchestrator
-from core import context_tracker, language_engine
 
 
 class DummyConnector:
@@ -44,10 +44,16 @@ def test_avatar_and_call_sequence(monkeypatch):
     monkeypatch.setattr(orchestrator, "load_interactions", lambda: [])
     monkeypatch.setattr(orchestrator, "update_insights", lambda logs: None)
     monkeypatch.setattr(orchestrator, "load_insights", lambda: {})
-    monkeypatch.setattr(orchestrator.learning_mutator, "propose_mutations", lambda d: [])
-    monkeypatch.setattr(orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"})
+    monkeypatch.setattr(
+        orchestrator.learning_mutator, "propose_mutations", lambda d: []
+    )
+    monkeypatch.setattr(
+        orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"}
+    )
     monkeypatch.setattr(orchestrator.symbolic_parser, "parse_intent", lambda d: [])
-    monkeypatch.setattr(orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
 
     orch = MoGEOrchestrator()
 

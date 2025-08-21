@@ -1,11 +1,13 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI import speaking_engine, utils as ai_utils
+from INANNA_AI import speaking_engine
+from INANNA_AI import utils as ai_utils
 
 
 def test_stream_latency(tmp_path, monkeypatch):
@@ -14,7 +16,9 @@ def test_stream_latency(tmp_path, monkeypatch):
     ai_utils.save_wav(wave, str(out), sr=44100)
 
     monkeypatch.setattr(speaking_engine, "synthesize_speech", lambda *a, **k: str(out))
-    monkeypatch.setattr(speaking_engine, "load_audio", lambda p, sr=None, mono=True: (wave, 44100))
+    monkeypatch.setattr(
+        speaking_engine, "load_audio", lambda p, sr=None, mono=True: (wave, 44100)
+    )
     monkeypatch.setattr(speaking_engine, "convert_voice", lambda w, sr, timbre: w)
 
     engine = speaking_engine.SpeakingEngine()

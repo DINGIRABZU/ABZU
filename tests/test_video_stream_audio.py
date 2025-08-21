@@ -1,4 +1,5 @@
 import asyncio
+import shutil
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -6,7 +7,6 @@ from types import ModuleType
 import httpx
 import numpy as np
 import pytest
-import shutil
 from aiortc import RTCSessionDescription
 from aiortc.mediastreams import AUDIO_PTIME
 from fastapi.testclient import TestClient

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Telegram bot forwarding chat messages to the `/glm-command` endpoint."""
 
-from pathlib import Path
+import logging
 import os
 import time
-import logging
+from pathlib import Path
 from typing import Any
 
 import requests

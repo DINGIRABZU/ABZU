@@ -1,7 +1,7 @@
-from pathlib import Path
+import importlib
 import sys
 import types
-import importlib
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -18,9 +18,7 @@ def test_voice_cli_invokes_engines(tmp_path, monkeypatch):
             return str(audio)
 
     pkg = types.ModuleType("INANNA_AI")
-    pkg.speaking_engine = types.SimpleNamespace(
-        SpeakingEngine=lambda: DummySpeaker()
-    )
+    pkg.speaking_engine = types.SimpleNamespace(SpeakingEngine=lambda: DummySpeaker())
     monkeypatch.setitem(sys.modules, "INANNA_AI", pkg)
     monkeypatch.setitem(sys.modules, "INANNA_AI.speaking_engine", pkg.speaking_engine)
 

@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
@@ -13,9 +13,9 @@ sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from crown_prompt_orchestrator import crown_prompt_orchestrator
-import servant_model_manager as smm
 import crown_decider
+import servant_model_manager as smm
+from crown_prompt_orchestrator import crown_prompt_orchestrator
 
 
 class DummyGLM:
@@ -43,9 +43,7 @@ def test_basic_flow(monkeypatch):
 def test_servant_invocation(monkeypatch):
     glm = DummyGLM()
     smm.register_model("deepseek", lambda p: f"ds:{p}")
-    monkeypatch.setattr(
-        crown_decider, "recommend_llm", lambda t, e: "deepseek"
-    )
+    monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
     result = crown_prompt_orchestrator("how do things work?", glm)
     assert result["text"] == "ds:how do things work?"
     assert result["model"] == "deepseek"
@@ -84,4 +82,3 @@ def test_technical_prefers_kimi(monkeypatch):
     result = crown_prompt_orchestrator("import os", glm)
     assert result["text"] == "k2:import os"
     assert result["model"] == "kimi_k2"
-

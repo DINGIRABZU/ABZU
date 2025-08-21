@@ -2,12 +2,13 @@ from __future__ import annotations
 
 """Load Crown agent configuration and expose model endpoints."""
 
-from pathlib import Path
-import os
 import logging
+import os
+from pathlib import Path
 from typing import Dict
 
 import yaml
+
 from env_validation import parse_servant_models
 
 # Path to the Crown configuration YAML file

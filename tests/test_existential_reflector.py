@@ -1,6 +1,6 @@
 import sys
-from types import ModuleType
 from pathlib import Path
+from types import ModuleType
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -31,6 +31,7 @@ def test_reflect_on_identity(tmp_path, monkeypatch):
     audit = tmp_path / "audit_logs"
 
     import INANNA_AI.existential_reflector as er
+
     monkeypatch.setattr(er, "INANNA_DIR", ina)
     monkeypatch.setattr(er, "QNL_DIR", qnl)
     monkeypatch.setattr(er, "AUDIT_DIR", audit)
@@ -48,6 +49,7 @@ def test_reflect_on_identity(tmp_path, monkeypatch):
 def test_reflect_existence_function(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(ExistentialReflector, "reflect_on_identity", lambda: "desc")
     from INANNA_AI_AGENT import INANNA_AI
+
     monkeypatch.setattr(inanna_ai, "ExistentialReflector", ExistentialReflector)
     out = inanna_ai.reflect_existence()
     captured = capsys.readouterr().out
@@ -58,6 +60,7 @@ def test_reflect_existence_function(tmp_path, monkeypatch, capsys):
 def test_existential_header(monkeypatch, tmp_path):
     monkeypatch.setenv("GLM_API_KEY", "sek")
     import importlib
+
     er = importlib.reload(
         __import__("INANNA_AI.existential_reflector", fromlist=["ExistentialReflector"])
     )

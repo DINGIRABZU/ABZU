@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("EmotiVoice", types.ModuleType("EmotiVoice"))
@@ -15,25 +15,30 @@ yaml_mod = types.ModuleType("yaml")
 yaml_mod.safe_load = lambda *a, **k: {}
 sys.modules.setdefault("yaml", yaml_mod)
 req_mod = types.ModuleType("requests")
-req_mod.post = lambda *a, **k: types.SimpleNamespace(json=lambda: {}, raise_for_status=lambda: None)
+req_mod.post = lambda *a, **k: types.SimpleNamespace(
+    json=lambda: {}, raise_for_status=lambda: None
+)
 req_mod.get = req_mod.post
 sys.modules.setdefault("requests", req_mod)
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from tools import voice_conversion
-from INANNA_AI import speaking_engine
 from crown_config import settings
+from INANNA_AI import speaking_engine
+from tools import voice_conversion
 
 
 def test_apply_rvc_invokes_binary(monkeypatch, tmp_path):
     out_dir = tmp_path / "rvc"
-    monkeypatch.setattr(voice_conversion.tempfile, "mkdtemp", lambda prefix="rvc_": str(out_dir))
+    monkeypatch.setattr(
+        voice_conversion.tempfile, "mkdtemp", lambda prefix="rvc_": str(out_dir)
+    )
     called = {}
 
     def fake_run(cmd, check):
         called["cmd"] = cmd
+
     monkeypatch.setattr(voice_conversion.subprocess, "run", fake_run)
 
     inp = tmp_path / "a.wav"
@@ -54,8 +59,10 @@ def test_apply_rvc_invokes_binary(monkeypatch, tmp_path):
 
 def test_voicefix_invokes_binary(monkeypatch, tmp_path):
     called = {}
+
     def fake_run(cmd, check):
         called["cmd"] = cmd
+
     monkeypatch.setattr(voice_conversion.subprocess, "run", fake_run)
 
     inp = tmp_path / "b.wav"
@@ -75,12 +82,15 @@ def test_synthesize_applies_converters(monkeypatch, tmp_path):
     monkeypatch.setattr(speaking_engine, "synthesize_speech", lambda *a, **k: str(wav))
 
     calls = {}
+
     def fake_rvc(path: Path, preset: str) -> Path:
         calls["rvc"] = (path, preset)
         return tmp_path / "rvc.wav"
+
     def fake_vf(path: Path) -> Path:
         calls["vf"] = path
         return tmp_path / "final.wav"
+
     monkeypatch.setattr(voice_conversion, "apply_rvc", fake_rvc)
     monkeypatch.setattr(voice_conversion, "voicefix", fake_vf)
 

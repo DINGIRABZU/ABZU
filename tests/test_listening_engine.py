@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,16 +16,21 @@ def _sine(freq: float, amp: float, sr: int, duration: float = 0.5) -> np.ndarray
 
 def _mock_stream(monkeypatch, waves):
     """Patch sounddevice.InputStream to feed ``waves``."""
+
     class DummyStream:
         def __init__(self, samplerate=None, channels=1, blocksize=None, callback=None):
             self.callback = callback
+
         def start(self):
             for w in waves:
                 self.callback(w.reshape(-1, 1), len(w), None, None)
+
         def stop(self):
             pass
+
         def close(self):
             pass
+
     dummy_sd = type("sd", (), {"InputStream": DummyStream})
     monkeypatch.setattr(listening_engine, "sd", dummy_sd)
 
@@ -58,11 +64,13 @@ def test_record(monkeypatch, tmp_path):
     _mock_stream(monkeypatch, waves)
 
     saved = {}
+
     def dummy_save(wave, path, sr=44100):
         saved["wave"] = wave
         saved["path"] = path
         saved["sr"] = sr
         Path(path).write_bytes(b"dummy")
+
     monkeypatch.setattr(listening_engine.utils, "save_wav", dummy_save)
 
     engine = listening_engine.ListeningEngine(sr=sr, chunk_duration=0.5)

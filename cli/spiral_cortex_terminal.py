@@ -2,13 +2,13 @@ from __future__ import annotations
 
 """Command line tool for exploring ``cortex_memory_spiral.jsonl``."""
 
-from collections import Counter
 import argparse
 import time
+from collections import Counter
 from typing import Dict, Iterable
 
-from memory import cortex as cortex_memory
 from archetype_feedback_loop import evaluate_archetype
+from memory import cortex as cortex_memory
 
 
 def _parse_filters(pairs: Iterable[str]) -> Dict[str, str]:

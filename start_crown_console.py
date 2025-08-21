@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Run Crown services and video stream with graceful shutdown."""
 from __future__ import annotations
+
 import json
 import signal
 import subprocess
@@ -9,8 +10,8 @@ import time
 from pathlib import Path
 
 from dotenv import load_dotenv
-import emotional_state
 
+import emotional_state
 
 ROOT = Path(__file__).resolve().parent
 

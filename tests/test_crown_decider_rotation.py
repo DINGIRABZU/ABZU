@@ -16,9 +16,10 @@ def test_failure_rotation(monkeypatch):
     monkeypatch.setenv("LLM_ROTATION_PERIOD", "1")
     monkeypatch.setenv("LLM_MAX_FAILURES", "2")
     import crown_decider
+
     importlib.reload(crown_decider)
     monkeypatch.setattr(crown_decider.smm, "has_model", lambda name: True)
-    monkeypatch.setattr(crown_decider.smm, "list_models", lambda: ["deepseek"]) 
+    monkeypatch.setattr(crown_decider.smm, "list_models", lambda: ["deepseek"])
     sample = [
         crown_decider.emotional_memory.EmotionalMemoryNode(
             llm_name="deepseek",
@@ -47,6 +48,7 @@ def test_time_based_rotation(monkeypatch):
     monkeypatch.setenv("LLM_ROTATION_PERIOD", "1")
     monkeypatch.setenv("LLM_MAX_FAILURES", "5")
     import crown_decider
+
     importlib.reload(crown_decider)
     monkeypatch.setattr(crown_decider.smm, "list_models", lambda: ["deepseek"])
     sample = [

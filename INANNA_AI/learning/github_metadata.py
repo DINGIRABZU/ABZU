@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+
 import requests
 
 import crown_config
@@ -55,4 +56,3 @@ def save_metadata(data: dict[str, dict[str, dict]], path: Path) -> None:
     """Save metadata mapping as JSON to ``path``."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
-

@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 import soundfile as sf
 
@@ -74,4 +75,3 @@ def test_mix_tracks_with_qnl_text(tmp_path, monkeypatch):
         sys.argv = argv_backup
 
     assert out.exists()
-

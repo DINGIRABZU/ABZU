@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Mirror reflection loop utilities."""
 
-from pathlib import Path
 import json
 import logging
 import os
+from pathlib import Path
 from typing import Dict
 
 try:  # pragma: no cover - optional dependency
@@ -15,15 +15,16 @@ except Exception:  # pragma: no cover - optional dependency
 
 import numpy as np
 
-from core import video_engine, self_correction_engine
+from core import self_correction_engine, video_engine
+
 try:  # pragma: no cover - optional dependency
     from invocation_engine import invoke_ritual as _invoke_ritual
 except ImportError:  # pragma: no cover - optional dependency
     _invoke_ritual = None  # type: ignore[assignment]
 invoke_ritual = _invoke_ritual
 """Optional ritual invocation; ``None`` if invocation engine is unavailable."""
-from corpus_memory_logging import log_ritual_result
 import emotional_state
+from corpus_memory_logging import log_ritual_result
 from INANNA_AI import adaptive_learning
 
 logger = logging.getLogger(__name__)

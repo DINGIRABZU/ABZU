@@ -2,16 +2,17 @@ from __future__ import annotations
 
 """Store retrieval insights for the spiral cortex."""
 
+import json
 from datetime import datetime
 from pathlib import Path
-import json
 from typing import Any, Iterable, List
-
 
 INSIGHT_FILE = Path("data/spiral_cortex_memory.jsonl")
 
 
-def log_insight(question: str, snippets: Iterable[dict[str, Any]], sentiment: float) -> None:
+def log_insight(
+    question: str, snippets: Iterable[dict[str, Any]], sentiment: float
+) -> None:
     """Append ``question`` and ``snippets`` to :data:`INSIGHT_FILE`."""
     entry = {
         "timestamp": datetime.utcnow().isoformat(),

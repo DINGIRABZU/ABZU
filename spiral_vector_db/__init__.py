@@ -2,11 +2,11 @@ from __future__ import annotations
 
 """Simple wrapper around ChromaDB for storing text embeddings."""
 
-from pathlib import Path
-from typing import Iterable, Any, Dict
+import math
 import os
 import uuid
-import math
+from pathlib import Path
+from typing import Any, Dict, Iterable
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -73,7 +73,9 @@ def insert_embeddings(data: Iterable[dict]) -> None:
     col.add(ids=ids, embeddings=embeddings, metadatas=metadatas)
 
 
-def query_embeddings(text: str, top_k: int = 5, filters: dict | None = None) -> list[dict]:
+def query_embeddings(
+    text: str, top_k: int = 5, filters: dict | None = None
+) -> list[dict]:
     """Return ``top_k`` matches for ``text`` ordered by cosine similarity."""
     qvec_raw = qnl_utils.quantum_embed(text)
     if np is not None:

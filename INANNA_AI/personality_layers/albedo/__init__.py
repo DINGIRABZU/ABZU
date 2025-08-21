@@ -2,11 +2,12 @@ from __future__ import annotations
 
 """Albedo personality layer combining state context with the GLM."""
 
+from SPIRAL_OS import qnl_engine
+
+from ...emotion_analysis import get_emotion_and_tone
+from . import state_contexts
 from .alchemical_persona import AlchemicalPersona, State
 from .glm_integration import GLMIntegration
-from . import state_contexts
-from ...emotion_analysis import get_emotion_and_tone
-from SPIRAL_OS import qnl_engine
 
 
 class AlbedoPersonality:
@@ -25,7 +26,9 @@ class AlbedoPersonality:
         """Return the name of the current state."""
         return self._persona.state.value
 
-    def generate_response(self, text: str, *, quantum_context: str | None = None) -> str:
+    def generate_response(
+        self, text: str, *, quantum_context: str | None = None
+    ) -> str:
         """Generate a GLM response for ``text``."""
         entity, triggers = self._persona.detect_state_trigger(text)
         emotion, tone = get_emotion_and_tone()

@@ -2,39 +2,38 @@ from __future__ import annotations
 
 """Lightweight orchestrator for the Crown console."""
 
-from typing import Any, Dict
 import asyncio
-from datetime import datetime
 import json
 import logging
 import sqlite3
+from datetime import datetime
 from importlib import import_module
 from pathlib import Path
+from typing import Any, Dict
 
-from state_transition_engine import StateTransitionEngine
-
+import emotional_state
 from core.memory_physical import PhysicalEvent, store_physical_event
-from memory.mental import record_task_flow
-from memory.spiritual import map_to_symbol
-from memory.sacred import generate_sacred_glyph
-from spiral_memory import REGISTRY_DB, spiral_recall
-
+from corpus_memory_logging import load_interactions, log_interaction
 from INANNA_AI import emotion_analysis, emotional_memory
 from INANNA_AI.glm_integration import GLMIntegration
-import emotional_state
-from corpus_memory_logging import load_interactions, log_interaction
+from memory.mental import record_task_flow
+from memory.sacred import generate_sacred_glyph
+from memory.spiritual import map_to_symbol
+from spiral_memory import REGISTRY_DB, spiral_recall
+from state_transition_engine import StateTransitionEngine
 
 try:
     _settings_mod = import_module("config.settings")
     is_layer_enabled = getattr(_settings_mod, "is_layer_enabled", lambda name: True)
 except Exception:  # pragma: no cover - missing config
+
     def is_layer_enabled(name: str) -> bool:  # type: ignore
         return True
 
-import crown_decider
-from task_profiling import classify_task
-import servant_model_manager as smm
 
+import crown_decider
+import servant_model_manager as smm
+from task_profiling import classify_task
 
 _EMOTION_KEYS = list(emotion_analysis.EMOTION_ARCHETYPES.keys())
 
@@ -60,8 +59,6 @@ def _build_context(limit: int = 3) -> str:
 
 async def _delegate(prompt: str, glm: GLMIntegration) -> str:
     return glm.complete(prompt)
-
-
 
 
 def _apply_layer(message: str) -> tuple[str | None, str | None]:
@@ -105,7 +102,9 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
         logging.exception("physical store failed")
 
     try:
-        record_task_flow(f"msg_{abs(hash(message))}", {"message": message, "emotion": emotion})
+        record_task_flow(
+            f"msg_{abs(hash(message))}", {"message": message, "emotion": emotion}
+        )
     except Exception:
         logging.exception("task flow logging failed")
 

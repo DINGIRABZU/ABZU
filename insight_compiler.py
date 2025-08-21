@@ -3,9 +3,9 @@ from __future__ import annotations
 """Aggregate interaction logs into an insight matrix."""
 
 import json
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any
+from pathlib import Path
+from typing import Any, Dict, List
 
 INSIGHT_FILE = Path(__file__).resolve().parent / "insight_matrix.json"
 
@@ -69,9 +69,7 @@ def update_insights(log_entries: List[dict]) -> None:
 
         emotion = entry.get("emotion")
         if emotion:
-            emo_ct = counts["emotions"].setdefault(
-                emotion, {"total": 0, "success": 0}
-            )
+            emo_ct = counts["emotions"].setdefault(emotion, {"total": 0, "success": 0})
             emo_ct["total"] += 1
             if success:
                 emo_ct["success"] += 1

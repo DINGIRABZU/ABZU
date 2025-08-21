@@ -1,6 +1,7 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
+
 import numpy as np
 import soundfile as sf
 
@@ -16,9 +17,10 @@ sys.modules.setdefault("sounddevice", types.ModuleType("sounddevice"))
 import audio.play_ritual_music as prm
 
 
-
 def test_play_ritual_music_cli(tmp_path, monkeypatch):
-    def dummy_compose(tempo, melody, *, sample_rate=44100, wav_path=None, wave_type="sine"):
+    def dummy_compose(
+        tempo, melody, *, sample_rate=44100, wav_path=None, wave_type="sine"
+    ):
         wave = np.zeros(100, dtype=np.float32)
         if wav_path:
             sf.write(wav_path, wave, sample_rate)

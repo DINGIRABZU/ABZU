@@ -49,9 +49,7 @@ def test_modulate_voice_uses_config(tmp_path, monkeypatch):
     monkeypatch.setattr(
         voice_layer_albedo, "TONE_PRESETS", voice_layer_albedo.TONE_PRESETS.copy()
     )
-    monkeypatch.setattr(
-        voice_layer_albedo, "voice_evolution", voice_evolution
-    )
+    monkeypatch.setattr(voice_layer_albedo, "voice_evolution", voice_evolution)
     importlib.reload(voice_layer_albedo)
 
     called = {}
@@ -60,10 +58,11 @@ def test_modulate_voice_uses_config(tmp_path, monkeypatch):
         called["args"] = (text, tone)
         return "x.wav"
 
-    monkeypatch.setattr(voice_layer_albedo.speaking_engine, "synthesize_speech", fake_synth)
+    monkeypatch.setattr(
+        voice_layer_albedo.speaking_engine, "synthesize_speech", fake_synth
+    )
 
     path = voice_layer_albedo.modulate_voice("hi", "sage")
     assert path == "x.wav"
     assert called["args"] == ("hi", "lunar")
     assert voice_evolution.DEFAULT_VOICE_STYLES["lunar"]["pitch"] == 0.2
-

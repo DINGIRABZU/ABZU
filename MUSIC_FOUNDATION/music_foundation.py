@@ -22,6 +22,7 @@ except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 import os
 
+
 class MusicInterpreter:
     def __init__(self, file_path):
         self.file_path = file_path
@@ -34,14 +35,20 @@ class MusicInterpreter:
     def load_audio(self):
         if librosa is None:
             raise RuntimeError("librosa library not installed")
-        self.waveform, self.sample_rate = librosa.load(self.file_path, sr=None, mono=True)
+        self.waveform, self.sample_rate = librosa.load(
+            self.file_path, sr=None, mono=True
+        )
         print(f"✅ Audio loaded: {self.file_path}")
-        print(f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec")
+        print(
+            f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec"
+        )
 
     def analyze_rhythm(self):
         if librosa is None:
             raise RuntimeError("librosa library not installed")
-        self.tempo, self.beats = librosa.beat.beat_track(y=self.waveform, sr=self.sample_rate)
+        self.tempo, self.beats = librosa.beat.beat_track(
+            y=self.waveform, sr=self.sample_rate
+        )
         print(f"🕒 Estimated Tempo: {self.tempo:.2f} BPM")
         return self.tempo, self.beats
 
@@ -66,6 +73,7 @@ class MusicInterpreter:
             os.makedirs(directory, exist_ok=True)
         sf.write(output_path, self.waveform, self.sample_rate)
         print(f"💾 Exported WAV preview to: {output_path}")
+
 
 if __name__ == "__main__":
     import argparse

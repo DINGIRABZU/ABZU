@@ -58,11 +58,14 @@ except Exception:  # pragma: no cover - environment lacks FastAPI
                 result = res
             content = json.dumps(result or {}).encode()
             headers = [(b"content-type", b"application/json")]
-            await send({"type": "http.response.start", "status": status, "headers": headers})
+            await send(
+                {"type": "http.response.start", "status": status, "headers": headers}
+            )
             await send({"type": "http.response.body", "body": content})
 
     class TestClient:
         __test__ = False
+
         def __init__(self, app: any) -> None:
             self.app = app
 
@@ -76,6 +79,7 @@ except Exception:  # pragma: no cover - environment lacks FastAPI
 try:
     from aiortc import RTCSessionDescription
 except Exception:  # pragma: no cover - environment lacks aiortc
+
     class RTCSessionDescription:
         def __init__(self, sdp: str, type: str) -> None:
             self.sdp = sdp

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Neo4j-backed task memory with optional reinforcement learning hooks."""
 
-from dataclasses import dataclass
 import json
 import logging
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List
 
@@ -18,13 +18,9 @@ else:  # pragma: no cover - imported dependency
     GraphDatabase = neo4j.GraphDatabase
     Driver = neo4j.Driver  # type: ignore[attr-defined]
 
+from aspect_processor import (analyze_geometric, analyze_phonetic,
+                              analyze_semantic, analyze_temporal)
 from crown_config import settings
-from aspect_processor import (
-    analyze_geometric,
-    analyze_phonetic,
-    analyze_semantic,
-    analyze_temporal,
-)
 
 np = lazy_import("numpy")
 gym = lazy_import("gymnasium")
@@ -91,9 +87,7 @@ if gym is not None and np is not None:
         """Minimal environment for context-based reinforcement learning."""
 
         def __init__(self) -> None:
-            self.observation_space = gym.spaces.Box(
-                -np.inf, np.inf, (1,), dtype=float
-            )
+            self.observation_space = gym.spaces.Box(-np.inf, np.inf, (1,), dtype=float)
             self.action_space = gym.spaces.Discrete(1)
 
         def reset(
@@ -142,7 +136,9 @@ def _update_rl(context: Dict[str, Any], reward: float) -> None:
     _RL_MODEL.train(batch_size=1, gradient_steps=1)
 
 
-def record_task_flow(task_id: str, context: Dict[str, Any], reward: float = 0.0) -> None:
+def record_task_flow(
+    task_id: str, context: Dict[str, Any], reward: float = 0.0
+) -> None:
     """Record a task execution and optionally update the RL model."""
 
     analyze_phonetic(task_id)

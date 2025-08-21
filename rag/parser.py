@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Utility to parse directories into text chunks for RAG."""
 
+import argparse
 from pathlib import Path
 from typing import Dict, List
-import argparse
 
 
 def load_inputs(source_dir: Path) -> List[Dict[str, str]]:

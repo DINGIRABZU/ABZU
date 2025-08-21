@@ -11,6 +11,7 @@ except Exception:  # pragma: no cover - fallback
     except Exception:  # pragma: no cover - fallback
         emotional_state = None  # type: ignore
 
+
 class EmotionFilter(logging.Filter):
     """Append emotion and resonance fields to log records."""
 
@@ -32,5 +33,6 @@ class EmotionFilter(logging.Filter):
         record.emotion = emotion
         record.resonance = resonance
         return True
+
 
 __all__ = ["EmotionFilter"]

@@ -6,7 +6,6 @@ from typing import Dict
 
 from . import corpus_memory
 
-
 # Reply templates for each core.  ``emotion`` and ``classification`` are inserted
 # to blend audio cues with the textual input.
 CORE_TEMPLATES = {

@@ -2,13 +2,13 @@ from __future__ import annotations
 
 """Real-time microphone listening with basic feature extraction."""
 
+import asyncio
+import json
 import logging
 import tempfile
 from pathlib import Path
-from queue import Queue, Empty
+from queue import Empty, Queue
 from typing import Dict, Generator, Optional, Tuple
-import asyncio
-import json
 
 import numpy as np
 
@@ -32,9 +32,9 @@ try:
 except Exception:  # pragma: no cover - optional dependency
     sd = None
 
-from . import utils, emotion_analysis, silence_reflection
 import emotional_state
 
+from . import emotion_analysis, silence_reflection, utils
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +87,7 @@ def _extract_features(wave: np.ndarray, sr: int) -> Dict[str, float]:
     tempo, _ = librosa.beat.beat_track(y=wave, sr=sr)
     tempo = float(np.atleast_1d(tempo)[0])
 
-    energy = float(np.mean(wave ** 2))
+    energy = float(np.mean(wave**2))
     classification = "silence"
     if energy > 1e-4:
         classification = "speech" if 80 <= pitch <= 300 else "noise"
@@ -163,7 +163,9 @@ class ListeningEngine:
             "weight": emotion_analysis.emotion_weight("neutral"),
         }
 
-    def _callback(self, indata: np.ndarray, frames: int, time, status) -> None:  # pragma: no cover - external callback
+    def _callback(
+        self, indata: np.ndarray, frames: int, time, status
+    ) -> None:  # pragma: no cover - external callback
         if status:
             logger.warning("InputStream status: %s", status)
         self._queue.put(indata[:, 0].copy())
@@ -196,7 +198,9 @@ class ListeningEngine:
             self._stream = None
             logger.info("Listening engine stopped")
 
-    def stream_chunks(self, duration: Optional[float] = None) -> Generator[Tuple[np.ndarray, Dict[str, float]], None, None]:
+    def stream_chunks(
+        self, duration: Optional[float] = None
+    ) -> Generator[Tuple[np.ndarray, Dict[str, float]], None, None]:
         """Yield (waveform, features) tuples for each audio chunk."""
         if self._stream is None:
             self.start()
@@ -239,7 +243,9 @@ def capture_audio(duration: float, sr: int = 44100) -> Tuple[np.ndarray, bool]:
     return audio, is_silent
 
 
-def analyze_audio(duration: float, sr: int = 44100) -> Tuple[np.ndarray, Dict[str, float]]:
+def analyze_audio(
+    duration: float, sr: int = 44100
+) -> Tuple[np.ndarray, Dict[str, float]]:
     """Capture audio and return the features."""
     audio, silent = capture_audio(duration, sr)
     info = _extract_features(audio, sr)
@@ -272,4 +278,3 @@ __all__ = [
     "analyze_audio",
     "start_websocket_server",
 ]
-

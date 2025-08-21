@@ -2,11 +2,11 @@ from __future__ import annotations
 
 """Apply reverb and timbre effects based on the current emotion."""
 
-from pathlib import Path
 import logging
 import shutil
 import subprocess
 import tempfile
+from pathlib import Path
 
 import numpy as np
 
@@ -15,8 +15,8 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-from audio.dsp_engine import rave_morph, nsynth_interpolate
 import emotional_state
+from audio.dsp_engine import nsynth_interpolate, rave_morph
 
 try:  # pragma: no cover - optional dependency
     from audio.segment import AudioSegment
@@ -43,7 +43,9 @@ def sox_available() -> bool:
     return shutil.which("sox") is not None
 
 
-def _apply_segment_effects(seg: AudioSegment, reverb_ms: int, delay_ms: int) -> AudioSegment:
+def _apply_segment_effects(
+    seg: AudioSegment, reverb_ms: int, delay_ms: int
+) -> AudioSegment:
     """Apply simple delay/reverb effects on an :class:`AudioSegment`."""
     if delay_ms > 0:
         seg = seg.overlay(seg - 6, position=delay_ms)

@@ -2,17 +2,18 @@ from __future__ import annotations
 
 """Cluster spiral memory vectors into archetypal groups."""
 
-from collections import Counter
-from pathlib import Path
 import argparse
 import json
 import re
+from collections import Counter
+from pathlib import Path
 from typing import Any, Iterable
 
 import numpy as np
 from sklearn.cluster import KMeans
 
 from MUSIC_FOUNDATION import qnl_utils
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency

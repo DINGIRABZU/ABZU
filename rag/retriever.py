@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Query Chroma collections using a shared embedding model."""
 
-from pathlib import Path
-from typing import List, Dict, Any
 import logging
 import math
+from pathlib import Path
+from typing import Any, Dict, List
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -19,9 +19,10 @@ except Exception:  # pragma: no cover - optional dependency
     chromadb = None  # type: ignore
     Collection = object  # type: ignore
 
-from . import embedder as rag_embedder
 from INANNA_AI.utils import sentiment_score
 from memory import spiral_cortex
+
+from . import embedder as rag_embedder
 
 _DB_DIR = Path("data") / "crown_queries"
 _COLLECTION_CACHE: dict[str, Collection] = {}
@@ -42,7 +43,9 @@ def get_collection(name: str) -> Collection:
     return col
 
 
-def retrieve_top(question: str, top_n: int = 5, *, collection: str = "tech") -> List[Dict[str, Any]]:
+def retrieve_top(
+    question: str, top_n: int = 5, *, collection: str = "tech"
+) -> List[Dict[str, Any]]:
     """Return ranked snippets for ``question`` from ``collection``."""
     model = rag_embedder._get_model()
     q_raw = model.encode([question])[0]

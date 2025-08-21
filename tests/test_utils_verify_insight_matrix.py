@@ -1,6 +1,7 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
+
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,8 +17,6 @@ from INANNA_AI import utils
 
 
 def test_verify_insight_matrix_raises_on_missing():
-    matrix = {
-        "spell": {"counts": {"emotions": {"joy": {"total": 1}}}}
-    }
+    matrix = {"spell": {"counts": {"emotions": {"joy": {"total": 1}}}}}
     with pytest.raises(KeyError):
         utils.verify_insight_matrix(matrix, emotion_keys=["joy", "sad"])

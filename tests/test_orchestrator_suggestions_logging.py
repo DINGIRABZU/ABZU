@@ -1,7 +1,7 @@
-import sys
-from pathlib import Path
-import types
 import logging
+import sys
+import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -46,13 +46,17 @@ from rag.orchestrator import MoGEOrchestrator
 def test_suggestions_logged_and_returned(monkeypatch, caplog, capsys):
     orch = MoGEOrchestrator()
     orch._interaction_count = 19
-    monkeypatch.setattr(orchestrator.learning_mutator, "propose_mutations", lambda insights: ["alpha"])
+    monkeypatch.setattr(
+        orchestrator.learning_mutator, "propose_mutations", lambda insights: ["alpha"]
+    )
     monkeypatch.setattr(orchestrator, "update_insights", lambda entries: None)
     monkeypatch.setattr(orchestrator, "load_insights", lambda: {})
     monkeypatch.setattr(orch._memory_logger, "load_interactions", lambda: [])
     monkeypatch.setattr(orch._task_profiler, "classify", lambda text: "task")
     monkeypatch.setattr(orch._model_selector, "choose", lambda *a, **k: "glm")
-    monkeypatch.setattr(orch._model_selector, "model_from_emotion", lambda emotion: "glm")
+    monkeypatch.setattr(
+        orch._model_selector, "model_from_emotion", lambda emotion: "glm"
+    )
     monkeypatch.setattr(orchestrator.vector_memory, "add_vector", lambda *a, **k: None)
     monkeypatch.setattr(orchestrator.vector_memory, "query_vectors", lambda *a, **k: [])
 

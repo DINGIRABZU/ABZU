@@ -9,10 +9,10 @@ single JSON structure printed to ``stdout``.  The entry point can be invoked
 from the command line via ``python music_llm_interface.py <audio_or_midi>``.
 """
 
-from pathlib import Path
 import argparse
 import json
 import tempfile
+from pathlib import Path
 from typing import Any, Dict
 
 import numpy as np
@@ -27,13 +27,10 @@ try:  # pragma: no cover - optional dependency for WAV writing
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-from pipeline.music_analysis import (
-    analyze_music,
-    extract_high_level_features,
-    MusicAnalysisResult,
-)
-from rag.orchestrator import MoGEOrchestrator
 from INANNA_AI.emotion_analysis import analyze_audio_emotion
+from pipeline.music_analysis import (MusicAnalysisResult, analyze_music,
+                                     extract_high_level_features)
+from rag.orchestrator import MoGEOrchestrator
 
 
 def _analyze_midi(path: Path) -> MusicAnalysisResult:
@@ -48,7 +45,11 @@ def _analyze_midi(path: Path) -> MusicAnalysisResult:
 
     midi = pretty_midi.PrettyMIDI(str(path))
     sr = 44100
-    samples = midi.fluidsynth(fs=sr) if hasattr(midi, "fluidsynth") else midi.synthesize(fs=sr)
+    samples = (
+        midi.fluidsynth(fs=sr)
+        if hasattr(midi, "fluidsynth")
+        else midi.synthesize(fs=sr)
+    )
 
     features = extract_high_level_features(samples, sr)
 
@@ -85,7 +86,9 @@ def analyze_path(path: Path) -> MusicAnalysisResult:
     return analyze_music(path)
 
 
-def run_interface(path: Path, orchestrator: MoGEOrchestrator | None = None) -> Dict[str, Any]:
+def run_interface(
+    path: Path, orchestrator: MoGEOrchestrator | None = None
+) -> Dict[str, Any]:
     """Analyse ``path`` and query the LLM through ``orchestrator``."""
 
     analysis = analyze_path(path)

@@ -17,12 +17,12 @@ Dependencies:
     pip install librosa soundfile numpy scipy
 """
 
-import os
 import json
+import os
 from pathlib import Path
 
-import yaml
 import numpy as np
+import yaml
 
 try:  # pragma: no cover - optional dependency
     import librosa
@@ -35,6 +35,7 @@ except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
 import emotional_state
+
 from . import layer_generators
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "emotion_music_map.yaml"
@@ -56,7 +57,9 @@ def load_emotion_music_map(path: Path = CONFIG_PATH) -> dict:
     return {}
 
 
-def select_music_params(emotion: str | None, mapping: dict, base_tempo: float) -> tuple[float, str, list[str], str]:
+def select_music_params(
+    emotion: str | None, mapping: dict, base_tempo: float
+) -> tuple[float, str, list[str], str]:
     """Return tempo, scale, melody and rhythm for ``emotion``."""
     key = str(emotion).lower() if emotion else "neutral"
     info = mapping.get(key, mapping.get("neutral", {}))
@@ -67,12 +70,15 @@ def select_music_params(emotion: str | None, mapping: dict, base_tempo: float) -
     return tempo, scale, melody, rhythm
 
 
-def get_emotion_music_params(default_tempo: float, mapping: dict | None = None) -> tuple[float, str, list[str], str]:
+def get_emotion_music_params(
+    default_tempo: float, mapping: dict | None = None
+) -> tuple[float, str, list[str], str]:
     """Load emotion state and return selected music parameters."""
     if mapping is None:
         mapping = load_emotion_music_map()
     emotion = emotional_state.get_last_emotion()
     return select_music_params(emotion, mapping, default_tempo)
+
 
 from MUSIC_FOUNDATION.qnl_utils import chroma_to_qnl, generate_qnl_structure
 
@@ -82,6 +88,7 @@ from MUSIC_FOUNDATION.qnl_utils import chroma_to_qnl, generate_qnl_structure
 # QNL CONVERSION LOGIC
 # -------------------------------
 
+
 def export_qnl(json_data, output_path="output/qnl_song.json"):
     """Save the QNL result to a JSON file."""
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -89,12 +96,15 @@ def export_qnl(json_data, output_path="output/qnl_song.json"):
         json.dump(json_data, f, indent=2, ensure_ascii=False)
     print(f"✅ QNL exported to: {output_path}")
 
+
 # -------------------------------
 # AUDIO ANALYSIS
 # -------------------------------
 
+
 class InannaMusicInterpreter:
     """Core class that handles MP3 loading and musical feature analysis."""
+
     def __init__(self, mp3_path):
         self.path = mp3_path
         self.waveform = None
@@ -109,7 +119,9 @@ class InannaMusicInterpreter:
             raise RuntimeError("librosa library not installed")
         self.waveform, self.sample_rate = librosa.load(self.path, sr=None, mono=True)
         print(f"🎧 Audio loaded: {self.path}")
-        print(f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec")
+        print(
+            f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec"
+        )
 
     def analyze(self):
         """Analyze tempo and pitch chroma."""
@@ -141,14 +153,15 @@ class InannaMusicInterpreter:
         sf.write(output_path, self.waveform, self.sample_rate)
         print(f"💾 Exported audio preview: {output_path}")
 
+
 # -------------------------------
 # MAIN EXECUTION
 # -------------------------------
 
 if __name__ == "__main__":
     if __package__ is None:
-        from pathlib import Path
         import sys
+        from pathlib import Path
 
         sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -173,7 +186,11 @@ if __name__ == "__main__":
     qnl_data = generate_qnl_structure(
         chroma_vector,
         tempo,
-        metadata={"source": args.mp3_file, "emotion": emotional_state.get_last_emotion(), "scale": scale, "rhythm": rhythm},
+        metadata={
+            "source": args.mp3_file,
+            "emotion": emotional_state.get_last_emotion(),
+            "scale": scale,
+            "rhythm": rhythm,
+        },
     )
     export_qnl(qnl_data, "output/qnl_song.json")
-

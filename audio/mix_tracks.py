@@ -24,6 +24,7 @@ except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
+
 from . import audio_ingestion, dsp_engine
 
 EMOTION_MAP = Path(__file__).resolve().parent.parent / "emotion_music_map.yaml"
@@ -83,7 +84,9 @@ def mix_audio(
     return mix, sr, {"tempo": tempo, "key": key}
 
 
-def _apply_dsp(data: np.ndarray, sr: int, params: dict[str, Any]) -> tuple[np.ndarray, int]:
+def _apply_dsp(
+    data: np.ndarray, sr: int, params: dict[str, Any]
+) -> tuple[np.ndarray, int]:
     """Apply basic DSP operations described by ``params``."""
 
     if "pitch" in params:

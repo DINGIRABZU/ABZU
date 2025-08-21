@@ -73,7 +73,9 @@ def compose_human_layer(
     return wave
 
 
-def generate_tone(frequency: float, duration: float, *, sample_rate: int = 44100) -> np.ndarray:
+def generate_tone(
+    frequency: float, duration: float, *, sample_rate: int = 44100
+) -> np.ndarray:
     """Return a normalized sine tone for ``duration`` seconds."""
 
     t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)

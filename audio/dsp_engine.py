@@ -2,11 +2,11 @@ from __future__ import annotations
 
 """Basic audio DSP utilities primarily using ffmpeg."""
 
-from pathlib import Path
-from typing import Tuple
+import shutil
 import subprocess
 import tempfile
-import shutil
+from pathlib import Path
+from typing import Tuple
 
 import numpy as np
 
@@ -33,12 +33,15 @@ except Exception:  # pragma: no cover - optional dependency
 # ffmpeg based helpers
 # ---------------------------------------------------------------------------
 
+
 def _has_ffmpeg() -> bool:
     """Return ``True`` when ``ffmpeg`` is available on the system path."""
     return shutil.which("ffmpeg") is not None
 
 
-def _apply_ffmpeg_filter(data: np.ndarray, sr: int, filters: str) -> Tuple[np.ndarray, int]:
+def _apply_ffmpeg_filter(
+    data: np.ndarray, sr: int, filters: str
+) -> Tuple[np.ndarray, int]:
     """Run ``filters`` on ``data`` using ``ffmpeg``."""
     if not _has_ffmpeg():
         raise RuntimeError("ffmpeg not installed")
@@ -76,7 +79,9 @@ def time_stretch(data: np.ndarray, sr: int, rate: float) -> Tuple[np.ndarray, in
     return _apply_ffmpeg_filter(data, sr, filters)
 
 
-def compress(data: np.ndarray, sr: int, threshold: float = -18.0, ratio: float = 2.0) -> Tuple[np.ndarray, int]:
+def compress(
+    data: np.ndarray, sr: int, threshold: float = -18.0, ratio: float = 2.0
+) -> Tuple[np.ndarray, int]:
     """Apply dynamic range compression using ``ffmpeg``."""
     filters = f"acompressor=threshold={threshold}:ratio={ratio}"
     return _apply_ffmpeg_filter(data, sr, filters)
@@ -85,6 +90,7 @@ def compress(data: np.ndarray, sr: int, threshold: float = -18.0, ratio: float =
 # ---------------------------------------------------------------------------
 # Optional RAVE support
 # ---------------------------------------------------------------------------
+
 
 def rave_encode(data: np.ndarray, sr: int, checkpoint: Path) -> np.ndarray:
     """Return RAVE latents for ``data`` using ``checkpoint``."""
@@ -97,7 +103,9 @@ def rave_encode(data: np.ndarray, sr: int, checkpoint: Path) -> np.ndarray:
     return latents.squeeze(0).cpu().numpy()
 
 
-def rave_decode(latents: np.ndarray, sr: int, checkpoint: Path) -> Tuple[np.ndarray, int]:
+def rave_decode(
+    latents: np.ndarray, sr: int, checkpoint: Path
+) -> Tuple[np.ndarray, int]:
     """Synthesize audio from RAVE ``latents``."""
     if rave is None or torch is None:  # pragma: no cover - optional dependency
         raise RuntimeError("rave library required")
@@ -108,7 +116,9 @@ def rave_decode(latents: np.ndarray, sr: int, checkpoint: Path) -> Tuple[np.ndar
     return audio.squeeze(0).cpu().numpy(), sr
 
 
-def rave_morph(data_a: np.ndarray, data_b: np.ndarray, sr: int, amount: float, checkpoint: Path) -> Tuple[np.ndarray, int]:
+def rave_morph(
+    data_a: np.ndarray, data_b: np.ndarray, sr: int, amount: float, checkpoint: Path
+) -> Tuple[np.ndarray, int]:
     """Interpolate between ``data_a`` and ``data_b`` via RAVE latents."""
     z_a = rave_encode(data_a, sr, checkpoint)
     z_b = rave_encode(data_b, sr, checkpoint)
@@ -120,7 +130,10 @@ def rave_morph(data_a: np.ndarray, data_b: np.ndarray, sr: int, amount: float, c
 # Optional NSynth support
 # ---------------------------------------------------------------------------
 
-def nsynth_interpolate(data_a: np.ndarray, data_b: np.ndarray, sr: int, amount: float, checkpoint: Path) -> Tuple[np.ndarray, int]:
+
+def nsynth_interpolate(
+    data_a: np.ndarray, data_b: np.ndarray, sr: int, amount: float, checkpoint: Path
+) -> Tuple[np.ndarray, int]:
     """Interpolate ``data_a`` and ``data_b`` using NSynth."""
     if nsynth_fastgen is None:  # pragma: no cover - optional dependency
         raise RuntimeError("nsynth library required")
@@ -140,4 +153,3 @@ __all__ = [
     "rave_morph",
     "nsynth_interpolate",
 ]
-

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 """Lightweight emotion analysis tools using Librosa."""
 
-from typing import Dict, Any, Tuple
+from typing import Any, Dict, Tuple
 
 # Mapping from emotional labels to Jungian archetypes
 EMOTION_ARCHETYPES = {
@@ -59,10 +59,8 @@ except Exception:  # pragma: no cover - optional dependency
 # Optional ML-based classifier support
 try:  # pragma: no cover - optional dependency
     import torch
-    from transformers import (
-        AutoModelForAudioClassification,
-        AutoProcessor,
-    )
+
+    from transformers import AutoModelForAudioClassification, AutoProcessor
 except Exception:  # pragma: no cover - optional dependency
     torch = None  # type: ignore
     AutoModelForAudioClassification = AutoProcessor = None  # type: ignore
@@ -131,7 +129,6 @@ def _rule_based_classify(
     return emotion
 
 
-
 def analyze_audio_emotion(
     audio_path: str, use_ml: bool = False, model_name: str | None = None
 ) -> Dict[str, Any]:
@@ -178,7 +175,9 @@ def analyze_audio_emotion(
     probs: Dict[str, float] | None = None
     if use_ml:
         try:
-            probs = predict_emotion_ml(audio_path, model_name or "m-a-p/MERT-v1-330M-CLAP")
+            probs = predict_emotion_ml(
+                audio_path, model_name or "m-a-p/MERT-v1-330M-CLAP"
+            )
             if probs:
                 emotion = max(probs, key=probs.get)
         except Exception:
@@ -202,6 +201,7 @@ def analyze_audio_emotion(
             k: round(float(v), 3) for k, v in sorted(probs.items(), key=lambda x: -x[1])
         }
     return result
+
 
 def get_current_archetype() -> str:
     """Return the Jungian archetype for the last analyzed emotion."""

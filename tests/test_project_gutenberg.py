@@ -1,7 +1,7 @@
-import sys
-from pathlib import Path
-import types
 import re
+import sys
+import types
+from pathlib import Path
 
 sys.modules.setdefault("requests", types.ModuleType("requests"))
 bs4_mod = types.ModuleType("bs4")
@@ -26,8 +26,10 @@ def test_search_parses_results(monkeypatch):
       <span class='title'>Title B</span>
     </li>
     """
+
     class DummyResp:
         text = html
+
         def raise_for_status(self):
             return None
 
@@ -41,9 +43,12 @@ def test_search_parses_results(monkeypatch):
             self.text = text
 
         def select(self, selector):
-            matches = re.findall(r"<a href='/ebooks/(\d+)'></a>\s*<span class='title'>([^<]+)", self.text)
+            matches = re.findall(
+                r"<a href='/ebooks/(\d+)'></a>\s*<span class='title'>([^<]+)", self.text
+            )
             books = []
             for book_id, title in matches:
+
                 class Book:
                     def __init__(self, bid, t):
                         self.bid = bid
@@ -53,7 +58,9 @@ def test_search_parses_results(monkeypatch):
                         if tag == "a" and href:
                             return {"href": f"/{self.bid}"}
                         if tag == "span" and class_ == "title":
-                            return types.SimpleNamespace(get_text=lambda strip=True: self.title)
+                            return types.SimpleNamespace(
+                                get_text=lambda strip=True: self.title
+                            )
                         return None
 
                 books.append(Book(book_id, title))
@@ -66,12 +73,14 @@ def test_search_parses_results(monkeypatch):
 
 def test_download_tries_patterns(monkeypatch, tmp_path):
     calls = []
+
     def dummy_download(url, dest):
         calls.append(url)
         if url.endswith("-0.txt"):
             raise RuntimeError("fail")
         dest.write_text("content", encoding="utf-8")
         return dest
+
     monkeypatch.setattr(pg, "_download_file", dummy_download)
     path = pg.download("789", dest_dir=tmp_path)
     assert path.read_text() == "content"
@@ -102,6 +111,7 @@ def test_ingest_downloads_and_embeds(monkeypatch, tmp_path):
 
         def encode(self, texts, convert_to_numpy=True):
             seen["texts"] = list(texts)
+
             class Vec(list):
                 def tolist(self):
                     return list(self)
@@ -115,7 +125,9 @@ def test_ingest_downloads_and_embeds(monkeypatch, tmp_path):
             seen["docs"] = documents
 
     monkeypatch.setattr(pg, "SentenceTransformer", DummyModel)
-    monkeypatch.setattr(pg.corpus_memory, "create_collection", lambda: DummyCollection())
+    monkeypatch.setattr(
+        pg.corpus_memory, "create_collection", lambda: DummyCollection()
+    )
 
     pg.ingest("query")
 

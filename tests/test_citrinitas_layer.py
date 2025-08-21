@@ -20,8 +20,8 @@ sys.modules.setdefault("scipy.io.wavfile", wavfile_mod)
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 
-from INANNA_AI.personality_layers.citrinitas_layer import CitrinitasPersonality
 from INANNA_AI.personality_layers import REGISTRY
+from INANNA_AI.personality_layers.citrinitas_layer import CitrinitasPersonality
 
 
 def test_citrinitas_methods_and_registry():

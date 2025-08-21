@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT))
 
 def test_selection_logic(monkeypatch):
     import crown_decider
+
     importlib.reload(crown_decider)
     monkeypatch.setattr(crown_decider.smm, "list_models", lambda: ["A", "B"])
     monkeypatch.setattr(crown_decider, "_enabled", lambda n: True)
@@ -50,7 +51,11 @@ def test_selection_logic(monkeypatch):
     monkeypatch.setattr(
         crown_decider.emotional_memory,
         "query_history",
-        lambda name: [node_a] * 3 if name == "A" else [node_b_success, node_b_success, node_b_fail],
+        lambda name: (
+            [node_a] * 3
+            if name == "A"
+            else [node_b_success, node_b_success, node_b_fail]
+        ),
     )
 
     def fake_score(response: str, emotion: str):

@@ -5,15 +5,14 @@ from __future__ import annotations
 The timestamp is stored in ISO format with UTC timezone.
 """
 
-from dataclasses import dataclass, asdict, field
+import json
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-import json
-from typing import List, Dict
+from typing import Dict, List
 
-from .utils import sentiment_score
 from . import emotion_analysis
-
+from .utils import sentiment_score
 
 MEMORY_FILE = Path("data/emotional_memory.jsonl")
 
@@ -73,7 +72,9 @@ def query_history(llm_name: str) -> List[EmotionalMemoryNode]:
     return entries
 
 
-def score_affect(response_text: str, user_emotion: str | None = None) -> Dict[str, float]:
+def score_affect(
+    response_text: str, user_emotion: str | None = None
+) -> Dict[str, float]:
     """Return basic resonance metrics for ``response_text``.
 
     Parameters

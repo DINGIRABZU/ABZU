@@ -1,5 +1,5 @@
-import sys
 import json
+import sys
 import types
 from pathlib import Path
 
@@ -39,9 +39,9 @@ gym_mod.spaces = types.SimpleNamespace(Box=lambda **k: None)
 sys.modules.setdefault("stable_baselines3", stable_mod)
 sys.modules.setdefault("gymnasium", gym_mod)
 
-from INANNA_AI_AGENT import INANNA_AI
 import system_monitor
 from INANNA_AI import network_utils
+from INANNA_AI_AGENT import INANNA_AI
 
 
 def test_root_chakra_flow(tmp_path, monkeypatch):
@@ -78,7 +78,9 @@ def test_root_chakra_flow(tmp_path, monkeypatch):
         bytes_sent = 1
         bytes_recv = 2
 
-    monkeypatch.setattr(system_monitor.psutil, "cpu_percent", lambda interval=None: 99.9)
+    monkeypatch.setattr(
+        system_monitor.psutil, "cpu_percent", lambda interval=None: 99.9
+    )
     monkeypatch.setattr(system_monitor.psutil, "virtual_memory", lambda: Mem)
     monkeypatch.setattr(system_monitor.psutil, "net_io_counters", lambda: Net)
 
@@ -110,7 +112,9 @@ def test_root_chakra_flow(tmp_path, monkeypatch):
             pass
 
     monkeypatch.setattr(network_utils, "capture_packets", fake_capture)
-    monkeypatch.setattr(network_utils, "threading", types.SimpleNamespace(Timer=DummyTimer))
+    monkeypatch.setattr(
+        network_utils, "threading", types.SimpleNamespace(Timer=DummyTimer)
+    )
 
     timer = network_utils.schedule_capture("eth0", 2)
     assert isinstance(timer, DummyTimer)

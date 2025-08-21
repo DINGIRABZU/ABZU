@@ -11,12 +11,12 @@ def test_generate_from_text_creates_file(tmp_path, monkeypatch):
     calls = {}
 
     def fake_pipeline(task, model):
-        calls['task'] = task
-        calls['model'] = model
+        calls["task"] = task
+        calls["model"] = model
 
         class P:
             def __call__(self, prompt):
-                calls['prompt'] = prompt
+                calls["prompt"] = prompt
                 return [{"audio": b"WAV"}]
 
         return P()
@@ -29,8 +29,7 @@ def test_generate_from_text_creates_file(tmp_path, monkeypatch):
     assert out.exists()
     assert out.parent == tmp_path
     assert calls == {
-        'task': 'text-to-audio',
-        'model': mg.MODEL_IDS['musicgen'],
-        'prompt': 'beat',
+        "task": "text-to-audio",
+        "model": mg.MODEL_IDS["musicgen"],
+        "prompt": "beat",
     }
-

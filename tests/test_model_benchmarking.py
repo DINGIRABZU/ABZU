@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -25,14 +25,14 @@ sp_pkg.symbolic_parser = types.SimpleNamespace(
 sys.modules.setdefault("SPIRAL_OS", sp_pkg)
 sys.modules["SPIRAL_OS.qnl_engine"] = sp_pkg.qnl_engine
 sys.modules["SPIRAL_OS.symbolic_parser"] = sp_pkg.symbolic_parser
-sys.modules.setdefault("training_guide", types.SimpleNamespace(log_result=lambda *a, **k: None))
+sys.modules.setdefault(
+    "training_guide", types.SimpleNamespace(log_result=lambda *a, **k: None)
+)
 
-from rag.orchestrator import MoGEOrchestrator
-from INANNA_AI import db_storage
-from INANNA_AI import gate_orchestrator
-from INANNA_AI import response_manager
-import rag.orchestrator as orch_mod
 import core.model_selector as ms_mod
+import rag.orchestrator as orch_mod
+from INANNA_AI import db_storage, gate_orchestrator, response_manager
+from rag.orchestrator import MoGEOrchestrator
 
 orch_mod.vector_memory.add_vector = lambda *a, **k: None
 orch_mod.vector_memory.query_vectors = lambda *a, **k: []
@@ -46,7 +46,9 @@ def test_orchestrator_logs_and_updates(tmp_path, monkeypatch):
     monkeypatch.setattr(db_storage, "DB_PATH", db)
 
     orch = MoGEOrchestrator(db_path=db)
-    monkeypatch.setattr(response_manager.corpus_memory, "search_corpus", lambda *a, **k: [("p", "s")])
+    monkeypatch.setattr(
+        response_manager.corpus_memory, "search_corpus", lambda *a, **k: [("p", "s")]
+    )
     monkeypatch.setattr(orch._responder, "generate_reply", lambda t, info: "reply text")
 
     weight_before = orch._model_selector.model_weights["glm"]

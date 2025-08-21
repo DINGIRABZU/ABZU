@@ -20,95 +20,110 @@ def test_parse_intent_memory(monkeypatch):
     called = {}
 
     def dummy_search(query, top_k=3, dirs=None, model_name="all-MiniLM-L6-v2"):
-        called['query'] = query
+        called["query"] = query
         return [("p", "s")]
 
     monkeypatch.setattr(symbolic_parser.corpus_memory, "search_corpus", dummy_search)
 
     result = symbolic_parser.parse_intent({"text": "summon memory"})
 
-    assert called['query']
+    assert called["query"]
     assert result == [[("p", "s")]]
-
 
 
 def test_parse_intent_voice(monkeypatch):
     calls = {}
 
     def fake_speak(text: str, tone: str):
-        calls['args'] = (text, tone)
-        return 'v.wav'
+        calls["args"] = (text, tone)
+        return "v.wav"
 
-    monkeypatch.setattr(symbolic_parser.voice_layer_albedo, 'speak', fake_speak)
-    result = symbolic_parser.parse_intent({'text': 'weave sound', 'tone': 'joy'})
-    assert result == ['v.wav']
-    assert calls['args'] == ('weave sound', 'joy')
+    monkeypatch.setattr(symbolic_parser.voice_layer_albedo, "speak", fake_speak)
+    result = symbolic_parser.parse_intent({"text": "weave sound", "tone": "joy"})
+    assert result == ["v.wav"]
+    assert calls["args"] == ("weave sound", "joy")
 
 
 def test_parse_intent_placeholder(monkeypatch):
     called = {}
 
     def fake_open(data):
-        called['data'] = data
-        return 'ok'
+        called["data"] = data
+        return "ok"
 
-    monkeypatch.setitem(symbolic_parser._ACTIONS, 'gateway.open', fake_open)
-    result = symbolic_parser.parse_intent({'text': 'open portal'})
-    assert result == ['ok']
-    assert called['data']['text'] == 'open portal'
+    monkeypatch.setitem(symbolic_parser._ACTIONS, "gateway.open", fake_open)
+    result = symbolic_parser.parse_intent({"text": "open portal"})
+    assert result == ["ok"]
+    assert called["data"]["text"] == "open portal"
 
 
 def test_route_intent_memory(monkeypatch):
     called = {}
 
     def dummy_search(query, top_k=3):
-        called['query'] = query
-        return ['hit']
+        called["query"] = query
+        return ["hit"]
 
-    monkeypatch.setattr(symbolic_parser.corpus_memory, 'search_corpus', dummy_search)
-    intent = {'intent': 'invoke remembrance', 'action': 'memory.recall', 'text': 'alpha'}
+    monkeypatch.setattr(symbolic_parser.corpus_memory, "search_corpus", dummy_search)
+    intent = {
+        "intent": "invoke remembrance",
+        "action": "memory.recall",
+        "text": "alpha",
+    }
     result = symbolic_parser.route_intent(intent)
-    assert result == ['hit']
-    assert called['query'] == 'alpha'
+    assert result == ["hit"]
+    assert called["query"] == "alpha"
 
 
 def test_route_intent_voice(monkeypatch):
     calls = {}
 
     def fake_speak(text: str, tone: str):
-        calls['args'] = (text, tone)
-        return 'p.wav'
+        calls["args"] = (text, tone)
+        return "p.wav"
 
-    monkeypatch.setattr(symbolic_parser.voice_layer_albedo, 'speak', fake_speak)
-    intent = {'intent': 'play', 'action': 'voice_layer.play', 'text': 'beta', 'tone': 'joy'}
+    monkeypatch.setattr(symbolic_parser.voice_layer_albedo, "speak", fake_speak)
+    intent = {
+        "intent": "play",
+        "action": "voice_layer.play",
+        "text": "beta",
+        "tone": "joy",
+    }
     result = symbolic_parser.route_intent(intent)
-    assert result == 'p.wav'
-    assert calls['args'] == ('beta', 'joy')
+    assert result == "p.wav"
+    assert calls["args"] == ("beta", "joy")
 
 
 def test_route_intent_music(monkeypatch):
     calls = {}
 
     def fake_play(seq: str, emo: str):
-        calls['args'] = (seq, emo)
-        return 'x.wav'
+        calls["args"] = (seq, emo)
+        return "x.wav"
 
-    monkeypatch.setattr(symbolic_parser.seven_dimensional_music, 'play_sequence', fake_play)
-    intent = {'intent': 'play', 'action': 'music.play_sequence', 'text': 'notes', 'tone': 'calm'}
+    monkeypatch.setattr(
+        symbolic_parser.seven_dimensional_music, "play_sequence", fake_play
+    )
+    intent = {
+        "intent": "play",
+        "action": "music.play_sequence",
+        "text": "notes",
+        "tone": "calm",
+    }
     result = symbolic_parser.route_intent(intent)
-    assert result == 'x.wav'
-    assert calls['args'] == ('notes', 'calm')
+    assert result == "x.wav"
+    assert calls["args"] == ("notes", "calm")
 
 
 def test_route_intent_ritual(monkeypatch):
     called = {}
 
     def fake_vault(data):
-        called['data'] = data
-        return 'ok'
+        called["data"] = data
+        return "ok"
 
-    monkeypatch.setattr(symbolic_parser.ritual, 'vault_open', fake_vault)
-    intent = {'intent': 'open vault', 'action': 'ritual.vault_open', 'text': 'secret'}
+    monkeypatch.setattr(symbolic_parser.ritual, "vault_open", fake_vault)
+    intent = {"intent": "open vault", "action": "ritual.vault_open", "text": "secret"}
     result = symbolic_parser.route_intent(intent)
-    assert result == 'ok'
-    assert called['data']['text'] == 'secret'
+    assert result == "ok"
+    assert called["data"]["text"] == "secret"

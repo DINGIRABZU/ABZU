@@ -1,8 +1,8 @@
-import types
-import json
 import builtins
-import sys
 import importlib.util
+import json
+import sys
+import types
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
@@ -68,9 +68,12 @@ def test_ritual_invocation_updates_state(mock_emotion_state, tmp_path, monkeypat
     monkeypatch.setattr(start_spiral_os.glm_analyze, "ANALYSIS_FILE", analysis)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "SUGGESTIONS_LOG", suggestions)
 
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
 
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
+
     def fake_summary():
         purpose.write_text("ritual summary", encoding="utf-8")
         return "summary"
@@ -87,10 +90,15 @@ def test_ritual_invocation_updates_state(mock_emotion_state, tmp_path, monkeypat
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", fake_analysis)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", fake_suggest)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: "id")
-    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda i, packet_count=5: None)
+    monkeypatch.setattr(
+        start_spiral_os.dnu, "monitor_traffic", lambda i, packet_count=5: None
+    )
 
-    monkeypatch.setattr(start_spiral_os.reflection_loop, "load_thresholds", lambda: {"default": 0.42})
+    monkeypatch.setattr(
+        start_spiral_os.reflection_loop, "load_thresholds", lambda: {"default": 0.42}
+    )
     captured = {}
+
     def fake_adjust(detected, intended, tol):
         captured["args"] = (detected, intended, tol)
 
@@ -101,7 +109,9 @@ def test_ritual_invocation_updates_state(mock_emotion_state, tmp_path, monkeypat
             invoke_path.write_text(f"invoked {text}", encoding="utf-8")
             return {"text": "ok"}
 
-    monkeypatch.setattr(start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch())
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
     monkeypatch.setattr(builtins, "input", lambda _="": "")
 
     _run_main(["--command", "❣⟁", "--skip-network", "--no-server", "--no-reflection"])

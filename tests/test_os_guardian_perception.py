@@ -67,6 +67,3 @@ def test_analyze_frame_runs_detection_and_ocr(monkeypatch):
     assert obs[0].label == "button" and obs[0].text == "TEXT"
     assert obs[1].label == "label" and obs[1].text is None
     assert regions == ["region-(slice(0, 2, None), slice(0, 2, None))"]
-
-
-

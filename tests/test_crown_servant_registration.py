@@ -1,7 +1,7 @@
-import sys
 import logging
-from types import ModuleType
+import sys
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 
@@ -13,15 +13,16 @@ sys.modules.setdefault("yaml", ModuleType("yaml"))
 sys.modules.setdefault("vector_memory", ModuleType("vector_memory"))
 sys.modules.setdefault("INANNA_AI.corpus_memory", ModuleType("corpus_memory"))
 
+import INANNA_AI.glm_integration as gi
 import init_crown_agent
 import servant_model_manager as smm
-import INANNA_AI.glm_integration as gi
 
 
 def test_crown_servant_registration(monkeypatch, tmp_path):
     cfg = tmp_path / "cfg.yaml"
     cfg.write_text("", encoding="utf-8")
     import yaml
+
     monkeypatch.setattr(yaml, "safe_load", lambda f: {}, raising=False)
 
     monkeypatch.setattr(init_crown_agent, "CONFIG_FILE", cfg)
@@ -29,7 +30,9 @@ def test_crown_servant_registration(monkeypatch, tmp_path):
 
     dummy = ModuleType("requests")
     dummy.post = lambda *a, **k: type(
-        "R", (), {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}}
+        "R",
+        (),
+        {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
     dummy.RequestException = Exception
 
@@ -50,6 +53,7 @@ def test_servant_models_env(monkeypatch, tmp_path):
     cfg = tmp_path / "cfg.yaml"
     cfg.write_text("", encoding="utf-8")
     import yaml
+
     monkeypatch.setattr(yaml, "safe_load", lambda f: {}, raising=False)
 
     monkeypatch.setattr(init_crown_agent, "CONFIG_FILE", cfg)
@@ -57,7 +61,9 @@ def test_servant_models_env(monkeypatch, tmp_path):
 
     dummy = ModuleType("requests")
     dummy.post = lambda *a, **k: type(
-        "R", (), {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}}
+        "R",
+        (),
+        {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
     dummy.RequestException = Exception
 
@@ -75,6 +81,7 @@ def test_servant_models_validation(monkeypatch, tmp_path, caplog):
     cfg = tmp_path / "cfg.yaml"
     cfg.write_text("", encoding="utf-8")
     import yaml
+
     monkeypatch.setattr(yaml, "safe_load", lambda f: {}, raising=False)
 
     monkeypatch.setattr(init_crown_agent, "CONFIG_FILE", cfg)
@@ -82,7 +89,9 @@ def test_servant_models_validation(monkeypatch, tmp_path, caplog):
 
     dummy = ModuleType("requests")
     dummy.post = lambda *a, **k: type(
-        "R", (), {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}}
+        "R",
+        (),
+        {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
     dummy.RequestException = Exception
 
@@ -106,6 +115,7 @@ def test_servant_models_requires_valid_pair(monkeypatch, tmp_path):
     cfg = tmp_path / "cfg.yaml"
     cfg.write_text("", encoding="utf-8")
     import yaml
+
     monkeypatch.setattr(yaml, "safe_load", lambda f: {}, raising=False)
 
     monkeypatch.setattr(init_crown_agent, "CONFIG_FILE", cfg)
@@ -113,7 +123,9 @@ def test_servant_models_requires_valid_pair(monkeypatch, tmp_path):
 
     dummy = ModuleType("requests")
     dummy.post = lambda *a, **k: type(
-        "R", (), {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}}
+        "R",
+        (),
+        {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
     dummy.RequestException = Exception
 

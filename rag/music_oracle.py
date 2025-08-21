@@ -2,13 +2,14 @@ from __future__ import annotations
 
 """Music oracle that mixes RAG search with audio emotion analysis."""
 
-from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional
 import argparse
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+from audio import play_ritual_music
+from INANNA_AI import emotion_analysis
 
 from . import engine as rag_engine
-from INANNA_AI import emotion_analysis
-from audio import play_ritual_music
 
 
 def analyze_audio(path: Path) -> Dict[str, Any]:
@@ -46,12 +47,12 @@ def answer(
         if isinstance(item, dict):
             snippet = item.get("snippet", "")
         else:
-            snippet = getattr(item, "content", getattr(getattr(item, "node", None), "text", ""))
+            snippet = getattr(
+                item, "content", getattr(getattr(item, "node", None), "text", "")
+            )
     text = ""
     if features:
-        text = (
-            f"Detected emotion {features['emotion']} at {features['tempo']} BPM. "
-        )
+        text = f"Detected emotion {features['emotion']} at {features['tempo']} BPM. "
     text += snippet or "No related passages found."
 
     out_path: Optional[Path] = None
@@ -84,4 +85,3 @@ __all__ = ["answer", "main", "analyze_audio", "search_corpus"]
 
 if __name__ == "__main__":  # pragma: no cover - CLI
     raise SystemExit(main())
-

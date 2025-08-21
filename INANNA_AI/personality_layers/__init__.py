@@ -29,6 +29,7 @@ for mod in iter_modules(__path__):
     if cls is not None:
         REGISTRY[mod.name] = cls
 
+
 def list_personalities() -> list[str]:
     """Return available personality layer names sorted alphabetically."""
 

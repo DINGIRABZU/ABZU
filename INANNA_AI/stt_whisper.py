@@ -1,4 +1,5 @@
 """Speech-to-text helpers using the Whisper library."""
+
 from __future__ import annotations
 
 try:

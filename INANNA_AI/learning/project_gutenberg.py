@@ -2,15 +2,17 @@ from __future__ import annotations
 
 """Helpers for retrieving texts from Project Gutenberg."""
 
+import re
+import types
 from pathlib import Path
 from typing import List, Tuple
-import re
+
 import requests
 from bs4 import BeautifulSoup
-import types
 
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
+
     _HAVE_SENTENCE_TRANSFORMER = True
 except ImportError:  # pragma: no cover - optional dependency
     _HAVE_SENTENCE_TRANSFORMER = False
@@ -23,8 +25,10 @@ except ImportError:  # pragma: no cover - optional dependency
 
         return types.SimpleNamespace(encode=_encode)
 
-from .. import corpus_memory
+
 import crown_config
+
+from .. import corpus_memory
 
 _SEARCH_URL = "https://www.gutenberg.org/ebooks/search/?query={query}"
 _TEXT_PATTERNS = ["-0.txt", "-8.txt", ".txt"]
@@ -135,4 +139,3 @@ def ingest(title_or_id: str) -> Path:
         )
 
     return clean_path
-

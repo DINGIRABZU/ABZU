@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Embed RAG text chunks with optional sentiment tags."""
 
-from pathlib import Path
-from typing import Iterable, List, Dict, Any
 import argparse
 import json
+from pathlib import Path
+from typing import Any, Dict, Iterable, List
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -17,8 +17,8 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
-from INANNA_AI.utils import sentiment_score
 from crown_config import settings
+from INANNA_AI.utils import sentiment_score
 
 _MODEL: Any | None = None
 
@@ -32,6 +32,7 @@ def _get_model() -> Any:
     if SentenceTransformer is not None:
         _MODEL = SentenceTransformer(model_path)
     else:  # pragma: no cover - fallback for tests
+
         class DummyModel:
             def encode(self, texts: Iterable[str], **_: Any) -> List[List[float]]:
                 if isinstance(texts, str):
@@ -55,7 +56,9 @@ def embed_chunks(chunks: Iterable[dict]) -> list[dict]:
         if np is not None:
             flat = np.asarray(emb).flatten().tolist()
         else:
-            flat = [float(x) for x in (emb if isinstance(emb, (list, tuple)) else [emb])]
+            flat = [
+                float(x) for x in (emb if isinstance(emb, (list, tuple)) else [emb])
+            ]
         record = {
             "text": chunk.get("text", ""),
             "source_path": chunk.get("source_path", ""),

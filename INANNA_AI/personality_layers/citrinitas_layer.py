@@ -2,6 +2,7 @@ from __future__ import annotations
 
 """Illumination phase personality layer."""
 
+
 class CitrinitasPersonality:
     """Guide with wisdom of the golden dawn."""
 
@@ -12,5 +13,6 @@ class CitrinitasPersonality:
     def choose_path(self, context: str) -> str:
         """Suggest enlightenment via ``context``."""
         return f"Following {context}, the sun of understanding rises."
+
 
 __all__ = ["CitrinitasPersonality"]

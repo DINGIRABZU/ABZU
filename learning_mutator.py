@@ -53,13 +53,9 @@ def propose_mutations(insight_matrix: dict) -> List[str]:
             continue
         synonyms = intents.get(pattern, {}).get("synonyms", [])
         if synonyms:
-            proposals.append(
-                f"Replace '{pattern}' with synonym '{synonyms[0]}'"
-            )
+            proposals.append(f"Replace '{pattern}' with synonym '{synonyms[0]}'")
         elif best and best != pattern:
-            proposals.append(
-                f"Merge '{pattern}' with high performer '{best}'"
-            )
+            proposals.append(f"Merge '{pattern}' with high performer '{best}'")
 
     # Inspect emotional state for potential personality layer changes
     current = emotion_registry.get_current_layer()

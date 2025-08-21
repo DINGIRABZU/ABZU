@@ -1,4 +1,5 @@
 """Packet capture helpers using scapy or pyshark."""
+
 from __future__ import annotations
 
 import logging
@@ -17,7 +18,9 @@ except Exception:  # pragma: no cover - fallback
 logger = logging.getLogger(__name__)
 
 
-def capture_packets(interface: str, *, count: int = 20, output: Optional[str] = None) -> None:
+def capture_packets(
+    interface: str, *, count: int = 20, output: Optional[str] = None
+) -> None:
     """Capture ``count`` packets from ``interface`` and write them to ``output``."""
     cfg = load_config()
     out_path = Path(output or cfg.get("capture_file", "capture.pcap"))

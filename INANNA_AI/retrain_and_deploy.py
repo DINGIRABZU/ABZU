@@ -2,15 +2,16 @@ from __future__ import annotations
 
 """Automate fine-tuning and deployment of INANNA models."""
 
-from datetime import datetime
-from pathlib import Path
 import argparse
 import os
 import shutil
+from datetime import datetime
+from pathlib import Path
 
 import mlflow
 
 import crown_config
+
 from . import train_soul
 from .corpus_memory import CHROMA_DIR
 

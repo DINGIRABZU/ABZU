@@ -22,4 +22,3 @@ def test_event_symbol_roundtrip():
     assert ms.get_event_symbol("rain", conn=conn) == "☔"
     assert ms.lookup_symbol_history("☔", conn=conn) == ["rain"]
     conn.close()
-

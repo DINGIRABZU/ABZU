@@ -13,6 +13,7 @@ from tools import kimi_k2_client
 def test_register_kimi_servant(monkeypatch):
     smm._REGISTRY.clear()
     called = {}
+
     def dummy(prompt):
         called["prompt"] = prompt
         return "reply"

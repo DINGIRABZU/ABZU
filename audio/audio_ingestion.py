@@ -18,8 +18,9 @@ except Exception:  # pragma: no cover - optional dependency
     ess = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
-    from transformers import ClapProcessor, ClapModel
     import torch
+
+    from transformers import ClapModel, ClapProcessor
 except Exception:  # pragma: no cover - optional dependency
     ClapProcessor = None  # type: ignore
     ClapModel = None  # type: ignore
@@ -117,7 +118,10 @@ def separate_sources(
         audio_tensor = torch.tensor(samples).unsqueeze(0).unsqueeze(0)
         with torch.no_grad():
             sources = apply_model(model, audio_tensor, sr=sr)[0]
-        return {name: src.squeeze().cpu().numpy() for name, src in zip(model.sources, sources)}
+        return {
+            name: src.squeeze().cpu().numpy()
+            for name, src in zip(model.sources, sources)
+        }
     raise ValueError("library must be 'spleeter' or 'demucs'")
 
 
@@ -165,4 +169,3 @@ __all__ = [
     "extract_features",
     "embed_clap",
 ]
-

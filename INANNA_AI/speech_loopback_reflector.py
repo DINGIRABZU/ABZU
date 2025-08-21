@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 """Analyze synthesized speech and update voice parameters."""
 
-from typing import Dict, Any
 import logging
+from typing import Any, Dict
 
 from . import emotion_analysis, voice_evolution
 

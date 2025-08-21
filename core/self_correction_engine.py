@@ -5,9 +5,9 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict
 
-from INANNA_AI import voice_evolution
-import emotional_state
 import archetype_shift_engine
+import emotional_state
+from INANNA_AI import voice_evolution
 
 logger = logging.getLogger(__name__)
 

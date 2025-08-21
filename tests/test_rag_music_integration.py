@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -10,8 +10,8 @@ sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("soundfile", types.ModuleType("soundfile"))
 
-from SPIRAL_OS import qnl_engine
 import vector_memory
+from SPIRAL_OS import qnl_engine
 
 audio_pkg = types.ModuleType("audio")
 fake_play = types.ModuleType("play_ritual_music")
@@ -36,7 +36,9 @@ def test_rag_music_pipeline(tmp_path, monkeypatch):
         ingested["meta"] = meta
 
     monkeypatch.setattr(vector_memory, "add_vector", fake_add_vector)
-    vector_memory.add_vector("Hex secrets", {"SOURCE_TYPE": "PDF", "SOURCE_PATH": str(pdf)})
+    vector_memory.add_vector(
+        "Hex secrets", {"SOURCE_TYPE": "PDF", "SOURCE_PATH": str(pdf)}
+    )
 
     features = {"emotion": "joy", "tempo": 90.0, "pitch": 440.0}
     monkeypatch.setattr(rmo, "analyze_audio", lambda p: features)
@@ -45,7 +47,9 @@ def test_rag_music_pipeline(tmp_path, monkeypatch):
 
     def fake_query(query, top_n=5):
         called["query"] = query
-        return [{"snippet": ingested.get("text", ""), "metadata": ingested.get("meta", {})}]
+        return [
+            {"snippet": ingested.get("text", ""), "metadata": ingested.get("meta", {})}
+        ]
 
     monkeypatch.setattr(rmo.rag_engine, "query", fake_query)
 
@@ -70,4 +74,3 @@ def test_rag_music_pipeline(tmp_path, monkeypatch):
     assert called["query"] == "What is hidden? emotion:joy tempo:90.0 pitch:440.0"
     assert hex_called["value"] == "deadbeef"
     assert ingested["meta"]["SOURCE_PATH"] == str(pdf)
-

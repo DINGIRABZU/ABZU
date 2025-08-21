@@ -1,6 +1,6 @@
-from pathlib import Path
 import sys
 import types
+from pathlib import Path
 
 from tests.helpers.config_stub import build_settings
 
@@ -23,7 +23,9 @@ def test_auto_retrain_called(tmp_path, monkeypatch):
     monkeypatch.setattr(training_guide.auto_retrain, "INSIGHT_FILE", insight)
     monkeypatch.setattr(training_guide, "AUTO_RETRAIN_THRESHOLD", 1)
     calls = []
-    monkeypatch.setattr(training_guide.auto_retrain, "main", lambda args: calls.append(args))
+    monkeypatch.setattr(
+        training_guide.auto_retrain, "main", lambda args: calls.append(args)
+    )
     monkeypatch.setattr(training_guide.db_storage, "log_feedback", lambda *a, **k: None)
 
     intent = {"intent": "open", "action": "gateway.open"}

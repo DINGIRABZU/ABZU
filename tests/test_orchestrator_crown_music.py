@@ -1,6 +1,7 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,4 +78,3 @@ def test_crown_music_path(monkeypatch, tmp_path):
 
     assert res["music_path"] == str(written["path"])
     assert res["qnl_phrases"] == [{"phrase": "p"}]
-

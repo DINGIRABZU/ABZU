@@ -1,7 +1,7 @@
 import importlib
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 dummy_np = types.ModuleType("numpy")
 dummy_np.clip = lambda val, lo, hi: lo if val < lo else hi if val > hi else val
@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT))
 
 def test_history_preference(monkeypatch):
     import crown_decider
+
     importlib.reload(crown_decider)
     monkeypatch.setattr(crown_decider.smm, "list_models", lambda: ["A", "B"])
     monkeypatch.setattr(crown_decider, "_enabled", lambda n: True)
@@ -46,4 +47,3 @@ def test_history_preference(monkeypatch):
     )
     res = crown_decider.recommend_llm("instructional", "joy")
     assert res == "A"
-

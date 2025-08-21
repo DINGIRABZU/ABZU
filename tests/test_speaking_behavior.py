@@ -18,4 +18,3 @@ def test_speaking_engine_speak(monkeypatch):
 
     assert path == "file.wav"
     assert calls == ["file.wav"]
-

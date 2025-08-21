@@ -11,30 +11,30 @@ import threading
 from pathlib import Path
 from typing import List, Optional
 
-import system_monitor
-
 import yaml
 
+import system_monitor
 from env_validation import check_optional_packages, check_required
 
 check_required(["GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"])
 check_optional_packages(["scapy", "sentence_transformers", "aiortc"])
 
-from INANNA_AI_AGENT import INANNA_AI
-from INANNA_AI import glm_init, glm_analyze
-from INANNA_AI.ethical_validator import EthicalValidator
-from INANNA_AI import defensive_network_utils as dnu
-from INANNA_AI.personality_layers import REGISTRY, list_personalities
-from INANNA_AI import listening_engine
-from rag.orchestrator import MoGEOrchestrator
-from archetype_shift_engine import maybe_shift_archetype
-from tools import reflection_loop
-import server
 import uvicorn
+
 import emotion_registry
 import emotional_state
-from core import self_correction_engine, language_engine
+import server
+from archetype_shift_engine import maybe_shift_archetype
 from connectors import webrtc_connector
+from core import language_engine, self_correction_engine
+from INANNA_AI import defensive_network_utils as dnu
+from INANNA_AI import glm_analyze, glm_init, listening_engine
+from INANNA_AI.ethical_validator import EthicalValidator
+from INANNA_AI.personality_layers import REGISTRY, list_personalities
+from INANNA_AI_AGENT import INANNA_AI
+from rag.orchestrator import MoGEOrchestrator
+from tools import reflection_loop
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
@@ -191,7 +191,6 @@ def main(argv: Optional[List[str]] = None) -> None:
     tol = reflection_loop.load_thresholds().get("default", 0.0)
     logger.info("Startup self-correction for %s (tol %.3f)", emotion, tol)
     self_correction_engine.adjust(emotion, emotion, tol)
-
 
     layer_name = args.personality or os.getenv("ARCHETYPE_STATE", "ALBEDO")
     layer_name = layer_name.lower()

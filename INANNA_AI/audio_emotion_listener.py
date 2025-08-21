@@ -39,7 +39,9 @@ def detect_emotion(wave: np.ndarray, sr: int) -> Dict[str, float | str]:
 
     if librosa is None:
         raise RuntimeError("librosa library not installed")
-    f0 = librosa.yin(wave, fmin=librosa.note_to_hz("C2"), fmax=librosa.note_to_hz("C7"), sr=sr)
+    f0 = librosa.yin(
+        wave, fmin=librosa.note_to_hz("C2"), fmax=librosa.note_to_hz("C7"), sr=sr
+    )
     pitch = float(np.nanmean(f0))
     tempo, _ = librosa.beat.beat_track(y=wave, sr=sr)
     tempo = float(np.atleast_1d(tempo)[0])
@@ -62,7 +64,9 @@ def detect_emotion(wave: np.ndarray, sr: int) -> Dict[str, float | str]:
     return {"emotion": emotion, "pitch": round(pitch, 2), "tempo": round(tempo, 2)}
 
 
-def listen_for_emotion(duration: float = 3.0, sr: int = 44100) -> Dict[str, float | str]:
+def listen_for_emotion(
+    duration: float = 3.0, sr: int = 44100
+) -> Dict[str, float | str]:
     """Record audio and update :mod:`emotional_state` with the detected emotion."""
     wave = record_audio(duration, sr)
     info = detect_emotion(wave, sr)

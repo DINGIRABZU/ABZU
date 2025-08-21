@@ -1,7 +1,8 @@
-import sys
-import os
 import json
+import os
+import sys
 from pathlib import Path
+
 import numpy as np
 import soundfile as sf
 
@@ -37,7 +38,7 @@ def test_cli_creates_final_track(tmp_path):
         str(out),
     ]
     try:
-        monkeypatch = __import__('pytest').MonkeyPatch()
+        monkeypatch = __import__("pytest").MonkeyPatch()
         monkeypatch.setattr(sdm, "analyze_seven_planes", lambda *a, **k: DUMMY_PLANES)
         sdm.main()
         monkeypatch.undo()
@@ -58,6 +59,7 @@ def test_cli_creates_final_track(tmp_path):
         "divine",
     }
     assert data["planes"]["physical"]["element"] == "bass"
+
 
 def test_cli_secret_message(tmp_path):
     sr = 44100
@@ -80,7 +82,7 @@ def test_cli_secret_message(tmp_path):
     ]
     try:
         os.chdir(tmp_path)
-        monkeypatch = __import__('pytest').MonkeyPatch()
+        monkeypatch = __import__("pytest").MonkeyPatch()
         monkeypatch.setattr(sdm, "analyze_seven_planes", lambda *a, **k: DUMMY_PLANES)
         sdm.main()
         monkeypatch.undo()
@@ -89,6 +91,7 @@ def test_cli_secret_message(tmp_path):
         sys.argv = argv_backup
 
     from MUSIC_FOUNDATION.synthetic_stego import extract_data
+
     hidden = extract_data(tmp_path / "human_layer.wav")
     assert hidden == secret
     jpath = out.with_suffix(".json")

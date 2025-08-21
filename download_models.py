@@ -4,8 +4,9 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from download_model import download_deepseek  # reuse logic
 from dotenv import load_dotenv
+
+from download_model import download_deepseek  # reuse logic
 
 try:  # pragma: no cover - package availability varies
     from huggingface_hub import snapshot_download

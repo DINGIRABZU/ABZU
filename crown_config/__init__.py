@@ -49,6 +49,7 @@ except Exception:  # pragma: no cover - fallback when dependency missing
     def SettingsConfigDict(**kwargs):  # type: ignore[misc]
         return kwargs
 
+
 # ``config`` is now a package; resolve paths relative to the repository root.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -125,9 +126,7 @@ class Settings(BaseSettings):
     retrain_threshold: int = Field(10, alias="RETRAIN_THRESHOLD")
     llm_rotation_period: int = Field(300, alias="LLM_ROTATION_PERIOD")
     llm_max_failures: int = Field(3, alias="LLM_MAX_FAILURES")
-    feedback_novelty_threshold: float = Field(
-        0.3, alias="FEEDBACK_NOVELTY_THRESHOLD"
-    )
+    feedback_novelty_threshold: float = Field(0.3, alias="FEEDBACK_NOVELTY_THRESHOLD")
     feedback_coherence_threshold: float = Field(
         0.7, alias="FEEDBACK_COHERENCE_THRESHOLD"
     )
@@ -164,7 +163,9 @@ def require(*names: str) -> None:
     if missing:
         plural = "s" if len(missing) > 1 else ""
         env_names = ", ".join(n.upper() for n in missing)
-        raise RuntimeError(f"Missing required environment variable{plural}: {env_names}")
+        raise RuntimeError(
+            f"Missing required environment variable{plural}: {env_names}"
+        )
 
 
 def reload() -> None:

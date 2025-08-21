@@ -8,8 +8,9 @@ from typing import Callable
 
 import numpy as np
 
-from . import language_engine, avatar_expression_engine
 from audio import engine as audio_engine
+
+from . import avatar_expression_engine, language_engine
 
 FrameCallback = Callable[[np.ndarray], None]
 

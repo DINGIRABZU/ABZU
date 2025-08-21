@@ -2,13 +2,14 @@ from __future__ import annotations
 
 """Lightweight spiral memory stored as JSON lines."""
 
+import json
 from dataclasses import asdict, is_dataclass
 from datetime import datetime
 from pathlib import Path
-import json
-from typing import Any, Dict, Iterable, Protocol, List
+from typing import Any, Dict, Iterable, List, Protocol
 
-from aspect_processor import analyze_phonetic, analyze_semantic, analyze_temporal
+from aspect_processor import (analyze_phonetic, analyze_semantic,
+                              analyze_temporal)
 
 
 class SpiralNode(Protocol):
@@ -16,23 +17,17 @@ class SpiralNode(Protocol):
 
     children: Iterable["SpiralNode"]
 
-    def ask(self) -> None:
-        ...
+    def ask(self) -> None: ...
 
-    def feel(self) -> None:
-        ...
+    def feel(self) -> None: ...
 
-    def symbolize(self) -> None:
-        ...
+    def symbolize(self) -> None: ...
 
-    def pause(self) -> None:
-        ...
+    def pause(self) -> None: ...
 
-    def reflect(self) -> None:
-        ...
+    def reflect(self) -> None: ...
 
-    def decide(self) -> Dict[str, Any]:
-        ...
+    def decide(self) -> Dict[str, Any]: ...
 
 
 CORTEX_MEMORY_FILE = Path("data/cortex_memory_spiral.jsonl")

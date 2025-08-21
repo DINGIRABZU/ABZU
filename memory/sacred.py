@@ -11,9 +11,9 @@ returns the path to a generated image along with a short phrase derived from the
 latent vector.
 """
 
+import datetime as _dt
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
-import datetime as _dt
 
 try:  # pragma: no cover - optional dependency
     import torch
@@ -29,7 +29,8 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     Image = None  # type: ignore
 
-from aspect_processor import analyze_phonetic, analyze_semantic, analyze_spatial
+from aspect_processor import (analyze_phonetic, analyze_semantic,
+                              analyze_spatial)
 
 SACRED_DIR = Path(__file__).resolve().parent / "data" / "sacred"
 SACRED_DIR.mkdir(parents=True, exist_ok=True)
@@ -58,7 +59,9 @@ if torch is not None:
             h1 = torch.relu(self.fc1(x))
             return self.fc_mu(h1), self.fc_logvar(h1)
 
-        def reparameterize(self, mu: torch.Tensor, logvar: torch.Tensor) -> torch.Tensor:
+        def reparameterize(
+            self, mu: torch.Tensor, logvar: torch.Tensor
+        ) -> torch.Tensor:
             std = torch.exp(0.5 * logvar)
             eps = torch.randn_like(std)
             return mu + eps * std

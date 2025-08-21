@@ -1,23 +1,25 @@
 """Helpers to evolve INANNA's vocal style."""
+
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable
 from pathlib import Path
+from typing import Any, Dict, Iterable
+
 import yaml
 
-from . import emotional_synaptic_engine
 import emotional_state
 
-from . import db_storage
+from . import db_storage, emotional_synaptic_engine
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-from crown_config import settings
-
 import numpy as np
+
+from crown_config import settings
 
 DEFAULT_VOICE_STYLES: Dict[str, Dict[str, float]] = {
     "neutral": {"speed": 1.0, "pitch": 0.0},
@@ -76,9 +78,9 @@ class VoiceEvolution:
     """Manage voice style parameters and allow future fine-tuning."""
 
     def __init__(self, styles: Dict[str, Dict[str, float]] | None = None) -> None:
-        self.styles: Dict[str, Dict[str, float]] = (
-            {k: v.copy() for k, v in (styles or DEFAULT_VOICE_STYLES).items()}
-        )
+        self.styles: Dict[str, Dict[str, float]] = {
+            k: v.copy() for k, v in (styles or DEFAULT_VOICE_STYLES).items()
+        }
 
     def base_params(self, emotion: str) -> Dict[str, float]:
         """Return stored parameters for ``emotion`` without filters."""
@@ -87,12 +89,12 @@ class VoiceEvolution:
     def get_params(self, emotion: str) -> Dict[str, float]:
         """Return style parameters for ``emotion`` label including filters."""
         style = self.base_params(emotion)
-        params = emotional_synaptic_engine.map_emotion_to_filters(
-            emotion, style=style
-        )
+        params = emotional_synaptic_engine.map_emotion_to_filters(emotion, style=style)
         return params
 
-    def update_from_history(self, history: Iterable[Dict[str, Any]] | None = None) -> None:
+    def update_from_history(
+        self, history: Iterable[Dict[str, Any]] | None = None
+    ) -> None:
         """Adjust voice styles based on recent emotion analyses.
 
         When ``history`` is ``None`` recent emotion logs are pulled from
@@ -102,7 +104,9 @@ class VoiceEvolution:
         records = []
         if vector_memory is not None:
             try:
-                records = vector_memory.query_vectors(filter={"type": "emotion"}, limit=20)
+                records = vector_memory.query_vectors(
+                    filter={"type": "emotion"}, limit=20
+                )
             except Exception:
                 records = []
         if history is not None:
@@ -126,13 +130,19 @@ class VoiceEvolution:
         for emotion, values in grouped.items():
             arousal = float(np.mean(values["arousal"]))
             valence = float(np.mean(values["valence"]))
-            sentiment = float(np.mean(values["sentiment"])) if values["sentiment"] else 0.0
+            sentiment = (
+                float(np.mean(values["sentiment"])) if values["sentiment"] else 0.0
+            )
             style = self.styles.setdefault(emotion, {"speed": 1.0, "pitch": 0.0})
             new_speed = round(1.0 + (arousal - 0.5) * 0.4, 3)
             new_pitch = round((valence - 0.5) * 2.0, 3)
             weight = 1.0 + sentiment
-            style["speed"] = round((style["speed"] + new_speed * weight) / (1.0 + weight), 3)
-            style["pitch"] = round((style["pitch"] + new_pitch * weight) / (1.0 + weight), 3)
+            style["speed"] = round(
+                (style["speed"] + new_speed * weight) / (1.0 + weight), 3
+            )
+            style["pitch"] = round(
+                (style["pitch"] + new_pitch * weight) / (1.0 + weight), 3
+            )
 
         if grouped:
             try:
@@ -144,7 +154,9 @@ class VoiceEvolution:
         """Update styles based on recent memory and log result."""
         if vector_memory is not None:
             try:
-                history = vector_memory.query_vectors(filter={"type": "emotion"}, limit=20)
+                history = vector_memory.query_vectors(
+                    filter={"type": "emotion"}, limit=20
+                )
             except Exception:
                 history = []
         else:

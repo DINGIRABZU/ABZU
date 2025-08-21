@@ -4,13 +4,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI_AGENT import model  # type: ignore
-
-from transformers import GPT2Config, GPT2LMHeadModel, PreTrainedTokenizerFast
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import WordLevelTrainer
+
+from INANNA_AI_AGENT import model  # type: ignore
+from transformers import GPT2Config, GPT2LMHeadModel, PreTrainedTokenizerFast
 
 
 def create_dummy_model(dir_path: Path) -> None:

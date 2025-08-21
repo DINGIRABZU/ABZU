@@ -2,9 +2,9 @@ from __future__ import annotations
 
 """Arrange and export audio stems produced by :mod:`vocal_isolation`."""
 
+import shutil
 from pathlib import Path
 from typing import Dict, Iterable, List
-import shutil
 
 try:  # pragma: no cover - optional dependency
     from audio.segment import AudioSegment
@@ -15,6 +15,7 @@ except Exception:  # pragma: no cover - optional dependency
 # ---------------------------------------------------------------------------
 # Core helpers
 # ---------------------------------------------------------------------------
+
 
 def layer_stems(
     stems: Dict[str, Path],
@@ -65,7 +66,9 @@ def slice_loop(segment: AudioSegment, start: float, duration: float) -> AudioSeg
     return segment[start_ms:end_ms]
 
 
-def apply_fades(segment: AudioSegment, fade_in_ms: int = 0, fade_out_ms: int = 0) -> AudioSegment:
+def apply_fades(
+    segment: AudioSegment, fade_in_ms: int = 0, fade_out_ms: int = 0
+) -> AudioSegment:
     """Apply fades to ``segment`` and return a new :class:`AudioSegment`."""
     if fade_in_ms:
         segment = segment.fade_in(fade_in_ms)
@@ -107,15 +110,20 @@ def export_session(
 # Optional session file helpers
 # ---------------------------------------------------------------------------
 
+
 def _tool_available(name: str) -> bool:
     return shutil.which(name) is not None
 
 
 def write_ardour_session(audio_path: Path, out_path: Path) -> Path:
     """Write a minimal Ardour session referencing ``audio_path``."""
-    if not (_tool_available("ardour6") or _tool_available("ardour7") or _tool_available("ardour")):
+    if not (
+        _tool_available("ardour6")
+        or _tool_available("ardour7")
+        or _tool_available("ardour")
+    ):
         raise RuntimeError("Ardour not installed")
-    xml = f"<Session><Sources><Source name=\"{audio_path}\"/></Sources></Session>"
+    xml = f'<Session><Sources><Source name="{audio_path}"/></Sources></Session>'
     out_path.write_text(xml)
     return out_path
 

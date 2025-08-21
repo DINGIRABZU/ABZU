@@ -3,11 +3,11 @@ from __future__ import annotations
 """Compose short ritual music based on emotion and play it."""
 
 import argparse
+import base64
 import json
+from io import BytesIO
 from pathlib import Path
 from threading import Thread
-import base64
-from io import BytesIO
 
 import numpy as np
 
@@ -16,15 +16,13 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-from MUSIC_FOUNDATION import layer_generators
-from MUSIC_FOUNDATION.synthetic_stego_engine import encode_phrase
-from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (
-    SCALE_MELODIES,
-    load_emotion_music_map,
-    select_music_params,
-)
 from core import expressive_output
 from INANNA_AI import emotion_analysis, sonic_emotion_mapper
+from MUSIC_FOUNDATION import layer_generators
+from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (SCALE_MELODIES,
+                                                       load_emotion_music_map,
+                                                       select_music_params)
+from MUSIC_FOUNDATION.synthetic_stego_engine import encode_phrase
 
 EMOTION_MAP = Path(__file__).resolve().parent / "emotion_music_map.yaml"
 RITUAL_PROFILE = Path(__file__).resolve().parent / "ritual_profile.json"
@@ -89,12 +87,18 @@ def compose_ritual_music(
     mapping = load_emotion_music_map(EMOTION_MAP)
     params = sonic_emotion_mapper.map_emotion_to_sound(emotion, archetype)
 
-    tempo, _scale, melody, rhythm = select_music_params(emotion, mapping, params["tempo"])
+    tempo, _scale, melody, rhythm = select_music_params(
+        emotion, mapping, params["tempo"]
+    )
 
     if params.get("scale"):
         melody = SCALE_MELODIES.get(params["scale"], melody)
 
-    wave_type = "square" if any("guitar" in t or "trumpet" in t for t in params.get("timbre", [])) else "sine"
+    wave_type = (
+        "square"
+        if any("guitar" in t or "trumpet" in t for t in params.get("timbre", []))
+        else "sine"
+    )
 
     wave = layer_generators.compose_human_layer(
         tempo,

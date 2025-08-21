@@ -12,12 +12,18 @@ logger = logging.getLogger(__name__)
 
 # Allowlist values may be populated via environment variables
 _DEFAULT_COMMANDS = {"echo", "ls", "pwd", "cat"}
-_ALLOWED_COMMANDS = set(filter(None, os.environ.get("OG_ALLOWED_COMMANDS", "").split(os.pathsep)))
+_ALLOWED_COMMANDS = set(
+    filter(None, os.environ.get("OG_ALLOWED_COMMANDS", "").split(os.pathsep))
+)
 if not _ALLOWED_COMMANDS:
     _ALLOWED_COMMANDS = set(_DEFAULT_COMMANDS)
 
-_ALLOWED_APPS = set(filter(None, os.environ.get("OG_ALLOWED_APPS", "").split(os.pathsep)))
-_ALLOWED_DOMAINS = set(filter(None, os.environ.get("OG_ALLOWED_DOMAINS", "").split(os.pathsep)))
+_ALLOWED_APPS = set(
+    filter(None, os.environ.get("OG_ALLOWED_APPS", "").split(os.pathsep))
+)
+_ALLOWED_DOMAINS = set(
+    filter(None, os.environ.get("OG_ALLOWED_DOMAINS", "").split(os.pathsep))
+)
 
 _POLICY = os.environ.get("OG_POLICY", "allow").lower()  # allow, ask or deny
 

@@ -68,7 +68,9 @@ def tokenize_texts(text_dict: Dict[str, str]) -> Dict[str, List[str]]:
     return tokens
 
 
-def preprocess_texts(text_dict: Dict[str, str], cache_dir: Path | str = "cache") -> Dict[str, List[str]]:
+def preprocess_texts(
+    text_dict: Dict[str, str], cache_dir: Path | str = "cache"
+) -> Dict[str, List[str]]:
     """Preprocess texts with caching support."""
     cache_dir = Path(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)

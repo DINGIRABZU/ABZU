@@ -1,7 +1,7 @@
-import sys
-from pathlib import Path
 import builtins
 import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 import yaml
@@ -34,8 +34,10 @@ steps:
 
     def fake_run(cmd, **kwargs):
         calls.append((cmd, kwargs))
+
         class Result:
             returncode = 0
+
         return Result()
 
     monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)
@@ -64,8 +66,10 @@ steps:
 
     def fake_run(cmd, **kwargs):
         calls.append((cmd, kwargs))
+
         class Result:
             returncode = 0
+
         return Result()
 
     monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)
@@ -101,8 +105,10 @@ steps:
     def fake_run(cmd, **kwargs):
         if cmd.strip() == "bad":
             raise subprocess.CalledProcessError(1, cmd)
+
         class Result:
             returncode = 0
+
         return Result()
 
     monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)

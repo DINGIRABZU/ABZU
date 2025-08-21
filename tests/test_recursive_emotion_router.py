@@ -44,7 +44,9 @@ class DummyNode:
 def test_route_logs_each_stage(monkeypatch):
     node = DummyNode()
     logged = []
-    monkeypatch.setattr(rer.vector_memory, "add_vector", lambda t, m: logged.append(m["stage"]))
+    monkeypatch.setattr(
+        rer.vector_memory, "add_vector", lambda t, m: logged.append(m["stage"])
+    )
 
     res = rer.route(node)
 
@@ -59,7 +61,9 @@ def test_recursive_depth(monkeypatch):
     root.children.append(child)
 
     logged = []
-    monkeypatch.setattr(rer.vector_memory, "add_vector", lambda t, m: logged.append(m["stage"]))
+    monkeypatch.setattr(
+        rer.vector_memory, "add_vector", lambda t, m: logged.append(m["stage"])
+    )
 
     rer.route(root, depth=2)
 

@@ -1,9 +1,9 @@
 import json
+import logging
 import sys
 import types
 from pathlib import Path
 from types import SimpleNamespace
-import logging
 
 from tests.helpers.config_stub import build_settings
 

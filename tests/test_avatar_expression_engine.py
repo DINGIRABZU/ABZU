@@ -1,14 +1,15 @@
 import sys
 from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+import emotional_state
+from audio import engine as audio_engine
 from core import avatar_expression_engine as aee
 from core import video_engine
-from audio import engine as audio_engine
-import emotional_state
 
 
 def test_stream_avatar_audio(monkeypatch):
@@ -24,4 +25,3 @@ def test_stream_avatar_audio(monkeypatch):
     open_pixels = out[0][-1].sum()
     closed_pixels = out[1][-1].sum()
     assert open_pixels > closed_pixels
-

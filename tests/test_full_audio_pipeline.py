@@ -1,7 +1,8 @@
+import shutil
 import sys
 from pathlib import Path
+
 import numpy as np
-import shutil
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,10 +19,10 @@ pytestmark = pytest.mark.skipif(
     shutil.which("ffmpeg") is None, reason="ffmpeg not installed"
 )
 
-from SPIRAL_OS import qnl_engine
-from audio import audio_ingestion, dsp_engine
 import music_generation
 import vector_memory
+from audio import audio_ingestion, dsp_engine
+from SPIRAL_OS import qnl_engine
 
 
 def test_full_audio_pipeline(monkeypatch, tmp_path):

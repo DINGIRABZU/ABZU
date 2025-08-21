@@ -2,11 +2,11 @@ from __future__ import annotations
 
 """Pattern-based invocation engine."""
 
-from typing import Callable, Dict, Tuple, Any, List, TYPE_CHECKING
 import json
 import logging
-from pathlib import Path
 import re
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Tuple
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -23,7 +23,9 @@ logger = logging.getLogger(__name__)
 _RITUAL_FILE = Path(__file__).resolve().parent / "ritual_profile.json"
 
 # Map of (symbols, emotion) -> callback
-_CALLBACKS: Dict[Tuple[str, str | None], Callable[[str, str | None, MoGEOrchestrator | None], Any]] = {}
+_CALLBACKS: Dict[
+    Tuple[str, str | None], Callable[[str, str | None, MoGEOrchestrator | None], Any]
+] = {}
 # Map of (symbols, emotion) -> orchestrator hook name
 _HOOKS: Dict[Tuple[str, str | None], str] = {}
 
@@ -47,7 +49,9 @@ def register_invocation(
     if hook:
         _HOOKS[key] = hook
     try:
-        vector_memory.add_vector(symbols, {"symbols": symbols, "emotion": emotion or ""})
+        vector_memory.add_vector(
+            symbols, {"symbols": symbols, "emotion": emotion or ""}
+        )
     except Exception:
         pass
 
@@ -82,12 +86,17 @@ def invoke(text: str, orchestrator: MoGEOrchestrator | None = None) -> List[Any]
 
     if cb is None and hk is None:
         try:
-            search_res = vector_memory.search(symbols or text, filter={"emotion": emotion} if emotion else None, k=1)
+            search_res = vector_memory.search(
+                symbols or text, filter={"emotion": emotion} if emotion else None, k=1
+            )
         except Exception:
             search_res = []
         if search_res:
             meta = search_res[0]
-            key = (str(meta.get("symbols", meta.get("text", ""))), meta.get("emotion") or None)
+            key = (
+                str(meta.get("symbols", meta.get("text", ""))),
+                meta.get("emotion") or None,
+            )
             cb = _CALLBACKS.get(key)
             hk = _HOOKS.get(key)
 
@@ -122,4 +131,3 @@ def invoke_ritual(name: str) -> List[str]:
 
 
 __all__ = ["register_invocation", "invoke", "clear_registry", "invoke_ritual"]
-

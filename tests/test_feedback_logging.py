@@ -21,4 +21,3 @@ def test_log_and_fetch_feedback(tmp_path):
     limited = db_storage.fetch_feedback(limit=1, db_path=db)
     assert len(limited) == 1
     assert limited[0]["emotion"] == "joy"
-

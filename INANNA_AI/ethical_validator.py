@@ -3,18 +3,22 @@
 This simple gate checks the requesting user and rejects prompts from
 unauthorized sources before they reach the language models.
 """
+
 from __future__ import annotations
 
-from typing import Dict, Iterable, List
-from pathlib import Path
-from datetime import datetime
 import logging
+import types
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Iterable, List
 
 import numpy as np
-import types
+
 from . import adaptive_learning
+
 try:
     from sentence_transformers import SentenceTransformer
+
     _HAVE_SENTENCE_TRANSFORMER = True
 except ImportError:  # pragma: no cover - optional dependency
     _HAVE_SENTENCE_TRANSFORMER = False

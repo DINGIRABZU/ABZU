@@ -1,12 +1,12 @@
-import sys
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI.network_utils import capture_packets
-from INANNA_AI.network_utils import analyze_capture, load_config
+from INANNA_AI.network_utils import (analyze_capture, capture_packets,
+                                     load_config)
 
 
 def _dummy_packet(proto: str, src: str | None = None):
@@ -59,7 +59,8 @@ def test_analyze_capture(tmp_path, monkeypatch):
     log_dir = tmp_path / "logs"
     monkeypatch.setattr("INANNA_AI.network_utils.analysis.rdpcap", rdpcap)
     monkeypatch.setattr(
-        "INANNA_AI.network_utils.analysis.load_config", lambda: {"log_dir": str(log_dir)}
+        "INANNA_AI.network_utils.analysis.load_config",
+        lambda: {"log_dir": str(log_dir)},
     )
 
     summary = analyze_capture("dummy.pcap")
@@ -76,6 +77,7 @@ def test_load_config_from_resource(tmp_path, monkeypatch):
     cfg = tmp_path / "network_utils_config.json"
     cfg.write_text(json.dumps({"log_dir": "x", "capture_file": "y"}))
     import INANNA_AI.network_utils as nu
+
     monkeypatch.setattr(nu.resources, "files", lambda pkg: tmp_path)
     monkeypatch.setattr(nu, "CONFIG_FILE", tmp_path / "missing.json")
     assert load_config() == {"log_dir": "x", "capture_file": "y"}
@@ -83,6 +85,10 @@ def test_load_config_from_resource(tmp_path, monkeypatch):
 
 def test_load_config_missing(monkeypatch):
     import INANNA_AI.network_utils as nu
-    monkeypatch.setattr(nu.resources, "files", lambda pkg: Path('missing'))
-    monkeypatch.setattr(nu, "CONFIG_FILE", Path('missing'))
-    assert load_config() == {"log_dir": "network_logs", "capture_file": "network_logs/capture.pcap"}
+
+    monkeypatch.setattr(nu.resources, "files", lambda pkg: Path("missing"))
+    monkeypatch.setattr(nu, "CONFIG_FILE", Path("missing"))
+    assert load_config() == {
+        "log_dir": "network_logs",
+        "capture_file": "network_logs/capture.pcap",
+    }

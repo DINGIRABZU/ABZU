@@ -20,4 +20,3 @@ def ritual_action_sequence(condition: str, emotion: str):
 
 
 __all__ = ["classify_task", "ritual_action_sequence", "TaskProfiler"]
-

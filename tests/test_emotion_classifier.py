@@ -1,6 +1,7 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
+
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,11 +19,13 @@ def test_train_and_predict(tmp_path, monkeypatch):
     model_path = tmp_path / "model.joblib"
     monkeypatch.setattr(ec, "MODEL_PATH", model_path)
 
-    X = np.array([
-        [100.0, 80.0],
-        [350.0, 130.0],
-        [200.0, 100.0],
-    ])
+    X = np.array(
+        [
+            [100.0, 80.0],
+            [350.0, 130.0],
+            [200.0, 100.0],
+        ]
+    )
     y = np.array(["calm", "stress", "neutral"])
 
     ec.train_from_arrays(X, y)
@@ -31,4 +34,3 @@ def test_train_and_predict(tmp_path, monkeypatch):
     ec._MODEL = None
     pred = ec.predict_emotion({"pitch": 350.0, "tempo": 130.0})
     assert pred == "stress"
-

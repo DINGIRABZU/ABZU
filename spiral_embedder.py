@@ -2,10 +2,9 @@ from __future__ import annotations
 
 """CLI helper for inserting embeddings into ``spiral_vector_db``."""
 
-from pathlib import Path
 import argparse
 import json
-
+from pathlib import Path
 
 import spiral_vector_db as svdb
 
@@ -41,10 +40,14 @@ def insert_file(path: Path, db_path: Path | None = None) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="spiral_embedder")
-    parser.add_argument("--in", dest="in_path", required=True, help="Input JSON or JSONL")
+    parser.add_argument(
+        "--in", dest="in_path", required=True, help="Input JSON or JSONL"
+    )
     parser.add_argument("--db-path", help="Database directory")
     args = parser.parse_args(argv)
-    count = insert_file(Path(args.in_path), Path(args.db_path) if args.db_path else None)
+    count = insert_file(
+        Path(args.in_path), Path(args.db_path) if args.db_path else None
+    )
     print(count)
     return 0
 
@@ -54,4 +57,3 @@ __all__ = ["insert_file", "main"]
 
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())
-

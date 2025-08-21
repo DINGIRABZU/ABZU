@@ -2,8 +2,8 @@ from __future__ import annotations
 
 """Parse the categorized INANNA training guide."""
 
-from pathlib import Path
 import re
+from pathlib import Path
 
 _URL_RE = re.compile(r"https?://[^\s)]+")
 

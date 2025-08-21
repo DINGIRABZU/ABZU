@@ -18,10 +18,12 @@ EMOTION_MAP: Dict[str, Tuple[int, int, int]] = {
     "neutral": (128, 128, 128),
 }
 
+
 def get_current_expression() -> Tuple[int, int, int]:
     """Return the expression colour for the last recorded emotion."""
     emotion = emotional_state.get_last_emotion() or "neutral"
     return EMOTION_MAP.get(emotion, EMOTION_MAP["neutral"])
+
 
 def apply_expression(frame: np.ndarray, emotion: str | None) -> np.ndarray:
     """Return ``frame`` modified according to ``emotion``."""
@@ -29,5 +31,6 @@ def apply_expression(frame: np.ndarray, emotion: str | None) -> np.ndarray:
     modified = frame.copy()
     modified[:8, :8] = np.array(colour, dtype=np.uint8)
     return modified
+
 
 __all__ = ["get_current_expression", "apply_expression"]

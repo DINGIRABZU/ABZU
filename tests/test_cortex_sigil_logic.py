@@ -10,8 +10,8 @@ ql_stub = ModuleType("qnl_utils")
 setattr(ql_stub, "quantum_embed", lambda t: [0.0])
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ql_stub)
 
-from labs import cortex_sigil as csl
 import recursive_emotion_router as rer
+from labs import cortex_sigil as csl
 
 
 class DummyNode:
@@ -69,14 +69,18 @@ def test_router_sigil_integration(monkeypatch):
     res = rer.route(node)
 
     # All stages should have been invoked in order on the node
-    assert node.calls == list(stages) == [
-        "ask",
-        "feel",
-        "symbolize",
-        "pause",
-        "reflect",
-        "decide",
-    ]
+    assert (
+        node.calls
+        == list(stages)
+        == [
+            "ask",
+            "feel",
+            "symbolize",
+            "pause",
+            "reflect",
+            "decide",
+        ]
+    )
     # Cortex memory should receive the final decision with sigil triggers
     assert logged and logged[0][1]["sigil_triggers"] == ["calm"]
 
@@ -100,12 +104,16 @@ def test_router_without_sigil(monkeypatch):
 
     res = rer.route(node)
 
-    assert node.calls == list(stages) == [
-        "ask",
-        "feel",
-        "symbolize",
-        "pause",
-        "reflect",
-        "decide",
-    ]
+    assert (
+        node.calls
+        == list(stages)
+        == [
+            "ask",
+            "feel",
+            "symbolize",
+            "pause",
+            "reflect",
+            "decide",
+        ]
+    )
     assert logged and "sigil_triggers" not in logged[0][1]

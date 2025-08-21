@@ -1,9 +1,9 @@
-import sys
 import importlib.util
+import json
+import sys
+import types
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
-import json
-import types
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -45,7 +45,9 @@ sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))
 sys.modules.setdefault("SPIRAL_OS.symbolic_parser", types.ModuleType("symbolic_parser"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", types.ModuleType("qnl_utils"))
 req_mod = types.ModuleType("requests")
-req_mod.post = lambda *a, **k: types.SimpleNamespace(json=lambda: {}, text="", raise_for_status=lambda: None)
+req_mod.post = lambda *a, **k: types.SimpleNamespace(
+    json=lambda: {}, text="", raise_for_status=lambda: None
+)
 req_mod.RequestException = Exception
 sys.modules.setdefault("requests", req_mod)
 srv_mod = types.ModuleType("server")
@@ -64,6 +66,7 @@ spec = importlib.util.spec_from_loader("start_spiral_os", loader)
 start_spiral_os = importlib.util.module_from_spec(spec)
 
 import os
+
 os.environ.setdefault("GLM_API_URL", "http://localhost")
 os.environ.setdefault("GLM_API_KEY", "key")
 os.environ.setdefault("HF_TOKEN", "token")
@@ -86,18 +89,24 @@ def test_system_status_logged(tmp_path, monkeypatch):
     stats = {"cpu": 1}
     monkeypatch.setattr(start_spiral_os.system_monitor, "collect_stats", lambda: stats)
     captured = {}
+
     def fake_add(text, meta):
         captured["text"] = text
         captured["meta"] = meta
+
     monkeypatch.setattr(start_spiral_os.vector_memory, "add_vector", fake_add)
     monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda c: None)
-    monkeypatch.setattr(start_spiral_os.inanna_ai, "display_welcome_message", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
     monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
     monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
     monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
-    monkeypatch.setattr(start_spiral_os.self_correction_engine, "adjust", lambda *a, **k: None)
-    monkeypatch.setattr(__import__('builtins'), 'input', lambda _="": "")
+    monkeypatch.setattr(
+        start_spiral_os.self_correction_engine, "adjust", lambda *a, **k: None
+    )
+    monkeypatch.setattr(__import__("builtins"), "input", lambda _="": "")
     _run_main(["--no-server", "--no-reflection"])
     log_file = tmp_path / "logs" / "system_status.json"
     assert log_file.exists()

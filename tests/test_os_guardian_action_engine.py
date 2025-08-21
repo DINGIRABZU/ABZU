@@ -8,14 +8,17 @@ sys.path.insert(0, str(ROOT))
 # Create dummy pyautogui module
 calls = {}
 
+
 def _record(name, value):
     calls.setdefault(name, []).append(value)
+
 
 pyautogui = types.ModuleType("pyautogui")
 pyautogui.click = lambda x=0, y=0: _record("click", (x, y))
 pyautogui.typewrite = lambda text: _record("typewrite", text)
 pyautogui.scroll = lambda amount: _record("scroll", amount)
 sys.modules["pyautogui"] = pyautogui
+
 
 # Create dummy selenium webdriver module
 class DummyDriver:
@@ -25,6 +28,7 @@ class DummyDriver:
     def execute_script(self, script):
         _record("js", script)
         return "result"
+
 
 webdriver = types.SimpleNamespace(Firefox=lambda: DummyDriver())
 selenium = types.ModuleType("selenium")
@@ -58,10 +62,12 @@ def test_run_command_whitelist(monkeypatch):
 
     def fake_run(args, capture_output=True, text=True, check=False):
         recorded.append(list(args))
+
         class CP:
             def __init__(self):
                 self.args = args
                 self.stdout = "ok"
+
         return CP()
 
     monkeypatch.setattr(action_engine.subprocess, "run", fake_run)

@@ -1,18 +1,23 @@
-import sys
 import json
-from pathlib import Path
+import sys
 import types
+from pathlib import Path
 
 # Stub heavy deps before import
 dummy_np = types.ModuleType("numpy")
+
+
 class NPArray(list):
     def tolist(self):
         return list(self)
+
     def __matmul__(self, other):
         return sum(a * b for a, b in zip(self, other))
 
+
 def _arr(x, dtype=None):
     return NPArray(x)
+
 
 dummy_np.array = _arr
 dummy_np.asarray = _arr
@@ -33,10 +38,10 @@ config = types.ModuleType("config")
 config.settings = build_settings()
 sys.modules.setdefault("config", config)
 
-from rag import retriever as rag_retriever
-from memory import spiral_cortex as scm
-import ritual_trainer
 import auto_retrain
+import ritual_trainer
+from memory import spiral_cortex as scm
+from rag import retriever as rag_retriever
 
 
 class DummyModel:
@@ -55,8 +60,13 @@ class DummyCollection:
 
     def query(self, query_embeddings, n_results, **_):
         q = dummy_np.asarray(query_embeddings[0])
-        sims = [float(e @ q / ((dummy_np.linalg.norm(e) * dummy_np.linalg.norm(q)) + 1e-8)) for e, _ in self.records]
-        order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[:n_results]
+        sims = [
+            float(e @ q / ((dummy_np.linalg.norm(e) * dummy_np.linalg.norm(q)) + 1e-8))
+            for e, _ in self.records
+        ]
+        order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[
+            :n_results
+        ]
         return {
             "embeddings": [[self.records[i][0] for i in order]],
             "metadatas": [[self.records[i][1] for i in order]],
@@ -98,7 +108,9 @@ def test_trainer_triggers(tmp_path, monkeypatch):
 
     monkeypatch.setattr(auto_retrain, "system_idle", lambda: True)
     captured = {}
-    monkeypatch.setattr(auto_retrain, "trigger_finetune", lambda ds: captured.setdefault("data", ds))
+    monkeypatch.setattr(
+        auto_retrain, "trigger_finetune", lambda ds: captured.setdefault("data", ds)
+    )
 
     ritual_trainer.run_training(True)
 

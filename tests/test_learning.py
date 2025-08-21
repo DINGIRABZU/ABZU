@@ -5,13 +5,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import types
+
 sys.modules.setdefault("requests", types.ModuleType("requests"))
 bs4_mod = types.ModuleType("bs4")
 bs4_mod.BeautifulSoup = lambda *a, **k: None
 sys.modules.setdefault("bs4", bs4_mod)
 
-from INANNA_AI.learning import project_gutenberg as pg
 from INANNA_AI.learning import github_scraper as gs
+from INANNA_AI.learning import project_gutenberg as pg
 
 
 def test_chunk_splits_text():

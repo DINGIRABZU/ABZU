@@ -2,8 +2,8 @@ from __future__ import annotations
 
 """Convenience imports for the INANNA AI agent."""
 
+from . import benchmark_preprocess, model, preprocess, source_loader
 from .inanna_ai import main as INANNA_AI
-from . import preprocess, source_loader, benchmark_preprocess, model
 
 __all__ = [
     "INANNA_AI",

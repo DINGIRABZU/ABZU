@@ -19,4 +19,3 @@ def test_predictive_model(tmp_path):
 def test_dashboard_import():
     mod = importlib.import_module("dashboard.app")
     assert mod is not None
-

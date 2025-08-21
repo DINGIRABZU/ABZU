@@ -17,15 +17,29 @@ _MODEL: "SentenceTransformer | None" = None
 
 # Map Western note names to QNL glyphs
 QNL_GLYPHS = {
-    "C": "❣⟁", "C#": "🜁🌀", "D": "✧↭", "D#": "ψ̄",
-    "E": "🪞♾", "F": "∂Ξ", "F#": "🜔⟁", "G": "🕯✧",
-    "G#": "💧∿", "A": "✦", "A#": "🩸∅", "B": "⟁⇌🜔",
+    "C": "❣⟁",
+    "C#": "🜁🌀",
+    "D": "✧↭",
+    "D#": "ψ̄",
+    "E": "🪞♾",
+    "F": "∂Ξ",
+    "F#": "🜔⟁",
+    "G": "🕯✧",
+    "G#": "💧∿",
+    "A": "✦",
+    "A#": "🩸∅",
+    "B": "⟁⇌🜔",
 }
 
 # Emotional interpretation of each tone
 QNL_TONES = {
-    "C": "Longing", "D": "Joy", "E": "Memory", "F": "Paradox",
-    "G": "Awakening", "A": "Hope", "B": "Fusion",
+    "C": "Longing",
+    "D": "Joy",
+    "E": "Memory",
+    "F": "Paradox",
+    "G": "Awakening",
+    "A": "Hope",
+    "B": "Fusion",
 }
 
 
@@ -53,8 +67,18 @@ def quantum_embed(text: str) -> np.ndarray:
 def note_index_to_name(index: int) -> str:
     """Convert chroma index (0-11) to a western note name."""
     scale = [
-        "C", "C#", "D", "D#", "E", "F",
-        "F#", "G", "G#", "A", "A#", "B",
+        "C",
+        "C#",
+        "D",
+        "D#",
+        "E",
+        "F",
+        "F#",
+        "G",
+        "G#",
+        "A",
+        "A#",
+        "B",
     ]
     return scale[index % 12]
 
@@ -64,7 +88,9 @@ def chroma_to_qnl(chroma_vector: "Sequence[float] | np.ndarray") -> list[dict]:
     if np is not None:
         top_indices = np.argsort(chroma_vector)[-4:][::-1]
     else:
-        sorted_indices = sorted(range(len(chroma_vector)), key=lambda i: chroma_vector[i])
+        sorted_indices = sorted(
+            range(len(chroma_vector)), key=lambda i: chroma_vector[i]
+        )
         top_indices = list(reversed(sorted_indices[-4:]))
     phrases = []
     for idx in top_indices:
@@ -72,12 +98,14 @@ def chroma_to_qnl(chroma_vector: "Sequence[float] | np.ndarray") -> list[dict]:
         glyph = QNL_GLYPHS.get(note, "?")
         tone = QNL_TONES.get(note, "Resonance")
         phrase = f"{glyph} ↝ {tone} [{note}]"
-        phrases.append({
-            "note": note,
-            "glyph": glyph,
-            "tone": tone,
-            "qnl_phrase": phrase,
-        })
+        phrases.append(
+            {
+                "note": note,
+                "glyph": glyph,
+                "tone": tone,
+                "qnl_phrase": phrase,
+            }
+        )
     return phrases
 
 

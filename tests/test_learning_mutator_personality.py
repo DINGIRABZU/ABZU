@@ -1,12 +1,12 @@
-import sys
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import learning_mutator as lm
 import emotion_registry
+import learning_mutator as lm
 
 
 def _mock_state(monkeypatch, layer, emotion, resonance):
@@ -36,7 +36,11 @@ def test_fuse_on_low_scores(monkeypatch):
 
 def test_cli_activate_sets_layer(monkeypatch):
     called = {}
-    monkeypatch.setattr(emotion_registry, "set_current_layer", lambda layer: called.setdefault("layer", layer))
+    monkeypatch.setattr(
+        emotion_registry,
+        "set_current_layer",
+        lambda layer: called.setdefault("layer", layer),
+    )
     monkeypatch.setattr(lm, "load_insights", lambda path=None: {})
     monkeypatch.setattr(lm, "propose_mutations", lambda d: [])
     argv = sys.argv.copy()

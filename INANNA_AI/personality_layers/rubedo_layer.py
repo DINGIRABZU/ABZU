@@ -2,6 +2,7 @@ from __future__ import annotations
 
 """Completion phase personality layer."""
 
+
 class RubedoPersonality:
     """Celebrate fiery transformation."""
 
@@ -12,5 +13,6 @@ class RubedoPersonality:
     def choose_path(self, context: str) -> str:
         """Reveal the triumphant route through ``context``."""
         return f"Along {context}, the crimson phoenix ascends."
+
 
 __all__ = ["RubedoPersonality"]

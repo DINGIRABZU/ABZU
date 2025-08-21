@@ -1,4 +1,5 @@
 """Basic traffic analysis for PCAP files."""
+
 from __future__ import annotations
 
 import json

@@ -1,14 +1,15 @@
+import shutil
 import sys
 from pathlib import Path
+
 import numpy as np
-import shutil
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from core import video_engine, context_tracker
 import emotional_state
+from core import context_tracker, video_engine
 
 pytestmark = pytest.mark.skipif(
     shutil.which("ffmpeg") is None, reason="ffmpeg not installed"

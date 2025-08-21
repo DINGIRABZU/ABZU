@@ -1,4 +1,5 @@
 """Random Field Array 7D with quantum-like execution and DNA serialization."""
+
 from __future__ import annotations
 
 import hashlib
@@ -7,6 +8,7 @@ from pathlib import Path
 from typing import Sequence
 
 import numpy as np
+
 from .gates import sign_blob, verify_blob
 
 try:  # optional quantum library
@@ -28,7 +30,9 @@ class RFA7D:
         self.public_key: bytes | None = None
         logger.debug("Initialized RFA7D with shape %s", self.shape)
 
-    def execute(self, input_vector: Sequence[complex], noise: bool = False) -> np.ndarray:
+    def execute(
+        self, input_vector: Sequence[complex], noise: bool = False
+    ) -> np.ndarray:
         """Return the grid scaled by ``input_vector`` with optional noise."""
         if not self.verify_integrity():
             raise RuntimeError("Integrity check failed")

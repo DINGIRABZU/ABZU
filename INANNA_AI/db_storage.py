@@ -1,11 +1,12 @@
 """SQLite helpers to store voice interactions."""
+
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import datetime
-import json
 from pathlib import Path
-from typing import List, Dict, Optional, Any
+from typing import Any, Dict, List, Optional
 
 DB_PATH = Path(__file__).resolve().parent / "interactions.db"
 
@@ -152,7 +153,9 @@ def fetch_voice_profiles(db_path: Path = DB_PATH) -> Dict[str, Dict[str, float]]
     return {row[0]: json.loads(row[1]) for row in rows}
 
 
-def fetch_benchmarks(limit: Optional[int] = None, db_path: Path = DB_PATH) -> List[Dict[str, float | str]]:
+def fetch_benchmarks(
+    limit: Optional[int] = None, db_path: Path = DB_PATH
+) -> List[Dict[str, float | str]]:
     """Return recorded benchmark metrics."""
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
@@ -205,7 +208,9 @@ def fetch_feedback(
     ]
 
 
-def fetch_interactions(limit: Optional[int] = None, db_path: Path = DB_PATH) -> List[Dict[str, str]]:
+def fetch_interactions(
+    limit: Optional[int] = None, db_path: Path = DB_PATH
+) -> List[Dict[str, str]]:
     """Return saved interactions ordered from newest to oldest."""
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()

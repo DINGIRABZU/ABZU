@@ -1,6 +1,6 @@
 import sys
-from pathlib import Path
 import types
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -18,13 +18,15 @@ sys.modules.setdefault("yaml", yaml_mod)
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("EmotiVoice", types.ModuleType("EmotiVoice"))
 
-from INANNA_AI import speaking_engine, tts_coqui, tts_tortoise, tts_bark, tts_xtts
 from crown_config import settings
+from INANNA_AI import (speaking_engine, tts_bark, tts_coqui, tts_tortoise,
+                       tts_xtts)
 
 
 def _test_backend(monkeypatch, name, module, attr):
     settings.crown_tts_backend = name
     called = {}
+
     def fake(text: str, emotion: str) -> str:
         called["args"] = (text, emotion)
         return f"{name}.wav"
@@ -52,6 +54,7 @@ def test_backend_selection(monkeypatch):
 
 def test_default_falls_back(monkeypatch):
     called = {}
+
     def gtts_fake(*a, **k):
         called["gtts"] = True
         return "gtts.wav"

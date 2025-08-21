@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+import importlib
 import sys
 from pathlib import Path
 from types import ModuleType
 
 import numpy as np
-from fastapi.testclient import TestClient
 from fastapi import APIRouter
-import importlib
+from fastapi.testclient import TestClient
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -24,13 +24,13 @@ video_stream_stub.router = APIRouter()
 
 closed_vs: list[str] = []
 
+
 async def _close_peers(*a, **k) -> None:
     closed_vs.append("v")
 
+
 video_stream_stub.close_peers = _close_peers
-video_stream_stub.start_stream = (
-    lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
-)
+video_stream_stub.start_stream = lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
 sys.modules["video_stream"] = video_stream_stub
 
 connectors_mod = ModuleType("connectors")
@@ -39,8 +39,10 @@ webrtc_stub.router = APIRouter()
 webrtc_stub.start_call = lambda *a, **k: None
 closed_wc: list[str] = []
 
+
 async def _wc_close(*a, **k) -> None:
     closed_wc.append("w")
+
 
 webrtc_stub.close_peers = _wc_close
 connectors_mod.webrtc_connector = webrtc_stub
@@ -56,11 +58,14 @@ inanna_mod.GLMIntegration = lambda *a, **k: None
 sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
 
 from crown_config import settings
+
 settings.glm_command_token = "token"
 import importlib
 
+
 def _load_server():
     import server
+
     return importlib.reload(server)
 
 

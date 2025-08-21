@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List
-
 import types
+from typing import Any, Callable, Dict, List
 
 try:  # pragma: no cover - fallback when optional modules are missing
     from INANNA_AI import corpus_memory, voice_layer_albedo
@@ -12,6 +11,7 @@ except Exception:  # pragma: no cover
 
 try:  # pragma: no cover
     import seven_dimensional_music as _sdm  # type: ignore
+
     if hasattr(_sdm, "play_sequence"):
         seven_dimensional_music = _sdm
     else:  # pragma: no cover - ensure attribute exists for monkeypatching

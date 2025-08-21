@@ -6,8 +6,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI import audio_emotion_listener
 import emotional_state
+from INANNA_AI import audio_emotion_listener
 
 
 def _sine(freq: float, amp: float, sr: int, duration: float = 0.5) -> np.ndarray:

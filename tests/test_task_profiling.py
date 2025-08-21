@@ -1,5 +1,5 @@
-from pathlib import Path
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -17,7 +17,10 @@ def test_classify_task_basic():
 
 def test_classify_task_ritual_dict():
     profiler = TaskProfiler()
-    assert profiler.classify({"ritual_condition": "☉", "emotion_trigger": "joy"}) == "ritual"
+    assert (
+        profiler.classify({"ritual_condition": "☉", "emotion_trigger": "joy"})
+        == "ritual"
+    )
 
 
 def test_ritual_action_sequence():
