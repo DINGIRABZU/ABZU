@@ -10,24 +10,28 @@ from typing import Iterator, Optional
 
 import numpy as np
 
-try:  # pragma: no cover - optional
-    import cv2  # type: ignore
-except Exception:  # pragma: no cover - optional
+from core.utils.optional_deps import lazy_import
+
+cv2 = lazy_import("cv2")
+if getattr(cv2, "__stub__", False):  # pragma: no cover - optional
     cv2 = None  # type: ignore
 
-try:  # pragma: no cover - optional
-    from wav2lip import Wav2LipPredictor  # type: ignore
-except Exception:  # pragma: no cover - optional
-    Wav2LipPredictor = None  # type: ignore
+wav2lip = lazy_import("wav2lip")
+Wav2LipPredictor = (
+    None
+    if getattr(wav2lip, "__stub__", False)
+    else getattr(wav2lip, "Wav2LipPredictor", None)
+)
 
-try:  # pragma: no cover - optional
-    from sadtalker import SadTalkerPipeline  # type: ignore
-except Exception:  # pragma: no cover - optional
-    SadTalkerPipeline = None  # type: ignore
+sadtalker = lazy_import("sadtalker")
+SadTalkerPipeline = (
+    None
+    if getattr(sadtalker, "__stub__", False)
+    else getattr(sadtalker, "SadTalkerPipeline", None)
+)
 
-try:  # pragma: no cover - optional
-    import librosa
-except Exception:  # pragma: no cover - optional
+librosa = lazy_import("librosa")
+if getattr(librosa, "__stub__", False):  # pragma: no cover - optional
     librosa = None  # type: ignore
 
 import emotional_state
@@ -35,19 +39,16 @@ import emotional_state
 from . import context_tracker
 from .facial_expression_controller import apply_expression
 
-try:  # pragma: no cover - optional dependency
-    import mediapipe as mp
-except Exception:  # pragma: no cover - optional dependency
+mp = lazy_import("mediapipe")
+if getattr(mp, "__stub__", False):  # pragma: no cover - optional dependency
     mp = None  # type: ignore
 
-try:  # pragma: no cover - optional gesture backends
-    import controlnet  # type: ignore
-except Exception:  # pragma: no cover - optional gesture backends
+controlnet = lazy_import("controlnet")
+if getattr(controlnet, "__stub__", False):  # pragma: no cover - optional gesture backends
     controlnet = None  # type: ignore
 
-try:  # pragma: no cover - optional gesture backends
-    import animatediff  # type: ignore
-except Exception:  # pragma: no cover - optional gesture backends
+animatediff = lazy_import("animatediff")
+if getattr(animatediff, "__stub__", False):  # pragma: no cover - optional gesture backends
     animatediff = None  # type: ignore
 
 logger = logging.getLogger(__name__)

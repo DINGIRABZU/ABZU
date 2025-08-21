@@ -12,25 +12,23 @@ from typing import Dict, Generator, Optional, Tuple
 
 import numpy as np
 
-try:  # pragma: no cover - optional dependency
-    import librosa
-except Exception:  # pragma: no cover - optional dependency
+from core.utils.optional_deps import lazy_import
+
+librosa = lazy_import("librosa")
+if getattr(librosa, "__stub__", False):  # pragma: no cover - optional dependency
     librosa = None  # type: ignore
 
-try:
-    import opensmile
-except Exception:  # pragma: no cover - optional dependency
-    opensmile = None
+opensmile = lazy_import("opensmile")
+if getattr(opensmile, "__stub__", False):  # pragma: no cover - optional dependency
+    opensmile = None  # type: ignore
 
-try:
-    import websockets
-except Exception:  # pragma: no cover - optional dependency
-    websockets = None
+websockets = lazy_import("websockets")
+if getattr(websockets, "__stub__", False):  # pragma: no cover - optional dependency
+    websockets = None  # type: ignore
 
-try:
-    import sounddevice as sd
-except Exception:  # pragma: no cover - optional dependency
-    sd = None
+sd = lazy_import("sounddevice")
+if getattr(sd, "__stub__", False):  # pragma: no cover - optional dependency
+    sd = None  # type: ignore
 
 import emotional_state
 

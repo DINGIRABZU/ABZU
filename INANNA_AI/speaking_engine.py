@@ -9,9 +9,10 @@ from typing import Any, Dict, Iterable, Tuple
 
 import numpy as np
 
-try:  # pragma: no cover - optional dependency
-    import librosa
-except Exception:  # pragma: no cover - optional dependency
+from core.utils.optional_deps import lazy_import
+
+librosa = lazy_import("librosa")
+if getattr(librosa, "__stub__", False):  # pragma: no cover - optional dependency
     librosa = None  # type: ignore
 
 from crown_config import settings
@@ -22,19 +23,19 @@ from .emotion_analysis import emotion_to_archetype
 from .utils import load_audio, save_wav, sentiment_score
 from .voice_evolution import get_voice_params, update_voice_from_history
 
-try:
-    from gtts import gTTS
-except Exception:  # pragma: no cover - optional dependency
-    gTTS = None  # type: ignore
+gtts_mod = lazy_import("gtts")
+gTTS = (
+    None
+    if getattr(gtts_mod, "__stub__", False)
+    else getattr(gtts_mod, "gTTS", None)
+)
 
-try:
-    import openvoice
-except Exception:  # pragma: no cover - optional dependency
+openvoice = lazy_import("openvoice")
+if getattr(openvoice, "__stub__", False):  # pragma: no cover - optional dependency
     openvoice = None
 
-try:  # optional playback dependency
-    import sounddevice as sd
-except Exception:  # pragma: no cover - optional dependency
+sd = lazy_import("sounddevice")
+if getattr(sd, "__stub__", False):  # pragma: no cover - optional dependency
     sd = None
 
 logger = logging.getLogger(__name__)

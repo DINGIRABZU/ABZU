@@ -8,27 +8,38 @@ from time import perf_counter
 from typing import Deque, List, Sequence
 
 import numpy as np
-import torch
-from torch import nn
+
+from core.utils.optional_deps import lazy_import
+
+torch = lazy_import("torch")
+if getattr(torch, "__stub__", False):  # pragma: no cover - optional dependency
+    nn = None  # type: ignore[assignment]
+else:  # pragma: no cover - optional dependency
+    from torch import nn
 
 from . import db_storage
 
 
-class _ModelPredictor(nn.Module):
-    """Tiny LSTM model predicting the best LLM."""
+if nn is not None:
+    class _ModelPredictor(nn.Module):
+        """Tiny LSTM model predicting the best LLM."""
 
-    def __init__(
-        self, num_features: int = 4, hidden_size: int = 16, num_models: int = 3
-    ) -> None:
-        super().__init__()
-        self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
-        self.fc = nn.Linear(hidden_size, num_models)
+        def __init__(
+            self, num_features: int = 4, hidden_size: int = 16, num_models: int = 3
+        ) -> None:
+            super().__init__()
+            self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
+            self.fc = nn.Linear(hidden_size, num_models)
 
-    def forward(
-        self, x: torch.Tensor
-    ) -> torch.Tensor:  # pragma: no cover - depends on torch
-        out, _ = self.lstm(x)
-        return self.fc(out[:, -1])
+        def forward(
+            self, x: torch.Tensor
+        ) -> torch.Tensor:  # pragma: no cover - depends on torch
+            out, _ = self.lstm(x)
+            return self.fc(out[:, -1])
+else:  # pragma: no cover - torch missing
+    class _ModelPredictor:  # type: ignore[no-redef]
+        def __init__(self, *_, **__):
+            raise RuntimeError("torch library is required for GateOrchestrator")
 
 
 class GateOrchestrator:
@@ -37,11 +48,12 @@ class GateOrchestrator:
     def __init__(self, *, db_path: Path | None = None) -> None:
         self._db_path = db_path or db_storage.DB_PATH
         self._context: Deque[List[float]] = deque(maxlen=5)
-        self._predictor = _ModelPredictor()
+        self._predictor = None if nn is None else _ModelPredictor()
         self._selection_weights = np.ones(3, dtype=float)
         self._seq_len = 3
-        self._train_predictor()
-        self._optimize_parameters()
+        if self._predictor is not None:
+            self._train_predictor()
+            self._optimize_parameters()
 
     def process_inward(self, text: str) -> Sequence[complex]:
         """Convert ``text`` to a complex vector of length 128."""
@@ -75,6 +87,8 @@ class GateOrchestrator:
     def _load_training_data(
         self,
     ) -> tuple[torch.Tensor, torch.Tensor] | tuple[None, None]:
+        if nn is None:
+            return None, None
         metrics = db_storage.fetch_benchmarks(limit=50, db_path=self._db_path)
         interactions = db_storage.fetch_interactions(limit=50, db_path=self._db_path)
         n = min(len(metrics), len(interactions))
@@ -102,6 +116,8 @@ class GateOrchestrator:
         return x, y
 
     def _train_predictor(self) -> None:
+        if self._predictor is None or nn is None:
+            return
         data = self._load_training_data()
         if data == (None, None):
             return
@@ -121,7 +137,11 @@ class GateOrchestrator:
         self._train_y = y
 
     def _optimize_parameters(self) -> None:
-        if not hasattr(self, "_train_x"):
+        if (
+            self._predictor is None
+            or nn is None
+            or not hasattr(self, "_train_x")
+        ):
             return
         pop = [np.random.rand(3) for _ in range(6)]
         loss_fn = nn.CrossEntropyLoss()
@@ -145,7 +165,11 @@ class GateOrchestrator:
         self._selection_weights = ranked[0]
 
     def predict_best_llm(self) -> str:
-        if len(self._context) < self._seq_len:
+        if (
+            self._predictor is None
+            or nn is None
+            or len(self._context) < self._seq_len
+        ):
             return "glm"
         seq = torch.tensor([list(self._context)[-self._seq_len :]], dtype=torch.float32)
         with torch.no_grad():
