@@ -27,9 +27,10 @@ def test_crown_console_startup(monkeypatch):
         if cmd[0] == "bash" and str(cmd[1]).endswith("start_crown_console.sh"):
             calls.extend(
                 [
+                    "check_requirements",
                     "crown_model_launcher",
                     "launch_servants",
-                    "nc -z localhost 8000",
+                    "curl http://localhost:8000/health",
                     "python -m cli.console_interface",
                 ]
             )
@@ -45,8 +46,10 @@ def test_crown_console_startup(monkeypatch):
     result = subprocess.run(["bash", str(ROOT / "start_crown_console.sh")])
 
     assert result.returncode == 0
+    assert "check_requirements" in calls
     assert "crown_model_launcher" in calls
     assert "launch_servants" in calls
+    assert "curl http://localhost:8000/health" in calls
     assert "python -m cli.console_interface" in calls
     launcher_idx = calls.index("crown_model_launcher")
     servants_idx = calls.index("launch_servants")

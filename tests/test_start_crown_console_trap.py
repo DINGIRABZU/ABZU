@@ -21,10 +21,10 @@ def test_launch_servants_failure_cleans_temp_file(tmp_path):
     servants.write_text("#!/bin/bash\nexit 1\n")
     servants.chmod(0o755)
 
-    # stub scripts/check_prereqs.sh
+    # stub scripts/check_requirements.sh
     scripts_dir = tmp_dir / "scripts"
     scripts_dir.mkdir()
-    check = scripts_dir / "check_prereqs.sh"
+    check = scripts_dir / "check_requirements.sh"
     check.write_text("#!/bin/bash\nexit 0\n")
     check.chmod(0o755)
 

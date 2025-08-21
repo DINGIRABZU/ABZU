@@ -1,12 +1,16 @@
 #!/bin/bash
-# Launch Crown services, wait for local endpoints, and start the console.
-# Uses 'nc' when available or falls back to a Python socket check.
+# Launch Crown services, verify health endpoints, and start the console.
+# Each service is polled via its /health endpoint before the REPL begins.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-./scripts/check_prereqs.sh
+# Ensure external requirements are present
+if ! ./scripts/check_requirements.sh >/dev/null 2>&1; then
+    echo "Requirement check failed. Run scripts/check_requirements.sh for details." >&2
+    exit 1
+fi
 
 if [ -f "secrets.env" ]; then
     set -a
@@ -18,10 +22,13 @@ else
     exit 1
 fi
 
-./crown_model_launcher.sh
+if ! ./crown_model_launcher.sh; then
+    echo "crown_model_launcher.sh failed" >&2
+    exit 1
+fi
 
 SERVANT_ENDPOINTS_FILE="$(mktemp)"
-trap 'rm -f "$SERVANT_ENDPOINTS_FILE"' EXIT ERR
+trap 'rm -f "$SERVANT_ENDPOINTS_FILE"' EXIT INT TERM ERR
 export SERVANT_ENDPOINTS_FILE
 if [ -f "launch_servants.sh" ]; then
     if ! ./launch_servants.sh; then
@@ -34,50 +41,32 @@ if [ -f "launch_servants.sh" ]; then
     fi
 fi
 
-if command -v nc >/dev/null 2>&1; then
-    HAS_NC=1
-else
-    HAS_NC=0
+wait_health() {
+    local name="$1"
+    local url="$2"
+    local health="${url%/}/health"
+    local timeout="${HEALTH_TIMEOUT:-60}"
+    printf 'Waiting for %s health at %s...\n' "$name" "$health"
+    for ((i=0; i<timeout; i++)); do
+        if curl -fsS "$health" >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 1
+    done
+    echo "$name failed health check at $health" >&2
+    return 1
+}
+
+if ! wait_health "GLM" "$GLM_API_URL"; then
+    exit 1
 fi
-
-wait_port() {
-    local port=$1
-    printf 'Waiting for port %s...\n' "$port"
-    if [ "$HAS_NC" -eq 1 ]; then
-        while ! nc -z localhost "$port"; do
-            sleep 1
-        done
-    else
-        python - "$port" <<'EOF'
-import socket
-import sys
-import time
-
-port = int(sys.argv[1])
-while True:
-    try:
-        with socket.create_connection(("localhost", port), timeout=1):
-            break
-    except OSError:
-        time.sleep(1)
-EOF
-    fi
-}
-
-parse_port() {
-    local url=$1
-    local port="${url##*:}"
-    echo "${port%%/*}"
-}
-
-main_port=$(parse_port "$GLM_API_URL")
-wait_port "$main_port"
 
 IFS=','
 for item in ${SERVANT_MODELS:-}; do
+    name="${item%%=*}"
     url="${item#*=}"
-    if [[ "$url" == http://localhost:* || "$url" == http://127.0.0.1:* ]]; then
-        wait_port "$(parse_port "$url")"
+    if ! wait_health "$name" "$url"; then
+        exit 1
     fi
 done
 unset IFS

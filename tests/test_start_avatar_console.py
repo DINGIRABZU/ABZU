@@ -1,6 +1,5 @@
 import os
 import subprocess
-import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,19 +23,21 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
                 ]
             )
         elif cmd[0] == "bash" and str(cmd[1]).endswith("start_crown_console.sh"):
-            calls.extend(["crown_model_launcher", "launch_servants"])
-            if shutil.which("nc"):
-                calls.append("nc -z localhost 8000")
-            else:
-                calls.append("python socket_check")
-            calls.append("python -m cli.console_interface")
+            calls.extend(
+                [
+                    "check_requirements",
+                    "crown_model_launcher",
+                    "launch_servants",
+                    "curl http://localhost:8000/health",
+                    "python -m cli.console_interface",
+                ]
+            )
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     def fake_system(cmd):
         calls.append(cmd)
         return 0
 
-    monkeypatch.setattr(shutil, "which", lambda *_: None)
     monkeypatch.setattr(subprocess, "run", fake_run)
     monkeypatch.setattr(os, "system", fake_system)
 
@@ -49,5 +50,5 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
     wait_idx = calls.index("wait crown stream")
     assert wait_idx > calls.index("start_crown_console")
     assert wait_idx > calls.index("python video_stream.py")
-    assert "python socket_check" in calls
+    assert "curl http://localhost:8000/health" in calls
 
