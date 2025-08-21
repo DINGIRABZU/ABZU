@@ -6,7 +6,14 @@ from pathlib import Path
 
 from download_model import download_deepseek  # reuse logic
 from dotenv import load_dotenv
-from huggingface_hub import snapshot_download
+
+try:  # pragma: no cover - package availability varies
+    from huggingface_hub import snapshot_download
+except ImportError as exc:  # pragma: no cover - handled at runtime
+    raise SystemExit(
+        "huggingface_hub is required for model downloads. "
+        "Install it with `pip install huggingface_hub`."
+    ) from exc
 
 
 def _get_hf_token() -> str:
@@ -14,13 +21,19 @@ def _get_hf_token() -> str:
     load_dotenv()
     token = os.getenv("HF_TOKEN")
     if not token:
-        raise RuntimeError("HF_TOKEN environment variable not set")
+        raise SystemExit("HF_TOKEN environment variable not set")
     return token
 
 
 def _quantize_to_int8(model_dir: Path) -> None:
     """Quantize weights in place using bitsandbytes 8-bit loaders."""
-    from transformers import AutoModelForCausalLM
+    try:  # pragma: no cover - package availability varies
+        from transformers import AutoModelForCausalLM
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise SystemExit(
+            "transformers is required for quantization. "
+            "Install it with `pip install transformers`."
+        ) from exc
 
     model = AutoModelForCausalLM.from_pretrained(
         str(model_dir), device_map="auto", load_in_8bit=True
@@ -50,12 +63,15 @@ def download_glm41v_9b(int8: bool = False) -> None:
     """Download GLM-4.1V-9B from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "GLM-4.1V-9B"
-    snapshot_download(
-        repo_id="THUDM/glm-4.1v-9b",
-        token=token,
-        local_dir=str(target_dir),
-        local_dir_use_symlinks=False,
-    )
+    try:
+        snapshot_download(
+            repo_id="THUDM/glm-4.1v-9b",
+            token=token,
+            local_dir=str(target_dir),
+            local_dir_use_symlinks=False,
+        )
+    except Exception as exc:  # pragma: no cover - network failure
+        raise SystemExit(f"Model download failed: {exc}") from None
     if int8:
         _quantize_to_int8(target_dir)
     print(f"Model downloaded to {target_dir}")
@@ -65,12 +81,15 @@ def download_deepseek_v3(int8: bool = False) -> None:
     """Download DeepSeek-V3 from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "DeepSeek-V3"
-    snapshot_download(
-        repo_id="deepseek-ai/DeepSeek-V3",
-        token=token,
-        local_dir=str(target_dir),
-        local_dir_use_symlinks=False,
-    )
+    try:
+        snapshot_download(
+            repo_id="deepseek-ai/DeepSeek-V3",
+            token=token,
+            local_dir=str(target_dir),
+            local_dir_use_symlinks=False,
+        )
+    except Exception as exc:  # pragma: no cover - network failure
+        raise SystemExit(f"Model download failed: {exc}") from None
     if int8:
         _quantize_to_int8(target_dir)
     print(f"Model downloaded to {target_dir}")
@@ -80,12 +99,15 @@ def download_mistral_8x22b(int8: bool = False) -> None:
     """Download Mistral 8x22B from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "Mistral-8x22B"
-    snapshot_download(
-        repo_id="mistralai/Mixtral-8x22B",
-        token=token,
-        local_dir=str(target_dir),
-        local_dir_use_symlinks=False,
-    )
+    try:
+        snapshot_download(
+            repo_id="mistralai/Mixtral-8x22B",
+            token=token,
+            local_dir=str(target_dir),
+            local_dir_use_symlinks=False,
+        )
+    except Exception as exc:  # pragma: no cover - network failure
+        raise SystemExit(f"Model download failed: {exc}") from None
     if int8:
         _quantize_to_int8(target_dir)
     print(f"Model downloaded to {target_dir}")
@@ -95,12 +117,15 @@ def download_kimi_k2(int8: bool = False) -> None:
     """Download Kimi-K2 from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "Kimi-K2"
-    snapshot_download(
-        repo_id="Fox-Kimi/Kimi-K2",
-        token=token,
-        local_dir=str(target_dir),
-        local_dir_use_symlinks=False,
-    )
+    try:
+        snapshot_download(
+            repo_id="Fox-Kimi/Kimi-K2",
+            token=token,
+            local_dir=str(target_dir),
+            local_dir_use_symlinks=False,
+        )
+    except Exception as exc:  # pragma: no cover - network failure
+        raise SystemExit(f"Model download failed: {exc}") from None
     if int8:
         _quantize_to_int8(target_dir)
     print(f"Model downloaded to {target_dir}")
@@ -140,4 +165,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

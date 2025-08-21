@@ -1,6 +1,14 @@
 import os
 from pathlib import Path
-from huggingface_hub import snapshot_download
+
+try:  # pragma: no cover - package availability varies
+    from huggingface_hub import snapshot_download
+except ImportError as exc:  # pragma: no cover - handled at runtime
+    raise SystemExit(
+        "huggingface_hub is required for model downloads. "
+        "Install it with `pip install huggingface_hub`."
+    ) from exc
+
 from dotenv import load_dotenv
 
 
@@ -9,16 +17,20 @@ def download_deepseek() -> None:
     load_dotenv()
     token = os.getenv("HF_TOKEN")
     if not token:
-        raise RuntimeError("HF_TOKEN environment variable not set")
+        raise SystemExit("HF_TOKEN environment variable not set")
 
     target_dir = Path("INANNA_AI") / "models" / "DeepSeek-R1"
-    snapshot_download(
-        repo_id="deepseek-ai/DeepSeek-R1",
-        token=token,
-        local_dir=str(target_dir),
-        local_dir_use_symlinks=False,
-    )
-    print(f"Model downloaded to {target_dir}")
+    try:
+        snapshot_download(
+            repo_id="deepseek-ai/DeepSeek-R1",
+            token=token,
+            local_dir=str(target_dir),
+            local_dir_use_symlinks=False,
+        )
+    except Exception as exc:  # pragma: no cover - network failure
+        raise SystemExit(f"Model download failed: {exc}") from None
+    else:
+        print(f"Model downloaded to {target_dir}")
 
 
 def main() -> None:
