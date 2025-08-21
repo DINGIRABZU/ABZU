@@ -13,17 +13,19 @@ The implementation optionally leverages the
 unavailable, the orchestrator still functions with minimal dependencies.
 """
 
-from dataclasses import dataclass
-from queue import Queue
-from pathlib import Path
-import subprocess
-from typing import Any, Dict, List
 import logging
 import os
+import shutil
+import subprocess
 import time
+from dataclasses import dataclass
+from pathlib import Path
+from queue import Queue
+from typing import Any, Dict, List
 
 from corpus_memory_logging import log_interaction
 from INANNA_AI.glm_integration import GLMIntegration
+
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
@@ -66,7 +68,11 @@ class DevAgent:
         if vector_memory is not None:
             vector_memory.add_vector(
                 prompt,
-                {"agent": self.name, "objective": self.objective, "response": response},
+                {
+                    "agent": self.name,
+                    "objective": self.objective,
+                    "response": response,
+                },
             )
         log_interaction(
             prompt,
@@ -85,8 +91,10 @@ class Planner(DevAgent):
 
     def plan(self) -> List[str]:
         prompt = (
-            "You are a project planner. Break the objective into short steps.\n"
-            f"Objective: {self.objective}\nContext:\n{self._context(self.objective)}"
+            "You are a project planner. Break the objective into short "
+            "steps.\n"
+            f"Objective: {self.objective}\n"
+            f"Context:\n{self._context(self.objective)}"
         )
         response = self._complete(prompt)
         self._log(prompt, response)
@@ -125,6 +133,16 @@ class Reviewer(DevAgent):
 def _run_tests(repo: Path) -> Dict[str, Any]:
     """Execute ``pytest`` in ``repo`` and return output and status."""
     logger.info("running tests in %s", repo)
+    if shutil.which("pytest") is None:
+        msg = "pytest not found; skipping tests"
+        logger.warning(msg)
+        log_interaction(
+            "pytest",
+            {"agent": "tester"},
+            {"output": msg},
+            "skip",
+        )
+        return {"returncode": None, "output": msg}
     proc = subprocess.run(
         ["pytest", "-q"], cwd=repo, capture_output=True, text=True, check=False
     )
@@ -151,8 +169,8 @@ def _commit(repo: Path, message: str) -> None:
 class DevAssistantService:
     """Long-running assistant that monitors logs and schedules dev cycles.
 
-    The service watches a log file for trigger phrases defined in ``objectives``.
-    When a trigger is detected the mapped objective is fed to
+    The service watches a log file for trigger phrases defined in
+    ``objectives``. When a trigger is detected the mapped objective is fed to
     :func:`run_dev_cycle`. Results are logged as suggestions to the operator.
     """
 
@@ -182,10 +200,16 @@ class DevAssistantService:
             self.logger.info("Suggestions for %s: %s", objective, suggestion)
             try:
                 timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-                with self.suggestion_path.open("a", encoding="utf-8") as fh:
+                with self.suggestion_path.open(
+                    "a",
+                    encoding="utf-8",
+                ) as fh:
                     fh.write(f"{timestamp}\t{objective}: {suggestion}\n")
             except Exception:  # pragma: no cover - best effort logging
-                self.logger.debug("Failed writing suggestion file", exc_info=True)
+                self.logger.debug(
+                    "Failed writing suggestion file",
+                    exc_info=True,
+                )
             log_interaction(
                 "suggestion",
                 {"agent": "dev_assistant", "objective": objective},
@@ -237,10 +261,10 @@ def run_dev_cycle(
     repo: str | Path | None = None,
     max_iterations: int | None = None,
 ) -> Dict[str, Any]:
-    """Coordinate planning, coding, review, testing and commit for ``objective``.
+    """Coordinate planning, coding, review, testing and commit.
 
-    Processing stops when all planned tasks are handled or ``max_iterations``
-    is reached.
+    Applies to ``objective``. Processing stops when all planned tasks are
+    handled or ``max_iterations`` is reached.
     """
     queue: Queue[str] = Queue()
     repo_path = Path(repo) if repo is not None else None
@@ -249,24 +273,43 @@ def run_dev_cycle(
     coder_glm = _glm_from_env("CODER_MODEL")
     reviewer_glm = _glm_from_env("REVIEWER_MODEL")
 
-    planner = Planner("planner", "Plan development tasks", planner_glm, objective, queue)
+    planner = Planner(
+        "planner", "Plan development tasks", planner_glm, objective, queue
+    )
     coder = Coder("coder", "Write code", coder_glm, objective, queue)
-    reviewer = Reviewer("reviewer", "Review code", reviewer_glm, objective, queue)
+    reviewer = Reviewer(
+        "reviewer",
+        "Review code",
+        reviewer_glm,
+        objective,
+        queue,
+    )
 
     plan_steps = planner.plan()
     results: List[Dict[str, str]] = []
     iterations = 0
-    while not queue.empty() and (max_iterations is None or iterations < max_iterations):
+    while not queue.empty():
+        if max_iterations is not None and iterations >= max_iterations:
+            break
         task = queue.get()
         logger.info("Executing task %s", task)
         code = coder.code(task)
         review = reviewer.review(task, code)
-        results.append({"task": task, "code": code, "review": review})
+        results.append(
+            {
+                "task": task,
+                "code": code,
+                "review": review,
+            }
+        )
         logger.info("Completed task %s", task)
         iterations += 1
 
     if not queue.empty():
-        logger.info("Max iterations reached with %s tasks remaining", queue.qsize())
+        logger.info(
+            "Max iterations reached with %s tasks remaining",
+            queue.qsize(),
+        )
 
     test_result: Dict[str, Any] | None = None
     if repo_path is not None:
@@ -290,4 +333,3 @@ __all__ = [
     "DevAgent",
     "DevAssistantService",
 ]
-
