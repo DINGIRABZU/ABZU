@@ -5,6 +5,23 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
+# Verify prerequisites
+if ! bash scripts/check_prereqs.sh >/dev/null 2>&1; then
+    echo "Prerequisite check failed. Run scripts/check_prereqs.sh for details." >&2
+    exit 1
+fi
+
+for cmd in curl docker python; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        echo "Required command not found: $cmd" >&2
+        exit 1
+    fi
+done
+
+LOG_FILE="${SERVANT_LOG_FILE:-$ROOT/servant_launch.log}"
+: >"$LOG_FILE"
+log() { echo "$@" | tee -a "$LOG_FILE"; }
+
 if [ -f "secrets.env" ]; then
     set -a
     # shellcheck source=/dev/null
@@ -35,12 +52,13 @@ wait_health() {
     local timeout="${SERVANT_TIMEOUT:-60}"
     for ((i=0; i<timeout; i++)); do
         if curl -fsS "$health" >/dev/null 2>&1; then
+            log "Health check passed for $name at $health"
             return 0
         fi
         sleep 1
     done
-    echo "Servant $name failed health check at $health" >&2
-    exit 1
+    log "Health check failed for $name at $health"
+    return 1
 }
 
 launch_model() {
@@ -49,7 +67,9 @@ launch_model() {
     local model_dir="$3"
     local image="$4"
 
+    log "Launching servant $name at $url"
     if [ -z "$url" ]; then
+        log "No URL provided for $name; skipping"
         return
     fi
 
@@ -69,13 +89,17 @@ launch_model() {
         if [ -n "$model_dir" ]; then
             if command -v docker >/dev/null 2>&1; then
                 docker pull "$image" >/dev/null 2>&1 || true
-                docker run -d --rm -v "$model_dir":/model -p "$port":8000 \
-                    --name "${name}_service" "$image"
+                local cmd="docker run -d --rm -v \"$model_dir\":/model -p \"$port\":8000 --name \"${name}_service\" \"$image\""
+                log "$cmd"
+                eval "$cmd"
             else
-                python -m vllm.entrypoints.openai.api_server \
-                    --model "$model_dir" --port "$port" &
+                local cmd="python -m vllm.entrypoints.openai.api_server --model \"$model_dir\" --port \"$port\""
+                log "$cmd"
+                eval "$cmd &"
             fi
         fi
+    else
+        log "Using remote servant at $url; no launch command executed"
     fi
 
     wait_health "$name" "$url"
