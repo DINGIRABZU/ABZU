@@ -15,10 +15,9 @@ license = {file = "LICENSE_CRYSTAL.md"}
 # which are provided as optional extras
 dependencies = [
     "openai-whisper==20231117",
-    "TTS==0.22.0; python_version<'3.12'",
-    "numpy==2.2.6",
-    "scipy==1.16.1",
-    "pandas==2.3.1",
+    "numpy==1.26.4",
+    "scipy==1.11.4",
+    "pandas==1.5.3",
     "librosa==0.11.0",
     "huggingface-hub==0.34.4",
     "sentencepiece==0.2.1",
@@ -62,8 +61,8 @@ llm = [
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
 dev = [
-    "numpy==2.2.6",
-    "scipy==1.16.1",
+    "numpy==1.26.4",
+    "scipy==1.11.4",
     "soundfile==0.13.1",
     "librosa==0.11.0",
     "pydub==0.25.1",
