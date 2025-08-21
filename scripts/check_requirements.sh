@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verify required external commands are available and load secrets if present
+# Verify required secrets and external commands are available, and load secrets if present
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,6 +12,15 @@ if [ -f "$ROOT_DIR/secrets.env" ]; then
     source "$ROOT_DIR/secrets.env"
     set +a
 fi
+
+# Ensure required secrets are set, fail fast if any are missing
+for var in HF_TOKEN GLM_API_URL GLM_API_KEY; do
+    if [ -z "${!var:-}" ]; then
+        echo "Missing required environment variable $var." >&2
+        echo "Populate secrets.env with a value for $var and retry." >&2
+        exit 1
+    fi
+done
 
 missing=0
 
