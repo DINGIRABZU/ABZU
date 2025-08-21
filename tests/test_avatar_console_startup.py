@@ -1,8 +1,18 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
+
+SKIP = shutil.which("bash") is None or not os.access(
+    ROOT / "start_avatar_console.sh", os.X_OK
+)
+pytestmark = pytest.mark.skipif(
+    SKIP, reason="requires bash and executable start_avatar_console.sh"
+)
 
 
 def test_avatar_console_startup(monkeypatch):
@@ -10,10 +20,13 @@ def test_avatar_console_startup(monkeypatch):
 
     def fake_run(cmd, *args, **kwargs):
         calls.append(" ".join(cmd) if isinstance(cmd, list) else cmd)
-        if cmd[0] == "bash" and str(cmd[1]).endswith("start_avatar_console.sh"):
+        script = str(cmd[1])
+        if cmd[0] == "bash" and script.endswith("start_avatar_console.sh"):
             scale = os.environ.get("AVATAR_SCALE")
             tail_cmd = "tail -f logs/INANNA_AI.log"
-            video_cmd = "python video_stream.py" + (f" --scale {scale}" if scale else "")
+            video_cmd = "python video_stream.py" + (
+                f" --scale {scale}" if scale else ""
+            )
             calls.extend(["start_crown_console", video_cmd, tail_cmd])
         return subprocess.CompletedProcess(cmd, 0, "", "")
 

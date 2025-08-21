@@ -85,7 +85,7 @@ def test_numpy_stub_permutation(monkeypatch):
     real_import = builtins.__import__
 
     def fake_import(name, *a, **k):
-        if name == "numpy":
+        if name.startswith("numpy"):
             raise ImportError
         return real_import(name, *a, **k)
 

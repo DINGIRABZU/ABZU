@@ -1,11 +1,21 @@
 import os
+import shutil
 import socket
 import subprocess
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
+
+SKIP = shutil.which("bash") is None or not os.access(
+    ROOT / "launch_servants.sh", os.X_OK
+)
+pytestmark = pytest.mark.skipif(
+    SKIP, reason="requires bash and executable launch_servants.sh"
+)
 
 
 class _HealthHandler(BaseHTTPRequestHandler):
@@ -45,7 +55,10 @@ def test_launch_servants_records_reachable(tmp_path):
                 "SERVANT_TIMEOUT": "5",
             }
         )
-        result = subprocess.run(["bash", str(ROOT / "launch_servants.sh")], env=env)
+        result = subprocess.run(
+            ["bash", str(ROOT / "launch_servants.sh")],
+            env=env,
+        )
     finally:
         secret.unlink(missing_ok=True)
         backup.rename(secret)
@@ -71,10 +84,12 @@ def test_launch_servants_fails_when_unreachable(tmp_path):
                 "SERVANT_TIMEOUT": "1",
             }
         )
-        result = subprocess.run(["bash", str(ROOT / "launch_servants.sh")], env=env)
+        result = subprocess.run(
+            ["bash", str(ROOT / "launch_servants.sh")],
+            env=env,
+        )
     finally:
         secret.unlink(missing_ok=True)
         backup.rename(secret)
 
     assert result.returncode != 0
-

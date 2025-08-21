@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import os
+import random as _random
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Dict, List
 
 from core.utils.optional_deps import lazy_import
@@ -14,6 +16,48 @@ np = lazy_import("numpy")
 sb3 = lazy_import("stable_baselines3")
 gym = lazy_import("gymnasium")
 PPO = getattr(sb3, "PPO", None)
+
+if getattr(np, "__stub__", False):
+
+    def _rand(size: int | None = None):
+        if size is None:
+            return _random.random()
+        return [_random.random() for _ in range(size)]
+
+    def _randint(low: int, high: int | None = None, size: int | None = None):
+        if high is None:
+            high = low
+            low = 0
+
+        def _one() -> int:
+            return _random.randint(low, high - 1)
+
+        if size is None:
+            return _one()
+        return [_one() for _ in range(size)]
+
+    def _permutation(x):
+        arr = list(range(x)) if isinstance(x, int) else list(x)
+        _random.shuffle(arr)
+        return arr
+
+    def _choice(seq):
+        if isinstance(seq, int):
+            return _random.randrange(seq)
+        return _random.choice(seq)
+
+    def _shuffle(seq):
+        _random.shuffle(seq)
+
+    np.random = SimpleNamespace(
+        rand=_rand,
+        random=_rand,
+        randint=_randint,
+        permutation=_permutation,
+        choice=_choice,
+        shuffle=_shuffle,
+        seed=_random.seed,
+    )
 
 CONFIG_ENV_VAR = "MIRROR_THRESHOLDS_PATH"
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "mirror_thresholds.json"
