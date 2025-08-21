@@ -33,6 +33,7 @@ Milestone VIII expands on the sovereign voice work with memory-aided routing and
 - [how_to_use.md](how_to_use.md)
 - [milestone_viii_plan.md](milestone_viii_plan.md)
 - [ml_environment.md](ml_environment.md)
+- [setup.md](setup.md)
 - [project_overview.md](project_overview.md)
 - [psychic_loop.md](psychic_loop.md)
 - [rag_music_oracle.md](rag_music_oracle.md)
