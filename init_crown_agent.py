@@ -8,6 +8,7 @@ from pathlib import Path
 
 import yaml
 
+from env_validation import parse_servant_models
 from INANNA_AI.glm_integration import GLMIntegration
 from INANNA_AI import glm_integration as gi
 try:  # pragma: no cover - optional dependency
@@ -47,19 +48,22 @@ def _load_config() -> dict:
             cfg[key] = val
             logger.info("%s loaded from env %s", key, env)
 
-    servant = cfg.get("servant_models", {})
-    env_servants = os.getenv("SERVANT_MODELS")
+    servant = dict(cfg.get("servant_models", {}))
+    env_servants = parse_servant_models(require=True)
     if env_servants:
-        for item in env_servants.split(","):
-            name, _, url = item.partition("=")
-            if name and url:
-                servant[name.strip()] = url.strip()
-        if servant:
-            cfg["servant_models"] = servant
-            logger.info(
-                "servant models loaded from SERVANT_MODELS: %s",
-                ", ".join(servant),
-            )
+        for name, url in env_servants.items():
+            if name in servant:
+                logger.warning(
+                    "Duplicate servant model name '%s' in SERVANT_MODELS; keeping existing",
+                    name,
+                )
+                continue
+            servant[name] = url
+        cfg["servant_models"] = servant
+        logger.info(
+            "servant models loaded from SERVANT_MODELS: %s",
+            ", ".join(env_servants),
+        )
     for name, env in (
         ("deepseek", "DEEPSEEK_URL"),
         ("mistral", "MISTRAL_URL"),
@@ -67,6 +71,13 @@ def _load_config() -> dict:
     ):
         val = os.getenv(env)
         if val:
+            if name in servant:
+                logger.warning(
+                    "Duplicate servant model name '%s' from %s; keeping existing",
+                    name,
+                    env,
+                )
+                continue
             servant[name] = val
             logger.info("servant %s url loaded from env %s", name, env)
     if servant:

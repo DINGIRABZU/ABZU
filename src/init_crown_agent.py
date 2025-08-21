@@ -4,15 +4,19 @@ from __future__ import annotations
 
 from pathlib import Path
 import os
+import logging
 from typing import Dict
 
 import yaml
+from env_validation import parse_servant_models
 
 # Path to the Crown configuration YAML file
 CONFIG_FILE = Path(__file__).resolve().parent.parent / "config" / "crown.yml"
 
 # Runtime configuration cache
 _RUNTIME_CONFIG: Dict[str, object] = {}
+
+logger = logging.getLogger(__name__)
 
 
 def load_crown_config() -> Dict[str, object]:
@@ -35,12 +39,15 @@ def load_crown_config() -> Dict[str, object]:
             cfg[key] = val
 
     servants = dict(cfg.get("servant_models") or {})
-    env_servants = os.getenv("SERVANT_MODELS")
-    if env_servants:
-        for item in env_servants.split(","):
-            name, _, url = item.partition("=")
-            if name and url:
-                servants[name.strip()] = url.strip()
+    env_servants = parse_servant_models(require=True)
+    for name, url in env_servants.items():
+        if name in servants:
+            logger.warning(
+                "Duplicate servant model name '%s' in SERVANT_MODELS; keeping existing",
+                name,
+            )
+            continue
+        servants[name] = url
     if servants:
         cfg["servant_models"] = servants
 
