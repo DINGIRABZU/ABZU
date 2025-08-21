@@ -67,6 +67,15 @@ def main() -> None:
     finally:
         _terminate()
 
+    crown_code = getattr(crown_proc, "returncode", 0) or 0
+    stream_code = getattr(stream_proc, "returncode", 0) or 0
+    if crown_code:
+        print(f"Error: crown process exited with code {crown_code}")
+        raise SystemExit(crown_code)
+    if stream_code:
+        print(f"Error: stream process exited with code {stream_code}")
+        raise SystemExit(stream_code)
+
 
 if __name__ == "__main__":
     main()
