@@ -19,8 +19,7 @@ sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("EmotiVoice", types.ModuleType("EmotiVoice"))
 
 from crown_config import settings
-from INANNA_AI import (speaking_engine, tts_bark, tts_coqui, tts_tortoise,
-                       tts_xtts)
+from INANNA_AI import speaking_engine, tts_bark, tts_coqui, tts_tortoise, tts_xtts
 
 
 def _test_backend(monkeypatch, name, module, attr):

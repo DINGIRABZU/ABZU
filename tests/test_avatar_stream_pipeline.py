@@ -3,8 +3,8 @@ import types
 from pathlib import Path
 
 import numpy as np
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 
 pytestmark = pytest.mark.skip(reason="requires unavailable resources")
 

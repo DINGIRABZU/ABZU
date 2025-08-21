@@ -8,8 +8,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from MUSIC_FOUNDATION import qnl_utils
-from MUSIC_FOUNDATION.qnl_utils import (chroma_to_qnl, generate_qnl_structure,
-                                        quantum_embed)
+from MUSIC_FOUNDATION.qnl_utils import (
+    chroma_to_qnl,
+    generate_qnl_structure,
+    quantum_embed,
+)
 
 
 def test_generate_qnl_structure():

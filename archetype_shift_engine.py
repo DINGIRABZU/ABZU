@@ -47,7 +47,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
         layer = "citrinitas_layer"
         try:
             soul_state_manager.update_archetype(layer)
-        except Exception as exc:
+        except Exception:
             logger.exception("Failed to update archetype")
         return layer
 
@@ -58,7 +58,7 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
         if layer and layer != current:
             try:
                 soul_state_manager.update_archetype(layer)
-            except Exception as exc:
+            except Exception:
                 logger.exception("Failed to update archetype")
             return layer
     return None

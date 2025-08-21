@@ -8,9 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import emotional_state
-from core import context_tracker, video_engine
-
 import env_validation
+from core import context_tracker, video_engine
 
 pytestmark = pytest.mark.skipif(
     not env_validation.check_audio_binaries(require=False),

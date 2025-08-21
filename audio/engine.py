@@ -17,9 +17,15 @@ try:  # pragma: no cover - optional dependency
     import soundfile as sf
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
-from audio.dsp_engine import (compress, nsynth_interpolate, pitch_shift,
-                              rave_decode, rave_encode, rave_morph,
-                              time_stretch)
+from audio.dsp_engine import (
+    compress,
+    nsynth_interpolate,
+    pitch_shift,
+    rave_decode,
+    rave_encode,
+    rave_morph,
+    time_stretch,
+)
 from MUSIC_FOUNDATION.layer_generators import generate_tone
 
 try:  # pragma: no cover - optional dependency

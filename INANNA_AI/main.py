@@ -104,8 +104,7 @@ def main(argv: list[str] | None = None) -> None:
         from pathlib import Path
 
         from .learning import github_metadata as gm
-        from .learning.training_guide import (parse_training_guide,
-                                              write_repo_list)
+        from .learning.training_guide import parse_training_guide, write_repo_list
 
         guide = (
             Path(__file__).resolve().parent

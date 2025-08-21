@@ -44,11 +44,15 @@ if getattr(mp, "__stub__", False):  # pragma: no cover - optional dependency
     mp = None  # type: ignore
 
 controlnet = lazy_import("controlnet")
-if getattr(controlnet, "__stub__", False):  # pragma: no cover - optional gesture backends
+if getattr(
+    controlnet, "__stub__", False
+):  # pragma: no cover - optional gesture backends
     controlnet = None  # type: ignore
 
 animatediff = lazy_import("animatediff")
-if getattr(animatediff, "__stub__", False):  # pragma: no cover - optional gesture backends
+if getattr(
+    animatediff, "__stub__", False
+):  # pragma: no cover - optional gesture backends
     animatediff = None  # type: ignore
 
 logger = logging.getLogger(__name__)

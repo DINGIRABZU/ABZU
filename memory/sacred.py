@@ -29,8 +29,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     Image = None  # type: ignore
 
-from aspect_processor import (analyze_phonetic, analyze_semantic,
-                              analyze_spatial)
+from aspect_processor import analyze_phonetic, analyze_semantic, analyze_spatial
 
 SACRED_DIR = Path(__file__).resolve().parent / "data" / "sacred"
 SACRED_DIR.mkdir(parents=True, exist_ok=True)

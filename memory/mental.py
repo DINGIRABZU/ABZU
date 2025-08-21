@@ -18,8 +18,12 @@ else:  # pragma: no cover - imported dependency
     GraphDatabase = neo4j.GraphDatabase
     Driver = neo4j.Driver  # type: ignore[attr-defined]
 
-from aspect_processor import (analyze_geometric, analyze_phonetic,
-                              analyze_semantic, analyze_temporal)
+from aspect_processor import (
+    analyze_geometric,
+    analyze_phonetic,
+    analyze_semantic,
+    analyze_temporal,
+)
 from crown_config import settings
 
 np = lazy_import("numpy")

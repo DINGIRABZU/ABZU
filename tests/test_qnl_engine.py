@@ -8,9 +8,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "SPIRAL_OS"))
 
-from SPIRAL_OS.qnl_engine import (apply_emotional_quantum_state,
-                                  apply_psi_equation, hex_to_qnl, hex_to_song,
-                                  parse_input)
+from SPIRAL_OS.qnl_engine import (
+    apply_emotional_quantum_state,
+    apply_psi_equation,
+    hex_to_qnl,
+    hex_to_song,
+    parse_input,
+)
 
 
 def compute_expected(byte):

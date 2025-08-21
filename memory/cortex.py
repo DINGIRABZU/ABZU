@@ -8,8 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Protocol
 
-from aspect_processor import (analyze_phonetic, analyze_semantic,
-                              analyze_temporal)
+from aspect_processor import analyze_phonetic, analyze_semantic, analyze_temporal
 
 
 class SpiralNode(Protocol):

@@ -37,8 +37,7 @@ dummy_np.clip = lambda x, low, high: low if x < low else high if x > high else x
 dummy_np.array = lambda x, dtype=None: list(x)
 sys.modules.setdefault("numpy", dummy_np)
 
-from INANNA_AI import (emotional_synaptic_engine, speaking_engine,
-                       voice_evolution)
+from INANNA_AI import emotional_synaptic_engine, speaking_engine, voice_evolution
 
 voice_evolution.vector_memory.query_vectors = lambda *a, **k: []
 import corpus_memory_logging

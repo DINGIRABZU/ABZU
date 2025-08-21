@@ -66,7 +66,7 @@ def test_router_sigil_integration(monkeypatch):
     monkeypatch.setattr(rer.vector_memory, "add_vector", add_vector)
     monkeypatch.setattr(rer.cortex_memory, "record_spiral", record_spiral)
 
-    res = rer.route(node)
+    rer.route(node)
 
     # All stages should have been invoked in order on the node
     assert (
@@ -102,7 +102,7 @@ def test_router_without_sigil(monkeypatch):
     monkeypatch.setattr(rer.vector_memory, "add_vector", add_vector)
     monkeypatch.setattr(rer.cortex_memory, "record_spiral", record_spiral)
 
-    res = rer.route(node)
+    rer.route(node)
 
     assert (
         node.calls

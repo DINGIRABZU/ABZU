@@ -70,9 +70,7 @@ def check_audio_binaries(*, require: bool = True) -> bool:
         names = ", ".join(missing)
         plural = "ies" if len(missing) > 1 else "y"
         if require:
-            raise SystemExit(
-                f"Missing required audio binar{plural}: {names}"
-            )
+            raise SystemExit(f"Missing required audio binar{plural}: {names}")
         logger.warning("Missing optional audio binar%s: %s", plural, names)
         return False
     return True

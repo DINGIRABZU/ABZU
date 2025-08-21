@@ -28,8 +28,11 @@ except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
 from INANNA_AI.emotion_analysis import analyze_audio_emotion
-from pipeline.music_analysis import (MusicAnalysisResult, analyze_music,
-                                     extract_high_level_features)
+from pipeline.music_analysis import (
+    MusicAnalysisResult,
+    analyze_music,
+    extract_high_level_features,
+)
 from rag.orchestrator import MoGEOrchestrator
 
 

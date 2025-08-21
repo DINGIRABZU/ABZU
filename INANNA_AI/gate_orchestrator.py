@@ -19,8 +19,8 @@ else:  # pragma: no cover - optional dependency
 
 from . import db_storage
 
-
 if nn is not None:
+
     class _ModelPredictor(nn.Module):
         """Tiny LSTM model predicting the best LLM."""
 
@@ -36,7 +36,9 @@ if nn is not None:
         ) -> torch.Tensor:  # pragma: no cover - depends on torch
             out, _ = self.lstm(x)
             return self.fc(out[:, -1])
+
 else:  # pragma: no cover - torch missing
+
     class _ModelPredictor:  # type: ignore[no-redef]
         def __init__(self, *_, **__):
             raise RuntimeError("torch library is required for GateOrchestrator")
@@ -137,11 +139,7 @@ class GateOrchestrator:
         self._train_y = y
 
     def _optimize_parameters(self) -> None:
-        if (
-            self._predictor is None
-            or nn is None
-            or not hasattr(self, "_train_x")
-        ):
+        if self._predictor is None or nn is None or not hasattr(self, "_train_x"):
             return
         pop = [np.random.rand(3) for _ in range(6)]
         loss_fn = nn.CrossEntropyLoss()
@@ -165,11 +163,7 @@ class GateOrchestrator:
         self._selection_weights = ranked[0]
 
     def predict_best_llm(self) -> str:
-        if (
-            self._predictor is None
-            or nn is None
-            or len(self._context) < self._seq_len
-        ):
+        if self._predictor is None or nn is None or len(self._context) < self._seq_len:
             return "glm"
         seq = torch.tensor([list(self._context)[-self._seq_len :]], dtype=torch.float32)
         with torch.no_grad():
