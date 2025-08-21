@@ -3,23 +3,32 @@ from __future__ import annotations
 """Minimal audio segment abstraction with optional NumPy backend.
 
 This module exposes :class:`AudioSegment` which resolves to the pydub class
-when available.  When pydub (or its ``audioop`` dependency) is missing the
+when available.  When pydub or the required ``ffmpeg`` binary is missing the
 module falls back to a small NumPy implementation offering a subset of the
 pydub API used across the project.  The NumPy backend relies on ``soundfile``
 for I/O and performs simple operations such as overlay, gain, panning and
 fades directly on arrays.
 """
 
+import logging
+import os
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
-import os
+
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 _backend = os.environ.get("AUDIO_BACKEND", "numpy").lower()
 if _backend != "numpy":
     try:  # pragma: no cover - optional dependency
         from pydub import AudioSegment as _PydubSegment  # type: ignore
+        if shutil.which("ffmpeg") is None:  # pragma: no cover - optional dependency
+            logger.warning("ffmpeg not found; falling back to NumPy audio backend")
+            _PydubSegment = None  # type: ignore
     except Exception:  # pragma: no cover - optional dependency
+        logger.warning("pydub unavailable; using NumPy audio backend")
         _PydubSegment = None  # type: ignore
 else:  # pragma: no cover - respect backend choice
     _PydubSegment = None  # type: ignore

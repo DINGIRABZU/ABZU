@@ -1,18 +1,20 @@
 import os
 import sys
 from pathlib import Path
+import shutil
 
 import pytest
 
 
-# Default to NumPy audio backend unless pydub and audioop are fully available
+# Default to NumPy audio backend unless pydub and ffmpeg are fully available
 if "AUDIO_BACKEND" not in os.environ:
     try:  # pragma: no cover - optional dependency
         import pydub  # type: ignore
-        import audioop  # type: ignore
+        if shutil.which("ffmpeg") is None:
+            raise RuntimeError("ffmpeg not found")
     except Exception:  # pragma: no cover - missing deps
         pass
-    else:  # pragma: no cover - both deps present
+    else:  # pragma: no cover - deps present
         os.environ["AUDIO_BACKEND"] = "pydub"
 
 
