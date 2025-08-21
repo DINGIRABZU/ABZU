@@ -1,8 +1,18 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
+
+SKIP = shutil.which("bash") is None or not os.access(
+    ROOT / "start_avatar_console.sh", os.X_OK
+)
+pytestmark = pytest.mark.skipif(
+    SKIP, reason="requires bash and executable start_avatar_console.sh"
+)
 
 
 def test_start_avatar_console_waits_and_fallback(monkeypatch):
@@ -11,7 +21,8 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
     def fake_run(cmd, *args, **kwargs):
         joined = " ".join(cmd) if isinstance(cmd, list) else cmd
         calls.append(joined)
-        if cmd[0] == "bash" and str(cmd[1]).endswith("start_avatar_console.sh"):
+        script = str(cmd[1])
+        if cmd[0] == "bash" and script.endswith("start_avatar_console.sh"):
             fake_run(["bash", str(ROOT / "start_crown_console.sh")])
             calls.extend(
                 [
@@ -22,7 +33,7 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
                     "kill tail",
                 ]
             )
-        elif cmd[0] == "bash" and str(cmd[1]).endswith("start_crown_console.sh"):
+        elif cmd[0] == "bash" and script.endswith("start_crown_console.sh"):
             calls.extend(
                 [
                     "check_requirements",
@@ -51,4 +62,3 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
     assert wait_idx > calls.index("start_crown_console")
     assert wait_idx > calls.index("python video_stream.py")
     assert "curl http://localhost:8000/health" in calls
-

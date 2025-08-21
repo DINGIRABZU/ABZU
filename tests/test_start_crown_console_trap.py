@@ -1,8 +1,17 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
+
+pytestmark = pytest.mark.skipif(
+    shutil.which("bash") is None,
+    reason="bash not available for script execution",
+)
+
 
 def test_launch_servants_failure_cleans_temp_file(tmp_path):
     tmp_dir = tmp_path
@@ -36,7 +45,9 @@ def test_launch_servants_failure_cleans_temp_file(tmp_path):
     bin_dir.mkdir()
     temp_file = tmp_dir / "servant_endpoints.tmp"
     mktemp_stub = bin_dir / "mktemp"
-    mktemp_stub.write_text(f"#!/bin/bash\n touch '{temp_file}'\n printf '%s\\n' '{temp_file}'\n")
+    mktemp_stub.write_text(
+        f"#!/bin/bash\n touch '{temp_file}'\n printf '%s\\n' '{temp_file}'\n"
+    )
     mktemp_stub.chmod(0o755)
 
     env = os.environ.copy()

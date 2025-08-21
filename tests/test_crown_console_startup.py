@@ -1,16 +1,28 @@
 import os
+import shutil
 import subprocess
 import sys
 import types
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
+
+SKIP = shutil.which("bash") is None or not os.access(
+    ROOT / "start_crown_console.sh", os.X_OK
+)
+pytestmark = pytest.mark.skipif(
+    SKIP, reason="requires bash and executable start_crown_console.sh"
+)
 
 
 def test_crown_console_startup(monkeypatch):
     calls: list[str] = []
 
-    dummy_orch = types.SimpleNamespace(route=lambda *a, **k: {"voice_path": "x.wav"})
+    dummy_orch = types.SimpleNamespace(
+        route=lambda *a, **k: {"voice_path": "x.wav"},
+    )
     dummy_av = types.SimpleNamespace(stream_avatar_audio=lambda p: iter(()))
     dummy_speak = types.SimpleNamespace(play_wav=lambda p: None)
 
@@ -24,7 +36,8 @@ def test_crown_console_startup(monkeypatch):
 
     def fake_run(cmd, *args, **kwargs):
         calls.append(" ".join(cmd) if isinstance(cmd, list) else cmd)
-        if cmd[0] == "bash" and str(cmd[1]).endswith("start_crown_console.sh"):
+        script = str(cmd[1])
+        if cmd[0] == "bash" and script.endswith("start_crown_console.sh"):
             calls.extend(
                 [
                     "check_requirements",

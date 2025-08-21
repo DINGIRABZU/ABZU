@@ -1,11 +1,21 @@
 import os
-import sys
-import subprocess
-from pathlib import Path
 import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+BASH_MISSING = shutil.which("bash") is None
+SCRIPT_MISSING = not os.access(ROOT / "run_inanna.sh", os.X_OK)
+SKIP = BASH_MISSING or SCRIPT_MISSING
+pytestmark = pytest.mark.skipif(
+    SKIP,
+    reason="requires bash and executable run_inanna.sh",
+)
 
 
 def _create_stub_python(tmp_path: Path, record: Path) -> Path:
@@ -13,16 +23,19 @@ def _create_stub_python(tmp_path: Path, record: Path) -> Path:
     bin_dir.mkdir()
     stub = bin_dir / "python"
     stub.write_text(
-        f"#!/bin/sh\n" \
-        f"if [ \"$1\" = \"INANNA_AI_AGENT/inanna_ai.py\" ]; then\n" \
-        f"  echo \"$@\" > \"{record}\"\n" \
+        f"#!/bin/sh\n"
+        f'if [ "$1" = "INANNA_AI_AGENT/inanna_ai.py" ]; then\n'
+        f'  echo "$@" > "{record}"\n'
         f"fi\n"
     )
     stub.chmod(0o755)
     return bin_dir
 
 
-def _symlink_models(repo_root: Path, models_dir: Path) -> tuple[Path, Path | None]:
+def _symlink_models(
+    repo_root: Path,
+    models_dir: Path,
+) -> tuple[Path, Path | None]:
     target = repo_root / "INANNA_AI" / "models"
     backup = None
     if target.exists() or target.is_symlink():
@@ -54,7 +67,12 @@ def test_run_inanna_invokes_chat(tmp_path):
 
     try:
         result = subprocess.run(
-            ["bash", str(ROOT / "run_inanna.sh"), "--model-dir", str(models_dir)],
+            [
+                "bash",
+                str(ROOT / "run_inanna.sh"),
+                "--model-dir",
+                str(models_dir),
+            ],
             cwd=ROOT,
             env=env,
             capture_output=True,
@@ -84,7 +102,10 @@ def test_run_inanna_exits_when_models_missing(tmp_path):
 
     try:
         result = subprocess.run(
-            ["bash", str(ROOT / "run_inanna.sh")],
+            [
+                "bash",
+                str(ROOT / "run_inanna.sh"),
+            ],
             cwd=ROOT,
             env=env,
             capture_output=True,
@@ -96,4 +117,3 @@ def test_run_inanna_exits_when_models_missing(tmp_path):
     assert result.returncode == 1
     assert "Required model files" in result.stderr
     assert not record.exists()
-
