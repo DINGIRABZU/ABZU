@@ -5,13 +5,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-# Verify prerequisites
-if ! bash scripts/check_prereqs.sh >/dev/null 2>&1; then
-    echo "Prerequisite check failed. Run scripts/check_prereqs.sh for details." >&2
-    exit 1
-fi
-
-for cmd in curl docker python; do
+# Verify required commands
+for cmd in curl python; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
         echo "Required command not found: $cmd" >&2
         exit 1
@@ -21,6 +16,10 @@ done
 LOG_FILE="${SERVANT_LOG_FILE:-$ROOT/servant_launch.log}"
 : >"$LOG_FILE"
 log() { echo "$@" | tee -a "$LOG_FILE"; }
+
+if ! command -v docker >/dev/null 2>&1; then
+    log "docker not found; containerized servants will not be launched"
+fi
 
 if [ -f "secrets.env" ]; then
     set -a
@@ -42,6 +41,25 @@ Define SERVANT_MODELS in secrets.env or export it before running.
 Example:
   export SERVANT_MODELS="deepseek=http://localhost:8002,mistral=http://localhost:8003"
 EOF
+    exit 0
+fi
+
+# Parse SERVANT_MODELS using Python helper for strict validation
+PARSED_SERVANTS=$(python <<'PY'
+from env_validation import parse_servant_models
+import sys
+try:
+    data = parse_servant_models(require=True)
+except SystemExit as exc:
+    print(str(exc), file=sys.stderr)
+    sys.exit(1)
+for n, u in data.items():
+    print(f"{n}={u}")
+PY
+) || exit 1
+
+if [ -z "$PARSED_SERVANTS" ]; then
+    log "No valid servant models found in SERVANT_MODELS"
     exit 0
 fi
 
@@ -106,10 +124,7 @@ launch_model() {
     echo "${name}=${url}" >>"$SERVANTS_FILE"
 }
 
-IFS=','
-for item in $SERVANT_MODELS; do
-    name="${item%%=*}"
-    url="${item#*=}"
+while IFS='=' read -r name url; do
     case "$name" in
         deepseek)
             launch_model "$name" "$url" "INANNA_AI/models/DeepSeek-V3" "deepseek-service:latest" ;;
@@ -120,4 +135,4 @@ for item in $SERVANT_MODELS; do
         *)
             launch_model "$name" "$url" "" "" ;;
     esac
-done
+done <<<"$PARSED_SERVANTS"
