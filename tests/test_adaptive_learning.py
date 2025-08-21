@@ -1,16 +1,18 @@
-import sys
-from pathlib import Path
-import json
-import types
+import builtins
 import importlib
+import json
+import sys
+import types
+from pathlib import Path
+
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 adaptive_learning = pytest.importorskip("INANNA_AI.adaptive_learning")
-import INANNA_AI.ethical_validator as ev
-import INANNA_AI.existential_reflector as er
+import INANNA_AI.ethical_validator as ev  # noqa: E402
+import INANNA_AI.existential_reflector as er  # noqa: E402
 
 ev = importlib.reload(ev)
 er = importlib.reload(er)
@@ -24,7 +26,9 @@ def test_validator_feedback_updates_threshold(monkeypatch):
     try:
         validator.apply_feedback(1.0, {"extra": ["x"]})
         assert adaptive_learning.THRESHOLD_AGENT.threshold != old_threshold
-        assert validator.threshold == adaptive_learning.THRESHOLD_AGENT.threshold
+        assert (
+            validator.threshold == adaptive_learning.THRESHOLD_AGENT.threshold
+        )  # noqa: E501
         assert "extra" in validator.categories
     finally:
         adaptive_learning.THRESHOLD_AGENT.threshold = old_threshold
@@ -49,17 +53,63 @@ def test_update_mirror_thresholds(tmp_path, monkeypatch):
     class DummyPPO:
         def __init__(self, *a, **k):
             pass
+
         def learn(self, *a, **k):
             pass
 
-    gym_mod = types.SimpleNamespace(Env=object, spaces=types.SimpleNamespace(Box=lambda **k: None))
+    gym_mod = types.SimpleNamespace(
+        Env=object,
+        spaces=types.SimpleNamespace(Box=lambda **k: None),
+    )
     monkeypatch.setitem(sys.modules, "gymnasium", gym_mod)
-    monkeypatch.setitem(sys.modules, "stable_baselines3", types.SimpleNamespace(PPO=DummyPPO))
+    monkeypatch.setitem(
+        sys.modules,
+        "stable_baselines3",
+        types.SimpleNamespace(PPO=DummyPPO),
+    )
     monkeypatch.setenv("MIRROR_THRESHOLDS_PATH", str(path))
 
     import importlib
+
     al = importlib.reload(adaptive_learning)
 
     al.update_mirror_thresholds(1.0)
     data = json.loads(path.read_text())
     assert data["default"] > 0.5
+
+
+def test_numpy_stub_permutation(monkeypatch):
+    real_numpy = sys.modules.get("numpy")
+    if real_numpy is not None:
+        monkeypatch.delitem(sys.modules, "numpy", raising=False)
+    real_import = builtins.__import__
+
+    def fake_import(name, *a, **k):
+        if name == "numpy":
+            raise ImportError
+        return real_import(name, *a, **k)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    monkeypatch.delitem(
+        sys.modules,
+        "INANNA_AI.adaptive_learning",
+        raising=False,
+    )
+    al = importlib.import_module("INANNA_AI.adaptive_learning")
+
+    try:
+        seq = [1, 2, 3]
+        perm = al.np.random.permutation(seq)
+        assert sorted(perm) == seq
+        val = al.np.random.random()
+        assert 0.0 <= val < 1.0
+    finally:
+        monkeypatch.setattr(builtins, "__import__", real_import)
+        if real_numpy is not None:
+            monkeypatch.setitem(sys.modules, "numpy", real_numpy)
+        monkeypatch.setitem(
+            sys.modules,
+            "INANNA_AI.adaptive_learning",
+            adaptive_learning,
+        )
+        importlib.reload(adaptive_learning)
