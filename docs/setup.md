@@ -38,6 +38,8 @@ GLM_API_URL=<GLM endpoint>
 GLM_API_KEY=<API key>
 ```
 
+`secrets.env` is ignored by Git so your credentials stay local.
+
 ## Validate Setup
 
 Run the following script from the repository root to verify the configuration:
