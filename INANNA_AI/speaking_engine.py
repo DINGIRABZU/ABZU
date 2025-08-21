@@ -18,7 +18,7 @@ from .voice_evolution import get_voice_params, update_voice_from_history
 from . import tts_coqui, tts_tortoise, tts_bark, tts_xtts
 from .emotion_analysis import emotion_to_archetype
 from tools import voice_conversion
-from config import settings
+from crown_config import settings
 
 try:
     from gtts import gTTS

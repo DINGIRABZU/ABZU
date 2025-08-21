@@ -10,12 +10,12 @@ import shutil
 
 import mlflow
 
-import config
+import crown_config
 from . import train_soul
 from .corpus_memory import CHROMA_DIR
 
 # Location of versioned soul artifacts and metadata
-SOUL_DIR = config.MODELS_DIR / "soul"
+SOUL_DIR = crown_config.MODELS_DIR / "soul"
 SOUL_DIR.mkdir(parents=True, exist_ok=True)
 LAST_TRAIN_FILE = SOUL_DIR / "last_trained.txt"
 SOUL_FILE = Path(__file__).resolve().parents[1] / "INANNA_AI" / "soul.dna"

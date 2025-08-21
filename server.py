@@ -18,7 +18,7 @@ from core import video_engine
 import video_stream
 from connectors import webrtc_connector
 from glm_shell import send_command
-from config import settings
+from crown_config import settings
 import music_generation
 import corpus_memory_logging
 import feedback_logging

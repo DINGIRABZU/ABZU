@@ -11,7 +11,7 @@ import numpy as np
 from INANNA_AI import speaking_engine
 from core import avatar_expression_engine
 from connectors import webrtc_connector
-from config import settings
+from crown_config import settings
 
 logger = logging.getLogger(__name__)
 

@@ -17,7 +17,7 @@ import json
 
 from INANNA_AI import db_storage
 import auto_retrain
-from config import settings
+from crown_config import settings
 
 AUTO_RETRAIN_THRESHOLD = settings.retrain_threshold
 

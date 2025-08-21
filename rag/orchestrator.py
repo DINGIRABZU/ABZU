@@ -71,7 +71,7 @@ import learning_mutator
 from tools import reflection_loop
 from INANNA_AI import listening_engine
 import archetype_shift_engine
-from config import settings
+from crown_config import settings
 from corpus_memory_logging import (
     load_interactions,
     log_interaction,

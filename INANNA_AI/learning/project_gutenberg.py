@@ -14,7 +14,7 @@ except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
 from .. import corpus_memory
-import config
+import crown_config
 
 _SEARCH_URL = "https://www.gutenberg.org/ebooks/search/?query={query}"
 _TEXT_PATTERNS = ["-0.txt", "-8.txt", ".txt"]
@@ -53,7 +53,7 @@ def _download_file(url: str, dest: Path) -> Path:
 def download(book_id: str, dest_dir: Path | None = None) -> Path:
     """Download ``book_id`` to ``dest_dir`` and return path."""
     if dest_dir is None:
-        dest_dir = config.GUTENBERG_DIR
+        dest_dir = crown_config.GUTENBERG_DIR
     for pattern in _TEXT_PATTERNS:
         url = f"https://www.gutenberg.org/files/{book_id}/{book_id}{pattern}"
         try:
@@ -72,7 +72,7 @@ def clean_text(path: Path) -> Path:
     end = text.find("*** END")
     if end != -1:
         text = text[:end]
-    clean_path = config.GUTENBERG_DIR / path.name
+    clean_path = crown_config.GUTENBERG_DIR / path.name
     clean_path.parent.mkdir(parents=True, exist_ok=True)
     clean_path.write_text(text.strip(), encoding="utf-8")
     return clean_path

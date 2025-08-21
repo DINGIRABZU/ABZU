@@ -7,7 +7,7 @@ This document summarizes the current state of the ABZU codebase. It is intended 
 - **INANNA_AI/** – Core modules including adaptive learning, ethical validation, and audio analysis.
 - **INANNA_AI_AGENT/** – Command line interface that activates the system and interacts with models.
 - **audio/** – Audio processing utilities and backends for handling waveforms and feature extraction.
-- **config/** – Pydantic settings models and environment variable parsing.
+- **crown_config/** – Pydantic settings models and environment variable parsing.
 - **connectors/** – Integrations with external services and APIs.
 - **tests/** – Unit tests for learning modules, connectors, and audio helpers.
 - **docs/** – Architecture overviews, deployment guides, and design notes.

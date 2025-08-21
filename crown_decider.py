@@ -17,12 +17,12 @@ vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 import voice_aura
 
-import config
+import crown_config
 
 
-config.reload()
-_ROTATION_PERIOD = config.settings.llm_rotation_period
-_MAX_FAILURES = config.settings.llm_max_failures
+crown_config.reload()
+_ROTATION_PERIOD = crown_config.settings.llm_rotation_period
+_MAX_FAILURES = crown_config.settings.llm_max_failures
 
 _FAIL_COUNTS: dict[str, int] = {}
 _DISABLED_UNTIL: dict[str, float] = {}

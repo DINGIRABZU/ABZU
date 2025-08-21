@@ -24,7 +24,7 @@ sys.path.insert(0, str(ROOT))
 
 from tools import voice_conversion
 from INANNA_AI import speaking_engine
-from config import settings
+from crown_config import settings
 
 
 def test_apply_rvc_invokes_binary(monkeypatch, tmp_path):

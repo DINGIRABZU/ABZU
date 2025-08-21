@@ -18,7 +18,7 @@ except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
 from INANNA_AI.utils import sentiment_score
-from config import settings
+from crown_config import settings
 
 _MODEL: Any | None = None
 

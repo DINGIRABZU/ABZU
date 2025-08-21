@@ -37,7 +37,7 @@ import video_stream
 from connectors import webrtc_connector
 from rag.orchestrator import MoGEOrchestrator
 from core import language_engine, context_tracker
-from config import settings
+from crown_config import settings
 
 settings.glm_command_token = "token"
 

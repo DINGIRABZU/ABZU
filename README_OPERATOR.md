@@ -71,7 +71,7 @@ file so you don't need to export the variables manually:
 Provide `GLM_API_URL` and `GLM_API_KEY` in `secrets.env` to point to your
 production GLM service.  The helper scripts read these variables on startup.
 
-Configuration options for `config/INANNA_CORE.yaml` and the corresponding
+Configuration options for `crown_config/INANNA_CORE.yaml` and the corresponding
 environment variables are explained in
 [docs/INANNA_CORE.md](docs/INANNA_CORE.md).
 
@@ -509,7 +509,7 @@ The selected layer and recent emotional analysis are stored in
 
 #### Layer configuration and glyph display
 
-Optional personality layers can be toggled in `config/settings/layers.yaml`.
+Optional personality layers can be toggled in `crown_config/settings/layers.yaml`.
 Set a layer to `false` to disable it:
 
 ```yaml

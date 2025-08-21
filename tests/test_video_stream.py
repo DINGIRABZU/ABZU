@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 
-from config import settings
+from crown_config import settings
 
 settings.glm_command_token = "token"
 

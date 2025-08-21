@@ -28,7 +28,7 @@ except Exception:  # pragma: no cover - optional dependency
     chromadb = None  # type: ignore
     Collection = object  # type: ignore
 
-from config import settings
+from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
 
 
