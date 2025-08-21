@@ -32,7 +32,10 @@ HISTORY_FILE = Path("data/console_history.txt")
 
 
 def _wait_for_glm_ready(retries: int = 3, delay: float = 5.0) -> GLMIntegration:
-    """Return a GLMIntegration once the service is reachable."""
+    """Return a ``GLMIntegration`` once the service is reachable.
+
+    Offers actionable guidance when the health endpoint cannot be contacted.
+    """
     endpoint = os.getenv("GLM_API_URL", "http://localhost:8000")
     health_url = endpoint.rstrip("/") + "/health"
     for attempt in range(1, retries + 1):
@@ -42,15 +45,17 @@ def _wait_for_glm_ready(retries: int = 3, delay: float = 5.0) -> GLMIntegration:
             return initialize_crown()
         except (requests.RequestException, SystemExit) as exc:
             print(
-                f"Unable to reach GLM service at {health_url}: {exc}. "
-                "Ensure the model server is running "
-                "(e.g., 'bash crown_model_launcher.sh') and GLM_API_URL points "
-                "to the correct endpoint."
+                f"[{attempt}/{retries}] Unable to reach GLM service at {health_url}: {exc}\n"
+                "Start the model server with 'bash crown_model_launcher.sh' and ensure "
+                "the GLM_API_URL environment variable points to the correct endpoint."
             )
         if attempt < retries:
-            print(f"Retrying in {delay} seconds (attempt {attempt}/{retries}).")
+            print(f"Retrying in {delay} seconds...")
             time.sleep(delay)
-    print("GLM service is still unreachable. Please start the server and try again.")
+    print(
+        f"GLM service is still unreachable after {retries} attempts. "
+        "Please start the server and try again."
+    )
     raise SystemExit(1)
 
 
@@ -64,6 +69,7 @@ def run_repl(argv: list[str] | None = None) -> None:
     )
     args = parser.parse_args(argv)
 
+    print("Waiting for GLM service to become available...")
     try:
         glm = _wait_for_glm_ready()
     except SystemExit:
