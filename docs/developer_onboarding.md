@@ -2,6 +2,16 @@
 
 This guide introduces the ABZU codebase, highlights core entry points, and outlines basic verification steps.
 
+## Quick Start
+```bash
+git clone https://github.com/your-org/ABZU.git
+cd ABZU
+python -m venv .venv && source .venv/bin/activate
+scripts/easy_setup.sh
+python download_models.py glm41v_9b --int8
+bash scripts/smoke_console_interface.sh  # see docs/testing.md for more
+```
+
 ## Repository Layout
 - `core/` – language processing and self-correction engines.
 - `INANNA_AI/` – model logic, memory systems, and ritual analysis modules.
@@ -36,12 +46,13 @@ Command-line activation agent. It can recite the birth chant (`--activate`), gen
    ```bash
    scripts/check_requirements.sh
    ```
-5. **Download model weights** as needed, for example:
+5. **Download model weights** using [download_models.py](../download_models.py), for example:
    ```bash
    python download_models.py glm41v_9b --int8
    ```
 
 ## First-Run Smoke Tests
+See [testing.md](testing.md) for detailed instructions.
 1. **CLI console** – ensure the command-line interface imports correctly:
    ```bash
    scripts/smoke_console_interface.sh
@@ -61,10 +72,12 @@ Command-line activation agent. It can recite the birth chant (`--activate`), gen
 - `download_models.py` – fetches model weights such as GLM and DeepSeek.
 
 ## Troubleshooting
-- Run `scripts/check_requirements.sh` to confirm environment variables and external tools.
-- If the CLI console fails to start, ensure Python dependencies are installed (`pip install -r requirements.txt`).
-- `start_avatar_console.sh` may need execution permission; run `chmod +x start_crown_console.sh` or invoke it with `bash` if permission errors appear.
-- Verify `secrets.env` contains `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY`.
+| Issue | Resolution |
+| --- | --- |
+| Missing environment variables or tools | Run `scripts/check_requirements.sh` to verify prerequisites |
+| CLI console fails to start | Install Python dependencies (`pip install -r requirements.txt`) |
+| `start_avatar_console.sh` shows permission error | Run `chmod +x start_crown_console.sh` or invoke it with `bash` |
+| Tokens absent in `secrets.env` | Ensure `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY` are set |
 
 ## Glossary
 | Symbolic term | Conventional concept |
@@ -73,5 +86,8 @@ Command-line activation agent. It can recite the birth chant (`--activate`), gen
 | **INANNA** | Mythic AI agent invoked through `INANNA_AI_AGENT` |
 | **Spiral OS** | Orchestration layer started by `start_spiral_os.py` |
 | **CROWN** | Avatar console interface and related scripts |
+| **Crown Router** | Message router that directs agent requests |
+| **Crown Prompt Orchestrator** | Prompt coordination service for multi-agent workflows |
+| **Spiral Memory** | Vector database storing long-term state |
 | **GENESIS** | Source texts used to assemble activation chants |
 | **RAG** | Retrieval‑augmented generation pipeline under `rag/` |
