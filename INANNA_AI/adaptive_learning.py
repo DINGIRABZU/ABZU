@@ -2,16 +2,18 @@ from __future__ import annotations
 
 """Adaptive learning agents for threshold and wording tuning."""
 
-from dataclasses import dataclass, field
-from typing import Dict, List
 import json
 import os
-from pathlib import Path
+import random as _random
 import types
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, List
 
 try:  # pragma: no cover - import side effects
     import numpy as np
 except Exception:  # pragma: no cover - allow stubbing in tests
+
     def _zeros(shape, dtype=float):
         size = shape[0] if isinstance(shape, tuple) else int(shape)
         return [dtype(0)] * size
@@ -21,30 +23,76 @@ except Exception:  # pragma: no cover - allow stubbing in tests
             return [max(a, min(b, v)) for v in x]
         return max(a, min(b, x))
 
-    np = types.SimpleNamespace(float32=float, zeros=_zeros, clip=_clip)  # type: ignore
+    def _rand(size: int | None = None):
+        if size is None:
+            return _random.random()
+        return [_random.random() for _ in range(size)]
+
+    def _randint(low: int, high: int | None = None, size: int | None = None):
+        if high is None:
+            high = low
+            low = 0
+
+        def _one():
+            return _random.randint(low, high - 1)
+
+        if size is None:
+            return _one()
+        return [_one() for _ in range(size)]
+
+    def _permutation(x):
+        arr = list(range(x)) if isinstance(x, int) else list(x)
+        _random.shuffle(arr)
+        return arr
+
+    def _seed(seed: int | None = None):
+        _random.seed(seed)
+
+    _rng = types.SimpleNamespace(
+        rand=_rand,
+        random=_rand,
+        randint=_randint,
+        permutation=_permutation,
+        seed=_seed,
+    )
+
+    np = types.SimpleNamespace(
+        float32=float,
+        zeros=_zeros,
+        clip=_clip,
+        random=_rng,
+    )  # type: ignore
 
 try:  # pragma: no cover - import side effects
     from stable_baselines3 import PPO as _PPO
+
     if isinstance(np, types.SimpleNamespace):
         raise RuntimeError("NumPy stub in use")
     PPO = _PPO
 except Exception:  # pragma: no cover - allow stubbing in tests
+
     class PPO:  # type: ignore
         def __init__(self, *a, **k):
             pass
+
         def learn(self, *a, **k):
             pass
+
 
 try:  # pragma: no cover - import side effects
     import gymnasium as gym
 except Exception:  # pragma: no cover - allow stubbing in tests
+
     class _Box:
         def __init__(self, *a, **k):
             pass
+
     class _Env:
         pass
+
     class _Spaces(types.SimpleNamespace):
         Box = _Box
+
     gym = types.SimpleNamespace(Env=_Env, spaces=_Spaces())  # type: ignore
 
 CONFIG_ENV_VAR = "MIRROR_THRESHOLDS_PATH"
@@ -54,8 +102,18 @@ CONFIG_PATH = Path(__file__).resolve().parents[1] / "mirror_thresholds.json"
 class _DummyEnv(gym.Env):
     """Minimal environment for PPO training."""
 
-    observation_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(1,), dtype=np.float32)
-    action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(1,), dtype=np.float32)
+    observation_space = gym.spaces.Box(
+        low=-1.0,
+        high=1.0,
+        shape=(1,),
+        dtype=np.float32,
+    )
+    action_space = gym.spaces.Box(
+        low=-1.0,
+        high=1.0,
+        shape=(1,),
+        dtype=np.float32,
+    )
 
     def reset(self, *, seed: int | None = None, options: dict | None = None):
         return np.zeros(1, dtype=np.float32), {}
@@ -75,9 +133,12 @@ class ThresholdAgent:
         self.env = _DummyEnv()
         self.model = PPO("MlpPolicy", self.env, verbose=0)
 
-    def update(self, reward: float, new_categories: Dict[str, List[str]] | None = None) -> None:
+    def update(
+        self, reward: float, new_categories: Dict[str, List[str]] | None = None
+    ) -> None:
         self.model.learn(total_timesteps=1)
-        self.threshold = float(np.clip(self.threshold + reward * 0.01, 0.0, 1.0))
+        clip_val = np.clip(self.threshold + reward * 0.01, 0.0, 1.0)
+        self.threshold = float(clip_val)
         if new_categories:
             for cat, phrases in new_categories.items():
                 self.categories.setdefault(cat, []).extend(phrases)
@@ -93,7 +154,11 @@ class WordingAgent:
         self.env = _DummyEnv()
         self.model = PPO("MlpPolicy", self.env, verbose=0)
 
-    def update(self, reward: float, new_wording: List[str] | None = None) -> None:
+    def update(
+        self,
+        reward: float,
+        new_wording: List[str] | None = None,
+    ) -> None:
         self.model.learn(total_timesteps=1)
         if new_wording:
             self.wording = new_wording
@@ -123,7 +188,16 @@ def _load_thresholds() -> Dict[str, float]:
 def _save_thresholds(values: Dict[str, float]) -> None:
     path = _threshold_path()
     path.write_text(
-        json.dumps({"_comment": "Tolerance per emotion for the reflection loop to trigger self-correction", **values}, indent=2),
+        json.dumps(
+            {
+                "_comment": (
+                    "Tolerance per emotion for the reflection loop to trigger "
+                    "self-correction"
+                ),
+                **values,
+            },
+            indent=2,
+        ),
         encoding="utf-8",
     )
 
