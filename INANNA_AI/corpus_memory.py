@@ -10,16 +10,43 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
+import types
 try:
     import chromadb
     from chromadb.api import Collection
-except Exception:  # pragma: no cover - optional dependency
-    chromadb = None  # type: ignore
-    Collection = object  # type: ignore
+    _HAVE_CHROMADB = True
+except ImportError:  # pragma: no cover - optional dependency
+    _HAVE_CHROMADB = False
+
+    class _Collection:  # type: ignore
+        def add(self, *a, **k):
+            pass
+
+        def query(self, *a, **k):  # pragma: no cover - stub
+            return {"ids": [[]]}
+
+    def _client(*a, **k):
+        return types.SimpleNamespace(
+            get_or_create_collection=lambda name: _Collection(),
+            delete_collection=lambda name: None,
+            create_collection=lambda name: _Collection(),
+        )
+
+    chromadb = types.SimpleNamespace(PersistentClient=_client)  # type: ignore
+    Collection = _Collection  # type: ignore
 try:
     from sentence_transformers import SentenceTransformer
-except Exception:  # pragma: no cover - optional dependency
-    SentenceTransformer = None  # type: ignore
+    _HAVE_SENTENCE_TRANSFORMER = True
+except ImportError:  # pragma: no cover - optional dependency
+    _HAVE_SENTENCE_TRANSFORMER = False
+
+    def SentenceTransformer(*args, **kwargs):  # type: ignore
+        def _encode(texts, **_kw):
+            if isinstance(texts, str):
+                texts = [texts]
+            return [[0.0] for _ in texts]
+
+        return types.SimpleNamespace(encode=_encode)
 
 import crown_config
 from MUSIC_FOUNDATION import qnl_utils
@@ -68,7 +95,7 @@ def _build_embeddings(texts: List[str], model: SentenceTransformer) -> np.ndarra
 
 def create_collection(name: str = "corpus", dir_path: Path = CHROMA_DIR) -> Collection:
     """Return a Chroma collection stored under ``dir_path``."""
-    if chromadb is None:  # pragma: no cover - optional dependency
+    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
         raise RuntimeError("chromadb library not installed")
     dir_path.mkdir(parents=True, exist_ok=True)
     client = chromadb.PersistentClient(path=str(dir_path))
@@ -113,9 +140,9 @@ def reindex_corpus(
     texts = scan_memory(dirs)
     if not texts:
         return True
-    if SentenceTransformer is None:  # pragma: no cover - optional dependency
+    if not _HAVE_SENTENCE_TRANSFORMER:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
-    if chromadb is None:  # pragma: no cover - optional dependency
+    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
         raise RuntimeError("chromadb library not installed")
     model = SentenceTransformer(model_name)
     client = chromadb.PersistentClient(path=str(dir_path))
@@ -137,9 +164,9 @@ def search_corpus(
     model_name: str = "all-MiniLM-L6-v2",
 ) -> List[Tuple[str, str]]:
     """Return ``top_k`` matching files and snippets for ``query``."""
-    if SentenceTransformer is None:  # pragma: no cover - optional dependency
+    if not _HAVE_SENTENCE_TRANSFORMER:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
-    if chromadb is None:  # pragma: no cover - optional dependency
+    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
         raise RuntimeError("chromadb library not installed")
 
     collection = create_collection()

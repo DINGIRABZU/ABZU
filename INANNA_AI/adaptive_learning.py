@@ -67,9 +67,9 @@ try:  # pragma: no cover - import side effects
     from stable_baselines3 import PPO as _PPO
 
     if isinstance(np, types.SimpleNamespace):
-        raise RuntimeError("NumPy stub in use")
+        raise ImportError("NumPy stub in use")
     PPO = _PPO
-except Exception:  # pragma: no cover - allow stubbing in tests
+except ImportError:  # pragma: no cover - allow stubbing in tests
 
     class PPO:  # type: ignore
         def __init__(self, *a, **k):
@@ -81,7 +81,7 @@ except Exception:  # pragma: no cover - allow stubbing in tests
 
 try:  # pragma: no cover - import side effects
     import gymnasium as gym
-except Exception:  # pragma: no cover - allow stubbing in tests
+except ImportError:  # pragma: no cover - allow stubbing in tests
 
     class _Box:
         def __init__(self, *a, **k):
