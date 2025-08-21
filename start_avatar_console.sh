@@ -8,14 +8,35 @@ cd "$ROOT"
 CROWN_PID=""
 STREAM_PID=""
 TAIL_PID=""
+CROWN_STATUS=""
+STREAM_STATUS=""
 
 cleanup() {
+    trap - EXIT INT TERM
+    [[ -n "$TAIL_PID" ]] && kill "$TAIL_PID" >/dev/null 2>&1 || true
     [[ -n "$CROWN_PID" ]] && kill "$CROWN_PID" >/dev/null 2>&1 || true
     [[ -n "$STREAM_PID" ]] && kill "$STREAM_PID" >/dev/null 2>&1 || true
-    [[ -n "$TAIL_PID" ]] && kill "$TAIL_PID" >/dev/null 2>&1 || true
+    if [[ -z "$CROWN_STATUS" && -n "$CROWN_PID" ]]; then
+        wait "$CROWN_PID" 2>/dev/null; CROWN_STATUS=$?
+    fi
+    if [[ -z "$STREAM_STATUS" && -n "$STREAM_PID" ]]; then
+        wait "$STREAM_PID" 2>/dev/null; STREAM_STATUS=$?
+    fi
+    if [[ -n "$TAIL_PID" ]]; then
+        wait "$TAIL_PID" 2>/dev/null || true
+    fi
+    if (( CROWN_STATUS != 0 )); then
+        echo "Crown process exited with status $CROWN_STATUS" >&2
+    fi
+    if (( STREAM_STATUS != 0 )); then
+        echo "Stream process exited with status $STREAM_STATUS" >&2
+    fi
+    if (( CROWN_STATUS != 0 || STREAM_STATUS != 0 )); then
+        exit 1
+    fi
 }
 
-trap 'cleanup; exit 1' INT TERM
+trap cleanup EXIT INT TERM
 
 # Start Crown services in the background
 ./start_crown_console.sh &
@@ -39,21 +60,10 @@ tail -f "$LOG_FILE" &
 TAIL_PID=$!
 
 set +e
-wait "$CROWN_PID"
-CROWN_STATUS=$?
-wait "$STREAM_PID"
-STREAM_STATUS=$?
+wait "$CROWN_PID"; CROWN_STATUS=$?
+wait "$STREAM_PID"; STREAM_STATUS=$?
 set -e
 
-kill "$TAIL_PID" >/dev/null 2>&1 || true
-wait "$TAIL_PID" 2>/dev/null || true
-
-if (( CROWN_STATUS != 0 )); then
-    echo "Crown process exited with status $CROWN_STATUS" >&2
-fi
-if (( STREAM_STATUS != 0 )); then
-    echo "Stream process exited with status $STREAM_STATUS" >&2
-fi
 if (( CROWN_STATUS != 0 || STREAM_STATUS != 0 )); then
     exit 1
 fi

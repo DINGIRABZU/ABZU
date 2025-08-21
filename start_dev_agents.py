@@ -83,6 +83,13 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    if args.objective is not None and not args.objective.strip():
+        parser.error("--objective cannot be empty")
+    if args.max_iterations is not None and args.max_iterations < 1:
+        parser.error("--max-iterations must be positive")
+    if args.objective_map and not Path(args.objective_map).is_file():
+        parser.error(f"Objective map not found: {args.objective_map}")
+
     load_env(Path("secrets.env"))
 
     log_path = Path(args.log_path)
@@ -119,6 +126,12 @@ def main() -> int:
         return 0
 
     check_required(["PLANNER_MODEL", "CODER_MODEL", "REVIEWER_MODEL"])
+    logger.info(
+        "Using models - planner: %s, coder: %s, reviewer: %s",
+        os.environ.get("PLANNER_MODEL"),
+        os.environ.get("CODER_MODEL"),
+        os.environ.get("REVIEWER_MODEL"),
+    )
 
     if args.watch:
         objectives = None
@@ -138,6 +151,7 @@ def main() -> int:
         return 0
 
     logger.info("Starting development cycle: %s", args.objective)
+    logger.info("Planner/coder/reviewer cycle begins")
 
     result = run_dev_cycle(
         args.objective, repo=Path.cwd(), max_iterations=args.max_iterations
@@ -158,7 +172,7 @@ def main() -> int:
         "tests": tests,
     }
     logger.info("Summary: %s", summary)
-    logger.info("Development cycle finished")
+    logger.info("Planner/coder/reviewer cycle finished")
     return 0
 
 
