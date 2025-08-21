@@ -13,6 +13,9 @@ ARG EXTRA_REQUIREMENTS=""
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg sox && \
+    rm -rf /var/lib/apt/lists/*
 RUN useradd --create-home --shell /bin/bash inanna
 WORKDIR /home/inanna/app
 COPY . .
