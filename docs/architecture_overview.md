@@ -16,6 +16,9 @@ graph TD
         "memory.cortex"
         "memory.spiral_cortex"
         "memory.emotional"
+        "memory.mental"
+        "memory.spiritual"
+        "memory.sacred"
     end
     subgraph Labs
         "labs.cortex_sigil"
@@ -23,6 +26,10 @@ graph TD
     Router --> "Emotion Analyzer" --> "Model Selector" --> "Memory Logger"
     "Memory Logger" --> "memory.cortex"
     "Memory Logger" --> "memory.spiral_cortex"
+    "Memory Logger" --> "memory.emotional"
+    "Memory Logger" --> "memory.mental"
+    "Memory Logger" --> "memory.spiritual"
+    "Memory Logger" --> "memory.sacred"
     Router --> "labs.cortex_sigil"
 ```
 
@@ -49,6 +56,8 @@ flowchart LR
     R --> M[Model registry]
     M --> L[Selected model]
     L --> A[Audio pipeline]
+    L --> ML[Memory logger]
+    ML --> V[Vector memory]
     A --> S[Avatar or text response]
 ```
 

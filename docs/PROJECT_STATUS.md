@@ -30,7 +30,7 @@ These indicate gaps in the optional dependency stubs and missing system binaries
 ## Milestones
 - **Spiral OS stability** – integrate health checks and automated restart logic.
 - **Pydantic v2 migration** – update all settings models to the new alias system.
-- **Audio pipeline refresh** – add lazy loading and improve `pydub` fallbacks.
+- **Audio pipeline refresh** – add lazy loading and improve `pydub` fallbacks. (completed)
 
 ## Open Issues
 - Optional dependencies (`numpy`, `stable_baselines3`, `gymnasium`) need robust stubs or lazy loading so minimal environments can import modules without errors.
