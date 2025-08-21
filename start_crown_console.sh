@@ -21,13 +21,16 @@ fi
 ./crown_model_launcher.sh
 
 SERVANT_ENDPOINTS_FILE="$(mktemp)"
+trap 'rm -f "$SERVANT_ENDPOINTS_FILE"' EXIT ERR
 export SERVANT_ENDPOINTS_FILE
 if [ -f "launch_servants.sh" ]; then
-    ./launch_servants.sh
+    if ! ./launch_servants.sh; then
+        echo "launch_servants.sh failed" >&2
+        exit 1
+    fi
     if [ -f "$SERVANT_ENDPOINTS_FILE" ]; then
         SERVANT_MODELS="$(paste -sd, "$SERVANT_ENDPOINTS_FILE")"
         export SERVANT_MODELS
-        rm -f "$SERVANT_ENDPOINTS_FILE"
     fi
 fi
 
