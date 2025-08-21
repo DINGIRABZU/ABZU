@@ -1,6 +1,6 @@
 # Project Status
 
-This document summarizes the current state of the ABZU codebase. It is intended to help new contributors understand the repository layout, test coverage, and outstanding issues.
+This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets.
 
 ## Repository Structure
 
@@ -27,12 +27,20 @@ The test suite currently fails early:
 
 These indicate gaps in the optional dependency stubs and missing system binaries.
 
-## Outstanding Issues
+## Milestones
+- **Spiral OS stability** – integrate health checks and automated restart logic.
+- **Pydantic v2 migration** – update all settings models to the new alias system.
+- **Audio pipeline refresh** – add lazy loading and improve `pydub` fallbacks.
 
+## Open Issues
 - Optional dependencies (`numpy`, `stable_baselines3`, `gymnasium`) need robust stubs or lazy loading so minimal environments can import modules without errors.
 - Pydantic models still use deprecated `Field` extras and require migration to aliases.
 - FastAPI `@app.on_event` hooks should move to the `lifespan` API.
 - Audio features depend on `pydub` and `ffmpeg`; availability checks and a NumPy fallback are recommended.
+
+## Release Targets
+- **v0.1** – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025).
+- **v0.2** – avatar console integration and basic RAG pipeline (target: Q4 2025).
 
 ## Deprecation Roadmap
 

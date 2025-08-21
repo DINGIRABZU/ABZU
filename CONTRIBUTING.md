@@ -32,3 +32,27 @@ After modifying dependencies, refresh the lock file and commit the result:
 uv pip compile --no-deps pyproject.toml -o requirements.lock
 ```
 
+# Coding Style
+
+Follow the conventions in [CODE_STYLE.md](CODE_STYLE.md):
+
+- Target Python 3.10+, use four spaces for indentation, and keep lines under 88 characters.
+- Organise imports into standard library, third‑party, and local groups separated by blank lines.
+- Include docstrings for public modules, classes, and functions.
+
+# Testing Expectations
+
+Run the test suite and basic smoke tests before opening a pull request:
+
+```bash
+scripts/smoke_console_interface.sh
+scripts/smoke_avatar_console.sh
+pytest --maxfail=1 -q
+```
+
+# Pull Request Guidelines
+
+- Keep changes focused; submit separate PRs for unrelated fixes.
+- Ensure tests pass and documentation is updated.
+- Request review from a maintainer and address feedback promptly.
+
