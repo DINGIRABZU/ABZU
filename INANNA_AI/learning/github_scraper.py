@@ -7,12 +7,22 @@ from typing import List, Dict, Any
 import base64
 import os
 import json
+import types
 import requests
 
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
-except Exception:  # pragma: no cover - optional dependency
-    SentenceTransformer = None  # type: ignore
+    _HAVE_SENTENCE_TRANSFORMER = True
+except ImportError:  # pragma: no cover - optional dependency
+    _HAVE_SENTENCE_TRANSFORMER = False
+
+    def SentenceTransformer(*args, **kwargs):  # type: ignore
+        def _encode(texts, **_kw):
+            if isinstance(texts, str):
+                texts = [texts]
+            return [[0.0] for _ in texts]
+
+        return types.SimpleNamespace(encode=_encode)
 
 from .. import corpus_memory
 from . import github_metadata
@@ -101,7 +111,7 @@ def fetch_repo(
     meta_path.write_text(json.dumps(meta, indent=2, sort_keys=True), encoding="utf-8")
 
     # Create embeddings and store in corpus DB
-    if SentenceTransformer is not None:
+    if _HAVE_SENTENCE_TRANSFORMER:
         try:
             collection = corpus_memory.create_collection()
         except Exception:

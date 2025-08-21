@@ -7,11 +7,21 @@ from typing import List, Tuple
 import re
 import requests
 from bs4 import BeautifulSoup
+import types
 
 try:  # pragma: no cover - optional dependency
     from sentence_transformers import SentenceTransformer
-except Exception:  # pragma: no cover - optional dependency
-    SentenceTransformer = None  # type: ignore
+    _HAVE_SENTENCE_TRANSFORMER = True
+except ImportError:  # pragma: no cover - optional dependency
+    _HAVE_SENTENCE_TRANSFORMER = False
+
+    def SentenceTransformer(*args, **kwargs):  # type: ignore
+        def _encode(texts, **_kw):
+            if isinstance(texts, str):
+                texts = [texts]
+            return [[0.0] for _ in texts]
+
+        return types.SimpleNamespace(encode=_encode)
 
 from .. import corpus_memory
 import crown_config
@@ -106,7 +116,7 @@ def ingest(title_or_id: str) -> Path:
     text = clean_path.read_text(encoding="utf-8")
     pieces = chunk(text)
 
-    if SentenceTransformer is None:  # pragma: no cover - optional dependency
+    if not _HAVE_SENTENCE_TRANSFORMER:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
 
     try:

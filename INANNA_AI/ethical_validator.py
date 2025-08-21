@@ -11,11 +11,21 @@ from datetime import datetime
 import logging
 
 import numpy as np
+import types
 from . import adaptive_learning
 try:
     from sentence_transformers import SentenceTransformer
-except Exception:  # pragma: no cover - optional dependency
-    SentenceTransformer = None  # type: ignore
+    _HAVE_SENTENCE_TRANSFORMER = True
+except ImportError:  # pragma: no cover - optional dependency
+    _HAVE_SENTENCE_TRANSFORMER = False
+
+    def SentenceTransformer(*args, **kwargs):  # type: ignore
+        def _encode(texts, **_kw):
+            if isinstance(texts, str):
+                texts = [texts]
+            return [[0.0] for _ in texts]
+
+        return types.SimpleNamespace(encode=_encode)
 
 
 DEFAULT_CATEGORIES: Dict[str, List[str]] = {
@@ -46,7 +56,7 @@ class EthicalValidator:
 
         self.model = None
         self.embeddings: Dict[str, np.ndarray] = {}
-        if SentenceTransformer is not None:
+        if _HAVE_SENTENCE_TRANSFORMER:
             try:
                 self.model = SentenceTransformer(model_name)
                 self.embeddings = {
