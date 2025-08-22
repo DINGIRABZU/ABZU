@@ -65,23 +65,27 @@ def _quantize_to_int8(model_dir: Path) -> None:
 
 def _download_with_hash(url: str, expected_hash: str) -> Path:
     """Download ``url`` to a temporary file and verify its SHA256 hash."""
+    logger.info("Downloading %s", url)
     try:
         with urllib.request.urlopen(url) as resp:  # pragma: no cover - network
             data = resp.read()
     except Exception as exc:  # pragma: no cover - network failure
-        logger.error("Failed to download %s: %s", url, exc)
-        raise RuntimeError(f"Failed to download installer: {exc}") from exc
+        logger.error("Download failed for %s: %s", url, exc)
+        raise RuntimeError(f"Download failed for {url}: {exc}") from exc
 
     digest = hashlib.sha256(data).hexdigest()
     if digest != expected_hash:
         logger.error(
             "Hash mismatch for %s: expected %s, got %s", url, expected_hash, digest
         )
-        raise RuntimeError("Installer hash mismatch")
+        raise RuntimeError(
+            f"Hash mismatch for {url}: expected {expected_hash}, got {digest}"
+        )
 
     tmp_dir = Path(tempfile.mkdtemp())
     script_path = tmp_dir / "install.sh"
     script_path.write_bytes(data)
+    logger.debug("Saved installer to %s", script_path)
     return script_path
 
 
@@ -106,7 +110,7 @@ def download_gemma2() -> None:
     env["OLLAMA_MODELS"] = str(models_dir)
 
     if shutil.which("ollama") is None:
-        print("Ollama not found, installing...")
+        logger.info("Ollama not found, installing")
         _install_ollama()
 
     try:
@@ -120,6 +124,7 @@ def download_gemma2() -> None:
     except subprocess.CalledProcessError as exc:
         logger.error("Ollama pull failed: %s", exc.stderr)
         raise RuntimeError(f"Ollama pull failed: {exc.stderr}") from exc
+    logger.info("Model downloaded to %s", models_dir / "gemma2")
     print(f"Model downloaded to {models_dir / 'gemma2'}")
 
 
