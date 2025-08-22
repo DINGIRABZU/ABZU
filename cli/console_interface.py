@@ -15,14 +15,14 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.patch_stdout import patch_stdout
 
 import emotional_state
+from audio import voice_cloner
 from core import avatar_expression_engine, context_tracker
 from INANNA_AI import speaking_engine
 from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown
+from memory.search import query_all
 from rag.orchestrator import MoGEOrchestrator
 from tools import sandbox_session, session_logger, virtual_env_manager
-from memory.search import query_all
-from audio import voice_cloner
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator

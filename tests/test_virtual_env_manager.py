@@ -14,8 +14,10 @@ from tools.virtual_env_manager import create_env, install_requirements, run
 def test_create_env(tmp_path: Path) -> None:
     env_dir = tmp_path / "env"
     create_env(env_dir)
-    python_bin = env_dir / ("Scripts" if os.name == "nt" else "bin") / (
-        "python.exe" if os.name == "nt" else "python"
+    python_bin = (
+        env_dir
+        / ("Scripts" if os.name == "nt" else "bin")
+        / ("python.exe" if os.name == "nt" else "python")
     )
     assert python_bin.exists()
 

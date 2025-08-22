@@ -1,8 +1,8 @@
 """Avatar animation utilities."""
 
-from .ltx_avatar import LTXAvatar, LTXDistilledModel
 from .expression_controller import generate_landmarks
 from .lip_sync import align_phonemes
+from .ltx_avatar import LTXAvatar, LTXDistilledModel
 
 __all__ = [
     "LTXAvatar",

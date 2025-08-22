@@ -1,3 +1,5 @@
+"""Utility functions for downloading model weights."""
+
 from __future__ import annotations
 
 import os

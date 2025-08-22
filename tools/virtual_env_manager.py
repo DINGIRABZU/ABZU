@@ -2,10 +2,10 @@ from __future__ import annotations
 
 """Utilities for working with Python virtual environments."""
 
-from pathlib import Path
 import os
 import subprocess
 import sys
+from pathlib import Path
 from typing import Sequence
 
 
@@ -24,7 +24,9 @@ def install_requirements(env: Path, requirements_file: Path) -> None:
     run(env, ["pip", "install", "-r", str(requirements_file)])
 
 
-def run(env: Path, command: Sequence[str] | str, **kwargs) -> subprocess.CompletedProcess:
+def run(
+    env: Path, command: Sequence[str] | str, **kwargs
+) -> subprocess.CompletedProcess:
     """Execute *command* inside *env*.
 
     Returns the ``subprocess.CompletedProcess`` instance. Additional keyword

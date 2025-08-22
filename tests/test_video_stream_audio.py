@@ -126,9 +126,11 @@ def test_avatar_audio_endpoint_updates_track(monkeypatch, tmp_path):
         calls["path"] = path
         yield np.zeros((1, 1, 3), dtype=np.uint8)
 
-    monkeypatch.setattr(video_stream.avatar_expression_engine, "stream_avatar_audio", fake_stream)
+    monkeypatch.setattr(
+        video_stream.avatar_expression_engine, "stream_avatar_audio", fake_stream
+    )
     video_stream._active_track = None  # type: ignore[attr-defined]
-    track = video_stream.AvatarVideoTrack()
+    _ = video_stream.AvatarVideoTrack()
     audio_file = tmp_path / "a.wav"
     audio_file.touch()
     with TestClient(server.app) as client:

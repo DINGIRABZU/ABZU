@@ -1,5 +1,5 @@
-from style_engine.style_library import load_style_config
 from ai_core.video_pipeline.pipeline import VideoPipeline
+from style_engine.style_library import load_style_config
 
 
 def test_pipeline_selects_pusa_v1():
