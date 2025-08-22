@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 music_foundation.py
 INANNA_AI — QNL Sonic Decoder

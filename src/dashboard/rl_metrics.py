@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Streamlit dashboard for reinforcement learning metrics."""
+
 import pandas as pd
 import streamlit as st
 

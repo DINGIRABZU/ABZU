@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+"""Pusa V1 video processing utilities."""
+
+
 class PusaV1Processor:
     """Simple placeholder processor for the `pusa_v1` style."""
 

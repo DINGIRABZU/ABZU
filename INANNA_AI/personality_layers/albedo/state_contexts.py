@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Prompt templates for each alchemical state."""
 
 CONTEXTS = {

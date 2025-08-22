@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Streamlit dashboard for usage metrics."""
+
 import pandas as pd
 import streamlit as st
 

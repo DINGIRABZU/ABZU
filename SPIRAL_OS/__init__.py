@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Expose core Spiral OS components for external use."""
+
 import importlib.util
 import sys
 from pathlib import Path

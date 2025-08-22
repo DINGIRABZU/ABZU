@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Communication connectors for Spiral OS."""
 
 from .webrtc_connector import close_peers as webrtc_close_peers

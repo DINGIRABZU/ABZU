@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Compatibility wrapper exposing :class:`~INANNA_AI.glm_integration.GLMIntegration`.
 
 ``GLMIntegration.complete`` accepts an optional ``quantum_context`` string
