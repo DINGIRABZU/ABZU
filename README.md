@@ -67,6 +67,13 @@ Begin with the [documentation index](docs/index.md) for architecture, setup, and
 For an overview of available agents and defensive modules, see
 [AGENTS.md](AGENTS.md#upcoming-components).
 
+## Architect and Developer Guidance
+- [docs/developer_manual.md](docs/developer_manual.md) – repository layout, crown orchestration and sandbox workflow.
+- [docs/memory_architecture.md](docs/memory_architecture.md) – memory layers and their interaction.
+- [docs/roadmap.md](docs/roadmap.md) – completed milestones and future work.
+- [docs/architecture_overview.md](docs/architecture_overview.md) – request flow diagram.
+- [docs/project_overview.md](docs/project_overview.md) – chakra oriented context.
+
 For a short deployment overview covering Vast.ai and local Docker Compose, see [docs/deployment_overview.md](docs/deployment_overview.md). Detailed Vast.ai instructions live in [docs/VAST_DEPLOYMENT.md](docs/VAST_DEPLOYMENT.md).
 
 ## Installation
