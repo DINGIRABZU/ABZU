@@ -12,6 +12,9 @@ except Exception:  # pragma: no cover - fallback
         emotional_state = None  # type: ignore
 
 
+logger = logging.getLogger(__name__)
+
+
 class EmotionFilter(logging.Filter):
     """Append emotion and resonance fields to log records."""
 
@@ -22,14 +25,14 @@ class EmotionFilter(logging.Filter):
             try:
                 emotion = emotion_registry.get_last_emotion()
                 resonance = emotion_registry.get_resonance_level()
-            except Exception:
-                pass
+            except (AttributeError, RuntimeError) as exc:
+                logger.warning("emotion_registry fetch failed: %s", exc)
         elif emotional_state is not None:
             try:
                 emotion = emotional_state.get_last_emotion()
                 resonance = emotional_state.get_resonance_level()
-            except Exception:
-                pass
+            except (AttributeError, RuntimeError) as exc:
+                logger.warning("emotional_state fetch failed: %s", exc)
         record.emotion = emotion
         record.resonance = resonance
         return True
