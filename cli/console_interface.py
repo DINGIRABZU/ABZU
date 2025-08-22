@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import logging
 import os
+import subprocess
 import time
 from pathlib import Path
 
@@ -19,7 +20,7 @@ from INANNA_AI import speaking_engine
 from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown
 from rag.orchestrator import MoGEOrchestrator
-from tools import session_logger
+from tools import sandbox_session, session_logger, virtual_env_manager
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
@@ -154,6 +155,39 @@ def run_repl(argv: list[str] | None = None) -> None:
                     _play_music(music_prompt)
                 else:
                     print("Usage: /music <prompt>")
+                continue
+            if command.startswith("/sandbox"):
+                _, _, patch_path_str = command.partition(" ")
+                if not patch_path_str:
+                    print("Usage: /sandbox <patch-file>")
+                    continue
+                patch_file = Path(patch_path_str)
+                try:
+                    patch_text = patch_file.read_text()
+                except Exception as exc:
+                    print(f"Unable to read patch file: {exc}")
+                    continue
+                repo_root = Path(__file__).resolve().parents[1]
+                try:
+                    sandbox_root = sandbox_session.create_sandbox(
+                        repo_root, virtual_env_manager
+                    )
+                    sandbox_session.apply_patch(sandbox_root, patch_text)
+                    env = sandbox_root / ".venv"
+                    req_file = sandbox_root / "tests" / "requirements.txt"
+                    virtual_env_manager.install_requirements(env, req_file)
+                    try:
+                        result = virtual_env_manager.run(
+                            env, ["pytest"], cwd=sandbox_root
+                        )
+                        print(result.stdout)
+                        print("Sandbox tests passed.")
+                    except subprocess.CalledProcessError as exc:
+                        print(exc.stdout)
+                        print(exc.stderr)
+                        print("Sandbox tests failed.")
+                except Exception as exc:
+                    print(f"Sandbox error: {exc}")
                 continue
             print(f"Unknown command: {command}")
             continue
