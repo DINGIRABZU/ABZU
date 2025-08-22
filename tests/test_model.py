@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -9,12 +10,12 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+import importlib.util
+
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import WordLevelTrainer
-
-import importlib.util
 
 spec = importlib.util.spec_from_file_location(
     "inanna_model", ROOT / "INANNA_AI_AGENT" / "model.py"
@@ -62,3 +63,20 @@ def test_load_model_logs_error_on_missing_weights(tmp_path, caplog):
         with pytest.raises(OSError):
             model.load_model(tmp_path)
     assert "Failed to load model" in caplog.text
+
+
+def test_load_model_logs_error_on_tokenizer_failure(tmp_path, monkeypatch, caplog):
+    create_dummy_model(tmp_path)
+
+    def failing_from_pretrained(model_dir, local_files_only=True):
+        raise ValueError("tokenizer missing")
+
+    monkeypatch.setattr(
+        model,
+        "AutoTokenizer",
+        types.SimpleNamespace(from_pretrained=failing_from_pretrained),
+    )
+    with caplog.at_level(logging.ERROR):
+        with pytest.raises(ValueError):
+            model.load_model(tmp_path)
+    assert "Failed to load tokenizer" in caplog.text

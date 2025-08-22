@@ -11,11 +11,11 @@ import logging
 
 try:
     import emotion_registry
-except Exception:  # pragma: no cover - fallback
+except ImportError:  # pragma: no cover - fallback
     emotion_registry = None  # type: ignore
     try:
         import emotional_state
-    except Exception:  # pragma: no cover - fallback
+    except ImportError:  # pragma: no cover - fallback
         emotional_state = None  # type: ignore
 
 
@@ -33,13 +33,13 @@ class EmotionFilter(logging.Filter):
                 emotion = emotion_registry.get_last_emotion()
                 resonance = emotion_registry.get_resonance_level()
             except (AttributeError, RuntimeError) as exc:
-                logger.warning("emotion_registry fetch failed: %s", exc)
+                logger.warning("emotion_registry fetch failed: %s", exc, exc_info=exc)
         elif emotional_state is not None:
             try:
                 emotion = emotional_state.get_last_emotion()
                 resonance = emotional_state.get_resonance_level()
             except (AttributeError, RuntimeError) as exc:
-                logger.warning("emotional_state fetch failed: %s", exc)
+                logger.warning("emotional_state fetch failed: %s", exc, exc_info=exc)
         record.emotion = emotion
         record.resonance = resonance
         return True
