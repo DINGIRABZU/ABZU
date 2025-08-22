@@ -157,16 +157,17 @@ pip install -e .
 Heavy or optional components are provided via extras:
 
 ```bash
-pip install .[audio]   # librosa, ffmpeg-python, wav2lip, EmotiVoice
-pip install .[ml]      # chromadb, mlflow, langchain
-pip install .[vision]  # aiortc, opencv, etc.
-pip install .[llm]     # LLM tooling
-pip install .[dev]     # development helpers
+pip install .[audio]    # openai-whisper, librosa, ffmpeg-python, etc.
+pip install .[llm]      # torch, transformers, huggingface-hub
+pip install .[ml]       # pandas, chromadb, mlflow, langchain
+pip install .[vision]   # aiortc, opencv, selenium
+pip install .[web]      # fastapi, uvicorn, streamlit
+pip install .[network]  # scapy
+pip install .[dev]      # development helpers
 ```
 
-Core multimedia features rely on `opencv-python`, `soundfile`,
-`openai-whisper`, and `opensmile`. The `audio`, `ml`, and `vision`
-extras install heavyweight libraries for advanced functionality.
+The extras install heavyweight libraries for advanced functionality such as
+audio processing, large language models, computer vision, and web interfaces.
 
 Run `./scripts/setup_audio_env.sh` to install a pinned set of audio
 dependencies. Verify the environment with:
