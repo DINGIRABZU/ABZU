@@ -148,21 +148,25 @@ Verify installation with:
    sudo apt-get install -y aria2
    ```
 
-Install the runtime dependencies and optional development tools using
-the project metadata:
+Install the runtime dependencies using the project metadata:
 
 ```bash
-pip install .[dev]
+pip install -e .
 ```
 
-Core multimedia features rely on `opencv-python`, `librosa`, `soundfile`,
-`openai-whisper`, and `opensmile`. These packages are included in the
-project requirements and will be installed automatically. To add them
-manually use:
+Heavy or optional components are provided via extras:
 
 ```bash
-pip install opencv-python librosa soundfile openai-whisper opensmile
+pip install .[audio]   # librosa, ffmpeg-python, wav2lip, EmotiVoice
+pip install .[ml]      # chromadb, mlflow, langchain
+pip install .[vision]  # aiortc, opencv, etc.
+pip install .[llm]     # LLM tooling
+pip install .[dev]     # development helpers
 ```
+
+Core multimedia features rely on `opencv-python`, `soundfile`,
+`openai-whisper`, and `opensmile`. The `audio`, `ml`, and `vision`
+extras install heavyweight libraries for advanced functionality.
 
 Run `./scripts/setup_audio_env.sh` to install a pinned set of audio
 dependencies. Verify the environment with:
