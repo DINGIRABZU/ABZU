@@ -1,6 +1,6 @@
 # Voice Aura FX
 
-`voice_aura.py` applies subtle reverb and delay based on the current emotion.
+`audio/voice_aura.py` applies subtle reverb and delay based on the current emotion.
 Each emotion maps to a simple preset:
 
 | Emotion  | Reverb | Delay |

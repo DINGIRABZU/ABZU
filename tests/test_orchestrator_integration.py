@@ -59,7 +59,10 @@ def setup_module(module):
     sys.modules["crown_decider"] = types.SimpleNamespace(
         decide_expression_options=lambda e: {}
     )
-    sys.modules["voice_aura"] = types.ModuleType("voice_aura")
+    audio_pkg = types.ModuleType("audio")
+    audio_pkg.voice_aura = types.ModuleType("voice_aura")
+    sys.modules["audio"] = audio_pkg
+    sys.modules["audio.voice_aura"] = audio_pkg.voice_aura
 
     spiral_pkg = types.ModuleType("SPIRAL_OS")
     qnl_engine = types.ModuleType("qnl_engine")

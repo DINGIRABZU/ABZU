@@ -122,7 +122,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `emotion_registry.py` | No description | None |
 | `emotional_state.py` | No description | None |
 | `env_validation.py` | No description | None |
-| `feedback_logging.py` | Manage feedback logs and thresholds with on-disk persistence. | None |
+| `core/feedback_logging.py` | Manage feedback logs and thresholds with on-disk persistence. | None |
 | `glm_shell.py` | No description | None |
 | `init_crown_agent.py` | No description | requests |
 | `insight_compiler.py` | No description | None |
@@ -180,7 +180,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `state_transition_engine.py` | No description | None |
 | `style_engine/neural_style_transfer.py` | No description | numpy |
 | `style_engine/style_library.py` | Utilities for loading video style configurations. | None |
-| `system_monitor.py` | System resource monitoring utilities. | psutil |
+| `dashboard/system_monitor.py` | System resource monitoring utilities. | psutil |
 | `task_profiling.py` | Compatibility wrappers around :class:`core.task_profiler.TaskProfiler`. | None |
 | `tests/conftest.py` | No description | pydub, pytest |
 | `tests/data/short_wav_base64.py` | No description | None |
@@ -408,4 +408,4 @@ Generated automatically. Lists each Python file with its description and externa
 | `vector_memory.py` | ChromaDB-backed text vector store with decay and operation logging. | chromadb, numpy |
 | `video_stream.py` | No description | aiortc, fastapi, numpy, soundfile |
 | `vocal_isolation.py` | No description | None |
-| `voice_aura.py` | No description | numpy, soundfile |
+| `audio/voice_aura.py` | No description | numpy, soundfile |

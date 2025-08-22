@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 # Stub heavy dependencies similar to other integration tests
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
@@ -39,7 +40,7 @@ gym_mod.spaces = types.SimpleNamespace(Box=lambda **k: None)
 sys.modules.setdefault("stable_baselines3", stable_mod)
 sys.modules.setdefault("gymnasium", gym_mod)
 
-import system_monitor
+from dashboard import system_monitor
 from INANNA_AI import network_utils
 from INANNA_AI_AGENT import INANNA_AI
 

@@ -44,15 +44,20 @@ graph TD
     subgraph core
         EA[EmotionAnalyzer]
         ML[MemoryLogger]
+        FL[FeedbackLogging]
     end
     subgraph audio
         EN[Engine]
+        VA[VoiceAura]
     end
     subgraph dashboard
         APP[Metrics Dashboard]
+        MON[SystemMonitor]
     end
     EA --> ML
     EN --> APP
+    VA --> APP
+    MON --> APP
 ```
 
 ### Service Boundaries
@@ -60,9 +65,10 @@ graph TD
 Spiral OS separates outward‑facing interfaces from heavy model logic. The
 **API layer** (``src/api``) exposes HTTP endpoints and orchestrates incoming
 requests. Core algorithms live in the **model layer** (``src/core``) which
-handles emotion analysis, memory logging and model selection. These layers
-communicate only through the contracts defined in ``core.contracts`` so each
-service can scale horizontally or be deployed independently.
+handles emotion analysis, memory logging, feedback collection and model
+selection. These layers communicate only through the contracts defined in
+``core.contracts`` so each service can scale horizontally or be deployed
+independently.
 
 ### Service Contracts
 
@@ -71,6 +77,7 @@ service can scale horizontally or be deployed independently.
 - `core.contracts.MemoryLoggerService` – protocol for persistence.
 - `core.memory_logger.MemoryLogger` – persist events to the memory stores.
 - `core.model_selector.ModelSelector` – choose the appropriate language model.
+- `core.feedback_logging` – record and retrieve user feedback.
 - `memory.cortex` – `record_spiral` / `query_spirals` for spiral decisions.
 - `memory.spiral_cortex` – `log_insight` / `load_insights` for retrieval traces.
 - `labs.cortex_sigil` – `interpret_sigils` to extract symbolic triggers.
@@ -80,6 +87,7 @@ service can scale horizontally or be deployed independently.
 - `recursive_emotion_router` persists results via `memory.cortex` and augments decisions with `labs.cortex_sigil`.
 - `crown_prompt_orchestrator` maps experiences with `memory.mental`, `memory.spiritual`, and `memory.sacred`.
 - `rag.retriever` records search context to `memory.spiral_cortex`.
+- `audio.voice_aura` feeds processed clips into `dashboard.system_monitor` for logging.
 
 ### Request Flow
 
@@ -102,5 +110,17 @@ The LLM router acts as a traffic controller for prompts. When a message arrives,
 `servant_model_manager.py` is a catalogue of helper models. Each servant registers a name and how to run it—either as a Python function or an external process. The orchestrator asks this registry to invoke a model by name, making it straightforward to plug in new specialised tools.
 
 ### Audio Pipeline
-The audio pipeline has two stops. `audio/audio_ingestion.py` brings in clips and analyses features such as tempo, key and CLAP embeddings. `audio/engine.py` then plays the sound, adds effects or synthesises missing notes. Together they handle capture, analysis and playback.
+The audio pipeline has two stops. `audio/audio_ingestion.py` brings in clips and analyses features such as tempo, key and CLAP embeddings. `audio/engine.py` then plays the sound, adds effects or synthesises missing notes. A new `audio/voice_aura.py` module applies emotion‑driven effects before final output. Together they handle capture, analysis and playback.
+
+### Dependency Mapping
+
+External package relationships were generated with `pipdeptree`:
+
+```
+fastapi
+  starlette
+    anyio
+      idna
+      sniffio
+```
 
