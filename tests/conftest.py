@@ -71,6 +71,8 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_api_endpoints.py"),
     str(ROOT / "tests" / "test_style_selection.py"),
     str(ROOT / "tests" / "test_prompt_engineering.py"),
+    str(ROOT / "tests" / "test_model.py"),
+    str(ROOT / "tests" / "test_logging_filters.py"),
 }
 
 

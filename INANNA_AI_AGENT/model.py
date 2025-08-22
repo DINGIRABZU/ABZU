@@ -3,7 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Tuple
 
-from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
+import logging
+
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+
+logger = logging.getLogger(__name__)
 
 
 def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
@@ -22,18 +27,12 @@ def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
     model_dir = Path(model_dir)
     tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
     try:
-        model = AutoModelForCausalLM.from_pretrained(model_dir, local_files_only=True)
-    except Exception:
-        config = AutoConfig.from_pretrained(model_dir, local_files_only=True)
-
-        class DummyModel:
-            def __init__(self, cfg):
-                self.config = cfg
-
-            def generate(self, **kwargs):  # pragma: no cover - placeholder
-                return [[0]]
-
-        model = DummyModel(config)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_dir, local_files_only=True
+        )
+    except (OSError, ValueError) as exc:
+        logger.error("Failed to load model from %s: %s", model_dir, exc)
+        raise
     return model, tokenizer
 
 

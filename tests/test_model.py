@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import logging
 import sys
 from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -11,7 +14,14 @@ from tokenizers.models import WordLevel
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import WordLevelTrainer
 
-from INANNA_AI_AGENT import model  # type: ignore
+import importlib.util
+
+spec = importlib.util.spec_from_file_location(
+    "inanna_model", ROOT / "INANNA_AI_AGENT" / "model.py"
+)
+model = importlib.util.module_from_spec(spec)
+assert spec.loader is not None
+spec.loader.exec_module(model)  # type: ignore
 from transformers import GPT2Config, GPT2LMHeadModel, PreTrainedTokenizerFast
 
 
@@ -39,3 +49,16 @@ def test_load_model_returns_objects(tmp_path):
     mdl, tok = model.load_model(tmp_path)
     assert mdl is not None
     assert tok is not None
+
+
+def test_load_model_logs_error_on_missing_weights(tmp_path, caplog):
+    create_dummy_model(tmp_path)
+    # Remove required files to trigger model loading failure
+    for name in ["pytorch_model.bin", "model.safetensors", "config.json"]:
+        path = tmp_path / name
+        if path.exists():
+            path.unlink()
+    with caplog.at_level(logging.ERROR):
+        with pytest.raises(OSError):
+            model.load_model(tmp_path)
+    assert "Failed to load model" in caplog.text
