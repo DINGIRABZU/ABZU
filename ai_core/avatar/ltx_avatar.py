@@ -10,9 +10,9 @@ is sufficient for unit tests and documentation examples and mirrors the API a
 real model might expose.
 """
 
+import time
 from dataclasses import dataclass
 from typing import Iterator, List
-import time
 
 import numpy as np
 

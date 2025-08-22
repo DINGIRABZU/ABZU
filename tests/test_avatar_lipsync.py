@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from pathlib import Path
 import types
+from pathlib import Path
 
 import numpy as np
 
@@ -48,4 +48,3 @@ def test_avatar_lipsync(monkeypatch, tmp_path):
 
     frame1, frame2 = asyncio.run(grab())
     assert frame1.sum() > frame2.sum()
-

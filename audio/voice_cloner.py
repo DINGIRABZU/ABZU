@@ -43,9 +43,7 @@ class VoiceCloner:
         self.sample = path
         return path
 
-    def synthesize(
-        self, text: str, out_path: Path, emotion: str = "neutral"
-    ) -> Path:
+    def synthesize(self, text: str, out_path: Path, emotion: str = "neutral") -> Path:
         """Generate ``text`` with the cloned voice."""
 
         if getattr(emotivoice, "__stub__", False):
@@ -60,4 +58,3 @@ class VoiceCloner:
 
 
 __all__ = ["VoiceCloner"]
-

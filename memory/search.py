@@ -7,9 +7,9 @@ import math
 from datetime import datetime
 from typing import Any, Dict, List
 
-from memory import cortex
 import spiral_memory
 import vector_memory
+from memory import cortex
 
 _DECAY_SECONDS = 86_400.0
 

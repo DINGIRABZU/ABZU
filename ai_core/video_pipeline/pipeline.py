@@ -1,11 +1,11 @@
 """Video generation pipeline that selects processors based on a ``StyleConfig``."""
+
 from __future__ import annotations
 
 from style_engine.style_library import StyleConfig
 
-from .pusa_v1_processor import PusaV1Processor
 from .ltx_video_processor import LTXVideoProcessor
-
+from .pusa_v1_processor import PusaV1Processor
 
 PROCESSOR_REGISTRY = {
     "pusa_v1": PusaV1Processor,

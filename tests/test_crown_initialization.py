@@ -248,7 +248,9 @@ def test_console_speak(monkeypatch, capsys):
     monkeypatch.setattr(
         console_interface.requests,
         "post",
-        lambda url, json, timeout=5: calls.setdefault("post", {"url": url, "json": json}),
+        lambda url, json, timeout=5: calls.setdefault(
+            "post", {"url": url, "json": json}
+        ),
     )
 
     console_interface.run_repl(["--speak"])
