@@ -23,6 +23,40 @@ Retrieval-Augmented Generation lives under `rag`. `orchestrator.py` acts as the
 central router, calling `retriever.py` to search vector memory, `embedder.py` to
 create sentence embeddings and `music_oracle.py` to craft musical prompts.
 
+
+## INANNA_AI Package
+
+`INANNA_AI` contains ritual analysis, memory helpers and network utilities. The command line interface in [INANNA_AI_AGENT/inanna_ai.py](../INANNA_AI_AGENT/inanna_ai.py) exposes these components.
+
+```bash
+python INANNA_AI_AGENT/inanna_ai.py --activate
+```
+
+Key modules include [INANNA_AI/ethical_validator.py](../INANNA_AI/ethical_validator.py) for prompt filtering and [INANNA_AI/network_utils](../INANNA_AI/network_utils/) for packet capture.
+
+## Core Package
+
+`core` hosts the language engines that analyse sentiment, select models and log experiences.
+
+```python
+from core.model_selector import ModelSelector
+
+selector = ModelSelector()
+model = selector.choose_model({"text": "greetings"})
+```
+
+See [core/emotion_analyzer.py](../core/emotion_analyzer.py), [core/memory_logger.py](../core/memory_logger.py) and [core/model_selector.py](../core/model_selector.py) for implementations.
+
+## Dashboard Package
+
+The `dashboard` folder contains a Streamlit interface for monitoring usage and experiments.
+
+```bash
+streamlit run dashboard/app.py
+```
+
+Refer to [dashboard/app.py](../dashboard/app.py) and [DASHBOARD.md](DASHBOARD.md) for details.
+
 ## Entry Points
 
 - `start_dev_agents.py` launches the planner, coder and reviewer agents for a
