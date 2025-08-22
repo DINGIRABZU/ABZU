@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover - optional dependency
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 import crown_config
-import voice_aura
+from audio import voice_aura
 
 crown_config.reload()
 _ROTATION_PERIOD = crown_config.settings.llm_rotation_period

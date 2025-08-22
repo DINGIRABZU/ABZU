@@ -7,9 +7,10 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 import env_validation
-import voice_aura
+from audio import voice_aura
 
 pytestmark = pytest.mark.skipif(
     not env_validation.check_audio_binaries(require=False),

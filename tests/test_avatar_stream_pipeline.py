@@ -12,6 +12,7 @@ pytestmark = pytest.mark.skip(reason="requires unavailable resources")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 # Patch heavy optional dependencies before importing modules
 aiortc_stub = types.ModuleType("aiortc")
@@ -137,8 +138,8 @@ sys.modules.setdefault("soundfile", sf_stub)
 import crown_decider
 import server
 import vector_memory
-import voice_aura
 from audio import engine as audio_engine
+from audio import voice_aura
 from core import avatar_expression_engine, video_engine
 from crown_config import settings
 from INANNA_AI import tts_coqui, tts_xtts

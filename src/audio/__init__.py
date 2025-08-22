@@ -14,6 +14,7 @@ from .engine import (
     stop_all,
     time_stretch,
 )
+from .voice_aura import apply_voice_aura, sox_available
 
 __all__ = [
     "play_sound",
@@ -26,4 +27,6 @@ __all__ = [
     "rave_decode",
     "rave_morph",
     "nsynth_interpolate",
+    "apply_voice_aura",
+    "sox_available",
 ]

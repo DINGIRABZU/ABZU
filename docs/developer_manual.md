@@ -22,7 +22,7 @@ through them. `crown_prompt_orchestrator.py` selects a servant and
 
 ## Audio and visual pipeline
 Text responses pass through `sonic_core_harmonics.md` for music generation and
-`avatar_pipeline.md` for video rendering. `voice_aura.py` aligns spoken audio
+`avatar_pipeline.md` for video rendering. `audio/voice_aura.py` aligns spoken audio
 with the avatar's expression. See `video_stream.py` for live output support.
 
 ## Sandbox self-modification flow

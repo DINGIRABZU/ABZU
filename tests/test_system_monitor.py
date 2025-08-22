@@ -4,8 +4,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
-import system_monitor
+from dashboard import system_monitor
 
 
 def test_collect_stats(monkeypatch):

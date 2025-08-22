@@ -16,7 +16,7 @@ This package offers command line helpers for packet capture and traffic analysis
 
 Configuration values such as the log directory and default pcap path are read from `INANNA_AI_AGENT/network_utils_config.json` when present.
 
-## `system_monitor.py`
+## `dashboard/system_monitor.py`
 
 `system_monitor` collects CPU, memory and network statistics via `psutil`. Run it with `--watch` to continuously print JSON formatted data or without arguments to output a single sample.
 

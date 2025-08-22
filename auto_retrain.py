@@ -12,7 +12,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
-import feedback_logging
+from core import feedback_logging
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory

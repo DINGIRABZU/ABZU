@@ -35,7 +35,7 @@ except Exception:  # pragma: no cover - optional dependency
     np = None  # type: ignore
 
 import crown_decider
-import voice_aura
+from audio import voice_aura
 from core import context_tracker, language_engine, task_parser
 from core.task_profiler import TaskProfiler
 from INANNA_AI import response_manager, voice_layer_albedo

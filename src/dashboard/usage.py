@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 
 import corpus_memory_logging
-import feedback_logging
+from core import feedback_logging
 
 st.set_page_config(page_title="Usage Metrics")
 

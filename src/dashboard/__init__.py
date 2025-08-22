@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from . import app, qnl_mixer, rl_metrics, usage
+from importlib import import_module
 
-__all__ = [
-    "app",
-    "qnl_mixer",
-    "rl_metrics",
-    "usage",
-]
+__all__ = ["app", "qnl_mixer", "rl_metrics", "usage", "system_monitor"]
+
+
+def __getattr__(name: str):  # pragma: no cover - simple delegation
+    if name in __all__:
+        return import_module(f".{name}", __name__)
+    raise AttributeError(f"module {__name__} has no attribute {name}")

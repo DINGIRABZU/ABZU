@@ -13,7 +13,7 @@ from typing import List, Optional
 
 import yaml
 
-import system_monitor
+from dashboard import system_monitor
 from env_validation import check_optional_packages, check_required
 
 check_required(["GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"])
