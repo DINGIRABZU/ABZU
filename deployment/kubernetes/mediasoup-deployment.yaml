@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mediasoup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mediasoup
+  template:
+    metadata:
+      labels:
+        app: mediasoup
+    spec:
+      containers:
+        - name: mediasoup
+          image: mediasoup:latest
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mediasoup
+spec:
+  selector:
+    app: mediasoup
+  ports:
+    - port: 3000
+      targetPort: 3000

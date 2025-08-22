@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  api:
+    build: ..
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - model
+      - mediasoup
+  model:
+    image: model-service:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    volumes:
+      - ../INANNA_AI/models:/models
+    ports:
+      - "8001:8000"
+  mediasoup:
+    image: mediasoup:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - MEDIASOUP_LISTEN_IP=0.0.0.0

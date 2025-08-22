@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+  gpu-exporter:
+    image: nvidia/dcgm-exporter:3.2.6
+    runtime: nvidia
+    ports:
+      - "9400:9400"
+volumes:
+  grafana-data:
