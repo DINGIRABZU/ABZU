@@ -1,11 +1,11 @@
 # THE CRYSTAL CODEX
 
-![Coverage](coverage.svg)
+![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![CodeQL](https://github.com/DINGIRABZU/ABZU/actions/workflows/codeql.yml/badge.svg)
 
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Getting Started
-Begin with the [documentation index](docs/index.md) for architecture, setup, and usage guides.
+Begin with the [CRYSTAL CODEX](docs/CRYSTAL_CODEX.md) for mission, dependencies, architecture and development flow. The [documentation index](docs/index.md) lists additional guides.
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see
@@ -80,32 +80,37 @@ For a short deployment overview covering Vast.ai and local Docker Compose, see [
 
 ## Installation
 
-For a one-command setup that creates a virtual environment, installs
+For a one-command bootstrap that creates a virtual environment, installs
 development dependencies, and validates the environment, run:
 
 ```bash
 ./scripts/bootstrap.sh
 ```
 
-Ensure required system tools are available before running the setup scripts.
+To install manually:
 
-Required packages:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .[llm,audio,ml,vision,web,network]
+cp secrets.env.template secrets.env
+```
 
-- Docker
-- Netcat (`nc`)
-- SoX
-- FFmpeg
-- curl
-- jq
-- wget
-- aria2c
-
-Before running the check, copy `secrets.env.template` to `secrets.env` and fill in `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY`. `scripts/check_requirements.sh` sources `secrets.env` automatically so the variables are loaded during verification.
+Required system tools include Docker, Netcat (`nc`), SoX, FFmpeg, `curl`, `jq`, `wget` and `aria2c`.
 
 Verify installation with:
 
 ```bash
 ./scripts/check_requirements.sh
+```
+
+## Usage
+
+Activate the INANNA agent or start a development cycle:
+
+```bash
+python INANNA_AI_AGENT/inanna_ai.py --activate
+python start_dev_agents.py --objective "Refactor audio engine"
 ```
 
 ## Testing and Coverage
