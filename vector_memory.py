@@ -1,11 +1,9 @@
+"""ChromaDB-backed text vector store with decay and operation logging.
+
+Persists entries under ``settings.vector_db_path`` and logs to
+``data/vector_memory.log`` on each modification."""
+
 from __future__ import annotations
-
-"""Lightweight text vector memory built on ChromaDB.
-
-The database location defaults to ``data/vector_memory`` next to this file but
-can be overridden by setting the ``VECTOR_DB_PATH`` environment variable.  Each
-stored entry is timestamped so query results decay in relevance over time.
-"""
 
 import json
 import logging

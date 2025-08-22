@@ -1,6 +1,8 @@
-from __future__ import annotations
+"""Compatibility wrappers around :class:`core.task_profiler.TaskProfiler`.
 
-"""Backward compatible wrappers for :class:`core.task_profiler.TaskProfiler`."""
+Instantiates a shared profiler at import time for quick access."""
+
+from __future__ import annotations
 
 from typing import Any, Dict
 
