@@ -1,5 +1,9 @@
 # Architecture Overview
 
+For broader project context read [project_overview.md](project_overview.md)
+and [README_CODE_FUNCTION.md](../README_CODE_FUNCTION.md). A consolidated
+reference lives in [CRYSTAL_CODEX.md](CRYSTAL_CODEX.md).
+
 This guide explains in plain language how a request travels through Spiral OS. For a chakra‑oriented map of the codebase, see [spiritual_architecture.md](spiritual_architecture.md).
 
 ## Canonical Diagram
