@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import logging
 import os
 import shutil
 import subprocess
+import tempfile
+import urllib.request
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -17,6 +21,12 @@ except ImportError as exc:  # pragma: no cover - handled at runtime
         "huggingface_hub is required for model downloads. "
         "Install it with `pip install huggingface_hub`."
     ) from exc
+
+
+logger = logging.getLogger(__name__)
+
+OLLAMA_INSTALL_URL = "https://ollama.ai/install.sh"
+OLLAMA_INSTALL_SHA256 = "9f5f4c4ed21821ba9b847bf3607ae75452283276cd8f52d2f2b38ea9f27af344"
 
 
 def _get_hf_token() -> str:
@@ -44,6 +54,42 @@ def _quantize_to_int8(model_dir: Path) -> None:
     model.save_pretrained(str(model_dir))
 
 
+def _download_with_hash(url: str, expected_hash: str) -> Path:
+    """Download ``url`` to a temporary file and verify its SHA256 hash."""
+    try:
+        with urllib.request.urlopen(url) as resp:  # pragma: no cover - network
+            data = resp.read()
+    except Exception as exc:  # pragma: no cover - network failure
+        logger.error("Failed to download %s: %s", url, exc)
+        raise RuntimeError(f"Failed to download installer: {exc}") from exc
+
+    digest = hashlib.sha256(data).hexdigest()
+    if digest != expected_hash:
+        logger.error(
+            "Hash mismatch for %s: expected %s, got %s", url, expected_hash, digest
+        )
+        raise RuntimeError("Installer hash mismatch")
+
+    tmp_dir = Path(tempfile.mkdtemp())
+    script_path = tmp_dir / "install.sh"
+    script_path.write_bytes(data)
+    return script_path
+
+
+def _install_ollama() -> None:
+    script_path = _download_with_hash(OLLAMA_INSTALL_URL, OLLAMA_INSTALL_SHA256)
+    try:
+        subprocess.run(
+            ["sh", str(script_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        logger.error("Ollama installation failed: %s", exc.stderr)
+        raise RuntimeError(f"Ollama installation failed: {exc.stderr}") from exc
+
+
 def download_gemma2() -> None:
     """Download the Gemma2 model using Ollama."""
     models_dir = Path("INANNA_AI") / "models"
@@ -52,13 +98,19 @@ def download_gemma2() -> None:
 
     if shutil.which("ollama") is None:
         print("Ollama not found, installing...")
-        subprocess.run(
-            "curl -fsSL https://ollama.ai/install.sh | sh",
-            shell=True,
-            check=True,
-        )
+        _install_ollama()
 
-    subprocess.run(["ollama", "pull", "gemma2"], check=True, env=env)
+    try:
+        subprocess.run(
+            ["ollama", "pull", "gemma2"],
+            check=True,
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        logger.error("Ollama pull failed: %s", exc.stderr)
+        raise RuntimeError(f"Ollama pull failed: {exc.stderr}") from exc
     print(f"Model downloaded to {models_dir / 'gemma2'}")
 
 
