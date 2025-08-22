@@ -2,9 +2,11 @@ from __future__ import annotations
 
 """Helpers for working with sandboxed repository copies."""
 
-from pathlib import Path
 import subprocess
 import tempfile
+from pathlib import Path
+
+from . import dependency_installer
 
 
 def create_sandbox(repo_root: Path, env_manager) -> Path:
@@ -30,3 +32,9 @@ def apply_patch(sandbox_root: Path, patch_text: str) -> None:
         text=True,
         check=True,
     )
+
+
+def install_packages(sandbox_root: Path, packages: list[str]) -> None:
+    """Install *packages* into the sandbox's virtual environment."""
+    env_path = sandbox_root / ".venv"
+    dependency_installer.install_packages(env_path, packages)
