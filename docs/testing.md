@@ -14,5 +14,5 @@
 3. Use `Ctrl+C` to terminate the services.
 
 ## Notes
-- During this test run, the CLI setup encountered dependency initialization issues, preventing the prompt from appearing.
-- `start_avatar_console.sh` reported a permission error for `start_crown_console.sh` and the WebRTC video stream did not start.
+- The CLI console repeatedly attempted to reach the GLM service at `http://localhost:8000/health` and never displayed a prompt before being interrupted.
+- `start_avatar_console.sh` could not execute `start_crown_console.sh` (permission denied), so the WebRTC video feed did not initialize.
