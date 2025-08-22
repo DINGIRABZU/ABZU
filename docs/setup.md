@@ -2,6 +2,24 @@
 
 This guide lists the system packages and environment variables required to run the project.
 
+## Installation
+
+### Minimal installation
+
+Install only the core Spiral OS utilities:
+
+```bash
+pip install .
+```
+
+### Full installation
+
+Include all optional features (LLM, audio, ML, vision, web, network):
+
+```bash
+pip install .[llm,audio,ml,vision,web,network]
+```
+
 ## Required Packages
 
 The [scripts/check_requirements.sh](../scripts/check_requirements.sh) script expects the following commands to be available:
