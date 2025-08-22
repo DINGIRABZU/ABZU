@@ -1,5 +1,11 @@
 # Code Function Overview
 
+For high-level goals and architecture see
+[docs/project_overview.md](docs/project_overview.md) and
+[docs/architecture_overview.md](docs/architecture_overview.md). A
+combined reference is available in
+[docs/CRYSTAL_CODEX.md](docs/CRYSTAL_CODEX.md).
+
 This document summarizes the purpose of the main scripts and modules in this repository and lists their key dependencies. See `README_OPERATOR.md` for more detailed usage instructions.
 For an overview of the Albedo personality layer see [docs/ALBEDO_LAYER.md](docs/ALBEDO_LAYER.md).
 
