@@ -19,6 +19,9 @@ dependencies = [
     "python-json-logger==3.3.0",
     "pyyaml==6.0.2",
     "psutil==7.0.0",
+    "fastapi==0.116.1",
+    "pymediasoup==0.3.1",
+    "torch==2.8.0",
 ]
 
 [project.optional-dependencies]
@@ -106,3 +109,12 @@ os-guardian = "os_guardian.cli:main"
 where = ["."]
 exclude = ["tests*", "docs*", "examples*"]
 
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+max-line-length = 88
