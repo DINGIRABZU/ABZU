@@ -29,6 +29,8 @@ jobs:
         run: pre-commit run --all-files --show-diff-on-failure
       - name: Test
         run: pytest -m "not hardware" --cov=./ --cov-report=xml
+      - name: Coverage report
+        run: coverage report -m
       - name: Generate coverage badge
         run: coverage-badge -o coverage.svg -f
       - name: Upload coverage

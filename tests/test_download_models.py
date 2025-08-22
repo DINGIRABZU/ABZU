@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import hashlib
 import importlib
+import subprocess
 import sys
 from pathlib import Path
 from types import ModuleType
-import hashlib
 
 import pytest
 
@@ -222,6 +223,22 @@ def test_ollama_install_hash_mismatch(monkeypatch):
     )
 
     with pytest.raises(RuntimeError, match="Hash mismatch"):
+        module.download_gemma2()
+
+
+def test_gemma2_pull_failure(monkeypatch):
+    _prepare(monkeypatch)
+    module = importlib.import_module("download_models")
+
+    # Pretend ollama is installed
+    monkeypatch.setattr(module.shutil, "which", lambda _: "/usr/bin/ollama")
+
+    def failing_run(cmd, *args, **kwargs):
+        raise subprocess.CalledProcessError(1, cmd, stderr="pull boom")
+
+    monkeypatch.setattr(module.subprocess, "run", failing_run)
+
+    with pytest.raises(RuntimeError, match="Ollama pull failed: pull boom"):
         module.download_gemma2()
 
 
