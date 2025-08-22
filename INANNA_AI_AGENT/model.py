@@ -29,7 +29,11 @@ def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
         The loaded model and tokenizer.
     """
     model_dir = Path(model_dir)
-    tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+    except (OSError, ValueError) as exc:
+        logger.error("Failed to load tokenizer from %s: %s", model_dir, exc)
+        raise
     try:
         model = AutoModelForCausalLM.from_pretrained(model_dir, local_files_only=True)
     except (OSError, ValueError) as exc:
