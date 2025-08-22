@@ -142,6 +142,11 @@ def test_logging_files_created(tmp_path, monkeypatch):
         sys.modules, "INANNA_AI.speech_loopback_reflector", dummy_reflector
     )
     monkeypatch.setattr(console_interface.context_tracker.state, "avatar_loaded", True)
+    monkeypatch.setattr(
+        console_interface.requests,
+        "post",
+        lambda url, json, timeout=5: None,
+    )
 
     monkeypatch.setattr(session_logger, "AUDIO_DIR", tmp_path / "audio")
     monkeypatch.setattr(session_logger, "VIDEO_DIR", tmp_path / "video")

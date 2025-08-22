@@ -119,6 +119,24 @@ def test_offer_adds_audio_track(monkeypatch):
     assert pc_state.closed
 
 
+def test_avatar_audio_endpoint_updates_track(monkeypatch, tmp_path):
+    calls: dict[str, Path] = {}
+
+    def fake_stream(path: Path):
+        calls["path"] = path
+        yield np.zeros((1, 1, 3), dtype=np.uint8)
+
+    monkeypatch.setattr(video_stream.avatar_expression_engine, "stream_avatar_audio", fake_stream)
+    video_stream._active_track = None  # type: ignore[attr-defined]
+    track = video_stream.AvatarVideoTrack()
+    audio_file = tmp_path / "a.wav"
+    audio_file.touch()
+    with TestClient(server.app) as client:
+        resp = client.post("/avatar-audio", json={"path": str(audio_file)})
+    assert resp.status_code == 200
+    assert calls["path"] == audio_file
+
+
 def test_server_shutdown_closes_peers(monkeypatch):
     events = []
 

@@ -20,7 +20,7 @@ from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
 from aiortc.mediastreams import AUDIO_PTIME, AudioStreamTrack, MediaStreamError
 from av import VideoFrame
 from av.audio.frame import AudioFrame
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 
 from core import avatar_expression_engine, video_engine
 
@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 _pcs: Set[RTCPeerConnection] = set()
+_active_track: AvatarVideoTrack | None = None  # type: ignore  # defined later
 
 
 class AvatarAudioTrack(AudioStreamTrack):
@@ -91,13 +92,17 @@ class AvatarVideoTrack(VideoStreamTrack):
     ) -> None:
         super().__init__()
         if audio_path is not None:
-            self._frames = avatar_expression_engine.stream_avatar_audio(
-                audio_path,
-            )
+            self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
         else:
             self._frames = video_engine.generate_avatar_stream()
         self._cues = cues
         self._style: str | None = None
+        global _active_track
+        _active_track = self
+
+    def update_audio(self, audio_path: Path) -> None:
+        """Replace the frame generator with audio-driven stream."""
+        self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
 
     def _cue_colour(self, text: str) -> np.ndarray:
         value = abs(hash(text)) & 0xFFFFFF
@@ -150,6 +155,19 @@ async def offer(request: Request) -> dict[str, str]:
     return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
 
 
+@router.post("/avatar-audio")
+async def avatar_audio(request: Request) -> dict[str, str]:
+    """Update the active ``AvatarVideoTrack`` with ``audio_path``."""
+
+    data = await request.json()
+    path = Path(data["path"])
+    if _active_track is None:
+        raise HTTPException(status_code=404, detail="no active track")
+    _active_track.update_audio(path)
+    logger.info("Updated avatar audio: %s", path)
+    return {"status": "ok"}
+
+
 async def close_peers() -> None:
     """Close all peer connections."""
 
@@ -157,6 +175,8 @@ async def close_peers() -> None:
     _pcs.clear()
     for coro in coros:
         await coro
+    global _active_track
+    _active_track = None
 
 
 __all__ = ["router", "close_peers", "AvatarVideoTrack", "AvatarAudioTrack"]
