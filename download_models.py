@@ -1,3 +1,10 @@
+"""CLI utilities for downloading model weights and dependencies.
+
+The script handles fetching multiple model repositories and optional tools,
+writing the resulting files to disk and invoking external installation
+commands when required.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -26,7 +33,9 @@ except ImportError as exc:  # pragma: no cover - handled at runtime
 logger = logging.getLogger(__name__)
 
 OLLAMA_INSTALL_URL = "https://ollama.ai/install.sh"
-OLLAMA_INSTALL_SHA256 = "9f5f4c4ed21821ba9b847bf3607ae75452283276cd8f52d2f2b38ea9f27af344"
+OLLAMA_INSTALL_SHA256 = (
+    "9f5f4c4ed21821ba9b847bf3607ae75452283276cd8f52d2f2b38ea9f27af344"
+)
 
 
 def _get_hf_token() -> str:

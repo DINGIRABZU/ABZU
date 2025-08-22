@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""Streamlit dashboard for visualising LLM performance.
 
-"""Streamlit app displaying LLM performance metrics."""
+The page fetches benchmark data, renders charts and predicts the best language
+model using the gate orchestrator.  Running this module requires an active
+Streamlit server and access to the underlying storage.
+"""
+
+from __future__ import annotations
 
 import logging
 
@@ -8,7 +13,6 @@ import pandas as pd
 import streamlit as st
 
 from INANNA_AI import db_storage, gate_orchestrator
-
 
 LOGGER = logging.getLogger(__name__)
 

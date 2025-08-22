@@ -1,3 +1,9 @@
+"""Utilities for reading ritual source texts.
+
+The helpers load Markdown files listed in ``source_paths.json`` and return the
+contents for use in chants or other processes.
+"""
+
 from __future__ import annotations
 
 import json

@@ -1,4 +1,9 @@
-"""Utility functions for downloading model weights."""
+"""Download DeepSeek-R1 weights from Hugging Face.
+
+The module fetches the model repository and stores the files under
+``INANNA_AI/models/DeepSeek-R1``. It exits the process with a clear error
+message if credentials are missing or the download fails.
+"""
 
 from __future__ import annotations
 

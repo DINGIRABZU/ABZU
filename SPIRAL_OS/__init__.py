@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""Expose Spiral OS components and dynamic helpers.
 
-"""Expose core Spiral OS components for external use."""
+Besides importing core modules, the package loads ``seven_dimensional_music``
+from the repository root at import time so existing integrations continue to
+work.
+"""
+
+from __future__ import annotations
 
 import importlib.util
 import sys

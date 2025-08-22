@@ -1,3 +1,10 @@
+"""Text preprocessing utilities for INANNA AI rituals.
+
+Functions in this module clean Markdown and optionally embed passages using
+``sentence_transformers`` when available.  Outputs may be written to disk for
+downstream benchmarking.
+"""
+
 from __future__ import annotations
 
 import json
