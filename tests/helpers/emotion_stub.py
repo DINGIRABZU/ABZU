@@ -5,6 +5,8 @@ fixed weights. It exposes a handful of helper functions so tests can replace
 the heavy production module.
 """
 
+from __future__ import annotations
+
 EMOTION_ARCHETYPES = {
     "neutral": "Everyman",
     "joy": "Jester",

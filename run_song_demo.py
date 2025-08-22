@@ -4,6 +4,7 @@
 This script analyzes a local MP3 or WAV file using
 ``inanna_music_COMPOSER_ai.py`` and prints the resulting QNL phrases.
 """
+from __future__ import annotations
 
 import argparse
 from pathlib import Path
