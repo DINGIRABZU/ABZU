@@ -16,6 +16,7 @@ Usage:
 Dependencies:
     pip install librosa soundfile numpy scipy
 """
+from __future__ import annotations
 
 import json
 import os
