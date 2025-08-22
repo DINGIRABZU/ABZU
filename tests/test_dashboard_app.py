@@ -1,6 +1,6 @@
-from pathlib import Path
 import sys
 import types
+from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 from streamlit.testing.v1.element_tree import UnknownElement
