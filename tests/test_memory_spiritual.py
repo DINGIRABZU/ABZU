@@ -1,5 +1,7 @@
 """Tests for the spiritual memory ontology database."""
 
+from __future__ import annotations
+
 from memory import spiritual as ms
 
 

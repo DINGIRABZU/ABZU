@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import logging
 import sys
 import types
 from pathlib import Path
@@ -5,7 +8,6 @@ from pathlib import Path
 import pytest
 from streamlit.testing.v1 import AppTest
 from streamlit.testing.v1.element_tree import UnknownElement
-import logging
 
 
 def test_dashboard_app_renders_metrics(monkeypatch):

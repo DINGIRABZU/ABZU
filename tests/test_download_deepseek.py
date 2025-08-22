@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import importlib
+import logging
 import sys
 import types
 
-import logging
 import pytest
 
 
