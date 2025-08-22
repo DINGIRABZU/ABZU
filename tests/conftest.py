@@ -57,6 +57,8 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_adaptive_learning_stub.py"),
     str(ROOT / "tests" / "test_env_validation.py"),
     str(ROOT / "tests" / "test_crown_config.py"),
+    str(ROOT / "tests" / "test_download_deepseek.py"),
+    str(ROOT / "tests" / "test_dashboard_app.py"),
 }
 
 
