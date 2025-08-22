@@ -67,6 +67,11 @@ def run_repl(argv: list[str] | None = None) -> None:
         action="store_true",
         help="Synthesize replies using the speaking engine",
     )
+    parser.add_argument(
+        "--music",
+        metavar="PROMPT",
+        help="Generate a music track for the given prompt and exit",
+    )
     args = parser.parse_args(argv)
 
     print("Waiting for GLM service to become available...")
@@ -76,6 +81,35 @@ def run_repl(argv: list[str] | None = None) -> None:
         return
     orch = MoGEOrchestrator()
     speak = args.speak
+
+    def _play_music(prompt: str) -> None:
+        """Generate and play music for ``prompt``."""
+        try:
+            result = orch.route(
+                prompt,
+                {},
+                text_modality=False,
+                voice_modality=False,
+                music_modality=True,
+            )
+            music_path = result.get("music_path")
+            if not music_path:
+                print("No music generated.")
+                return
+            session_logger.log_audio(Path(music_path))
+            try:
+                speaking_engine.play_wav(music_path)
+            except Exception:  # pragma: no cover - playback may fail
+                logger.exception("music playback failed")
+            print(f"Music saved to {music_path}")
+        except Exception:  # pragma: no cover - generation may fail
+            logger.exception("music generation failed")
+            print("Music generation failed")
+
+    if args.music:
+        _play_music(args.music)
+        return
+
     session = PromptSession(history=FileHistory(str(HISTORY_FILE)))
     print("Crown console started. Type /exit to quit.")
 
@@ -99,6 +133,13 @@ def run_repl(argv: list[str] | None = None) -> None:
                 continue
             if command == "/memory":
                 _show_memory()
+                continue
+            if command.startswith("/music"):
+                _, _, music_prompt = command.partition(" ")
+                if music_prompt:
+                    _play_music(music_prompt)
+                else:
+                    print("Usage: /music <prompt>")
                 continue
             print(f"Unknown command: {command}")
             continue
