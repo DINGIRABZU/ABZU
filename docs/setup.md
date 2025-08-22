@@ -9,15 +9,34 @@ This guide lists the system packages and environment variables required to run t
 Install only the core Spiral OS utilities:
 
 ```bash
-pip install .
+pip install -e .[minimal]
+```
+
+### Optional dependency groups
+
+Each extra installs heavier libraries for a specific domain:
+
+- `audio` – audio processing (`librosa`, `ffmpeg-python`, etc.)
+- `llm` – large language model stacks (`torch`, `transformers`)
+- `ml` – analytics and vector stores (`pandas`, `chromadb`, `mlflow`)
+- `vision` – computer vision and automation (`opencv`, `aiortc`, `selenium`)
+- `web` – APIs and streaming (`fastapi`, `uvicorn`, `streamlit`)
+- `network` – packet capture and analysis (`scapy`)
+- `extras` – experimental or heavyweight models (`stable-baselines3`, `wav2lip`)
+- `dev` – development helpers for tests and formatting
+
+Install the groups you need, for example:
+
+```bash
+pip install -e .[llm,audio]
 ```
 
 ### Full installation
 
-Include all optional features (LLM, audio, ML, vision, web, network):
+Include all optional features:
 
 ```bash
-pip install .[llm,audio,ml,vision,web,network]
+pip install -e .[llm,audio,ml,vision,web,network,extras]
 ```
 
 ## Required Packages

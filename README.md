@@ -195,26 +195,28 @@ The badge above reflects the latest coverage generated in CI.
    sudo apt-get install -y aria2
    ```
 
-Install the runtime dependencies using the project metadata:
+Install just the core utilities with the `minimal` group:
 
 ```bash
-pip install -e .
+pip install -e .[minimal]
 ```
 
-Heavy or optional components are provided via extras:
+Optional groups install heavier dependencies for specific features:
+
+- `audio` – audio processing libraries such as `librosa` and `ffmpeg-python`.
+- `llm` – large language model support via `torch`, `transformers` and friends.
+- `ml` – general machine learning utilities like `pandas`, `chromadb`, and `mlflow`.
+- `vision` – computer vision and screen automation with `opencv`, `aiortc`, and `selenium`.
+- `web` – web APIs and streaming through `fastapi`, `uvicorn`, `streamlit`, etc.
+- `network` – packet capture and network analysis via `scapy`.
+- `extras` – experimental or highly specialized models (`stable-baselines3`, `wav2lip`, ...).
+- `dev` – development helpers for testing and formatting.
+
+Install the extras you need, for example:
 
 ```bash
-pip install .[audio]    # openai-whisper, librosa, ffmpeg-python, etc.
-pip install .[llm]      # torch, transformers, huggingface-hub
-pip install .[ml]       # pandas, chromadb, mlflow, langchain
-pip install .[vision]   # aiortc, opencv, selenium
-pip install .[web]      # fastapi, uvicorn, streamlit
-pip install .[network]  # scapy
-pip install .[dev]      # development helpers
+pip install .[audio,llm]
 ```
-
-The extras install heavyweight libraries for advanced functionality such as
-audio processing, large language models, computer vision, and web interfaces.
 
 Run `./scripts/setup_audio_env.sh` to install a pinned set of audio
 dependencies. Verify the environment with:
@@ -233,7 +235,7 @@ pip install -r requirements.lock
 Regenerate the lock file after editing `pyproject.toml` with:
 
 ```bash
-uv pip compile --no-deps pyproject.toml -o requirements.lock
+uv pip compile pyproject.toml --no-deps --extra llm --extra audio --extra ml --extra vision --extra web --extra network --extra extras -o requirements.lock
 ```
 
 ## Local Usage
