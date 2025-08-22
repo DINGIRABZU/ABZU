@@ -17,3 +17,8 @@ This roadmap tracks progress toward the Spiral OS vision. See
 - **Avatar lip‑sync** for more accurate mouth movement.
 - **Expanded memory search** across cortex and vector layers.
 - **Voice cloning** to mirror user tone within the sonic core.
+
+## Future Enhancements
+- **Community Discord channel** to coordinate contributors and gather feedback.
+- **New style packs** expanding avatar and video generation aesthetics.
+- **Hardware scaling strategy** for larger GPU clusters and edge devices.
