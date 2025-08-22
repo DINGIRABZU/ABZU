@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""Coordinate model and expression routing for the Crown agent.
 
-"""Combine model and expression routing for the Crown agent."""
+This module queries orchestrators and recent emotional context to choose an
+LLM and expressive parameters. Importing it touches optional vector memory
+services when available.
+"""
+
+from __future__ import annotations
 
 from typing import Any, Dict
 

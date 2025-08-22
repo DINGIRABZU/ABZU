@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""Route questions to archetype-specific vector stores.
 
-"""Route questions to the appropriate vector collection."""
+The module maps archetype labels to collection names and delegates
+retrieval to :mod:`rag.retriever`. Calling :func:`route_query` triggers
+lookup requests against the configured vector database.
+"""
+
+from __future__ import annotations
 
 from typing import Dict, List
 
