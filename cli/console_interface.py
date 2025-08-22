@@ -21,6 +21,7 @@ from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown
 from rag.orchestrator import MoGEOrchestrator
 from tools import sandbox_session, session_logger, virtual_env_manager
+from memory.search import query_all
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
@@ -146,8 +147,9 @@ def run_repl(argv: list[str] | None = None) -> None:
                 glm = initialize_crown()
                 print("Agent reloaded.")
                 continue
-            if command == "/memory":
-                _show_memory()
+            if command.startswith("/memory"):
+                _, _, q = command.partition(" ")
+                _show_memory(q)
                 continue
             if command.startswith("/music"):
                 _, _, music_prompt = command.partition(" ")
@@ -238,19 +240,21 @@ def run_repl(argv: list[str] | None = None) -> None:
                 logger.exception("speaking failed")
 
 
-def _show_memory() -> None:
-    """Display recent interaction logs."""
+def _show_memory(query: str = "") -> None:
+    """Display unified memory search results."""
     try:
-        from corpus_memory_logging import load_interactions
-
-        entries = load_interactions(limit=5)
+        entries = query_all(query)
         if not entries:
             print("No memory entries found.")
             return
         for e in entries:
             ts = e.get("timestamp", "")
-            text = e.get("input", "")
-            print(f"{ts}: {text}")
+            text = e.get("text", "")
+            src = e.get("source", "")
+            if ts:
+                print(f"{ts} [{src}] {text}")
+            else:
+                print(f"[{src}] {text}")
     except Exception as exc:  # pragma: no cover - optional deps
         logger.error("Failed to load memory: %s", exc)
         print("Memory unavailable")
