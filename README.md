@@ -87,12 +87,35 @@ development dependencies, and validates the environment, run:
 ./scripts/bootstrap.sh
 ```
 
-To install manually:
+### Manual installation
+
+Create a virtual environment and install the lean core:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .[llm,audio,ml,vision,web,network]
+pip install -e .
+```
+
+Optional dependency groups provide additional capabilities:
+
+- `llm` – language model interfaces and training helpers
+- `audio` – audio processing and transcription tools
+- `ml` – machine learning utilities and experiment tracking
+- `vision` – computer vision and screen capture helpers
+- `web` – web APIs, streaming and scraping
+- `network` – packet capture utilities
+- `extras` – heavy or experimental packages
+
+Install any combination as needed, for example:
+
+```bash
+pip install -e .[llm,audio]
+```
+
+Copy the secret template if required:
+
+```bash
 cp secrets.env.template secrets.env
 ```
 

@@ -2,11 +2,11 @@
 #    uv pip compile pyproject.toml --no-deps -o requirements.txt
 numpy==1.26.4
     # via spiral-os (pyproject.toml)
-requests==2.32.4
+psutil==7.0.0
     # via spiral-os (pyproject.toml)
 python-json-logger==3.3.0
     # via spiral-os (pyproject.toml)
 pyyaml==6.0.2
     # via spiral-os (pyproject.toml)
-psutil==7.0.0
+requests==2.32.4
     # via spiral-os (pyproject.toml)
