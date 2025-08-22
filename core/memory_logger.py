@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
+from .contracts import MemoryLoggerService
+
 from corpus_memory_logging import load_interactions, log_interaction, log_ritual_result
 
 
-class MemoryLogger:
+class MemoryLogger(MemoryLoggerService):
     """Provide methods for storing interaction history."""
 
     def log_interaction(

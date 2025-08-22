@@ -33,11 +33,31 @@ graph TD
     Router --> "labs.cortex_sigil"
 ```
 
+### Package Layout
+
+```mermaid
+graph TD
+    subgraph core
+        EA[EmotionAnalyzer]
+        ML[MemoryLogger]
+    end
+    subgraph audio
+        EN[Engine]
+    end
+    subgraph dashboard
+        APP[Metrics Dashboard]
+    end
+    EA --> ML
+    EN --> APP
+```
+
 ### Service Contracts
 
+- `core.contracts.EmotionAnalyzerService` – protocol for mood analysis.
 - `core.emotion_analyzer.EmotionAnalyzer` – classify mood of incoming text.
-- `core.model_selector.ModelSelector` – choose the appropriate language model.
+- `core.contracts.MemoryLoggerService` – protocol for persistence.
 - `core.memory_logger.MemoryLogger` – persist events to the memory stores.
+- `core.model_selector.ModelSelector` – choose the appropriate language model.
 - `memory.cortex` – `record_spiral` / `query_spirals` for spiral decisions.
 - `memory.spiral_cortex` – `log_insight` / `load_insights` for retrieval traces.
 - `labs.cortex_sigil` – `interpret_sigils` to extract symbolic triggers.

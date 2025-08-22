@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
+from .contracts import EmotionAnalyzerService
+
 import emotional_state
 from INANNA_AI import emotion_analysis
 
 
-class EmotionAnalyzer:
+class EmotionAnalyzer(EmotionAnalyzerService):
     """Track recent emotions and expose analysis helpers.
 
     The analyzer maintains an exponential moving average of emotion weights and
