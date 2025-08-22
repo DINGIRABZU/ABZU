@@ -16,7 +16,8 @@ The Sonic Core layers audio synthesis and expression modules on top of Spiral OS
 
 - `librosa` for audio analysis
 - `soundfile` for WAV I/O
-- `opensmile` and `EmotiVoice` for emotion detection
+- `opensmile` for emotion detection
+- `EmotiVoice` and `sounddevice` for optional voice cloning
 - Optional: `pydub` and the `ffmpeg` binary for the full `AudioSegment` backend. Set `AUDIO_BACKEND=pydub` when both are available.
 
 ## From QNL Phrase to Sound
@@ -65,3 +66,22 @@ from INANNA_AI.audio_emotion_listener import listen_for_emotion
 info = listen_for_emotion(2.0)
 print(info["emotion"])
 ```
+
+### Voice cloning with EmotiVoice
+
+Install the optional dependencies and record a reference sample:
+
+```bash
+pip install emotivoice sounddevice soundfile
+python cli/console_interface.py --speak
+/clone-voice "The clone is alive."
+```
+
+The command captures a short microphone sample, generates a confirmation
+phrase and stores the voice for later synthesis.
+
+#### Ethical guidelines
+
+- Clone only your own voice or with explicit permission from the owner.
+- Inform listeners that audio was generated and avoid deceptive usage.
+- Comply with local laws and respect privacy when storing or sharing samples.

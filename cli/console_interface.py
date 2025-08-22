@@ -22,6 +22,7 @@ from init_crown_agent import initialize_crown
 from rag.orchestrator import MoGEOrchestrator
 from tools import sandbox_session, session_logger, virtual_env_manager
 from memory.search import query_all
+from audio import voice_cloner
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
@@ -97,6 +98,7 @@ def run_repl(argv: list[str] | None = None) -> None:
         return
     orch = MoGEOrchestrator()
     speak = args.speak
+    voice_clone: voice_cloner.VoiceCloner | None = None
 
     def _play_music(prompt: str) -> None:
         """Generate and play music for ``prompt``."""
@@ -158,6 +160,22 @@ def run_repl(argv: list[str] | None = None) -> None:
                 else:
                     print("Usage: /music <prompt>")
                 continue
+            if command.startswith("/clone-voice"):
+                _, _, sample_text = command.partition(" ")
+                try:
+                    voice_clone = voice_cloner.VoiceCloner()
+                    sample_path = Path("data/voice_sample.wav")
+                    out_path = Path("data/voice_clone.wav")
+                    voice_clone.capture_sample(sample_path)
+                    voice_clone.synthesize(
+                        sample_text or "Voice clone ready.", out_path
+                    )
+                    speaking_engine.play_wav(str(out_path))
+                    print("Cloned voice registered for future replies.")
+                except Exception as exc:
+                    print(f"Voice cloning unavailable: {exc}")
+                    voice_clone = None
+                continue
             if command.startswith("/sandbox"):
                 _, _, patch_path_str = command.partition(" ")
                 if not patch_path_str:
@@ -208,14 +226,21 @@ def run_repl(argv: list[str] | None = None) -> None:
             text_reply = reply.get("text", str(reply))
             emotion = reply.get("emotion", "neutral")
             try:
-                result = orch.route(
-                    text_reply,
-                    {"emotion": emotion},
-                    text_modality=False,
-                    voice_modality=True,
-                    music_modality=False,
-                )
-                voice_path = result.get("voice_path")
+                voice_path: str | None
+                if voice_clone is not None:
+                    out_path = Path("data/cloned_reply.wav")
+                    voice_path = str(
+                        voice_clone.synthesize(text_reply, out_path, emotion)
+                    )
+                else:
+                    result = orch.route(
+                        text_reply,
+                        {"emotion": emotion},
+                        text_modality=False,
+                        voice_modality=True,
+                        music_modality=False,
+                    )
+                    voice_path = result.get("voice_path")
                 if voice_path:
                     session_logger.log_audio(Path(voice_path))
                     _send_audio_path(Path(voice_path))
