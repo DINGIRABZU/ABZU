@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""Lightweight prompt orchestrator for the Crown console.
 
-"""Lightweight orchestrator for the Crown console."""
+It detects emotion, logs interactions, and delegates prompts to language
+models while applying optional personality layers. The functions here read
+and write state to databases and memory logs as part of those duties.
+"""
+
+from __future__ import annotations
 
 import asyncio
 import json

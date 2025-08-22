@@ -1,6 +1,12 @@
+"""Load application configuration from environment variables.
+
+The module defines pydantic settings and spiritual constants used across the
+project. Importing it reads environment variables to populate configuration
+fields.
+"""
+
 from __future__ import annotations
 
-"""Application configuration loaded from environment variables."""
 import os
 from pathlib import Path
 

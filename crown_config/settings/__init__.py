@@ -1,6 +1,11 @@
-from __future__ import annotations
+"""Utilities for reading optional layer configuration.
 
-"""Utilities for reading optional layer configuration."""
+This package loads a YAML file describing enabled personality layers and
+exposes helpers for querying that state. Import time triggers a disk read to
+populate the cached configuration.
+"""
+
+from __future__ import annotations
 
 from pathlib import Path
 from typing import Dict
