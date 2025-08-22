@@ -3,6 +3,8 @@ import sys
 from pathlib import Path
 from types import ModuleType
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -125,3 +127,38 @@ def test_cli_kimi_k2_invokes_function(monkeypatch):
         sys.argv = argv
 
     assert called == {"ok": False}
+
+
+def test_get_hf_token_requires_env(monkeypatch):
+    _prepare(monkeypatch)
+    module = importlib.import_module("download_models")
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    with pytest.raises(SystemExit):
+        module._get_hf_token()
+
+
+def test_get_hf_token_returns_value(monkeypatch):
+    _prepare(monkeypatch)
+    module = importlib.import_module("download_models")
+    monkeypatch.setenv("HF_TOKEN", "secret")
+    assert module._get_hf_token() == "secret"
+
+
+def test_deepseek_v3_download_and_quant(monkeypatch):
+    _prepare(monkeypatch)
+    module = importlib.import_module("download_models")
+    monkeypatch.setenv("HF_TOKEN", "x")
+    called = {}
+    monkeypatch.setattr(
+        module,
+        "snapshot_download",
+        lambda **kw: called.setdefault("snap", kw),
+    )
+    monkeypatch.setattr(
+        module,
+        "_quantize_to_int8",
+        lambda path: called.setdefault("quant", str(path)),
+    )
+    module.download_deepseek_v3(int8=True)
+    assert called["snap"]["repo_id"] == "deepseek-ai/DeepSeek-V3"
+    assert called["quant"].endswith("DeepSeek-V3")
