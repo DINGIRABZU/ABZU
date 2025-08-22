@@ -1,6 +1,10 @@
-from __future__ import annotations
+"""Automatically trigger fine-tuning based on feedback metrics.
 
-"""Automatically trigger fine-tuning based on feedback metrics."""
+Monitors evaluation feedback and launches retraining jobs when performance
+drops below configured thresholds.
+"""
+
+from __future__ import annotations
 
 import argparse
 import json

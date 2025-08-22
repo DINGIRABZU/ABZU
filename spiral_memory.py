@@ -1,6 +1,10 @@
-from __future__ import annotations
+"""Cross-layer spiral memory with recursive recall and event registry.
 
-"""Cross-layer spiral memory with recursive recall and event registry."""
+Maintains multi-layer event history and offers mechanisms for spiral-style
+retrieval across different cognitive levels.
+"""
+
+from __future__ import annotations
 
 import logging
 import sqlite3
