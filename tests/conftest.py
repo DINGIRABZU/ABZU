@@ -60,6 +60,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_download_deepseek.py"),
     str(ROOT / "tests" / "test_dashboard_app.py"),
     str(ROOT / "tests" / "test_virtual_env_manager.py"),
+    str(ROOT / "tests" / "test_sandbox_session.py"),
 }
 
 
