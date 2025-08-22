@@ -216,8 +216,8 @@ def run_repl(argv: list[str] | None = None) -> None:
                 voice_path = result.get("voice_path")
                 if voice_path:
                     session_logger.log_audio(Path(voice_path))
-                    speaking_engine.play_wav(voice_path)
                     _send_audio_path(Path(voice_path))
+                    speaking_engine.play_wav(voice_path)
                     frames = []
                     if context_tracker.state.avatar_loaded:
                         for frame in avatar_expression_engine.stream_avatar_audio(

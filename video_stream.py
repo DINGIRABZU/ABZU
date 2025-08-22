@@ -92,7 +92,7 @@ class AvatarVideoTrack(VideoStreamTrack):
     ) -> None:
         super().__init__()
         if audio_path is not None:
-            self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
+            self.update_audio(audio_path)
         else:
             self._frames = video_engine.generate_avatar_stream()
         self._cues = cues
