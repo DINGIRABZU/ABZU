@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Streamlit app displaying LLM performance metrics."""
+
 import pandas as pd
 import streamlit as st
 

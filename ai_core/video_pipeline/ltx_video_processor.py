@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+"""LTX video processing utilities."""
+
+
 class LTXVideoProcessor:
     """Simple placeholder processor for the `ltx` style."""
 

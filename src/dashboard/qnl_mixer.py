@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Tools for mixing QNL audio inside Streamlit."""
+
 import io
 
 import numpy as np
