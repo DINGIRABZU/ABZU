@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
-from .contracts import MemoryLoggerService
-
 from corpus_memory_logging import load_interactions, log_interaction, log_ritual_result
+
+from .contracts import MemoryLoggerService
 
 
 class MemoryLogger(MemoryLoggerService):

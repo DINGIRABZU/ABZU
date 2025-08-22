@@ -1,14 +1,14 @@
-from __future__ import annotations
-
 """Core package exposing primary services."""
 
+from __future__ import annotations
+
+from .contracts import EmotionAnalyzerService, MemoryLoggerService
 from .emotion_analyzer import EmotionAnalyzer
 from .memory_logger import MemoryLogger
-from .contracts import EmotionAnalyzerService, MemoryLoggerService
 
 __all__ = [
-    'EmotionAnalyzer',
-    'MemoryLogger',
-    'EmotionAnalyzerService',
-    'MemoryLoggerService',
+    "EmotionAnalyzer",
+    "MemoryLogger",
+    "EmotionAnalyzerService",
+    "MemoryLoggerService",
 ]

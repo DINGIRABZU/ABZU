@@ -1,5 +1,7 @@
 """Core package for the INANNA AI helpers."""
 
+from __future__ import annotations
+
 __all__ = [
     "utils",
     "tts_coqui",
