@@ -104,7 +104,7 @@ dev = [
 os-guardian = "os_guardian.cli:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 exclude = ["tests*", "docs*", "examples*"]
 
 

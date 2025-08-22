@@ -55,6 +55,15 @@ graph TD
     EN --> APP
 ```
 
+### Service Boundaries
+
+Spiral OS separates outward‑facing interfaces from heavy model logic. The
+**API layer** (``src/api``) exposes HTTP endpoints and orchestrates incoming
+requests. Core algorithms live in the **model layer** (``src/core``) which
+handles emotion analysis, memory logging and model selection. These layers
+communicate only through the contracts defined in ``core.contracts`` so each
+service can scale horizontally or be deployed independently.
+
 ### Service Contracts
 
 - `core.contracts.EmotionAnalyzerService` – protocol for mood analysis.
