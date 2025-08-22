@@ -1,6 +1,10 @@
-from __future__ import annotations
+"""Arrange and export audio stems produced by :mod:`vocal_isolation`.
 
-"""Arrange and export audio stems produced by :mod:`vocal_isolation`."""
+Groups instrument layers and writes combined stems for downstream
+processing.
+"""
+
+from __future__ import annotations
 
 import shutil
 from pathlib import Path

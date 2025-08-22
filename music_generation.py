@@ -1,6 +1,10 @@
-from __future__ import annotations
+"""Generate music from a text prompt using various models.
 
-"""Generate music from a text prompt using various models."""
+Wraps available Hugging Face pipelines to synthesize audio from textual
+descriptions.
+"""
+
+from __future__ import annotations
 
 import argparse
 import logging

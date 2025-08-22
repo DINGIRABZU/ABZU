@@ -1,6 +1,10 @@
-from __future__ import annotations
+"""Utility for simple seven-dimensional music features.
 
-"""Simple seven dimensional music utility used in tests."""
+Provides helpers to convert embeddings to musical parameters and generate
+audio used in tests.
+"""
+
+from __future__ import annotations
 
 import argparse
 import json
