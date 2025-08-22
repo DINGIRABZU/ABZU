@@ -2,6 +2,7 @@ import importlib
 import sys
 import types
 
+import logging
 import pytest
 
 
@@ -16,7 +17,7 @@ def dl_module(monkeypatch):
     return importlib.reload(importlib.import_module("download_model"))
 
 
-def test_download_deepseek_success(dl_module, monkeypatch, capsys):
+def test_download_deepseek_success(dl_module, monkeypatch, caplog):
     calls = {}
 
     def fake_snapshot_download(**kwargs):
@@ -25,28 +26,32 @@ def test_download_deepseek_success(dl_module, monkeypatch, capsys):
     monkeypatch.setattr(dl_module, "snapshot_download", fake_snapshot_download)
     monkeypatch.setenv("HF_TOKEN", "test-token")
 
-    dl_module.download_deepseek()
+    with caplog.at_level(logging.INFO):
+        dl_module.download_deepseek()
 
-    out = capsys.readouterr().out
-    assert "Model downloaded to" in out
+    assert "Model downloaded to" in caplog.text
     assert calls["repo_id"] == "deepseek-ai/DeepSeek-R1"
     assert calls["token"] == "test-token"
     assert calls["local_dir"].endswith("INANNA_AI/models/DeepSeek-R1")
     assert calls["local_dir_use_symlinks"] is False
 
 
-def test_download_deepseek_missing_token(dl_module, monkeypatch):
+def test_download_deepseek_missing_token(dl_module, monkeypatch, caplog):
     monkeypatch.delenv("HF_TOKEN", raising=False)
-    with pytest.raises(SystemExit, match="HF_TOKEN environment variable not set"):
-        dl_module.download_deepseek()
+    with caplog.at_level(logging.ERROR):
+        with pytest.raises(SystemExit, match="HF_TOKEN environment variable not set"):
+            dl_module.download_deepseek()
+    assert "HF_TOKEN environment variable not set" in caplog.text
 
 
-def test_download_deepseek_download_failure(dl_module, monkeypatch):
+def test_download_deepseek_download_failure(dl_module, monkeypatch, caplog):
     monkeypatch.setenv("HF_TOKEN", "abc")
 
     def fake_snapshot_download(**kwargs):
         raise RuntimeError("boom")
 
     monkeypatch.setattr(dl_module, "snapshot_download", fake_snapshot_download)
-    with pytest.raises(SystemExit, match="Model download failed: boom"):
-        dl_module.download_deepseek()
+    with caplog.at_level(logging.ERROR):
+        with pytest.raises(SystemExit, match="Model download failed: boom"):
+            dl_module.download_deepseek()
+    assert "Model download failed: boom" in caplog.text

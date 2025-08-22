@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 
@@ -15,12 +16,15 @@ except ImportError as exc:  # pragma: no cover - handled at runtime
 
 from dotenv import load_dotenv
 
+LOGGER = logging.getLogger(__name__)
+
 
 def download_deepseek() -> None:
     """Download the DeepSeek-R1 model to the local models directory."""
     load_dotenv()
     token = os.getenv("HF_TOKEN")
     if not token:
+        LOGGER.error("HF_TOKEN environment variable not set")
         raise SystemExit("HF_TOKEN environment variable not set")
 
     target_dir = Path("INANNA_AI") / "models" / "DeepSeek-R1"
@@ -32,9 +36,10 @@ def download_deepseek() -> None:
             local_dir_use_symlinks=False,
         )
     except Exception as exc:  # pragma: no cover - network failure
+        LOGGER.exception("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
     else:
-        print(f"Model downloaded to {target_dir}")
+        LOGGER.info("Model downloaded to %s", target_dir)
 
 
 def main() -> None:

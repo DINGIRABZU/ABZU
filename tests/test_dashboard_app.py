@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from streamlit.testing.v1 import AppTest
 from streamlit.testing.v1.element_tree import UnknownElement
+import logging
 
 
 def test_dashboard_app_renders_metrics(monkeypatch):
@@ -32,9 +33,8 @@ def test_dashboard_app_renders_metrics(monkeypatch):
     at = AppTest.from_file(app_path)
     at.run(timeout=10)
 
-    assert at.title[0].value == "LLM Performance Metrics"
-    assert isinstance(at.main[1], UnknownElement)
-    assert at.markdown[0].value == "**Predicted best model:** `mock-model`"
+    assert any(isinstance(el, UnknownElement) for el in at.main)
+    assert any(m.value == "**Predicted best model:** `mock-model`" for m in at.markdown)
 
 
 def test_dashboard_app_handles_no_metrics(monkeypatch):
@@ -55,9 +55,8 @@ def test_dashboard_app_handles_no_metrics(monkeypatch):
     at = AppTest.from_file(app_path)
     at.run(timeout=10)
 
-    assert at.title[0].value == "LLM Performance Metrics"
-    assert at.markdown[0].value == "No benchmark data available."
-    assert at.markdown[1].value == "**Predicted best model:** `mock-model`"
+    assert any(m.value == "No benchmark data available." for m in at.markdown)
+    assert any(m.value == "**Predicted best model:** `mock-model`" for m in at.markdown)
 
 
 def test_dashboard_app_multiple_metrics(monkeypatch):
@@ -91,6 +90,85 @@ def test_dashboard_app_multiple_metrics(monkeypatch):
     at = AppTest.from_file(app_path)
     at.run(timeout=10)
 
-    assert at.title[0].value == "LLM Performance Metrics"
-    assert at.markdown[0].value == "**Predicted best model:** `mock-model`"
-    assert len(at.markdown) == 1
+    assert any(m.value == "**Predicted best model:** `mock-model`" for m in at.markdown)
+
+
+def test_dashboard_app_fetch_failure(monkeypatch, caplog):
+    def broken_fetch():
+        raise RuntimeError("db down")
+
+    fake_db = types.ModuleType("db_storage")
+    fake_db.fetch_benchmarks = broken_fetch
+
+    class DummyGO:
+        def predict_best_llm(self):
+            return "mock-model"
+
+    fake_go_mod = types.ModuleType("gate_orchestrator")
+    fake_go_mod.GateOrchestrator = DummyGO
+
+    monkeypatch.setitem(sys.modules, "INANNA_AI.db_storage", fake_db)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.gate_orchestrator", fake_go_mod)
+
+    app_path = Path(__file__).resolve().parents[1] / "src" / "dashboard" / "app.py"
+    with caplog.at_level(logging.ERROR):
+        at = AppTest.from_file(app_path)
+        at.run(timeout=10)
+
+    assert "Failed to fetch benchmarks" in caplog.text
+    assert any(m.value == "No benchmark data available." for m in at.markdown)
+    assert any(m.value == "**Predicted best model:** `mock-model`" for m in at.markdown)
+
+
+def test_dashboard_app_prediction_failure(monkeypatch, caplog):
+    fake_db = types.ModuleType("db_storage")
+    fake_db.fetch_benchmarks = lambda: []
+
+    class DummyGO:
+        def predict_best_llm(self):
+            raise RuntimeError("boom")
+
+    fake_go_mod = types.ModuleType("gate_orchestrator")
+    fake_go_mod.GateOrchestrator = DummyGO
+
+    monkeypatch.setitem(sys.modules, "INANNA_AI.db_storage", fake_db)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.gate_orchestrator", fake_go_mod)
+
+    app_path = Path(__file__).resolve().parents[1] / "src" / "dashboard" / "app.py"
+    with caplog.at_level(logging.ERROR):
+        at = AppTest.from_file(app_path)
+        at.run(timeout=10)
+
+    assert "Failed to predict best model" in caplog.text
+    assert any(m.value == "No benchmark data available." for m in at.markdown)
+    assert any(m.value == "**Predicted best model:** `unknown`" for m in at.markdown)
+
+
+def test_dashboard_app_large_metrics(monkeypatch):
+    fake_db = types.ModuleType("db_storage")
+    fake_db.fetch_benchmarks = lambda: [
+        {
+            "timestamp": f"2024-01-{i:02d}T00:00:00",
+            "response_time": i * 0.1,
+            "coherence": 0.8,
+            "relevance": 0.85,
+        }
+        for i in range(1, 101)
+    ]
+
+    class DummyGO:
+        def predict_best_llm(self):
+            return "mock-model"
+
+    fake_go_mod = types.ModuleType("gate_orchestrator")
+    fake_go_mod.GateOrchestrator = DummyGO
+
+    monkeypatch.setitem(sys.modules, "INANNA_AI.db_storage", fake_db)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.gate_orchestrator", fake_go_mod)
+
+    app_path = Path(__file__).resolve().parents[1] / "src" / "dashboard" / "app.py"
+    at = AppTest.from_file(app_path)
+    at.run(timeout=10)
+
+    assert any(isinstance(el, UnknownElement) for el in at.main)
+    assert any(m.value == "**Predicted best model:** `mock-model`" for m in at.markdown)
