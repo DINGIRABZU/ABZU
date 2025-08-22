@@ -31,6 +31,20 @@ logger = logging.getLogger(__name__)
 HISTORY_FILE = Path("data/console_history.txt")
 
 
+def _send_audio_path(path: Path) -> None:
+    """Notify the video stream service of new audio."""
+
+    url = os.getenv("VIDEO_STREAM_URL", "http://localhost:8000")
+    try:
+        requests.post(
+            f"{url.rstrip('/')}/avatar-audio",
+            json={"path": str(path)},
+            timeout=5,
+        )
+    except Exception:  # pragma: no cover - network issues
+        logger.exception("failed to send audio path")
+
+
 def _wait_for_glm_ready(retries: int = 3, delay: float = 5.0) -> GLMIntegration:
     """Return a ``GLMIntegration`` once the service is reachable.
 
@@ -169,6 +183,7 @@ def run_repl(argv: list[str] | None = None) -> None:
                 if voice_path:
                     session_logger.log_audio(Path(voice_path))
                     speaking_engine.play_wav(voice_path)
+                    _send_audio_path(Path(voice_path))
                     frames = []
                     if context_tracker.state.avatar_loaded:
                         for frame in avatar_expression_engine.stream_avatar_audio(

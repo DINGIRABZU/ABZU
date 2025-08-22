@@ -245,9 +245,15 @@ def test_console_speak(monkeypatch, capsys):
     monkeypatch.setitem(
         sys.modules, "INANNA_AI.speech_loopback_reflector", dummy_reflector
     )
+    monkeypatch.setattr(
+        console_interface.requests,
+        "post",
+        lambda url, json, timeout=5: calls.setdefault("post", {"url": url, "json": json}),
+    )
 
     console_interface.run_repl(["--speak"])
     out = capsys.readouterr().out
     assert "ok" in out
     assert calls["play"] == "out.wav"
     assert calls["reflect"] == "out.wav"
+    assert calls["post"]["json"] == {"path": "out.wav"}
