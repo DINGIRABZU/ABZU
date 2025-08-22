@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from .contracts import EmotionAnalyzerService
-
 import emotional_state
 from INANNA_AI import emotion_analysis
+
+from .contracts import EmotionAnalyzerService
 
 
 class EmotionAnalyzer(EmotionAnalyzerService):

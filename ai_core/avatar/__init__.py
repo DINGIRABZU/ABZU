@@ -1,5 +1,7 @@
 """Avatar animation utilities."""
 
+from __future__ import annotations
+
 from .expression_controller import generate_landmarks
 from .lip_sync import align_phonemes
 from .ltx_avatar import LTXAvatar, LTXDistilledModel
