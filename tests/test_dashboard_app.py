@@ -28,7 +28,7 @@ def test_dashboard_app_renders_metrics(monkeypatch):
     monkeypatch.setitem(sys.modules, "INANNA_AI.db_storage", fake_db)
     monkeypatch.setitem(sys.modules, "INANNA_AI.gate_orchestrator", fake_go_mod)
 
-    app_path = Path(__file__).resolve().parents[1] / "dashboard" / "app.py"
+    app_path = Path(__file__).resolve().parents[1] / "src" / "dashboard" / "app.py"
     at = AppTest.from_file(app_path)
     at.run(timeout=10)
 
@@ -51,7 +51,7 @@ def test_dashboard_app_handles_no_metrics(monkeypatch):
     monkeypatch.setitem(sys.modules, "INANNA_AI.db_storage", fake_db)
     monkeypatch.setitem(sys.modules, "INANNA_AI.gate_orchestrator", fake_go_mod)
 
-    app_path = Path(__file__).resolve().parents[1] / "dashboard" / "app.py"
+    app_path = Path(__file__).resolve().parents[1] / "src" / "dashboard" / "app.py"
     at = AppTest.from_file(app_path)
     at.run(timeout=10)
 
