@@ -66,6 +66,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_lip_sync.py"),
     str(ROOT / "tests" / "test_memory_search.py"),
     str(ROOT / "tests" / "test_gateway.py"),
+    str(ROOT / "tests" / "test_style_selection.py"),
 }
 
 
