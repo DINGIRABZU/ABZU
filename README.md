@@ -1,5 +1,7 @@
 # THE CRYSTAL CODEX
 
+![Coverage](coverage.svg)
+
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Getting Started
@@ -105,6 +107,16 @@ Verify installation with:
 ```bash
 ./scripts/check_requirements.sh
 ```
+
+## Testing and Coverage
+
+Run the test suite with coverage reporting:
+
+```bash
+pytest --cov=./ --cov-report=term-missing
+```
+
+The badge above reflects the latest coverage generated in CI.
 
 1. **Docker**
 
