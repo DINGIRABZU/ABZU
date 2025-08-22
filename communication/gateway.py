@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Protocol
 
+from api import server as api_server
+
 
 @dataclass
 class ChannelMessage:
@@ -31,6 +33,12 @@ class Gateway:
 
     async def handle_incoming(self, channel: str, user_id: str, content: str) -> None:
         """Create a ``ChannelMessage`` and forward it to the AI core."""
+        if channel == "generate_video":
+            await api_server.generate_video(content)
+        elif channel == "stream_avatar":
+            await api_server.broadcast_avatar_update(content)
+        elif channel == "styles":
+            await api_server.list_styles()
         message = ChannelMessage(channel=channel, user_id=user_id, content=content)
         await self.ai_core.handle_message(message)
 
