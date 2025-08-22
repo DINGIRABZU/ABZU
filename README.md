@@ -2,6 +2,10 @@
 
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
+## Getting Started
+Begin with the [documentation index](docs/index.md) for architecture, setup, and usage guides.
+
+## Additional Documentation
 - For a quick start geared toward non-technical users, see
   [docs/quick_start_non_technical.md](docs/quick_start_non_technical.md).
 - For required system packages and environment variables, see
