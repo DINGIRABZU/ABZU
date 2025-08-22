@@ -1,6 +1,10 @@
-from __future__ import annotations
+"""Persist emotional state and expose retrieval helpers.
 
-"""Persist and retrieve emotional state parameters."""
+State is stored on disk under ``data/emotion_state.json`` and updated through
+the module's helper functions.
+"""
+
+from __future__ import annotations
 
 import json
 import logging

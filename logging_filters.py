@@ -1,3 +1,10 @@
+"""Logging filters that enrich records with emotional context.
+
+Each filter attempts to query ``emotion_registry`` or a legacy
+``emotional_state`` module, appending the emotion and resonance level to log
+records.  Failures are logged but otherwise ignored.
+"""
+
 from __future__ import annotations
 
 import logging

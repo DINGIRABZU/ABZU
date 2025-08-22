@@ -1,4 +1,9 @@
-"""Command line interface for interacting with the INANNA AI system."""
+"""Command line interface for the INANNA AI system.
+
+The module assembles ritual chants, converts hexadecimal input into QNL songs
+and exposes a chat interface.  It reads source texts, loads language models and
+may write audio and metadata files during operation.
+"""
 
 from __future__ import annotations
 

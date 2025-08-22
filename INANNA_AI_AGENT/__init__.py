@@ -1,6 +1,10 @@
-from __future__ import annotations
+"""Convenience imports and CLI exposure for the INANNA AI agent.
 
-"""Convenience imports for the INANNA AI agent."""
+Importing this package registers the command line interface and injects the
+``inanna_ai`` module into :mod:`builtins` for compatibility with legacy tests.
+"""
+
+from __future__ import annotations
 
 import builtins as _builtins
 
