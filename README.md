@@ -43,6 +43,8 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
   [docs/spiritual_architecture.md](docs/spiritual_architecture.md).
 - For a plain-language architecture map with a request flow diagram covering the LLM router, audio pipeline and model registry, see
   [docs/architecture_overview.md](docs/architecture_overview.md).
+- For a detailed map of package responsibilities, see [docs/architecture.md](docs/architecture.md) and [docs/packages_overview.md](docs/packages_overview.md).
+- For the development workflow and agent cycle, see [docs/development_workflow.md](docs/development_workflow.md).
 - For how archetypal states shape personality behavior, read
   [docs/archetype_logic.md](docs/archetype_logic.md).
 - For insight into the self-reflection cycle that tunes responses, check
