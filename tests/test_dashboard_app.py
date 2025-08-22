@@ -146,6 +146,28 @@ def test_dashboard_app_prediction_failure(monkeypatch, caplog):
     assert any(m.value == "**Predicted best model:** `unknown`" for m in at.markdown)
 
 
+def test_dashboard_app_prediction_none(monkeypatch):
+    fake_db = types.ModuleType("db_storage")
+    fake_db.fetch_benchmarks = lambda: []
+
+    class DummyGO:
+        def predict_best_llm(self):
+            return None
+
+    fake_go_mod = types.ModuleType("gate_orchestrator")
+    fake_go_mod.GateOrchestrator = DummyGO
+
+    monkeypatch.setitem(sys.modules, "INANNA_AI.db_storage", fake_db)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.gate_orchestrator", fake_go_mod)
+
+    app_path = Path(__file__).resolve().parents[1] / "src" / "dashboard" / "app.py"
+    at = AppTest.from_file(app_path)
+    at.run(timeout=10)
+
+    assert any(m.value == "No benchmark data available." for m in at.markdown)
+    assert any(m.value == "**Predicted best model:** `None`" for m in at.markdown)
+
+
 def test_dashboard_app_large_metrics(monkeypatch):
     fake_db = types.ModuleType("db_storage")
     fake_db.fetch_benchmarks = lambda: [
