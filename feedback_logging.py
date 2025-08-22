@@ -1,6 +1,6 @@
-from __future__ import annotations
+"""Manage feedback logs and thresholds with on-disk persistence."""
 
-"""Simple feedback log reader with retraining thresholds."""
+from __future__ import annotations
 
 import json
 import logging
