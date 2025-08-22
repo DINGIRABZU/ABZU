@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from ai_core.video_pipeline.pipeline import VideoPipeline
 from style_engine.style_library import load_style_config
 

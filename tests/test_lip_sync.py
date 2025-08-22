@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from ai_core.avatar.lip_sync import align_phonemes
 
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 from spiral_memory import SpiralMemory, spiral_recall
