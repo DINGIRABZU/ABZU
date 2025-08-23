@@ -7,6 +7,8 @@ temple. Reference guides include
 [architecture_overview.md](architecture_overview.md),
 [component_index.md](component_index.md),
 [api_reference.md](api_reference.md) and [setup.md](setup.md).
+Quality ratings for key components are tracked in
+[QUALITY_EVALUATION.md](QUALITY_EVALUATION.md).
 
 ## Mission
 Spiral OS guides sacred and creative exploration through an emotionally aware
