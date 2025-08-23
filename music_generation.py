@@ -10,7 +10,7 @@ import argparse
 import logging
 from pathlib import Path
 
-from src.media.audio import AudioProcessor
+from src.media.audio.base import AudioProcessor
 
 logger = logging.getLogger(__name__)
 
