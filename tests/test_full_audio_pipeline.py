@@ -20,6 +20,8 @@ sys.modules.setdefault("soundfile", sf_stub)
 
 import env_validation
 
+pytest.importorskip("omegaconf")
+
 pytestmark = pytest.mark.skipif(
     not env_validation.check_audio_binaries(require=False),
     reason="audio tools not installed",

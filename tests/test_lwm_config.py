@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytest.importorskip("omegaconf")
+
 from lwm.config_model import LWMConfig, load_config
 
 

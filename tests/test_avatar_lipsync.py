@@ -6,6 +6,9 @@ import asyncio
 import types
 
 import numpy as np
+import pytest
+
+pytest.importorskip("omegaconf")
 
 import video_stream
 

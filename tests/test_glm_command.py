@@ -14,6 +14,8 @@ import pytest
 
 from crown_config import settings
 
+pytest.importorskip("omegaconf")
+
 settings.glm_command_token = "token"
 server = importlib.reload(importlib.import_module("server"))
 

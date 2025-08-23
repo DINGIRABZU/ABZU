@@ -7,6 +7,10 @@ import types
 
 from fastapi.testclient import TestClient
 
+import pytest
+
+pytest.importorskip("omegaconf")
+
 import introspection_api
 from src.lwm import LargeWorldModel, default_lwm
 from src.media.video import generate_video

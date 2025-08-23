@@ -8,6 +8,8 @@ from unittest import mock
 
 import pytest
 
+pytest.importorskip("omegaconf")
+
 from src.media.audio import generate_waveform, play_waveform
 
 
