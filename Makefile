@@ -1,5 +1,7 @@
 .RECIPEPREFIX := >
-.PHONY: install-minimal install-audio install-vision install-full verify-deps
+.PHONY: install-minimal install-audio install-vision install-full verify-deps test test-deterministic train-deterministic
+
+SEED ?= 0
 
 install-minimal:
 >pip install -e .
@@ -16,4 +18,13 @@ install-full:
 verify-deps:
 >pip check
 >pipdeptree --warn fail
+
+test:
+>pytest --maxfail=1 --strict-markers --cov=./
+
+test-deterministic:
+>PYTEST_SEED=$(SEED) SEED=$(SEED) pytest --maxfail=1 --strict-markers --cov=./
+
+train-deterministic:
+>SEED=$(SEED) python auto_retrain.py --dry-run
 

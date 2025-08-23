@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 from pathlib import Path
 
 import numpy as np
 
+from core.utils.seed import seed_all
 from .rfa_7d import RFA7D
+
+
+seed_all(int(os.getenv("SEED", "0")))
 
 
 def fractal_mutate(core: RFA7D, seed: int) -> None:

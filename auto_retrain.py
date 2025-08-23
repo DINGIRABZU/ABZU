@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
@@ -17,6 +18,7 @@ import yaml
 from INANNA_AI.ethical_validator import EthicalValidator
 
 from core import feedback_logging
+from core.utils.seed import seed_all
 from learning_mutator import propose_mutations
 from INANNA_AI.gates import verify_blob
 
@@ -26,6 +28,8 @@ except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
+
+seed_all(int(os.getenv("SEED", "0")))
 
 INSIGHT_FILE = Path("insight_matrix.json")
 DATASET_SIGNATURE_FILE = Path("dataset.sig")
