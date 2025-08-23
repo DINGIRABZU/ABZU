@@ -1,3 +1,5 @@
+"""Tests for task parser."""
+
 from __future__ import annotations
 
 import importlib.util

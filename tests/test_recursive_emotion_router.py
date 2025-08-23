@@ -1,3 +1,5 @@
+"""Tests for recursive emotion router."""
+
 from __future__ import annotations
 
 import sys
@@ -7,7 +9,6 @@ from types import ModuleType
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import types
 
 # Ensure vector_memory dependency can be imported
 sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))

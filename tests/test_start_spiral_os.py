@@ -1,3 +1,5 @@
+"""Tests for start spiral os."""
+
 from __future__ import annotations
 
 import builtins

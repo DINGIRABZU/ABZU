@@ -1,3 +1,5 @@
+"""Tests for dashboard usage."""
+
 from __future__ import annotations
 
 import importlib
@@ -18,6 +20,7 @@ def test_usage_dashboard_metrics(monkeypatch):
         subheader=lambda *a, **k: None,
         dataframe=lambda *a, **k: None,
     )
+
     class FakeDF(list):
         def tail(self, n):
             return self

@@ -1,3 +1,5 @@
+"""Tests for run inanna sh."""
+
 from __future__ import annotations
 
 import os

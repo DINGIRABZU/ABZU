@@ -1,6 +1,6 @@
-from __future__ import annotations
+"""Tests for spiral memory."""
 
-from pathlib import Path
+from __future__ import annotations
 
 from spiral_memory import SpiralMemory, spiral_recall
 

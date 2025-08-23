@@ -1,3 +1,5 @@
+"""Tests for music analysis pipeline."""
+
 from __future__ import annotations
 
 import json

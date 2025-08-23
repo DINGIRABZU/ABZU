@@ -1,3 +1,5 @@
+"""Tests for archetype shift."""
+
 from __future__ import annotations
 
 import logging

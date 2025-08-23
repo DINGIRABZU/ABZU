@@ -1,3 +1,5 @@
+"""Tests for orchestrator suggestions logging."""
+
 from __future__ import annotations
 
 import logging

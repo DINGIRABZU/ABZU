@@ -1,3 +1,5 @@
+"""Tests for archetype feedback loop."""
+
 from __future__ import annotations
 
 import sys

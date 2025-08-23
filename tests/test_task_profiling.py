@@ -1,3 +1,5 @@
+"""Tests for task profiling."""
+
 from __future__ import annotations
 
 import sys

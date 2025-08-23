@@ -1,3 +1,5 @@
+"""Tests for inanna ai."""
+
 from __future__ import annotations
 
 import sys
@@ -11,8 +13,6 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import json
-
-from INANNA_AI_AGENT import INANNA_AI
 
 
 def test_activate_returns_chant(tmp_path, monkeypatch):

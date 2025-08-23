@@ -1,3 +1,5 @@
+"""Tests for test1 wav base64."""
+
 from __future__ import annotations
 
 TEST1_WAV_BASE64 = """

@@ -1,3 +1,5 @@
+"""Tests for feedback logging."""
+
 from __future__ import annotations
 
 import sys

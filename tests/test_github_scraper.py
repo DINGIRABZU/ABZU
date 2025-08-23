@@ -1,3 +1,5 @@
+"""Tests for github scraper."""
+
 from __future__ import annotations
 
 import base64

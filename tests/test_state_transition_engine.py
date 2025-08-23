@@ -1,3 +1,5 @@
+"""Tests for state transition engine."""
+
 from __future__ import annotations
 
 import sys

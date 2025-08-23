@@ -1,3 +1,5 @@
+"""Tests for avatar stream pipeline."""
+
 from __future__ import annotations
 
 import sys
@@ -143,7 +145,6 @@ from audio import voice_aura
 from core import avatar_expression_engine, video_engine
 from crown_config import settings
 from INANNA_AI import tts_coqui, tts_xtts
-from rag import orchestrator
 from rag.orchestrator import MoGEOrchestrator
 
 settings.glm_command_token = "token"

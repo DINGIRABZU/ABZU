@@ -1,3 +1,5 @@
+"""Tests for speech loopback reflector."""
+
 from __future__ import annotations
 
 import sys

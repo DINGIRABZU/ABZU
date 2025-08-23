@@ -1,3 +1,5 @@
+"""Tests for logging filters."""
+
 from __future__ import annotations
 
 import logging
@@ -40,4 +42,3 @@ def test_emotion_filter_handles_invalid_data(caplog):
     assert record.emotion is None
     assert record.resonance is None
     assert "returned invalid data" in caplog.text
-

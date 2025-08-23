@@ -1,3 +1,5 @@
+"""Tests for root chakra integration."""
+
 from __future__ import annotations
 
 import json
@@ -44,7 +46,6 @@ sys.modules.setdefault("gymnasium", gym_mod)
 
 from dashboard import system_monitor
 from INANNA_AI import network_utils
-from INANNA_AI_AGENT import INANNA_AI
 
 
 def test_root_chakra_flow(tmp_path, monkeypatch):

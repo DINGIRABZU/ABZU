@@ -1,3 +1,5 @@
+"""Tests for existential reflector."""
+
 from __future__ import annotations
 
 import sys
@@ -50,7 +52,6 @@ def test_reflect_on_identity(tmp_path, monkeypatch):
 
 def test_reflect_existence_function(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(ExistentialReflector, "reflect_on_identity", lambda: "desc")
-    from INANNA_AI_AGENT import INANNA_AI
 
     monkeypatch.setattr(inanna_ai, "ExistentialReflector", ExistentialReflector)
     out = inanna_ai.reflect_existence()

@@ -1,3 +1,5 @@
+"""Tests for emotion classifier."""
+
 from __future__ import annotations
 
 import sys

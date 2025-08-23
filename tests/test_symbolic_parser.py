@@ -1,3 +1,5 @@
+"""Tests for symbolic parser."""
+
 from __future__ import annotations
 
 import sys

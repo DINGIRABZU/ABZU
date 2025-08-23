@@ -1,3 +1,5 @@
+"""Tests for emotion loop."""
+
 from __future__ import annotations
 
 import sys

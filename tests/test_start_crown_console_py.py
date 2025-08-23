@@ -1,3 +1,5 @@
+"""Tests for start crown console py."""
+
 from __future__ import annotations
 
 import importlib.util

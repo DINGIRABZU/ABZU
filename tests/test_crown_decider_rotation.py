@@ -1,3 +1,5 @@
+"""Tests for crown decider rotation."""
+
 from __future__ import annotations
 
 import importlib

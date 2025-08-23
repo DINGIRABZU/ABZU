@@ -1,3 +1,5 @@
+"""Tests for seven dimensional music."""
+
 from __future__ import annotations
 
 import json

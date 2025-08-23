@@ -1,3 +1,5 @@
+"""Tests for voice avatar pipeline."""
+
 from __future__ import annotations
 
 import sys
@@ -57,7 +59,6 @@ import vector_memory
 from core import avatar_expression_engine, expressive_output
 from crown_config import settings
 from INANNA_AI import speaking_engine
-from INANNA_AI_AGENT import INANNA_AI
 from tools import voice_conversion
 
 

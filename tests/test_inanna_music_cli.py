@@ -1,3 +1,5 @@
+"""Tests for inanna music cli."""
+
 from __future__ import annotations
 
 import base64

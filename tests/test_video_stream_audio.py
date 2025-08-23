@@ -1,3 +1,5 @@
+"""Tests for video stream audio."""
+
 from __future__ import annotations
 
 import asyncio

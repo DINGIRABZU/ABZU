@@ -1,3 +1,5 @@
+"""Tests for network schedule."""
+
 from __future__ import annotations
 
 import sys

@@ -1,3 +1,5 @@
+"""Tests for voice conversion."""
+
 from __future__ import annotations
 
 import sys

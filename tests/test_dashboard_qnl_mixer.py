@@ -1,3 +1,5 @@
+"""Tests for dashboard qnl mixer."""
+
 from __future__ import annotations
 
 import sys
@@ -19,7 +21,9 @@ def test_qnl_mixer_processes_audio(monkeypatch):
         amplitude_to_db=lambda spec, ref=np.max: spec,
         display=types.SimpleNamespace(specshow=lambda *a, **k: None),
     )
-    fake_sf = types.SimpleNamespace(write=lambda buf, data, sr, format="WAV": buf.write(b"data"))
+    fake_sf = types.SimpleNamespace(
+        write=lambda buf, data, sr, format="WAV": buf.write(b"data")
+    )
     fake_mix = types.SimpleNamespace(
         apply_audio_params=lambda data, sr, pitch, tempo, cutoff: data,
         embedding_to_params=lambda emb: (0, 0, 0),

@@ -1,3 +1,5 @@
+"""Tests for rag retriever."""
+
 from __future__ import annotations
 
 import sys

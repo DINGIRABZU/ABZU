@@ -1,3 +1,5 @@
+"""Tests for corpus memory."""
+
 from __future__ import annotations
 
 import logging

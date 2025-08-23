@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
-def _prepare(monkeypatch):
+def _prepare(monkeypatch, *, patch_verify=True):
     dummy_hf = ModuleType("huggingface_hub")
     dummy_hf.snapshot_download = lambda **kwargs: kwargs
     monkeypatch.setitem(sys.modules, "huggingface_hub", dummy_hf)
@@ -39,7 +39,8 @@ def _prepare(monkeypatch):
     monkeypatch.setitem(sys.modules, "transformers", dummy_tf)
 
     module = importlib.import_module("download_models")
-    monkeypatch.setattr(module, "_verify_checksum", lambda *a, **k: None)
+    if patch_verify:
+        monkeypatch.setattr(module, "_verify_checksum", lambda *a, **k: None)
     module.MODEL_CHECKSUMS = {name: "0" * 64 for name in module.MODEL_CHECKSUMS}
     return module
 
@@ -281,3 +282,13 @@ def test_require_checksum_missing(monkeypatch):
     module.MODEL_CHECKSUMS["gemma2"] = None
     with pytest.raises(RuntimeError, match="No checksum defined"):
         module._require_checksum("gemma2")
+
+
+def test_validate_url_accepts_https(monkeypatch):
+    module = _prepare(monkeypatch)
+    module._validate_url("https://example.com/path")
+
+
+def test_require_checksum_returns_value(monkeypatch):
+    module = _prepare(monkeypatch)
+    assert module._require_checksum("gemma2") == "0" * 64

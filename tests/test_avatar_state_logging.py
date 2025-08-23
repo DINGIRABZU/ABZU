@@ -1,3 +1,5 @@
+"""Tests for avatar state logging."""
+
 from __future__ import annotations
 
 import sys

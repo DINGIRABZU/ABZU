@@ -1,3 +1,5 @@
+"""Tests for mix tracks instructions."""
+
 from __future__ import annotations
 
 import json

@@ -1,6 +1,7 @@
+"""Tests for spiral os."""
+
 from __future__ import annotations
 
-import builtins
 import subprocess
 import sys
 from pathlib import Path

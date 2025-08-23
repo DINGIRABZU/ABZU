@@ -1,3 +1,5 @@
+"""Tests for orchestrator integration."""
+
 from __future__ import annotations
 
 import sys

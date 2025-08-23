@@ -1,3 +1,5 @@
+"""Tests for defensive network utils."""
+
 from __future__ import annotations
 
 import sys

@@ -1,3 +1,5 @@
+"""Tests for launch servants script."""
+
 from __future__ import annotations
 
 import os

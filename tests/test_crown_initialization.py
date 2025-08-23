@@ -1,3 +1,5 @@
+"""Tests for crown initialization."""
+
 from __future__ import annotations
 
 import sys

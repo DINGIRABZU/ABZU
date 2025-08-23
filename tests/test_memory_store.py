@@ -1,3 +1,5 @@
+"""Tests for memory store."""
+
 from __future__ import annotations
 
 import numpy as np

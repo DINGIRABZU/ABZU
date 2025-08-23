@@ -1,11 +1,11 @@
+"""Tests for memory search."""
+
 from __future__ import annotations
 
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from types import ModuleType
-
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))

@@ -1,3 +1,5 @@
+"""Tests for rag music integration."""
+
 from __future__ import annotations
 
 import sys

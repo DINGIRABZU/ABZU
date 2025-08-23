@@ -1,3 +1,5 @@
+"""Tests for audio tools."""
+
 from __future__ import annotations
 
 import base64

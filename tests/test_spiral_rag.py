@@ -1,3 +1,5 @@
+"""Tests for spiral rag."""
+
 from __future__ import annotations
 
 import sys

@@ -1,3 +1,5 @@
+"""Tests for vector memory performance."""
+
 from __future__ import annotations
 
 import importlib

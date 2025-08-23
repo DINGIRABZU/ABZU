@@ -1,3 +1,5 @@
+"""Tests for data pipeline."""
+
 from __future__ import annotations
 
 import importlib
@@ -5,10 +7,9 @@ import sys
 import types
 from pathlib import Path
 
-import pytest
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
 
 def test_run_collects_sources(tmp_path, monkeypatch):
     data_pipeline = importlib.import_module("ml.data_pipeline")
@@ -19,7 +20,9 @@ def test_run_collects_sources(tmp_path, monkeypatch):
     (source_dir / "gutenberg_books.txt").write_text("Book Title\n", encoding="utf-8")
     monkeypatch.setattr(data_pipeline, "SOURCE_DIR", source_dir)
     monkeypatch.setattr(data_pipeline, "GITHUB_LIST", source_dir / "github_repos.txt")
-    monkeypatch.setattr(data_pipeline, "GUTENBERG_LIST", source_dir / "gutenberg_books.txt")
+    monkeypatch.setattr(
+        data_pipeline, "GUTENBERG_LIST", source_dir / "gutenberg_books.txt"
+    )
 
     training_dir = tmp_path / "data" / "training_corpus"
     manifest_path = tmp_path / "data" / "training_manifest.json"
@@ -34,7 +37,9 @@ def test_run_collects_sources(tmp_path, monkeypatch):
     )
     fake_pg_file = tmp_path / "book.txt"
     fake_pg_file.write_text("book", encoding="utf-8")
-    fake_pg = types.SimpleNamespace(ingest=lambda q: fake_pg_file, SentenceTransformer=None)
+    fake_pg = types.SimpleNamespace(
+        ingest=lambda q: fake_pg_file, SentenceTransformer=None
+    )
     monkeypatch.setattr(data_pipeline, "gs", fake_gs)
     monkeypatch.setattr(data_pipeline, "pg", fake_pg)
 

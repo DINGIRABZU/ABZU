@@ -1,3 +1,5 @@
+"""Tests for training guide logger."""
+
 from __future__ import annotations
 
 import json
