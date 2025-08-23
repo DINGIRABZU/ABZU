@@ -26,6 +26,11 @@ dependencies = [
 [project.optional-dependencies]
 minimal = []
 torch = ["torch==2.8.0"]
+spatial = [
+    "torch==2.8.0",
+    "open3d==0.18.0",
+    "pytorch3d==0.7.6",
+]
 transformers = [
     "transformers==4.55.2",
     "huggingface-hub==0.34.4",
@@ -113,3 +118,6 @@ omit = ["tests/*"]
 
 [tool.coverage.report]
 fail_under = 80
+
+[tool.poetry.extras]
+spatial = ["torch", "open3d", "pytorch3d"]

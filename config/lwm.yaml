@@ -1,0 +1,6 @@
+paths:
+  model_dir: models/lwm
+  output_dir: outputs/lwm
+gpu:
+  use_cuda: false
+  device: 0
