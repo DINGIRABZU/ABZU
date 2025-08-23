@@ -26,7 +26,7 @@ try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
-vector_memory = _vector_memory
+    vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 
 seed_all(int(os.getenv("SEED", "0")))
@@ -196,6 +196,28 @@ def trigger_finetune(
             raise
     except Exception:
         logger.exception("failed to trigger fine-tune")
+
+
+def retrain_model(dataset: list[dict], *, run_name: str | None = None) -> None:
+    """Fine-tune the model on ``dataset`` while logging an MLflow run.
+
+    Parameters
+    ----------
+    dataset:
+        Training examples used for supervised self-improvement.
+    run_name:
+        Optional MLflow run name. Defaults to ``"auto_retrain"``.
+    """
+    try:
+        import mlflow
+    except Exception:  # pragma: no cover - optional dependency
+        logger.error("mlflow is required for retrain_model")
+        return
+
+    name = run_name or "auto_retrain"
+    with mlflow.start_run(run_name=name):
+        mlflow.log_param("examples", len(dataset))
+        trigger_finetune(dataset)
 
 
 def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
