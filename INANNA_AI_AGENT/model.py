@@ -10,7 +10,13 @@ import logging
 from pathlib import Path
 from typing import Tuple
 
-from transformers import AutoModelForCausalLM, AutoTokenizer
+try:  # pragma: no cover - import guarded for optional dependency
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+except ImportError as exc:  # pragma: no cover - handled at runtime
+    AutoModelForCausalLM = AutoTokenizer = None  # type: ignore[assignment]
+    _TRANSFORMERS_IMPORT_ERROR = exc
+else:  # pragma: no cover - simple assignment
+    _TRANSFORMERS_IMPORT_ERROR = None
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +34,11 @@ def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
     Tuple[AutoModelForCausalLM, AutoTokenizer]
         The loaded model and tokenizer.
     """
+    if AutoModelForCausalLM is None or AutoTokenizer is None:
+        raise ImportError(
+            "The 'transformers' library is required to load models."
+        ) from _TRANSFORMERS_IMPORT_ERROR
+
     model_dir = Path(model_dir)
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
