@@ -6,17 +6,18 @@ import json
 import shutil
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, List, Sequence, Tuple
+from typing import Any, Dict, List, Sequence, Tuple, cast
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
 except Exception:  # pragma: no cover - optional dependency
-    np = None  # type: ignore
+    np = cast(Any, None)
 
 try:  # pragma: no cover - optional dependency
-    import faiss  # type: ignore
+    # ``faiss`` is optional and ships without type hints
+    import faiss  # type: ignore[import-not-found]
 except Exception:  # pragma: no cover - optional dependency
-    faiss = None  # type: ignore
+    faiss = cast(Any, None)
 
 
 class MemoryStore:
