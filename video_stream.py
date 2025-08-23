@@ -1,4 +1,8 @@
-"""WebRTC streaming of avatar frames."""
+"""Provide WebRTC streaming for avatar audio and video.
+
+This module exposes FastAPI routes and stream tracks to deliver avatar frames
+and optional audio to connected clients.
+"""
 
 from __future__ import annotations
 

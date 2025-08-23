@@ -1,7 +1,7 @@
-"""Helpers for loading local language models and tokenizers.
+"""Load local language models and tokenizers.
 
-The utilities operate solely on files already present on disk and log failures
-when the model cannot be instantiated.
+These helpers operate solely on files already present on disk and log failures
+when a model or tokenizer cannot be instantiated.
 """
 
 from __future__ import annotations

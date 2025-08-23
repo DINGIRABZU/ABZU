@@ -1,4 +1,8 @@
-"""Persist and retrieve emotional and soul state parameters."""
+"""Manage emotional and soul state persistence.
+
+This module persists and retrieves emotional and soul state parameters,
+maintaining a registry and event log for analysis.
+"""
 
 from __future__ import annotations
 
