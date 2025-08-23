@@ -8,6 +8,8 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel
 
+from src.lwm import default_lwm
+
 app = FastAPI()
 
 # Allowed directories for module inspection; defaults to repository root.
@@ -37,6 +39,12 @@ def get_ast(params: ASTQuery = Depends()) -> dict:
     except Exception as exc:  # pragma: no cover - parse failures
         raise HTTPException(status_code=400, detail=str(exc))
     return {"module": str(resolved), "ast": ast.dump(tree)}
+
+
+@app.get("/lwm/inspect")
+def inspect_lwm() -> dict:
+    """Expose the last generated 3D scene."""
+    return default_lwm.inspect_scene()
 
 
 __all__ = ["app"]
