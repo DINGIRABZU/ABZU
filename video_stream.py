@@ -1,4 +1,5 @@
 """WebRTC streaming of avatar frames."""
+
 from __future__ import annotations
 
 import asyncio
@@ -15,18 +16,28 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
-from aiortc.mediastreams import AUDIO_PTIME, AudioStreamTrack, MediaStreamError
-from av import VideoFrame
-from av.audio.frame import AudioFrame
+try:  # pragma: no cover - optional dependency
+    from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
+    from aiortc.mediastreams import AUDIO_PTIME, AudioStreamTrack, MediaStreamError
+except Exception:  # pragma: no cover - optional dependency
+    RTCPeerConnection = RTCSessionDescription = VideoStreamTrack = None  # type: ignore
+    AudioStreamTrack = MediaStreamError = None  # type: ignore
+    AUDIO_PTIME = 0.02
+
+try:  # pragma: no cover - optional dependency
+    from av import VideoFrame
+    from av.audio.frame import AudioFrame
+except Exception:  # pragma: no cover - optional dependency
+    VideoFrame = AudioFrame = None  # type: ignore
+
 from fastapi import APIRouter, HTTPException, Request
 
 from core import avatar_expression_engine, video_engine
+from src.media.video import VideoProcessor
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
-_pcs: Set[RTCPeerConnection] = set()
+_pcs: Set[RTCPeerConnection] = set()  # type: ignore[assignment]
 _active_track: AvatarVideoTrack | None = None  # type: ignore  # defined later
 
 
@@ -34,6 +45,7 @@ class AvatarAudioTrack(AudioStreamTrack):
     """Audio track streaming a WAV file."""
 
     def __init__(self, audio_path: Optional[Path] = None) -> None:
+        """Initialize track, optionally loading audio from ``audio_path``."""
         super().__init__()
         if audio_path is not None:
             if sf is None:
@@ -51,6 +63,7 @@ class AvatarAudioTrack(AudioStreamTrack):
         self._timestamp = 0
 
     async def recv(self) -> AudioFrame:
+        """Yield the next chunk of audio as an ``AudioFrame``."""
         if self.readyState != "live":
             raise MediaStreamError
 
@@ -89,6 +102,7 @@ class AvatarVideoTrack(VideoStreamTrack):
         audio_path: Optional[Path] = None,
         cues: Optional[asyncio.Queue[str]] = None,
     ) -> None:
+        """Initialize the track with optional audio path and style cues."""
         super().__init__()
         if audio_path is not None:
             self.update_audio(audio_path)
@@ -121,6 +135,7 @@ class AvatarVideoTrack(VideoStreamTrack):
         return result
 
     async def recv(self) -> VideoFrame:
+        """Receive the next video frame from the generator."""
         if self._cues is not None:
             try:
                 while True:
@@ -134,48 +149,60 @@ class AvatarVideoTrack(VideoStreamTrack):
         return video
 
 
-@router.post("/offer")
-async def offer(request: Request) -> dict[str, str]:
-    """Handle WebRTC offer and return answer."""
+class WebRTCStreamProcessor(VideoProcessor):
+    """Processor handling WebRTC offers and avatar audio updates."""
 
-    params = await request.json()
-    offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+    def __init__(self) -> None:
+        """Create a processor and register FastAPI routes."""
+        self.router = APIRouter()
+        self.router.post("/offer")(self.offer)
+        self.router.post("/avatar-audio")(self.avatar_audio)
 
-    pc = RTCPeerConnection()
-    _pcs.add(pc)
-    pc.addTrack(AvatarVideoTrack())
-    pc.addTrack(AvatarAudioTrack())
+    async def process(self, request: Request) -> dict[str, str]:
+        """Process a generic request by delegating to :meth:`offer`."""
+        return await self.offer(request)
 
-    await pc.setRemoteDescription(offer)
-    answer = await pc.createAnswer()
-    await pc.setLocalDescription(answer)
+    async def offer(self, request: Request) -> dict[str, str]:
+        """Handle WebRTC offer and return answer."""
+        params = await request.json()
+        offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
 
-    logger.info("WebRTC peer connected")
-    return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
+        pc = RTCPeerConnection()
+        _pcs.add(pc)
+        pc.addTrack(AvatarVideoTrack())
+        pc.addTrack(AvatarAudioTrack())
+
+        await pc.setRemoteDescription(offer)
+        answer = await pc.createAnswer()
+        await pc.setLocalDescription(answer)
+
+        logger.info("WebRTC peer connected")
+        return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
+
+    async def avatar_audio(self, request: Request) -> dict[str, str]:
+        """Update the active ``AvatarVideoTrack`` with ``audio_path``."""
+        data = await request.json()
+        path = Path(data["path"])
+        if _active_track is None:
+            raise HTTPException(status_code=404, detail="no active track")
+        _active_track.update_audio(path)
+        logger.info("Updated avatar audio: %s", path)
+        return {"status": "ok"}
+
+    async def close_peers(self) -> None:
+        """Close all peer connections."""
+        coros = [pc.close() for pc in list(_pcs)]
+        _pcs.clear()
+        for coro in coros:
+            await coro
+        global _active_track
+        _active_track = None
 
 
-@router.post("/avatar-audio")
-async def avatar_audio(request: Request) -> dict[str, str]:
-    """Update the active ``AvatarVideoTrack`` with ``audio_path``."""
-
-    data = await request.json()
-    path = Path(data["path"])
-    if _active_track is None:
-        raise HTTPException(status_code=404, detail="no active track")
-    _active_track.update_audio(path)
-    logger.info("Updated avatar audio: %s", path)
-    return {"status": "ok"}
-
-
-async def close_peers() -> None:
-    """Close all peer connections."""
-
-    coros = [pc.close() for pc in list(_pcs)]
-    _pcs.clear()
-    for coro in coros:
-        await coro
-    global _active_track
-    _active_track = None
-
+processor = WebRTCStreamProcessor()
+router = processor.router
+offer = processor.offer
+avatar_audio = processor.avatar_audio
+close_peers = processor.close_peers
 
 __all__ = ["router", "close_peers", "AvatarVideoTrack", "AvatarAudioTrack"]
