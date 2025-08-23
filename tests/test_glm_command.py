@@ -1,3 +1,7 @@
+"""Test the GLM command endpoint for authorization and command filtering."""
+
+from __future__ import annotations
+
 import asyncio
 import importlib
 
