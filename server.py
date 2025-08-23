@@ -17,6 +17,7 @@ from pydantic import BaseModel
 
 import corpus_memory_logging
 import music_generation
+import vector_memory
 import video_stream
 from connectors import webrtc_connector
 from core import feedback_logging, video_engine
@@ -38,6 +39,16 @@ app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
 
 _avatar_stream: Optional[Iterator[np.ndarray]] = None
+
+_ALLOWED_PREFIXES = {
+    "ls",
+    "cat",
+    "rg",
+    "git",
+    "black",
+    "isort",
+    "pre-commit",
+}
 
 
 @app.get("/health")
@@ -61,13 +72,38 @@ class ShellCommand(BaseModel):
 if settings.glm_command_token:
 
     @app.post("/glm-command")
-    def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str]:
+    def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str | bool]:
         """Execute ``cmd.command`` via the GLM shell and return the result."""
         auth_header = request.headers.get("Authorization") or ""
         if not secrets.compare_digest(auth_header, settings.glm_command_token):
+            vector_memory.add_vector(
+                cmd.command,
+                {"intent": "glm_command", "outcome": "unauthorized"},
+            )
             raise HTTPException(status_code=401, detail="Unauthorized")
-        result = send_command(cmd.command)
-        return {"result": result}
+        prefix = cmd.command.split()[0]
+        if prefix not in _ALLOWED_PREFIXES:
+            vector_memory.add_vector(
+                cmd.command,
+                {"intent": "glm_command", "outcome": "rejected"},
+            )
+            raise HTTPException(status_code=400, detail="command not allowed")
+        try:
+            result = send_command(cmd.command)
+        except Exception as exc:  # pragma: no cover - GLM failure
+            vector_memory.add_vector(
+                cmd.command,
+                {
+                    "intent": "glm_command",
+                    "outcome": "error",
+                    "error": str(exc),
+                },
+            )
+            raise HTTPException(status_code=500, detail="command failed") from exc
+        vector_memory.add_vector(
+            cmd.command, {"intent": "glm_command", "outcome": "success"}
+        )
+        return {"ok": True, "result": result}
 
 else:
     logger.warning("GLM_COMMAND_TOKEN not set; /glm-command endpoint disabled")

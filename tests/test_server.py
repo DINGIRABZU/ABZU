@@ -78,7 +78,7 @@ def test_health_and_ready_return_200():
 def test_glm_command_endpoint(monkeypatch):
     """POST /glm-command should return GLM output when authorized."""
 
-    async def run_request() -> tuple[int, dict[str, str]]:
+    async def run_request() -> tuple[int, dict[str, str | bool]]:
         transport = httpx.ASGITransport(app=server.app)
         async with httpx.AsyncClient(
             transport=transport, base_url="http://testserver"
@@ -91,9 +91,10 @@ def test_glm_command_endpoint(monkeypatch):
         return resp.status_code, resp.json()
 
     monkeypatch.setattr(server, "send_command", lambda cmd: f"ran {cmd}")
+    monkeypatch.setattr(server.vector_memory, "add_vector", lambda t, m: None)
     status, data = asyncio.run(run_request())
     assert status == 200
-    assert data == {"result": "ran ls"}
+    assert data == {"ok": True, "result": "ran ls"}
 
 
 def test_glm_command_requires_authorization(monkeypatch):
@@ -110,6 +111,7 @@ def test_glm_command_requires_authorization(monkeypatch):
         return resp.status_code
 
     monkeypatch.setattr(server, "send_command", lambda cmd: "ran")
+    monkeypatch.setattr(server.vector_memory, "add_vector", lambda t, m: None)
     status_missing = asyncio.run(run_request({}))
     status_wrong = asyncio.run(run_request({"Authorization": "bad"}))
     assert status_missing == 401
