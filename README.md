@@ -4,8 +4,19 @@
 
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
-## Getting Started
-Begin with the [CRYSTAL CODEX](docs/CRYSTAL_CODEX.md) for mission, dependencies, architecture and development flow. The [documentation index](docs/index.md) lists additional guides.
+## Start Here
+Read the [CRYSTAL CODEX](docs/CRYSTAL_CODEX.md) for mission, dependencies, memory flow and self‑improvement protocols. The [documentation index](docs/index.md) lists additional guides.
+
+## Seven-Milestone Roadmap
+1. Virtual environment manager ✅
+2. Sandbox repository ✅
+3. `/sandbox` command ✅
+4. Dependency installer ✅
+5. Music command – in progress
+6. Avatar lip-sync – planned
+7. Expanded memory search – planned
+
+See [docs/roadmap.md](docs/roadmap.md) for details.
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see
