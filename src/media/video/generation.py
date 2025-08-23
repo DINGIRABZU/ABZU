@@ -5,9 +5,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Iterable
 
+from ...lwm import LargeWorldModel
 
-def generate_video(images: Iterable[Path], output_path: Path) -> None:
-    """Create a video from image frames.
+
+def generate_video(
+    images: Iterable[Path],
+    output_path: Path,
+    lwm_model: LargeWorldModel | None = None,
+) -> None:
+    """Create a video from image frames with optional 3D scene generation.
 
     Parameters
     ----------
@@ -16,12 +22,19 @@ def generate_video(images: Iterable[Path], output_path: Path) -> None:
         compatibility.
     output_path:
         Where to write the generated video.
+    lwm_model:
+        Optional :class:`~lwm.LargeWorldModel` instance used to build a 3D
+        representation from ``images`` before rendering the video.
 
     Raises
     ------
     ImportError
         If ``ffmpeg`` is not installed.
     """
+    if lwm_model:
+        images = list(images)
+        lwm_model.from_frames(images)
+
     try:  # pragma: no cover - dependency guard
         import ffmpeg
     except ImportError as exc:  # pragma: no cover - dependency guard
