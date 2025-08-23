@@ -8,8 +8,6 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-import numpy as np
-
 try:  # pragma: no cover - optional dependency
     import soundfile as sf
 except Exception:  # pragma: no cover - optional dependency

@@ -75,9 +75,7 @@ def adjust(
                 )
                 freqs = np.arange(spectrum.size)
                 centroid = float(np.sum(freqs * spectrum) / np.sum(spectrum))
-                norm_centroid = float(
-                    np.clip(centroid / spectrum.size, 0.0, 1.0)
-                )
+                norm_centroid = float(np.clip(centroid / spectrum.size, 0.0, 1.0))
                 entry["arousal"] = norm_energy
                 entry["valence"] = norm_centroid
         except Exception:

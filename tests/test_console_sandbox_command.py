@@ -5,8 +5,6 @@ from __future__ import annotations
 import subprocess
 import types
 
-import pytest
-
 from cli import console_interface
 
 

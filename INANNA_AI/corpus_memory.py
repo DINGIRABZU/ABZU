@@ -54,7 +54,6 @@ except ImportError:  # pragma: no cover - optional dependency
 
 import corpus_memory_logging
 import crown_config
-from MUSIC_FOUNDATION import qnl_utils
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory

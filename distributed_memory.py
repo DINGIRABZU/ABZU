@@ -1,4 +1,5 @@
 """Redis-backed helper for off-box vector memory backups."""
+
 from __future__ import annotations
 
 import json
@@ -26,7 +27,9 @@ class DistributedMemory:
         self.key = key
 
     # ------------------------------------------------------------------
-    def backup(self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]) -> None:
+    def backup(
+        self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]
+    ) -> None:
         payload = json.dumps({"vector": list(vector), "metadata": metadata})
         self.client.hset(self.key, id_, payload)
 

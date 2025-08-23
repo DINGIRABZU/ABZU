@@ -2,11 +2,9 @@ from __future__ import annotations
 
 """Simple playback engine for ritual loops and voice audio."""
 
-import base64
 import logging
 import shutil
 import tempfile
-from io import BytesIO
 from pathlib import Path
 from threading import Event, Thread
 from typing import Any

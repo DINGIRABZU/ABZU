@@ -81,7 +81,7 @@ def get_emotion_music_params(
     return select_music_params(emotion, mapping, default_tempo)
 
 
-from MUSIC_FOUNDATION.qnl_utils import chroma_to_qnl, generate_qnl_structure
+from MUSIC_FOUNDATION.qnl_utils import generate_qnl_structure
 
 # -------------------------------
 # QNL GLYPH & EMOTION MAPPINGS

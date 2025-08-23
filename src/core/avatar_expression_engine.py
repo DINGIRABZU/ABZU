@@ -2,7 +2,6 @@ from __future__ import annotations
 
 """Synchronise avatar expressions with audio playback."""
 
-import logging
 from pathlib import Path
 from threading import Thread
 from typing import Iterator

@@ -7,21 +7,21 @@ drops below configured thresholds.
 from __future__ import annotations
 
 import argparse
+import asyncio
+import fnmatch
 import json
 import logging
 import os
-import asyncio
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
-import fnmatch
 import yaml
-from INANNA_AI.ethical_validator import EthicalValidator
 
 from core import feedback_logging
 from core.utils.seed import seed_all
-from learning_mutator import propose_mutations
+from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI.gates import verify_blob
+from learning_mutator import propose_mutations
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -223,7 +223,9 @@ async def retrain_model(dataset: list[dict], *, run_name: str | None = None) -> 
         mlflow.log_param("examples", len(dataset))
         await asyncio.to_thread(trigger_finetune, dataset)
         if _vector_memory is not None:
-            await asyncio.to_thread(_vector_memory.configure, embedder=_vector_memory._EMBED)
+            await asyncio.to_thread(
+                _vector_memory.configure, embedder=_vector_memory._EMBED
+            )
 
 
 def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry

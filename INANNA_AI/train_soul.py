@@ -10,8 +10,8 @@ from pathlib import Path
 import numpy as np
 
 from core.utils.seed import seed_all
-from .rfa_7d import RFA7D
 
+from .rfa_7d import RFA7D
 
 seed_all(int(os.getenv("SEED", "0")))
 

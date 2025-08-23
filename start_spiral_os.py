@@ -31,7 +31,6 @@ from INANNA_AI import defensive_network_utils as dnu
 from INANNA_AI import glm_analyze, glm_init, listening_engine
 from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI.personality_layers import REGISTRY, list_personalities
-from INANNA_AI_AGENT import INANNA_AI
 from rag.orchestrator import MoGEOrchestrator
 from tools import reflection_loop
 

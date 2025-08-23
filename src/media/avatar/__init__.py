@@ -7,4 +7,10 @@ from .base import AvatarProcessor
 from .generation import generate_avatar
 from .playback import play_avatar
 
-__all__ = ["AvatarProcessor", "generate_avatar", "play_avatar", "generation", "playback"]
+__all__ = [
+    "AvatarProcessor",
+    "generate_avatar",
+    "play_avatar",
+    "generation",
+    "playback",
+]

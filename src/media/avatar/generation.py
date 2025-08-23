@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterable, Any
+from typing import Any, Iterable
 
 from ...lwm import LargeWorldModel
-
 from ..audio import generate_waveform
 from ..video import generate_video
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
-from typing import Callable, Iterable, List
+from typing import Callable, List
 from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
