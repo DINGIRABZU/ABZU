@@ -1,7 +1,8 @@
-from __future__ import annotations
-
 """Load Crown agent configuration and expose model endpoints."""
 
+from __future__ import annotations
+
+import importlib.util as _importlib_util
 import logging
 import os
 from pathlib import Path
@@ -66,7 +67,9 @@ def get_model_endpoints() -> Dict[str, str]:
     glm_url = _RUNTIME_CONFIG.get("glm_api_url")
     if isinstance(glm_url, str):
         endpoints["glm"] = glm_url
-    for name, url in cast(Dict[str, Any], _RUNTIME_CONFIG.get("servant_models") or {}).items():
+    for name, url in cast(
+        Dict[str, Any], _RUNTIME_CONFIG.get("servant_models") or {}
+    ).items():
         if isinstance(url, str):
             endpoints[name] = url
     return endpoints
@@ -81,10 +84,9 @@ def get_model_endpoints() -> Dict[str, str]:
 # ``src/`` originally only exposed configuration helpers which caused imports to
 # fail during test collection.  To maintain compatibility we load the root
 # module under an internal name and re‑export the key functions here.
-
-import importlib.util as _importlib_util
-
 _ROOT_PATH = Path(__file__).resolve().parent.parent / "init_crown_agent.py"
+
+
 _spec = _importlib_util.spec_from_file_location("_init_crown_agent_root", _ROOT_PATH)
 assert _spec is not None and _spec.loader is not None
 _root = _importlib_util.module_from_spec(_spec)

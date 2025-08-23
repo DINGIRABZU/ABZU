@@ -22,7 +22,9 @@ def load_feedback() -> List[dict[str, Any]]:
     if not LOG_FILE.exists():
         return []
     try:
-        return cast(List[dict[str, Any]], json.loads(LOG_FILE.read_text(encoding="utf-8")))
+        return cast(
+            List[dict[str, Any]], json.loads(LOG_FILE.read_text(encoding="utf-8"))
+        )
     except Exception:
         logger.exception("failed to read %s", LOG_FILE)
         return []

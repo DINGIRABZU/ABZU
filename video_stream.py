@@ -8,13 +8,18 @@ from __future__ import annotations
 
 import asyncio
 import fractions
+import importlib
 import logging
 import time
 from pathlib import Path
 from typing import Any, Optional, Set, cast
 
 import numpy as np
+from fastapi import APIRouter, HTTPException, Request
 from numpy.typing import NDArray
+
+from core import avatar_expression_engine, video_engine
+from src.media.video.base import VideoProcessor
 
 try:  # pragma: no cover - optional dependency
     import soundfile as sf
@@ -33,6 +38,7 @@ try:  # pragma: no cover - optional dependency
     _VideoFrame = getattr(importlib.import_module("av"), "VideoFrame")
     _AudioFrame = getattr(importlib.import_module("av.audio.frame"), "AudioFrame")
 except Exception:  # pragma: no cover - optional dependency
+
     class _VideoFrameStub:
         @staticmethod
         def from_ndarray(*_a: Any, **_k: Any) -> Any:
@@ -48,12 +54,6 @@ except Exception:  # pragma: no cover - optional dependency
 
 VideoFrame = _VideoFrame
 AudioFrame = _AudioFrame
-
-import importlib
-from fastapi import APIRouter, HTTPException, Request
-
-from core import avatar_expression_engine, video_engine
-from src.media.video.base import VideoProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +101,9 @@ class AvatarAudioTrack(AudioStreamTrack):  # type: ignore[misc]
         if len(chunk) < self._samples:
             chunk = np.pad(chunk, (0, self._samples - len(chunk)), constant_values=0)
 
-        frame = AudioFrame.from_ndarray(chunk.reshape(1, -1), format="s16", layout="mono")
+        frame = AudioFrame.from_ndarray(
+            chunk.reshape(1, -1), format="s16", layout="mono"
+        )
         frame.pts = self._timestamp
         frame.sample_rate = self._sr
         frame.time_base = fractions.Fraction(1, self._sr)
@@ -216,4 +218,3 @@ router = processor.router
 close_peers = processor.close_peers
 
 __all__ = ["router", "close_peers", "AvatarVideoTrack", "AvatarAudioTrack"]
-

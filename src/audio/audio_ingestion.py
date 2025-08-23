@@ -30,6 +30,7 @@ except Exception:  # pragma: no cover - optional dependency
 
 try:  # pragma: no cover - optional dependency
     import torch
+
     from transformers import ClapModel, ClapProcessor
 except Exception:  # pragma: no cover - optional dependency
     ClapProcessor = None
@@ -106,7 +107,9 @@ def extract_chords(samples: Array, sr: int) -> List[str]:
     return chords
 
 
-def separate_sources(samples: Array, sr: int, library: str = "spleeter") -> Dict[str, Array]:
+def separate_sources(
+    samples: Array, sr: int, library: str = "spleeter"
+) -> Dict[str, Array]:
     """Separate ``samples`` using Spleeter or Demucs."""
     if library == "spleeter":
         try:  # pragma: no cover - optional dependency
@@ -135,7 +138,9 @@ def separate_sources(samples: Array, sr: int, library: str = "spleeter") -> Dict
     raise ValueError("library must be 'spleeter' or 'demucs'")
 
 
-def extract_features(path: Path, sr: int = 44100, separate: str | None = None) -> Dict[str, Any]:
+def extract_features(
+    path: Path, sr: int = 44100, separate: str | None = None
+) -> Dict[str, Any]:
     """Load ``path`` and return a dictionary of audio descriptors."""
     samples, sr = load_audio(path, sr)
     features: Dict[str, Any] = {
@@ -177,4 +182,3 @@ __all__ = [
     "extract_features",
     "embed_clap",
 ]
-
