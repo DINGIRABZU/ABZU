@@ -9,6 +9,9 @@ from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
+# Allowed directories for module inspection; defaults to repository root.
+ALLOWED_DIRS = [Path(__file__).resolve().parent]
+
 
 @app.get("/ast")
 def get_ast(module: str) -> dict:
@@ -20,13 +23,19 @@ def get_ast(module: str) -> dict:
         File system path to a Python module.
     """
     path = Path(module)
-    if not path.exists():
-        raise HTTPException(status_code=404, detail="module not found")
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"))
+        resolved = path.expanduser().resolve(strict=True)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="module not found")
+
+    if not any(resolved.is_relative_to(base) for base in ALLOWED_DIRS):
+        raise HTTPException(status_code=403, detail="module not allowed")
+
+    try:
+        tree = ast.parse(resolved.read_text(encoding="utf-8"))
     except Exception as exc:  # pragma: no cover - parse failures
         raise HTTPException(status_code=400, detail=str(exc))
-    return {"module": str(path), "ast": ast.dump(tree)}
+    return {"module": str(resolved), "ast": ast.dump(tree)}
 
 
 __all__ = ["app"]

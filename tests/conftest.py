@@ -108,6 +108,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_video_stream_helpers.py"),
     str(ROOT / "tests" / "test_media_video.py"),
     str(ROOT / "tests" / "test_media_avatar.py"),
+    str(ROOT / "tests" / "test_introspection_api.py"),
 }
 
 
