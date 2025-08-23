@@ -1,3 +1,5 @@
+"""Parse symbolic inputs and dispatch matching system actions."""
+
 from __future__ import annotations
 
 import types
