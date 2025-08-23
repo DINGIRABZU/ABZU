@@ -16,12 +16,14 @@ sys.path.insert(0, str(ROOT))
 
 
 def _prepare(monkeypatch, *, patch_verify=True):
+    module = importlib.import_module("download_models")
+
     dummy_hf = ModuleType("huggingface_hub")
     dummy_hf.snapshot_download = lambda **kwargs: kwargs
-    monkeypatch.setitem(sys.modules, "huggingface_hub", dummy_hf)
+    dummy_utils = ModuleType("huggingface_hub.utils")
+    dummy_utils.HfHubHTTPError = RuntimeError
     dummy_dotenv = ModuleType("dotenv")
     dummy_dotenv.load_dotenv = lambda: None
-    monkeypatch.setitem(sys.modules, "dotenv", dummy_dotenv)
     dummy_tf = ModuleType("transformers")
 
     class DummyModel:
@@ -36,9 +38,12 @@ def _prepare(monkeypatch, *, patch_verify=True):
             DummyModel.called["save"] = path
 
     dummy_tf.AutoModelForCausalLM = DummyModel
+
+    monkeypatch.setitem(sys.modules, "huggingface_hub", dummy_hf)
+    monkeypatch.setitem(sys.modules, "huggingface_hub.utils", dummy_utils)
+    monkeypatch.setitem(sys.modules, "dotenv", dummy_dotenv)
     monkeypatch.setitem(sys.modules, "transformers", dummy_tf)
 
-    module = importlib.import_module("download_models")
     if patch_verify:
         monkeypatch.setattr(module, "_verify_checksum", lambda *a, **k: None)
     module.MODEL_CHECKSUMS = {name: "0" * 64 for name in module.MODEL_CHECKSUMS}
@@ -238,7 +243,7 @@ def test_deepseek_v3_download_and_quant(monkeypatch):
     monkeypatch.setenv("HF_TOKEN", "x")
     called = {}
     monkeypatch.setattr(
-        module,
+        sys.modules["huggingface_hub"],
         "snapshot_download",
         lambda **kw: called.setdefault("snap", kw),
     )

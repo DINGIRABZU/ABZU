@@ -11,22 +11,19 @@ import logging
 import os
 from pathlib import Path
 
-try:  # pragma: no cover - package availability varies
-    from huggingface_hub import snapshot_download
-    from huggingface_hub.utils import HfHubHTTPError
-except ImportError as exc:  # pragma: no cover - handled at runtime
-    raise SystemExit(
-        "huggingface_hub is required for model downloads. "
-        "Install it with `pip install huggingface_hub`."
-    ) from exc
-
-from dotenv import load_dotenv
-
 LOGGER = logging.getLogger(__name__)
 
 
 def download_deepseek() -> None:
     """Download the DeepSeek-R1 model to the local models directory."""
+    try:  # pragma: no cover - package availability varies
+        from dotenv import load_dotenv
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "python-dotenv is required to load environment variables. "
+            "Install it with `pip install python-dotenv`."
+        ) from exc
+
     load_dotenv()
     token = os.getenv("HF_TOKEN")
     if not token:
@@ -34,6 +31,16 @@ def download_deepseek() -> None:
         raise SystemExit("HF_TOKEN environment variable not set")
 
     target_dir = Path("INANNA_AI") / "models" / "DeepSeek-R1"
+
+    try:  # pragma: no cover - package availability varies
+        from huggingface_hub import snapshot_download
+        from huggingface_hub.utils import HfHubHTTPError
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "huggingface_hub is required for model downloads. "
+            "Install it with `pip install huggingface_hub`."
+        ) from exc
+
     try:
         snapshot_download(
             repo_id="deepseek-ai/DeepSeek-R1",

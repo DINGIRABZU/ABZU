@@ -18,18 +18,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
-from dotenv import load_dotenv
 
 from download_model import download_deepseek  # reuse logic
-
-try:  # pragma: no cover - package availability varies
-    from huggingface_hub import snapshot_download
-    from huggingface_hub.utils import HfHubHTTPError
-except ImportError as exc:  # pragma: no cover - handled at runtime
-    raise SystemExit(
-        "huggingface_hub is required for model downloads. "
-        "Install it with `pip install huggingface_hub`."
-    ) from exc
 
 
 LOG_PATH = Path("logs") / "model_audit.log"
@@ -57,6 +47,14 @@ MODEL_CHECKSUMS = {
 
 def _get_hf_token() -> str:
     """Load the Hugging Face token from the environment."""
+    try:  # pragma: no cover - package availability varies
+        from dotenv import load_dotenv
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "python-dotenv is required to load environment variables. "
+            "Install it with `pip install python-dotenv`."
+        ) from exc
+
     load_dotenv()
     token = os.getenv("HF_TOKEN")
     if not token:
@@ -191,6 +189,15 @@ def download_glm41v_9b(int8: bool = False) -> None:
     """Download GLM-4.1V-9B from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "GLM-4.1V-9B"
+    try:  # pragma: no cover - package availability varies
+        from huggingface_hub import snapshot_download
+        from huggingface_hub.utils import HfHubHTTPError
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "huggingface_hub is required for model downloads. "
+            "Install it with `pip install huggingface_hub`."
+        ) from exc
+
     try:
         snapshot_download(
             repo_id="THUDM/glm-4.1v-9b",
@@ -213,6 +220,15 @@ def download_deepseek_v3(int8: bool = False) -> None:
     """Download DeepSeek-V3 from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "DeepSeek-V3"
+    try:  # pragma: no cover - package availability varies
+        from huggingface_hub import snapshot_download
+        from huggingface_hub.utils import HfHubHTTPError
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "huggingface_hub is required for model downloads. "
+            "Install it with `pip install huggingface_hub`."
+        ) from exc
+
     try:
         snapshot_download(
             repo_id="deepseek-ai/DeepSeek-V3",
@@ -235,6 +251,15 @@ def download_mistral_8x22b(int8: bool = False) -> None:
     """Download Mistral 8x22B from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "Mistral-8x22B"
+    try:  # pragma: no cover - package availability varies
+        from huggingface_hub import snapshot_download
+        from huggingface_hub.utils import HfHubHTTPError
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "huggingface_hub is required for model downloads. "
+            "Install it with `pip install huggingface_hub`."
+        ) from exc
+
     try:
         snapshot_download(
             repo_id="mistralai/Mixtral-8x22B",
@@ -257,6 +282,15 @@ def download_kimi_k2(int8: bool = False) -> None:
     """Download Kimi-K2 from Hugging Face and optionally quantize."""
     token = _get_hf_token()
     target_dir = Path("INANNA_AI") / "models" / "Kimi-K2"
+    try:  # pragma: no cover - package availability varies
+        from huggingface_hub import snapshot_download
+        from huggingface_hub.utils import HfHubHTTPError
+    except ImportError as exc:  # pragma: no cover - handled at runtime
+        raise ImportError(
+            "huggingface_hub is required for model downloads. "
+            "Install it with `pip install huggingface_hub`."
+        ) from exc
+
     try:
         snapshot_download(
             repo_id="Fox-Kimi/Kimi-K2",
