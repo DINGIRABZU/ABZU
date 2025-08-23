@@ -1,3 +1,5 @@
+"""Tests for emotion registry."""
+
 from __future__ import annotations
 
 import json

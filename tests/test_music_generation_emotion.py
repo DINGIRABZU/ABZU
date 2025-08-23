@@ -1,3 +1,5 @@
+"""Tests for music generation emotion."""
+
 from __future__ import annotations
 
 import music_generation

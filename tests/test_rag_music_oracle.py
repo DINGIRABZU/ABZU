@@ -1,3 +1,5 @@
+"""Tests for rag music oracle."""
+
 from __future__ import annotations
 
 import sys

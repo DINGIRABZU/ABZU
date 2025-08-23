@@ -1,3 +1,5 @@
+"""Tests for suggest enhancement."""
+
 from __future__ import annotations
 
 import sys
@@ -5,8 +7,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-
-from INANNA_AI_AGENT import INANNA_AI
 
 
 def test_suggest_enhancement(tmp_path, monkeypatch):

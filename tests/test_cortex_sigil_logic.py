@@ -1,3 +1,5 @@
+"""Tests for cortex sigil logic."""
+
 from __future__ import annotations
 
 import sys

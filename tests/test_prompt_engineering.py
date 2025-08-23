@@ -1,3 +1,5 @@
+"""Tests for prompt engineering."""
+
 from __future__ import annotations
 
 from prompt_engineering import apply_style_preset

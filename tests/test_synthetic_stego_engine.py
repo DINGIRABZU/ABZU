@@ -1,3 +1,5 @@
+"""Tests for synthetic stego engine."""
+
 from __future__ import annotations
 
 import sys

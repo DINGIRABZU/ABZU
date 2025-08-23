@@ -1,3 +1,5 @@
+"""Tests for silence reflection."""
+
 from __future__ import annotations
 
 import sys

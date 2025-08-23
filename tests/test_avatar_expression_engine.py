@@ -1,3 +1,5 @@
+"""Tests for avatar expression engine."""
+
 from __future__ import annotations
 
 import sys

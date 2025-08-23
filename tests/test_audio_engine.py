@@ -1,3 +1,5 @@
+"""Tests for audio engine."""
+
 from __future__ import annotations
 
 import sys

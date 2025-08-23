@@ -1,9 +1,10 @@
+"""Tests for kimi servant."""
+
 from __future__ import annotations
 
 import asyncio
 import sys
 from pathlib import Path
-from types import ModuleType
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))

@@ -1,3 +1,5 @@
+"""Tests for music generation."""
+
 from __future__ import annotations
 
 import sys

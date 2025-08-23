@@ -1,3 +1,5 @@
+"""Tests for alchemical persona."""
+
 from __future__ import annotations
 
 import sys

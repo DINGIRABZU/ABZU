@@ -1,6 +1,6 @@
-from __future__ import annotations
+"""Tests for introspection api."""
 
-from pathlib import Path
+from __future__ import annotations
 
 from fastapi.testclient import TestClient
 

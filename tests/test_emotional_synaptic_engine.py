@@ -1,3 +1,5 @@
+"""Tests for emotional synaptic engine."""
+
 from __future__ import annotations
 
 import sys

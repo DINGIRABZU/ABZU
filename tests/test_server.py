@@ -1,3 +1,5 @@
+"""Tests for server."""
+
 from __future__ import annotations
 
 import asyncio
@@ -8,7 +10,6 @@ from types import ModuleType
 
 import httpx
 import numpy as np
-from fastapi.testclient import TestClient
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))

@@ -1,3 +1,5 @@
+"""Tests for avatar pipeline."""
+
 from __future__ import annotations
 
 import sys
@@ -9,8 +11,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import emotional_state
-from core import avatar_expression_engine, context_tracker, video_engine
+from core import context_tracker, video_engine
 
 
 def test_sadtalker_pipeline(monkeypatch):

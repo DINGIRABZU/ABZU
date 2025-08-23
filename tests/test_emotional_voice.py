@@ -1,3 +1,5 @@
+"""Tests for emotional voice."""
+
 from __future__ import annotations
 
 import json

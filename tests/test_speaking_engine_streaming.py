@@ -1,3 +1,5 @@
+"""Tests for speaking engine streaming."""
+
 from __future__ import annotations
 
 import sys

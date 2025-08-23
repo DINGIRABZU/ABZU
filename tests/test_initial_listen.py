@@ -1,3 +1,5 @@
+"""Tests for initial listen."""
+
 from __future__ import annotations
 
 import builtins

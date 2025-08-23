@@ -1,3 +1,5 @@
+"""Tests for project audit."""
+
 from __future__ import annotations
 
 import sys

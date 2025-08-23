@@ -1,3 +1,5 @@
+"""Tests for modulation arrangement."""
+
 from __future__ import annotations
 
 import sys

@@ -1,7 +1,8 @@
+"""Tests for predictive gate."""
+
 from __future__ import annotations
 
 import importlib
-from pathlib import Path
 
 from INANNA_AI import db_storage, gate_orchestrator
 

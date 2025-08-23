@@ -1,3 +1,5 @@
+"""Tests for audio emotion listener."""
+
 from __future__ import annotations
 
 import sys

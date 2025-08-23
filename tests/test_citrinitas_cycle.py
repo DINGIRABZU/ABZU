@@ -1,3 +1,5 @@
+"""Tests for citrinitas cycle."""
+
 from __future__ import annotations
 
 import sys

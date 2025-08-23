@@ -1,3 +1,5 @@
+"""Tests for start dev agents triage."""
+
 from __future__ import annotations
 
 import sys
@@ -12,7 +14,9 @@ def test_triage_writes_transcript(monkeypatch, tmp_path):
 
     # redirect interactions file
     monkeypatch.setattr(
-        start_dev_agents, "run_dev_cycle", lambda *a, **k: log_interaction("p", {}, {}, "ok")
+        start_dev_agents,
+        "run_dev_cycle",
+        lambda *a, **k: log_interaction("p", {}, {}, "ok"),
     )
     monkeypatch.setattr(start_dev_agents, "check_required", lambda _: None)
     monkeypatch.setattr(start_dev_agents, "load_env", lambda _p: None)
@@ -20,14 +24,20 @@ def test_triage_writes_transcript(monkeypatch, tmp_path):
     monkeypatch.setattr(
         start_dev_agents.subprocess,
         "run",
-        lambda *a, **k: type("P", (), {"returncode": 1, "stdout": "fail", "stderr": ""})(),
+        lambda *a, **k: type(
+            "P", (), {"returncode": 1, "stdout": "fail", "stderr": ""}
+        )(),
     )
 
     monkeypatch.setenv("PLANNER_MODEL", "p")
     monkeypatch.setenv("CODER_MODEL", "c")
     monkeypatch.setenv("REVIEWER_MODEL", "r")
 
-    monkeypatch.setattr("corpus_memory_logging.INTERACTIONS_FILE", tmp_path / "data" / "interactions.jsonl", raising=False)
+    monkeypatch.setattr(
+        "corpus_memory_logging.INTERACTIONS_FILE",
+        tmp_path / "data" / "interactions.jsonl",
+        raising=False,
+    )
 
     argv = ["prog", "--triage", "tests/sample.py"]
     monkeypatch.setattr(sys, "argv", argv)
@@ -36,4 +46,3 @@ def test_triage_writes_transcript(monkeypatch, tmp_path):
     files = list(triage_dir.glob("*.jsonl"))
     assert len(files) == 1
     assert files[0].read_text().strip()
-

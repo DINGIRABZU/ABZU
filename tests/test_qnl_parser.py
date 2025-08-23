@@ -1,3 +1,5 @@
+"""Tests for qnl parser."""
+
 from __future__ import annotations
 
 import sys

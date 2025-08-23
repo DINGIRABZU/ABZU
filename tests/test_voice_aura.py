@@ -1,3 +1,5 @@
+"""Tests for voice aura."""
+
 from __future__ import annotations
 
 import sys

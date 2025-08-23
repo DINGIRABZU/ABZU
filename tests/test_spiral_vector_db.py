@@ -1,3 +1,5 @@
+"""Tests for spiral vector db."""
+
 from __future__ import annotations
 
 import importlib

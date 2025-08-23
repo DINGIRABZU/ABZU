@@ -1,8 +1,9 @@
+"""Tests for memory snapshot."""
+
 from __future__ import annotations
 
 import sys
 from pathlib import Path
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -66,4 +67,3 @@ def test_vector_memory_snapshot_restore(tmp_path, monkeypatch):
     col.data = {"ids": [], "embeddings": [], "metadatas": []}
     vector_memory.restore(snap)
     assert col.data["metadatas"][0]["text"] == "hello"
-

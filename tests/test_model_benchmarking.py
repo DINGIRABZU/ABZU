@@ -1,3 +1,5 @@
+"""Tests for model benchmarking."""
+
 from __future__ import annotations
 
 import sys

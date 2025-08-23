@@ -1,3 +1,5 @@
+"""Tests for kimi k2 servant."""
+
 from __future__ import annotations
 
 import sys

@@ -1,3 +1,5 @@
+"""Tests for emotion music map."""
+
 from __future__ import annotations
 
 import sys

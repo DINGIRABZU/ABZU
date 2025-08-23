@@ -1,3 +1,5 @@
+"""Tests for vast check."""
+
 from __future__ import annotations
 
 import asyncio

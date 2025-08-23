@@ -1,28 +1,30 @@
+"""Pytest configuration and shared fixtures."""
+
 from __future__ import annotations
 
+import importlib.util
 import os
 import shutil
 import sys
 from pathlib import Path
 
-import importlib.util
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-spec = importlib.util.spec_from_file_location("seed", ROOT / "src" / "core" / "utils" / "seed.py")
-seed_module = importlib.util.module_from_spec(spec)
+spec = importlib.util.spec_from_file_location(
+    "seed", ROOT / "src" / "core" / "utils" / "seed.py"
+)
+seed_module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
 assert spec and spec.loader
 spec.loader.exec_module(seed_module)  # type: ignore[union-attr]
 seed_all = seed_module.seed_all
 
-import pytest
+import pytest  # noqa: E402
 
 # Default to NumPy audio backend unless pydub and ffmpeg are fully available
 if "AUDIO_BACKEND" not in os.environ:
     try:  # pragma: no cover - optional dependency
-        import pydub  # type: ignore
 
         if shutil.which("ffmpeg") is None:
             raise RuntimeError("ffmpeg not found")
@@ -32,12 +34,13 @@ if "AUDIO_BACKEND" not in os.environ:
         os.environ["AUDIO_BACKEND"] = "pydub"
 
 
-import emotion_registry
-import emotional_state
+import emotion_registry  # noqa: E402
+import emotional_state  # noqa: E402
 
 
 @pytest.fixture()
 def mock_emotion_state(tmp_path, monkeypatch):
+    """Return a temporary emotion state file."""
     state_file = tmp_path / "emotion_state.json"
     monkeypatch.setattr(emotional_state, "STATE_FILE", state_file)
     monkeypatch.setattr(emotion_registry, "STATE_FILE", state_file)
@@ -102,12 +105,14 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_server_endpoints.py"),
     str(ROOT / "tests" / "test_glm_command.py"),
     str(ROOT / "tests" / "test_media_audio.py"),
+    str(ROOT / "tests" / "test_video_stream_helpers.py"),
     str(ROOT / "tests" / "test_media_video.py"),
     str(ROOT / "tests" / "test_media_avatar.py"),
 }
 
 
 def pytest_collection_modifyitems(config, items):
+    """Skip tests that require heavy resources unless allowed."""
     skip_marker = pytest.mark.skip(reason="requires unavailable resources")
     for item in items:
         if str(item.fspath) not in ALLOWED_TESTS:

@@ -1,3 +1,5 @@
+"""Tests for insight compiler."""
+
 from __future__ import annotations
 
 import json

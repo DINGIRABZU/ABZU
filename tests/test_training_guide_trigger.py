@@ -1,3 +1,5 @@
+"""Tests for training guide trigger."""
+
 from __future__ import annotations
 
 import sys

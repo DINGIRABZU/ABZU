@@ -1,3 +1,5 @@
+"""Tests for memory emotional."""
+
 from __future__ import annotations
 
 import pytest

@@ -1,3 +1,5 @@
+"""Tests for core services."""
+
 from __future__ import annotations
 
 import sys
@@ -15,7 +17,6 @@ config_mod.settings = build_settings()
 config_mod.reload = lambda: None
 sys.modules.setdefault("config", config_mod)
 
-import INANNA_AI as ia_pkg
 
 sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 sys.modules["emotional_state"] = types.SimpleNamespace(

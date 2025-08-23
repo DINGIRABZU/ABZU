@@ -1,3 +1,5 @@
+"""Tests for vocal isolation."""
+
 from __future__ import annotations
 
 import sys

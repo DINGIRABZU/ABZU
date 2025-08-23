@@ -1,3 +1,5 @@
+"""Tests for dsp engine."""
+
 from __future__ import annotations
 
 import sys

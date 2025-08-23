@@ -1,3 +1,5 @@
+"""Tests for audio video sync profile."""
+
 from __future__ import annotations
 
 import asyncio

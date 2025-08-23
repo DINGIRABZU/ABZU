@@ -1,3 +1,5 @@
+"""Tests for rubedo layer."""
+
 from __future__ import annotations
 
 import sys

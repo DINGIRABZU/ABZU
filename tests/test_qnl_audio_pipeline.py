@@ -1,3 +1,5 @@
+"""Tests for qnl audio pipeline."""
+
 from __future__ import annotations
 
 import sys
@@ -53,7 +55,6 @@ sys.modules.setdefault("gymnasium", gym_mod)
 
 import vector_memory
 from audio import audio_ingestion, dsp_engine
-from INANNA_AI_AGENT import INANNA_AI
 
 
 def test_qnl_audio_pipeline(tmp_path, monkeypatch):

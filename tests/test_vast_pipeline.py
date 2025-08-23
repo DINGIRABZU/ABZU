@@ -1,3 +1,5 @@
+"""Tests for vast pipeline."""
+
 from __future__ import annotations
 
 import asyncio
@@ -35,7 +37,6 @@ setattr(sp_mod, "qnl_engine", qnl_engine)
 setattr(sp_mod, "symbolic_parser", sym_stub)
 
 import server
-import video_stream
 from connectors import webrtc_connector
 from core import context_tracker, language_engine
 from crown_config import settings

@@ -1,3 +1,5 @@
+"""Tests for nigredo layer."""
+
 from __future__ import annotations
 
 import sys

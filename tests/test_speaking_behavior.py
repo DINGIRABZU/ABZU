@@ -1,3 +1,5 @@
+"""Tests for speaking behavior."""
+
 from __future__ import annotations
 
 import sys

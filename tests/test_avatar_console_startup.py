@@ -1,3 +1,5 @@
+"""Tests for avatar console startup."""
+
 from __future__ import annotations
 
 import os

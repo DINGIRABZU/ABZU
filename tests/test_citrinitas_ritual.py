@@ -1,3 +1,5 @@
+"""Tests for citrinitas ritual."""
+
 from __future__ import annotations
 
 import sys
@@ -16,7 +18,6 @@ sys.modules.setdefault("vector_memory", dummy_vm)
 sys.modules.setdefault("SPIRAL_OS", types.ModuleType("SPIRAL_OS"))
 
 reflection_loop = pytest.importorskip("tools.reflection_loop")
-import corpus_memory_logging
 from core import video_engine
 
 

@@ -1,3 +1,5 @@
+"""Tests for source loader."""
+
 from __future__ import annotations
 
 import json

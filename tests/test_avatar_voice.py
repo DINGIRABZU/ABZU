@@ -1,3 +1,5 @@
+"""Tests for avatar voice."""
+
 from __future__ import annotations
 
 import sys
@@ -10,8 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-from core import video_engine
 from audio import voice_aura
+from core import video_engine
 
 
 def test_audio_driven_lip_sync(monkeypatch, tmp_path):
