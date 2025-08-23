@@ -40,6 +40,19 @@ Follow the conventions in [CODE_STYLE.md](CODE_STYLE.md):
 - Organise imports into standard library, third‑party, and local groups separated by blank lines.
 - Include docstrings for public modules, classes, and functions.
 
+# Static Typing
+
+Static type checks run via `mypy` using defaults defined in `mypy.ini` such as
+`ignore_missing_imports = true` and `disallow_untyped_defs = true`. Run the
+checker before committing:
+
+```bash
+mypy
+```
+
+Modules that require dynamic behaviour are relaxed through per‑module overrides
+inside `mypy.ini` (e.g. `INANNA_AI_AGENT.inanna_ai`, `INANNA_AI_AGENT.preprocess`).
+
 # Testing Expectations
 
 Run the test suite and basic smoke tests before opening a pull request:
