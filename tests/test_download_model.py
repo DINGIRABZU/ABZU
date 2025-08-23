@@ -1,3 +1,5 @@
+"""Tests for the DeepSeek model downloader."""
+
 from __future__ import annotations
 
 import importlib
