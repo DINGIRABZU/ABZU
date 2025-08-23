@@ -22,10 +22,11 @@ repos:
     rev: 6.3.0
     hooks:
       - id: pydocstyle
+        exclude: ^tests/
         args: ["--convention=pep257"]
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.11.2
     hooks:
       - id: mypy
         args: ["--config-file", "mypy.ini"]
-        files: '^(INANNA_AI_AGENT/.*|emotional_state\.py|video_stream\.py|logging_filters\.py|tests/test_glm_command\.py)$'
+        files: '^(INANNA_AI_AGENT/.*|src/.*|emotional_state\.py|video_stream\.py|logging_filters\.py)$'
