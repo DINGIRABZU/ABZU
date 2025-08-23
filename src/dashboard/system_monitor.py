@@ -34,6 +34,8 @@ def _print_stats_loop(interval: float) -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
+    """Run the system monitor command line interface."""
+
     parser = argparse.ArgumentParser(description="System monitor")
     parser.add_argument(
         "--watch", action="store_true", help="continuously display stats"
