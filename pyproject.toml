@@ -20,7 +20,8 @@ dependencies = [
     "pyyaml==6.0.2",
     "psutil==7.0.0",
     "omegaconf==2.3.0",
-    "pydantic==2.9.2"
+    "pydantic==2.9.2",
+    "uvicorn==0.35.0"
 ]
 
 [project.optional-dependencies]
@@ -56,7 +57,6 @@ opencv = ["opencv-python==4.12.0.88"]
 pytesseract = ["pytesseract==0.3.13"]
 selenium = ["selenium==4.35.0"]
 fastapi = ["fastapi==0.116.1"]
-uvicorn = ["uvicorn==0.35.0"]
 streamlit = ["streamlit==1.48.1"]
 beautifulsoup4 = ["beautifulsoup4==4.13.4"]
 scapy = ["scapy==2.6.1"]
@@ -96,6 +96,7 @@ os-guardian = "os_guardian.cli:main"
 crown-console = "cli.console_interface:run_repl"
 spiral-cortex = "cli.spiral_cortex_terminal:main"
 voice-cli = "cli.voice:main"
+spiral-os = "spiral_os.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
