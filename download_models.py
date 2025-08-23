@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
 
@@ -94,7 +95,23 @@ def _verify_checksum(path: Path, expected_hash: str) -> None:
     logger.info("Checksum verified for %s", path)
 
 
+def _validate_url(url: str) -> None:
+    """Ensure ``url`` has a valid HTTP/HTTPS scheme and host."""
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError(f"Invalid URL: {url}")
+
+
+def _require_checksum(name: str) -> str:
+    """Return checksum for ``name`` or raise if missing."""
+    checksum = MODEL_CHECKSUMS.get(name)
+    if not checksum:
+        raise RuntimeError(f"No checksum defined for {name}")
+    return checksum
+
+
 def _install_ollama() -> None:
+    _validate_url(OLLAMA_INSTALL_URL)
     try:
         resp = requests.get(OLLAMA_INSTALL_URL, timeout=30)
         resp.raise_for_status()
@@ -121,12 +138,15 @@ def _install_ollama() -> None:
     finally:
         tmp.close()
 
+    script_path.chmod(0o700)
     try:
         subprocess.run(
             ["sh", str(script_path)],
             check=True,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
+            env={"PATH": os.environ.get("PATH", "")},
         )
     except subprocess.CalledProcessError as exc:
         logger.error("Ollama installation failed: %s", exc.stderr)
@@ -157,10 +177,9 @@ def download_gemma2() -> None:
     except subprocess.CalledProcessError as exc:
         logger.error("Ollama pull failed: %s", exc.stderr)
         raise RuntimeError(f"Ollama pull failed: {exc.stderr}") from exc
-    expected = MODEL_CHECKSUMS.get("gemma2")
+    expected = _require_checksum("gemma2")
     target = models_dir / "gemma2"
-    if expected:
-        _verify_checksum(target, expected)
+    _verify_checksum(target, expected)
     logger.info("Model downloaded to %s", target)
     print(f"Model downloaded to {target}")
 
@@ -179,9 +198,8 @@ def download_glm41v_9b(int8: bool = False) -> None:
     except Exception as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
-    expected = MODEL_CHECKSUMS.get("glm41v_9b")
-    if expected:
-        _verify_checksum(target_dir, expected)
+    expected = _require_checksum("glm41v_9b")
+    _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
     logger.info("Model downloaded to %s", target_dir)
@@ -202,9 +220,8 @@ def download_deepseek_v3(int8: bool = False) -> None:
     except Exception as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
-    expected = MODEL_CHECKSUMS.get("deepseek_v3")
-    if expected:
-        _verify_checksum(target_dir, expected)
+    expected = _require_checksum("deepseek_v3")
+    _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
     logger.info("Model downloaded to %s", target_dir)
@@ -225,9 +242,8 @@ def download_mistral_8x22b(int8: bool = False) -> None:
     except Exception as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
-    expected = MODEL_CHECKSUMS.get("mistral_8x22b")
-    if expected:
-        _verify_checksum(target_dir, expected)
+    expected = _require_checksum("mistral_8x22b")
+    _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
     logger.info("Model downloaded to %s", target_dir)
@@ -248,9 +264,8 @@ def download_kimi_k2(int8: bool = False) -> None:
     except Exception as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
-    expected = MODEL_CHECKSUMS.get("kimi_k2")
-    if expected:
-        _verify_checksum(target_dir, expected)
+    expected = _require_checksum("kimi_k2")
+    _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
     logger.info("Model downloaded to %s", target_dir)
