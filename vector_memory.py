@@ -11,7 +11,7 @@ import math
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -29,6 +29,7 @@ from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
 
 _DIR = Path(settings.vector_db_path)
+_EMBED = qnl_utils.quantum_embed
 
 _COLLECTION_NAME = "memory"
 _DECAY_SECONDS = 86_400.0  # one day
@@ -37,6 +38,21 @@ LOG_FILE = Path("data/vector_memory.log")
 logger = logging.getLogger(__name__)
 
 _COLLECTION: Collection | None = None
+
+
+def configure(
+    *,
+    db_path: str | Path | None = None,
+    embedder: Callable[[str], Any] | None = None,
+) -> None:
+    """Configure storage location or embedding function."""
+
+    global _DIR, _EMBED, _COLLECTION
+    if db_path is not None:
+        _DIR = Path(db_path)
+        _COLLECTION = None
+    if embedder is not None:
+        _EMBED = embedder
 
 
 def _log(op: str, text: str, meta: Dict[str, Any]) -> None:
@@ -73,7 +89,7 @@ def add_vector(text: str, metadata: Dict[str, Any]) -> None:
     meta.setdefault("text", text)
     meta.setdefault("timestamp", datetime.utcnow().isoformat())
     col = _get_collection()
-    emb_raw = qnl_utils.quantum_embed(text)
+    emb_raw = _EMBED(text)
     if np is not None:
         emb = np.asarray(emb_raw, dtype=float).tolist()
     else:
@@ -100,7 +116,7 @@ def search(
 ) -> List[Dict[str, Any]]:
     """Return ``k`` fuzzy matches for ``query`` ordered by decayed similarity."""
 
-    qvec_raw = qnl_utils.quantum_embed(query)
+    qvec_raw = _EMBED(query)
     if np is not None:
         qvec = np.asarray(qvec_raw, dtype=float)
     else:
@@ -152,7 +168,7 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
     retry.
     """
     col = _get_collection()
-    emb_raw = qnl_utils.quantum_embed(new_text)
+    emb_raw = _EMBED(new_text)
     try:
         rec = col.get(ids=[old_id])
         meta_list = rec.get("metadatas", [[]])[0]
@@ -189,10 +205,42 @@ def query_vectors(
     return search("", filter=filter, k=limit)
 
 
+def snapshot(path: str | Path) -> None:
+    """Persist the current collection to ``path``."""
+
+    col = _get_collection()
+    data = col.get()
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(data), encoding="utf-8")
+
+
+def restore(path: str | Path) -> None:
+    """Load collection data from ``path`` replacing existing entries."""
+
+    col = _get_collection()
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    ids = data.get("ids", [])
+    if ids:
+        try:
+            col.delete(ids=ids)
+        except Exception:  # pragma: no cover - best effort
+            logger.exception("failed to clear collection")
+    if data.get("ids"):
+        col.add(
+            ids=data.get("ids"),
+            embeddings=data.get("embeddings"),
+            metadatas=data.get("metadatas"),
+        )
+
+
 __all__ = [
     "add_vector",
     "search",
     "rewrite_vector",
     "query_vectors",
+    "snapshot",
+    "restore",
+    "configure",
     "LOG_FILE",
 ]

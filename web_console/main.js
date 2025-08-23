@@ -132,6 +132,23 @@ function generateMusic() {
 
 musicBtn.addEventListener('click', generateMusic);
 
+document.getElementById('logs-btn').addEventListener('click', loadLogs);
+
+function loadLogs() {
+    fetch('emotion_events.jsonl')
+        .then((resp) => resp.text())
+        .then((txt) => {
+            const pre = document.getElementById('emotion-logs');
+            pre.style.display = 'block';
+            pre.textContent = txt;
+        })
+        .catch((err) => {
+            const pre = document.getElementById('emotion-logs');
+            pre.style.display = 'block';
+            pre.textContent = 'Error: ' + err;
+        });
+}
+
 async function startStream() {
     const local = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
