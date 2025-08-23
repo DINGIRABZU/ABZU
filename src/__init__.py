@@ -2,6 +2,6 @@
 
 from __future__ import annotations
 
-from . import api, audio, core, dashboard
+from . import api, audio, core, dashboard, media
 
-__all__ = ["core", "audio", "dashboard", "api"]
+__all__ = ["core", "audio", "dashboard", "api", "media"]

@@ -82,6 +82,9 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_server.py"),
     str(ROOT / "tests" / "test_server_endpoints.py"),
     str(ROOT / "tests" / "test_glm_command.py"),
+    str(ROOT / "tests" / "test_media_audio.py"),
+    str(ROOT / "tests" / "test_media_video.py"),
+    str(ROOT / "tests" / "test_media_avatar.py"),
 }
 
 
