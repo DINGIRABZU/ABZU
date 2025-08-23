@@ -1,3 +1,5 @@
+"""Restore backups and rebuild vector memory from log files."""
+
 from __future__ import annotations
 
 import argparse
@@ -7,7 +9,7 @@ import shutil
 from pathlib import Path
 
 try:  # pragma: no cover - optional dependency
-    from vector_memory import add_vector, LOG_FILE
+    from vector_memory import LOG_FILE, add_vector
 except Exception:  # pragma: no cover - optional dependency
     add_vector = None  # type: ignore[assignment]
     LOG_FILE = Path("data/vector_memory.log")  # type: ignore[assignment]
@@ -20,7 +22,6 @@ except Exception:  # pragma: no cover - optional dependency
 
 def replay(src: Path) -> None:
     """Restore latest backups from ``src`` and rebuild vector memory."""
-
     src.mkdir(parents=True, exist_ok=True)
     log_files = sorted(src.glob("vector_memory_*.log"))
     db_files = sorted(src.glob("spiral_registry_*.db"))
@@ -49,6 +50,7 @@ def replay(src: Path) -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
+    """Parse CLI arguments and replay state from backups."""
     parser = argparse.ArgumentParser(
         description="Replay state from off-site backups",
     )

@@ -5,6 +5,8 @@ The project uses a ``src`` layout but many modules – especially tests – impo
 imports working without requiring callers to modify ``sys.path``.
 """
 
+from __future__ import annotations
+
 import sys as _sys
 from importlib import import_module
 
