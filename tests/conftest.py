@@ -86,6 +86,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_avatar_lipsync.py"),
     str(ROOT / "tests" / "test_lip_sync.py"),
     str(ROOT / "tests" / "test_memory_search.py"),
+    str(ROOT / "tests" / "test_memory_persistence.py"),
     str(ROOT / "tests" / "test_start_dev_agents_triage.py"),
     str(ROOT / "tests" / "test_gateway.py"),
     str(ROOT / "tests" / "test_download_models.py"),

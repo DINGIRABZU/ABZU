@@ -10,6 +10,7 @@ import argparse
 import json
 import logging
 import os
+import asyncio
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
@@ -198,8 +199,11 @@ def trigger_finetune(
         logger.exception("failed to trigger fine-tune")
 
 
-def retrain_model(dataset: list[dict], *, run_name: str | None = None) -> None:
+async def retrain_model(dataset: list[dict], *, run_name: str | None = None) -> None:
     """Fine-tune the model on ``dataset`` while logging an MLflow run.
+
+    This asynchronous routine logs the run via MLflow and reloads updated
+    embeddings in the vector memory subsystem once training completes.
 
     Parameters
     ----------
@@ -217,7 +221,9 @@ def retrain_model(dataset: list[dict], *, run_name: str | None = None) -> None:
     name = run_name or "auto_retrain"
     with mlflow.start_run(run_name=name):
         mlflow.log_param("examples", len(dataset))
-        trigger_finetune(dataset)
+        await asyncio.to_thread(trigger_finetune, dataset)
+        if _vector_memory is not None:
+            await asyncio.to_thread(_vector_memory.configure, embedder=_vector_memory._EMBED)
 
 
 def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
