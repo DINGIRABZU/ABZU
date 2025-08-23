@@ -1,6 +1,5 @@
-from __future__ import annotations
-
 """Persist and retrieve emotional and soul state parameters."""
+from __future__ import annotations
 
 import json
 import logging
