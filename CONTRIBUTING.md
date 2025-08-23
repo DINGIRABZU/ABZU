@@ -63,6 +63,14 @@ scripts/smoke_avatar_console.sh
 pytest --maxfail=1 -q
 ```
 
+Code coverage is enforced at 85%. Generate a report locally to ensure the
+threshold is met:
+
+```bash
+coverage run -m pytest
+coverage report
+```
+
 # Pull Request Guidelines
 
 - Keep changes focused; submit separate PRs for unrelated fixes.

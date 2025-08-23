@@ -4,6 +4,8 @@ beautifulsoup4==4.13.4
     # via spiral-os (pyproject.toml)
 black==25.1.0
     # via spiral-os (pyproject.toml)
+coverage==7.6.10
+    # via spiral-os (pyproject.toml)
 fastapi==0.116.1
     # via spiral-os (pyproject.toml)
 flake8==7.3.0
@@ -20,9 +22,13 @@ markdown==3.8.2
     # via spiral-os (pyproject.toml)
 numpy==1.26.4
     # via spiral-os (pyproject.toml)
+omegaconf==2.3.0
+    # via spiral-os (pyproject.toml)
 pre-commit==4.3.0
     # via spiral-os (pyproject.toml)
 psutil==7.0.0
+    # via spiral-os (pyproject.toml)
+pydantic==2.9.2
     # via spiral-os (pyproject.toml)
 pydub==0.25.1
     # via spiral-os (pyproject.toml)
@@ -43,4 +49,6 @@ scipy==1.11.4
 soundfile==0.13.1
     # via spiral-os (pyproject.toml)
 streamlit==1.48.1
+    # via spiral-os (pyproject.toml)
+uvicorn==0.35.0
     # via spiral-os (pyproject.toml)
