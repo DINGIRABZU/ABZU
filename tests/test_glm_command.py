@@ -1,4 +1,4 @@
-"""Test the GLM command endpoint for authorization and command filtering."""
+"""Ensure the GLM command endpoint enforces auth and filters commands."""
 
 from __future__ import annotations
 
@@ -6,7 +6,6 @@ import asyncio
 import importlib
 
 import httpx
-import pytest
 
 from crown_config import settings
 
