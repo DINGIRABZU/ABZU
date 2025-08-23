@@ -1,17 +1,18 @@
-# syntax=docker/dockerfile:1
-FROM python:3.11-slim AS base
+FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04 AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY . .
-RUN pip install --no-cache-dir .
-
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
+    apt-get install -y --no-install-recommends python3 python3-pip curl && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/*
+
+COPY . .
+
+RUN python -m pip install --no-cache-dir .[spatial]
 
 RUN useradd --create-home --shell /bin/bash inanna && \
     chown -R inanna:inanna /app
