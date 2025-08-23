@@ -6,7 +6,7 @@ import logging
 import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterator, Optional
+from typing import Callable, Iterator, Optional
 
 import numpy as np
 
@@ -39,6 +39,12 @@ import emotional_state
 from . import context_tracker
 from .facial_expression_controller import apply_expression
 
+try:  # pragma: no cover - optional dependency
+    import vector_memory as _vector_memory
+except ImportError:  # pragma: no cover - optional dependency
+    _vector_memory = None  # type: ignore[assignment]
+vector_memory = _vector_memory
+
 mp = lazy_import("mediapipe")
 if getattr(mp, "__stub__", False):  # pragma: no cover - optional dependency
     mp = None  # type: ignore
@@ -58,6 +64,21 @@ if getattr(
 logger = logging.getLogger(__name__)
 
 _CONFIG_PATH = Path(__file__).resolve().parents[1] / "guides" / "avatar_config.toml"
+
+FACE_PIPELINES: list[Callable[[np.ndarray], np.ndarray]] = []
+GESTURE_PIPELINES: list[Callable[[np.ndarray], np.ndarray]] = []
+
+
+def register_face_pipeline(func: Callable[[np.ndarray], np.ndarray]) -> None:
+    """Register a face processing pipeline."""
+
+    FACE_PIPELINES.append(func)
+
+
+def register_gesture_pipeline(func: Callable[[np.ndarray], np.ndarray]) -> None:
+    """Register a gesture processing pipeline."""
+
+    GESTURE_PIPELINES.append(func)
 
 
 @dataclass
@@ -88,6 +109,29 @@ def _load_traits() -> AvatarTraits:
     return AvatarTraits(eye, sigil, skins)
 
 
+def _apply_trait_overrides(traits: AvatarTraits) -> AvatarTraits:
+    """Augment ``traits`` from :mod:`vector_memory` when available."""
+
+    if vector_memory is None:
+        return traits
+    try:
+        records = vector_memory.query_vectors(filter={"type": "avatar_trait"}, limit=1)
+    except Exception:
+        records = []
+    if records:
+        rec = records[-1]
+        eye = rec.get("eye_color")
+        if isinstance(eye, (list, tuple)) and len(eye) == 3:
+            traits.eye_color = tuple(int(v) for v in eye)
+        sigil = rec.get("sigil")
+        if isinstance(sigil, str):
+            traits.sigil = sigil
+        skins = rec.get("skins")
+        if isinstance(skins, dict):
+            traits.skins.update({str(k): str(v) for k, v in skins.items()})
+    return traits
+
+
 def _get_face_mesh() -> Optional[object]:  # pragma: no cover - optional
     if mp is None:
         return None
@@ -116,7 +160,7 @@ def generate_avatar_stream(
     scale: int = 1, lip_sync_audio: Optional[Path] = None
 ) -> Iterator[np.ndarray]:
     """Yield RGB frames representing the configured avatar."""
-    traits = _load_traits()
+    traits = _apply_trait_overrides(_load_traits())
     color = np.array(traits.eye_color, dtype=np.uint8)
     mesh = _get_face_mesh()
 
@@ -172,6 +216,12 @@ def generate_avatar_stream(
                     except Exception:  # pragma: no cover - optional
                         logger.exception("Wav2Lip synthesis failed")
 
+            for pipe in FACE_PIPELINES:
+                try:
+                    frame = pipe(frame)
+                except Exception:  # pragma: no cover - plugin errors
+                    logger.exception("face pipeline failed")
+
             if controlnet is not None:
                 try:
                     frame = controlnet.apply_gesture(frame)  # type: ignore[attr-defined]
@@ -182,6 +232,12 @@ def generate_avatar_stream(
                     frame = animatediff.apply_gesture(frame)  # type: ignore[attr-defined]
                 except Exception:  # pragma: no cover - optional
                     logger.exception("AnimateDiff gesture failed")
+
+            for pipe in GESTURE_PIPELINES:
+                try:
+                    frame = pipe(frame)
+                except Exception:  # pragma: no cover - plugin errors
+                    logger.exception("gesture pipeline failed")
 
             frame = _upscale(frame, scale)
             yield frame
@@ -198,4 +254,10 @@ def start_stream(
     return generate_avatar_stream(scale=scale, lip_sync_audio=lip_sync_audio)
 
 
-__all__ = ["start_stream", "generate_avatar_stream", "AvatarTraits"]
+__all__ = [
+    "start_stream",
+    "generate_avatar_stream",
+    "AvatarTraits",
+    "register_face_pipeline",
+    "register_gesture_pipeline",
+]
