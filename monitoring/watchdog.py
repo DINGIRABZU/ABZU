@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Resource watchdog exposing Prometheus metrics for key services."""
+
 import json
 import logging
 import time
@@ -13,7 +15,7 @@ from os_guardian import action_engine
 
 try:  # pragma: no cover - optional dependency
     from prometheus_client import CollectorRegistry, Gauge, start_http_server
-except Exception:  # pragma: no cover - optional dependency
+except ImportError:  # pragma: no cover - optional dependency
     CollectorRegistry = Gauge = start_http_server = None  # type: ignore
 
 ALERT_DIR = Path(__file__).with_name("alerts")

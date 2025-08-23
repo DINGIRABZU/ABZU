@@ -35,3 +35,28 @@ The script executes the specified suites and writes the full pytest output to
 `logs/triage_<timestamp>.log`. When failures occur it launches the
 planner/coder/reviewer agents to suggest fixes. Interactions from each triage
 run are stored under `data/triage_sessions/` for later review.
+
+## Service monitoring
+
+Use `monitoring/watchdog.py` to track resource usage of critical processes.
+The script relies on `psutil` and exposes Prometheus metrics for CPU, memory
+and open file descriptors:
+
+```bash
+python monitoring/watchdog.py
+```
+
+Edit the `SERVICES` dictionary in the script to list the process names or
+command line fragments to monitor. Metrics are published on port `9100` by
+default and can be scraped with Prometheus. To verify locally:
+
+```bash
+curl http://localhost:9100/metrics
+```
+
+### Troubleshooting
+
+- Ensure `psutil` and `prometheus_client` are installed.
+- Check that the monitored process names match running services.
+- If metrics are missing, confirm the watchdog is running and that port `9100`
+  is reachable.
