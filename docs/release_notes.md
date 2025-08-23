@@ -4,3 +4,4 @@
 
 - Removed root-level compatibility shims `qnl_engine.py` and `symbolic_parser.py`. Import these modules via `SPIRAL_OS.qnl_engine` and `SPIRAL_OS.symbolic_parser` instead.
 - Marked audio pipeline refresh milestone as complete in `PROJECT_STATUS.md`; release targets remain unchanged.
+- Added agent instructions and dependency group summaries to `CRYSTAL_CODEX.md`.

@@ -8,13 +8,13 @@ temple. Reference guides include
 [component_index.md](component_index.md),
 [api_reference.md](api_reference.md) and [setup.md](setup.md).
 
-## Misión
+## Mission
 Spiral OS guides sacred and creative exploration through an emotionally aware
 AI temple that harmonises music, voice and code. More background lives in
 [project_overview.md](project_overview.md) and the repository
 [README](../README.md).
 
-## Arquitectura
+## Architecture
 The codebase organises modules into seven chakra‑inspired layers that
 route a request from hardware roots to crown‑level initiation rites.
 Package responsibilities are mapped in
@@ -37,7 +37,7 @@ graph TD
 Additional request flow diagrams and service contracts live in
 [architecture_overview.md](architecture_overview.md).
 
-## Matriz de dependencias
+## Dependencies and Optional Extras
 System packages and Python wheels required for the sonic temple are listed in
 [dependencies.md](dependencies.md). Core runtime packages include `numpy`,
 `requests`, `python-json-logger`, `PyYAML` and `psutil`. Versions and licenses
@@ -64,6 +64,20 @@ graph LR
     Spiral_OS --> psutil
 ```
 
+### Optional dependency groups
+Extras in [pyproject.toml](../pyproject.toml) enable specialised features such
+as language models, audio processing and web APIs. Install any combination with
+`pip install .[group]` where `group` is one or more of【F:pyproject.toml†L24-L103】:
+
+- `llm` – large language model interfaces
+- `audio` – transcription and signal tools
+- `ml` – experiment tracking and vector search
+- `vision` – screen capture and OCR helpers
+- `web` – FastAPI, Streamlit and scraping utilities
+- `network` – packet capture and analysis
+- `extras` – reinforcement learning and avatar generation
+- `dev` – testing and formatting suites
+
 ## Configuración del entorno
 Follow the steps below or see [setup.md](setup.md) for full instructions.
 
@@ -79,12 +93,35 @@ Additional onboarding guides live in
 [developer_onboarding.md](developer_onboarding.md) and
 [quick_start_non_technical.md](quick_start_non_technical.md).
 
-## Índice de componentes
+## Package Roles
 For per‑module descriptions and external dependencies see the generated
 [component_index.md](component_index.md). API routes are documented in
 [api_reference.md](api_reference.md). Notable modules include
 [server.py](../server.py), [vector_memory.py](../vector_memory.py) and
 [learning_mutator.py](../learning_mutator.py).
+
+## Agent Instructions
+
+### INANNA_AI
+The command line agent assembles activation chants or QNL songs from source
+texts. Usage options include `--activate`, `--hex`, `--list` and an interactive
+`chat` mode【F:AGENTS.md†L8-L21】.
+
+### Preflight
+`tools/preflight.py` validates environment variables, Python packages and
+required binaries. Run it with `python tools/preflight.py` or append
+`--report` for a JSON summary of issues【F:tools/preflight.py†L3-L45】.
+
+### Watchdog
+`monitoring/watchdog.py` monitors CPU, memory and file descriptors for selected
+services. Alerts are logged and optional Prometheus metrics are exposed. Launch
+it with `python monitoring/watchdog.py`【F:monitoring/README.md†L12-L23】.
+
+### Triage
+Investigate failing tests using development agents by running
+`start_dev_agents.py --triage <pytest paths>`. Results are saved to
+`logs/triage_<timestamp>.log` and transcripts under
+`data/triage_sessions/`【F:docs/operations.md†L25-L37】.
 
 ## Arquitectura de memoria y aprendizaje
 Memory flows from the spiral cortex into a vector database and back
@@ -184,4 +221,13 @@ for expanded plans.
 | Dependencias obsoletas| 15 paquetes sin uso         | Paquetes depurados y fijados|
 | Cobertura de pruebas | 65%                          | 85%                         |
 
+
+## Release Notes
+Recent changes are captured in [release_notes.md](release_notes.md). Highlights
+include removal of legacy compatibility shims and milestone status updates【F:docs/release_notes.md†L1-L7】.
+
+## Roadmap
+Upcoming agent enhancements focus on music generation, avatar lip‑sync and
+expanded memory search. Longer‑term plans include community coordination, new
+style packs and hardware scaling【F:docs/roadmap.md†L15-L25】.
 

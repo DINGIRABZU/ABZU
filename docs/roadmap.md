@@ -22,3 +22,4 @@ This roadmap tracks progress toward the Spiral OS vision. See
 - **Community Discord channel** to coordinate contributors and gather feedback.
 - **New style packs** expanding avatar and video generation aesthetics.
 - **Hardware scaling strategy** for larger GPU clusters and edge devices.
+- **Agent hardening** automating preflight fixes, watchdog recovery and triage summaries.
