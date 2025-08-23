@@ -13,7 +13,7 @@ import numpy as np
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from PIL import Image
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 import corpus_memory_logging
 import music_generation
@@ -67,7 +67,7 @@ def readiness_check() -> dict[str, str]:
 class ShellCommand(BaseModel):
     """Payload for ``/glm-command``."""
 
-    command: str
+    command: str = Field(min_length=1)
 
 
 if settings.glm_command_token:
@@ -127,10 +127,10 @@ def avatar_frame() -> JSONResponse:
 class MusicRequest(BaseModel):
     """Payload for ``/music`` generation."""
 
-    prompt: str
+    prompt: str = Field(min_length=1)
     model: str | None = None
     feedback: str | None = None
-    rating: float | None = None
+    rating: float | None = Field(default=None, ge=0.0, le=1.0)
 
 
 @app.post("/music")

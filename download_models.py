@@ -18,7 +18,6 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
-
 from dotenv import load_dotenv
 
 from download_model import download_deepseek  # reuse logic
@@ -78,6 +77,7 @@ def _quantize_to_int8(model_dir: Path) -> None:
         str(model_dir), device_map="auto", load_in_8bit=True
     )
     model.save_pretrained(str(model_dir))
+
 
 def _verify_checksum(path: Path, expected_hash: str) -> None:
     """Validate SHA256 checksum of ``path`` against ``expected_hash``."""
@@ -159,8 +159,10 @@ def _install_ollama() -> None:
 def download_gemma2() -> None:
     """Download the Gemma2 model using Ollama."""
     models_dir = Path("INANNA_AI") / "models"
-    env = os.environ.copy()
-    env["OLLAMA_MODELS"] = str(models_dir)
+    env = {
+        "PATH": os.environ.get("PATH", ""),
+        "OLLAMA_MODELS": str(models_dir),
+    }
 
     if shutil.which("ollama") is None:
         logger.info("Ollama not found, installing")
@@ -273,6 +275,7 @@ def download_kimi_k2(int8: bool = False) -> None:
 
 
 def main() -> None:
+    """CLI entry point for model downloads."""
     parser = argparse.ArgumentParser(description="Model downloader")
     subparsers = parser.add_subparsers(dest="model", help="Model to download")
 

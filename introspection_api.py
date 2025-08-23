@@ -5,7 +5,8 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -13,16 +14,16 @@ app = FastAPI()
 ALLOWED_DIRS = [Path(__file__).resolve().parent]
 
 
-@app.get("/ast")
-def get_ast(module: str) -> dict:
-    """Return the abstract syntax tree for ``module``.
+class ASTQuery(BaseModel):
+    """Query parameters for ``/ast``."""
 
-    Parameters
-    ----------
-    module:
-        File system path to a Python module.
-    """
-    path = Path(module)
+    module: str
+
+
+@app.get("/ast")
+def get_ast(params: ASTQuery = Depends()) -> dict:
+    """Return the abstract syntax tree for ``params.module``."""
+    path = Path(params.module)
     try:
         resolved = path.expanduser().resolve(strict=True)
     except FileNotFoundError:
