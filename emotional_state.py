@@ -7,10 +7,14 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-import soul_state_manager
+try:  # pragma: no cover - optional dependency
+    import soul_state_manager
+except Exception:  # pragma: no cover - optional dependency
+    soul_state_manager = None  # type: ignore
 
 STATE_FILE = Path("data/emotion_state.json")
 REGISTRY_FILE = Path("data/emotion_registry.json")
+EVENT_LOG = Path("data/emotion_events.jsonl")
 _DEFAULT_STATE = {
     "current_layer": None,
     "last_emotion": None,
@@ -23,6 +27,20 @@ _STATE: Dict[str, Any] = {}
 _REGISTRY: List[str] = []
 
 logger = logging.getLogger(__name__)
+
+
+def _log_event(event: str, **payload: Any) -> None:
+    """Append a structured emotion event to :data:`EVENT_LOG`."""
+
+    try:
+        EVENT_LOG.parent.mkdir(parents=True, exist_ok=True)
+        entry = {
+            "event": event,
+            **payload,
+        }
+        EVENT_LOG.open("a", encoding="utf-8").write(json.dumps(entry) + "\n")
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("failed to write emotion event")
 
 
 def _load_state() -> None:
@@ -98,6 +116,7 @@ def set_current_layer(layer: str | None) -> None:
     _STATE["current_layer"] = layer
     _save_state()
     logger.info("current_layer set to %s", layer)
+    _log_event("set_current_layer", layer=layer)
 
 
 def get_last_emotion() -> str | None:
@@ -112,6 +131,7 @@ def set_last_emotion(emotion: str | None) -> None:
     if emotion is not None:
         _ensure_in_registry(emotion)
     logger.info("last_emotion set to %s", emotion)
+    _log_event("set_last_emotion", emotion=emotion)
 
 
 def get_resonance_level() -> float:
@@ -124,6 +144,7 @@ def set_resonance_level(level: float) -> None:
     _STATE["resonance_level"] = float(level)
     _save_state()
     logger.info("resonance_level set to %.3f", level)
+    _log_event("set_resonance_level", level=float(level))
 
 
 def get_preferred_expression_channel() -> str:
@@ -136,6 +157,7 @@ def set_preferred_expression_channel(channel: str) -> None:
     _STATE["preferred_expression_channel"] = channel
     _save_state()
     logger.info("preferred_channel set to %s", channel)
+    _log_event("set_preferred_expression_channel", channel=channel)
 
 
 def get_resonance_pairs() -> List[Tuple[float, float]]:
@@ -155,6 +177,7 @@ def set_resonance_pairs(pairs: List[Tuple[float, float]]) -> None:
             "resonance": _STATE.get("resonance_level"),
         },
     )
+    _log_event("set_resonance_pairs", pairs=pairs)
 
 
 def get_soul_state() -> str | None:
@@ -166,16 +189,39 @@ def set_soul_state(state: str | None) -> None:
     """Persist the current ``state`` of the soul."""
     _STATE["soul_state"] = state
     _save_state()
-    try:
-        soul_state_manager.update_soul_state(state)
-    except Exception:
-        logger.exception("failed to update soul_state_manager")
+    if soul_state_manager is not None:
+        try:
+            soul_state_manager.update_soul_state(state)
+        except Exception:
+            logger.exception("failed to update soul_state_manager")
     logger.info("soul_state set to %s", state)
+    _log_event("set_soul_state", state=state)
 
 
 def get_registered_emotions() -> List[str]:
     """Return the list of known emotion labels."""
     return list(_REGISTRY)
+
+
+def snapshot(path: Path | str) -> None:
+    """Write state and registry to ``path``."""
+
+    data = {"state": _STATE, "registry": _REGISTRY}
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
+def restore(path: Path | str) -> None:
+    """Load state and registry from ``path`` and persist them."""
+
+    p = Path(path)
+    data = json.loads(p.read_text(encoding="utf-8"))
+    global _STATE, _REGISTRY
+    _STATE = dict(data.get("state", _DEFAULT_STATE))
+    _REGISTRY = list(data.get("registry", []))
+    _save_state()
+    _save_registry()
 
 
 __all__ = [
@@ -192,4 +238,7 @@ __all__ = [
     "get_soul_state",
     "set_soul_state",
     "get_registered_emotions",
+    "snapshot",
+    "restore",
+    "EVENT_LOG",
 ]

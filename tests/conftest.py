@@ -75,6 +75,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_prompt_engineering.py"),
     str(ROOT / "tests" / "test_model.py"),
     str(ROOT / "tests" / "test_logging_filters.py"),
+    str(ROOT / "tests" / "test_memory_snapshot.py"),
     str(ROOT / "tests" / "performance" / "test_task_parser_performance.py"),
     str(ROOT / "tests" / "performance" / "test_vector_memory_performance.py"),
     str(ROOT / "tests" / "test_auto_retrain.py"),

@@ -1,48 +1,45 @@
 """Logging filters that enrich records with emotional context.
 
-Each filter attempts to query ``emotion_registry`` or a legacy
-``emotional_state`` module, appending the emotion and resonance level to log
-records.  Failures are logged but otherwise ignored.
+The filter is intentionally decoupled from any particular emotion module.  A
+callable returning ``(emotion, resonance)`` can be registered via
+``set_emotion_provider``.  If no provider is set the added fields default to
+``None``.
 """
 
 from __future__ import annotations
 
 import logging
-
-try:
-    import emotion_registry
-except ImportError:  # pragma: no cover - fallback
-    emotion_registry = None  # type: ignore
-    try:
-        import emotional_state
-    except ImportError:  # pragma: no cover - fallback
-        emotional_state = None  # type: ignore
+from typing import Callable, Optional, Tuple
 
 
 logger = logging.getLogger(__name__)
+
+_provider: Callable[[], Tuple[Optional[str], Optional[float]]] = (
+    lambda: (None, None)
+)
+
+
+def set_emotion_provider(
+    provider: Callable[[], Tuple[Optional[str], Optional[float]]]
+) -> None:
+    """Register ``provider`` returning ``(emotion, resonance)``."""
+
+    global _provider
+    _provider = provider
 
 
 class EmotionFilter(logging.Filter):
     """Append emotion and resonance fields to log records."""
 
     def filter(self, record: logging.LogRecord) -> bool:  # pragma: no cover - simple
-        emotion = None
-        resonance = None
-        if emotion_registry is not None:
-            try:
-                emotion = emotion_registry.get_last_emotion()
-                resonance = emotion_registry.get_resonance_level()
-            except (AttributeError, RuntimeError) as exc:
-                logger.warning("emotion_registry fetch failed: %s", exc, exc_info=exc)
-        elif emotional_state is not None:
-            try:
-                emotion = emotional_state.get_last_emotion()
-                resonance = emotional_state.get_resonance_level()
-            except (AttributeError, RuntimeError) as exc:
-                logger.warning("emotional_state fetch failed: %s", exc, exc_info=exc)
+        try:
+            emotion, resonance = _provider()
+        except Exception as exc:  # pragma: no cover - safety
+            logger.warning("emotion provider failed: %s", exc, exc_info=exc)
+            emotion, resonance = None, None
         record.emotion = emotion
         record.resonance = resonance
         return True
 
 
-__all__ = ["EmotionFilter"]
+__all__ = ["EmotionFilter", "set_emotion_provider"]
