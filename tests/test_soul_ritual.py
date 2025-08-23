@@ -6,6 +6,8 @@ import sys
 import types
 from pathlib import Path
 
+import pytest
+
 from tests.helpers import emotion_stub
 from tests.helpers.config_stub import build_settings
 
@@ -14,24 +16,25 @@ sys.path.insert(0, str(ROOT))
 
 # Stub external dependencies to allow importing inanna_ai.main
 sf = types.ModuleType("soundfile")
-sf.write = lambda *a, **k: None
+sf.write = lambda *a, **k: None  # type: ignore[attr-defined]
 sys.modules.setdefault("soundfile", sf)
 
 np = types.ModuleType("numpy")
-np.random = types.SimpleNamespace(rand=lambda *a, **k: 0)
-np.int16 = "int16"  # type: ignore[attr-defined]
+np.random = types.SimpleNamespace(rand=lambda *a, **k: 0)  # type: ignore[attr-defined]
+monkeypatch = pytest.MonkeyPatch()
+monkeypatch.setattr(np, "int16", "int16", raising=False)
 sys.modules.setdefault("numpy", np)
 sys.modules.setdefault("torch", types.ModuleType("torch"))
 sys.modules.setdefault("torch.nn", types.ModuleType("torch.nn"))
-sys.modules["torch.nn"].Module = object
+sys.modules["torch.nn"].Module = object  # type: ignore[attr-defined]
 
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
-sys.modules["librosa"].load = lambda *a, **k: ([], 0)
+sys.modules["librosa"].load = lambda *a, **k: ([], 0)  # type: ignore[attr-defined]
 
 rag_pkg = sys.modules.setdefault("rag", types.ModuleType("rag"))
 orch_stub = types.ModuleType("rag.orchestrator")
-orch_stub.MoGEOrchestrator = lambda: None
-rag_pkg.orchestrator = orch_stub
+orch_stub.MoGEOrchestrator = lambda: None  # type: ignore[attr-defined]
+rag_pkg.orchestrator = orch_stub  # type: ignore[attr-defined]
 sys.modules["rag.orchestrator"] = orch_stub
 
 sys.modules.setdefault(
@@ -42,31 +45,31 @@ sys.modules["INANNA_AI.emotion_analysis"] = emotion_stub
 sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("qnl_engine"))
 
 sys.modules.setdefault("INANNA_AI.gates", types.ModuleType("gates"))
-sys.modules["INANNA_AI.gates"].sign_blob = lambda *a, **k: b""
-sys.modules["INANNA_AI.gates"].verify_blob = lambda *a, **k: True
+sys.modules["INANNA_AI.gates"].sign_blob = lambda *a, **k: b""  # type: ignore[attr-defined]
+sys.modules["INANNA_AI.gates"].verify_blob = lambda *a, **k: True  # type: ignore[attr-defined]
 
 sys.modules["INANNA_AI.utils"] = types.ModuleType("utils")
-sys.modules["INANNA_AI.utils"].setup_logger = lambda: None
-sys.modules["INANNA_AI.utils"].sentiment_score = lambda text: 0.0
+sys.modules["INANNA_AI.utils"].setup_logger = lambda: None  # type: ignore[attr-defined]
+sys.modules["INANNA_AI.utils"].sentiment_score = lambda text: 0.0  # type: ignore[attr-defined]
 sys.modules["INANNA_AI.stt_whisper"] = types.ModuleType("stt_whisper")
-sys.modules["INANNA_AI.stt_whisper"].transcribe_audio = lambda p: ""
+sys.modules["INANNA_AI.stt_whisper"].transcribe_audio = lambda p: ""  # type: ignore[attr-defined]
 sys.modules["INANNA_AI.listening_engine"] = types.ModuleType("listening_engine")
-sys.modules["INANNA_AI.listening_engine"].ListeningEngine = lambda: None
+sys.modules["INANNA_AI.listening_engine"].ListeningEngine = lambda: None  # type: ignore[attr-defined]
 sys.modules["INANNA_AI.speaking_engine"] = types.ModuleType("speaking_engine")
-sys.modules["INANNA_AI.speaking_engine"].SpeakingEngine = lambda: None
+sys.modules["INANNA_AI.speaking_engine"].SpeakingEngine = lambda: None  # type: ignore[attr-defined]
 sys.modules["INANNA_AI.db_storage"] = types.ModuleType("db_storage")
-sys.modules["INANNA_AI.db_storage"].init_db = lambda: None
-sys.modules["INANNA_AI.db_storage"].save_interaction = lambda *a, **k: None
+sys.modules["INANNA_AI.db_storage"].init_db = lambda: None  # type: ignore[attr-defined]
+sys.modules["INANNA_AI.db_storage"].save_interaction = lambda *a, **k: None  # type: ignore[attr-defined]
 
 config_mod = types.ModuleType("config")
-config_mod.settings = build_settings()
-config_mod.reload = lambda: None
+config_mod.settings = build_settings()  # type: ignore[attr-defined]
+config_mod.reload = lambda: None  # type: ignore[attr-defined]
 sys.modules.setdefault("config", config_mod)
 
-from INANNA_AI import main as voice_main
+from INANNA_AI import main as voice_main  # noqa: E402
 
 
-def test_soul_ritual_formats_phrase(monkeypatch):
+def test_soul_ritual_formats_phrase(monkeypatch: pytest.MonkeyPatch) -> None:
     dummy_core = type(
         "C",
         (),
@@ -81,7 +84,7 @@ def test_soul_ritual_formats_phrase(monkeypatch):
     monkeypatch.setattr(voice_main, "RFA7D", lambda: dummy_core)
     monkeypatch.setattr(voice_main, "GateOrchestrator", lambda: dummy_gate)
 
-    out = []
+    out: list[str] = []
     phrase = voice_main.soul_ritual({"emotion": "joy"}, out)
     assert phrase == "Ritual gate echo: gate_text [joy]"
     assert out == [phrase]
