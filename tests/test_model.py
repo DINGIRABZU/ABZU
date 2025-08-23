@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import logging
 import sys
 import types
@@ -9,15 +10,17 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-
-import importlib.util
+pytest.importorskip("tokenizers")
+pytest.importorskip("transformers")
 
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import WordLevelTrainer
+from transformers import GPT2Config, GPT2LMHeadModel, PreTrainedTokenizerFast
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 spec = importlib.util.spec_from_file_location(
     "inanna_model", ROOT / "INANNA_AI_AGENT" / "model.py"
@@ -25,7 +28,6 @@ spec = importlib.util.spec_from_file_location(
 model = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(model)  # type: ignore
-from transformers import GPT2Config, GPT2LMHeadModel, PreTrainedTokenizerFast
 
 
 def create_dummy_model(dir_path: Path) -> None:
@@ -82,3 +84,11 @@ def test_load_model_logs_error_on_tokenizer_failure(tmp_path, monkeypatch, caplo
         with pytest.raises(ValueError):
             model.load_model(tmp_path)
     assert "Failed to load tokenizer" in caplog.text
+
+
+def test_load_model_requires_transformers(monkeypatch, tmp_path):
+    """load_model should raise ImportError when transformers is unavailable."""
+    monkeypatch.setattr(model, "AutoModelForCausalLM", None)
+    monkeypatch.setattr(model, "AutoTokenizer", None)
+    with pytest.raises(ImportError):
+        model.load_model(tmp_path)
