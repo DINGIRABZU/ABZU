@@ -325,3 +325,21 @@ def test_deepseek_v3_download_and_quant(monkeypatch):
     module.download_deepseek_v3(int8=True)
     assert called["snap"]["repo_id"] == "deepseek-ai/DeepSeek-V3"
     assert called["quant"].endswith("DeepSeek-V3")
+
+
+def test_verify_checksum_success(monkeypatch, tmp_path):
+    _prepare(monkeypatch)
+    module = importlib.import_module("download_models")
+    file = tmp_path / "data.txt"
+    file.write_text("hello", encoding="utf-8")
+    digest = hashlib.sha256(b"hello").hexdigest()
+    module._verify_checksum(file, digest)  # should not raise
+
+
+def test_verify_checksum_failure(monkeypatch, tmp_path):
+    _prepare(monkeypatch)
+    module = importlib.import_module("download_models")
+    file = tmp_path / "data.txt"
+    file.write_text("hello", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="Checksum mismatch"):
+        module._verify_checksum(file, "0" * 64)
