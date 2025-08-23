@@ -5,6 +5,8 @@ import sys
 from pathlib import Path
 from types import ModuleType
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -40,3 +42,16 @@ def test_main_invokes_snapshot_download(monkeypatch):
         "local_dir": expected_dir,
         "local_dir_use_symlinks": False,
     }
+
+
+def test_main_exits_without_token(monkeypatch):
+    dummy_dotenv = ModuleType("dotenv")
+    dummy_dotenv.load_dotenv = lambda: None
+    dummy_hf = ModuleType("huggingface_hub")
+    dummy_hf.snapshot_download = lambda **kwargs: None
+    monkeypatch.setitem(sys.modules, "dotenv", dummy_dotenv)
+    monkeypatch.setitem(sys.modules, "huggingface_hub", dummy_hf)
+    download_model = importlib.import_module("download_model")
+    monkeypatch.delenv("HF_TOKEN", raising=False)
+    with pytest.raises(SystemExit):
+        download_model.main()

@@ -5,6 +5,18 @@ import shutil
 import sys
 from pathlib import Path
 
+import importlib.util
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
+
+spec = importlib.util.spec_from_file_location("seed", ROOT / "src" / "core" / "utils" / "seed.py")
+seed_module = importlib.util.module_from_spec(spec)
+assert spec and spec.loader
+spec.loader.exec_module(seed_module)  # type: ignore[union-attr]
+seed_all = seed_module.seed_all
+
 import pytest
 
 # Default to NumPy audio backend unless pydub and ffmpeg are fully available
@@ -19,9 +31,6 @@ if "AUDIO_BACKEND" not in os.environ:
     else:  # pragma: no cover - deps present
         os.environ["AUDIO_BACKEND"] = "pydub"
 
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
 
 import emotion_registry
 import emotional_state
@@ -39,6 +48,12 @@ def mock_emotion_state(tmp_path, monkeypatch):
     emotional_state.set_last_emotion("longing")
     emotional_state.set_resonance_level(0.75)
     return state_file
+
+
+@pytest.fixture(autouse=True)
+def _seed_all():
+    seed = int(os.getenv("PYTEST_SEED", "0"))
+    seed_all(seed)
 
 
 # ---------------------------------------------------------------------------
@@ -61,6 +76,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_crown_config.py"),
     str(ROOT / "tests" / "test_download_deepseek.py"),
     str(ROOT / "tests" / "test_dashboard_app.py"),
+    str(ROOT / "tests" / "test_dashboard_usage.py"),
     str(ROOT / "tests" / "test_virtual_env_manager.py"),
     str(ROOT / "tests" / "test_sandbox_session.py"),
     str(ROOT / "tests" / "test_dependency_installer.py"),
@@ -70,11 +86,13 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_start_dev_agents_triage.py"),
     str(ROOT / "tests" / "test_gateway.py"),
     str(ROOT / "tests" / "test_download_models.py"),
+    str(ROOT / "tests" / "test_download_model.py"),
     str(ROOT / "tests" / "test_api_endpoints.py"),
     str(ROOT / "tests" / "test_style_selection.py"),
     str(ROOT / "tests" / "test_prompt_engineering.py"),
     str(ROOT / "tests" / "test_model.py"),
     str(ROOT / "tests" / "test_logging_filters.py"),
+    str(ROOT / "tests" / "test_data_pipeline.py"),
     str(ROOT / "tests" / "test_memory_snapshot.py"),
     str(ROOT / "tests" / "performance" / "test_task_parser_performance.py"),
     str(ROOT / "tests" / "performance" / "test_vector_memory_performance.py"),

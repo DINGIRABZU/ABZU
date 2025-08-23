@@ -5,16 +5,20 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 from pathlib import Path
 from typing import Any, Iterable, List
 
 import auto_retrain
+from core.utils.seed import seed_all
 from memory import spiral_cortex
 
 STATE_FILE = Path("data/ritual_trainer_state.json")
 THRESHOLD = 10
 
 logger = logging.getLogger(__name__)
+
+seed_all(int(os.getenv("SEED", "0")))
 
 
 def _load_state() -> int:
