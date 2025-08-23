@@ -1,0 +1,17 @@
+paths:
+  - path: "INANNA_AI/suggestions.txt"
+    operations: ["write"]
+  - path: "audit_logs/**"
+    operations: ["write"]
+  - path: "data/**"
+    operations: ["read", "write"]
+  - path: "insight_matrix.json"
+    operations: ["read"]
+  - path: "intent_matrix.json"
+    operations: ["read"]
+  - path: "data/vector_memory.log"
+    operations: ["read"]
+  - path: "dataset.sig"
+    operations: ["read"]
+  - path: "dataset.pub"
+    operations: ["read"]
