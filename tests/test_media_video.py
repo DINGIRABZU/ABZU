@@ -1,4 +1,4 @@
-"""Regression tests for media.video package."""
+"""Regression tests for media.video module."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
+
+pytest.importorskip("omegaconf")
 
 from src.media.video import generate_video, play_video
 

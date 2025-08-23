@@ -4,6 +4,8 @@ The test verifies that the vector memory store handles concurrent writes and
 recovery after file deletion using a fake Redis backend.
 """
 
+from __future__ import annotations
+
 import threading
 from pathlib import Path
 from tempfile import TemporaryDirectory

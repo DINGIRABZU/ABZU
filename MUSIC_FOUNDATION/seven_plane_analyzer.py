@@ -19,7 +19,7 @@ try:
 except ImportError:
     ess = None
 
-from .inanna_music_COMPOSER_ai import chroma_to_qnl
+from .qnl_utils import chroma_to_qnl
 
 
 def analyze_seven_planes(waveform: np.ndarray, sample_rate: int) -> dict:

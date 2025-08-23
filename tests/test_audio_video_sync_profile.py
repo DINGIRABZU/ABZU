@@ -10,6 +10,7 @@ from pathlib import Path
 from types import ModuleType
 
 import numpy as np
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -17,6 +18,8 @@ sys.path.insert(0, str(ROOT))
 # Ensure optional modules referenced by video_stream are present
 sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
+
+pytest.importorskip("omegaconf")
 
 import video_stream  # noqa: E402
 from src.media.video.base import VideoProcessor

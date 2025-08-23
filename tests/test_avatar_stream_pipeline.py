@@ -12,6 +12,8 @@ from fastapi.testclient import TestClient
 
 pytestmark = pytest.mark.skip(reason="requires unavailable resources")
 
+pytest.importorskip("omegaconf")
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))

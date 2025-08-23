@@ -37,8 +37,13 @@ import threading
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
 
+
+def _default_embed(text: str) -> Any:
+    return qnl_utils.quantum_embed(text)
+
+
 _DIR = Path(settings.vector_db_path)
-_EMBED = qnl_utils.quantum_embed
+_EMBED: Callable[[str], Any] = _default_embed
 
 _DECAY_SECONDS = 86_400.0  # one day
 
@@ -47,6 +52,7 @@ logger = logging.getLogger(__name__)
 _STORE: Any | None = None
 _STORE_LOCK = threading.Lock()
 _DIST: Any | None = None
+_COLLECTION: Any | None = None
 
 
 def configure(
@@ -58,10 +64,11 @@ def configure(
 ) -> None:
     """Configure storage location or embedding function."""
 
-    global _DIR, _EMBED, _STORE, _DIST
+    global _DIR, _EMBED, _STORE, _DIST, _COLLECTION
     if db_path is not None:
         _DIR = Path(db_path)
         _STORE = None
+        _COLLECTION = None
     if embedder is not None:
         _EMBED = embedder
     if redis_url is not None or redis_client is not None:
@@ -103,19 +110,29 @@ def _get_store() -> Any:
     return _STORE
 
 
+def _get_collection() -> Any:
+    """Return the active collection instance used for queries."""
+    if _COLLECTION is not None:
+        return _COLLECTION
+    return _get_store()
+
+
 def add_vector(text: str, metadata: Dict[str, Any]) -> None:
     """Embed ``text`` and store it with ``metadata``."""
     meta = dict(metadata)
     meta.setdefault("text", text)
     meta.setdefault("timestamp", datetime.utcnow().isoformat())
-    store = _get_store()
+    col = _get_collection()
     emb_raw = _EMBED(text)
     if np is not None:
         emb = np.asarray(emb_raw, dtype=float).tolist()
     else:
         emb = [float(x) for x in emb_raw]
     id_ = uuid.uuid4().hex
-    store.add(id_, emb, meta)
+    try:
+        col.add(id_, emb, meta)
+    except Exception:
+        col.add([id_], [emb], [meta])
     if _DIST is not None:
         _DIST.backup(id_, emb, meta)
     _log("add", text, meta)
@@ -140,10 +157,21 @@ def search(
         qvec = np.asarray(qvec_raw, dtype=float)
     else:
         qvec = [float(x) for x in qvec_raw]
-    store = _get_store()
-    raw = store.search(qvec.tolist(), k=max(k * 5, k))
+    col = _get_collection()
+    k_search = max(k * 5, k)
     results: List[Dict[str, Any]] = []
-    for _id, emb_list, meta in raw:
+    qvec_list = qvec.tolist() if hasattr(qvec, "tolist") else list(qvec)
+    if hasattr(col, "search"):
+        raw = col.search(qvec_list, k=k_search)
+        iterator = ((mid, emb, meta) for mid, emb, meta in raw)
+    else:
+        raw = col.query([qvec_list], n_results=k_search)
+        iterator = zip(
+            raw.get("ids", [[]])[0] if "ids" in raw else range(k_search),
+            raw["embeddings"][0],
+            raw["metadatas"][0],
+        )
+    for _id, emb_list, meta in iterator:
         if filter is not None:
             skip = False
             for key, val in filter.items():
@@ -222,15 +250,26 @@ def query_vectors(
 def snapshot(path: str | Path) -> None:
     """Persist the current collection to ``path``."""
 
-    store = _get_store()
-    store.snapshot(path)
+    col = _get_collection()
+    if hasattr(col, "snapshot"):
+        col.snapshot(path)
+    else:
+        data = col.get()
+        Path(path).write_text(json.dumps(data), encoding="utf-8")
 
 
 def restore(path: str | Path) -> None:
     """Load collection data from ``path`` replacing existing entries."""
 
-    store = _get_store()
-    store.restore(path)
+    col = _get_collection()
+    if hasattr(col, "restore"):
+        col.restore(path)
+    else:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        existing = col.get().get("ids", [])
+        if existing:
+            col.delete(existing)
+        col.add(data["ids"], data["embeddings"], data["metadatas"])
 
 
 __all__ = [
