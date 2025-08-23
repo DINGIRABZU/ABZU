@@ -1,5 +1,7 @@
 """Unified media interfaces for audio, video, and avatar."""
 
-from . import audio, video, avatar
+from __future__ import annotations
 
-__all__ = ["audio", "video", "avatar"]
+from . import audio, avatar, video
+
+__all__ = ["audio", "avatar", "video"]
