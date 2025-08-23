@@ -50,5 +50,13 @@ jobs:
       - *checkout
       - *setup-python
       - *install-deps
-      - name: Pytest
-        run: pytest  # Run test suite
+      - name: Coverage
+        run: |
+          coverage run -m pytest
+          coverage html
+          coverage report
+      - name: Upload coverage HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: htmlcov
