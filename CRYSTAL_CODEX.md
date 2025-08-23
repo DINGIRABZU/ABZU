@@ -20,6 +20,43 @@ graph LR
     Root --> Sacral --> SolarPlexus --> Heart --> Throat --> ThirdEye --> Crown
 ```
 
+## LWM Architecture
+The Living Web Matrix (LWM) describes how messages traverse the chakra layers and interact with core services.
+
+```mermaid
+graph TD
+    user((User)) --> gateway[Gateway]
+    gateway --> router[Intent Router]
+    router --> engine[LLM Engine]
+    router <--> memory[(Vector Memory)]
+    engine --> gateway --> user
+```
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant G as Gateway
+    participant R as Router
+    participant E as LWM Engine
+    U->>G: Prompt
+    G->>R: Analyze
+    R->>E: Dispatch
+    E-->>R: Response
+    R-->>G: Format
+    G-->>U: Reply
+```
+
+## Chakra-to-Module Mapping
+| Chakra | Directories | Core Modules |
+| --- | --- | --- |
+| Root | `scripts/`, `config/` | `bootstrap.sh`, environment loaders |
+| Sacral | `data/`, `memory/` | `memory_store.py`, corpus tools |
+| Solar Plexus | `crown_router.py`, `intent_matrix.json` | intent parsing, decision logic |
+| Heart | `emotional_state.py`, `emotion_registry.py` | affect trackers, resonance models |
+| Throat | `communication/`, `server.py` | API gateways, WebRTC bridges |
+| Third Eye | `insight_compiler.py`, `task_profiling.py` | analytics, introspection |
+| Crown | `start_crown_console.sh`, `start_dev_agents.py` | orchestration scripts, operator consoles |
+
 ## Dependency Matrix
 | Layer | Key Modules | Core Dependencies | External Services |
 | --- | --- | --- | --- |
@@ -30,6 +67,14 @@ graph LR
 | Throat | `communication/`, `server.py` | fastapi, websockets | WebRTC clients |
 | Third Eye | `insight_compiler.py`, `task_profiling.py` | numpy, pandas | — |
 | Crown | `start_crown_console.sh`, `start_dev_agents.py` | rich, typer | Terminal |
+
+## Setup Guide
+1. **Clone the Repository** – `git clone https://github.com/DINGIRABZU/ABZU.git && cd ABZU`.
+2. **Create a Virtual Environment** – `python -m venv .venv && source .venv/bin/activate`.
+3. **Install Requirements** – run `./scripts/bootstrap.sh` or `pip install -e .` for a lean setup.
+4. **Configure Secrets** – copy `secrets.env.template` to `secrets.env` and populate required tokens.
+5. **Validate Installation** – execute `pre-commit run --all-files` and `pytest` to ensure a healthy environment.
+6. **Launch Console** – start the crown console with `python start_crown_console.py` and issue the `chat` command.
 
 ## Tutorials
 

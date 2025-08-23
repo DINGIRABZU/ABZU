@@ -5,11 +5,12 @@
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Start Here
-Begin with the [CRYSTAL CODEX](CRYSTAL_CODEX.md) for mission, architecture diagrams,
-tutorials, dependency matrix, testing and style guidance. Then follow the
-[setup guide](docs/setup.md) to configure the environment. The
-[documentation index](docs/index.md) lists additional guides. Quality ratings and
-past audits are tracked in [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
+Begin with the [CRYSTAL CODEX](CRYSTAL_CODEX.md) for mission, LWM architecture diagrams,
+chakra-to-module mappings, step-by-step setup guides, tutorials, dependency matrix,
+testing and style guidance. Then follow the [setup guide](docs/setup.md) to configure the
+environment. The [documentation index](docs/index.md) lists additional guides.
+Current ratings, past scores and milestone validation results are tracked in
+[docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
 
 ## Seven-Milestone Roadmap
 1. Virtual environment manager ✅
@@ -25,7 +26,7 @@ See [docs/roadmap.md](docs/roadmap.md) for details.
 ## Agent Updates
 - [docs/release_notes.md](docs/release_notes.md) – recent changes and fixes.
 - [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.
-- [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md) – component ratings, past evaluations and remediation checklists.
+- [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md) – component ratings, past scores, milestone validation results and remediation checklists.
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see
