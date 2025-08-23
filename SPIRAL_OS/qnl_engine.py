@@ -9,12 +9,12 @@ from typing import Dict, List, Tuple
 
 try:  # optional dependency
     import numpy as np
-except Exception:  # pragma: no cover - environment dependent
+except ImportError:  # pragma: no cover - environment dependent
     np = None  # type: ignore
 
 try:  # optional dependency
     from scipy.io.wavfile import write
-except Exception:  # pragma: no cover - environment dependent
+except ImportError:  # pragma: no cover - environment dependent
     write = None  # type: ignore
 
 # QNL-SongCore mappings from hex value ranges to glyphs and tones

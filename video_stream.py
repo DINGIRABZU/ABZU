@@ -17,13 +17,13 @@ import numpy as np
 
 try:  # pragma: no cover - optional dependency
     import soundfile as sf
-except Exception:  # pragma: no cover - optional dependency
+except ImportError:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
     from aiortc.mediastreams import AUDIO_PTIME, AudioStreamTrack, MediaStreamError
-except Exception:  # pragma: no cover - optional dependency
+except ImportError:  # pragma: no cover - optional dependency
     RTCPeerConnection = RTCSessionDescription = VideoStreamTrack = None  # type: ignore
     AudioStreamTrack = MediaStreamError = None  # type: ignore
     AUDIO_PTIME = 0.02
@@ -31,7 +31,7 @@ except Exception:  # pragma: no cover - optional dependency
 try:  # pragma: no cover - optional dependency
     from av import VideoFrame
     from av.audio.frame import AudioFrame
-except Exception:  # pragma: no cover - optional dependency
+except ImportError:  # pragma: no cover - optional dependency
     VideoFrame = AudioFrame = None  # type: ignore
 
 from fastapi import APIRouter, HTTPException, Request
@@ -80,7 +80,7 @@ class AvatarAudioTrack(AudioStreamTrack):
             await asyncio.sleep(max(0, wait))
 
         end = self._index + self._samples
-        chunk = self._data[self._index : end]  # noqa: E203
+        chunk = self._data[self._index : end]
         self._index = end
         if len(chunk) < self._samples:
             chunk = np.pad(
@@ -135,7 +135,7 @@ class AvatarVideoTrack(VideoStreamTrack):
         color = self._cue_colour(self._style)
         h, w, _ = result.shape
         result[:10, :10] = color
-        result[h - 10 :, w - 10 :] = color  # noqa: E203
+        result[h - 10 :, w - 10 :] = color
         return result
 
     async def recv(self) -> VideoFrame:
