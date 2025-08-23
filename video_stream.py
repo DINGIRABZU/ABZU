@@ -1,6 +1,5 @@
-from __future__ import annotations
-
 """WebRTC streaming of avatar frames."""
+from __future__ import annotations
 
 import asyncio
 import fractions
