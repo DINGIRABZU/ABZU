@@ -11,22 +11,26 @@ import math
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, cast
 
 try:  # pragma: no cover - optional dependency
     from distributed_memory import DistributedMemory
 except Exception:  # pragma: no cover - optional dependency
-    DistributedMemory = None  # type: ignore
+    DistributedMemory = cast(Any, None)
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
 except Exception:  # pragma: no cover - optional dependency
-    np = None  # type: ignore
+    np = cast(Any, None)
 
 try:  # pragma: no cover - optional dependency
-    from memory_store import MemoryStore
+    from memory_store import MemoryStore as _MemoryStore
 except Exception:  # pragma: no cover - optional dependency
-    MemoryStore = None  # type: ignore
+    class _MemoryStoreStub:
+        def __init__(self, *_a: Any, **_k: Any) -> None:
+            raise RuntimeError("memory_store backend unavailable")
+
+    _MemoryStore = _MemoryStoreStub  # type: ignore[misc,assignment]
 
 import threading
 
@@ -40,9 +44,9 @@ _DECAY_SECONDS = 86_400.0  # one day
 
 LOG_FILE = Path("data/vector_memory.log")
 logger = logging.getLogger(__name__)
-_STORE: MemoryStore | None = None
+_STORE: Any | None = None
 _STORE_LOCK = threading.Lock()
-_DIST: DistributedMemory | None = None
+_DIST: Any | None = None
 
 
 def configure(
@@ -84,17 +88,17 @@ def _log(op: str, text: str, meta: Dict[str, Any]) -> None:
         logger.exception("failed to log vector_memory operation")
 
 
-def _get_store() -> MemoryStore:
+def _get_store() -> Any:
     """Return a persistent :class:`MemoryStore` instance."""
-    if MemoryStore is None:  # pragma: no cover - optional dependency
+    if _MemoryStore is None:  # pragma: no cover - optional dependency
         raise RuntimeError("memory_store backend unavailable")
     global _STORE
     if _STORE is None:
         with _STORE_LOCK:
             if _STORE is None:
                 _DIR.mkdir(parents=True, exist_ok=True)
-                _STORE = MemoryStore(_DIR / "memory.sqlite")
-                if _DIST is not None and not _STORE.ids:
+                _STORE = _MemoryStore(_DIR / "memory.sqlite")
+                if _DIST is not None and not getattr(_STORE, "ids", []):
                     _DIST.restore_to(_STORE)
     return _STORE
 

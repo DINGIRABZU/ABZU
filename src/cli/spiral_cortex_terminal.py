@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import time
 from collections import Counter
-from typing import Dict, Iterable
+from typing import Any, Dict, Iterable, List, cast
 
 from archetype_feedback_loop import evaluate_archetype
 from memory import cortex as cortex_memory
@@ -20,14 +20,14 @@ def _parse_filters(pairs: Iterable[str]) -> Dict[str, str]:
     return filters
 
 
-def _load_entries(filters: Dict[str, str], limit: int) -> list[dict]:
-    entries = cortex_memory.query_spirals(filters)
+def _load_entries(filters: Dict[str, str], limit: int) -> List[Dict[str, Any]]:
+    entries = cast(List[Dict[str, Any]], cortex_memory.query_spirals(filters))
     if limit:
         entries = entries[-limit:]
     return entries
 
 
-def _print_entries(entries: Iterable[dict]) -> None:
+def _print_entries(entries: Iterable[Dict[str, Any]]) -> None:
     for e in entries:
         ts = e.get("timestamp", "")
         decision = e.get("decision", {})

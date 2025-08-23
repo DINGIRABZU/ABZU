@@ -13,17 +13,17 @@ import os
 import secrets
 import threading
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, cast
 
 try:  # pragma: no cover - optional dependency
     import soul_state_manager
 except Exception:  # pragma: no cover - optional dependency
-    soul_state_manager = None  # type: ignore
+    soul_state_manager = None
 
 try:  # pragma: no cover - optional dependency
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 except Exception:  # pragma: no cover - optional dependency
-    AESGCM = None  # type: ignore
+    AESGCM = None
 
 STATE_FILE = Path("data/emotion_state.json")
 REGISTRY_FILE = Path("data/emotion_registry.json")
@@ -66,7 +66,7 @@ def _encrypt(data: bytes) -> bytes:
         return data
     aes = AESGCM(key)
     nonce = secrets.token_bytes(12)
-    return nonce + aes.encrypt(nonce, data, None)
+    return nonce + cast(bytes, aes.encrypt(nonce, data, None))
 
 
 def _decrypt(blob: bytes) -> bytes:
@@ -77,7 +77,7 @@ def _decrypt(blob: bytes) -> bytes:
     aes = AESGCM(key)
     nonce, ct = blob[:12], blob[12:]
     try:
-        return aes.decrypt(nonce, ct, None)
+        return cast(bytes, aes.decrypt(nonce, ct, None))
     except Exception as exc:  # pragma: no cover - corruption
         logger.error("decryption failed: %s", exc, exc_info=exc)
         raise

@@ -4,25 +4,25 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, Field, HttpUrl
 
 CONFIG_DIR = Path(__file__).resolve().parents[2] / "config"
 
 
-class ServicesConfig(BaseModel):
+class ServicesConfig(BaseModel):  # type: ignore[misc]
     """Endpoints for external services used by the application."""
 
     animation_service_url: HttpUrl
 
 
-class AudioConfig(BaseModel):
+class AudioConfig(BaseModel):  # type: ignore[misc]
     """Audio processing parameters."""
 
     sample_rate: int = Field(default=44_100, gt=0)
 
 
-class Config(BaseModel):
+class Config(BaseModel):  # type: ignore[misc]
     """Top level configuration validated by Pydantic."""
 
     services: ServicesConfig

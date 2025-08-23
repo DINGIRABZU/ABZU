@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from omegaconf import OmegaConf
 
@@ -41,9 +41,10 @@ def load_config(config_path: str | Path = Path("config/lwm.yaml")) -> LWMConfig:
     config_path:
         Location of the YAML configuration file.
     """
-    data: dict[str, Any] = OmegaConf.to_container(
-        OmegaConf.load(config_path), resolve=True
-    )  # type: ignore[assignment]
+    data = cast(
+        dict[str, Any],
+        OmegaConf.to_container(OmegaConf.load(config_path), resolve=True),
+    )
     path_conf = {k: Path(v) for k, v in data.get("paths", {}).items()}
     gpu_conf = data.get("gpu", {})
     return LWMConfig(paths=PathConfig(**path_conf), gpu=GPUConfig(**gpu_conf))

@@ -5,9 +5,9 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict, cast
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 from env_validation import parse_servant_models
 
@@ -15,7 +15,7 @@ from env_validation import parse_servant_models
 CONFIG_FILE = Path(__file__).resolve().parent.parent / "config" / "crown.yml"
 
 # Runtime configuration cache
-_RUNTIME_CONFIG: Dict[str, object] = {}
+_RUNTIME_CONFIG: Dict[str, Any] = {}
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 def load_crown_config() -> Dict[str, object]:
     """Return configuration dictionary merged with ``os.environ`` overrides."""
 
-    cfg: Dict[str, object] = {}
+    cfg: Dict[str, Any] = {}
     if CONFIG_FILE.exists():
         with CONFIG_FILE.open("r", encoding="utf-8") as fh:
             cfg = yaml.safe_load(fh) or {}
@@ -39,7 +39,7 @@ def load_crown_config() -> Dict[str, object]:
         if val:
             cfg[key] = val
 
-    servants = dict(cfg.get("servant_models") or {})
+    servants = dict(cast(Dict[str, str], cfg.get("servant_models") or {}))
     env_servants = parse_servant_models(require=True)
     for name, url in env_servants.items():
         if name in servants:
@@ -66,7 +66,7 @@ def get_model_endpoints() -> Dict[str, str]:
     glm_url = _RUNTIME_CONFIG.get("glm_api_url")
     if isinstance(glm_url, str):
         endpoints["glm"] = glm_url
-    for name, url in (_RUNTIME_CONFIG.get("servant_models") or {}).items():
+    for name, url in cast(Dict[str, Any], _RUNTIME_CONFIG.get("servant_models") or {}).items():
         if isinstance(url, str):
             endpoints[name] = url
     return endpoints
@@ -86,9 +86,9 @@ import importlib.util as _importlib_util
 
 _ROOT_PATH = Path(__file__).resolve().parent.parent / "init_crown_agent.py"
 _spec = _importlib_util.spec_from_file_location("_init_crown_agent_root", _ROOT_PATH)
+assert _spec is not None and _spec.loader is not None
 _root = _importlib_util.module_from_spec(_spec)
-assert _spec and _spec.loader  # help mypy
-_spec.loader.exec_module(_root)  # type: ignore[misc]
+_spec.loader.exec_module(_root)
 
 initialize_crown = _root.initialize_crown
 _init_servants = getattr(_root, "_init_servants")
