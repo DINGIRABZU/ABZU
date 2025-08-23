@@ -33,7 +33,7 @@ except Exception:  # pragma: no cover - optional dependency
 from fastapi import APIRouter, HTTPException, Request
 
 from core import avatar_expression_engine, video_engine
-from src.media.video import VideoProcessor
+from src.media.video.base import VideoProcessor
 
 logger = logging.getLogger(__name__)
 

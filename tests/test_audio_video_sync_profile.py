@@ -19,6 +19,7 @@ sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 
 import video_stream  # noqa: E402
+from src.media.video.base import VideoProcessor
 
 
 def test_audio_video_sync_with_profile(monkeypatch):
@@ -44,3 +45,4 @@ def test_audio_video_sync_with_profile(monkeypatch):
     assert stats.total_tt < 0.5
     assert audio_frame.pts == 0
     assert video_frame.pts == 0
+    assert isinstance(video_stream.processor, VideoProcessor)

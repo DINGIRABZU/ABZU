@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict, Optional
 
-from src.media.audio import AudioProcessor
+from src.media.audio.base import AudioProcessor
 
 _DEF_AUDIO_EXTS = {".wav", ".mp3", ".flac", ".ogg", ".m4a"}
 
