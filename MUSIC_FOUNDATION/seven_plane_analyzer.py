@@ -11,12 +11,12 @@ import numpy as np
 
 try:  # pragma: no cover - optional dependency
     import librosa
-except Exception:  # pragma: no cover - optional dependency
+except ImportError:  # pragma: no cover - optional dependency
     librosa = None  # type: ignore
 
 try:
     import essentia.standard as ess
-except Exception:  # noqa: S110
+except ImportError:
     ess = None
 
 from .inanna_music_COMPOSER_ai import chroma_to_qnl

@@ -24,6 +24,7 @@ from download_model import download_deepseek  # reuse logic
 
 try:  # pragma: no cover - package availability varies
     from huggingface_hub import snapshot_download
+    from huggingface_hub.utils import HfHubHTTPError
 except ImportError as exc:  # pragma: no cover - handled at runtime
     raise SystemExit(
         "huggingface_hub is required for model downloads. "
@@ -197,7 +198,7 @@ def download_glm41v_9b(int8: bool = False) -> None:
             local_dir=str(target_dir),
             local_dir_use_symlinks=False,
         )
-    except Exception as exc:  # pragma: no cover - network failure
+    except HfHubHTTPError as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
     expected = _require_checksum("glm41v_9b")
@@ -219,7 +220,7 @@ def download_deepseek_v3(int8: bool = False) -> None:
             local_dir=str(target_dir),
             local_dir_use_symlinks=False,
         )
-    except Exception as exc:  # pragma: no cover - network failure
+    except HfHubHTTPError as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
     expected = _require_checksum("deepseek_v3")
@@ -241,7 +242,7 @@ def download_mistral_8x22b(int8: bool = False) -> None:
             local_dir=str(target_dir),
             local_dir_use_symlinks=False,
         )
-    except Exception as exc:  # pragma: no cover - network failure
+    except HfHubHTTPError as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
     expected = _require_checksum("mistral_8x22b")
@@ -263,7 +264,7 @@ def download_kimi_k2(int8: bool = False) -> None:
             local_dir=str(target_dir),
             local_dir_use_symlinks=False,
         )
-    except Exception as exc:  # pragma: no cover - network failure
+    except HfHubHTTPError as exc:  # pragma: no cover - network failure
         logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
     expected = _require_checksum("kimi_k2")

@@ -13,6 +13,7 @@ from pathlib import Path
 
 try:  # pragma: no cover - package availability varies
     from huggingface_hub import snapshot_download
+    from huggingface_hub.utils import HfHubHTTPError
 except ImportError as exc:  # pragma: no cover - handled at runtime
     raise SystemExit(
         "huggingface_hub is required for model downloads. "
@@ -40,7 +41,7 @@ def download_deepseek() -> None:
             local_dir=str(target_dir),
             local_dir_use_symlinks=False,
         )
-    except Exception as exc:  # pragma: no cover - network failure
+    except HfHubHTTPError as exc:  # pragma: no cover - network failure
         LOGGER.exception("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
     else:
