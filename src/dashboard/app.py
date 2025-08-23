@@ -7,12 +7,16 @@ Streamlit server and access to the underlying storage.
 
 from __future__ import annotations
 
+import importlib
 import logging
 
 import pandas as pd
 import streamlit as st
 
-from INANNA_AI import db_storage, gate_orchestrator
+# Import potentially heavy modules lazily so tests can substitute lightweight
+# stand‑ins by pre‑loading entries in ``sys.modules``.
+db_storage = importlib.import_module("INANNA_AI.db_storage")
+gate_orchestrator = importlib.import_module("INANNA_AI.gate_orchestrator")
 
 LOGGER = logging.getLogger(__name__)
 
@@ -28,11 +32,12 @@ except Exception as exc:  # pragma: no cover - external service failure
 
 if metrics:
     df = pd.DataFrame(metrics)
+    st.write(df)
     st.line_chart(
         df.set_index("timestamp")[["response_time", "coherence", "relevance"]]
     )
 else:
-    st.write("No benchmark data available.")
+    st.markdown("No benchmark data available.")
 
 try:
     predictor = gate_orchestrator.GateOrchestrator()

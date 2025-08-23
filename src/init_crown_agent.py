@@ -72,4 +72,37 @@ def get_model_endpoints() -> Dict[str, str]:
     return endpoints
 
 
-__all__ = ["load_crown_config", "get_model_endpoints", "_RUNTIME_CONFIG"]
+# ---------------------------------------------------------------------------
+# Legacy initialisation helper
+
+#
+# Some modules import :mod:`init_crown_agent` expecting the richer API provided
+# by the top‑level ``init_crown_agent.py``.  The lightweight version in
+# ``src/`` originally only exposed configuration helpers which caused imports to
+# fail during test collection.  To maintain compatibility we load the root
+# module under an internal name and re‑export the key functions here.
+
+import importlib.util as _importlib_util
+
+_ROOT_PATH = Path(__file__).resolve().parent.parent / "init_crown_agent.py"
+_spec = _importlib_util.spec_from_file_location("_init_crown_agent_root", _ROOT_PATH)
+_root = _importlib_util.module_from_spec(_spec)
+assert _spec and _spec.loader  # help mypy
+_spec.loader.exec_module(_root)  # type: ignore[misc]
+
+initialize_crown = _root.initialize_crown
+_init_servants = getattr(_root, "_init_servants")
+_check_glm = getattr(_root, "_check_glm")
+vector_memory = getattr(_root, "vector_memory")
+corpus_memory = getattr(_root, "corpus_memory")
+
+__all__ = [
+    "load_crown_config",
+    "get_model_endpoints",
+    "initialize_crown",
+    "_init_servants",
+    "_check_glm",
+    "vector_memory",
+    "corpus_memory",
+    "_RUNTIME_CONFIG",
+]
