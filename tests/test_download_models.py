@@ -38,11 +38,14 @@ def _prepare(monkeypatch):
     dummy_tf.AutoModelForCausalLM = DummyModel
     monkeypatch.setitem(sys.modules, "transformers", dummy_tf)
 
+    module = importlib.import_module("download_models")
+    monkeypatch.setattr(module, "_verify_checksum", lambda *a, **k: None)
+    module.MODEL_CHECKSUMS = {name: "0" * 64 for name in module.MODEL_CHECKSUMS}
+    return module
+
 
 def test_main_deepseek_calls_download(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
+    module = _prepare(monkeypatch)
     called = {}
     monkeypatch.setattr(
         module, "download_deepseek", lambda: called.setdefault("deepseek", True)
@@ -59,9 +62,7 @@ def test_main_deepseek_calls_download(monkeypatch):
 
 
 def test_main_gemma2_invokes_ollama(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
+    module = _prepare(monkeypatch)
     runs = []
 
     def dummy_run(cmd, *args, **kwargs):
@@ -88,9 +89,7 @@ def test_main_gemma2_invokes_ollama(monkeypatch):
 
 
 def test_ollama_install_success(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
+    module = _prepare(monkeypatch)
     script = b"echo hi"
     digest = hashlib.sha256(script).hexdigest()
 
@@ -122,8 +121,7 @@ def test_ollama_install_success(monkeypatch):
 
 
 def test_install_ollama_invalid_url(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
+    module = _prepare(monkeypatch)
     monkeypatch.setattr(module.shutil, "which", lambda _: None)
 
     def failing_get(url, timeout=None):
@@ -139,9 +137,7 @@ def test_install_ollama_invalid_url(monkeypatch):
 
 
 def test_install_ollama_checksum_mismatch(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
+    module = _prepare(monkeypatch)
     script = b"bad"
 
     class DummyResp:
@@ -162,9 +158,7 @@ def test_install_ollama_checksum_mismatch(monkeypatch):
 
 
 def test_gemma2_pull_failure(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
+    module = _prepare(monkeypatch)
     # Pretend ollama is installed
     monkeypatch.setattr(module.shutil, "which", lambda _: "/usr/bin/ollama")
 
@@ -178,8 +172,7 @@ def test_gemma2_pull_failure(monkeypatch):
 
 
 def test_glm41v_download_and_quant(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
+    module = _prepare(monkeypatch)
     monkeypatch.setenv("HF_TOKEN", "x")
     module.download_glm41v_9b(int8=True)
     called = sys.modules["transformers"].AutoModelForCausalLM.called
@@ -191,9 +184,7 @@ def test_glm41v_download_and_quant(monkeypatch):
 
 
 def test_cli_mistral_invokes_function(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
+    module = _prepare(monkeypatch)
     called = {}
     monkeypatch.setattr(
         module,
@@ -212,9 +203,7 @@ def test_cli_mistral_invokes_function(monkeypatch):
 
 
 def test_cli_kimi_k2_invokes_function(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
+    module = _prepare(monkeypatch)
     called = {}
     monkeypatch.setattr(
         module, "download_kimi_k2", lambda int8=False: called.setdefault("ok", int8)
@@ -231,23 +220,20 @@ def test_cli_kimi_k2_invokes_function(monkeypatch):
 
 
 def test_get_hf_token_requires_env(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
+    module = _prepare(monkeypatch)
     monkeypatch.delenv("HF_TOKEN", raising=False)
     with pytest.raises(SystemExit):
         module._get_hf_token()
 
 
 def test_get_hf_token_returns_value(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
+    module = _prepare(monkeypatch)
     monkeypatch.setenv("HF_TOKEN", "secret")
     assert module._get_hf_token() == "secret"
 
 
 def test_deepseek_v3_download_and_quant(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
+    module = _prepare(monkeypatch)
     monkeypatch.setenv("HF_TOKEN", "x")
     called = {}
     monkeypatch.setattr(
@@ -266,8 +252,8 @@ def test_deepseek_v3_download_and_quant(monkeypatch):
 
 
 def test_verify_checksum_success(monkeypatch, tmp_path):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
+    module = _prepare(monkeypatch)
+    module = importlib.reload(module)
     file = tmp_path / "data.txt"
     file.write_text("hello", encoding="utf-8")
     digest = hashlib.sha256(b"hello").hexdigest()
@@ -275,9 +261,23 @@ def test_verify_checksum_success(monkeypatch, tmp_path):
 
 
 def test_verify_checksum_failure(monkeypatch, tmp_path):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
+    module = _prepare(monkeypatch)
+    module = importlib.reload(module)
     file = tmp_path / "data.txt"
     file.write_text("hello", encoding="utf-8")
     with pytest.raises(RuntimeError, match="Checksum mismatch"):
         module._verify_checksum(file, "0" * 64)
+
+
+def test_install_ollama_bad_url(monkeypatch):
+    module = _prepare(monkeypatch)
+    monkeypatch.setattr(module, "OLLAMA_INSTALL_URL", "ftp://example.com/install.sh")
+    with pytest.raises(ValueError, match="Invalid URL"):
+        module._install_ollama()
+
+
+def test_require_checksum_missing(monkeypatch):
+    module = _prepare(monkeypatch)
+    module.MODEL_CHECKSUMS["gemma2"] = None
+    with pytest.raises(RuntimeError, match="No checksum defined"):
+        module._require_checksum("gemma2")
