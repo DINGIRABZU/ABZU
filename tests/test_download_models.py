@@ -292,3 +292,9 @@ def test_validate_url_accepts_https(monkeypatch):
 def test_require_checksum_returns_value(monkeypatch):
     module = _prepare(monkeypatch)
     assert module._require_checksum("gemma2") == "0" * 64
+
+
+def test_validate_url_rejects_invalid_scheme(monkeypatch):
+    module = _prepare(monkeypatch)
+    with pytest.raises(ValueError):
+        module._validate_url("ftp://invalid.example")
