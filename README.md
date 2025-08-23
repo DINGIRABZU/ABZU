@@ -21,6 +21,7 @@ See [docs/roadmap.md](docs/roadmap.md) for details.
 ## Agent Updates
 - [docs/release_notes.md](docs/release_notes.md) – recent changes and fixes.
 - [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.
+- [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md) – before/after component ratings.
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see
