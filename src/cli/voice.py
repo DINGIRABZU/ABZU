@@ -9,8 +9,7 @@ from pathlib import Path
 import numpy as np
 
 from connectors import webrtc_connector
-from core import avatar_expression_engine
-from crown_config import settings
+from core import avatar_expression_engine, load_config
 from INANNA_AI import speaking_engine
 
 logger = logging.getLogger(__name__)
@@ -26,6 +25,9 @@ def play_frame(frame: np.ndarray) -> None:
     cv2.waitKey(1)
 
 
+config = load_config()
+
+
 def send_frame(frame: np.ndarray) -> None:
     """Forward ``frame`` to an animation subsystem via HTTP."""
     try:  # pragma: no cover - optional dependencies
@@ -33,7 +35,7 @@ def send_frame(frame: np.ndarray) -> None:
         import httpx
     except Exception:  # pragma: no cover - dependencies may be missing
         return
-    url = settings.animation_service_url or "http://localhost:8000/frame"
+    url = config.services.animation_service_url
     try:
         ok, buf = cv2.imencode(".jpg", frame)
         if ok:

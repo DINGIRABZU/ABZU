@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .config import load_config
 from .contracts import EmotionAnalyzerService, MemoryLoggerService
 from .emotion_analyzer import EmotionAnalyzer
 from .feedback_logging import append_feedback, load_feedback
@@ -14,4 +15,5 @@ __all__ = [
     "MemoryLoggerService",
     "append_feedback",
     "load_feedback",
+    "load_config",
 ]

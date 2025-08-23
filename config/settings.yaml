@@ -1,0 +1,4 @@
+services:
+  animation_service_url: "http://localhost:8000/frame"
+audio:
+  sample_rate: 44100
