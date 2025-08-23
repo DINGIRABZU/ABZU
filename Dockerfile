@@ -6,14 +6,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Select extras to install via build argument. Defaults to the minimal set.
-ARG EXTRAS="minimal"
-
 COPY . .
-RUN pip install --no-cache-dir .[${EXTRAS}]
+RUN pip install --no-cache-dir .
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl ffmpeg sox && \
+    apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
 RUN useradd --create-home --shell /bin/bash inanna && \
