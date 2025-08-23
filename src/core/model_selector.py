@@ -3,7 +3,7 @@ from __future__ import annotations
 """Model selection and benchmarking utilities."""
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from INANNA_AI import db_storage
 

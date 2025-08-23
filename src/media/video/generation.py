@@ -42,8 +42,6 @@ def generate_video(
             "ffmpeg-python is required for video generation. Install it via `pip install ffmpeg-python`."
         ) from exc
 
-    stream = ffmpeg.input(
-        "pipe:", format="image2", pattern_type="glob", framerate=24
-    )
+    stream = ffmpeg.input("pipe:", format="image2", pattern_type="glob", framerate=24)
     stream = ffmpeg.output(stream, str(output_path))
     ffmpeg.run(stream, quiet=True)

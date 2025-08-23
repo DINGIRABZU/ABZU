@@ -7,8 +7,8 @@ import shutil
 import sqlite3
 import threading
 from contextlib import contextmanager
-from queue import Queue
 from pathlib import Path
+from queue import Queue
 from typing import Any, Dict, List, Sequence, Tuple, cast
 
 try:  # pragma: no cover - optional dependency
@@ -94,7 +94,9 @@ class MemoryStore:
                 conn.commit()
 
     # ------------------------------------------------------------------
-    def search(self, vector: Sequence[float], k: int) -> List[Tuple[str, List[float], Dict[str, Any]]]:
+    def search(
+        self, vector: Sequence[float], k: int
+    ) -> List[Tuple[str, List[float], Dict[str, Any]]]:
         with self._lock:
             if self.index is None or not self.ids:
                 return []
@@ -112,7 +114,9 @@ class MemoryStore:
             return results
 
     # ------------------------------------------------------------------
-    def rewrite(self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]) -> None:
+    def rewrite(
+        self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]
+    ) -> None:
         with self._lock:
             vec = np.asarray(vector, dtype="float32")
             with self._connection() as conn:

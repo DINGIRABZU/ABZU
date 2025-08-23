@@ -8,15 +8,15 @@ may write audio and metadata files during operation.
 from __future__ import annotations
 
 import argparse
+import fnmatch
+import importlib.util
 import json
 import logging
 import logging.config
-import importlib.util
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
-import fnmatch
 import yaml
 
 import emotion_registry
@@ -111,6 +111,7 @@ def has_permission(target: Path, operation: str) -> bool:
         if pattern and fnmatch.fnmatch(rel, pattern) and operation in ops:
             return True
     return False
+
 
 _SPEC = importlib.util.spec_from_file_location(
     "code_introspector", BASE_DIR.parent / "src" / "core" / "code_introspector.py"

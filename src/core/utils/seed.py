@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import random
-from typing import Any
 
 import numpy as np
 
@@ -20,7 +19,9 @@ def seed_all(seed: int) -> None:
         np.random.seed(seed)
     if torch is not None:
         torch.manual_seed(seed)
-        if hasattr(torch, "cuda") and torch.cuda.is_available():  # pragma: no cover - gpu
+        if (
+            hasattr(torch, "cuda") and torch.cuda.is_available()
+        ):  # pragma: no cover - gpu
             torch.cuda.manual_seed_all(seed)
 
 

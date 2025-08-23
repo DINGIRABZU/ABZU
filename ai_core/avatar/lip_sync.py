@@ -2,7 +2,7 @@ from __future__ import annotations
 
 """Utilities for aligning phonemes with video frame indices."""
 
-from typing import Iterable, List, Sequence, Tuple
+from typing import List, Sequence, Tuple
 
 FramePhoneme = Tuple[int, str]
 

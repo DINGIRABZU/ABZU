@@ -56,8 +56,7 @@ def main() -> int:
     except SystemExit as exc:
         missing = str(exc).split(": ", 1)[1].split(", ")
         report["env"] = [
-            {"name": n, "fix": f"Set {n} in the environment"}
-            for n in missing
+            {"name": n, "fix": f"Set {n} in the environment"} for n in missing
         ]
 
     missing_packages = _check_optional_packages(OPTIONAL_PACKAGES)

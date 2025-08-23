@@ -18,7 +18,7 @@ import json
 
 import numpy as np
 
-from .qnl_utils import chroma_to_qnl, generate_qnl_structure
+from .qnl_utils import generate_qnl_structure
 
 
 def generate_qnl_song_structure(chroma_vector, tempo, metadata=None):

@@ -1,7 +1,6 @@
 # THE CRYSTAL CODEX
 
-![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![CodeQL](https://github.com/DINGIRABZU/ABZU/actions/workflows/codeql.yml/badge.svg)
-
+![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![CodeQL](https://github.com/DINGIRABZU/ABZU/actions/workflows/codeql.yml/badge.svg) ![Black](https://img.shields.io/badge/code%20style-black-000000.svg) ![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Start Here

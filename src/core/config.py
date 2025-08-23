@@ -7,7 +7,6 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel, Field, HttpUrl
 
-
 CONFIG_DIR = Path(__file__).resolve().parents[2] / "config"
 
 
@@ -38,4 +37,3 @@ def load_config(name: str = "settings") -> Config:
 
 
 __all__ = ["Config", "load_config", "ServicesConfig", "AudioConfig"]
-

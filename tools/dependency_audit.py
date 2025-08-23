@@ -19,7 +19,10 @@ def _parse_requirements() -> Dict[str, str]:
     data = tomllib.loads(PYPROJECT.read_text())
     project = data.get("project", {})
     reqs: Dict[str, str] = {}
-    for section in [project.get("dependencies", []), *project.get("optional-dependencies", {}).values()]:
+    for section in [
+        project.get("dependencies", []),
+        *project.get("optional-dependencies", {}).values(),
+    ]:
         for entry in section:
             if "==" not in entry:
                 continue

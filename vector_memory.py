@@ -28,9 +28,10 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     MemoryStore = None  # type: ignore
 
+import threading
+
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
-import threading
 
 _DIR = Path(settings.vector_db_path)
 _EMBED = qnl_utils.quantum_embed
@@ -62,7 +63,9 @@ def configure(
     if redis_url is not None or redis_client is not None:
         if DistributedMemory is None:
             raise RuntimeError("DistributedMemory backend unavailable")
-        _DIST = DistributedMemory(redis_url or "redis://localhost:6379/0", client=redis_client)
+        _DIST = DistributedMemory(
+            redis_url or "redis://localhost:6379/0", client=redis_client
+        )
 
 
 def _log(op: str, text: str, meta: Dict[str, Any]) -> None:

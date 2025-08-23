@@ -11,4 +11,3 @@ def test_load_config() -> None:
     cfg = load_config()
     assert isinstance(cfg, Config)
     assert cfg.audio.sample_rate == 44100
-

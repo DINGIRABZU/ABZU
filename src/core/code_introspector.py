@@ -65,4 +65,3 @@ def analyze_repository(root: Path | None = None, limit: int = 20) -> List[str]:
     AUDIT_FILE.parent.mkdir(parents=True, exist_ok=True)
     AUDIT_FILE.write_text("\n".join(snippets), encoding="utf-8")
     return snippets
-

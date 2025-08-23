@@ -95,7 +95,9 @@ def monitor() -> None:
                 cpu = proc.cpu_percent(interval=None)
                 mem = proc.memory_info().rss / (1024 * 1024)
                 fds = (
-                    proc.num_fds() if hasattr(proc, "num_fds") else len(proc.open_files())
+                    proc.num_fds()
+                    if hasattr(proc, "num_fds")
+                    else len(proc.open_files())
                 )
 
             if cpu_gauge is not None:
