@@ -1,3 +1,5 @@
+"""Manage snapshot and restoration of off-site memory backups."""
+
 from __future__ import annotations
 
 import argparse
@@ -17,7 +19,6 @@ def _timestamp() -> str:
 
 def snapshot(dest: Path) -> None:
     """Copy current memory files to ``dest`` with a timestamp."""
-
     dest.mkdir(parents=True, exist_ok=True)
     ts = _timestamp()
     if VECTOR_LOG.exists():
@@ -28,7 +29,6 @@ def snapshot(dest: Path) -> None:
 
 def restore(src: Path) -> None:
     """Restore the most recent backups from ``src``."""
-
     src.mkdir(parents=True, exist_ok=True)
     logs = sorted(src.glob("vector_memory_*.log"))
     dbs = sorted(src.glob("spiral_registry_*.db"))
@@ -41,6 +41,7 @@ def restore(src: Path) -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
+    """Parse CLI arguments and run backup or restore commands."""
     parser = argparse.ArgumentParser(description="Manage off-site backups")
     sub = parser.add_subparsers(dest="command", required=True)
 
