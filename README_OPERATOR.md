@@ -75,6 +75,22 @@ Configuration options for `crown_config/INANNA_CORE.yaml` and the corresponding
 environment variables are explained in
 [docs/INANNA_CORE.md](docs/INANNA_CORE.md).
 
+## Preflight Checks
+
+Verify that essential environment variables, optional Python packages and
+external binaries are available:
+
+```bash
+python tools/preflight.py
+```
+
+Use `--report` to emit a JSON summary of missing components and suggested
+fixes:
+
+```bash
+python tools/preflight.py --report
+```
+
 ## Script overview
 
 - **`INANNA_AI_AGENT/inanna_ai.py`** – Activation agent that loads source texts and can recite the INANNA birth chant or feed hex data into the QNL engine. Use `--list` to show available texts.
