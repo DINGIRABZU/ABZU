@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Unified memory search across multiple subsystems."""
+
+from __future__ import annotations
 
 import json
 import math

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Detect sustained silence and suggest a short meaning."""
+
+from __future__ import annotations
 
 import numpy as np
 

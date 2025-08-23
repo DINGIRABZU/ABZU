@@ -1,10 +1,15 @@
 # Quality Evaluation
 
-This document tracks quality ratings for major components. Update the table as improvements land.
+## Current Ratings
+- **Code Clarity:** B+
+- **Test Coverage:** B
+- **Security Posture:** A-
 
-| Component | Before | After | Rationale |
-|-----------|--------|-------|-----------|
-| Architecture clarity | 3 | 4 | Refined module boundaries and updated diagrams. |
-| Test coverage | 2 | 3 | Added baseline unit tests and reduced skips. |
-| Documentation | 4 | 5 | Expanded guides and cross-links across docs. |
+## Past Evaluations
+- **2024 Q2 Audit:** Identified redundant memory utilities and reduced dead code.
+- **2023 Q4 Review:** Improved logging hygiene and added lint enforcement.
 
+## Remediation Checklist
+- [ ] Increase unit tests for `communication/` modules.
+- [ ] Document deployment edge cases in `docs/deployment_overview.md`.
+- [ ] Periodically run `bandit` and address new warnings.

@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Manage startup and shutdown tasks for the FastAPI app."""
     yield
     await video_stream.close_peers()
     await webrtc_connector.close_peers()

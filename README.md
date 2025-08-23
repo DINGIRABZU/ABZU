@@ -5,7 +5,7 @@
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Start Here
-Begin with the [CRYSTAL CODEX](docs/CRYSTAL_CODEX.md) for mission, architecture,
+Begin with the [CRYSTAL CODEX](CRYSTAL_CODEX.md) for mission, architecture,
 modules, dependencies, testing and style guidance. Then follow the
 [setup guide](docs/setup.md) to configure the environment. The
 [documentation index](docs/index.md) lists additional guides.
