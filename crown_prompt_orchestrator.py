@@ -40,6 +40,8 @@ import crown_decider
 import servant_model_manager as smm
 from task_profiling import classify_task
 
+logger = logging.getLogger(__name__)
+
 _EMOTION_KEYS = list(emotion_analysis.EMOTION_ARCHETYPES.keys())
 
 
@@ -188,6 +190,8 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
     layer_text, layer_model = _apply_layer(message)
 
     async def _process() -> tuple[str, str]:
+        current = await emotional_state.get_last_emotion_async()
+        logger.debug("processing with last emotion %s", current)
         task_type = classify_task(message)
         model = crown_decider.recommend_llm(task_type, emotion)
         success = True

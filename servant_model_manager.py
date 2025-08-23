@@ -1,19 +1,22 @@
-from __future__ import annotations
-
 """Registry and launcher for auxiliary language models."""
 
+from __future__ import annotations
+
 import asyncio
-from typing import Awaitable, Callable, Dict, List
+import threading
+from typing import Awaitable, Callable, Dict, List, cast
 
 from tools import kimi_k2_client
 
 _Handler = Callable[[str], Awaitable[str] | str]
 _REGISTRY: Dict[str, _Handler] = {}
+_LOCK = threading.Lock()
 
 
 def register_model(name: str, handler: _Handler) -> None:
     """Register ``handler`` under ``name``."""
-    _REGISTRY[name] = handler
+    with _LOCK:
+        _REGISTRY[name] = handler
 
 
 def register_subprocess_model(name: str, command: List[str]) -> None:
@@ -40,27 +43,30 @@ def register_kimi_k2() -> None:
 
 def has_model(name: str) -> bool:
     """Return ``True`` if ``name`` is registered."""
-    return name in _REGISTRY
+    with _LOCK:
+        return name in _REGISTRY
 
 
 def list_models() -> List[str]:
     """Return registered model names."""
-    return list(_REGISTRY)
+    with _LOCK:
+        return list(_REGISTRY)
 
 
 async def invoke(name: str, prompt: str) -> str:
     """Invoke the model ``name`` with ``prompt``."""
-    handler = _REGISTRY.get(name)
+    with _LOCK:
+        handler = _REGISTRY.get(name)
     if handler is None:
         raise KeyError(name)
     result = handler(prompt)
     if asyncio.iscoroutine(result):
         return await result
-    return result
+    return cast(str, result)
 
 
 def invoke_sync(name: str, prompt: str) -> str:
-    """Synchronously invoke ``name`` with ``prompt``."""
+    """Invoke ``name`` with ``prompt`` synchronously."""
     return asyncio.run(invoke(name, prompt))
 
 
