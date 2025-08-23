@@ -1,3 +1,10 @@
+"""Analyze audio features across seven metaphysical planes.
+
+This module extracts audio descriptors with ``librosa`` and ``essentia`` and
+maps them to physical, emotional, mental, astral, etheric, celestial, and
+divine planes for experimental music analysis.
+"""
+
 from __future__ import annotations
 
 import numpy as np

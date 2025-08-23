@@ -1,3 +1,9 @@
+"""Provide a minimal configuration object for tests.
+
+This stub mimics the interface of the real settings object used throughout the
+codebase so tests can run without loading full configuration files.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path
