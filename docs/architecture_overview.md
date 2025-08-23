@@ -124,3 +124,19 @@ fastapi
       sniffio
 ```
 
+
+### Backup and Recovery
+
+Periodic snapshots of `data/vector_memory.log` and `data/spiral_registry.db` can be sent to an off-site location using `scripts/offsite_backup.py`:
+
+```bash
+python scripts/offsite_backup.py snapshot --dest /path/to/offsite --interval 30
+```
+
+The command above copies the memory files every 30 minutes. To recover on a new deployment, replay the most recent backups:
+
+```bash
+python scripts/replay_state.py --src /path/to/offsite
+```
+
+`replay_state.py` restores the latest snapshots and replays `vector_memory.log` to rebuild the ChromaDB store while `spiral_registry.db` is copied directly, completing recovery.
