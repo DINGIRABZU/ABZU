@@ -8,14 +8,13 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Tuple
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 logger = logging.getLogger(__name__)
 
 
-def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
+def load_model(model_dir: str | Path) -> tuple[AutoModelForCausalLM, AutoTokenizer]:
     """Load a local causal language model and tokenizer.
 
     Parameters
@@ -30,12 +29,16 @@ def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
     """
     model_dir = Path(model_dir)
     try:
-        tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_dir, local_files_only=True
+        )
     except (OSError, ValueError) as exc:
         logger.error("Failed to load tokenizer from %s: %s", model_dir, exc)
         raise
     try:
-        model = AutoModelForCausalLM.from_pretrained(model_dir, local_files_only=True)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_dir, local_files_only=True
+        )
     except (OSError, ValueError) as exc:
         logger.error("Failed to load model from %s: %s", model_dir, exc)
         raise
