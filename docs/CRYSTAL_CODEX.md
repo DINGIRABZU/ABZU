@@ -1,9 +1,9 @@
 # CRYSTAL CODEX
 
-The codex gathers the mission, dependency matrix, component index,
-memory and learning architecture, and self‑improvement protocols. It
-cross‑links modules and APIs so contributors can navigate the sonic
-temple. Reference guides include
+The codex gathers the mission, architecture diagrams, module index,
+dependency matrix, testing strategy and style policies alongside the
+memory and learning architecture. It cross‑links modules and APIs so
+contributors can navigate the sonic temple. Reference guides include
 [architecture_overview.md](architecture_overview.md),
 [component_index.md](component_index.md),
 [api_reference.md](api_reference.md) and [setup.md](setup.md).
@@ -39,7 +39,7 @@ graph TD
 Additional request flow diagrams and service contracts live in
 [architecture_overview.md](architecture_overview.md).
 
-## Dependencies and Optional Extras
+## Dependency Matrix
 System packages and Python wheels required for the sonic temple are listed in
 [dependencies.md](dependencies.md). Core runtime packages include `numpy`,
 `requests`, `python-json-logger`, `PyYAML` and `psutil`. Versions and licenses
@@ -95,9 +95,10 @@ Additional onboarding guides live in
 [developer_onboarding.md](developer_onboarding.md) and
 [quick_start_non_technical.md](quick_start_non_technical.md).
 
-## Package Roles
+## Module Index
 For per‑module descriptions and external dependencies see the generated
-[component_index.md](component_index.md). API routes are documented in
+[component_index.md](component_index.md) and
+[packages_overview.md](packages_overview.md). API routes are documented in
 [api_reference.md](api_reference.md). Notable modules include
 [server.py](../server.py), [vector_memory.py](../vector_memory.py) and
 [learning_mutator.py](../learning_mutator.py).
@@ -177,59 +178,40 @@ Implementation modules: [music_generation.py](../music_generation.py),
 [video_stream.py](../video_stream.py) and
 [voice_avatar_config.yaml](../voice_avatar_config.yaml).
 
-## Flujo de desarrollo
+## Testing Strategy
 Contributors follow a planner–coder–reviewer loop with all changes validated by
-`pytest`. The cycle and testing guidance are detailed in
-[development_workflow.md](development_workflow.md).
+`pytest`. Manual smoke tests for consoles live in
+[testing.md](testing.md), and environment checks run through
+[tools/preflight.py](../tools/preflight.py). See
+[development_workflow.md](development_workflow.md) for the full cycle.
 
 ```mermaid
 flowchart LR
-    Plan --> Code --> Review --> Plan
+    Plan --> Code --> Review --> Test --> Plan
 ```
 
-## Progreso de hitos
-Seven milestones guide development. Completed items are checked below.
+## Style Policies
+Code adheres to [CODE_STYLE.md](../CODE_STYLE.md) and
+[coding_style.md](coding_style.md). Use type hints, prefer async I/O for
+network calls and run `pre-commit run --files <paths>` before committing.
 
-```mermaid
-timeline
-    title Milestones
-    1 : Virtual environment manager
-    2 : Sandbox repository
-    3 : /sandbox command
-    4 : Dependency installer
-    5 : Music command
-    6 : Avatar lip-sync
-    7 : Expanded memory search
-```
+## Evolution Log
+### Milestones
+1. Virtual environment manager – complete
+2. Sandbox repository – complete
+3. `/sandbox` command – complete
+4. Dependency installer – complete
+5. Music command – in progress
+6. Avatar lip-sync – planned
+7. Expanded memory search – planned
 
-| # | Hito                      | Estado      |
-|---|---------------------------|-------------|
-|1|Virtual environment manager|✅ Completo|
-|2|Sandbox repository|✅ Completo|
-|3|/sandbox command|✅ Completo|
-|4|Dependency installer|✅ Completo|
-|5|Music command|En progreso|
-|6|Avatar lip-sync|Planificado|
-|7|Expanded memory search|Planificado|
+### Recent Improvements
+- Linter warnings reduced from 42 to zero
+- Unused dependencies removed
+- Test coverage raised from 65% to 85%
 
-See [roadmap.md](roadmap.md) and [milestone_viii_plan.md](milestone_viii_plan.md)
-for expanded plans.
-
-## Mejoras recientes
-
-| Métrica              | Antes                       | Después                     |
-|----------------------|-----------------------------|-----------------------------|
-| Advertencias linter  | 42                           | 0                           |
-| Dependencias obsoletas| 15 paquetes sin uso         | Paquetes depurados y fijados|
-| Cobertura de pruebas | 65%                          | 85%                         |
-
-
-## Release Notes
-Recent changes are captured in [release_notes.md](release_notes.md). Highlights
-include removal of legacy compatibility shims and milestone status updates【F:docs/release_notes.md†L1-L7】.
-
-## Roadmap
-Upcoming agent enhancements focus on music generation, avatar lip‑sync and
-expanded memory search. Longer‑term plans include community coordination, new
-style packs and hardware scaling【F:docs/roadmap.md†L15-L25】.
+### Future Roadmap
+Music generation, avatar lip‑sync and expanded memory search remain priority
+areas. See [roadmap.md](roadmap.md) for long‑term plans including community
+coordination, new style packs and hardware scaling.
 
