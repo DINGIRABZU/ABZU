@@ -1,6 +1,7 @@
+"""Tests for LWM integration and inspection routes."""
+
 from __future__ import annotations
 
-from pathlib import Path
 import sys
 import types
 

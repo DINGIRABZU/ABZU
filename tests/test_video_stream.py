@@ -185,3 +185,24 @@ def test_avatar_audio_endpoint_updates_track(monkeypatch, tmp_path):
     assert status == 200
     assert data == {"status": "ok"}
     assert called["path"] == audio
+
+
+def test_avatar_video_track_applies_cue(monkeypatch):
+    """Applying a cue colour should tint frame corners."""
+
+    frame = np.zeros((20, 20, 3), dtype=np.uint8)
+
+    def fake_stream():
+        while True:
+            yield frame
+
+    monkeypatch.setattr(
+        server.video_stream.video_engine, "generate_avatar_stream", fake_stream
+    )
+
+    track = server.video_stream.AvatarVideoTrack()
+    track._style = "blue"  # type: ignore[attr-defined]
+    coloured = asyncio.run(track.recv()).to_ndarray()
+    color = track._cue_colour("blue")
+    assert np.array_equal(coloured[:10, :10], color)
+    assert np.array_equal(coloured[-10:, -10:], color)
