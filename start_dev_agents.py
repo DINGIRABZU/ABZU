@@ -6,6 +6,8 @@ import argparse
 import json
 import logging
 import os
+import subprocess
+from datetime import datetime
 from pathlib import Path
 
 from env_validation import check_required
@@ -52,6 +54,12 @@ def main() -> int:
     )
     group.add_argument(
         "--stop", action="store_true", help="Signal a running watcher to stop"
+    )
+    group.add_argument(
+        "--triage",
+        nargs="+",
+        metavar="PATH",
+        help="Run pytest on selected paths and trigger agent fixes",
     )
     parser.add_argument(
         "--planner-model",
@@ -132,6 +140,41 @@ def main() -> int:
         os.environ.get("CODER_MODEL"),
         os.environ.get("REVIEWER_MODEL"),
     )
+
+    if args.triage:
+        logger.info("Running triage for: %s", " ".join(args.triage))
+        cmd = ["pytest", "-q", *args.triage]
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        output = proc.stdout + proc.stderr
+        timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        triage_log = Path("logs") / f"triage_{timestamp}.log"
+        triage_log.parent.mkdir(parents=True, exist_ok=True)
+        triage_log.write_text(output, encoding="utf-8")
+        if proc.returncode == 0:
+            logger.info("Selected tests passed; no triage needed")
+            return 0
+        from corpus_memory_logging import INTERACTIONS_FILE
+
+        start_lines = 0
+        if INTERACTIONS_FILE.exists():
+            with INTERACTIONS_FILE.open("r", encoding="utf-8") as fh:
+                start_lines = sum(1 for _ in fh)
+        tail = "\n".join(output.splitlines()[-20:])
+        objective = (
+            f"Fix failing tests: {' '.join(args.triage)}\nPytest log tail:\n{tail}"
+        )
+        run_dev_cycle(objective, repo=Path.cwd(), max_iterations=args.max_iterations)
+        if INTERACTIONS_FILE.exists():
+            with INTERACTIONS_FILE.open("r", encoding="utf-8") as fh:
+                lines = fh.read().splitlines()
+            new_lines = lines[start_lines:]
+            if new_lines:
+                triage_dir = Path("data/triage_sessions")
+                triage_dir.mkdir(parents=True, exist_ok=True)
+                transcript = triage_dir / f"{timestamp}.jsonl"
+                transcript.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+                logger.info("Triage transcript written to %s", transcript)
+        return 0
 
     if args.watch:
         objectives = None

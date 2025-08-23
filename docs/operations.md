@@ -21,3 +21,17 @@ detected, allowing cron to report failures.
 Model downloads performed with `download_models.py` now include checksum
 validation, retry logic and write detailed results to
 `logs/model_audit.log`.
+
+## Triage failing tests
+
+Use the development agents to investigate failing tests. Run `start_dev_agents.py`
+with `--triage` and one or more pytest paths:
+
+```
+python start_dev_agents.py --triage tests/test_example.py
+```
+
+The script executes the specified suites and writes the full pytest output to
+`logs/triage_<timestamp>.log`. When failures occur it launches the
+planner/coder/reviewer agents to suggest fixes. Interactions from each triage
+run are stored under `data/triage_sessions/` for later review.
