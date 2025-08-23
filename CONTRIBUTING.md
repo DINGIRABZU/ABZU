@@ -1,61 +1,47 @@
 # Contributing
 
-To run the test suite you need a few Python packages:
+Thank you for your interest in improving ABZU! This guide covers environment
+setup, coding conventions, testing, and the pull request process.
 
-- `numpy`
-- `scipy`
-- `soundfile`
-- `librosa`
-- `pytest`
+## Setup
 
-Install them with:
+Use Python 3.10 or later. Install development dependencies with:
 
 ```bash
 pip install -r dev-requirements.txt
 ```
 
-You can also run the helper script which prints a brief warning about the
-download size:
+A helper script prints a brief warning about download size:
 
 ```bash
 ./scripts/install_test_deps.sh
 ```
 
-## Dependency lock file
-
 Runtime dependencies are pinned in `requirements.lock` which is generated from
-`pyproject.toml`.
-
-After modifying dependencies, refresh the lock file and commit the result:
+`pyproject.toml`. After modifying dependencies, refresh the lock file and commit
+the result:
 
 ```bash
 uv pip compile --no-deps pyproject.toml -o requirements.lock
 ```
 
-# Coding Style
+## Coding Style
 
-Follow the conventions in [CODE_STYLE.md](CODE_STYLE.md):
+Follow the conventions in [CODE_STYLE.md](CODE_STYLE.md). Highlights include:
 
-- Target Python 3.10+, use four spaces for indentation, and keep lines under 88 characters.
-- Organise imports into standard library, third‑party, and local groups separated by blank lines.
-- Include docstrings for public modules, classes, and functions.
+- Four spaces per indentation level and lines under 88 characters.
+- Imports grouped into standard library, third‑party, and local sections.
+- Docstrings for public modules, classes, and functions.
 
-# Static Typing
-
-Static type checks run via `mypy` using defaults defined in `mypy.ini` such as
-`ignore_missing_imports = true` and `disallow_untyped_defs = true`. Run the
-checker before committing:
+Run static type checks with:
 
 ```bash
 mypy
 ```
 
-Modules that require dynamic behaviour are relaxed through per‑module overrides
-inside `mypy.ini` (e.g. `INANNA_AI_AGENT.inanna_ai`, `INANNA_AI_AGENT.preprocess`).
+## Testing
 
-# Testing Expectations
-
-Run the test suite and basic smoke tests before opening a pull request:
+Execute smoke tests and the unit test suite before submitting changes:
 
 ```bash
 scripts/smoke_console_interface.sh
@@ -71,9 +57,12 @@ coverage run -m pytest
 coverage report
 ```
 
-# Pull Request Guidelines
+## Pull Requests
 
 - Keep changes focused; submit separate PRs for unrelated fixes.
-- Ensure tests pass and documentation is updated.
+- Ensure documentation is updated and tests pass.
+- Lint Markdown files with `markdownlint` and verify links using `markdown-link-check`.
 - Request review from a maintainer and address feedback promptly.
+
+By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
 
