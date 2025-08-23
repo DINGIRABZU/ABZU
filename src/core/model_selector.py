@@ -3,15 +3,16 @@ from __future__ import annotations
 """Model selection and benchmarking utilities."""
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 
 from INANNA_AI import db_storage
 
+_vector_memory: Any | None
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
-    _vector_memory = None  # type: ignore[assignment]
-vector_memory = _vector_memory
+    _vector_memory = None
+vector_memory: Any | None = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 
 # Emotion to model lookup derived from docs/crown_manifest.md
@@ -69,7 +70,7 @@ class ModelSelector:
         weight: float,
         history: List[str],
         *,
-        weights: Dict[str, float] | None = None,
+        weights: Optional[Dict[str, float]] = None,
     ) -> str:
         emotional_ratio = 0.0
         if history:
@@ -86,7 +87,7 @@ class ModelSelector:
 
         effective = weights or self.model_weights
         scores = {m: base[m] * effective.get(m, 1.0) for m in base}
-        return max(scores, key=scores.get)
+        return max(scores, key=lambda m: scores[m])
 
     def benchmark(self, model: str, prompt: str, output: str, elapsed: float) -> None:
         coh = self._coherence(output)

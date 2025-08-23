@@ -10,7 +10,7 @@ from INANNA_AI import emotion_analysis
 from .contracts import EmotionAnalyzerService
 
 
-class EmotionAnalyzer(EmotionAnalyzerService):
+class EmotionAnalyzer(EmotionAnalyzerService):  # type: ignore[misc]
     """Track recent emotions and expose analysis helpers.
 
     The analyzer maintains an exponential moving average of emotion weights and
@@ -34,7 +34,7 @@ class EmotionAnalyzer(EmotionAnalyzerService):
     def analyze(self, emotion: str) -> Dict[str, Any]:
         """Return enriched data for ``emotion`` and update ``mood_state``."""
         self.update_mood(emotion)
-        dominant = max(self.mood_state, key=self.mood_state.get)
+        dominant = max(self.mood_state, key=lambda e: self.mood_state[e])
         emotional_state.set_last_emotion(dominant)
         emotional_state.set_resonance_level(self.mood_state[dominant])
         return {

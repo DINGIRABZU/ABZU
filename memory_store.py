@@ -9,7 +9,7 @@ import threading
 from contextlib import contextmanager
 from pathlib import Path
 from queue import Queue
-from typing import Any, Dict, List, Sequence, Tuple, cast
+from typing import Any, Dict, Iterator, List, Sequence, Tuple, cast
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -18,7 +18,7 @@ except Exception:  # pragma: no cover - optional dependency
 
 try:  # pragma: no cover - optional dependency
     # ``faiss`` is optional and ships without type hints
-    import faiss  # type: ignore[import-not-found]
+    import faiss
 except Exception:  # pragma: no cover - optional dependency
     faiss = cast(Any, None)
 
@@ -46,7 +46,7 @@ class MemoryStore:
 
     # ------------------------------------------------------------------
     @contextmanager
-    def _connection(self) -> sqlite3.Connection:
+    def _connection(self) -> Iterator[sqlite3.Connection]:
         conn = self._pool.get()
         try:
             yield conn
@@ -138,7 +138,7 @@ class MemoryStore:
     def restore(self, path: str | Path) -> None:
         with self._lock:
             while not self._pool.empty():
-                conn = self._pool.get()
+                conn: sqlite3.Connection = self._pool.get()
                 conn.close()
             shutil.copy(path, self.db_path)
             for _ in range(self._pool_size):

@@ -9,7 +9,7 @@ import subprocess
 import time
 from pathlib import Path
 
-import requests
+import requests  # type: ignore[import-untyped]
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.patch_stdout import patch_stdout
@@ -27,7 +27,7 @@ from tools import sandbox_session, session_logger, virtual_env_manager
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
 except Exception:  # pragma: no cover - orchestrator may be added later
-    crown_prompt_orchestrator = None  # type: ignore
+    crown_prompt_orchestrator = None
 
 logger = logging.getLogger(__name__)
 

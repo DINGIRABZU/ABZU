@@ -11,7 +11,7 @@ from pathlib import Path
 try:  # pragma: no cover - optional dependency
     import soundfile as sf
 except Exception:  # pragma: no cover - optional dependency
-    sf = None  # type: ignore
+    sf = None
 
 import emotional_state
 from audio.dsp_engine import nsynth_interpolate, rave_morph
@@ -19,7 +19,7 @@ from audio.dsp_engine import nsynth_interpolate, rave_morph
 try:  # pragma: no cover - optional dependency
     from audio.segment import AudioSegment
 except Exception:  # pragma: no cover - optional dependency
-    AudioSegment = None  # type: ignore
+    AudioSegment = None
 
 logger = logging.getLogger(__name__)
 

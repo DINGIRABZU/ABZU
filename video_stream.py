@@ -11,29 +11,45 @@ import fractions
 import logging
 import time
 from pathlib import Path
-from typing import Optional, Set
+from typing import Any, Optional, Set, cast
 
 import numpy as np
+from numpy.typing import NDArray
 
 try:  # pragma: no cover - optional dependency
     import soundfile as sf
 except ImportError:  # pragma: no cover - optional dependency
-    sf = None  # type: ignore
+    sf = cast(Any, None)
 
 try:  # pragma: no cover - optional dependency
     from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
     from aiortc.mediastreams import AUDIO_PTIME, AudioStreamTrack, MediaStreamError
 except ImportError:  # pragma: no cover - optional dependency
-    RTCPeerConnection = RTCSessionDescription = VideoStreamTrack = None  # type: ignore
-    AudioStreamTrack = MediaStreamError = None  # type: ignore
+    RTCPeerConnection = RTCSessionDescription = VideoStreamTrack = cast(Any, None)
+    AudioStreamTrack = MediaStreamError = cast(Any, None)
     AUDIO_PTIME = 0.02
 
 try:  # pragma: no cover - optional dependency
-    from av import VideoFrame
-    from av.audio.frame import AudioFrame
-except ImportError:  # pragma: no cover - optional dependency
-    VideoFrame = AudioFrame = None  # type: ignore
+    _VideoFrame = getattr(importlib.import_module("av"), "VideoFrame")
+    _AudioFrame = getattr(importlib.import_module("av.audio.frame"), "AudioFrame")
+except Exception:  # pragma: no cover - optional dependency
+    class _VideoFrameStub:
+        @staticmethod
+        def from_ndarray(*_a: Any, **_k: Any) -> Any:
+            raise RuntimeError("av library not installed")
 
+    class _AudioFrameStub:
+        @staticmethod
+        def from_ndarray(*_a: Any, **_k: Any) -> Any:
+            raise RuntimeError("av library not installed")
+
+    _VideoFrame = _VideoFrameStub
+    _AudioFrame = _AudioFrameStub
+
+VideoFrame = _VideoFrame
+AudioFrame = _AudioFrame
+
+import importlib
 from fastapi import APIRouter, HTTPException, Request
 
 from core import avatar_expression_engine, video_engine
@@ -41,11 +57,11 @@ from src.media.video.base import VideoProcessor
 
 logger = logging.getLogger(__name__)
 
-_pcs: Set[RTCPeerConnection] = set()  # type: ignore[assignment]
-_active_track: AvatarVideoTrack | None = None  # type: ignore  # defined later
+_pcs: Set[RTCPeerConnection] = set()
+_active_track: "AvatarVideoTrack" | None = None
 
 
-class AvatarAudioTrack(AudioStreamTrack):
+class AvatarAudioTrack(AudioStreamTrack):  # type: ignore[misc]
     """Audio track streaming a WAV file."""
 
     def __init__(self, audio_path: Optional[Path] = None) -> None:
@@ -66,7 +82,7 @@ class AvatarAudioTrack(AudioStreamTrack):
         self._start: float | None = None
         self._timestamp = 0
 
-    async def recv(self) -> AudioFrame:
+    async def recv(self) -> Any:
         """Yield the next chunk of audio as an ``AudioFrame``."""
         if self.readyState != "live":
             raise MediaStreamError
@@ -83,22 +99,16 @@ class AvatarAudioTrack(AudioStreamTrack):
         chunk = self._data[self._index : end]
         self._index = end
         if len(chunk) < self._samples:
-            chunk = np.pad(
-                chunk,
-                (0, self._samples - len(chunk)),
-                constant_values=0,
-            )
+            chunk = np.pad(chunk, (0, self._samples - len(chunk)), constant_values=0)
 
-        frame = AudioFrame.from_ndarray(
-            chunk.reshape(1, -1), format="s16", layout="mono"
-        )
+        frame = AudioFrame.from_ndarray(chunk.reshape(1, -1), format="s16", layout="mono")
         frame.pts = self._timestamp
         frame.sample_rate = self._sr
         frame.time_base = fractions.Fraction(1, self._sr)
         return frame
 
 
-class AvatarVideoTrack(VideoStreamTrack):
+class AvatarVideoTrack(VideoStreamTrack):  # type: ignore[misc]
     """Video track producing frames from ``avatar_expression_engine``."""
 
     def __init__(
@@ -121,14 +131,14 @@ class AvatarVideoTrack(VideoStreamTrack):
         """Replace the frame generator with audio-driven stream."""
         self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
 
-    def _cue_colour(self, text: str) -> np.ndarray:
+    def _cue_colour(self, text: str) -> NDArray[np.uint8]:
         value = abs(hash(text)) & 0xFFFFFF
         return np.array(
             [(value >> 16) & 255, (value >> 8) & 255, value & 255],
             dtype=np.uint8,
         )
 
-    def _apply_cue(self, frame: np.ndarray) -> np.ndarray:
+    def _apply_cue(self, frame: NDArray[np.uint8]) -> NDArray[np.uint8]:
         if not self._style:
             return frame
         result = frame.copy()
@@ -138,7 +148,7 @@ class AvatarVideoTrack(VideoStreamTrack):
         result[h - 10 :, w - 10 :] = color
         return result
 
-    async def recv(self) -> VideoFrame:
+    async def recv(self) -> Any:
         """Receive the next video frame from the generator."""
         if self._cues is not None:
             try:
@@ -153,7 +163,7 @@ class AvatarVideoTrack(VideoStreamTrack):
         return video
 
 
-class WebRTCStreamProcessor(VideoProcessor):
+class WebRTCStreamProcessor(VideoProcessor):  # type: ignore[misc]
     """Processor handling WebRTC offers and avatar audio updates."""
 
     def __init__(self) -> None:
@@ -199,14 +209,11 @@ class WebRTCStreamProcessor(VideoProcessor):
         _pcs.clear()
         for coro in coros:
             await coro
-        global _active_track
-        _active_track = None
 
 
 processor = WebRTCStreamProcessor()
 router = processor.router
-offer = processor.offer
-avatar_audio = processor.avatar_audio
 close_peers = processor.close_peers
 
 __all__ = ["router", "close_peers", "AvatarVideoTrack", "AvatarAudioTrack"]
+

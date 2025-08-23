@@ -2,14 +2,14 @@ from __future__ import annotations
 
 """Wrapper around corpus memory logging helpers."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, cast
 
 from corpus_memory_logging import load_interactions, log_interaction, log_ritual_result
 
 from .contracts import MemoryLoggerService
 
 
-class MemoryLogger(MemoryLoggerService):
+class MemoryLogger(MemoryLoggerService):  # type: ignore[misc]
     """Provide methods for storing interaction history."""
 
     def log_interaction(
@@ -18,7 +18,7 @@ class MemoryLogger(MemoryLoggerService):
         log_interaction(text, meta, result, status)
 
     def load_interactions(self) -> List[Dict[str, Any]]:
-        return load_interactions()
+        return cast(List[Dict[str, Any]], load_interactions())
 
     def log_ritual_result(self, name: str, steps: List[Any]) -> None:
         log_ritual_result(name, steps)

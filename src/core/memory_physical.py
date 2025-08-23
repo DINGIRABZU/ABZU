@@ -14,15 +14,15 @@ from core.utils.optional_deps import lazy_import
 
 cv2 = lazy_import("cv2")
 if getattr(cv2, "__stub__", False):  # pragma: no cover - optional
-    cv2 = None  # type: ignore
+    cv2 = None
 
 librosa = lazy_import("librosa")
 if getattr(librosa, "__stub__", False):  # pragma: no cover - optional
-    librosa = None  # type: ignore
+    librosa = None
 
 whisper = lazy_import("whisper")
 if getattr(whisper, "__stub__", False):  # pragma: no cover - optional
-    whisper = None  # type: ignore
+    whisper = None
 
 
 logger = logging.getLogger(__name__)
