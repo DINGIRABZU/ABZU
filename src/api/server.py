@@ -17,7 +17,7 @@ _connections: Set[WebSocket] = set()
 
 
 async def generate_video(prompt: str) -> dict[str, str]:
-    """Placeholder video generation returning a queued status."""
+    """Queue a placeholder video generation request."""
     return {"status": "queued", "prompt": prompt}
 
 
@@ -48,7 +48,7 @@ async def generate_video_endpoint(data: dict[str, str]) -> dict[str, str]:
 
 @app.websocket("/stream_avatar")
 async def stream_avatar(websocket: WebSocket) -> None:
-    """WebSocket endpoint for real-time avatar updates."""
+    """Open a websocket for real-time avatar updates."""
     await websocket.accept()
     _connections.add(websocket)
     try:

@@ -1,12 +1,12 @@
-from __future__ import annotations
+"""Initialize the crown agent and optional vector memory subsystem."""
 
-"""Initialize the Crown agent by loading configuration and memory."""
+from __future__ import annotations
 
 import logging
 import os
 from pathlib import Path
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 from env_validation import parse_servant_models
 from INANNA_AI import glm_integration as gi
@@ -16,13 +16,13 @@ try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
-vector_memory = _vector_memory
-"""Optional vector memory subsystem; ``None`` if unavailable."""
 import servant_model_manager as smm
 from INANNA_AI import corpus_memory
 
+vector_memory = _vector_memory  # Optional vector memory subsystem
+
 try:  # pragma: no cover - optional dependency
-    import requests
+    import requests  # type: ignore[import-untyped]
 except Exception:  # pragma: no cover - optional dependency
     requests = None  # type: ignore
 
