@@ -1,5 +1,5 @@
 .RECIPEPREFIX := >
-.PHONY: install-minimal install-audio install-vision install-full
+.PHONY: install-minimal install-audio install-vision install-full verify-deps
 
 install-minimal:
 >pip install -e .
@@ -12,4 +12,8 @@ install-vision:
 
 install-full:
 >pip install -e .[audio,vision,llm,ml,web,network]
+
+verify-deps:
+>pip check
+>pipdeptree --warn fail
 
