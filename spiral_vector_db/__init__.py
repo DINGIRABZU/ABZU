@@ -1,12 +1,14 @@
-from __future__ import annotations
-
 """Simple wrapper around ChromaDB for storing text embeddings."""
+
+from __future__ import annotations
 
 import math
 import os
 import uuid
 from pathlib import Path
-from typing import Any, Dict, Iterable
+from typing import Iterable
+
+from MUSIC_FOUNDATION import qnl_utils
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -19,8 +21,6 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     chromadb = None  # type: ignore
     Collection = object  # type: ignore
-
-from MUSIC_FOUNDATION import qnl_utils
 
 _DEFAULT_PATH = Path(__file__).resolve().parents[1] / "data" / "spiral_vector_db"
 DB_PATH = Path(os.getenv("SPIRAL_VECTOR_PATH", str(_DEFAULT_PATH)))
