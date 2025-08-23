@@ -14,8 +14,9 @@ import os
 import shutil
 import subprocess
 import tempfile
-import urllib.request
 from pathlib import Path
+
+import requests
 
 from dotenv import load_dotenv
 
@@ -77,39 +78,6 @@ def _quantize_to_int8(model_dir: Path) -> None:
     )
     model.save_pretrained(str(model_dir))
 
-
-def _download_with_hash(url: str, expected_hash: str, retries: int = 3) -> Path:
-    """Download ``url`` verifying SHA256 ``expected_hash`` with retries."""
-    for attempt in range(1, retries + 1):
-        logger.info("Downloading %s (attempt %s/%s)", url, attempt, retries)
-        try:
-            with urllib.request.urlopen(url) as resp:  # pragma: no cover - network
-                data = resp.read()
-        except Exception as exc:  # pragma: no cover - network failure
-            logger.warning("Download failed for %s: %s", url, exc)
-            if attempt == retries:
-                raise RuntimeError(f"Download failed for {url}: {exc}") from exc
-            continue
-
-        digest = hashlib.sha256(data).hexdigest()
-        if digest != expected_hash:
-            logger.warning(
-                "Hash mismatch for %s: expected %s, got %s", url, expected_hash, digest
-            )
-            if attempt == retries:
-                raise RuntimeError(
-                    f"Hash mismatch for {url}: expected {expected_hash}, got {digest}"
-                )
-            continue
-
-        tmp_dir = Path(tempfile.mkdtemp())
-        script_path = tmp_dir / "install.sh"
-        script_path.write_bytes(data)
-        logger.debug("Saved installer to %s", script_path)
-        return script_path
-    raise RuntimeError(f"Failed to download {url}")
-
-
 def _verify_checksum(path: Path, expected_hash: str) -> None:
     """Validate SHA256 checksum of ``path`` against ``expected_hash``."""
     h = hashlib.sha256()
@@ -127,7 +95,32 @@ def _verify_checksum(path: Path, expected_hash: str) -> None:
 
 
 def _install_ollama() -> None:
-    script_path = _download_with_hash(OLLAMA_INSTALL_URL, OLLAMA_INSTALL_SHA256)
+    try:
+        resp = requests.get(OLLAMA_INSTALL_URL, timeout=30)
+        resp.raise_for_status()
+    except requests.RequestException as exc:  # pragma: no cover - network failure
+        logger.error("Download failed for %s: %s", OLLAMA_INSTALL_URL, exc)
+        raise RuntimeError(f"Download failed for {OLLAMA_INSTALL_URL}: {exc}") from exc
+
+    digest = hashlib.sha256(resp.content).hexdigest()
+    if digest != OLLAMA_INSTALL_SHA256:
+        logger.error(
+            "Checksum mismatch for installer: expected %s, got %s",
+            OLLAMA_INSTALL_SHA256,
+            digest,
+        )
+        raise RuntimeError(
+            f"Checksum mismatch for {OLLAMA_INSTALL_URL}: expected {OLLAMA_INSTALL_SHA256}, got {digest}"
+        )
+
+    tmp = tempfile.NamedTemporaryFile(delete=False)
+    try:
+        tmp.write(resp.content)
+        tmp.flush()
+        script_path = Path(tmp.name)
+    finally:
+        tmp.close()
+
     try:
         subprocess.run(
             ["sh", str(script_path)],
@@ -138,6 +131,8 @@ def _install_ollama() -> None:
     except subprocess.CalledProcessError as exc:
         logger.error("Ollama installation failed: %s", exc.stderr)
         raise RuntimeError(f"Ollama installation failed: {exc.stderr}") from exc
+    finally:
+        script_path.unlink(missing_ok=True)
     logger.info("Ollama installation succeeded")
 
 

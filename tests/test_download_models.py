@@ -37,65 +37,6 @@ def _prepare(monkeypatch):
     monkeypatch.setitem(sys.modules, "transformers", dummy_tf)
 
 
-def test_download_with_hash_success(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
-    data = b"ok"
-    digest = hashlib.sha256(data).hexdigest()
-
-    class DummyResp:
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc, tb):
-            pass
-
-        def read(self):
-            return data
-
-    monkeypatch.setattr(module.urllib.request, "urlopen", lambda url: DummyResp())
-    path = module._download_with_hash("http://example.com/install.sh", digest)
-    try:
-        assert path.read_bytes() == data
-    finally:
-        path.unlink(missing_ok=True)
-        path.parent.rmdir()
-
-
-def test_download_with_hash_network_failure(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
-    def failing(url):
-        raise OSError("no network")
-
-    monkeypatch.setattr(module.urllib.request, "urlopen", failing)
-    with pytest.raises(RuntimeError, match="Download failed"):
-        module._download_with_hash("http://example.com/install.sh", "0" * 64)
-
-
-def test_download_with_hash_hash_mismatch(monkeypatch):
-    _prepare(monkeypatch)
-    module = importlib.import_module("download_models")
-
-    data = b"data"
-
-    class DummyResp:
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc, tb):
-            pass
-
-        def read(self):
-            return data
-
-    monkeypatch.setattr(module.urllib.request, "urlopen", lambda url: DummyResp())
-    with pytest.raises(RuntimeError, match="Hash mismatch"):
-        module._download_with_hash("http://example.com/install.sh", "0" * 64)
-
-
 def test_main_deepseek_calls_download(monkeypatch):
     _prepare(monkeypatch)
     module = importlib.import_module("download_models")
@@ -152,17 +93,13 @@ def test_ollama_install_success(monkeypatch):
     digest = hashlib.sha256(script).hexdigest()
 
     class DummyResp:
-        def __enter__(self):
-            return self
+        content = script
 
-        def __exit__(self, exc_type, exc, tb):
+        def raise_for_status(self):
             pass
 
-        def read(self):
-            return script
-
     monkeypatch.setattr(module, "OLLAMA_INSTALL_SHA256", digest)
-    monkeypatch.setattr(module.urllib.request, "urlopen", lambda url: DummyResp())
+    monkeypatch.setattr(module.requests, "get", lambda url, timeout=None: DummyResp())
     monkeypatch.setattr(module.shutil, "which", lambda _: None)
 
     runs = []
@@ -182,47 +119,43 @@ def test_ollama_install_success(monkeypatch):
     assert pull_cmd == ["ollama", "pull", "gemma2"]
 
 
-def test_ollama_install_network_failure(monkeypatch):
+def test_install_ollama_invalid_url(monkeypatch):
     _prepare(monkeypatch)
     module = importlib.import_module("download_models")
     monkeypatch.setattr(module.shutil, "which", lambda _: None)
 
-    def failing(url):
-        raise OSError("no network")
+    def failing_get(url, timeout=None):
+        raise module.requests.RequestException("bad url")
 
-    monkeypatch.setattr(module.urllib.request, "urlopen", failing)
+    monkeypatch.setattr(module.requests, "get", failing_get)
     monkeypatch.setattr(
         module.subprocess, "run", lambda *a, **kw: pytest.fail("should not run")
     )
 
-    with pytest.raises(RuntimeError):
+    with pytest.raises(RuntimeError, match="Download failed"):
         module.download_gemma2()
 
 
-def test_ollama_install_hash_mismatch(monkeypatch):
+def test_install_ollama_checksum_mismatch(monkeypatch):
     _prepare(monkeypatch)
     module = importlib.import_module("download_models")
 
     script = b"bad"
 
     class DummyResp:
-        def __enter__(self):
-            return self
+        content = script
 
-        def __exit__(self, exc_type, exc, tb):
+        def raise_for_status(self):
             pass
 
-        def read(self):
-            return script
-
     monkeypatch.setattr(module, "OLLAMA_INSTALL_SHA256", "0" * 64)
-    monkeypatch.setattr(module.urllib.request, "urlopen", lambda url: DummyResp())
+    monkeypatch.setattr(module.requests, "get", lambda url, timeout=None: DummyResp())
     monkeypatch.setattr(module.shutil, "which", lambda _: None)
     monkeypatch.setattr(
         module.subprocess, "run", lambda *a, **kw: pytest.fail("should not run")
     )
 
-    with pytest.raises(RuntimeError, match="Hash mismatch"):
+    with pytest.raises(RuntimeError, match="Checksum mismatch"):
         module.download_gemma2()
 
 
