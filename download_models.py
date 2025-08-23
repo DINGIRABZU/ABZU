@@ -30,12 +30,27 @@ except ImportError as exc:  # pragma: no cover - handled at runtime
     ) from exc
 
 
+LOG_PATH = Path("logs") / "model_audit.log"
+LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    handlers=[logging.FileHandler(LOG_PATH), logging.StreamHandler()],
+)
 logger = logging.getLogger(__name__)
 
 OLLAMA_INSTALL_URL = "https://ollama.ai/install.sh"
 OLLAMA_INSTALL_SHA256 = (
     "9f5f4c4ed21821ba9b847bf3607ae75452283276cd8f52d2f2b38ea9f27af344"
 )
+
+MODEL_CHECKSUMS = {
+    "gemma2": None,
+    "glm41v_9b": None,
+    "deepseek_v3": None,
+    "mistral_8x22b": None,
+    "kimi_k2": None,
+}
 
 
 def _get_hf_token() -> str:
@@ -63,30 +78,52 @@ def _quantize_to_int8(model_dir: Path) -> None:
     model.save_pretrained(str(model_dir))
 
 
-def _download_with_hash(url: str, expected_hash: str) -> Path:
-    """Download ``url`` to a temporary file and verify its SHA256 hash."""
-    logger.info("Downloading %s", url)
-    try:
-        with urllib.request.urlopen(url) as resp:  # pragma: no cover - network
-            data = resp.read()
-    except Exception as exc:  # pragma: no cover - network failure
-        logger.error("Download failed for %s: %s", url, exc)
-        raise RuntimeError(f"Download failed for {url}: {exc}") from exc
+def _download_with_hash(url: str, expected_hash: str, retries: int = 3) -> Path:
+    """Download ``url`` verifying SHA256 ``expected_hash`` with retries."""
+    for attempt in range(1, retries + 1):
+        logger.info("Downloading %s (attempt %s/%s)", url, attempt, retries)
+        try:
+            with urllib.request.urlopen(url) as resp:  # pragma: no cover - network
+                data = resp.read()
+        except Exception as exc:  # pragma: no cover - network failure
+            logger.warning("Download failed for %s: %s", url, exc)
+            if attempt == retries:
+                raise RuntimeError(f"Download failed for {url}: {exc}") from exc
+            continue
 
-    digest = hashlib.sha256(data).hexdigest()
+        digest = hashlib.sha256(data).hexdigest()
+        if digest != expected_hash:
+            logger.warning(
+                "Hash mismatch for %s: expected %s, got %s", url, expected_hash, digest
+            )
+            if attempt == retries:
+                raise RuntimeError(
+                    f"Hash mismatch for {url}: expected {expected_hash}, got {digest}"
+                )
+            continue
+
+        tmp_dir = Path(tempfile.mkdtemp())
+        script_path = tmp_dir / "install.sh"
+        script_path.write_bytes(data)
+        logger.debug("Saved installer to %s", script_path)
+        return script_path
+    raise RuntimeError(f"Failed to download {url}")
+
+
+def _verify_checksum(path: Path, expected_hash: str) -> None:
+    """Validate SHA256 checksum of ``path`` against ``expected_hash``."""
+    h = hashlib.sha256()
+    if path.is_file():
+        h.update(path.read_bytes())
+    else:
+        for file in sorted(p for p in path.rglob("*") if p.is_file()):
+            h.update(file.read_bytes())
+    digest = h.hexdigest()
     if digest != expected_hash:
-        logger.error(
-            "Hash mismatch for %s: expected %s, got %s", url, expected_hash, digest
-        )
         raise RuntimeError(
-            f"Hash mismatch for {url}: expected {expected_hash}, got {digest}"
+            f"Checksum mismatch for {path}: expected {expected_hash}, got {digest}"
         )
-
-    tmp_dir = Path(tempfile.mkdtemp())
-    script_path = tmp_dir / "install.sh"
-    script_path.write_bytes(data)
-    logger.debug("Saved installer to %s", script_path)
-    return script_path
+    logger.info("Checksum verified for %s", path)
 
 
 def _install_ollama() -> None:
@@ -101,6 +138,7 @@ def _install_ollama() -> None:
     except subprocess.CalledProcessError as exc:
         logger.error("Ollama installation failed: %s", exc.stderr)
         raise RuntimeError(f"Ollama installation failed: {exc.stderr}") from exc
+    logger.info("Ollama installation succeeded")
 
 
 def download_gemma2() -> None:
@@ -124,8 +162,12 @@ def download_gemma2() -> None:
     except subprocess.CalledProcessError as exc:
         logger.error("Ollama pull failed: %s", exc.stderr)
         raise RuntimeError(f"Ollama pull failed: {exc.stderr}") from exc
-    logger.info("Model downloaded to %s", models_dir / "gemma2")
-    print(f"Model downloaded to {models_dir / 'gemma2'}")
+    expected = MODEL_CHECKSUMS.get("gemma2")
+    target = models_dir / "gemma2"
+    if expected:
+        _verify_checksum(target, expected)
+    logger.info("Model downloaded to %s", target)
+    print(f"Model downloaded to {target}")
 
 
 def download_glm41v_9b(int8: bool = False) -> None:
@@ -140,9 +182,14 @@ def download_glm41v_9b(int8: bool = False) -> None:
             local_dir_use_symlinks=False,
         )
     except Exception as exc:  # pragma: no cover - network failure
+        logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
+    expected = MODEL_CHECKSUMS.get("glm41v_9b")
+    if expected:
+        _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
+    logger.info("Model downloaded to %s", target_dir)
     print(f"Model downloaded to {target_dir}")
 
 
@@ -158,9 +205,14 @@ def download_deepseek_v3(int8: bool = False) -> None:
             local_dir_use_symlinks=False,
         )
     except Exception as exc:  # pragma: no cover - network failure
+        logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
+    expected = MODEL_CHECKSUMS.get("deepseek_v3")
+    if expected:
+        _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
+    logger.info("Model downloaded to %s", target_dir)
     print(f"Model downloaded to {target_dir}")
 
 
@@ -176,9 +228,14 @@ def download_mistral_8x22b(int8: bool = False) -> None:
             local_dir_use_symlinks=False,
         )
     except Exception as exc:  # pragma: no cover - network failure
+        logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
+    expected = MODEL_CHECKSUMS.get("mistral_8x22b")
+    if expected:
+        _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
+    logger.info("Model downloaded to %s", target_dir)
     print(f"Model downloaded to {target_dir}")
 
 
@@ -194,9 +251,14 @@ def download_kimi_k2(int8: bool = False) -> None:
             local_dir_use_symlinks=False,
         )
     except Exception as exc:  # pragma: no cover - network failure
+        logger.error("Model download failed: %s", exc)
         raise SystemExit(f"Model download failed: {exc}") from None
+    expected = MODEL_CHECKSUMS.get("kimi_k2")
+    if expected:
+        _verify_checksum(target_dir, expected)
     if int8:
         _quantize_to_int8(target_dir)
+    logger.info("Model downloaded to %s", target_dir)
     print(f"Model downloaded to {target_dir}")
 
 
