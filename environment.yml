@@ -1,0 +1,11 @@
+name: abzu
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - sqlite
+  - faiss-cpu
+  - pip:
+      - -r requirements.txt
+      - -r dev-requirements.txt
