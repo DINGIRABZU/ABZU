@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
 from core import feedback_logging
+from learning_mutator import propose_mutations
+from INANNA_AI.gates import verify_blob
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -22,6 +24,8 @@ vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 
 INSIGHT_FILE = Path("insight_matrix.json")
+DATASET_SIGNATURE_FILE = Path("dataset.sig")
+PUBLIC_KEY_FILE = Path("dataset.pub")
 
 NOVELTY_THRESHOLD = feedback_logging.NOVELTY_THRESHOLD
 COHERENCE_THRESHOLD = feedback_logging.COHERENCE_THRESHOLD
@@ -70,6 +74,11 @@ def build_dataset(feedback: Iterable[dict]) -> list[dict]:
                         "completion": entry["action"],
                     }
                 )
+        try:
+            for proposal in propose_mutations(_load_json(INSIGHT_FILE, {})):
+                dataset.append({"prompt": "PATCH", "completion": proposal})
+        except Exception:
+            logger.exception("failed to add mutation proposals")
         return dataset
     except Exception:
         logger.exception("failed to build dataset")
@@ -96,12 +105,36 @@ def system_idle() -> bool:
     return not Path("training.lock").exists()
 
 
+def verify_signature(dataset: list[dict]) -> bool:
+    """Return ``True`` if ``dataset`` matches ``DATASET_SIGNATURE_FILE``."""
+    try:
+        sig = DATASET_SIGNATURE_FILE.read_bytes()
+        pub = PUBLIC_KEY_FILE.read_bytes()
+        payload = json.dumps(dataset, sort_keys=True).encode("utf-8")
+        return verify_blob(payload, sig, pub)
+    except Exception:
+        logger.exception("signature verification failed")
+        return False
+
+
 def trigger_finetune(dataset: list[dict]) -> None:
     """Invoke the LLM fine-tuning API with ``dataset``."""
     try:
+        if not verify_signature(dataset):
+            logger.error("dataset signature invalid")
+            return
         import llm_api
 
-        llm_api.fine_tune(dataset)
+        try:
+            llm_api.fine_tune(dataset)
+        except Exception:
+            rollback = getattr(llm_api, "rollback", None)
+            if callable(rollback):
+                try:
+                    rollback()
+                except Exception:
+                    logger.exception("rollback failed")
+            raise
     except Exception:
         logger.exception("failed to trigger fine-tune")
 

@@ -36,6 +36,8 @@ def test_main_triggers_finetune(tmp_path, monkeypatch):
     monkeypatch.setattr(auto_retrain, "COHERENCE_THRESHOLD", 0.7)
     monkeypatch.setattr(auto_retrain, "system_idle", lambda: True)
     monkeypatch.setattr(auto_retrain, "_load_vector_logs", lambda: [{}])
+    monkeypatch.setattr(auto_retrain, "verify_signature", lambda ds: True)
+    monkeypatch.setattr(auto_retrain, "propose_mutations", lambda _ins: [])
 
     captured = {}
 
