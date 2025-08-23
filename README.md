@@ -18,6 +18,10 @@ Read the [CRYSTAL CODEX](docs/CRYSTAL_CODEX.md) for mission, dependencies, memor
 
 See [docs/roadmap.md](docs/roadmap.md) for details.
 
+## Agent Updates
+- [docs/release_notes.md](docs/release_notes.md) – recent changes and fixes.
+- [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.
+
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see
   [docs/quick_start_non_technical.md](docs/quick_start_non_technical.md).
