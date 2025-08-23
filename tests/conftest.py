@@ -12,6 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
+# Provide a minimal `huggingface_hub` stub for tests so that modules depending on
+# it can be imported without pulling in the real library. The stub implements the
+# small surface area used in the codebase and performs no network operations.
+import spiral_os._hf_stub as hf_stub  # noqa: E402
+
+sys.modules.setdefault("huggingface_hub", hf_stub)
+sys.modules.setdefault("huggingface_hub.utils", hf_stub)
+
 spec = importlib.util.spec_from_file_location(
     "seed", ROOT / "src" / "core" / "utils" / "seed.py"
 )
