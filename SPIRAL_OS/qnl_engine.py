@@ -1,3 +1,5 @@
+"""Convert hexadecimal data into Quantum Narrative Language waveforms."""
+
 from __future__ import annotations
 
 import math
