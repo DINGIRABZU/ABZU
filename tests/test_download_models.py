@@ -1,3 +1,5 @@
+"""Tests for the model download utility."""
+
 from __future__ import annotations
 
 import hashlib
@@ -27,7 +29,7 @@ def _prepare(monkeypatch):
 
         @classmethod
         def from_pretrained(cls, path, device_map=None, load_in_8bit=False):
-            cls.called["args"] = (path, load_in_8bit)
+            cls.called["from"] = (path, device_map, load_in_8bit)
             return cls()
 
         def save_pretrained(self, path):
@@ -181,7 +183,10 @@ def test_glm41v_download_and_quant(monkeypatch):
     monkeypatch.setenv("HF_TOKEN", "x")
     module.download_glm41v_9b(int8=True)
     called = sys.modules["transformers"].AutoModelForCausalLM.called
-    assert called["args"][1] is True
+    path, device_map, int8 = called["from"]
+    assert int8 is True
+    assert device_map == "auto"
+    assert path.endswith("GLM-4.1V-9B")
     assert called["save"].endswith("GLM-4.1V-9B")
 
 
