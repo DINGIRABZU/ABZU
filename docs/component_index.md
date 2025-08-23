@@ -94,6 +94,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `communication/webrtc_server.py` | No description | None |
 | `connectors/webrtc_connector.py` | No description | aiortc, fastapi |
 | `core/avatar_expression_engine.py` | No description | numpy |
+| `core/code_introspector.py` | Enumerate modules and log snippets for analysis. | None |
 | `core/context_tracker.py` | No description | None |
 | `core/contracts.py` | No description | None |
 | `core/emotion_analyzer.py` | No description | None |

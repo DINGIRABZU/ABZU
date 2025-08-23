@@ -11,6 +11,7 @@ import argparse
 import json
 import logging
 import logging.config
+import importlib.util
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -84,9 +85,15 @@ MODEL_PATH = BASE_DIR.parent / "INANNA_AI" / "models" / "DeepSeek-R1"
 logger = logging.getLogger(__name__)
 
 AUDIT_DIR = BASE_DIR.parent / "audit_logs"
-ANALYSIS_PATH = AUDIT_DIR / "code_analysis.txt"
 SUGGESTIONS_FILE = BASE_DIR.parent / "INANNA_AI" / "suggestions.txt"
 SUGGESTIONS_LOG = AUDIT_DIR / "suggestions.txt"
+
+_SPEC = importlib.util.spec_from_file_location(
+    "code_introspector", BASE_DIR.parent / "src" / "core" / "code_introspector.py"
+)
+code_introspector = importlib.util.module_from_spec(_SPEC)
+assert _SPEC.loader is not None
+_SPEC.loader.exec_module(code_introspector)
 
 
 def read_texts() -> Dict[str, str]:
@@ -156,14 +163,7 @@ def suggest_enhancement(validator: EthicalValidator | None = None) -> List[str]:
     """Validate code analysis suggestions and store approved ones."""
     validator = validator or EthicalValidator()
 
-    if not ANALYSIS_PATH.exists():
-        return []
-
-    suggestions = [
-        s.strip()
-        for s in ANALYSIS_PATH.read_text(encoding="utf-8").splitlines()
-        if s.strip()
-    ]
+    suggestions = code_introspector.analyze_repository()
     approved: List[str] = []
     for s in suggestions:
         if validator.validate_text(s):

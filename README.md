@@ -218,6 +218,23 @@ Install the extras you need, for example:
 pip install .[audio,llm]
 ```
 
+## Code Introspector
+
+Enumerate modules and capture source snippets for review:
+
+```bash
+python -m core.code_introspector
+```
+
+Results are written to `audit_logs/code_analysis.txt`. The API can also be
+invoked from Python:
+
+```python
+from core import code_introspector
+
+snippets = code_introspector.analyze_repository()
+```
+
 Run `./scripts/setup_audio_env.sh` to install a pinned set of audio
 dependencies. Verify the environment with:
 
