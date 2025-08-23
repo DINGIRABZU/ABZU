@@ -14,6 +14,11 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 try:  # pragma: no cover - optional dependency
+    from distributed_memory import DistributedMemory
+except Exception:  # pragma: no cover - optional dependency
+    DistributedMemory = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
     import numpy as np
 except Exception:  # pragma: no cover - optional dependency
     np = None  # type: ignore
@@ -25,6 +30,7 @@ except Exception:  # pragma: no cover - optional dependency
 
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
+import threading
 
 _DIR = Path(settings.vector_db_path)
 _EMBED = qnl_utils.quantum_embed
@@ -34,21 +40,29 @@ _DECAY_SECONDS = 86_400.0  # one day
 LOG_FILE = Path("data/vector_memory.log")
 logger = logging.getLogger(__name__)
 _STORE: MemoryStore | None = None
+_STORE_LOCK = threading.Lock()
+_DIST: DistributedMemory | None = None
 
 
 def configure(
     *,
     db_path: str | Path | None = None,
     embedder: Callable[[str], Any] | None = None,
+    redis_url: str | None = None,
+    redis_client: Any | None = None,
 ) -> None:
     """Configure storage location or embedding function."""
 
-    global _DIR, _EMBED, _STORE
+    global _DIR, _EMBED, _STORE, _DIST
     if db_path is not None:
         _DIR = Path(db_path)
         _STORE = None
     if embedder is not None:
         _EMBED = embedder
+    if redis_url is not None or redis_client is not None:
+        if DistributedMemory is None:
+            raise RuntimeError("DistributedMemory backend unavailable")
+        _DIST = DistributedMemory(redis_url or "redis://localhost:6379/0", client=redis_client)
 
 
 def _log(op: str, text: str, meta: Dict[str, Any]) -> None:
@@ -73,8 +87,12 @@ def _get_store() -> MemoryStore:
         raise RuntimeError("memory_store backend unavailable")
     global _STORE
     if _STORE is None:
-        _DIR.mkdir(parents=True, exist_ok=True)
-        _STORE = MemoryStore(_DIR / "memory.sqlite")
+        with _STORE_LOCK:
+            if _STORE is None:
+                _DIR.mkdir(parents=True, exist_ok=True)
+                _STORE = MemoryStore(_DIR / "memory.sqlite")
+                if _DIST is not None and not _STORE.ids:
+                    _DIST.restore_to(_STORE)
     return _STORE
 
 
@@ -89,7 +107,10 @@ def add_vector(text: str, metadata: Dict[str, Any]) -> None:
         emb = np.asarray(emb_raw, dtype=float).tolist()
     else:
         emb = [float(x) for x in emb_raw]
-    store.add(uuid.uuid4().hex, emb, meta)
+    id_ = uuid.uuid4().hex
+    store.add(id_, emb, meta)
+    if _DIST is not None:
+        _DIST.backup(id_, emb, meta)
     _log("add", text, meta)
 
 
@@ -163,6 +184,8 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
     else:
         emb_list = [float(x) for x in emb_raw]
     store.rewrite(old_id, emb_list, meta)
+    if _DIST is not None:
+        _DIST.backup(old_id, emb_list, meta)
     _log("rewrite", new_text, meta)
     return True
 
