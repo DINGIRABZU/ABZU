@@ -37,10 +37,10 @@ class EmotionFilter(logging.Filter):
         try:
             emotion, resonance = _provider()
         except RuntimeError as exc:  # pragma: no cover - safety
-            logger.warning("emotion provider runtime error: %s", exc, exc_info=exc)
+            logger.error("emotion provider runtime error: %s", exc, exc_info=exc)
             emotion, resonance = None, None
         except (TypeError, ValueError) as exc:  # pragma: no cover - safety
-            logger.warning(
+            logger.error(
                 "emotion provider returned invalid data: %s", exc, exc_info=exc
             )
             emotion, resonance = None, None

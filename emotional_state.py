@@ -9,6 +9,8 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
+import secrets
 import threading
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -17,6 +19,11 @@ try:  # pragma: no cover - optional dependency
     import soul_state_manager
 except Exception:  # pragma: no cover - optional dependency
     soul_state_manager = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+except Exception:  # pragma: no cover - optional dependency
+    AESGCM = None  # type: ignore
 
 STATE_FILE = Path("data/emotion_state.json")
 REGISTRY_FILE = Path("data/emotion_registry.json")
@@ -34,6 +41,46 @@ _REGISTRY: List[str] = []
 _LOCK = threading.Lock()
 
 logger = logging.getLogger(__name__)
+
+_AES_KEY: bytes | None = None
+
+
+def _get_key() -> bytes | None:
+    """Return AES key from ``EMOTION_AES_KEY`` env var if available."""
+    global _AES_KEY
+    if _AES_KEY is None:
+        key_hex = os.getenv("EMOTION_AES_KEY")
+        if key_hex:
+            try:
+                _AES_KEY = bytes.fromhex(key_hex)
+            except ValueError as exc:  # pragma: no cover - invalid key
+                logger.error("invalid EMOTION_AES_KEY: %s", exc, exc_info=exc)
+                _AES_KEY = None
+    return _AES_KEY
+
+
+def _encrypt(data: bytes) -> bytes:
+    """Encrypt ``data`` with AES-GCM if key and library are available."""
+    key = _get_key()
+    if not key or AESGCM is None:
+        return data
+    aes = AESGCM(key)
+    nonce = secrets.token_bytes(12)
+    return nonce + aes.encrypt(nonce, data, None)
+
+
+def _decrypt(blob: bytes) -> bytes:
+    """Decrypt ``blob`` with AES-GCM if possible."""
+    key = _get_key()
+    if not key or AESGCM is None:
+        return blob
+    aes = AESGCM(key)
+    nonce, ct = blob[:12], blob[12:]
+    try:
+        return aes.decrypt(nonce, ct, None)
+    except Exception as exc:  # pragma: no cover - corruption
+        logger.error("decryption failed: %s", exc, exc_info=exc)
+        raise
 
 
 def _log_event(event: str, **payload: Any) -> None:
@@ -55,7 +102,8 @@ def _load_state() -> None:
     with _LOCK:
         if STATE_FILE.exists():
             try:
-                _STATE = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+                raw = _decrypt(STATE_FILE.read_bytes())
+                _STATE = json.loads(raw.decode("utf-8"))
             except Exception:
                 _STATE = _DEFAULT_STATE.copy()
         else:
@@ -66,7 +114,8 @@ def _save_state() -> None:
     """Write :data:`_STATE` to :data:`STATE_FILE`."""
     with _LOCK:
         STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        STATE_FILE.write_text(json.dumps(_STATE, indent=2), encoding="utf-8")
+        data = json.dumps(_STATE, indent=2).encode("utf-8")
+        STATE_FILE.write_bytes(_encrypt(data))
 
 
 def _load_registry() -> None:
@@ -75,7 +124,8 @@ def _load_registry() -> None:
     with _LOCK:
         if REGISTRY_FILE.exists():
             try:
-                data = json.loads(REGISTRY_FILE.read_text(encoding="utf-8"))
+                raw = _decrypt(REGISTRY_FILE.read_bytes())
+                data = json.loads(raw.decode("utf-8"))
                 if isinstance(data, list):
                     unique = {str(e) for e in data}
                     _REGISTRY = sorted(unique)
@@ -91,7 +141,8 @@ def _save_registry() -> None:
     """Persist :data:`_REGISTRY` to :data:`REGISTRY_FILE`."""
     with _LOCK:
         REGISTRY_FILE.parent.mkdir(parents=True, exist_ok=True)
-        REGISTRY_FILE.write_text(json.dumps(_REGISTRY, indent=2), encoding="utf-8")
+        data = json.dumps(_REGISTRY, indent=2).encode("utf-8")
+        REGISTRY_FILE.write_bytes(_encrypt(data))
 
 
 def _ensure_in_registry(emotion: str) -> None:

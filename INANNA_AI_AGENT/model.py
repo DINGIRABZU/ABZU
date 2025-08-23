@@ -32,12 +32,14 @@ def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
     except (OSError, ValueError) as exc:
-        logger.error("Failed to load tokenizer from %s: %s", model_dir, exc)
+        logger.error(
+            "Failed to load tokenizer from %s: %s", model_dir, exc, exc_info=exc
+        )
         raise
     try:
         model = AutoModelForCausalLM.from_pretrained(model_dir, local_files_only=True)
     except (OSError, ValueError) as exc:
-        logger.error("Failed to load model from %s: %s", model_dir, exc)
+        logger.error("Failed to load model from %s: %s", model_dir, exc, exc_info=exc)
         raise
     return model, tokenizer
 
