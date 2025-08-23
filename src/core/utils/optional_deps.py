@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Helpers for optional dependencies with lightweight stubs."""
+
+from __future__ import annotations
 
 import logging
 import random as _random
@@ -28,7 +28,9 @@ def _stub_numpy() -> Any:
             return _random.random()
         return [_random.random() for _ in range(size)]
 
-    def _randint(low: int, high: int | None = None, size: int | None = None) -> int | List[int]:
+    def _randint(
+        low: int, high: int | None = None, size: int | None = None
+    ) -> int | List[int]:
         if high is None:
             high = low
             low = 0

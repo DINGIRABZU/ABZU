@@ -26,6 +26,7 @@ except Exception:  # pragma: no cover - optional dependency
 try:  # pragma: no cover - optional dependency
     from memory_store import MemoryStore as _MemoryStore
 except Exception:  # pragma: no cover - optional dependency
+
     class _MemoryStoreStub:
         def __init__(self, *_a: Any, **_k: Any) -> None:
             raise RuntimeError("memory_store backend unavailable")

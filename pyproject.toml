@@ -105,6 +105,14 @@ exclude = ["tests*", "docs*", "examples*"]
 
 [tool.black]
 line-length = 88
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
 
 [tool.isort]
 profile = "black"
