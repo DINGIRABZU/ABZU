@@ -19,7 +19,7 @@ sys.modules.setdefault("soundfile", sf)
 
 np = types.ModuleType("numpy")
 np.random = types.SimpleNamespace(rand=lambda *a, **k: 0)
-np.int16 = "int16"
+np.int16 = "int16"  # type: ignore[attr-defined]
 sys.modules.setdefault("numpy", np)
 sys.modules.setdefault("torch", types.ModuleType("torch"))
 sys.modules.setdefault("torch.nn", types.ModuleType("torch.nn"))
