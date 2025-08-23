@@ -16,6 +16,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+import fnmatch
 import yaml
 
 import emotion_registry
@@ -87,6 +88,29 @@ logger = logging.getLogger(__name__)
 AUDIT_DIR = BASE_DIR.parent / "audit_logs"
 SUGGESTIONS_FILE = BASE_DIR.parent / "INANNA_AI" / "suggestions.txt"
 SUGGESTIONS_LOG = AUDIT_DIR / "suggestions.txt"
+PERMISSIONS_FILE = BASE_DIR.parent / "permissions.yml"
+
+
+def _load_permissions() -> List[Dict[str, List[str]]]:
+    try:
+        data = yaml.safe_load(PERMISSIONS_FILE.read_text(encoding="utf-8"))
+        return data.get("paths", []) if isinstance(data, dict) else []
+    except Exception:
+        logger.error("permission manifest missing")
+        return []
+
+
+def has_permission(target: Path, operation: str) -> bool:
+    try:
+        rel = str(target.resolve().relative_to(PERMISSIONS_FILE.parent))
+    except ValueError:
+        return True
+    for entry in _load_permissions():
+        pattern = entry.get("path", "")
+        ops = entry.get("operations", [])
+        if pattern and fnmatch.fnmatch(rel, pattern) and operation in ops:
+            return True
+    return False
 
 _SPEC = importlib.util.spec_from_file_location(
     "code_introspector", BASE_DIR.parent / "src" / "core" / "code_introspector.py"
@@ -162,6 +186,13 @@ def run_qnl(
 def suggest_enhancement(validator: EthicalValidator | None = None) -> List[str]:
     """Validate code analysis suggestions and store approved ones."""
     validator = validator or EthicalValidator()
+
+    if not (
+        has_permission(SUGGESTIONS_FILE, "write")
+        and has_permission(SUGGESTIONS_LOG, "write")
+    ):
+        logger.error("Permission denied for writing suggestions")
+        return []
 
     suggestions = code_introspector.analyze_repository()
     approved: List[str] = []

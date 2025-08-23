@@ -12,6 +12,10 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
+import fnmatch
+import yaml
+from INANNA_AI.ethical_validator import EthicalValidator
+
 from core import feedback_logging
 from learning_mutator import propose_mutations
 from INANNA_AI.gates import verify_blob
@@ -26,6 +30,7 @@ vector_memory = _vector_memory
 INSIGHT_FILE = Path("insight_matrix.json")
 DATASET_SIGNATURE_FILE = Path("dataset.sig")
 PUBLIC_KEY_FILE = Path("dataset.pub")
+PERMISSIONS_FILE = Path("permissions.yml")
 
 NOVELTY_THRESHOLD = feedback_logging.NOVELTY_THRESHOLD
 COHERENCE_THRESHOLD = feedback_logging.COHERENCE_THRESHOLD
@@ -34,7 +39,32 @@ COHERENCE_THRESHOLD = feedback_logging.COHERENCE_THRESHOLD
 logger = logging.getLogger(__name__)
 
 
+def _load_permissions() -> List[Dict[str, List[str]]]:
+    try:
+        data = yaml.safe_load(PERMISSIONS_FILE.read_text(encoding="utf-8"))
+        return data.get("paths", []) if isinstance(data, dict) else []
+    except Exception:
+        logger.error("permission manifest missing")
+        return []
+
+
+def has_permission(target: Path, operation: str) -> bool:
+    try:
+        rel = str(target.resolve().relative_to(PERMISSIONS_FILE.parent))
+    except ValueError:
+        return True
+    for entry in _load_permissions():
+        pattern = entry.get("path", "")
+        ops = entry.get("operations", [])
+        if pattern and fnmatch.fnmatch(rel, pattern) and operation in ops:
+            return True
+    return False
+
+
 def _load_json(path: Path, default: Any) -> Any:
+    if not has_permission(path, "read"):
+        logger.error("Permission denied for reading %s", path)
+        return default
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
@@ -62,21 +92,23 @@ def compute_metrics(insights: dict, feedback: Iterable[dict]) -> tuple[float, fl
         return 0.0, 0.0
 
 
-def build_dataset(feedback: Iterable[dict]) -> list[dict]:
+def build_dataset(
+    feedback: Iterable[dict], validator: EthicalValidator | None = None
+) -> list[dict]:
     """Return a fine-tuning dataset from successful feedback entries."""
+    validator = validator or EthicalValidator()
     try:
         dataset = []
         for entry in feedback:
-            if entry.get("success") and entry.get("intent") and entry.get("action"):
-                dataset.append(
-                    {
-                        "prompt": entry["intent"],
-                        "completion": entry["action"],
-                    }
-                )
+            intent = entry.get("intent")
+            action = entry.get("action")
+            if entry.get("success") and intent and action:
+                if validator.validate_text(intent) and validator.validate_text(action):
+                    dataset.append({"prompt": intent, "completion": action})
         try:
             for proposal in propose_mutations(_load_json(INSIGHT_FILE, {})):
-                dataset.append({"prompt": "PATCH", "completion": proposal})
+                if validator.validate_text(proposal):
+                    dataset.append({"prompt": "PATCH", "completion": proposal})
         except Exception:
             logger.exception("failed to add mutation proposals")
         return dataset
@@ -87,6 +119,9 @@ def build_dataset(feedback: Iterable[dict]) -> list[dict]:
 
 def _load_vector_logs() -> List[Dict[str, Any]]:
     if vector_memory is None:
+        return []
+    if not has_permission(vector_memory.LOG_FILE, "read"):
+        logger.error("Permission denied for reading %s", vector_memory.LOG_FILE)
         return []
     if not vector_memory.LOG_FILE.exists():
         return []
@@ -102,12 +137,22 @@ def _load_vector_logs() -> List[Dict[str, Any]]:
 
 def system_idle() -> bool:
     """Return ``True`` if no training lock file exists."""
-    return not Path("training.lock").exists()
+    lock = Path("training.lock")
+    if not has_permission(lock, "read"):
+        logger.error("Permission denied for reading %s", lock)
+        return False
+    return not lock.exists()
 
 
 def verify_signature(dataset: list[dict]) -> bool:
     """Return ``True`` if ``dataset`` matches ``DATASET_SIGNATURE_FILE``."""
     try:
+        if not (
+            has_permission(DATASET_SIGNATURE_FILE, "read")
+            and has_permission(PUBLIC_KEY_FILE, "read")
+        ):
+            logger.error("Permission denied for signature files")
+            return False
         sig = DATASET_SIGNATURE_FILE.read_bytes()
         pub = PUBLIC_KEY_FILE.read_bytes()
         payload = json.dumps(dataset, sort_keys=True).encode("utf-8")
@@ -117,9 +162,19 @@ def verify_signature(dataset: list[dict]) -> bool:
         return False
 
 
-def trigger_finetune(dataset: list[dict]) -> None:
+def trigger_finetune(
+    dataset: list[dict], validator: EthicalValidator | None = None
+) -> None:
     """Invoke the LLM fine-tuning API with ``dataset``."""
+    validator = validator or EthicalValidator()
     try:
+        for item in dataset:
+            if not (
+                validator.validate_text(item.get("prompt", ""))
+                and validator.validate_text(item.get("completion", ""))
+            ):
+                logger.error("Dataset contains disallowed content")
+                return
         if not verify_signature(dataset):
             logger.error("dataset signature invalid")
             return
@@ -158,9 +213,10 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
         and vector_entries
         and system_idle()
     ):
-        dataset = build_dataset(feedback)
+        validator = EthicalValidator()
+        dataset = build_dataset(feedback, validator)
         if args.run:
-            trigger_finetune(dataset)
+            trigger_finetune(dataset, validator)
             logger.info("Fine-tuning triggered")
         else:
             logger.info(json.dumps(dataset, indent=2))
