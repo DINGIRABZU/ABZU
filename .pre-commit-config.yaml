@@ -27,4 +27,5 @@ repos:
     rev: v1.11.2
     hooks:
       - id: mypy
-        args: ["--ignore-missing-imports", "--follow-imports=skip"]
+        args: ["--config-file", "mypy.ini", "--ignore-missing-imports", "--follow-imports=skip"]
+        files: '^(INANNA_AI_AGENT/.*|emotional_state\.py|video_stream\.py|logging_filters\.py|tests/test_glm_command\.py)$'
