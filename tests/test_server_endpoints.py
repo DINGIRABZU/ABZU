@@ -82,6 +82,7 @@ def test_health_and_ready():
 def test_glm_command_authorized(monkeypatch):
     server = _load_server()
     monkeypatch.setattr(server, "send_command", lambda c: f"ran {c}")
+    monkeypatch.setattr(server.vector_memory, "add_vector", lambda t, m: None)
     with TestClient(server.app) as client:
         resp = client.post(
             "/glm-command",
@@ -89,12 +90,13 @@ def test_glm_command_authorized(monkeypatch):
             headers={"Authorization": "token"},
         )
     assert resp.status_code == 200
-    assert resp.json() == {"result": "ran ls"}
+    assert resp.json() == {"ok": True, "result": "ran ls"}
 
 
 def test_glm_command_requires_authorization(monkeypatch):
     server = _load_server()
     monkeypatch.setattr(server, "send_command", lambda c: "out")
+    monkeypatch.setattr(server.vector_memory, "add_vector", lambda t, m: None)
     with TestClient(server.app) as client:
         missing = client.post("/glm-command", json={"command": "ls"})
         wrong = client.post(
