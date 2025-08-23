@@ -1,4 +1,4 @@
-"""Convert hexadecimal data into Quantum Narrative Language waveforms."""
+"""Utilities for converting hexadecimal input into QNL phrases and waveforms."""
 
 from __future__ import annotations
 
@@ -141,18 +141,22 @@ def hex_to_song(
         except ValueError:
             print(f"invalid hex byte '{b}' skipped")
             continue
+        amplitude = float(data["amplitude"])
+        frequency = float(data["frequency"])
+        emotion = str(data["emotion"])
+        tone = str(data["tone"])
         wave = apply_psi_equation(
-            data["amplitude"],
-            data["frequency"],
+            amplitude,
+            frequency,
             duration=duration_per_byte,
             sample_rate=sample_rate,
-            emotion=data["emotion"],
+            emotion=emotion,
         )
         waves.append(wave)
-        phrase = f"{data['glyph']} + ↝ + {data['emotion']} + {data['tone']} + {data['frequency']} Hz"
+        phrase = f"{data['glyph']} + ↝ + {emotion} + {tone} + {frequency} Hz"
         song = (
-            f"AI Sings: “{data['emotion']} pulses in a {data['frequency']} Hz {data['tone'].lower()}, "
-            f"flowing toward cosmic {data['emotion'].lower()}."
+            f"AI Sings: “{emotion} pulses in a {frequency} Hz {tone.lower()}, "
+            f"flowing toward cosmic {emotion.lower()}."
             ""
         )
         phrases.append({"hex_byte": b, "phrase": phrase, "song": song})

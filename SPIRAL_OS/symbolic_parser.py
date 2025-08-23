@@ -1,4 +1,4 @@
-"""Parse symbolic inputs and dispatch matching system actions."""
+"""Intent parser that maps symbolic input to Spiral OS actions."""
 
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ def parse_intent(data: Dict[str, Any]) -> List[Any]:
         triggers = [name] + info.get("synonyms", []) + info.get("glyphs", [])
         if any(t.lower() in lowered for t in triggers):
             action = info.get("action")
-            func = _ACTIONS.get(action)
+            func = _ACTIONS.get(action) if isinstance(action, str) else None
             if func:
                 results.append(func(data))
     return results
@@ -82,7 +82,7 @@ def parse_intent(data: Dict[str, Any]) -> List[Any]:
 def route_intent(intent: Dict[str, Any]) -> Any:
     """Route ``intent`` using the action table."""
     action = intent.get("action")
-    func = _ACTIONS.get(action)
+    func = _ACTIONS.get(action) if isinstance(action, str) else None
     if func:
         return func(intent)
     return {"status": "unhandled"}
