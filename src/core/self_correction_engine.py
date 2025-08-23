@@ -5,6 +5,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict
 
+import numpy as np
+
 import archetype_shift_engine
 import emotional_state
 from INANNA_AI import voice_evolution
@@ -23,8 +25,17 @@ def _entry_for_emotion(emotion: str) -> Dict[str, Any]:
     }
 
 
-def adjust(detected: str, intended: str, tolerance: float) -> None:
-    """Adjust avatar tone when ``detected`` diverges from ``intended``."""
+def adjust(
+    detected: str,
+    intended: str,
+    tolerance: float,
+    audio: np.ndarray | None = None,
+) -> None:
+    """Adjust avatar tone when ``detected`` diverges from ``intended``.
+
+    When ``audio`` is provided the spectrum of the mismatched clip influences
+    the arousal and valence passed to :mod:`voice_evolution`.
+    """
 
     logger.info(
         "Adjusting from %s to %s with tolerance %.3f", detected, intended, tolerance
@@ -54,6 +65,23 @@ def adjust(detected: str, intended: str, tolerance: float) -> None:
         return
 
     entry = _entry_for_emotion(intended)
+    if audio is not None:
+        try:
+            spectrum = np.abs(np.fft.rfft(audio))
+            if spectrum.size:
+                energy = float(np.mean(spectrum))
+                norm_energy = float(
+                    np.clip(energy / (np.max(spectrum) + 1e-9), 0.0, 1.0)
+                )
+                freqs = np.arange(spectrum.size)
+                centroid = float(np.sum(freqs * spectrum) / np.sum(spectrum))
+                norm_centroid = float(
+                    np.clip(centroid / spectrum.size, 0.0, 1.0)
+                )
+                entry["arousal"] = norm_energy
+                entry["valence"] = norm_centroid
+        except Exception:
+            logger.exception("spectral analysis failed")
     try:
         voice_evolution.update_voice_from_history([entry])
         logger.info("Voice evolution updated for %s", intended)
