@@ -3,12 +3,12 @@ from __future__ import annotations
 """Audio ingestion helpers using librosa with optional Essentia and CLAP."""
 
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, cast
 
 import numpy as np
 
 try:  # pragma: no cover - optional dependency
-    import librosa  # type: ignore
+    import librosa
 except Exception:  # pragma: no cover - optional dependency
     # Provide a very small stub so tests can monkeypatch the expected
     # functions without requiring the heavy librosa dependency or its
@@ -16,35 +16,36 @@ except Exception:  # pragma: no cover - optional dependency
     # descriptive error.
     import types
 
-    def _missing(*_a, **_k):  # pragma: no cover - helper
+    def _missing(*_a: Any, **_k: Any) -> None:  # pragma: no cover - helper
         raise RuntimeError("librosa library not installed")
 
-    librosa = types.SimpleNamespace(  # type: ignore[assignment]
+    librosa: Any = types.SimpleNamespace(
         load=_missing,
         feature=types.SimpleNamespace(),
         beat=types.SimpleNamespace(tempo=_missing),
-    )
+    )  # type: ignore[no-redef]
 
 try:  # pragma: no cover - optional dependency
     import essentia.standard as ess
 except Exception:  # pragma: no cover - optional dependency
-    ess = None  # type: ignore
+    ess: Any = None  # type: ignore[no-redef]
 
 try:  # pragma: no cover - optional dependency
     import torch
 
     from transformers import ClapModel, ClapProcessor
 except Exception:  # pragma: no cover - optional dependency
-    ClapProcessor = None  # type: ignore
-    ClapModel = None  # type: ignore
-    torch = None  # type: ignore
+    ClapProcessor: Any = None  # type: ignore[no-redef]
+    ClapModel: Any = None  # type: ignore[no-redef]
+    torch = None
 
 
 def load_audio(path: Path, sr: int = 44100) -> Tuple[np.ndarray, int]:
     """Load audio using :func:`librosa.load`."""
     if librosa is None:
         raise RuntimeError("librosa library not installed")
-    return librosa.load(path, sr=sr, mono=True)
+    result = librosa.load(path, sr=sr, mono=True)
+    return cast(Tuple[np.ndarray, int], result)
 
 
 def extract_mfcc(samples: np.ndarray, sr: int) -> np.ndarray:
@@ -102,7 +103,7 @@ def extract_chords(samples: np.ndarray, sr: int) -> List[str]:
     chords: List[str] = []
     for frame in chroma.T:
         scores = {name: float(frame @ tmpl) for name, tmpl in templates.items()}
-        best = max(scores, key=scores.get)
+        best = max(scores, key=lambda name: scores[name])
         chords.append(best)
     return chords
 

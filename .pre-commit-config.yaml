@@ -32,5 +32,12 @@ repos:
     rev: v1.11.2
     hooks:
       - id: mypy
-        args: ["--ignore-missing-imports", "--follow-imports=skip"]
-        files: ^(audio/__init__\.py|core/__init__\.py|scripts/offsite_backup\.py|scripts/replay_state\.py|src/media/__init__\.py|src/media/audio/__init__\.py|src/media/avatar/__init__\.py|src/media/video/__init__\.py)$
+        args: ["--config-file", "mypy.ini"]
+        files: ^(src/core/utils/optional_deps\.py|src/dashboard/__init__\.py|INANNA_AI_AGENT/model\.py)$
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        args: ["-q"]
+        files: ^(src/|INANNA_AI_AGENT/)
