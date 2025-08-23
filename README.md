@@ -5,7 +5,10 @@
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Start Here
-Read the [CRYSTAL CODEX](docs/CRYSTAL_CODEX.md) for mission, dependencies, memory flow and self‑improvement protocols. The [documentation index](docs/index.md) lists additional guides.
+Begin with the [CRYSTAL CODEX](docs/CRYSTAL_CODEX.md) for mission, architecture,
+modules, dependencies, testing and style guidance. Then follow the
+[setup guide](docs/setup.md) to configure the environment. The
+[documentation index](docs/index.md) lists additional guides.
 
 ## Seven-Milestone Roadmap
 1. Virtual environment manager ✅
