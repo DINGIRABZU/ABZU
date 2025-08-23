@@ -131,11 +131,11 @@ def test_voice_avatar_pipeline(tmp_path, monkeypatch):
         vector_memory.LOG_FILE.unlink()
     monkeypatch.setattr(vector_memory.qnl_utils, "quantum_embed", lambda t: np.zeros(1))
 
-    class DummyCollection:
-        def add(self, ids, embeddings, metadatas):
+    class DummyStore:
+        def add(self, *a, **k):
             pass
 
-    monkeypatch.setattr(vector_memory, "_get_collection", lambda: DummyCollection())
+    monkeypatch.setattr(vector_memory, "_get_store", lambda: DummyStore())
     vector_memory.add_vector("test", {"src": str(out_path)})
 
     logs = vector_memory.LOG_FILE.read_text(encoding="utf-8").splitlines()
