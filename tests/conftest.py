@@ -106,6 +106,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_model.py"),
     str(ROOT / "tests" / "test_logging_filters.py"),
     str(ROOT / "tests" / "test_data_pipeline.py"),
+    str(ROOT / "tests" / "test_deployment_configs.py"),
     str(ROOT / "tests" / "test_memory_snapshot.py"),
     str(ROOT / "tests" / "performance" / "test_task_parser_performance.py"),
     str(ROOT / "tests" / "performance" / "test_vector_memory_performance.py"),

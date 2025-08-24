@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abzu-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: abzu
+  template:
+    metadata:
+      labels:
+        app: abzu
+    spec:
+      containers:
+        - name: abzu
+          image: registry.example.com/abzu:${APP_VERSION}
+          ports:
+            - containerPort: 8000

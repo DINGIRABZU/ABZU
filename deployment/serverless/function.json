@@ -1,0 +1,13 @@
+{
+  "name": "abzuFunction",
+  "runtime": "python3.11",
+  "handler": "handler.main",
+  "events": [
+    {
+      "http": {
+        "path": "/",
+        "method": "get"
+      }
+    }
+  ]
+}
