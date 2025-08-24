@@ -1,4 +1,8 @@
-"""Compose short ritual music based on emotion and play it."""
+"""Compose short ritual music based on emotion and play it.
+
+Falls back to generating synthetic overlay tones with NumPy when the
+``soundfile`` library is unavailable.
+"""
 
 from __future__ import annotations
 
@@ -90,25 +94,28 @@ def load_ritual_profile(path: Path = RITUAL_PROFILE) -> dict:
 def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     """Return a small overlay sample for ``archetype`` or synthesize one."""
 
+    def _synth() -> np.ndarray:
+        duration = 0.5
+        t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+        freq_map = {
+            "nigredo": 220.0,
+            "albedo": 440.0,
+            "rubedo": 660.0,
+            "citrinitas": 880.0,
+        }
+        freq = freq_map.get(archetype.lower(), 440.0)
+        tone = 0.05 * np.sin(2 * np.pi * freq * t)
+        return tone.astype(np.float32)
+
     data = ARCHETYPE_MIXES.get(archetype.lower())
     if data:
-        if sf is None:
-            raise RuntimeError("soundfile library not installed")
-        raw = base64.b64decode(data)
-        wave, _ = sf.read(BytesIO(raw), dtype="float32")
-        return wave.astype(np.float32)
+        if sf is not None:
+            raw = base64.b64decode(data)
+            wave, _ = sf.read(BytesIO(raw), dtype="float32")
+            return wave.astype(np.float32)
+        return _synth()
 
-    duration = 0.5
-    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
-    freq_map = {
-        "nigredo": 220.0,
-        "albedo": 440.0,
-        "rubedo": 660.0,
-        "citrinitas": 880.0,
-    }
-    freq = freq_map.get(archetype.lower(), 440.0)
-    tone = 0.05 * np.sin(2 * np.pi * freq * t)
-    return tone.astype(np.float32)
+    return _synth()
 
 
 def compose_ritual_music(
