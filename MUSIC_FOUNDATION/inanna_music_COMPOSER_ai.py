@@ -121,7 +121,8 @@ class InannaMusicInterpreter:
         self.waveform, self.sample_rate = librosa.load(self.path, sr=None, mono=True)
         print(f"🎧 Audio loaded: {self.path}")
         print(
-            f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec"
+            f"📐 Sample Rate: {self.sample_rate}, Duration: "
+            f"{len(self.waveform) / self.sample_rate:.2f} sec"
         )
 
     def analyze(self):

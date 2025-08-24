@@ -175,7 +175,8 @@ def initialize_crown() -> GLMIntegration:
         for name, url in env_servants.items():
             if name in servants:
                 logger.warning(
-                    "Duplicate servant model name '%s' in SERVANT_MODELS; keeping existing",
+                    "Duplicate servant model name '%s' in SERVANT_MODELS; "
+                    "keeping existing",
                     name,
                 )
                 continue

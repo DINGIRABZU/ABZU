@@ -129,7 +129,9 @@ class MoGEOrchestrator:
 
     @staticmethod
     def _select_plane(weight: float, archetype: str) -> str:
-        """Return ``ascension`` or ``underworld`` based on ``weight`` and ``archetype``."""
+        """Return ``ascension`` or ``underworld`` based on ``weight`` and
+        ``archetype``.
+        """
         if weight >= 0.6 or archetype.lower() in {"hero", "sage", "jester"}:
             return "ascension"
         return "underworld"

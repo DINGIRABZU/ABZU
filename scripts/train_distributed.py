@@ -52,7 +52,12 @@ def build_dataloader(cfg: OmegaConf) -> DataLoader:
         sampler = DistributedSampler(dataset)
     else:
         sampler = None
-    return DataLoader(dataset, batch_size=cfg.batch_size, sampler=sampler, shuffle=sampler is None)
+    return DataLoader(
+        dataset,
+        batch_size=cfg.batch_size,
+        sampler=sampler,
+        shuffle=sampler is None,
+    )
 
 
 def train_once(cfg: OmegaConf) -> float:
@@ -103,7 +108,12 @@ def run_sweep(cfg: OmegaConf) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Distributed trainer")
-    parser.add_argument("--config", type=Path, required=True, help="Path to config file")
+    parser.add_argument(
+        "--config",
+        type=Path,
+        required=True,
+        help="Path to config file",
+    )
     parser.add_argument("--sweep", action="store_true", help="Run Optuna sweep")
     args = parser.parse_args()
 

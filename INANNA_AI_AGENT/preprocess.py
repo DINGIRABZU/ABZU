@@ -108,7 +108,8 @@ def generate_embeddings(
 
     if np is None:
         raise ImportError(
-            "NumPy is required for generate_embeddings; install numpy to use this function."
+            "NumPy is required for generate_embeddings; install numpy to use "
+            "this function."
         )
     if SentenceTransformer is None:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")

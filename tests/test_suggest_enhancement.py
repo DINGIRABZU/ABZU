@@ -39,4 +39,4 @@ def test_suggest_enhancement(tmp_path, monkeypatch):
     assert (inanna_dir / "suggestions.txt").read_text().splitlines() == ["keep", "more"]
     log_lines = (audit_dir / "suggestions.txt").read_text().splitlines()
     assert len(log_lines) == 2
-    assert all("bad" not in l for l in log_lines)
+    assert all("bad" not in line for line in log_lines)

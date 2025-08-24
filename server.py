@@ -56,9 +56,7 @@ def get_current_user(
 
     token_info = _TOKENS.get(token)
     if not token_info:
-        logger.warning(
-            "Unauthorized token for scopes %s", security_scopes.scope_str
-        )
+        logger.warning("Unauthorized token for scopes %s", security_scopes.scope_str)
         raise HTTPException(status_code=401, detail="Invalid token")
 
     required = set(security_scopes.scopes)
@@ -133,7 +131,11 @@ if settings.glm_command_token:
                 cmd.command,
                 {"intent": "glm_command", "outcome": "rejected"},
             )
-            logger.warning("Rejected command %s by %s", cmd.command, current_user.get("sub"))
+            logger.warning(
+                "Rejected command %s by %s",
+                cmd.command,
+                current_user.get("sub"),
+            )
             raise HTTPException(status_code=400, detail="command not allowed")
         try:
             result = send_command(cmd.command)
