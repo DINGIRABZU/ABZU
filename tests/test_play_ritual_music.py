@@ -37,3 +37,19 @@ def test_play_ritual_music_cli(tmp_path, monkeypatch):
     prm.main(["--emotion", "joy", "--ritual", "\u2609", "--output", str(out)])
 
     assert out.exists()
+
+
+def test_play_ritual_music_fallback(tmp_path, monkeypatch):
+    def dummy_compose(
+        tempo, melody, *, sample_rate=44100, wav_path=None, wave_type="sine"
+    ):
+        return np.zeros(100, dtype=np.float32)
+
+    monkeypatch.setattr(prm, "sf", None)
+    monkeypatch.setattr(prm.layer_generators, "compose_human_layer", dummy_compose)
+    monkeypatch.setattr(prm.expressive_output, "play_audio", lambda p, loop=False: None)
+
+    out = tmp_path / "ritual.wav"
+    prm.compose_ritual_music("joy", "\u2609", out_path=out)
+
+    assert out.exists()
