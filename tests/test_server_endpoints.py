@@ -7,7 +7,11 @@ import sys
 from pathlib import Path
 from types import ModuleType
 
-import numpy as np
+import pytest
+
+np = pytest.importorskip("numpy")
+pytest.importorskip("fastapi")
+
 from fastapi import APIRouter
 from fastapi.testclient import TestClient
 
@@ -15,11 +19,27 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.modules.setdefault("SPIRAL_OS", ModuleType("SPIRAL_OS"))
 sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
-sys.modules.setdefault("core", ModuleType("core"))
 
 video_engine_stub = ModuleType("video_engine")
 video_engine_stub.start_stream = lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
-sys.modules.setdefault("core.video_engine", video_engine_stub)
+
+feedback_logging_stub = ModuleType("feedback_logging")
+
+core_stub = ModuleType("core")
+core_stub.video_engine = video_engine_stub
+core_stub.feedback_logging = feedback_logging_stub
+
+sys.modules["core"] = core_stub
+sys.modules["core.video_engine"] = video_engine_stub
+sys.modules["core.feedback_logging"] = feedback_logging_stub
+
+vector_memory_stub = ModuleType("vector_memory")
+vector_memory_stub.add_vector = lambda *a, **k: None
+sys.modules["vector_memory"] = vector_memory_stub
+
+music_generation_stub = ModuleType("music_generation")
+music_generation_stub.generate_from_text = lambda *a, **k: Path("dummy.wav")
+sys.modules["music_generation"] = music_generation_stub
 
 video_stream_stub = ModuleType("video_stream")
 video_stream_stub.router = APIRouter()
@@ -114,6 +134,8 @@ def test_shutdown_closes_streams():
     server = _load_server()
     closed_vs.clear()
     closed_wc.clear()
-    with TestClient(server.app):
-        pass
+    with TestClient(server.app) as client:
+        # trigger startup with a simple request
+        resp = client.get("/health")
+        assert resp.status_code == 200
     assert "v" in closed_vs and "w" in closed_wc
