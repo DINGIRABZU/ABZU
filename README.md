@@ -640,6 +640,18 @@ glyph sequences followed by an optional `[emotion]` to trigger hooks.
 
 See `docs/JSON_STRUCTURES.md` for example layouts and registration code.
 
+## Command-line Interface
+
+Once installed, the project exposes an ``abzu`` command bundling common
+developer tasks:
+
+```bash
+abzu start                        # Launch the Spiral OS stack
+abzu test                         # Run the unit tests
+abzu profile                      # Profile system startup
+abzu play-music path/to/song.wav  # Analyze a local audio file
+```
+
 ## Dashboard and Operator Console
 
 The Streamlit dashboard and the web‑based operator console rely on
