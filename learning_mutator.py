@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Suggest mutations to the intent matrix based on insight metrics."""
+
+from __future__ import annotations
 
 import argparse
 import json

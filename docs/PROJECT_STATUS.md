@@ -31,6 +31,7 @@ These results indicate optional dependencies and system binaries are still missi
 
 - Standardized import order in `tools.session_logger`, `tools.sandbox_session`, and `tools.reflection_loop`.
 - Added smoke tests covering reflection and session logging utilities.
+- Reordered imports in `learning_mutator`, `state_transition_engine`, and `archetype_shift_engine` and added transformation smoke tests.
 
 ## Completed Milestones
 - [Sovereign voice pipeline](https://github.com/DINGIRABZU/ABZU/pull/38) — owner: @DINGIRABZU.
