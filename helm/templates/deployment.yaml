@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abzu-inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: abzu-inference
+  template:
+    metadata:
+      labels:
+        app: abzu-inference
+    spec:
+      containers:
+        - name: triton
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.httpPort }}
+            - containerPort: {{ .Values.service.grpcPort }}
+            - containerPort: {{ .Values.service.metricsPort }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}

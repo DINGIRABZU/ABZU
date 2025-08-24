@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abzu-inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: abzu-inference
+  template:
+    metadata:
+      labels:
+        app: abzu-inference
+    spec:
+      containers:
+        - name: triton
+          image: abzu-inference:latest
+          ports:
+            - containerPort: 8000
+            - containerPort: 8001
+            - containerPort: 8002
+          resources:
+            limits:
+              nvidia.com/gpu: 1

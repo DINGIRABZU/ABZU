@@ -1,0 +1,5 @@
+apiVersion: v2
+name: abzu-inference
+description: Deploy ABZU Triton inference server with autoscaling
+version: 0.1.0
+appVersion: "0.1.0"
