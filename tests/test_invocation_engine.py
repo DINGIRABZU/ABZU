@@ -30,7 +30,7 @@ stub_orch.MoGEOrchestrator = StubMoGE
 rag_pkg.orchestrator = stub_orch
 sys.modules.setdefault("rag.orchestrator", stub_orch)
 
-import invocation_engine
+import invocation_engine  # noqa: E402
 
 
 class DummyOrchestrator:
@@ -60,6 +60,22 @@ def test_known_invocation(monkeypatch):
 
     assert res == ["ok"]
     assert called == [("∴⟐+🜂", "joy")]
+
+
+def test_add_vector_logs_warning(monkeypatch, caplog):
+    invocation_engine.clear_registry()
+
+    def fail(*_args, **_kwargs):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(invocation_engine.vector_memory, "add_vector", fail)
+
+    with caplog.at_level(logging.WARNING):
+        invocation_engine.register_invocation("∴⟐+🜂", "joy", lambda *a: None)
+
+    record = next(r for r in caplog.records if r.levelno == logging.WARNING)
+    assert record.symbols == "∴⟐+🜂"
+    assert record.emotion == "joy"
 
 
 def test_fuzzy_invocation(monkeypatch):
