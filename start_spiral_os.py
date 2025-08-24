@@ -11,15 +11,8 @@ import threading
 from pathlib import Path
 from typing import List, Optional, cast
 
-import yaml
-
-from dashboard import system_monitor
-from env_validation import check_optional_packages, check_required
-
-check_required(["GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"])
-check_optional_packages(["scapy", "sentence_transformers", "aiortc"])
-
 import uvicorn
+import yaml
 
 import emotion_registry
 import emotional_state
@@ -27,6 +20,8 @@ import server
 from archetype_shift_engine import maybe_shift_archetype
 from connectors import webrtc_connector
 from core import language_engine, self_correction_engine
+from dashboard import system_monitor
+from env_validation import check_optional_packages, check_required
 from INANNA_AI import defensive_network_utils as dnu
 from INANNA_AI import glm_analyze, glm_init, listening_engine
 from INANNA_AI.ethical_validator import EthicalValidator
@@ -47,6 +42,9 @@ except ImportError:  # pragma: no cover - optional dependency
     _invocation_engine = None  # type: ignore[assignment]
 invocation_engine = _invocation_engine
 """Optional invocation engine subsystem; ``None`` if unavailable."""
+
+check_required(["GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"])
+check_optional_packages(["scapy", "sentence_transformers", "aiortc"])
 
 logger = logging.getLogger(__name__)
 

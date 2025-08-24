@@ -29,3 +29,10 @@ The orchestrator exposes a lookup table called `_EMOTION_MODEL_MATRIX` which mat
 The selected model also determines the text-to-speech backend used when voice output is enabled. `decide_expression_options()` inspects recent vector memory records to choose between Google TTS, Bark or Coqui. Frequent entries of the same emotion are logged as `routing_decision` records and gradually bias future model selection toward the most successful choice.
 
 For a neutral summary of the router and related modules, see [architecture_overview.md](architecture_overview.md).
+
+## Key Scripts
+
+- `start_spiral_os.py` launches the Spiral OS initialization sequence and checks required environment configuration.
+- `init_crown_agent.py` prepares the Crown agent, servants and optional vector memory.
+- `crown_router.py` routes model and expression decisions using recent emotional context.
+- `crown_decider.py` selects language models and expressive options based on heuristic rules.
