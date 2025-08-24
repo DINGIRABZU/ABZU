@@ -22,7 +22,12 @@ def deploy_pipeline(path: str | Path) -> None:
     """
     path = Path(path)
     try:
-        data = yaml.safe_load(path.read_text()) or {}
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        logger.error("Unable to read pipeline YAML %s: %s", path, exc)
+        raise
+    try:
+        data = yaml.safe_load(text) or {}
     except yaml.YAMLError as exc:
         logger.error("Failed to parse pipeline YAML %s: %s", path, exc)
         raise
@@ -35,6 +40,7 @@ def deploy_pipeline(path: str | Path) -> None:
         command = step if isinstance(step, str) else step.get("run")
         if command:
             try:
+                logger.info("Running command: %s", command)
                 subprocess.run(command, shell=True, check=True)
             except subprocess.CalledProcessError as exc:
                 logger.error(
