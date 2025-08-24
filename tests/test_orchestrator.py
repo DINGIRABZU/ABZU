@@ -219,6 +219,30 @@ def test_handle_input_parses_and_routes(monkeypatch):
     assert out == {"result": True}
 
 
+def test_handle_input_logs_analyze_audio_error(monkeypatch, caplog):
+    """An exception in `listening_engine.analyze_audio` is logged."""
+
+    # avoid heavy side effects
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "load_thresholds", lambda: {"default": 1.0}
+    )
+    monkeypatch.setattr(
+        orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None
+    )
+    monkeypatch.setattr(MoGEOrchestrator, "route", lambda self, *a, **k: {})
+
+    def boom(*a, **k):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(orchestrator.listening_engine, "analyze_audio", boom)
+
+    orch = MoGEOrchestrator()
+    with caplog.at_level("ERROR"):
+        orch.handle_input("hello")
+
+    assert any("analyze_audio failed" in r.getMessage() for r in caplog.records)
+
+
 def test_schedule_action_executes(monkeypatch):
     called = []
 
