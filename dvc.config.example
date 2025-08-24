@@ -1,0 +1,5 @@
+[core]
+    remote = training-storage
+
+['remote "training-storage"']
+    url = s3://example-bucket/training-data

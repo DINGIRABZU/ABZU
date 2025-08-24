@@ -13,3 +13,9 @@ logs/
 
 # Database files
 *.db
+# DVC
+.dvc/config
+.dvc/tmp/
+
+# Training data managed by DVC
+data/training/
