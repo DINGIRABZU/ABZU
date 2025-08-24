@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Synchronise avatar expressions with audio playback."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from threading import Thread
@@ -8,17 +8,16 @@ from typing import Iterator
 
 import numpy as np
 
+import emotional_state
+from audio import engine as audio_engine
 from core.utils.optional_deps import lazy_import
+
+from . import video_engine
+from .facial_expression_controller import apply_expression
 
 librosa = lazy_import("librosa")
 if getattr(librosa, "__stub__", False):  # pragma: no cover - optional dependency
     librosa = None  # type: ignore
-
-import emotional_state
-from audio import engine as audio_engine
-
-from . import video_engine
-from .facial_expression_controller import apply_expression
 
 
 def _apply_mouth(frame: np.ndarray, ratio: float) -> np.ndarray:
