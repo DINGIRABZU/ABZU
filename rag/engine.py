@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 """Retrieval helper for vector memory documents."""
+# ruff: noqa: E402
 
 import argparse
 import importlib.util
+import logging
 from typing import Any, Dict, List, Optional
 
 try:  # pragma: no cover - optional dependency
@@ -16,14 +18,15 @@ _LLAMA_AVAILABLE = (
     importlib.util.find_spec("llama_index") is not None
     or importlib.util.find_spec("llamaindex") is not None
 )
+logger = logging.getLogger(__name__)
 
 
 def _make_item(text: str, meta: Dict[str, Any], score: float) -> Any:
     if _HAYSTACK_AVAILABLE:
         try:
             from haystack import Document
-        except Exception:  # pragma: no cover - optional dep missing at runtime
-            pass
+        except Exception as exc:  # pragma: no cover - optional dep missing at runtime
+            logger.warning("Haystack import failed: %s", exc)
         else:
             doc = Document(content=text, meta=meta)
             doc.score = score  # type: ignore[attr-defined]
@@ -31,8 +34,8 @@ def _make_item(text: str, meta: Dict[str, Any], score: float) -> Any:
     if _LLAMA_AVAILABLE:
         try:
             from llama_index.core.schema import NodeWithScore, TextNode
-        except Exception:  # pragma: no cover - optional dep missing at runtime
-            pass
+        except Exception as exc:  # pragma: no cover - optional dep missing at runtime
+            logger.warning("LlamaIndex import failed: %s", exc)
         else:
             node = TextNode(text=text, metadata=meta)
             return NodeWithScore(node=node, score=score)
