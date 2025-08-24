@@ -53,3 +53,20 @@ reproduce the error message:
 ```bash
 python scripts/bootstrap.py
 ```
+
+## Dependency check
+
+Verify that core modules import correctly and optional packages are available:
+
+```bash
+python scripts/dependency_check.py
+```
+
+- `❌` indicates a component failed to import.
+- `⚠️` means optional modules such as FAISS or OmegaConf are missing. Install them with:
+
+```bash
+pip install faiss-cpu omegaconf
+```
+
+Re-run the checker until all components report `✅`.
