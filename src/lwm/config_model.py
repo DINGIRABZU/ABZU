@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Configuration model for the Large World Model."""
+
+from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Minimal Large World Model converting 2D frames into a 3D scene."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Iterable
