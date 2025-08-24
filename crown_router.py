@@ -10,6 +10,8 @@ from __future__ import annotations
 from typing import Any, Dict
 
 import emotional_state
+from crown_decider import decide_expression_options
+from rag.orchestrator import MoGEOrchestrator
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -17,9 +19,6 @@ except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-
-from crown_decider import decide_expression_options
-from rag.orchestrator import MoGEOrchestrator
 
 
 def route_decision(
@@ -88,8 +87,8 @@ def route_decision(
         if a:
             avatar_weights[a] = avatar_weights.get(a, 0.0) + w
 
-    tts_backend = max(backend_weights, key=backend_weights.get)
-    avatar_style = max(avatar_weights, key=avatar_weights.get)
+    tts_backend = max(backend_weights, key=backend_weights.__getitem__)
+    avatar_style = max(avatar_weights, key=avatar_weights.__getitem__)
 
     return {
         "model": result.get("model"),

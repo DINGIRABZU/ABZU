@@ -6,9 +6,11 @@ import time
 from statistics import mean
 from typing import Any, Dict
 
+import crown_config
 import emotional_state
 import servant_model_manager as smm
 from INANNA_AI import emotional_memory
+from audio import voice_aura
 from task_profiling import classify_task
 
 try:  # pragma: no cover - optional dependency
@@ -17,8 +19,6 @@ except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
-import crown_config
-from audio import voice_aura
 
 crown_config.reload()
 _ROTATION_PERIOD = crown_config.settings.llm_rotation_period
