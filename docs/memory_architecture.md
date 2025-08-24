@@ -32,17 +32,20 @@ in a lightweight ontology stored in SQLite.
 ## Spiral registry
 
 [`spiral_memory.py`](../spiral_memory.py) aggregates multi‑layer data and logs
-major events with optional sacred glyphs.
+major events with optional sacred glyphs. When available, a small PyTorch
+transformer refines cross‑layer aggregates.
 
 ## Vector memory
 
-[`vector_memory.py`](../vector_memory.py) embeds text through ChromaDB and
-applies exponential decay so recent conversations have more influence.
+[`vector_memory.py`](../vector_memory.py) embeds text through a
+FAISS/SQLite-backed `MemoryStore`, optionally replicating to Redis. It applies
+exponential decay so recent conversations have more influence. Dependencies
+include `faiss`, `numpy` and optional `redis` for distributed backups.
 
 ```mermaid
 flowchart LR
     T[Text input] --> E[embed_text]
-    E --> C[(ChromaDB store)]
+    E --> C[(MemoryStore)]
     C --> D[Decay scheduler]
     C --> R[search]
     D --> C

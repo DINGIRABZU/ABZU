@@ -104,7 +104,7 @@ class SpiralMemory:
             result = self._model(tensor)
             return result.mean(dim=0).tolist()
         length = max(len(layer) for layer in self.layers)
-        acc = [[] for _ in range(length)]
+        acc: List[List[float]] = [[] for _ in range(length)]
         for layer in self.layers:
             for idx, val in enumerate(layer):
                 acc[idx].append(float(val))
