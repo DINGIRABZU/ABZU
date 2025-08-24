@@ -119,9 +119,7 @@ def test_glm_command_requires_authorization(monkeypatch):
     monkeypatch.setattr(server, "send_command", lambda cmd: "ran")
     monkeypatch.setattr(server.vector_memory, "add_vector", lambda t, m: None)
     status_missing = asyncio.run(run_request({}))
-    status_wrong = asyncio.run(
-        run_request({"Authorization": "Bearer bad"})
-    )
+    status_wrong = asyncio.run(run_request({"Authorization": "Bearer bad"}))
     assert status_missing == 401
     assert status_wrong == 401
 

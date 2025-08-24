@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Ensure components have descriptions and data-flow references.
 
+### Quality
+
+- Verified repository passes `ruff` and `black` checks.
+
 ## [0.1.0] - 2025-08-23
 
 ### Added
