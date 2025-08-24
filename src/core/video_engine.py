@@ -3,12 +3,12 @@ from __future__ import annotations
 """Avatar video generation utilities."""
 
 import logging
-import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterator, Optional
 
 import numpy as np
+import tomllib
 
 from core.utils.optional_deps import lazy_import
 

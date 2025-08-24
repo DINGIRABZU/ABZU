@@ -21,7 +21,6 @@ import requests
 
 from download_model import download_deepseek  # reuse logic
 
-
 LOG_PATH = Path("logs") / "model_audit.log"
 LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(

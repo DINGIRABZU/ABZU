@@ -15,8 +15,8 @@ from __future__ import annotations
 import logging
 import tempfile
 import threading
-from dataclasses import dataclass
 from collections import deque
+from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Callable, Deque, Dict, List

@@ -17,6 +17,7 @@ from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import WordLevelTrainer
+
 from transformers import GPT2Config, GPT2LMHeadModel, PreTrainedTokenizerFast
 
 ROOT = Path(__file__).resolve().parents[1]

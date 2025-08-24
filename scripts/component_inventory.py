@@ -14,13 +14,13 @@ quality score. Results are written to three files under ``docs``:
 * ``component_status.json`` – JSON snapshot for historical comparisons.
 """
 
-from dataclasses import dataclass
-from datetime import date
-from pathlib import Path
 import ast
 import json
 import subprocess
 import sys
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
 from typing import Iterator
 
 REPO_ROOT = Path(__file__).resolve().parent.parent

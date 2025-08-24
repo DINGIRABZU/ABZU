@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 # mypy: ignore-errors
-
 import sys
 import types
 from pathlib import Path
@@ -14,9 +13,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from INANNA_AI_AGENT import inanna_ai
-
 import env_validation
+from INANNA_AI_AGENT import inanna_ai
 
 pytestmark = pytest.mark.skipif(
     not env_validation.check_audio_binaries(require=False),
