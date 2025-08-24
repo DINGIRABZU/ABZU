@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+
+# Base image providing NVIDIA Triton Inference Server
+FROM nvcr.io/nvidia/tritonserver:24.03-py3
+
+# Copy model repository into the image
+ARG MODEL_REPO=./models
+ENV MODEL_REPOSITORY=/models
+COPY ${MODEL_REPO} ${MODEL_REPOSITORY}
+
+# Expose Triton HTTP, gRPC and metrics ports
+EXPOSE 8000 8001 8002
+
+# Launch Triton server with the model repository
+CMD ["tritonserver", "--model-repository=/models"]

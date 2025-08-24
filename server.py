@@ -13,6 +13,7 @@ import numpy as np
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from PIL import Image
+from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field
 
 import corpus_memory_logging
@@ -38,6 +39,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
+
+Instrumentator().instrument(app).expose(app)
 
 _avatar_stream: Optional[Iterator[np.ndarray]] = None
 

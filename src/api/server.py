@@ -5,10 +5,13 @@ from __future__ import annotations
 from typing import List, Set
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from style_engine import style_library
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app)
 
 # ---------------------------------------------------------------------------
 # Core logic functions

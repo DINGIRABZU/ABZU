@@ -6,11 +6,14 @@ import ast
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException
+from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel
 
 from src.lwm import default_lwm
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app)
 
 # Allowed directories for module inspection; defaults to repository root.
 ALLOWED_DIRS = [Path(__file__).resolve().parent]
