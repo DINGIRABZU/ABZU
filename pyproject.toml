@@ -69,6 +69,8 @@ stable_baselines3 = ["stable-baselines3==2.7.0"]
 emotivoice = ["EmotiVoice==0.2.0"]
 wav2lip = ["wav2lip==1.2.4"]
 ultralytics = ["ultralytics==8.3.179"]
+optuna = ["optuna==3.6.1"]
+shap = ["shap==0.45.0"]
 
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
