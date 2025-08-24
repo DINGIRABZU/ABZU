@@ -326,6 +326,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_emotion_registry.py` | Tests for emotion registry. | pytest, yaml |
 | `tests/test_emotional_memory.py` | Tests for emotional memory. | INANNA_AI |
 | `tests/test_emotional_state.py` | Tests for emotional state. | pytest |
+| `tests/test_emotional_state_logging.py` | Smoke test for emotion event logging. | emotional_state, pytest |
 | `tests/test_emotional_synaptic_engine.py` | Tests for emotional synaptic engine. | INANNA_AI |
 | `tests/test_emotional_voice.py` | Tests for emotional voice. | INANNA_AI |
 | `tests/test_env_validation.py` | Tests for env validation. | pytest |
@@ -399,6 +400,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_personality_layers.py` | Tests for personality layers. | INANNA_AI, pytest |
 | `tests/test_pipeline_cli.py` | Tests for pipeline cli. | None |
 | `tests/test_play_ritual_music.py` | Tests for play ritual music. | audio, numpy, soundfile |
+| `tests/test_play_ritual_music_smoke.py` | Smoke test for ritual music playback. | audio, numpy, soundfile |
 | `tests/test_predictive_gate.py` | Tests for predictive gate. | INANNA_AI |
 | `tests/test_preprocess.py` | Tests for preprocess. | INANNA_AI_AGENT, numpy |
 | `tests/test_project_audit.py` | Tests for project audit. | tools |
