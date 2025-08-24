@@ -34,6 +34,7 @@ except Exception:  # pragma: no cover - optional dependency
     _MemoryStore = _MemoryStoreStub  # type: ignore[misc,assignment]
 
 import threading
+from dataclasses import dataclass
 
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
@@ -50,6 +51,18 @@ _DECAY_SECONDS = 86_400.0  # one day
 
 LOG_FILE = Path("data/vector_memory.log")
 logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True)
+class VersionInfo:
+    """Semantic version information for :mod:`vector_memory`."""
+
+    major: int
+    minor: int
+    patch: int
+
+
+__version__ = VersionInfo(0, 1, 0)
 _STORE: Any | None = None
 _STORE_LOCK = threading.Lock()
 _DIST: Any | None = None
