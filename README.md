@@ -483,27 +483,28 @@ running with Docker or Compose).
 
 ## Docker Compose
 
-Spiral OS ships with a compose file that launches the service in one command.
-The stack reads environment variables from `secrets.env` so create it first:
+Spiral OS ships with a compose file that launches the full stack—including the API
+server, vector memory, and model backends—in one command. The stack reads
+environment variables from `secrets.env` so create it first:
 
 ```bash
 cp secrets.env.template secrets.env
 # edit secrets.env and provide your API keys
 ```
 
-Then build and start the containers:
+Then build and start the full stack:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
-On subsequent runs simply execute `docker-compose up` to start the service.
+On subsequent runs simply execute `docker compose up` to start the stack.
 
 The container exposes ports `8000` for the FastAPI endpoint and `8001` for the
 local GLM server.
 
 Mounted `data` and `logs` directories persist across restarts. Stop the stack
-with `docker-compose down`. Open `web_console/index.html` to send commands via
+with `docker compose down`. Open `web_console/index.html` to send commands via
 the FastAPI endpoint at `http://localhost:8000/glm-command`.
 
 For instructions on building the GPU container and deploying the Kubernetes

@@ -10,9 +10,13 @@ RUN apt-get update && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/*
 
+COPY requirements.lock ./
+
+RUN python -m pip install --no-cache-dir -r requirements.lock
+
 COPY . .
 
-RUN python -m pip install --no-cache-dir .[spatial]
+RUN python -m pip install --no-cache-dir --no-deps .
 
 RUN useradd --create-home --shell /bin/bash inanna && \
     chown -R inanna:inanna /app
