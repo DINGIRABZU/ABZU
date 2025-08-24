@@ -1,8 +1,12 @@
 name: CI
 
 on:
-  push:
   pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
 
 # Reusable anchors keep the workflow maintainable
 jobs:
@@ -60,15 +64,35 @@ jobs:
           coverage run -m pytest
           coverage html
           coverage report --fail-under=85
-      - name: Component inventory
-        run: python scripts/component_inventory.py
       - name: Upload coverage HTML
         uses: actions/upload-artifact@v4
         with:
           name: coverage-html
           path: htmlcov
-      - name: Upload component status
+      - name: Component inventory
+        run: python scripts/component_inventory.py
+      - name: Quality score
+        env:
+          CI_ARTIFACTS_DIR: ci_artifacts
+        run: python scripts/quality_score.py
+      - name: Upload documentation
         uses: actions/upload-artifact@v4
         with:
-          name: component-status
-          path: docs/component_status.md
+          name: documentation
+          path: |
+            docs/component_status.md
+            docs/component_index.md
+            docs/component_status.json
+            CHANGELOG*.md
+      - name: Gate release on quality threshold
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          python - <<'PY'
+          import json, sys
+          data = json.load(open('data/quality_history.json'))[-1]['results']
+          threshold = 7
+          bad = [n for n, m in data.items() if m['overall'] < threshold]
+          if bad:
+            print('Components below threshold:', ', '.join(bad))
+            sys.exit(1)
+          PY
