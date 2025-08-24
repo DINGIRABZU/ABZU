@@ -122,6 +122,8 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_media_avatar.py"),
     str(ROOT / "tests" / "test_introspection_api.py"),
     str(ROOT / "tests" / "test_lwm.py"),
+    str(ROOT / "tests" / "test_emotional_state_logging.py"),
+    str(ROOT / "tests" / "test_play_ritual_music_smoke.py"),
 }
 
 
