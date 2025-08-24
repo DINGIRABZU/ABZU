@@ -18,7 +18,12 @@ sys.modules.setdefault("SPIRAL_OS.qnl_utils", ModuleType("qnl_utils"))
 sys.modules.setdefault("core", ModuleType("core"))
 video_engine_stub = ModuleType("video_engine")
 video_engine_stub.start_stream = lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
+feedback_logging_stub = ModuleType("feedback_logging")
+core_mod = sys.modules["core"]
+core_mod.video_engine = video_engine_stub
+core_mod.feedback_logging = feedback_logging_stub
 sys.modules.setdefault("core.video_engine", video_engine_stub)
+sys.modules.setdefault("core.feedback_logging", feedback_logging_stub)
 from fastapi import APIRouter
 
 video_stream_stub = ModuleType("video_stream")
@@ -87,7 +92,7 @@ def test_glm_command_endpoint(monkeypatch):
             resp = await client.post(
                 "/glm-command",
                 json={"command": "ls"},
-                headers={"Authorization": "token"},
+                headers={"Authorization": "Bearer token"},
             )
         return resp.status_code, resp.json()
 
@@ -114,7 +119,9 @@ def test_glm_command_requires_authorization(monkeypatch):
     monkeypatch.setattr(server, "send_command", lambda cmd: "ran")
     monkeypatch.setattr(server.vector_memory, "add_vector", lambda t, m: None)
     status_missing = asyncio.run(run_request({}))
-    status_wrong = asyncio.run(run_request({"Authorization": "bad"}))
+    status_wrong = asyncio.run(
+        run_request({"Authorization": "Bearer bad"})
+    )
     assert status_missing == 401
     assert status_wrong == 401
 
@@ -149,7 +156,9 @@ def test_avatar_frame_endpoint(monkeypatch):
         async with httpx.AsyncClient(
             transport=transport, base_url="http://testserver"
         ) as client:
-            resp = await client.get("/avatar-frame")
+            resp = await client.get(
+                "/avatar-frame", headers={"Authorization": "Bearer token"}
+            )
         return resp.status_code, resp.json()
 
     frames = iter([np.zeros((1, 1, 3), dtype=np.uint8)])

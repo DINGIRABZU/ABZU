@@ -109,7 +109,7 @@ def test_glm_command_authorized(monkeypatch):
         resp = client.post(
             "/glm-command",
             json={"command": "ls"},
-            headers={"Authorization": "token"},
+            headers={"Authorization": "Bearer token"},
         )
     assert resp.status_code == 200
     assert resp.json() == {"ok": True, "result": "ran ls"}
@@ -124,7 +124,7 @@ def test_glm_command_requires_authorization(monkeypatch):
         wrong = client.post(
             "/glm-command",
             json={"command": "ls"},
-            headers={"Authorization": "bad"},
+            headers={"Authorization": "Bearer bad"},
         )
     assert missing.status_code == 401
     assert wrong.status_code == 401
