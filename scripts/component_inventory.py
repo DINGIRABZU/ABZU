@@ -21,7 +21,7 @@ import ast
 import json
 import subprocess
 import sys
-from typing import Iterable, Iterator
+from typing import Iterator
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STATUS_MD = REPO_ROOT / "docs" / "component_status.md"

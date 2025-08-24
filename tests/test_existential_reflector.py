@@ -1,6 +1,7 @@
 """Tests for existential reflector."""
 
 from __future__ import annotations
+# mypy: ignore-errors
 
 import sys
 from pathlib import Path
@@ -9,6 +10,7 @@ from types import ModuleType
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from INANNA_AI_AGENT import inanna_ai
 from INANNA_AI.existential_reflector import ExistentialReflector
 
 
