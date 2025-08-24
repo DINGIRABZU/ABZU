@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import base64
 import logging
+import time
 from contextlib import asynccontextmanager
 from io import BytesIO
 from typing import AsyncIterator, Iterator, Optional, TypedDict
 
 import numpy as np
-from fastapi import FastAPI, HTTPException, Security
+from fastapi import FastAPI, HTTPException, Security, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from PIL import Image
@@ -91,6 +92,14 @@ app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
 
 Instrumentator().instrument(app).expose(app)
+
+@app.middleware("http")
+async def log_request_time(request: Request, call_next):
+    start = time.perf_counter()
+    response = await call_next(request)
+    duration = time.perf_counter() - start
+    logger.info("request completed", extra={"path": request.url.path, "method": request.method, "duration": duration})
+    return response
 
 _avatar_stream: Optional[Iterator[np.ndarray]] = None
 
