@@ -1,4 +1,5 @@
 """Utility functions to log session audio and video."""
+
 from __future__ import annotations
 
 # ruff: noqa: E402

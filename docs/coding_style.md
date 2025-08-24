@@ -12,6 +12,11 @@ This document outlines the project's coding conventions.
 - Favor `async`/`await` for I/O-bound or concurrent tasks.
 - Ensure coroutines are awaited and avoid blocking calls inside async functions.
 
+## Linting and Formatting
+
+- Use `ruff` to check style and `black` to enforce formatting.
+- Verify types with `mypy`.
+
 ## Testing Requirements
 
 - Write unit tests with `pytest` for new features and bug fixes.

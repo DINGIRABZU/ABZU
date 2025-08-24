@@ -33,10 +33,12 @@ Follow the conventions in [CODE_STYLE.md](CODE_STYLE.md). Highlights include:
 - Imports grouped into standard library, third‑party, and local sections.
 - Docstrings for public modules, classes, and functions.
 
-Run static type checks with:
+Run the standard tooling before committing changes:
 
 ```bash
-mypy
+ruff <paths>    # lint
+black <paths>   # format
+mypy            # type check
 ```
 
 ## Testing
