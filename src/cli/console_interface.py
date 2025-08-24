@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Interactive REPL for the Crown agent."""
+
+from __future__ import annotations
 
 import argparse
 import logging
@@ -61,10 +61,14 @@ def _wait_for_glm_ready(retries: int = 3, delay: float = 5.0) -> GLMIntegration:
             resp.raise_for_status()
             return initialize_crown()
         except (requests.RequestException, SystemExit) as exc:
-            print(
-                f"[{attempt}/{retries}] Unable to reach GLM service at {health_url}: {exc}\n"
+            logger.error(
+                "[%s/%s] Unable to reach GLM service at %s: %s\n"
                 "Start the model server with 'bash crown_model_launcher.sh' and ensure "
-                "the GLM_API_URL environment variable points to the correct endpoint."
+                "the GLM_API_URL environment variable points to the correct endpoint.",
+                attempt,
+                retries,
+                health_url,
+                exc,
             )
         if attempt < retries:
             print(f"Retrying in {delay} seconds...")
@@ -122,7 +126,6 @@ def run_repl(argv: list[str] | None = None) -> None:
             print(f"Music saved to {music_path}")
         except Exception:  # pragma: no cover - generation may fail
             logger.exception("music generation failed")
-            print("Music generation failed")
 
     if args.music:
         _play_music(args.music)
@@ -136,7 +139,7 @@ def run_repl(argv: list[str] | None = None) -> None:
             with patch_stdout():
                 text = session.prompt("crown> ")
         except (EOFError, KeyboardInterrupt):
-            print()
+            logger.error("console input interrupted")
             break
 
         if not text:
@@ -173,7 +176,7 @@ def run_repl(argv: list[str] | None = None) -> None:
                     speaking_engine.play_wav(str(out_path))
                     print("Cloned voice registered for future replies.")
                 except Exception as exc:
-                    print(f"Voice cloning unavailable: {exc}")
+                    logger.error("Voice cloning unavailable: %s", exc)
                     voice_clone = None
                 continue
             if command.startswith("/sandbox"):
@@ -185,7 +188,7 @@ def run_repl(argv: list[str] | None = None) -> None:
                 try:
                     patch_text = patch_file.read_text()
                 except Exception as exc:
-                    print(f"Unable to read patch file: {exc}")
+                    logger.error("Unable to read patch file: %s", exc)
                     continue
                 repo_root = Path(__file__).resolve().parents[1]
                 try:
@@ -203,11 +206,11 @@ def run_repl(argv: list[str] | None = None) -> None:
                         print(result.stdout)
                         print("Sandbox tests passed.")
                     except subprocess.CalledProcessError as exc:
-                        print(exc.stdout)
-                        print(exc.stderr)
-                        print("Sandbox tests failed.")
+                        logger.error("%s", exc.stdout)
+                        logger.error("%s", exc.stderr)
+                        logger.error("Sandbox tests failed.")
                 except Exception as exc:
-                    print(f"Sandbox error: {exc}")
+                    logger.error("Sandbox error: %s", exc)
                 continue
             print(f"Unknown command: {command}")
             continue
@@ -217,9 +220,8 @@ def run_repl(argv: list[str] | None = None) -> None:
             continue
         try:
             reply = crown_prompt_orchestrator(command, glm)
-        except Exception as exc:  # pragma: no cover - runtime errors
-            logger.error("orchestrator failed: %s", exc)
-            print("Error: could not process input")
+        except Exception:  # pragma: no cover - runtime errors
+            logger.exception("Error: could not process input")
             continue
         print(reply)
         if speak and isinstance(reply, dict):
@@ -280,9 +282,8 @@ def _show_memory(query: str = "") -> None:
                 print(f"{ts} [{src}] {text}")
             else:
                 print(f"[{src}] {text}")
-    except Exception as exc:  # pragma: no cover - optional deps
-        logger.error("Failed to load memory: %s", exc)
-        print("Memory unavailable")
+    except Exception:  # pragma: no cover - optional deps
+        logger.exception("Memory unavailable")
 
 
 __all__ = ["run_repl"]
