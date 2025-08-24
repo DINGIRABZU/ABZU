@@ -15,6 +15,7 @@ from __future__ import annotations
 import logging
 import tempfile
 import threading
+from dataclasses import dataclass
 from collections import deque
 from pathlib import Path
 from time import perf_counter
@@ -72,6 +73,18 @@ from task_profiling import ritual_action_sequence
 from tools import reflection_loop
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True)
+class VersionInfo:
+    """Semantic version information for :mod:`rag.orchestrator`."""
+
+    major: int
+    minor: int
+    patch: int
+
+
+__version__ = VersionInfo(0, 1, 0)
 
 
 class MoGEOrchestrator:
