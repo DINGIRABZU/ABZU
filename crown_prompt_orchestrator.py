@@ -16,7 +16,9 @@ from importlib import import_module
 from pathlib import Path
 from typing import Any, Dict
 
+import crown_decider
 import emotional_state
+import servant_model_manager as smm
 from core.memory_physical import PhysicalEvent, store_physical_event
 from corpus_memory_logging import load_interactions, log_interaction
 from INANNA_AI import emotion_analysis, emotional_memory
@@ -26,6 +28,7 @@ from memory.sacred import generate_sacred_glyph
 from memory.spiritual import map_to_symbol
 from spiral_memory import REGISTRY_DB, spiral_recall
 from state_transition_engine import StateTransitionEngine
+from task_profiling import classify_task
 
 try:
     _settings_mod = import_module("config.settings")
@@ -35,10 +38,6 @@ except Exception:  # pragma: no cover - missing config
     def is_layer_enabled(name: str) -> bool:  # type: ignore
         return True
 
-
-import crown_decider
-import servant_model_manager as smm
-from task_profiling import classify_task
 
 logger = logging.getLogger(__name__)
 

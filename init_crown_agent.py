@@ -6,18 +6,16 @@ import logging
 import os
 from pathlib import Path
 
+import servant_model_manager as smm
 import yaml  # type: ignore[import-untyped]
-
-from env_validation import parse_servant_models
-from INANNA_AI import glm_integration as gi
+from INANNA_AI import corpus_memory, glm_integration as gi
 from INANNA_AI.glm_integration import GLMIntegration
+from env_validation import parse_servant_models
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
-import servant_model_manager as smm
-from INANNA_AI import corpus_memory
 
 vector_memory = _vector_memory  # Optional vector memory subsystem
 
