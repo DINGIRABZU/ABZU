@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple finite state engine based on emotional cues."""
+
+from __future__ import annotations
 
 from typing import List
 

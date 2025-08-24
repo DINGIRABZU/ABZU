@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Determine when to switch personality layers based on ritual cues or emotion."""
+
+from __future__ import annotations
 
 import logging
 from typing import Iterable
@@ -54,13 +54,13 @@ def maybe_shift_archetype(event: str, emotion: str) -> str | None:
     resonance = emotion_registry.get_resonance_level()
     current = emotion_registry.get_current_layer()
     if resonance >= 0.8:
-        layer = EMOTION_LAYER_MAP.get(emotion.lower())
-        if layer and layer != current:
+        target: str | None = EMOTION_LAYER_MAP.get(emotion.lower())
+        if target and target != current:
             try:
-                soul_state_manager.update_archetype(layer)
+                soul_state_manager.update_archetype(target)
             except Exception:
                 logger.exception("Failed to update archetype")
-            return layer
+            return target
     return None
 
 
