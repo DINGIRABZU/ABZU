@@ -31,7 +31,7 @@ jobs:
           pip install ruff black mypy pytest
 
       - name: Ruff
-        run: ruff check --exit-zero .
+        run: ruff check .
 
       - name: Black
         run: black --check --exclude tests .
