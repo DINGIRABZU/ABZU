@@ -49,6 +49,16 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
     monkeypatch.setattr(prm.layer_generators, "compose_human_layer", dummy_compose)
     monkeypatch.setattr(prm.expressive_output, "play_audio", lambda p, loop=False: None)
 
+    class _DummyPB:
+        def wait_done(self):
+            return None
+
+    class _DummySA:
+        def play_buffer(self, *args, **kwargs):
+            return _DummyPB()
+
+    monkeypatch.setattr(prm, "sa", _DummySA())
+
     out = tmp_path / "ritual.wav"
     prm.compose_ritual_music("joy", "\u2609", out_path=out)
 

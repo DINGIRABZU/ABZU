@@ -542,6 +542,9 @@ bash crown_model_launcher.sh > glm_launch.log 2>&1
   that your network connection is active.
 - Confirm port `8001` is free before launching; an existing process on that port
   prevents the health endpoint from becoming ready.
+- If `soundfile` is missing, `play_ritual_music.py` synthesizes tones with
+  NumPy and plays them through `simpleaudio`. Install `simpleaudio` to hear
+  this fallback output.
 
 ## Codex GPU Deployment
 

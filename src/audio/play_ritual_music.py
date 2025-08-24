@@ -1,7 +1,10 @@
 """Compose short ritual music based on emotion and play it.
 
-If the optional ``soundfile`` dependency is missing, tones are synthesized with
-NumPy and written using Python's :mod:`wave` module.
+When the optional :mod:`soundfile` dependency is available the waveform is
+written and played using that library. If :mod:`soundfile` cannot be imported,
+tones are synthesized directly with NumPy and played back via
+``simpleaudio`` with the output also saved using the standard :mod:`wave`
+module.
 """
 
 from __future__ import annotations
@@ -19,6 +22,11 @@ try:  # pragma: no cover - optional dependency
     import soundfile as sf
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    import simpleaudio as sa
+except Exception:  # pragma: no cover - optional dependency
+    sa = None  # type: ignore
 
 from core import expressive_output
 from INANNA_AI import emotion_analysis, sonic_emotion_mapper
@@ -118,6 +126,60 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     return _synth()
 
 
+def _note_to_freq_simple(note: str) -> float:
+    """Convert a basic note name like ``C4`` to a frequency in Hertz."""
+
+    offsets = {
+        "C": -9,
+        "C#": -8,
+        "Db": -8,
+        "D": -7,
+        "D#": -6,
+        "Eb": -6,
+        "E": -5,
+        "F": -4,
+        "F#": -3,
+        "Gb": -3,
+        "G": -2,
+        "G#": -1,
+        "Ab": -1,
+        "A": 0,
+        "A#": 1,
+        "Bb": 1,
+        "B": 2,
+    }
+    name = note[:-1]
+    octave = int(note[-1])
+    semitone = offsets.get(name, 0) + 12 * (octave - 4)
+    return 440.0 * (2 ** (semitone / 12))
+
+
+def _synthesize_melody(
+    tempo: float,
+    melody: list[str],
+    *,
+    wave_type: str = "sine",
+    sample_rate: int = 44100,
+) -> np.ndarray:
+    """Generate a simple waveform for ``melody`` without ``soundfile``."""
+
+    beat_duration = 60.0 / float(tempo)
+    segments: list[np.ndarray] = []
+    for note in melody:
+        freq = _note_to_freq_simple(str(note))
+        t = np.linspace(0, beat_duration, int(sample_rate * beat_duration), endpoint=False)
+        if wave_type == "square":
+            seg = 0.5 * np.sign(np.sin(2 * np.pi * freq * t))
+        else:
+            seg = 0.5 * np.sin(2 * np.pi * freq * t)
+        segments.append(seg.astype(np.float32))
+    wave = np.concatenate(segments) if segments else np.zeros(1, dtype=np.float32)
+    max_val = float(np.max(np.abs(wave)))
+    if max_val > 0:
+        wave /= max_val
+    return wave.astype(np.float32)
+
+
 def _write_wav(path: Path, data: np.ndarray, sample_rate: int = 44100) -> None:
     """Write ``data`` to ``path`` as a mono WAV using the standard library."""
 
@@ -143,8 +205,9 @@ def compose_ritual_music(
 ) -> Path:
     """Generate a simple melody and optionally hide ritual steps.
 
-    Uses ``soundfile`` when available; otherwise falls back to NumPy and the
-    built-in :mod:`wave` module for output.
+    Uses ``soundfile`` when available. When ``soundfile`` is missing the melody
+    is synthesized with NumPy, written using the :mod:`wave` module and played
+    through ``simpleaudio`` if installed.
     """
     if archetype is None:
         try:
@@ -168,12 +231,15 @@ def compose_ritual_music(
         else "sine"
     )
 
-    wave = layer_generators.compose_human_layer(
-        tempo,
-        melody,
-        wav_path=str(out_path) if sf is not None else None,
-        wave_type=wave_type,
-    )
+    if sf is not None:
+        wave = layer_generators.compose_human_layer(
+            tempo,
+            melody,
+            wav_path=str(out_path),
+            wave_type=wave_type,
+        )
+    else:
+        wave = _synthesize_melody(tempo, melody, wave_type=wave_type)
 
     mix = _get_archetype_mix(archetype)
     if mix.size:
@@ -196,15 +262,20 @@ def compose_ritual_music(
             stego_wave = encode_phrase(phrase)
             if stego_wave.size < wave.size:
                 stego_wave = np.pad(stego_wave, (0, wave.size - stego_wave.size))
-            mixed = wave[: stego_wave.size] + stego_wave[: wave.size]
-            max_val = float(np.max(np.abs(mixed)))
+            wave = wave[: stego_wave.size] + stego_wave[: wave.size]
+            max_val = float(np.max(np.abs(wave)))
             if max_val > 0:
-                mixed /= max_val
+                wave /= max_val
             if sf is not None:
-                sf.write(out_path, mixed, 44100)
+                sf.write(out_path, wave, 44100)
             else:
-                _write_wav(out_path, mixed, 44100)
-    Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
+                _write_wav(out_path, wave, 44100)
+
+    if sf is not None:
+        Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
+    elif sa is not None:
+        pcm = (np.clip(wave, -1.0, 1.0) * 32767).astype(np.int16)
+        Thread(target=lambda: sa.play_buffer(pcm, 1, 2, 44100).wait_done(), daemon=True).start()
     return out_path
 
 
