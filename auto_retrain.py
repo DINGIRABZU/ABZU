@@ -12,6 +12,9 @@ import fnmatch
 import json
 import logging
 import os
+import subprocess
+import hashlib
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
@@ -39,9 +42,56 @@ PERMISSIONS_FILE = Path("permissions.yml")
 
 NOVELTY_THRESHOLD = feedback_logging.NOVELTY_THRESHOLD
 COHERENCE_THRESHOLD = feedback_logging.COHERENCE_THRESHOLD
+MODEL_REGISTRY_NAME = os.getenv("MODEL_REGISTRY_NAME", "inanna-model")
+LOG_FILE = Path("docs/retraining_log.md")
 
 
 logger = logging.getLogger(__name__)
+
+
+def pull_latest_data() -> None:
+    """Fetch the newest training data using DVC."""
+    try:
+        subprocess.run(["dvc", "pull"], check=True)
+    except Exception:
+        logger.exception("failed to pull latest data")
+
+
+def push_to_registry(model_path: Path) -> str | None:
+    """Log and register the trained model artifact via MLflow."""
+    try:
+        import mlflow
+    except Exception:
+        logger.error("mlflow is required to push to registry")
+        return None
+    with mlflow.start_run(run_name="auto_retrain") as run:
+        mlflow.log_artifact(str(model_path), artifact_path="model")
+        try:
+            result = mlflow.register_model(
+                f"runs:/{run.info.run_id}/model", MODEL_REGISTRY_NAME
+            )
+            return getattr(result, "version", run.info.run_id)
+        except Exception:
+            logger.exception("model registration failed")
+            return run.info.run_id
+
+
+def log_retraining(outcome: str, model_path: Path) -> None:
+    """Append retraining outcome and model hash to the log file."""
+    try:
+        model_hash = hashlib.sha256(model_path.read_bytes()).hexdigest()
+    except Exception:
+        model_hash = "unknown"
+    LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    if not LOG_FILE.exists():
+        LOG_FILE.write_text(
+            "| date | outcome | model_hash |\n| --- | --- | --- |\n",
+            encoding="utf-8",
+        )
+    with LOG_FILE.open("a", encoding="utf-8") as fh:
+        fh.write(
+            f"| {datetime.utcnow().isoformat()} | {outcome} | {model_hash} |\n"
+        )
 
 
 def _load_permissions() -> List[Dict[str, List[str]]]:
@@ -169,7 +219,7 @@ def verify_signature(dataset: list[dict]) -> bool:
 
 def trigger_finetune(
     dataset: list[dict], validator: EthicalValidator | None = None
-) -> None:
+) -> Path | None:
     """Invoke the LLM fine-tuning API with ``dataset``."""
     validator = validator or EthicalValidator()
     try:
@@ -179,14 +229,15 @@ def trigger_finetune(
                 and validator.validate_text(item.get("completion", ""))
             ):
                 logger.error("Dataset contains disallowed content")
-                return
+                return None
         if not verify_signature(dataset):
             logger.error("dataset signature invalid")
-            return
+            return None
         import llm_api
 
         try:
-            llm_api.fine_tune(dataset)
+            artifact = llm_api.fine_tune(dataset)
+            return Path(artifact) if artifact else None
         except Exception:
             rollback = getattr(llm_api, "rollback", None)
             if callable(rollback):
@@ -197,6 +248,7 @@ def trigger_finetune(
             raise
     except Exception:
         logger.exception("failed to trigger fine-tune")
+        return None
 
 
 async def retrain_model(dataset: list[dict], *, run_name: str | None = None) -> None:
@@ -234,6 +286,8 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
     parser.add_argument("--dry-run", action="store_true", help="Show dataset only")
     args = parser.parse_args(argv)
 
+    pull_latest_data()
+
     insights = _load_json(INSIGHT_FILE, {})
     feedback = feedback_logging.load_feedback()
     vector_entries = _load_vector_logs()
@@ -250,8 +304,14 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
         validator = EthicalValidator()
         dataset = build_dataset(feedback, validator)
         if args.run:
-            trigger_finetune(dataset, validator)
-            logger.info("Fine-tuning triggered")
+            model_path = trigger_finetune(dataset, validator)
+            if model_path:
+                registry_id = push_to_registry(model_path)
+                outcome = f"registered {registry_id}" if registry_id else "trained"
+                log_retraining(outcome, model_path)
+                logger.info("Fine-tuning triggered")
+            else:
+                logger.error("Fine-tuning failed")
         else:
             logger.info(json.dumps(dataset, indent=2))
     else:
