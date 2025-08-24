@@ -9,7 +9,7 @@ import logging.config
 import os
 import threading
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, cast
 
 import yaml
 
@@ -31,6 +31,7 @@ from INANNA_AI import defensive_network_utils as dnu
 from INANNA_AI import glm_analyze, glm_init, listening_engine
 from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI.personality_layers import REGISTRY, list_personalities
+from INANNA_AI_AGENT import inanna_ai
 from rag.orchestrator import MoGEOrchestrator
 from tools import reflection_loop
 
@@ -178,7 +179,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         vector_memory.add_vector("initial_listen", features)
     else:  # pragma: no cover - optional dependency missing
         logger.warning("Vector memory module missing; initial listen not stored")
-    emotional_state.set_last_emotion(features.get("emotion"))
+    emotion_val = cast(str | None, features.get("emotion"))
+    emotional_state.set_last_emotion(emotion_val)
     summary = glm_init.summarize_purpose()
     logger.info("Project summary: %s", summary)
 

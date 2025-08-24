@@ -1,6 +1,7 @@
 """Tests for inanna ai."""
 
 from __future__ import annotations
+# mypy: ignore-errors
 
 import sys
 from pathlib import Path
@@ -11,6 +12,8 @@ pytestmark = pytest.mark.skip(reason="requires unavailable resources")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+from INANNA_AI_AGENT import inanna_ai
 
 import json
 

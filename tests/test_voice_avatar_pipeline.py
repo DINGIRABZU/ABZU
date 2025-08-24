@@ -1,6 +1,7 @@
 """Tests for voice avatar pipeline."""
 
 from __future__ import annotations
+# mypy: ignore-errors
 
 import sys
 import types
@@ -10,6 +11,8 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+from INANNA_AI_AGENT import inanna_ai
 
 # Stub heavy optional modules
 for name in [

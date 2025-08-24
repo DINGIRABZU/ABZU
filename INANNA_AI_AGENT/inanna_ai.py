@@ -15,7 +15,7 @@ import logging
 import logging.config
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, TYPE_CHECKING
+from typing import Dict, List
 
 import yaml
 
@@ -24,9 +24,6 @@ import emotional_state
 from INANNA_AI import db_storage
 from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI.existential_reflector import ExistentialReflector
-
-if TYPE_CHECKING:  # pragma: no cover - import for type checkers only
-    from transformers import GenerationMixin
 
 from . import model, source_loader
 
@@ -238,16 +235,14 @@ def show_status() -> tuple[str | None, str | None]:
 
 def chat_loop(model_dir: str | Path = MODEL_PATH) -> None:
     """Interactive chat with a local language model."""
-    try:
-        from transformers import GenerationMixin
-    except ImportError as exc:  # pragma: no cover - transformers optional
+    if importlib.util.find_spec("transformers") is None:
         raise RuntimeError(
             "Chat requires the 'transformers' package. Install it with "
             "'pip install transformers'."
-        ) from exc
+        )
 
     mdl, tok = model.load_model(model_dir)
-    gen_model: GenerationMixin = mdl  # type: ignore[assignment]
+    gen_model = mdl
     print("Enter 'exit' to quit.")
     while True:
         prompt = input("You: ")

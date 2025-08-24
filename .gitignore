@@ -19,3 +19,6 @@ logs/
 
 # Training data managed by DVC
 data/training/
+
+# Local virtual environment
+.venv/

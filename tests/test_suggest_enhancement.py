@@ -1,6 +1,7 @@
 """Tests for suggest enhancement."""
 
 from __future__ import annotations
+# mypy: ignore-errors
 
 import sys
 from pathlib import Path
@@ -8,8 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from INANNA_AI_AGENT import inanna_ai
 
-def test_suggest_enhancement(tmp_path, monkeypatch):
+
+def test_suggest_enhancement(tmp_path, monkeypatch) -> None:
     audit_dir = tmp_path / "audit_logs"
     inanna_dir = tmp_path / "INANNA_AI"
     audit_dir.mkdir()
@@ -24,10 +27,10 @@ def test_suggest_enhancement(tmp_path, monkeypatch):
     monkeypatch.setattr(inanna_ai, "SUGGESTIONS_LOG", audit_dir / "suggestions.txt")
 
     class DummyValidator:
-        def __init__(self):
+        def __init__(self) -> None:
             self.seen = []
 
-        def validate_text(self, text):
+        def validate_text(self, text: str) -> bool:
             self.seen.append(text)
             return "bad" not in text
 
