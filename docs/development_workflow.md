@@ -41,7 +41,20 @@ bash scripts/smoke_console_interface.sh
 
 Additional guidance is available in [testing.md](testing.md).
 
+## Linting
+
+Continuous integration runs [Ruff](https://docs.astral.sh/ruff/) and fails if any
+lint errors are detected. Check your changes locally with:
+
+```bash
+ruff check .
+```
+
+Fix any reported issues before pushing to ensure the CI pipeline remains
+green.
+
 ## Style and Contribution
 
-Code follows the guidelines in [CODE_STYLE.md](../CODE_STYLE.md). Commits should be small and include descriptive messages.
+Code follows the guidelines in [CODE_STYLE.md](../CODE_STYLE.md). Commits should
+be small and include descriptive messages.
 
