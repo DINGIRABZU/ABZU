@@ -12,6 +12,7 @@ except Exception:  # pragma: no cover - fallback
     sniff = None
     wrpcap = None
 
+from .config import load_config
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +21,6 @@ def capture_packets(
     interface: str, *, count: int = 20, output: Optional[str] = None
 ) -> None:
     """Capture ``count`` packets from ``interface`` and write them to ``output``."""
-    from . import load_config
-
     cfg = load_config()
     out_path = Path(output or cfg.get("capture_file", "capture.pcap"))
     out_path.parent.mkdir(parents=True, exist_ok=True)

@@ -13,6 +13,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - fallback
     rdpcap = None
 
+from .config import load_config
 
 logger = logging.getLogger(__name__)
 
@@ -37,8 +38,6 @@ def analyze_capture(pcap_path: str, *, log_dir: Optional[str] = None) -> dict:
         "protocols": dict(proto_counts),
         "top_talkers": top_talkers,
     }
-
-    from . import load_config
 
     cfg = load_config()
     log_directory = Path(log_dir or cfg.get("log_dir", "network_logs"))
