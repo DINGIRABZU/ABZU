@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Pattern-based invocation engine."""
+
+from __future__ import annotations
 
 import json
 import logging
@@ -53,7 +53,11 @@ def register_invocation(
             symbols, {"symbols": symbols, "emotion": emotion or ""}
         )
     except Exception:
-        pass
+        logger.warning(
+            "vector_memory.add_vector failed",
+            extra={"symbols": symbols, "emotion": emotion},
+            exc_info=True,
+        )
 
 
 def clear_registry() -> None:
