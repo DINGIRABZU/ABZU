@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import math
 from datetime import datetime
 from typing import Any, Dict, List
@@ -10,6 +11,8 @@ from typing import Any, Dict, List
 import spiral_memory
 import vector_memory
 from memory import cortex
+
+logger = logging.getLogger(__name__)
 
 _DECAY_SECONDS = 86_400.0
 
@@ -44,8 +47,8 @@ def query_all(text: str) -> List[Dict[str, Any]]:
                         "weight": _recency_weight(ts),
                     }
                 )
-    except Exception:
-        pass
+    except Exception as exc:  # pragma: no cover - just logging
+        logger.warning("cortex query failed: %s", exc)
 
     try:
         events = spiral_memory.DEFAULT_MEMORY._load_events()  # type: ignore[attr-defined]
@@ -59,8 +62,8 @@ def query_all(text: str) -> List[Dict[str, Any]]:
                         "weight": 1.0,
                     }
                 )
-    except Exception:
-        pass
+    except Exception as exc:  # pragma: no cover - just logging
+        logger.warning("spiral query failed: %s", exc)
 
     try:
         for hit in vector_memory.search(text, k=5):
@@ -73,8 +76,8 @@ def query_all(text: str) -> List[Dict[str, Any]]:
                     "weight": _recency_weight(ts),
                 }
             )
-    except Exception:
-        pass
+    except Exception as exc:  # pragma: no cover - just logging
+        logger.warning("vector search failed: %s", exc)
 
     results.sort(key=lambda r: r.get("weight", 0.0), reverse=True)
     return results
