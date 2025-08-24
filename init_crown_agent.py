@@ -6,23 +6,25 @@ import logging
 import os
 from pathlib import Path
 
-import servant_model_manager as smm
 import yaml  # type: ignore[import-untyped]
-from INANNA_AI import corpus_memory, glm_integration as gi
-from INANNA_AI.glm_integration import GLMIntegration
+
+import servant_model_manager as smm
 from env_validation import parse_servant_models
+from INANNA_AI import corpus_memory
+from INANNA_AI import glm_integration as gi
+from INANNA_AI.glm_integration import GLMIntegration
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 
-vector_memory = _vector_memory  # Optional vector memory subsystem
-
 try:  # pragma: no cover - optional dependency
     import requests  # type: ignore[import-untyped]
 except Exception:  # pragma: no cover - optional dependency
     requests = None  # type: ignore
+
+vector_memory = _vector_memory  # Optional vector memory subsystem
 
 logger = logging.getLogger(__name__)
 
