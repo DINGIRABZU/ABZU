@@ -51,6 +51,54 @@ Command-line activation agent. It can recite the birth chant (`--activate`), gen
    python download_models.py glm41v_9b --int8
    ```
 
+## Chakra Overview
+
+ABZU's codebase mirrors a seven‑chakra layout. Each layer groups modules by
+function and maturity. See [chakra_architecture.md](chakra_architecture.md) for
+the full table.
+
+| Chakra | Purpose | Key Modules |
+| --- | --- | --- |
+| Root | Networking and I/O foundation | `server.py`, `INANNA_AI/network_utils/` |
+| Sacral | Emotion engine | `emotional_state.py`, `emotion_registry.py` |
+| Solar Plexus | Learning and state transitions | `learning_mutator.py`, `state_transition_engine.py` |
+| Heart | Memory and avatar voice | `vector_memory.py`, `voice_avatar_config.yaml` |
+| Throat | Prompt orchestration and agent interface | `crown_prompt_orchestrator.py`, `INANNA_AI_AGENT/inanna_ai.py` |
+| Third Eye | Insight and QNL processing | `insight_compiler.py`, `SPIRAL_OS/qnl_engine.py` |
+| Crown | High‑level orchestration | `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh` |
+
+## System Architecture
+
+```mermaid
+graph TD
+    U[User] --> A[INANNA_AI_AGENT]
+    A --> R[Crown Router]
+    R --> S[Spiral OS]
+    S --> M[Language Models]
+    S --> V[Spiral Memory]
+    M --> S
+    V --> S
+```
+
+## Request Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as INANNA_AI_AGENT
+    participant R as Crown Router
+    participant S as Spiral OS
+    participant M as Model
+    U->>A: command or prompt
+    A->>R: send message
+    R->>S: route request
+    S->>M: generate
+    M-->>S: response
+    S-->>R: return output
+    R-->>A: deliver reply
+    A-->>U: display result
+```
+
 ## First-Run Smoke Tests
 See [testing.md](testing.md) for detailed instructions.
 1. **CLI console** – ensure the command-line interface imports correctly:
@@ -71,13 +119,14 @@ See [testing.md](testing.md) for detailed instructions.
 - `scripts/easy_setup.sh` / `scripts/setup_repo.sh` – install common dependencies.
 - `download_models.py` – fetches model weights such as GLM and DeepSeek.
 
-## Troubleshooting
+## Common Troubleshooting
 | Issue | Resolution |
 | --- | --- |
 | Missing environment variables or tools | Run `scripts/check_requirements.sh` to verify prerequisites |
 | CLI console fails to start | Install Python dependencies (`pip install -r requirements.txt`) |
 | `start_avatar_console.sh` shows permission error | Run `chmod +x start_crown_console.sh` or invoke it with `bash` |
 | Tokens absent in `secrets.env` | Ensure `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY` are set |
+| Model download fails | Check network connectivity and token permissions |
 
 ## Glossary
 | Symbolic term | Conventional concept |
