@@ -10,6 +10,8 @@ import logging
 from pathlib import Path
 from typing import Tuple
 
+_TRANSFORMERS_IMPORT_ERROR: ImportError | None
+
 try:  # pragma: no cover - import guarded for optional dependency
     from transformers import AutoModelForCausalLM, AutoTokenizer
 except ImportError as exc:  # pragma: no cover - handled at runtime
@@ -33,6 +35,7 @@ def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
     -------
     Tuple[AutoModelForCausalLM, AutoTokenizer]
         The loaded model and tokenizer.
+
     """
     if AutoModelForCausalLM is None or AutoTokenizer is None:
         raise ImportError(
