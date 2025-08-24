@@ -1,7 +1,7 @@
+"""Utility functions to log session audio and video."""
 from __future__ import annotations
 
-"""Utility functions to log session audio and video."""
-
+# ruff: noqa: E402
 import logging
 import shutil
 from datetime import datetime

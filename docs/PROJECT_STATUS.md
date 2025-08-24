@@ -27,6 +27,11 @@ The suite currently reports numerous skips but completes without failures:
 
 These results indicate optional dependencies and system binaries are still missing but do not block the minimal test run.
 
+## Recent Refactoring
+
+- Standardized import order in `tools.session_logger`, `tools.sandbox_session`, and `tools.reflection_loop`.
+- Added smoke tests covering reflection and session logging utilities.
+
 ## Completed Milestones
 - [Sovereign voice pipeline](https://github.com/DINGIRABZU/ABZU/pull/38) — owner: @DINGIRABZU.
 - [Audio pipeline refresh](https://github.com/DINGIRABZU/ABZU/pull/194) — owner: @DINGIRABZU.
