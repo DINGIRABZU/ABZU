@@ -29,7 +29,11 @@ def update_changelog(version: str) -> None:
     """Insert a release heading into ``CHANGELOG.md``."""
     path = Path("CHANGELOG.md")
     text = path.read_text()
-    heading = f"## [{version}] - {date.today().isoformat()}"
+    heading = (
+        f"## [{version}] - {date.today().isoformat()}\n"
+        "\n"
+        "- Component health report: see `component_status.md`\n"
+    )
     updated = text.replace("## [Unreleased]", f"## [Unreleased]\n\n{heading}")
     path.write_text(updated)
 
