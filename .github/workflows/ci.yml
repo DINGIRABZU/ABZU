@@ -40,6 +40,14 @@ jobs:
       - name: Bandit
         run: bandit -r . -x tests  # Security analysis
 
+      - name: Dependency check
+        run: |
+          python scripts/dependency_check.py | tee dependency_check.log
+          if grep -F '❌' dependency_check.log; then
+            echo 'Detected failing components'
+            exit 1
+          fi
+
   tests:
     runs-on: ubuntu-latest
     needs: lint
@@ -51,9 +59,16 @@ jobs:
         run: |
           coverage run -m pytest
           coverage html
-          coverage report
+          coverage report --fail-under=85
+      - name: Component inventory
+        run: python scripts/component_inventory.py
       - name: Upload coverage HTML
         uses: actions/upload-artifact@v4
         with:
           name: coverage-html
           path: htmlcov
+      - name: Upload component status
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-status
+          path: docs/component_status.md
