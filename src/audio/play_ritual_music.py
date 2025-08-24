@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Compose short ritual music based on emotion and play it."""
+
+from __future__ import annotations
 
 import argparse
 import base64
@@ -154,7 +154,7 @@ def compose_ritual_music(
         if mix.size < wave.size:
             mix = np.pad(mix, (0, wave.size - mix.size))
         wave = wave + mix[: wave.size]
-        max_val = np.max(np.abs(wave))
+        max_val = float(np.max(np.abs(wave)))
         if max_val > 0:
             wave /= max_val
         if sf is None:
@@ -169,7 +169,7 @@ def compose_ritual_music(
             if stego_wave.size < wave.size:
                 stego_wave = np.pad(stego_wave, (0, wave.size - stego_wave.size))
             mixed = wave[: stego_wave.size] + stego_wave[: wave.size]
-            max_val = np.max(np.abs(mixed))
+            max_val = float(np.max(np.abs(mixed)))
             if max_val > 0:
                 mixed /= max_val
             if sf is None:
