@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any, Dict, Iterable
 
@@ -20,6 +21,8 @@ vector_memory = _vector_memory
 import numpy as np
 
 from crown_config import settings
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_VOICE_STYLES: Dict[str, Dict[str, float]] = {
     "neutral": {"speed": 1.0, "pitch": 0.0},
@@ -108,6 +111,7 @@ class VoiceEvolution:
                     filter={"type": "emotion"}, limit=20
                 )
             except Exception:
+                logger.exception("Failed to query emotion vectors from vector memory")
                 records = []
         if history is not None:
             records.extend(list(history))
@@ -148,7 +152,7 @@ class VoiceEvolution:
             try:
                 db_storage.save_voice_profiles(self.styles)
             except Exception:
-                pass
+                logger.exception("Failed to save updated voice profiles")
 
     def evolve_with_memory(self) -> None:
         """Update styles based on recent memory and log result."""
@@ -158,6 +162,7 @@ class VoiceEvolution:
                     filter={"type": "emotion"}, limit=20
                 )
             except Exception:
+                logger.exception("Failed to query emotion vectors from vector memory")
                 history = []
         else:
             history = []
@@ -190,7 +195,7 @@ class VoiceEvolution:
                     },
                 )
             except Exception:
-                pass
+                logger.exception("Failed to add voice profile vector for %s", emotion)
 
     def reset(self) -> None:
         """Reset styles to the default values."""

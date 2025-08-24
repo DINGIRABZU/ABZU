@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import sys
 import types
 from pathlib import Path
@@ -68,3 +69,37 @@ def test_get_voice_params_uses_music_map(monkeypatch):
         == voice_evolution.DEFAULT_VOICE_STYLES["neutral"]["pitch"]
         + voice_evolution.SCALE_PITCH["D_minor"]
     )
+
+
+def test_update_from_history_logs_failure(monkeypatch, caplog):
+    evol = voice_evolution.VoiceEvolution({"joy": {"speed": 1.0, "pitch": 0.0}})
+
+    def fail_save(*a, **k):
+        raise RuntimeError("db error")
+
+    monkeypatch.setattr(voice_evolution.db_storage, "save_voice_profiles", fail_save)
+    history = [{"emotion": "joy", "arousal": 0.6, "valence": 0.6, "sentiment": 0.0}]
+    with caplog.at_level(logging.ERROR):
+        evol.update_from_history(history)
+    assert "Failed to save updated voice profiles" in caplog.text
+
+
+def test_evolve_with_memory_logs_add_vector_failure(monkeypatch, caplog):
+    class DummyVM:
+        def query_vectors(self, *a, **k):
+            return [{"emotion": "joy"}]
+
+        def add_vector(self, *a, **k):  # pragma: no cover - dummy
+            raise RuntimeError("vm error")
+
+    monkeypatch.setattr(voice_evolution, "vector_memory", DummyVM())
+    monkeypatch.setattr(voice_evolution, "update_voice_from_history", lambda h: None)
+    monkeypatch.setattr(
+        voice_evolution.emotional_synaptic_engine,
+        "adjust_from_memory",
+        lambda: {"speed": 1.0},
+    )
+    evol = voice_evolution.VoiceEvolution()
+    with caplog.at_level(logging.ERROR):
+        evol.evolve_with_memory()
+    assert "Failed to add voice profile vector for joy" in caplog.text
