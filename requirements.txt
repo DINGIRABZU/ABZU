@@ -2,6 +2,8 @@
 #    uv pip compile pyproject.toml --no-deps -o requirements.txt
 numpy==1.26.4
     # via spiral-os (pyproject.toml)
+opencv-python==4.10.0.84
+    # via spiral-os (pyproject.toml)
 prometheus-client==0.20.0
     # via spiral-os (pyproject.toml)
 prometheus-fastapi-instrumentator==6.1.0
@@ -13,4 +15,6 @@ python-json-logger==3.3.0
 pyyaml==6.0.2
     # via spiral-os (pyproject.toml)
 requests==2.32.4
+    # via spiral-os (pyproject.toml)
+scipy==1.11.4
     # via spiral-os (pyproject.toml)
