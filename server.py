@@ -6,7 +6,7 @@ import base64
 import logging
 from contextlib import asynccontextmanager
 from io import BytesIO
-from typing import Iterator, Optional
+from typing import AsyncIterator, Iterator, Optional, TypedDict
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, Security
@@ -38,10 +38,16 @@ oauth2_scheme = OAuth2PasswordBearer(
     },
 )
 
+
 # Simple in-memory token store. Real deployments would integrate with an
 # identity provider. The configured ``GLM_COMMAND_TOKEN`` is reused to create a
 # single privileged token.
-_TOKENS: dict[str, dict[str, set[str]]] = {}
+class TokenInfo(TypedDict):
+    sub: str
+    scopes: set[str]
+
+
+_TOKENS: dict[str, TokenInfo] = {}
 if settings.glm_command_token:
     _TOKENS[settings.glm_command_token] = {
         "sub": "system",
@@ -51,7 +57,7 @@ if settings.glm_command_token:
 
 def get_current_user(
     security_scopes: SecurityScopes, token: str = Security(oauth2_scheme)
-) -> dict[str, set[str]]:
+) -> TokenInfo:
     """Validate ``token`` and enforce required ``security_scopes``."""
 
     token_info = _TOKENS.get(token)
@@ -73,7 +79,7 @@ def get_current_user(
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Manage startup and shutdown tasks for the FastAPI app."""
     yield
     await video_stream.close_peers()
