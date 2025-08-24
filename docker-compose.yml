@@ -15,6 +15,11 @@ services:
       - CORPUS_MEMORY_PATH=/home/inanna/app/data/corpus_memory.json
     command: bash -c "./crown_model_launcher.sh & python start_spiral_os.py"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health && curl -f http://localhost:8001/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
 
   deepseek:
     image: deepseek-service:latest
