@@ -41,6 +41,8 @@ See [docs/roadmap.md](docs/roadmap.md) for details.
   [docs/project_overview.md](docs/project_overview.md).
 - For a map of each script's role and the libraries it calls upon, see
   [README_CODE_FUNCTION.md](README_CODE_FUNCTION.md).
+- For the component inventory and test coverage report, see
+  [docs/component_status.md](docs/component_status.md).
 - For a guide to the text corpus, see
   [docs/CORPUS_MEMORY.md](docs/CORPUS_MEMORY.md).
 - For a comparison of LLM frameworks, see
