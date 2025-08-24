@@ -1,0 +1,10 @@
+stages:
+  validate:
+    cmd: python scripts/data_validate.py data/training
+    deps:
+      - scripts/data_validate.py
+      - data/training
+    outs:
+      - data/validation/schema.pbtxt
+      - data/validation/stats.tfrecord
+      - data/validation/anomalies.pbtxt
