@@ -46,7 +46,7 @@ jobs:
       - *checkout
       - *setup-python
       - *install-deps
-      - name: Smoke tests
-        run: pytest tests/test_prompt_engineering.py
+      - name: Run tests
+        run: pytest
       - name: Profiling
         run: python -m cProfile -m task_profiling

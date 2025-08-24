@@ -226,3 +226,17 @@ def test_schedule_action_executes(monkeypatch):
     timer.join(0.1)
 
     assert called == [True]
+
+
+def test_select_plane_logic():
+    assert MoGEOrchestrator._select_plane(0.7, "villain") == "ascension"
+    assert MoGEOrchestrator._select_plane(0.2, "hero") == "ascension"
+    assert MoGEOrchestrator._select_plane(0.2, "villain") == "underworld"
+
+
+def test_version_metadata():
+    v = orchestrator.__version__
+    assert isinstance(v, orchestrator.VersionInfo)
+    assert v.major >= 0
+    assert v.minor >= 0
+    assert v.patch >= 0
