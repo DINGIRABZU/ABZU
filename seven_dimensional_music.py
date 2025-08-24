@@ -18,14 +18,20 @@ except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
+from numpy.typing import NDArray
+from typing import Any
 
 
-def embedding_to_params(_emb):
-    """Return pitch, tempo and volume from embedding."""
+def embedding_to_params(_emb: NDArray[np.floating]) -> tuple[float, float, float]:
+    """Return pitch, tempo, and volume from an embedding.
+
+    The mapping currently returns constant values and serves as a placeholder
+    for more sophisticated audio parameter extraction.
+    """
     return 0.0, 1.0, 1.0
 
 
-def analyze_seven_planes(*_args, **_kwargs) -> dict:
+def analyze_seven_planes(*_args: Any, **_kwargs: Any) -> dict:
     """Return dummy plane analysis."""
     return {
         "physical": {"element": "bass"},
@@ -41,6 +47,11 @@ def analyze_seven_planes(*_args, **_kwargs) -> dict:
 def generate_quantum_music(
     context: str, emotion: str, *, output_dir: Path = Path(".")
 ) -> Path:
+    """Generate a simple quantum-inspired tone.
+
+    Saves a short sine wave as ``quantum.wav`` under ``output_dir`` and writes
+    a companion JSON file with placeholder seven-plane analysis.
+    """
     embed = quantum_embed(context)
     _pitch, _tempo, _vol = embedding_to_params(embed)
     sr = 44100
@@ -60,6 +71,11 @@ def generate_quantum_music(
 
 
 def main(args: list[str] | None = None) -> None:
+    """Run the command-line interface for quantum music generation.
+
+    Parses arguments, copies audio, optionally embeds hidden data, and writes a
+    JSON analysis file alongside the output.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("input")
     parser.add_argument("--output", required=True)
