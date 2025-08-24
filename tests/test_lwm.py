@@ -5,9 +5,8 @@ from __future__ import annotations
 import sys
 import types
 
-from fastapi.testclient import TestClient
-
 import pytest
+from fastapi.testclient import TestClient
 
 pytest.importorskip("omegaconf")
 

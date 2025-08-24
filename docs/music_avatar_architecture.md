@@ -3,7 +3,8 @@
 The Crown agent can reflect on musical input by combining feature extraction
 with language model reasoning.  The `music_llm_interface.py` helper analyses an
 audio or MIDI file, packages the findings and forwards them to the Crown LLM
-through `rag.orchestrator.MoGEOrchestrator`.
+through `rag.orchestrator.MoGEOrchestrator`, which can optionally persist
+context using the `vector_memory` subsystem.
 
 ```bash
 python music_llm_interface.py path/to/song.wav
@@ -20,6 +21,10 @@ The script performs the following steps:
 
 The JSON printed to `stdout` combines the analysis with the LLM response, making
 it easy to feed musical context into higher level agents or pipelines.
+
+For generating test tones during development, the
+`seven_dimensional_music.generate_quantum_music` helper can synthesise a short
+audio clip along with placeholder seven-plane analysis.
 
 ## Evaluation Workflow
 

@@ -8,9 +8,8 @@ from __future__ import annotations
 
 import builtins as _builtins
 
-from . import benchmark_preprocess
+from . import benchmark_preprocess, model, preprocess, source_loader
 from . import inanna_ai as _inanna_ai
-from . import model, preprocess, source_loader
 
 # Re-export the CLI entry point for convenience
 INANNA_AI = _inanna_ai.main

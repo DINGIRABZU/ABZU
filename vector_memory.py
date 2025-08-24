@@ -15,8 +15,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, cast
 
-from MUSIC_FOUNDATION import qnl_utils
 from crown_config import settings
+from MUSIC_FOUNDATION import qnl_utils
 
 try:  # pragma: no cover - optional dependency
     from distributed_memory import DistributedMemory

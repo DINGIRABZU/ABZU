@@ -17,9 +17,11 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     sf = None  # type: ignore
 
-from MUSIC_FOUNDATION.qnl_utils import quantum_embed
-from numpy.typing import NDArray
 from typing import Any
+
+from numpy.typing import NDArray
+
+from MUSIC_FOUNDATION.qnl_utils import quantum_embed
 
 
 def embedding_to_params(_emb: NDArray[np.floating]) -> tuple[float, float, float]:

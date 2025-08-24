@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 # mypy: ignore-errors
-
 import sys
 import types
 from pathlib import Path
