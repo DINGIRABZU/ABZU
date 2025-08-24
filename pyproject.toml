@@ -108,6 +108,9 @@ spiral-cortex = "cli.spiral_cortex_terminal:main"
 voice-cli = "cli.voice:main"
 spiral-os = "spiral_os.__main__:main"
 
+[tool.poetry.scripts]
+abzu = "cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 exclude = ["tests*", "docs*", "examples*"]
