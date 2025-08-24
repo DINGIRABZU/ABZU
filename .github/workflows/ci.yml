@@ -33,7 +33,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .[dev] --no-deps
-          pip install ruff black mypy bandit pytest
+          pip install ruff black mypy bandit semgrep pytest
 
       - name: Ruff
         run: ruff .
@@ -45,7 +45,10 @@ jobs:
         run: mypy .  # Static type checking
 
       - name: Bandit
-        run: bandit -r . -x tests  # Security analysis
+        run: bandit -r . -x tests --severity-level high --confidence-level high
+
+      - name: Semgrep
+        run: semgrep --config auto --severity=ERROR --error
 
       - name: Profiling
         run: python -m cProfile -m task_profiling

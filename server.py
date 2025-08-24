@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import base64
 import logging
-import secrets
 from contextlib import asynccontextmanager
 from io import BytesIO
 from typing import Iterator, Optional
 
 import numpy as np
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Security
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from PIL import Image
 from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field
@@ -26,6 +26,52 @@ from crown_config import settings
 from glm_shell import send_command
 
 logger = logging.getLogger(__name__)
+
+# --- OAuth2 security configuration ---
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="token",
+    scopes={
+        "avatar:read": "Access avatar frames",
+        "music:write": "Generate music",
+        "music:read": "Download generated music",
+        "glm:exec": "Execute GLM shell commands",
+    },
+)
+
+# Simple in-memory token store. Real deployments would integrate with an
+# identity provider. The configured ``GLM_COMMAND_TOKEN`` is reused to create a
+# single privileged token.
+_TOKENS: dict[str, dict[str, set[str]]] = {}
+if settings.glm_command_token:
+    _TOKENS[settings.glm_command_token] = {
+        "sub": "system",
+        "scopes": {"avatar:read", "music:write", "music:read", "glm:exec"},
+    }
+
+
+def get_current_user(
+    security_scopes: SecurityScopes, token: str = Security(oauth2_scheme)
+) -> dict[str, set[str]]:
+    """Validate ``token`` and enforce required ``security_scopes``."""
+
+    token_info = _TOKENS.get(token)
+    if not token_info:
+        logger.warning(
+            "Unauthorized token for scopes %s", security_scopes.scope_str
+        )
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    required = set(security_scopes.scopes)
+    if not required.issubset(token_info["scopes"]):
+        logger.warning(
+            "Forbidden: %s lacks %s", token_info.get("sub"), security_scopes.scope_str
+        )
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+
+    logger.info(
+        "Access granted for %s to %s", token_info.get("sub"), security_scopes.scope_str
+    )
+    return token_info
 
 
 @asynccontextmanager
@@ -76,21 +122,18 @@ class ShellCommand(BaseModel):
 if settings.glm_command_token:
 
     @app.post("/glm-command")
-    def glm_command(cmd: ShellCommand, request: Request) -> dict[str, str | bool]:
+    def glm_command(
+        cmd: ShellCommand,
+        current_user: dict = Security(get_current_user, scopes=["glm:exec"]),
+    ) -> dict[str, str | bool]:
         """Execute ``cmd.command`` via the GLM shell and return the result."""
-        auth_header = request.headers.get("Authorization") or ""
-        if not secrets.compare_digest(auth_header, settings.glm_command_token):
-            vector_memory.add_vector(
-                cmd.command,
-                {"intent": "glm_command", "outcome": "unauthorized"},
-            )
-            raise HTTPException(status_code=401, detail="Unauthorized")
         prefix = cmd.command.split()[0]
         if prefix not in _ALLOWED_PREFIXES:
             vector_memory.add_vector(
                 cmd.command,
                 {"intent": "glm_command", "outcome": "rejected"},
             )
+            logger.warning("Rejected command %s by %s", cmd.command, current_user.get("sub"))
             raise HTTPException(status_code=400, detail="command not allowed")
         try:
             result = send_command(cmd.command)
@@ -103,9 +146,13 @@ if settings.glm_command_token:
                     "error": str(exc),
                 },
             )
+            logger.exception("GLM command failed")
             raise HTTPException(status_code=500, detail="command failed") from exc
         vector_memory.add_vector(
             cmd.command, {"intent": "glm_command", "outcome": "success"}
+        )
+        logger.info(
+            "Executed GLM command %s for %s", cmd.command, current_user.get("sub")
         )
         return {"ok": True, "result": result}
 
@@ -114,7 +161,9 @@ else:
 
 
 @app.get("/avatar-frame")
-def avatar_frame() -> JSONResponse:
+def avatar_frame(
+    current_user: dict = Security(get_current_user, scopes=["avatar:read"])
+) -> JSONResponse:
     """Return the next avatar frame as a base64 encoded PNG."""
     global _avatar_stream
     if _avatar_stream is None:
@@ -124,6 +173,7 @@ def avatar_frame() -> JSONResponse:
     buf = BytesIO()
     img.save(buf, format="PNG")
     b64 = base64.b64encode(buf.getvalue()).decode()
+    logger.info("Avatar frame served for %s", current_user.get("sub"))
     return JSONResponse({"frame": b64})
 
 
@@ -137,8 +187,12 @@ class MusicRequest(BaseModel):
 
 
 @app.post("/music")
-def generate_music(req: MusicRequest) -> dict[str, str]:
+def generate_music(
+    req: MusicRequest,
+    current_user: dict = Security(get_current_user, scopes=["music:write"]),
+) -> dict[str, str]:
     """Generate music from ``req.prompt`` and return a download path."""
+    logger.info("Music generation requested by %s", current_user.get("sub"))
     try:
         path = music_generation.generate_from_text(req.prompt, req.model or "musicgen")
         corpus_memory_logging.log_interaction(
@@ -185,9 +239,13 @@ def generate_music(req: MusicRequest) -> dict[str, str]:
 
 
 @app.get("/music/{filename}")
-def get_music(filename: str) -> FileResponse:
+def get_music(
+    filename: str,
+    current_user: dict = Security(get_current_user, scopes=["music:read"]),
+) -> FileResponse:
     """Return generated music file ``filename``."""
     path = music_generation.OUTPUT_DIR / filename
     if not path.exists():
         raise HTTPException(status_code=404, detail="file not found")
+    logger.info("Music file %s served for %s", filename, current_user.get("sub"))
     return FileResponse(path)
