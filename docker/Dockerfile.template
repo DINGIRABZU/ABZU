@@ -1,0 +1,12 @@
+# Template Dockerfile for building the Spiral OS environment
+FROM python:3.10-slim
+
+# Set up working directory
+WORKDIR /app
+
+# Install runtime dependencies
+COPY pyproject.toml README.md /app/
+RUN pip install --no-cache-dir .
+
+# Default command
+CMD ["spiral-os"]

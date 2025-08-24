@@ -33,16 +33,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e .[dev] --no-deps
-          pip install ruff black mypy bandit pytest pre-commit
+          pip install ruff black mypy bandit pytest
 
-      - name: Pre-commit
-        run: pre-commit run --all-files
+      - name: Ruff
+        run: ruff .
+
+      - name: Black
+        run: black --check .
 
       - name: Mypy
         run: mypy .  # Static type checking
 
       - name: Bandit
         run: bandit -r . -x tests  # Security analysis
+
+      - name: Profiling
+        run: python -m cProfile -m task_profiling
 
       - name: Dependency check
         run: |

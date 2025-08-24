@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spiral-os
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spiral-os
+  template:
+    metadata:
+      labels:
+        app: spiral-os
+    spec:
+      containers:
+        - name: spiral-os
+          image: spiral-os:latest
+          ports:
+            - containerPort: 8000
