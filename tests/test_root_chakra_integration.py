@@ -1,6 +1,7 @@
 """Tests for root chakra integration."""
 
 from __future__ import annotations
+
 # mypy: ignore-errors
 
 import json

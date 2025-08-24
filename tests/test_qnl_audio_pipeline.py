@@ -1,6 +1,7 @@
 """Tests for qnl audio pipeline."""
 
 from __future__ import annotations
+
 # mypy: ignore-errors
 
 import sys
