@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Log intent outcomes for reinforcement learning.
 
 Entries are appended to ``data/feedback.json`` as dictionaries with the
@@ -10,6 +8,8 @@ following keys:
 ``tone`` tonal label if provided,
 ``success`` boolean result indicator.
 """
+
+from __future__ import annotations
 
 import json
 from datetime import datetime

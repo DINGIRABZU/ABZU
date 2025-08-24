@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Command line wrappers for voice conversion tools."""
+
+from __future__ import annotations
 
 import subprocess
 import tempfile

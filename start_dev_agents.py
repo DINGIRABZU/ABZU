@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Command line launcher for the development agent cycle."""
+
+from __future__ import annotations
 
 import argparse
 import json

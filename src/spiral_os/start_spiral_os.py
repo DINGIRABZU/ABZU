@@ -11,9 +11,8 @@ import threading
 from pathlib import Path
 from typing import List, Optional
 
-import yaml
-
 import uvicorn
+import yaml
 
 import emotion_registry
 import emotional_state
@@ -23,11 +22,11 @@ from connectors import webrtc_connector
 from core import language_engine, self_correction_engine
 from dashboard import system_monitor
 from env_validation import check_optional_packages, check_required
-from INANNA_AI_AGENT import inanna_ai
 from INANNA_AI import defensive_network_utils as dnu
 from INANNA_AI import glm_analyze, glm_init, listening_engine
 from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI.personality_layers import REGISTRY, list_personalities
+from INANNA_AI_AGENT import inanna_ai
 from rag.orchestrator import MoGEOrchestrator
 from tools import reflection_loop
 
