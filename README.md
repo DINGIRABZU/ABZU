@@ -71,6 +71,10 @@ See [docs/roadmap.md](docs/roadmap.md) for details.
   [docs/spiritual_architecture.md](docs/spiritual_architecture.md).
 - For the contemplative Chakra System Koan, see
   [docs/chakra_koan_system.md](docs/chakra_koan_system.md).
+- For chakra module architecture and quality notes, see
+  [docs/chakra_architecture.md](docs/chakra_architecture.md).
+- For semantic version numbers of each chakra layer, refer to
+  [docs/chakra_versions.json](docs/chakra_versions.json).
 - For a plain-language architecture map with a request flow diagram covering the LLM router, audio pipeline and model registry, see
   [docs/architecture_overview.md](docs/architecture_overview.md).
 - For a detailed map of package responsibilities, see [docs/architecture.md](docs/architecture.md) and [docs/packages_overview.md](docs/packages_overview.md).

@@ -3,6 +3,10 @@
 Thank you for your interest in improving ABZU! This guide covers environment
 setup, coding conventions, testing, and the pull request process.
 
+For details on chakra module architecture and version history, consult
+[docs/chakra_architecture.md](docs/chakra_architecture.md) and
+[docs/chakra_versions.json](docs/chakra_versions.json).
+
 ## Setup
 
 Use Python 3.10 or later. Install development dependencies with:
