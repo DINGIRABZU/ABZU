@@ -242,7 +242,8 @@ def chat_loop(model_dir: str | Path = MODEL_PATH) -> None:
         from transformers import GenerationMixin
     except ImportError as exc:  # pragma: no cover - transformers optional
         raise RuntimeError(
-            "Chat requires the 'transformers' package. Install it with 'pip install transformers'."
+            "Chat requires the 'transformers' package. Install it with "
+            "'pip install transformers'."
         ) from exc
 
     mdl, tok = model.load_model(model_dir)

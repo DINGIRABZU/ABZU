@@ -47,7 +47,7 @@ def load_repo_list(path: Path | None = None) -> List[str]:
     if not path.is_file():
         return []
     lines = path.read_text(encoding="utf-8").splitlines()
-    return [l.strip() for l in lines if l.strip() and not l.startswith("#")]
+    return [line.strip() for line in lines if line.strip() and not line.startswith("#")]
 
 
 def _headers() -> dict:

@@ -29,7 +29,8 @@ def generate_waveform(duration_ms: int, freq: int = 440) -> Any:
         from pydub import AudioSegment
     except ImportError as exc:  # pragma: no cover - dependency guard
         raise ImportError(
-            "pydub is required for audio generation. Install it via `pip install pydub`."
+            "pydub is required for audio generation. Install it via "
+            "`pip install pydub`."
         ) from exc
 
     segment = AudioSegment.sine(duration=duration_ms, frequency=freq)

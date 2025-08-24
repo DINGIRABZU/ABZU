@@ -73,7 +73,10 @@ def save_interaction(
     conn = sqlite3.connect(db_path)
     with conn:
         conn.execute(
-            "INSERT INTO interactions(timestamp, transcript, emotion, response_path) VALUES (?, ?, ?, ?)",
+            (
+                "INSERT INTO interactions(timestamp, transcript, emotion, "
+                "response_path) VALUES (?, ?, ?, ?)"
+            ),
             (datetime.utcnow().isoformat(), transcript, emotion, response_path),
         )
     conn.close()
@@ -91,7 +94,10 @@ def log_benchmark(
     conn = sqlite3.connect(db_path)
     with conn:
         conn.execute(
-            "INSERT INTO benchmarks(timestamp, model, response_time, coherence, relevance) VALUES (?, ?, ?, ?, ?)",
+            (
+                "INSERT INTO benchmarks(timestamp, model, response_time, "
+                "coherence, relevance) VALUES (?, ?, ?, ?, ?)"
+            ),
             (
                 datetime.utcnow().isoformat(),
                 model,
@@ -115,8 +121,11 @@ def log_feedback(
     conn = sqlite3.connect(db_path)
     with conn:
         conn.execute(
-            "INSERT INTO feedback(timestamp, emotion, satisfaction, ethical_alignment, existential_clarity)"
-            " VALUES (?, ?, ?, ?, ?)",
+            (
+                "INSERT INTO feedback(timestamp, emotion, satisfaction, "
+                "ethical_alignment, existential_clarity) VALUES "
+                "(?, ?, ?, ?, ?)"
+            ),
             (
                 datetime.utcnow().isoformat(),
                 emotion,
@@ -159,7 +168,10 @@ def fetch_benchmarks(
     """Return recorded benchmark metrics."""
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    query = "SELECT timestamp, model, response_time, coherence, relevance FROM benchmarks ORDER BY id DESC"
+    query = (
+        "SELECT timestamp, model, response_time, coherence, relevance FROM "
+        "benchmarks ORDER BY id DESC"
+    )
     params = ()
     if limit is not None:
         query += " LIMIT ?"
@@ -214,7 +226,10 @@ def fetch_interactions(
     """Return saved interactions ordered from newest to oldest."""
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    query = "SELECT timestamp, transcript, emotion, response_path FROM interactions ORDER BY id DESC"
+    query = (
+        "SELECT timestamp, transcript, emotion, response_path FROM "
+        "interactions ORDER BY id DESC"
+    )
     params = ()
     if limit is not None:
         query += " LIMIT ?"

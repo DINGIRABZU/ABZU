@@ -26,7 +26,9 @@ QNL_LAYER_MAP: Dict[str, Dict[str, Any]] = _load_mapping(_QNL_MAP_PATH)
 
 
 def map_emotion_to_sound(emotion: str, archetype: str) -> Dict[str, Any]:
-    """Return tempo, scale, timbre, harmonics and QNL params for ``emotion`` and ``archetype``."""
+    """Return tempo, scale, timbre, harmonics and QNL params for
+    ``emotion`` and ``archetype``.
+    """
     ekey = str(emotion).lower()
     akey = str(archetype).lower()
     palette = EMOTIONAL_TONE_PALETTE.get(akey, {})

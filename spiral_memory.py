@@ -135,7 +135,10 @@ class SpiralMemory:
 
         with _connect(self.db_path) as conn:
             conn.execute(
-                "INSERT INTO events (timestamp, event, glyph_path, phrase) VALUES (?, ?, ?, ?)",
+                (
+                    "INSERT INTO events (timestamp, event, glyph_path, "
+                    "phrase) VALUES (?, ?, ?, ?)"
+                ),
                 (datetime.utcnow().isoformat(), event, glyph_path, phrase),
             )
 

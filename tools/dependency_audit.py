@@ -41,9 +41,8 @@ def audit() -> List[str]:
             mismatches.append(f"{pkg} not installed (expected {expected_version})")
             continue
         if installed_version != expected_version:
-            mismatches.append(
-                f"{pkg} {installed_version} != {expected_version}"  # pragma: no cover - simple string
-            )
+            # pragma: no cover - simple string
+            mismatches.append(f"{pkg} {installed_version} != {expected_version}")
     return mismatches
 
 

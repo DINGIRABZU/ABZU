@@ -21,7 +21,9 @@ logger = logging.getLogger(__name__)
 
 
 def monitor_traffic(interface: str, packet_count: int = 5) -> None:
-    """Capture packets from ``interface`` and store them in ``network_logs/defensive.pcap``."""
+    """Capture packets from ``interface`` and store them in
+    ``network_logs/defensive.pcap``.
+    """
     if sniff is None or wrpcap is None:
         raise RuntimeError("scapy is required for packet capture")
 

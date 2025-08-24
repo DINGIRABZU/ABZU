@@ -164,7 +164,10 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
                 """
             )
             conn.execute(
-                "INSERT INTO events (timestamp, event, glyph_path, phrase) VALUES (?, ?, ?, ?)",
+                (
+                    "INSERT INTO events (timestamp, event, glyph_path, "
+                    "phrase) VALUES (?, ?, ?, ?)"
+                ),
                 (datetime.utcnow().isoformat(), message, glyph_path, glyph_phrase),
             )
     except Exception:

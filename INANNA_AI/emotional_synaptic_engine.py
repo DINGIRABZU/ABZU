@@ -42,7 +42,9 @@ def map_emotion_to_filters(
 def adjust_from_memory(
     history: Iterable[Dict[str, Any]] | None = None,
 ) -> Dict[str, Any]:
-    """Update voice profiles from ``history`` and return filters for the last emotion."""
+    """Update voice profiles from ``history`` and return filters for the last
+    emotion.
+    """
     entries = (
         list(history)
         if history is not None

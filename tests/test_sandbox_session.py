@@ -34,7 +34,15 @@ def test_apply_patch_isolated() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     sandbox = create_sandbox(repo_root, virtual_env_manager)
 
-    patch = """diff --git a/NEW_FILE.txt b/NEW_FILE.txt\nnew file mode 100644\nindex 0000000..e69de29\n--- /dev/null\n+++ b/NEW_FILE.txt\n@@ -0,0 +1 @@\n+hello sandbox\n"""
+    patch = (
+        "diff --git a/NEW_FILE.txt b/NEW_FILE.txt\n"
+        "new file mode 100644\n"
+        "index 0000000..e69de29\n"
+        "--- /dev/null\n"
+        "+++ b/NEW_FILE.txt\n"
+        "@@ -0,0 +1 @@\n"
+        "+hello sandbox\n"
+    )
     apply_patch(sandbox, patch)
 
     assert (sandbox / "NEW_FILE.txt").exists()

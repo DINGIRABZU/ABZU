@@ -54,7 +54,10 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
     """Create required table in ``conn`` if it does not already exist."""
 
     conn.execute(
-        "CREATE TABLE IF NOT EXISTS emotion_log (timestamp REAL NOT NULL, vector TEXT NOT NULL)"
+        (
+            "CREATE TABLE IF NOT EXISTS emotion_log (timestamp REAL NOT NULL, "
+            "vector TEXT NOT NULL)"
+        )
     )
 
 
@@ -144,7 +147,10 @@ def fetch_emotion_history(
     conn = conn or get_connection(db_path)
     try:
         cur = conn.execute(
-            "SELECT timestamp, vector FROM emotion_log WHERE timestamp >= ? ORDER BY timestamp ASC",
+            (
+                "SELECT timestamp, vector FROM emotion_log WHERE timestamp >= ? "
+                "ORDER BY timestamp ASC"
+            ),
             (since,),
         )
         rows = cur.fetchall()

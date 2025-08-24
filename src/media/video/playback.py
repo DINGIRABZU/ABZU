@@ -22,7 +22,8 @@ def play_video(path: Path) -> None:
         import ffmpeg
     except ImportError as exc:  # pragma: no cover - dependency guard
         raise ImportError(
-            "ffmpeg-python is required for video playback. Install it via `pip install ffmpeg-python`."
+            "ffmpeg-python is required for video playback. Install it via "
+            "`pip install ffmpeg-python`."
         ) from exc
 
     stream = ffmpeg.input(str(path))

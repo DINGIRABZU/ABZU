@@ -4,8 +4,8 @@ from __future__ import annotations
 human_music_to_qnl_converter.py
 INANNA_AI — QNL Music Transmutation Core
 
-This module receives symbolic musical data (from MP3 analysis) and translates it into QNL code,
-glosses, and optionally symbolic ritual audio frames.
+This module receives symbolic musical data (from MP3 analysis) and translates
+it into QNL code, glosses, and optionally symbolic ritual audio frames.
 
 Requires:
 - Input: tempo, chroma (pitch class profile), duration

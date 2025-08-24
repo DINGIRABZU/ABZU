@@ -26,7 +26,8 @@ def layer_stems(
     pans: Iterable[float] | None = None,
     volumes: Iterable[float] | None = None,
 ) -> AudioSegment:
-    """Return a stereo mix by overlaying ``stems`` with optional ``pans`` and ``volumes``.
+    """Return a stereo mix by overlaying ``stems`` with optional ``pans``
+    and ``volumes``.
 
     Parameters
     ----------
@@ -136,7 +137,11 @@ def write_carla_project(audio_path: Path, out_path: Path) -> Path:
     """Write a simple Carla rack session referencing ``audio_path``."""
     if not _tool_available("carla"):
         raise RuntimeError("Carla not installed")
-    xml = f"<?xml version='1.0'?><CarlaPatchbay><File name=\"{audio_path}\"/></CarlaPatchbay>"
+    xml = (
+        "<?xml version='1.0'?><CarlaPatchbay><File name=\""
+        f"{audio_path}"
+        '"/></CarlaPatchbay>'
+    )
     out_path.write_text(xml)
     return out_path
 

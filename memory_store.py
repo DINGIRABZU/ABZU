@@ -35,7 +35,10 @@ class MemoryStore:
         for _ in range(pool_size):
             conn = sqlite3.connect(self.db_path, check_same_thread=False)
             conn.execute(
-                "CREATE TABLE IF NOT EXISTS memory (id TEXT PRIMARY KEY, vector BLOB, metadata TEXT)"
+                (
+                    "CREATE TABLE IF NOT EXISTS memory (id TEXT PRIMARY KEY, "
+                    "vector BLOB, metadata TEXT)"
+                )
             )
             self._pool.put(conn)
         self._lock = threading.RLock()
@@ -88,7 +91,10 @@ class MemoryStore:
             self.metadata[id_] = dict(metadata)
             with self._connection() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO memory (id, vector, metadata) VALUES (?, ?, ?)",
+                    (
+                        "INSERT OR REPLACE INTO memory (id, vector, metadata) "
+                        "VALUES (?, ?, ?)"
+                    ),
                     (id_, vec.tobytes(), json.dumps(metadata)),
                 )
                 conn.commit()
@@ -121,7 +127,10 @@ class MemoryStore:
             vec = np.asarray(vector, dtype="float32")
             with self._connection() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO memory (id, vector, metadata) VALUES (?, ?, ?)",
+                    (
+                        "INSERT OR REPLACE INTO memory (id, vector, metadata) "
+                        "VALUES (?, ?, ?)"
+                    ),
                     (id_, vec.tobytes(), json.dumps(metadata)),
                 )
                 conn.commit()
@@ -144,7 +153,10 @@ class MemoryStore:
             for _ in range(self._pool_size):
                 conn = sqlite3.connect(self.db_path, check_same_thread=False)
                 conn.execute(
-                    "CREATE TABLE IF NOT EXISTS memory (id TEXT PRIMARY KEY, vector BLOB, metadata TEXT)"
+                    (
+                        "CREATE TABLE IF NOT EXISTS memory (id TEXT PRIMARY KEY, "
+                        "vector BLOB, metadata TEXT)"
+                    )
                 )
                 self._pool.put(conn)
             self._load()

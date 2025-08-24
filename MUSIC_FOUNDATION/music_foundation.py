@@ -4,8 +4,9 @@ from __future__ import annotations
 music_foundation.py
 INANNA_AI — QNL Sonic Decoder
 
-This module loads an MP3 file, converts it to waveform, analyzes rhythm, pitch, and harmonic structure,
-and prepares it for QNL transformation (to be defined in qnl_engine or human_music_to_qnl_converter).
+This module loads an MP3 file, converts it to waveform, analyzes rhythm,
+pitch, and harmonic structure, and prepares it for QNL transformation
+(to be defined in qnl_engine or human_music_to_qnl_converter).
 
 Requirements:
     pip install librosa soundfile numpy scipy
@@ -42,7 +43,8 @@ class MusicInterpreter:
         )
         print(f"✅ Audio loaded: {self.file_path}")
         print(
-            f"📐 Sample Rate: {self.sample_rate}, Duration: {len(self.waveform) / self.sample_rate:.2f} sec"
+            f"📐 Sample Rate: {self.sample_rate}, Duration: "
+            f"{len(self.waveform) / self.sample_rate:.2f} sec"
         )
 
     def analyze_rhythm(self):

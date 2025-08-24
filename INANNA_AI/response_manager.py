@@ -10,7 +10,10 @@ from . import corpus_memory
 # to blend audio cues with the textual input.
 CORE_TEMPLATES = {
     "surface": "[Surface] {snippet} ({emotion}/{classification}) You said: '{text}'",
-    "deep": "[Deep] {snippet} ({emotion}/{classification}) Your words carry depth: '{text}'",
+    "deep": (
+        "[Deep] {snippet} ({emotion}/{classification}) "
+        "Your words carry depth: '{text}'"
+    ),
     "umbra": "[Umbra] {snippet} ({emotion}/{classification}) Shadows echo: '{text}'",
     "albedo": "[Albedo] {snippet} ({emotion}/{classification}) Reflecting: '{text}'",
 }

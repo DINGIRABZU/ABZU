@@ -126,7 +126,8 @@ def _install_ollama() -> None:
             digest,
         )
         raise RuntimeError(
-            f"Checksum mismatch for {OLLAMA_INSTALL_URL}: expected {OLLAMA_INSTALL_SHA256}, got {digest}"
+            f"Checksum mismatch for {OLLAMA_INSTALL_URL}: expected "
+            f"{OLLAMA_INSTALL_SHA256}, got {digest}"
         )
 
     tmp = tempfile.NamedTemporaryFile(delete=False)

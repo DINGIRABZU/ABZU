@@ -13,7 +13,8 @@ from pathlib import Path
 
 from . import qnl_engine, symbolic_parser
 
-# Expose modules from repository root so tests can import `SPIRAL_OS.seven_dimensional_music`.
+# Expose modules from repository root so tests can import
+# `SPIRAL_OS.seven_dimensional_music`.
 _repo_root = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location(
     "seven_dimensional_music", _repo_root / "seven_dimensional_music.py"
