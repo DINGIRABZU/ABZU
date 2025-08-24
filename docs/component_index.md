@@ -184,7 +184,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `src/audio/dsp_engine.py` | No description | magenta, numpy, rave, soundfile, torch |
 | `src/audio/engine.py` | No description | MUSIC_FOUNDATION, audio, numpy, pydub, simpleaudio, soundfile |
 | `src/audio/mix_tracks.py` | No description | MUSIC_FOUNDATION, numpy, soundfile, yaml |
-| `src/audio/play_ritual_music.py` | No description | INANNA_AI, MUSIC_FOUNDATION, core, numpy, soundfile |
+| `src/audio/play_ritual_music.py` | Compose short ritual music based on emotion and play it. | core, INANNA_AI, MUSIC_FOUNDATION, numpy, soundfile |
 | `src/audio/segment.py` | No description | core, numpy |
 | `src/audio/voice_aura.py` | No description | audio, soundfile |
 | `src/audio/voice_cloner.py` | No description | INANNA_AI, core, numpy |
