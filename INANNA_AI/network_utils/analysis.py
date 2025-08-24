@@ -8,8 +8,6 @@ from collections import Counter
 from pathlib import Path
 from typing import Optional
 
-from . import load_config
-
 try:  # pragma: no cover - optional dependency
     from scapy.all import rdpcap  # type: ignore
 except Exception:  # pragma: no cover - fallback
@@ -39,6 +37,8 @@ def analyze_capture(pcap_path: str, *, log_dir: Optional[str] = None) -> dict:
         "protocols": dict(proto_counts),
         "top_talkers": top_talkers,
     }
+
+    from . import load_config
 
     cfg = load_config()
     log_directory = Path(log_dir or cfg.get("log_dir", "network_logs"))

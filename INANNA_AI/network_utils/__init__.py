@@ -7,6 +7,9 @@ import threading
 from importlib import resources
 from pathlib import Path
 
+from .analysis import analyze_capture
+from .capture import capture_packets
+
 CONFIG_FILE = (
     Path(__file__).resolve().parents[2]
     / "INANNA_AI_AGENT"
@@ -51,13 +54,6 @@ def schedule_capture(interface: str, period: float) -> threading.Timer:
     timer.start()
     return timer
 
-
-from .analysis import (  # noqa: E402 - imported late to avoid circular import
-    analyze_capture,
-)
-from .capture import (  # noqa: E402 - imported late to avoid circular import
-    capture_packets,
-)
 
 __all__ = [
     "capture_packets",

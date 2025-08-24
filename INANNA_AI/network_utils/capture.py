@@ -6,8 +6,6 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from . import load_config
-
 try:  # pragma: no cover - optional dependency
     from scapy.all import sniff, wrpcap  # type: ignore
 except Exception:  # pragma: no cover - fallback
@@ -22,6 +20,8 @@ def capture_packets(
     interface: str, *, count: int = 20, output: Optional[str] = None
 ) -> None:
     """Capture ``count`` packets from ``interface`` and write them to ``output``."""
+    from . import load_config
+
     cfg = load_config()
     out_path = Path(output or cfg.get("capture_file", "capture.pcap"))
     out_path.parent.mkdir(parents=True, exist_ok=True)
