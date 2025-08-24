@@ -1,10 +1,13 @@
-"""Tests for spiral os."""
+"""Tests for the spiral_os CLI pipeline utility."""
 
 from __future__ import annotations
 
+import importlib.util
 import subprocess
 import sys
+from importlib.machinery import SourceFileLoader
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
@@ -12,18 +15,18 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import importlib.util
-from importlib.machinery import SourceFileLoader
-
 spiral_os_path = ROOT / "spiral_os"
 loader = SourceFileLoader("spiral_os", str(spiral_os_path))
 spec = importlib.util.spec_from_loader("spiral_os", loader)
+assert spec is not None
 spiral_os = importlib.util.module_from_spec(spec)
 loader.exec_module(spiral_os)
 
 
 @pytest.mark.parametrize("as_str", [True, False])
-def test_deploy_pipeline_runs_commands(monkeypatch, tmp_path, as_str):
+def test_deploy_pipeline_runs_commands(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, as_str: bool
+) -> None:
     # create simple pipeline YAML
     yaml_text = """
 steps:
@@ -35,7 +38,7 @@ steps:
 
     calls = []
 
-    def fake_run(cmd, **kwargs):
+    def fake_run(cmd: str, **kwargs: Any) -> Any:
         calls.append((cmd, kwargs))
 
         class Result:
@@ -54,7 +57,9 @@ steps:
 
 
 @pytest.mark.parametrize("as_str", [True, False])
-def test_deploy_pipeline_multiline(monkeypatch, tmp_path, as_str):
+def test_deploy_pipeline_multiline(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, as_str: bool
+) -> None:
     yaml_text = """
 steps:
   - name: multi
@@ -67,7 +72,7 @@ steps:
 
     calls = []
 
-    def fake_run(cmd, **kwargs):
+    def fake_run(cmd: str, **kwargs: Any) -> Any:
         calls.append((cmd, kwargs))
 
         class Result:
@@ -85,7 +90,9 @@ steps:
     assert kwargs["shell"] is True and kwargs["check"] is True
 
 
-def test_deploy_pipeline_invalid_yaml(tmp_path, caplog):
+def test_deploy_pipeline_invalid_yaml(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
     pipeline = tmp_path / "p.yaml"
     pipeline.write_text(":: not yaml ::")
 
@@ -96,7 +103,9 @@ def test_deploy_pipeline_invalid_yaml(tmp_path, caplog):
     assert "Failed to parse pipeline YAML" in caplog.text
 
 
-def test_deploy_pipeline_command_failure(monkeypatch, tmp_path, caplog):
+def test_deploy_pipeline_command_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
     yaml_text = """
 steps:
   - run: ok
@@ -105,7 +114,7 @@ steps:
     pipeline = tmp_path / "p.yaml"
     pipeline.write_text(yaml_text)
 
-    def fake_run(cmd, **kwargs):
+    def fake_run(cmd: str, **kwargs: Any) -> Any:
         if cmd.strip() == "bad":
             raise subprocess.CalledProcessError(1, cmd)
 
@@ -121,3 +130,13 @@ steps:
             spiral_os.deploy_pipeline(pipeline)
 
     assert "Command failed" in caplog.text
+
+
+def test_deploy_pipeline_missing_file(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    missing = tmp_path / "absent.yaml"
+    with caplog.at_level("ERROR"):
+        with pytest.raises(OSError):
+            spiral_os.deploy_pipeline(missing)
+    assert "Unable to read pipeline YAML" in caplog.text

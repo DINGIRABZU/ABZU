@@ -11,7 +11,7 @@ import math
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, cast
+from typing import Any, Callable, Dict, Iterable, List, Optional, cast
 
 try:  # pragma: no cover - optional dependency
     from distributed_memory import DistributedMemory
@@ -133,9 +133,16 @@ def add_vector(text: str, metadata: Dict[str, Any]) -> None:
     try:
         col.add(id_, emb, meta)
     except Exception:
+        logger.debug(
+            "collection.add failed, retrying with legacy signature",
+            exc_info=True,
+        )
         col.add([id_], [emb], [meta])
     if _DIST is not None:
-        _DIST.backup(id_, emb, meta)
+        try:
+            _DIST.backup(id_, emb, meta)
+        except Exception:  # pragma: no cover - best effort backup
+            logger.exception("distributed backup failed for %s", id_)
     _log("add", text, meta)
 
 
@@ -164,7 +171,9 @@ def search(
     qvec_list = qvec.tolist() if hasattr(qvec, "tolist") else list(qvec)
     if hasattr(col, "search"):
         raw = col.search(qvec_list, k=k_search)
-        iterator = ((mid, emb, meta) for mid, emb, meta in raw)
+        iterator: Iterable[tuple[Any, Any, Any]] = (
+            (mid, emb, meta) for mid, emb, meta in raw
+        )
     else:
         raw = col.query([qvec_list], n_results=k_search)
         iterator = zip(
