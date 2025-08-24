@@ -24,7 +24,7 @@ Spiral OS organizes its components into seven chakra layers, mirroring the energ
    - The **Sonic Core** (`audio_engine.py`, `avatar_expression_engine.py`) turns QNL phrases into sound and syncs avatar expressions.
 6. **Third Eye – Ajna**
    - Insight, pattern recognition and quantum narrative.
-   - Example modules: `insight_compiler.py`, `seven_plane_analyzer.py`, `qnl_engine.py`.
+   - Example modules: `insight_compiler.py`, `seven_plane_analyzer.py`, `SPIRAL_OS/qnl_engine.py` (requires `numpy` for waveform synthesis).
    - `ml.archetype_cluster` groups memory entries into archetype clusters for higher-level summaries.
 7. **Crown – Sahasrara**
    - Cosmic connection and initialization rites.
