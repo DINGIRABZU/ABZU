@@ -1,7 +1,7 @@
 """Compose short ritual music based on emotion and play it.
 
-Falls back to generating synthetic overlay tones with NumPy when the
-``soundfile`` library is unavailable.
+If the optional ``soundfile`` dependency is missing, tones are synthesized with
+NumPy and written using Python's :mod:`wave` module.
 """
 
 from __future__ import annotations
@@ -118,6 +118,21 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     return _synth()
 
 
+def _write_wav(path: Path, data: np.ndarray, sample_rate: int = 44100) -> None:
+    """Write ``data`` to ``path`` as a mono WAV using the standard library."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    import wave
+
+    clipped = np.clip(data, -1.0, 1.0)
+    pcm = (clipped * 32767).astype("<i2")
+    with wave.open(str(path), "wb") as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(2)
+        wf.setframerate(sample_rate)
+        wf.writeframes(pcm.tobytes())
+
+
 def compose_ritual_music(
     emotion: str,
     ritual: str,
@@ -126,7 +141,11 @@ def compose_ritual_music(
     hide: bool = False,
     out_path: Path = Path("ritual.wav"),
 ) -> Path:
-    """Generate a simple melody and optionally hide ritual steps."""
+    """Generate a simple melody and optionally hide ritual steps.
+
+    Uses ``soundfile`` when available; otherwise falls back to NumPy and the
+    built-in :mod:`wave` module for output.
+    """
     if archetype is None:
         try:
             archetype = emotion_analysis.get_current_archetype()
@@ -152,7 +171,7 @@ def compose_ritual_music(
     wave = layer_generators.compose_human_layer(
         tempo,
         melody,
-        wav_path=str(out_path),
+        wav_path=str(out_path) if sf is not None else None,
         wave_type=wave_type,
     )
 
@@ -164,9 +183,11 @@ def compose_ritual_music(
         max_val = float(np.max(np.abs(wave)))
         if max_val > 0:
             wave /= max_val
-        if sf is None:
-            raise RuntimeError("soundfile library not installed")
+
+    if sf is not None:
         sf.write(out_path, wave, 44100)
+    else:
+        _write_wav(out_path, wave, 44100)
 
     if hide:
         profile = load_ritual_profile()
@@ -179,9 +200,10 @@ def compose_ritual_music(
             max_val = float(np.max(np.abs(mixed)))
             if max_val > 0:
                 mixed /= max_val
-            if sf is None:
-                raise RuntimeError("soundfile library not installed")
-            sf.write(out_path, mixed, 44100)
+            if sf is not None:
+                sf.write(out_path, mixed, 44100)
+            else:
+                _write_wav(out_path, mixed, 44100)
     Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
     return out_path
 
