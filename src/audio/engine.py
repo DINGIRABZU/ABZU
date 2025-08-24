@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple playback engine for ritual loops and voice audio."""
+
+from __future__ import annotations
 
 import logging
 import shutil
@@ -112,7 +112,8 @@ def _play_segment(seg: Any) -> Any:
     data = seg.data
     sr = seg.frame_rate
     arr = np.int16(np.clip(data, -1, 1) * 32767)
-    return sa.play_buffer(arr, arr.shape[1], 2, sr)
+    channels = arr.shape[1] if arr.ndim > 1 else 1  # type: ignore[misc]
+    return sa.play_buffer(arr, channels, 2, sr)
 
 
 def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> None:

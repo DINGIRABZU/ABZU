@@ -15,6 +15,7 @@ from __future__ import annotations
 import logging
 import tempfile
 import threading
+import wave as wave_module
 from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
@@ -35,42 +36,41 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     np = None  # type: ignore
 
+import archetype_shift_engine
 import crown_decider
+import emotional_state
+import learning_mutator
+import training_guide
 from audio import voice_aura
 from core import context_tracker, language_engine, task_parser
+from core.emotion_analyzer import EmotionAnalyzer
+from core.memory_logger import MemoryLogger
+from core.model_selector import ModelSelector
 from core.task_profiler import TaskProfiler
-from INANNA_AI import response_manager, voice_layer_albedo
+from corpus_memory_logging import load_interactions, log_interaction, log_ritual_result
+from crown_config import settings
+from INANNA_AI import listening_engine, response_manager, voice_layer_albedo
 from INANNA_AI.personality_layers import REGISTRY as PERSONALITY_REGISTRY
 from INANNA_AI.personality_layers import AlbedoPersonality
+from insight_compiler import load_insights, update_insights
 from SPIRAL_OS import qnl_engine, symbolic_parser
+from task_profiling import ritual_action_sequence
+from tools import reflection_loop
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except Exception:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
-vector_memory = _vector_memory
-"""Optional vector memory subsystem; ``None`` if unavailable."""
 
 try:  # pragma: no cover - optional dependency
     import invocation_engine as _invocation_engine
 except Exception:  # pragma: no cover - optional dependency
     _invocation_engine = None  # type: ignore[assignment]
-invocation_engine = _invocation_engine
-"""Optional invocation engine subsystem; ``None`` if unavailable."""
 
-import archetype_shift_engine
-import emotional_state
-import learning_mutator
-import training_guide
-from core.emotion_analyzer import EmotionAnalyzer
-from core.memory_logger import MemoryLogger
-from core.model_selector import ModelSelector
-from corpus_memory_logging import load_interactions, log_interaction, log_ritual_result
-from crown_config import settings
-from INANNA_AI import listening_engine
-from insight_compiler import load_insights, update_insights
-from task_profiling import ritual_action_sequence
-from tools import reflection_loop
+vector_memory = _vector_memory
+# Optional vector memory subsystem; ``None`` if unavailable.
+invocation_engine = _invocation_engine
+# Optional invocation engine subsystem; ``None`` if unavailable.
 
 logger = logging.getLogger(__name__)
 
@@ -253,8 +253,6 @@ class MoGEOrchestrator:
             phrases, wave = qnl_engine.hex_to_song(hex_input, duration_per_byte=0.05)
             wav_path = Path(tempfile.gettempdir()) / f"qnl_{abs(hash(hex_input))}.wav"
             if sf is None:
-                import wave as wave_module
-
                 wav_data = np.clip(wave, -1.0, 1.0)
                 wav_data = (wav_data * 32767).astype(np.int16)
                 with wave_module.open(str(wav_path), "wb") as wf:
