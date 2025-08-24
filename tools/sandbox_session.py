@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Helpers for working with sandboxed repository copies."""
+
+from __future__ import annotations
 
 import subprocess
 import tempfile
