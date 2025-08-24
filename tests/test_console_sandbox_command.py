@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import subprocess
 import types
 
@@ -85,12 +86,12 @@ def test_sandbox_command_success(monkeypatch, tmp_path, capsys):
     assert req == tmp_path / "sandbox" / "tests" / "requirements.txt"
 
 
-def test_sandbox_command_failure(monkeypatch, tmp_path, capsys):
+def test_sandbox_command_failure(monkeypatch, tmp_path, caplog):
     err = subprocess.CalledProcessError(1, ["pytest"], output="bad", stderr="fails")
     calls = _setup(monkeypatch, tmp_path, err)
-    console_interface.run_repl([])
-    out = capsys.readouterr().out
-    assert "Sandbox tests failed." in out
+    with caplog.at_level(logging.ERROR):
+        console_interface.run_repl([])
+    assert "Sandbox tests failed." in caplog.text
     assert calls["create"] is True
     assert calls["apply"] == "patch-data"
     assert calls["run"][1][0] == "pytest"
