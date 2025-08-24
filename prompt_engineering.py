@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Prompt transformations based on style presets."""
+
+from __future__ import annotations
 
 from typing import Dict
 
