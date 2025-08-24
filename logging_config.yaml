@@ -4,11 +4,13 @@ formatters:
     '()': pythonjsonlogger.jsonlogger.JsonFormatter
 handlers:
   file:
-    class: logging.FileHandler
+    class: logging.handlers.RotatingFileHandler
     formatter: json
     filename: logs/INANNA_AI.log
     encoding: utf-8
     filters: [emotion]
+    maxBytes: 1048576
+    backupCount: 5
 filters:
   emotion:
     '()': logging_filters.EmotionFilter

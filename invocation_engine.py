@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 import re
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Tuple
@@ -80,6 +81,7 @@ def _extract_emotion(text: str) -> str | None:
 
 def invoke(text: str, orchestrator: MoGEOrchestrator | None = None) -> List[Any]:
     """Process ``text`` and trigger callbacks for matching invocations."""
+    start = time.perf_counter()
     symbols = _extract_symbols(text)
     emotion = _extract_emotion(text)
     key = (symbols, emotion)
@@ -110,15 +112,19 @@ def invoke(text: str, orchestrator: MoGEOrchestrator | None = None) -> List[Any]
         method = getattr(orchestrator, hk, None)
         if callable(method):
             results.append(method(symbols, emotion))
+    duration = time.perf_counter() - start
+    logger.info("invoke completed", extra={"symbols": symbols, "emotion": emotion, "duration": duration})
     return results
 
 
 def invoke_ritual(name: str) -> List[str]:
     """Return ritual steps for ``name`` and log the invocation."""
+    start = time.perf_counter()
     try:
         data = json.loads(_RITUAL_FILE.read_text(encoding="utf-8"))
     except Exception:
-        logger.error("failed to load %s", _RITUAL_FILE)
+        duration = time.perf_counter() - start
+        logger.error("failed to load %s", _RITUAL_FILE, extra={"duration": duration})
         return []
     info = data.get(name)
     steps: List[str] = []
@@ -130,7 +136,8 @@ def invoke_ritual(name: str) -> List[str]:
                 steps.extend(str(a) for a in actions)
     else:
         info = {}
-    logger.info("ritual invoked", extra={"ritual": name})
+    duration = time.perf_counter() - start
+    logger.info("ritual invoked", extra={"ritual": name, "duration": duration})
     return steps
 
 
