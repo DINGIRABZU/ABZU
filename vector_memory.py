@@ -8,10 +8,15 @@ from __future__ import annotations
 import json
 import logging
 import math
+import threading
 import uuid
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, cast
+
+from MUSIC_FOUNDATION import qnl_utils
+from crown_config import settings
 
 try:  # pragma: no cover - optional dependency
     from distributed_memory import DistributedMemory
@@ -32,12 +37,6 @@ except Exception:  # pragma: no cover - optional dependency
             raise RuntimeError("memory_store backend unavailable")
 
     _MemoryStore = _MemoryStoreStub  # type: ignore[misc,assignment]
-
-import threading
-from dataclasses import dataclass
-
-from crown_config import settings
-from MUSIC_FOUNDATION import qnl_utils
 
 
 def _default_embed(text: str) -> Any:

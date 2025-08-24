@@ -12,6 +12,9 @@ from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
 
+import corpus_memory_logging
+import crown_config
+
 try:
     import chromadb
     from chromadb.api import Collection
@@ -51,9 +54,6 @@ except ImportError:  # pragma: no cover - optional dependency
 
         return types.SimpleNamespace(encode=_encode)
 
-
-import corpus_memory_logging
-import crown_config
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
