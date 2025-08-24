@@ -22,6 +22,8 @@ markdown==3.8.2
     # via spiral-os (pyproject.toml)
 numpy==1.26.4
     # via spiral-os (pyproject.toml)
+opencv-python==4.10.0.84
+    # via spiral-os (pyproject.toml)
 omegaconf==2.3.0
     # via spiral-os (pyproject.toml)
 pre-commit==4.3.0
