@@ -5,17 +5,15 @@ from __future__ import annotations
 import math
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, TYPE_CHECKING
 
 try:  # optional dependency
     import numpy as np
 except ImportError:  # pragma: no cover - environment dependent
     np = None  # type: ignore
 
-try:  # optional dependency
-    from scipy.io.wavfile import write
-except ImportError:  # pragma: no cover - environment dependent
-    write = None  # type: ignore
+if TYPE_CHECKING:  # pragma: no cover - type checking only
+    from numpy.typing import NDArray
 
 # QNL-SongCore mappings from hex value ranges to glyphs and tones
 GLYPH_MAP: Dict[range, Tuple[str, str]] = {
@@ -80,7 +78,7 @@ def apply_psi_equation(
     sample_rate: int = 44100,
     emotion: str | None = None,
     phase_shift: float = 0.0,
-) -> np.ndarray:
+) -> "NDArray[np.float64]":
     """Generate a waveform from the ψ(t) equation."""
     if np is None:
         raise ImportError(
@@ -114,7 +112,7 @@ def hex_to_song(
     *,
     duration_per_byte: float = 1.0,
     sample_rate: int = 44100,
-) -> Tuple[List[Dict[str, str]], np.ndarray]:
+) -> Tuple[List[Dict[str, str]], "NDArray[np.int16]"]:
     """Convert hexadecimal input into a list of phrases and a waveform."""
     if np is None:
         raise ImportError(
