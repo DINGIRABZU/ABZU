@@ -94,9 +94,23 @@ def _broadcast_scores(scores: Dict[str, Any]) -> None:
     """Send archetypal scores to a webhook or message queue if configured."""
     webhook = os.getenv("ARCHETYPE_SCORE_WEBHOOK_URL")
     queue_path = os.getenv("ARCHETYPE_SCORE_QUEUE_PATH")
+    headers: Dict[str, str] = {}
+    raw_headers = os.getenv("ARCHETYPE_SCORE_WEBHOOK_HEADERS")
+    if raw_headers:
+        try:
+            parsed = json.loads(raw_headers)
+            if isinstance(parsed, dict):
+                headers = {str(k): str(v) for k, v in parsed.items()}
+        except Exception:  # pragma: no cover - invalid header JSON
+            headers = {}
     if webhook:
         try:
-            requests.post(webhook, json=scores, timeout=3)
+            requests.post(
+                webhook,
+                json=scores,
+                headers=headers or None,
+                timeout=3,
+            )
         except Exception:  # pragma: no cover - network failure is non-critical
             pass
     if queue_path:
