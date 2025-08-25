@@ -33,7 +33,11 @@ def test_play_ritual_music_cli(tmp_path, monkeypatch):
     monkeypatch.setattr(
         prm.waveform.layer_generators, "compose_human_layer", dummy_compose
     )
-    monkeypatch.setattr(prm.expressive_output, "play_audio", lambda p, loop=False: None)
+    class DummyBackend:
+        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
+            prm.backends._write_wav(path, wave, sample_rate)
+
+    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
 
     out = tmp_path / "ritual.wav"
     prm.main(["--emotion", "joy", "--ritual", "\u2609", "--output", str(out)])
@@ -47,22 +51,18 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
     ):
         return np.zeros(100, dtype=np.float32)
 
-    monkeypatch.setattr(prm, "sf", None)
-    monkeypatch.setattr(prm.waveform, "sf", None)
     monkeypatch.setattr(
         prm.waveform.layer_generators, "compose_human_layer", dummy_compose
     )
-    monkeypatch.setattr(prm.expressive_output, "play_audio", lambda p, loop=False: None)
 
-    class _DummyPB:
-        def wait_done(self):
-            return None
+    called = {}
 
-    class _DummySA:
-        def play_buffer(self, *args, **kwargs):
-            return _DummyPB()
+    class DummyBackend:
+        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
+            called["sample_rate"] = sample_rate
+            prm.backends._write_wav(path, wave, sample_rate)
 
-    monkeypatch.setattr(prm, "sa", _DummySA())
+    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
 
     out = prm.compose_ritual_music(
         "joy", "\u2609", output_dir=tmp_path, sample_rate=8000
@@ -70,3 +70,4 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
 
     assert out.exists()
     assert out == tmp_path / "ritual.wav"
+    assert called["sample_rate"] == 8000
