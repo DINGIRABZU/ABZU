@@ -12,13 +12,13 @@ progress.
 
 | Chakra | Target Quarter | Milestone | Issue |
 | --- | --- | --- | --- |
-| Root | Q3 2024 | milestone/root-chakra-q3-2024 | #101 |
-| Sacral | Q4 2024 | milestone/sacral-chakra-q4-2024 | #102 |
-| Solar Plexus | Q1 2025 | milestone/solar-plexus-q1-2025 | #103 |
-| Heart | Q2 2025 | milestone/heart-chakra-q2-2025 | #104 |
-| Throat | Q3 2025 | milestone/throat-chakra-q3-2025 | #105 |
-| Third Eye | Q4 2025 | milestone/third-eye-q4-2025 | #106 |
-| Crown | Q1 2026 | milestone/crown-chakra-q1-2026 | #107 |
+| Root | Q3 2024 | [root-chakra-q3-2024](https://github.com/DINGIRABZU/ABZU/milestone/root-chakra-q3-2024) | [#101](https://github.com/DINGIRABZU/ABZU/issues/101) |
+| Sacral | Q4 2024 | [sacral-chakra-q4-2024](https://github.com/DINGIRABZU/ABZU/milestone/sacral-chakra-q4-2024) | [#102](https://github.com/DINGIRABZU/ABZU/issues/102) |
+| Solar Plexus | Q1 2025 | [solar-plexus-q1-2025](https://github.com/DINGIRABZU/ABZU/milestone/solar-plexus-q1-2025) | [#103](https://github.com/DINGIRABZU/ABZU/issues/103) |
+| Heart | Q2 2025 | [heart-chakra-q2-2025](https://github.com/DINGIRABZU/ABZU/milestone/heart-chakra-q2-2025) | [#104](https://github.com/DINGIRABZU/ABZU/issues/104) |
+| Throat | Q3 2025 | [throat-chakra-q3-2025](https://github.com/DINGIRABZU/ABZU/milestone/throat-chakra-q3-2025) | [#105](https://github.com/DINGIRABZU/ABZU/issues/105) |
+| Third Eye | Q4 2025 | [third-eye-q4-2025](https://github.com/DINGIRABZU/ABZU/milestone/third-eye-q4-2025) | [#106](https://github.com/DINGIRABZU/ABZU/issues/106) |
+| Crown | Q1 2026 | [crown-chakra-q1-2026](https://github.com/DINGIRABZU/ABZU/milestone/crown-chakra-q1-2026) | [#107](https://github.com/DINGIRABZU/ABZU/issues/107) |
 
 ## Completed
 
@@ -60,5 +60,5 @@ quarter‑level goals and owners.
 
 ## Roadmap Maintenance
 
-Review this roadmap after each chakra release to update milestone links,
+Review this roadmap after each release cycle to update milestone links,
 issue references, and target quarters for remaining upgrades.
