@@ -12,10 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
-try:  # pragma: no cover - optional dependency
-    import soundfile as sf
-except Exception:  # pragma: no cover - optional dependency
-    sf = None  # type: ignore
+from src.media.audio.backends import load_backend
 
 from typing import Any
 
@@ -61,6 +58,7 @@ def generate_quantum_music(
     t = np.linspace(0, duration, int(sr * duration), endpoint=False)
     wave = 0.5 * np.sin(2 * np.pi * 220 * t)
     out = Path(output_dir) / "quantum.wav"
+    sf = load_backend("soundfile")
     if sf is None:
         raise RuntimeError("soundfile library not installed")
     sf.write(out, wave, sr, subtype="PCM_16")
@@ -83,6 +81,10 @@ def main(args: list[str] | None = None) -> None:
     parser.add_argument("--output", required=True)
     parser.add_argument("--secret")
     opts = parser.parse_args(args)
+
+    sf = load_backend("soundfile")
+    if sf is None:
+        raise RuntimeError("soundfile library not installed")
 
     data, sr = sf.read(opts.input, always_2d=False)
     sf.write(opts.output, data, sr, subtype="PCM_16")

@@ -17,15 +17,7 @@ from typing import Any, Dict
 
 import numpy as np
 
-try:  # pragma: no cover - optional dependency for MIDI support
-    import pretty_midi
-except Exception:  # pragma: no cover - optional dependency
-    pretty_midi = None  # type: ignore
-
-try:  # pragma: no cover - optional dependency for WAV writing
-    import soundfile as sf
-except Exception:  # pragma: no cover - optional dependency
-    sf = None  # type: ignore
+from src.media.audio.backends import load_backend
 
 from INANNA_AI.emotion_analysis import analyze_audio_emotion
 from pipeline.music_analysis import (
@@ -43,10 +35,11 @@ def _analyze_midi(path: Path) -> MusicAnalysisResult:
     then extracts the same high level features as :func:`analyze_music`.
     """
 
-    if pretty_midi is None:
+    pm = load_backend("pretty_midi")
+    if pm is None:
         raise RuntimeError("pretty_midi library not installed")
 
-    midi = pretty_midi.PrettyMIDI(str(path))
+    midi = pm.PrettyMIDI(str(path))
     sr = 44100
     samples = (
         midi.fluidsynth(fs=sr)
@@ -60,6 +53,7 @@ def _analyze_midi(path: Path) -> MusicAnalysisResult:
     # temporary WAV file.
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
         tmp_path = Path(tmp.name)
+        sf = load_backend("soundfile")
         if sf is not None:
             sf.write(tmp_path, samples, sr)
         else:  # pragma: no cover - ``wave`` fallback when soundfile missing

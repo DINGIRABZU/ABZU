@@ -13,7 +13,7 @@ def test_generate_from_text_includes_emotion_and_tempo(monkeypatch, tmp_path):
     captured = {}
 
     class DummyPipe:
-        def __call__(self, prompt: str):
+        def __call__(self, prompt: str, **_params):
             captured["prompt"] = prompt
             return [{"audio": b"data"}]
 

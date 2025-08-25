@@ -31,7 +31,7 @@ progress.
 
 ## Upcoming
 
-- **Music command** enabling on‑the‑fly song generation.
+- **Music command** enabling on‑the‑fly song generation and streaming output.
 - **Avatar lip‑sync** for more accurate mouth movement.
 - **Expanded memory search** across cortex and vector layers.
 - **Voice cloning** to mirror user tone within the sonic core.
@@ -52,7 +52,7 @@ quarter‑level goals and owners.
 
 | Milestone | Component | Score |
 | --- | --- | --- |
-| Music command | `music_generation.py` | ⚠️3 |
+| Music command | `music_generation.py` (streaming support) | ⚠️4 |
 | Avatar lip‑sync | `ai_core/avatar/lip_sync.py` | ⚠️2 |
 | Expanded memory search | `memory/cortex.py` | ⚠️1 |
 | Expanded memory search | `vector_memory.py` | ⚠️3 |
