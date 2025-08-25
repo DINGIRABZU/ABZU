@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `docs/chakra_versions.json`.
 - Record each chakra version bump in this changelog.
 - Bumped `root` and `crown` chakras to `1.0.1`.
+- Bumped `sacral` chakra to `1.0.1`.
 
 ### Insight Matrix
 

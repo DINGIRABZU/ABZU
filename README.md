@@ -88,8 +88,8 @@ full Hugging Face identifier.
 - [docs/chakra_koan_system.md](docs/chakra_koan_system.md) – meditative verses for
   each chakra.
 - [docs/chakra_versions.json](docs/chakra_versions.json) – semantic version
-  numbers for chakra modules. Record each bump in
-  [CHANGELOG.md](CHANGELOG.md).
+  numbers for chakra modules (latest sacral release: 1.0.1). Record each bump
+  in [CHANGELOG.md](CHANGELOG.md).
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see

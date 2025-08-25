@@ -13,7 +13,8 @@ For details on chakra module architecture, version history, and contemplative
 context, consult
 [docs/chakra_architecture.md](docs/chakra_architecture.md),
 [docs/chakra_versions.json](docs/chakra_versions.json), and
-[docs/chakra_koan_system.md](docs/chakra_koan_system.md).
+[docs/chakra_koan_system.md](docs/chakra_koan_system.md) – keep verses aligned
+with version bumps.
 
 When bumping versions in
 [docs/chakra_versions.json](docs/chakra_versions.json), record the change in

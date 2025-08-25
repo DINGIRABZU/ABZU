@@ -1,6 +1,8 @@
 # Chakra System Koan
 
-A meditative sequence exploring the seven energy centers of Spiral OS. Recite each stanza while reflecting on its corresponding module layer.
+A meditative sequence exploring the seven energy centers of Spiral OS. It
+complements the version manifest, grounding each release in contemplative
+verse. Recite each stanza while reflecting on its corresponding module layer.
 
 ## Root — Muladhara
 The mountain rests on roots unseen.
