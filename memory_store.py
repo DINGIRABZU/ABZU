@@ -100,6 +100,18 @@ class MemoryStore:
                 conn.commit()
 
     # ------------------------------------------------------------------
+    def delete(self, ids: Sequence[str]) -> None:
+        """Remove ``ids`` from the store."""
+        if not ids:
+            return
+        with self._lock:
+            marks = ",".join("?" for _ in ids)
+            with self._connection() as conn:
+                conn.execute(f"DELETE FROM memory WHERE id IN ({marks})", list(ids))
+                conn.commit()
+            self._load()
+
+    # ------------------------------------------------------------------
     def search(
         self, vector: Sequence[float], k: int
     ) -> List[Tuple[str, List[float], Dict[str, Any]]]:
@@ -162,4 +174,109 @@ class MemoryStore:
             self._load()
 
 
-__all__ = ["MemoryStore"]
+class ShardedMemoryStore:
+    """Shard vectors across multiple :class:`MemoryStore` instances."""
+
+    def __init__(
+        self,
+        base_path: str | Path,
+        *,
+        shards: int = 1,
+        snapshot_interval: int = 100,
+    ) -> None:
+        self.base_path = Path(base_path)
+        self.base_path.mkdir(parents=True, exist_ok=True)
+        self.shards = max(1, shards)
+        self.snapshot_interval = max(1, snapshot_interval)
+        self._stores = [
+            MemoryStore(self.base_path / f"shard_{i}.sqlite")
+            for i in range(self.shards)
+        ]
+        self._op_count = 0
+        self.snapshot_dir = self.base_path / "snapshots"
+        if self.snapshot_dir.exists():
+            try:
+                self.restore(self.snapshot_dir)
+            except Exception:
+                pass
+
+    # ------------------------------------------------------------------
+    @property
+    def ids(self) -> List[str]:
+        out: List[str] = []
+        for store in self._stores:
+            out.extend(store.ids)
+        return out
+
+    # ------------------------------------------------------------------
+    @property
+    def metadata(self) -> Dict[str, Dict[str, Any]]:
+        meta: Dict[str, Dict[str, Any]] = {}
+        for store in self._stores:
+            meta.update(store.metadata)
+        return meta
+
+    # ------------------------------------------------------------------
+    def _pick(self, id_: str) -> MemoryStore:
+        idx = int(id_, 16) % self.shards
+        return self._stores[idx]
+
+    # ------------------------------------------------------------------
+    def add(self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]) -> None:
+        self._pick(id_).add(id_, vector, metadata)
+        self._after_mutation()
+
+    # ------------------------------------------------------------------
+    def delete(self, ids: Sequence[str]) -> None:
+        by_shard: Dict[int, List[str]] = {}
+        for id_ in ids:
+            idx = int(id_, 16) % self.shards
+            by_shard.setdefault(idx, []).append(id_)
+        for idx, id_list in by_shard.items():
+            self._stores[idx].delete(id_list)
+        self._after_mutation()
+
+    # ------------------------------------------------------------------
+    def search(
+        self, vector: Sequence[float], k: int
+    ) -> List[Tuple[str, List[float], Dict[str, Any]]]:
+        results: List[Tuple[str, List[float], Dict[str, Any]]] = []
+        for store in self._stores:
+            results.extend(store.search(vector, k))
+        if len(results) <= k:
+            return results
+        return results[:k]
+
+    # ------------------------------------------------------------------
+    def rewrite(
+        self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]
+    ) -> None:
+        self._pick(id_).rewrite(id_, vector, metadata)
+        self._after_mutation()
+
+    # ------------------------------------------------------------------
+    def snapshot(self, path: str | Path) -> None:
+        path = Path(path)
+        path.mkdir(parents=True, exist_ok=True)
+        for i, store in enumerate(self._stores):
+            store.snapshot(path / f"shard_{i}.sqlite")
+
+    # ------------------------------------------------------------------
+    def restore(self, path: str | Path) -> None:
+        path = Path(path)
+        for i, store in enumerate(self._stores):
+            db = path / f"shard_{i}.sqlite"
+            if db.exists():
+                store.restore(db)
+
+    # ------------------------------------------------------------------
+    def _after_mutation(self) -> None:
+        self._op_count += 1
+        if self._op_count >= self.snapshot_interval:
+            try:
+                self.snapshot(self.snapshot_dir)
+            finally:
+                self._op_count = 0
+
+
+__all__ = ["MemoryStore", "ShardedMemoryStore"]
