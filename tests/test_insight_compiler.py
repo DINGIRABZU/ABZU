@@ -16,7 +16,9 @@ import logging_filters  # noqa: E402
 
 def test_update_aggregates(tmp_path, monkeypatch):
     insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
     monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
 
     logs = [
         {
@@ -67,7 +69,9 @@ def test_update_aggregates(tmp_path, monkeypatch):
 
 def test_resonance_index_increases(tmp_path, monkeypatch):
     insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
     monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
 
     log = {
         "intent": "conjure fire",
@@ -86,9 +90,31 @@ def test_resonance_index_increases(tmp_path, monkeypatch):
     assert data["conjure fire"]["resonance_index"]["joy"] == 2
 
 
+def test_manifest_version_bumps(tmp_path, monkeypatch):
+    insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
+    # seed manifest with starting version
+    manifest_file.write_text(json.dumps({"version": "0.1.0", "updated": ""}))
+    monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
+
+    log = {"intent": "open portal", "tone": "calm", "success": True}
+    ic.update_insights([log])
+    manifest = json.loads(manifest_file.read_text())
+    assert manifest["version"] == "0.1.1"
+    first_time = manifest["updated"]
+
+    ic.update_insights([log])
+    manifest = json.loads(manifest_file.read_text())
+    assert manifest["version"] == "0.1.2"
+    assert manifest["updated"] != first_time
+
+
 def test_connector_invoked(tmp_path, monkeypatch):
     insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
     monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
 
     called: dict = {}
 
@@ -119,7 +145,9 @@ def test_connector_invoked(tmp_path, monkeypatch):
 def test_logging_filter_integration(tmp_path, monkeypatch, caplog):
     """Log records enriched by the emotion filter update the matrix."""
     insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
     monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
 
     logging_filters.set_emotion_provider(lambda: ("joy", 0.8))
     logger = logging.getLogger("insight-test")

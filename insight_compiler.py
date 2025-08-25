@@ -11,6 +11,7 @@ from typing import Any, Dict, List
 import requests
 
 INSIGHT_FILE = Path(__file__).resolve().parent / "insight_matrix.json"
+INSIGHT_MANIFEST_FILE = Path(__file__).resolve().parent / "insight_manifest.json"
 
 # Map ritual glyphs to intents
 _INTENT_FILE = Path(__file__).resolve().parent / "intent_matrix.json"
@@ -35,6 +36,31 @@ def load_insights() -> Dict[str, Any]:
         except Exception:
             return {}
     return {}
+
+
+def _bump_version(version: str) -> str:
+    """Return the next patch semantic version."""
+    try:
+        major, minor, patch = map(int, version.split("."))
+    except Exception:  # pragma: no cover - invalid stored version
+        return "0.1.0"
+    patch += 1
+    return f"{major}.{minor}.{patch}"
+
+
+def _update_manifest(now: str) -> None:
+    """Write a companion manifest tagging insight updates with a version."""
+    manifest = {"version": "0.1.0"}
+    if INSIGHT_MANIFEST_FILE.exists():
+        try:
+            manifest = json.loads(INSIGHT_MANIFEST_FILE.read_text(encoding="utf-8"))
+            manifest["version"] = _bump_version(manifest.get("version", "0.1.0"))
+        except Exception:  # pragma: no cover - malformed manifest
+            manifest = {"version": "0.1.0"}
+    manifest["updated"] = now
+    INSIGHT_MANIFEST_FILE.write_text(
+        json.dumps(manifest, indent=2), encoding="utf-8"
+    )
 
 
 def _broadcast_scores(scores: Dict[str, Any]) -> None:
@@ -134,6 +160,7 @@ def update_insights(log_entries: List[dict]) -> None:
         info["last_updated"] = now
 
     INSIGHT_FILE.write_text(json.dumps(insights, indent=2), encoding="utf-8")
+    _update_manifest(now)
 
     scores = {
         pattern: {
@@ -146,4 +173,4 @@ def update_insights(log_entries: List[dict]) -> None:
     _broadcast_scores(scores)
 
 
-__all__ = ["update_insights", "load_insights", "INSIGHT_FILE"]
+__all__ = ["update_insights", "load_insights", "INSIGHT_FILE", "INSIGHT_MANIFEST_FILE"]
