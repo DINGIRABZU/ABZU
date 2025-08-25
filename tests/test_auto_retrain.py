@@ -180,3 +180,36 @@ def test_retrain_model_invokes_finetune_and_vector(monkeypatch):
     assert calls["vm"] == "e"
     assert calls["run"] == "test"
     assert calls["param"] == ("examples", 1)
+
+
+def test_compute_metrics_returns_expected_values():
+    insights = {"known": {}}
+    feedback = [
+        {"intent": "known", "response_quality": 0.5},
+        {"intent": "new1", "response_quality": 0.9},
+        {"intent": "new2", "response_quality": 0.1},
+    ]
+    novelty, coherence = auto_retrain.compute_metrics(insights, feedback)
+    assert novelty == pytest.approx(2 / 3)
+    assert coherence == pytest.approx(0.5)
+
+
+def test_build_dataset_respects_validator(monkeypatch):
+    feedback = [
+        {"intent": "good", "action": "ok", "success": True},
+        {"intent": "bad", "action": "nope", "success": True},
+    ]
+    monkeypatch.setattr(auto_retrain, "_load_json", lambda *a, **k: {})
+    monkeypatch.setattr(
+        auto_retrain, "propose_mutations", lambda _ins: ["allowed", "blocked"]
+    )
+
+    class DummyValidator:
+        def validate_text(self, text):
+            return "bad" not in text and "blocked" not in text
+
+    ds = auto_retrain.build_dataset(feedback, DummyValidator())
+    assert ds == [
+        {"prompt": "good", "completion": "ok"},
+        {"prompt": "PATCH", "completion": "allowed"},
+    ]
