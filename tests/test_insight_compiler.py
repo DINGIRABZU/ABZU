@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -10,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import insight_compiler as ic  # noqa: E402
+import logging_filters  # noqa: E402
 
 
 def test_update_aggregates(tmp_path, monkeypatch):
@@ -112,3 +114,39 @@ def test_connector_invoked(tmp_path, monkeypatch):
     assert called["url"] == "http://example.com"
     assert "open portal" in called["json"]
     assert "action_success_rate" in called["json"]["open portal"]
+
+
+def test_logging_filter_integration(tmp_path, monkeypatch, caplog):
+    """Log records enriched by the emotion filter update the matrix."""
+    insight_file = tmp_path / "insights.json"
+    monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+
+    logging_filters.set_emotion_provider(lambda: ("joy", 0.8))
+    logger = logging.getLogger("insight-test")
+    logger.addFilter(logging_filters.EmotionFilter())
+
+    with caplog.at_level(logging.INFO):
+        logger.info(
+            "spell cast",
+            extra={
+                "intent": "open portal",
+                "tone": "calm",
+                "responded_with": "text",
+                "success": True,
+            },
+        )
+
+    record = caplog.records[0]
+    assert record.emotion == "joy"
+    entry = {
+        "intent": record.intent,
+        "tone": record.tone,
+        "emotion": record.emotion,
+        "responded_with": record.responded_with,
+        "success": record.success,
+    }
+    ic.update_insights([entry])
+    data = json.loads(insight_file.read_text())
+    assert data["open portal"]["counts"]["emotions"]["joy"]["total"] == 1
+    assert data["open portal"]["counts"]["total"] == 1
+

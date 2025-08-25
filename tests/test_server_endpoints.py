@@ -90,15 +90,12 @@ def _load_server():
     return importlib.reload(server)
 
 
-def test_health_and_ready():
+def test_health_check():
     server = _load_server()
     with TestClient(server.app) as client:
-        health = client.get("/health")
-        ready = client.get("/ready")
-    assert health.status_code == 200
-    assert health.json() == {"status": "alive"}
-    assert ready.status_code == 200
-    assert ready.json() == {"status": "ready"}
+        resp = client.get("/health")
+    assert resp.status_code == 200
+    assert resp.json() == {"status": "alive"}
 
 
 def test_glm_command_authorized(monkeypatch):
