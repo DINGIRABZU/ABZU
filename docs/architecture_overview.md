@@ -8,6 +8,10 @@ This guide breaks down Spiral OS into its primary components. Each section
 includes a small diagram, links to implementation and tests, and a brief note
 on how the design has evolved.
 
+Architecture decisions are recorded as [ADRs](adr/). Key choices include
+[using FAISS for vector search](adr/0001-use-faiss-for-vector-search.md) and
+[preferring asyncio over threads](adr/0002-prefer-asyncio-over-threads.md).
+
 ## Router
 
 ```mermaid
