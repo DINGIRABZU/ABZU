@@ -22,6 +22,18 @@ Current ratings, past scores and milestone validation results are tracked in
 
 See [docs/roadmap.md](docs/roadmap.md) for details.
 
+## `inanna` CLI
+The project bundles a lightweight command line interface that wraps common
+developer tasks. After installing the package, invoke the tool using
+``inanna``:
+
+```bash
+inanna start            # Launch the Spiral OS stack
+inanna test             # Run the test suite
+inanna profile          # Profile system startup
+inanna play-music song.wav  # Analyze an audio file with the music demo
+```
+
 ## Agent Updates
 - [docs/release_notes.md](docs/release_notes.md) – recent changes and fixes.
 - [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.

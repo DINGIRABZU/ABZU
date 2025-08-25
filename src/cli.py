@@ -1,8 +1,17 @@
 """Unified command line interface for Spiral OS tools.
 
-This module exposes a small wrapper around common developer tasks. It is
-lightweight and avoids importing heavy dependencies until a command is
-invoked.
+The :mod:`inanna` command provides a lightweight wrapper around common
+developer tasks.  Heavy dependencies are imported lazily when a subcommand is
+invoked.  Available subcommands are:
+
+``start``
+    Launch the Spiral OS startup sequence.
+``test``
+    Run the project's unit tests using :mod:`pytest`.
+``profile``
+    Profile the startup sequence with :mod:`cProfile`.
+``play-music``
+    Analyse a local audio file with the music demo.
 """
 
 from __future__ import annotations
@@ -44,7 +53,9 @@ def _play_music(args: argparse.Namespace) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Spiral OS helper commands")
+    parser = argparse.ArgumentParser(
+        prog="inanna", description="Spiral OS helper commands"
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     start_p = sub.add_parser("start", help="Launch the Spiral OS stack")
