@@ -148,6 +148,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_music_backends_missing.py"),
     str(ROOT / "tests" / "test_vector_memory_extensions.py"),
     str(ROOT / "tests" / "test_cortex_memory.py"),
+    str(ROOT / "tests" / "test_voice_cloner_cli.py"),
 }
 
 

@@ -52,16 +52,16 @@ def main(argv: list[str] | None = None) -> None:
     elif args.cmd == "synthesize":
         cloner.samples[args.speaker] = Path(args.sample)
         try:
-            cloner.synthesize(
+            _, mos = cloner.synthesize(
                 args.text,
                 Path(args.out),
                 speaker=args.speaker,
                 emotion=args.emotion,
             )
+            logger.info("Synthesis MOS=%.2f", mos)
         except RuntimeError as exc:  # pragma: no cover - missing deps
             logger.error("%s", exc)
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry
     main()
-

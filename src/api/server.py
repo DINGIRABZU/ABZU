@@ -88,7 +88,7 @@ async def capture_voice(data: dict[str, object]) -> dict[str, str]:
 
 
 @app.post("/voice/synthesize")  # type: ignore[misc]
-async def synthesize_voice(data: dict[str, object]) -> dict[str, str]:
+async def synthesize_voice(data: dict[str, object]) -> dict[str, object]:
     """Generate speech for ``text`` with a cloned voice."""
 
     text = str(data.get("text", ""))
@@ -96,10 +96,12 @@ async def synthesize_voice(data: dict[str, object]) -> dict[str, str]:
     speaker = str(data.get("speaker", "user"))
     emotion = str(data.get("emotion", "neutral"))
     try:
-        voice_cloner.synthesize(text, out_path, speaker=speaker, emotion=emotion)
+        _, mos = voice_cloner.synthesize(
+            text, out_path, speaker=speaker, emotion=emotion
+        )
     except RuntimeError as exc:
         return {"error": str(exc)}
-    return {"audio": str(out_path), "speaker": speaker, "emotion": emotion}
+    return {"audio": str(out_path), "speaker": speaker, "emotion": emotion, "mos": mos}
 
 
 __all__ = [
