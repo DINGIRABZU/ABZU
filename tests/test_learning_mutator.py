@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import json
+import logging
 import sys
 from pathlib import Path
 
 import pytest
+
+from tests.helpers.mock_training_data import MOCK_INSIGHTS, MOCK_INTENTS
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -14,33 +17,24 @@ sys.path.insert(0, str(ROOT))
 import learning_mutator as lm
 
 
-def test_propose_mutations(tmp_path, monkeypatch):
-    matrix = {
-        "good": {"counts": {"total": 5, "success": 5}},
-        "bad": {"counts": {"total": 4, "success": 1}},
-        "ugly": {"counts": {"total": 4, "success": 1}},
-    }
-    intent_file = tmp_path / "intent.json"
-    intent_file.write_text(
-        json.dumps({"bad": {"synonyms": ["awful"]}}), encoding="utf-8"
-    )
+def test_propose_mutations(monkeypatch):
     monkeypatch.setattr(
-        lm, "load_intents", lambda path=intent_file: json.loads(intent_file.read_text())
+        lm, "load_intents", lambda path=lm.INTENT_FILE: MOCK_INTENTS
     )
-
-    suggestions = lm.propose_mutations(matrix)
-
+    suggestions = lm.propose_mutations(MOCK_INSIGHTS)
     assert any("awful" in s and "bad" in s for s in suggestions)
-    assert any("ugly" in s and "good" in s for s in suggestions)
+    assert any("ugly" in s and "open" in s for s in suggestions)
 
 
-def test_main_writes_mutation_file(tmp_path, monkeypatch):
+def test_main_writes_mutation_file(tmp_path, monkeypatch, caplog):
     mfile = tmp_path / "mutations.txt"
     monkeypatch.setattr(lm, "MUTATION_FILE", mfile)
     monkeypatch.setattr(lm, "load_insights", lambda path=None: {})
     monkeypatch.setattr(lm, "propose_mutations", lambda data: ["a", "b"])
-    lm.main(["--run"])
+    with caplog.at_level(logging.INFO):
+        lm.main(["--run"])
     assert mfile.read_text(encoding="utf-8").splitlines() == ["a", "b"]
+    assert any("Wrote 2 suggestions" in r.message for r in caplog.records)
 
 
 def test_main_returns_suggestions_without_run(monkeypatch):

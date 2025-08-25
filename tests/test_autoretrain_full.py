@@ -9,6 +9,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from tests.helpers.config_stub import build_settings
+from tests.helpers.mock_training_data import MOCK_FEEDBACK
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -21,19 +22,15 @@ import auto_retrain
 
 
 def test_main_triggers_finetune(tmp_path, monkeypatch):
-    insight = {"open": {}}
-    feedback = [
-        {"intent": "open", "action": "door", "success": True, "response_quality": 0.9},
-        {"intent": "close", "action": "door", "success": True, "response_quality": 0.8},
-    ]
-
+    insight = {}
     ins = tmp_path / "insight.json"
     ins.write_text(json.dumps(insight), encoding="utf-8")
     fb = tmp_path / "feedback.json"
-    fb.write_text(json.dumps(feedback), encoding="utf-8")
+    fb.write_text(json.dumps(MOCK_FEEDBACK), encoding="utf-8")
 
     monkeypatch.setattr(auto_retrain, "INSIGHT_FILE", ins)
     monkeypatch.setattr(auto_retrain.feedback_logging, "LOG_FILE", fb)
+    monkeypatch.setattr(auto_retrain, "LOG_FILE", tmp_path / "log.md")
     monkeypatch.setattr(auto_retrain, "NOVELTY_THRESHOLD", 0.3)
     monkeypatch.setattr(auto_retrain, "COHERENCE_THRESHOLD", 0.7)
     monkeypatch.setattr(auto_retrain, "system_idle", lambda: True)
