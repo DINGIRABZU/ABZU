@@ -19,6 +19,7 @@ sys.modules.setdefault("core", ModuleType("core"))
 video_engine_stub = ModuleType("video_engine")
 video_engine_stub.start_stream = lambda: iter([np.zeros((1, 1, 3), dtype=np.uint8)])
 feedback_logging_stub = ModuleType("feedback_logging")
+feedback_logging_stub.append_feedback = lambda *a, **k: None
 core_mod = sys.modules["core"]
 core_mod.video_engine = video_engine_stub
 core_mod.feedback_logging = feedback_logging_stub
@@ -57,6 +58,15 @@ sys.modules.setdefault("init_crown_agent", init_crown_stub)
 inanna_mod = ModuleType("INANNA_AI.glm_integration")
 inanna_mod.GLMIntegration = lambda *a, **k: None
 sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
+
+corpus_memory_logging_stub = ModuleType("corpus_memory_logging")
+corpus_memory_logging_stub.log_interaction = lambda *a, **k: None
+sys.modules.setdefault("corpus_memory_logging", corpus_memory_logging_stub)
+
+music_generation_stub = ModuleType("music_generation")
+music_generation_stub.generate_from_text = lambda *a, **k: Path("song.wav")
+music_generation_stub.OUTPUT_DIR = Path(".")
+sys.modules.setdefault("music_generation", music_generation_stub)
 
 from crown_config import settings
 
@@ -166,3 +176,49 @@ def test_avatar_frame_endpoint(monkeypatch):
     status, data = asyncio.run(run_request())
     assert status == 200
     assert isinstance(data.get("frame"), str) and len(data["frame"]) > 0
+
+
+def test_music_endpoint_success(monkeypatch, tmp_path):
+    """POST /music should return path when generation succeeds."""
+
+    song = tmp_path / "song.wav"
+    song.write_bytes(b"wav")
+
+    monkeypatch.setattr(server.music_generation, "generate_from_text", lambda p, m: song)
+    monkeypatch.setattr(server.music_generation, "OUTPUT_DIR", tmp_path)
+
+    async def run_request():
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+            resp = await client.post(
+                "/music",
+                json={"prompt": "melody"},
+                headers={"Authorization": "Bearer token"},
+            )
+        return resp.status_code, resp.json()
+
+    status, data = asyncio.run(run_request())
+    assert status == 200
+    assert data == {"wav": "/music/song.wav"}
+
+
+def test_music_endpoint_failure(monkeypatch):
+    """POST /music should return 500 when generation fails."""
+
+    def boom(*a, **k):
+        raise RuntimeError("fail")
+
+    monkeypatch.setattr(server.music_generation, "generate_from_text", boom)
+
+    async def run_request():
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+            resp = await client.post(
+                "/music",
+                json={"prompt": "melody"},
+                headers={"Authorization": "Bearer token"},
+            )
+        return resp.status_code
+
+    status = asyncio.run(run_request())
+    assert status == 500
