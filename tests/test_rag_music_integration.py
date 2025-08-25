@@ -7,7 +7,7 @@ import types
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 # Stub heavy optional packages
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
@@ -19,7 +19,14 @@ from SPIRAL_OS import qnl_engine
 
 audio_pkg = types.ModuleType("audio")
 fake_play = types.ModuleType("play_ritual_music")
-fake_play.compose_ritual_music = lambda *a, **k: Path("out.wav")
+
+
+class _Track:
+    def __init__(self, path: Path):
+        self.path = path
+
+
+fake_play.compose_ritual_music = lambda *a, **k: _Track(Path("out.wav"))
 audio_pkg.play_ritual_music = fake_play
 sys.modules.setdefault("audio", audio_pkg)
 sys.modules.setdefault("audio.play_ritual_music", fake_play)
@@ -67,7 +74,7 @@ def test_rag_music_pipeline(tmp_path, monkeypatch):
 
     def fake_compose(emotion, ritual, archetype=None):
         qnl_engine.hex_to_song("deadbeef")
-        return tmp_path / "out.wav"
+        return _Track(tmp_path / "out.wav")
 
     monkeypatch.setattr(rmo.play_ritual_music, "compose_ritual_music", fake_compose)
 

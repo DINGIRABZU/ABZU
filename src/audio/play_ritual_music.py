@@ -1,17 +1,10 @@
-"""Compose short ritual music based on emotion and play it.
-
-When the optional :mod:`soundfile` dependency is available the waveform is
-written and played using that library. If :mod:`soundfile` cannot be imported,
-tones are synthesized directly with NumPy and played back via
-``simpleaudio`` with the output also saved using the standard :mod:`wave`
-module.
-"""
+"""Compose short ritual music based on emotion and play it."""
 
 from __future__ import annotations
 
 import argparse
 import base64
-import json
+from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
 from threading import Thread
@@ -29,17 +22,12 @@ except Exception:  # pragma: no cover - optional dependency
     sa = None  # type: ignore
 
 from core import expressive_output
-from INANNA_AI import emotion_analysis, sonic_emotion_mapper
-from MUSIC_FOUNDATION import layer_generators
-from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (
-    SCALE_MELODIES,
-    load_emotion_music_map,
-    select_music_params,
-)
-from MUSIC_FOUNDATION.synthetic_stego_engine import encode_phrase
 
-EMOTION_MAP = Path(__file__).resolve().parent / "emotion_music_map.yaml"
-RITUAL_PROFILE = Path(__file__).resolve().parent / "ritual_profile.json"
+import importlib
+
+emotion_params = importlib.import_module(".emotion_params", __package__)
+stego = importlib.import_module(".stego", __package__)
+waveform = importlib.import_module(".waveform", __package__)
 
 # Small overlay samples encoded as base64 WAV data
 ARCHETYPE_MIXES: dict[str, str] = {
@@ -52,7 +40,7 @@ ARCHETYPE_MIXES: dict[str, str] = {
         "I/bi9aX1afUx9fv0yPSY9Gv0QPQZ9PTz0/O185rzgvNt81vzTfNB8znzNPMz8zTzOfNB803zW/Nt84Lz"
         "mvO189Pz9PMZ9ED0a/SY9Mj0+/Qx9Wn1pfXi9SP2Zvar9vL2PPeJ99f3J/h5+M74JPl7+dX5MPqM+ur6"
         "Sfuq+wv8bfzR/DX9mf3//WX+y/4y/5n/AABmAM0ANAGaAQACZgLKAi4DkgP0A1UEtgQVBXMFzwUqBoQG"
-        "2wYxBw=="
+        "2wYxBw==",
     ),
     "nigredo": (
         "UklGRtwBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YbgBAAAAAJoANAHNAWYC/AKSAyUE"
@@ -63,7 +51,7 @@ ARCHETYPE_MIXES: dict[str, str] = {
         "0fxn/f/9mP4y/8z/ZgABAZoBMwLKAmAD9AOGBBUFoQUqBrAGMQevBygInQgNCXcJ3Ak8CpYK6Qo3C34L"
         "vwv5CywMWAx9DJwMsgzCDMsMzAzGDLkMpAyIDGUMOwwLDNMLlAtPCwQLsgpaCv0JmQkxCcMIUAjYB1wH"
         "2wZXBs8FRAW2BCUEkgP8AmYCzQE0AZoAAABl/8v+Mv6Z/QP9bfza+0n7u/ow+qj5JPmj+Cf4r/c89872"
-        "ZvYC9g=="
+        "ZvYC9g==",
     ),
     "rubedo": (
         "UklGRtwBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YbgBAAAAAM0AmgFmAi4D9AO2BHMF"
@@ -74,7 +62,7 @@ ARCHETYPE_MIXES: dict[str, str] = {
         "kgxlDCwM5guUCzcLzgpaCtwJVAnDCCgIhgfbBioGcwW2BPQDLgNmApoBzQAAADL/Zf6Z/dH8C/xJ+4z6"
         "1fkk+Xn41/c896v2I/al9TH1yPRr9Bn00/Oa823zTfM58zPzOfNN823zmvPT8xn0a/TI9DH1pfUj9qv2"
         "PPfX93n4JPnV+Yz6SfsL/NH8mf1l/jL/AADNAJoBZgIuA/QDtgRzBSoG2waGBygIwwhUCdwJWgrOCjcL"
-        "lAvmCw=="
+        "lAvmCw==",
     ),
     "citrinitas": (
         "UklGRtwBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YbgBAAAAAAEBAAL8AvQD5QTPBbAG"
@@ -85,18 +73,9 @@ ARCHETYPE_MIXES: dict[str, str] = {
         "efiv9/L2RPal9Rb1mPQs9NPzjfNb8z3zM/M981vzjfPT8yz0mPQW9aX1RPby9q/3efhP+TD6GvsL/AP9"
         "//3+/gAAAQEAAvwC9APlBM8FsAaGB1AIDQm7CVoK6QpnC9MLLAxyDKQMwgzMDMIMpAxyDCwM0wtnC+kK"
         "Wgq7CQ0JUAiGB7AGzwXlBPQD/AIAAgEBAAD+/v/9A/0L/Br7MPpP+Xn4r/fy9kT2pfUW9Zj0LPTT843z"
-        "W/M98w=="
+        "W/M98w==",
     ),
 }
-
-
-def load_ritual_profile(path: Path = RITUAL_PROFILE) -> dict:
-    """Return ritual mappings loaded from ``path`` if available."""
-    if path.exists():
-        with path.open("r", encoding="utf-8") as fh:
-            data = json.load(fh)
-        return {k: v for k, v in data.items() if isinstance(v, dict)}
-    return {}
 
 
 def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
@@ -126,60 +105,6 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     return _synth()
 
 
-def _note_to_freq_simple(note: str) -> float:
-    """Convert a basic note name like ``C4`` to a frequency in Hertz."""
-
-    offsets = {
-        "C": -9,
-        "C#": -8,
-        "Db": -8,
-        "D": -7,
-        "D#": -6,
-        "Eb": -6,
-        "E": -5,
-        "F": -4,
-        "F#": -3,
-        "Gb": -3,
-        "G": -2,
-        "G#": -1,
-        "Ab": -1,
-        "A": 0,
-        "A#": 1,
-        "Bb": 1,
-        "B": 2,
-    }
-    name = note[:-1]
-    octave = int(note[-1])
-    semitone = offsets.get(name, 0) + 12 * (octave - 4)
-    return 440.0 * (2 ** (semitone / 12))
-
-
-def _synthesize_melody(
-    tempo: float,
-    melody: list[str],
-    *,
-    wave_type: str = "sine",
-    sample_rate: int = 44100,
-) -> np.ndarray:
-    """Generate a simple waveform for ``melody`` without ``soundfile``."""
-
-    beat_duration = 60.0 / float(tempo)
-    segments: list[np.ndarray] = []
-    for note in melody:
-        freq = _note_to_freq_simple(str(note))
-        t = np.linspace(0, beat_duration, int(sample_rate * beat_duration), endpoint=False)
-        if wave_type == "square":
-            seg = 0.5 * np.sign(np.sin(2 * np.pi * freq * t))
-        else:
-            seg = 0.5 * np.sin(2 * np.pi * freq * t)
-        segments.append(seg.astype(np.float32))
-    wave = np.concatenate(segments) if segments else np.zeros(1, dtype=np.float32)
-    max_val = float(np.max(np.abs(wave)))
-    if max_val > 0:
-        wave /= max_val
-    return wave.astype(np.float32)
-
-
 def _write_wav(path: Path, data: np.ndarray, sample_rate: int = 44100) -> None:
     """Write ``data`` to ``path`` as a mono WAV using the standard library."""
 
@@ -195,6 +120,16 @@ def _write_wav(path: Path, data: np.ndarray, sample_rate: int = 44100) -> None:
         wf.writeframes(pcm.tobytes())
 
 
+@dataclass
+class RitualTrack:
+    """Container for generated ritual music."""
+
+    path: Path
+    wave: np.ndarray
+    tempo: float
+    melody: list[str]
+
+
 def compose_ritual_music(
     emotion: str,
     ritual: str,
@@ -202,46 +137,13 @@ def compose_ritual_music(
     archetype: str | None = None,
     hide: bool = False,
     out_path: Path = Path("ritual.wav"),
-) -> Path:
-    """Generate a simple melody and optionally hide ritual steps.
+) -> RitualTrack:
+    """Generate a simple melody and optionally hide ritual steps."""
 
-    Uses ``soundfile`` when available. When ``soundfile`` is missing the melody
-    is synthesized with NumPy, written using the :mod:`wave` module and played
-    through ``simpleaudio`` if installed.
-    """
-    if archetype is None:
-        try:
-            archetype = emotion_analysis.get_current_archetype()
-        except Exception:
-            archetype = "Everyman"
+    tempo, melody, wave_type, arch = emotion_params.resolve(emotion, archetype)
+    wave = waveform.synthesize(melody, tempo, wave_type)
 
-    mapping = load_emotion_music_map(EMOTION_MAP)
-    params = sonic_emotion_mapper.map_emotion_to_sound(emotion, archetype)
-
-    tempo, _scale, melody, rhythm = select_music_params(
-        emotion, mapping, params["tempo"]
-    )
-
-    if params.get("scale"):
-        melody = SCALE_MELODIES.get(params["scale"], melody)
-
-    wave_type = (
-        "square"
-        if any("guitar" in t or "trumpet" in t for t in params.get("timbre", []))
-        else "sine"
-    )
-
-    if sf is not None:
-        wave = layer_generators.compose_human_layer(
-            tempo,
-            melody,
-            wav_path=str(out_path),
-            wave_type=wave_type,
-        )
-    else:
-        wave = _synthesize_melody(tempo, melody, wave_type=wave_type)
-
-    mix = _get_archetype_mix(archetype)
+    mix = _get_archetype_mix(arch)
     if mix.size:
         if mix.size < wave.size:
             mix = np.pad(mix, (0, wave.size - mix.size))
@@ -250,33 +152,21 @@ def compose_ritual_music(
         if max_val > 0:
             wave /= max_val
 
+    if hide:
+        wave = stego.embed_phrase(wave, ritual, emotion)
+
     if sf is not None:
         sf.write(out_path, wave, 44100)
     else:
         _write_wav(out_path, wave, 44100)
-
-    if hide:
-        profile = load_ritual_profile()
-        phrase = " ".join(profile.get(ritual, {}).get(emotion, []))
-        if phrase:
-            stego_wave = encode_phrase(phrase)
-            if stego_wave.size < wave.size:
-                stego_wave = np.pad(stego_wave, (0, wave.size - stego_wave.size))
-            wave = wave[: stego_wave.size] + stego_wave[: wave.size]
-            max_val = float(np.max(np.abs(wave)))
-            if max_val > 0:
-                wave /= max_val
-            if sf is not None:
-                sf.write(out_path, wave, 44100)
-            else:
-                _write_wav(out_path, wave, 44100)
 
     if sf is not None:
         Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
     elif sa is not None:
         pcm = (np.clip(wave, -1.0, 1.0) * 32767).astype(np.int16)
         Thread(target=lambda: sa.play_buffer(pcm, 1, 2, 44100).wait_done(), daemon=True).start()
-    return out_path
+
+    return RitualTrack(path=out_path, wave=wave, tempo=tempo, melody=melody)
 
 
 def main(argv: list[str] | None = None) -> None:

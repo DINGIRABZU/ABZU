@@ -58,9 +58,10 @@ def answer(
     out_path: Optional[Path] = None
     if play and features:
         arch = emotion_analysis.emotion_to_archetype(features["emotion"])
-        out_path = play_ritual_music.compose_ritual_music(
+        track = play_ritual_music.compose_ritual_music(
             features["emotion"], ritual, archetype=arch
         )
+        out_path = track.path
     return text, out_path
 
 
