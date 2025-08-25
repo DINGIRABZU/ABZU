@@ -6,9 +6,8 @@ import json
 import sys
 from pathlib import Path
 
+import os
 import pytest
-
-pytestmark = pytest.mark.skip(reason="requires unavailable resources")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -49,3 +48,25 @@ def test_current_layer_round_trip(tmp_path, monkeypatch):
     emotional_state._STATE.clear()
     emotional_state._load_state()
     assert emotional_state.get_current_layer() == "citrinitas_layer"
+
+
+def test_soul_state_without_manager(monkeypatch):
+    """set_soul_state should work even if the optional manager is missing."""
+
+    monkeypatch.setattr(emotional_state, "soul_state_manager", None)
+    emotional_state._STATE.clear()
+    emotional_state.set_soul_state("dreaming")
+    assert emotional_state.get_soul_state() == "dreaming"
+
+
+def test_encrypt_decrypt_without_aes(monkeypatch):
+    """_encrypt/_decrypt should act as passthrough when AESGCM is unavailable."""
+
+    monkeypatch.setattr(emotional_state, "AESGCM", None)
+    monkeypatch.delenv("EMOTION_AES_KEY", raising=False)
+    os.environ["EMOTION_AES_KEY"] = "00" * 32
+    data = b"secret"
+    enc = emotional_state._encrypt(data)
+    assert enc == data  # no encryption without AESGCM
+    dec = emotional_state._decrypt(enc)
+    assert dec == data

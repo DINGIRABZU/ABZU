@@ -78,6 +78,21 @@ def test_add_vector_logs_warning(monkeypatch, caplog):
     assert record.emotion == "joy"
 
 
+def test_register_invocation_without_vector_memory(monkeypatch, caplog):
+    """Registration should still succeed if vector_memory is unavailable."""
+
+    invocation_engine.clear_registry()
+    monkeypatch.setattr(invocation_engine, "vector_memory", None)
+
+    cb = lambda *a: None
+    with caplog.at_level(logging.WARNING):
+        invocation_engine.register_invocation("∞", None, cb)
+
+    assert invocation_engine._CALLBACKS.get(("∞", None)) is cb
+    # A warning about vector memory should be logged
+    assert any("vector memory unavailable" in r.message for r in caplog.records)
+
+
 def test_fuzzy_invocation(monkeypatch):
     invocation_engine.clear_registry()
     monkeypatch.setattr(
@@ -101,6 +116,20 @@ def test_fuzzy_invocation(monkeypatch):
 
     assert res == ["ok"]
     assert called == [("∴⟐+🜄", "joy")]
+
+
+def test_invoke_handles_missing_vector_memory(monkeypatch, caplog):
+    """invoke should log a warning when vector memory search is unavailable."""
+
+    invocation_engine.clear_registry()
+    vm = types.SimpleNamespace()
+    monkeypatch.setattr(invocation_engine, "vector_memory", vm)
+
+    with caplog.at_level(logging.WARNING):
+        res = invocation_engine.invoke("nothing")
+
+    assert res == []
+    assert any("vector memory unavailable" in r.message for r in caplog.records)
 
 
 def test_orchestrator_hook(monkeypatch):

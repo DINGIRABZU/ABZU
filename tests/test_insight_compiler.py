@@ -209,3 +209,23 @@ def test_logging_filter_integration(tmp_path, monkeypatch, caplog):
     data = json.loads(insight_file.read_text())
     assert data["open portal"]["counts"]["emotions"]["joy"]["total"] == 1
     assert data["open portal"]["counts"]["total"] == 1
+
+
+def test_broadcast_scores_handles_errors(monkeypatch, tmp_path):
+    """_broadcast_scores should ignore webhook and queue failures."""
+
+    insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
+    monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
+
+    logs = [{"intent": "open portal", "tone": "joy", "success": True}]
+
+    # Webhook error
+    monkeypatch.setenv("ARCHETYPE_SCORE_WEBHOOK_URL", "http://example.com")
+    monkeypatch.setattr(ic.requests, "post", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom")))
+
+    # Queue path error (non-existent directory)
+    monkeypatch.setenv("ARCHETYPE_SCORE_QUEUE_PATH", str(tmp_path / "no" / "queue.log"))
+
+    ic.update_insights(logs)  # Should not raise despite errors
