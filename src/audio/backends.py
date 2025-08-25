@@ -75,10 +75,13 @@ class NoOpBackend:
 def get_backend():
     """Return an appropriate playback backend."""
     if sf is not None:
+        logger.info("Selected SoundfileBackend")
         return SoundfileBackend()
     if sa is not None:
+        logger.warning("soundfile library not installed; using simpleaudio backend")
+        logger.info("Selected SimpleAudioBackend")
         return SimpleAudioBackend()
     logger.warning(
-        "No audio playback backend; install soundfile or simpleaudio to enable playback"
+        "soundfile and simpleaudio libraries not installed; audio playback disabled"
     )
     return NoOpBackend()

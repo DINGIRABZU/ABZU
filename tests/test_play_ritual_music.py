@@ -7,6 +7,7 @@ import types
 from pathlib import Path
 
 import numpy as np
+import logging
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -98,6 +99,18 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
     assert called["used"]
 
 
+def test_archetype_mix_fallback(monkeypatch, caplog):
+    """Ensure NumPy tone is used when soundfile is missing."""
+
+    monkeypatch.setattr(prm.backends, "sf", None)
+
+    with caplog.at_level(logging.WARNING):
+        mix = prm._get_archetype_mix("albedo", sample_rate=8000)
+
+    assert mix.size > 0
+    assert "soundfile not available" in caplog.text
+
+
 def test_encode_phrase_increases_size(tmp_path, monkeypatch):
     """Embedding a phrase should grow the output file size."""
 
@@ -143,3 +156,38 @@ def test_encode_phrase_increases_size(tmp_path, monkeypatch):
 
     assert calls["count"] == 1
     assert out_hidden.path.stat().st_size > out_plain.path.stat().st_size
+
+
+def test_emotion_map_cached(tmp_path, monkeypatch):
+    """Repeated calls should load mapping only once."""
+
+    calls = {"count": 0}
+
+    def fake_load(path):
+        calls["count"] += 1
+        return {}
+
+    def fake_resolve(emotion, archetype=None):
+        prm.emotion_params.load_emotion_music_map(prm.emotion_params.EMOTION_MAP)
+        return 120.0, ["C4"], "sine", "albedo"
+
+    monkeypatch.setattr(prm.emotion_params, "load_emotion_music_map", fake_load)
+    monkeypatch.setattr(prm.emotion_params, "resolve", fake_resolve)
+
+    def dummy_compose(
+        tempo, melody, *, sample_rate=44100, wav_path=None, wave_type="sine"
+    ):
+        return np.zeros(100, dtype=np.float32)
+
+    monkeypatch.setattr(
+        prm.waveform.layer_generators, "compose_human_layer", dummy_compose
+    )
+    monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.backends, "sa", None)
+    monkeypatch.setattr(prm.waveform, "sf", object())
+
+    prm.map_emotion.cache_clear()
+    prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
+    prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
+
+    assert calls["count"] == 1

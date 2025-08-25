@@ -100,14 +100,15 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
         return wave.astype(np.float32)
 
     if data:
-        logger.info("soundfile not available; synthesizing tone for '%s'", archetype)
+        logger.warning("soundfile not available; synthesizing tone for '%s'", archetype)
     return _synth()
 
 
+@lru_cache(maxsize=None)
 def map_emotion(
     emotion: str, archetype: str | None = None
 ) -> tuple[float, list[str], str, str]:
-    """Resolve music parameters for ``emotion`` and ``archetype``."""
+    """Resolve music parameters for ``emotion`` and ``archetype`` with caching."""
 
     return emotion_params.resolve(emotion, archetype)
 
@@ -121,6 +122,7 @@ def synthesize_waveform(
     """Generate a waveform for the given ``melody``."""
 
     if waveform.sf is None:
+        logger.warning("soundfile library not available; using NumPy synthesis")
         return waveform._synthesize_melody(
             tempo, melody, wave_type=wave_type, sample_rate=sample_rate
         )
