@@ -76,10 +76,13 @@ def push_to_registry(model_path: Path) -> str | None:
             return run.info.run_id
 
 
-def log_retraining(outcome: str, model_path: Path) -> None:
+def log_retraining(outcome: str, model_path: Path | None) -> None:
     """Append retraining outcome and model hash to the log file."""
     try:
-        model_hash = hashlib.sha256(model_path.read_bytes()).hexdigest()
+        if model_path and model_path.exists():
+            model_hash = hashlib.sha256(model_path.read_bytes()).hexdigest()
+        else:
+            model_hash = "n/a"
     except Exception:
         model_hash = "unknown"
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -311,10 +314,12 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
                 log_retraining(outcome, model_path)
                 logger.info("Fine-tuning triggered")
             else:
+                log_retraining("failed", None)
                 logger.error("Fine-tuning failed")
         else:
             logger.info(json.dumps(dataset, indent=2))
     else:
+        log_retraining("skipped", None)
         logger.info("Conditions not met")
 
 
