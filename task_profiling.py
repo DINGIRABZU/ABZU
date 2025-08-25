@@ -5,26 +5,17 @@ Instantiates a shared profiler at import time for quick access.
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-ROOT = Path(__file__).resolve().parent
-SRC_DIR = ROOT / "src"
-CORE_DIR = SRC_DIR / "core"
-for path in (SRC_DIR, CORE_DIR):
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
-
-# Ensure subprocesses also resolve modules from ``src`` and ``core``
-env_paths = os.environ.get("PYTHONPATH", "").split(os.pathsep)
-for path in (SRC_DIR, CORE_DIR):
-    if str(path) not in env_paths:
-        env_paths.insert(0, str(path))
-os.environ["PYTHONPATH"] = os.pathsep.join(filter(None, env_paths))
-
-from core.task_profiler import TaskProfiler
+try:
+    from core.task_profiler import TaskProfiler
+except ModuleNotFoundError:  # pragma: no cover - fallback for source execution
+    project_root = Path(__file__).resolve().parent / "src"
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from core.task_profiler import TaskProfiler
 
 _profiler = TaskProfiler()
 
