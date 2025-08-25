@@ -505,6 +505,20 @@ orchestrator works with several engines:
 Each example caches the model files in the backend's default location so later
 runs avoid network access.
 
+#### Step-by-step voice model setup
+
+1. **Install a backend** – choose one of the engines above and install it with
+   `pip install ...`.
+2. **Download the weights** – run the provided Python snippet for the selected
+   backend to cache the model files locally.
+3. **Configure voices** – copy or edit `voice_config.yaml` and
+   `voice_avatar_config.yaml` to tune pitch, speed and tone for each
+   archetype.
+4. **Set environment variables** – optionally point `VOICE_CONFIG_PATH`,
+   `VOICE_AVATAR_CONFIG_PATH` or `VOICE_TONE_PATH` to custom locations.
+5. **Verify synthesis** – start the CLI with `abzu start --speak` or invoke the
+   FastAPI server and confirm speech is produced.
+
 Voice selection is controlled by `voice_config.yaml` and
 `voice_avatar_config.yaml`. Set `VOICE_CONFIG_PATH` or
 `VOICE_AVATAR_CONFIG_PATH` to point to custom files.
