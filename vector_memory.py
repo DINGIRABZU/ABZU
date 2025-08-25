@@ -74,7 +74,7 @@ class VersionInfo:
     patch: int
 
 
-__version__ = VersionInfo(0, 1, 0)
+__version__ = VersionInfo(0, 1, 1)
 _STORE: Any | None = None
 _STORE_LOCK = threading.RLock()
 _DIST: Any | None = None
@@ -431,6 +431,35 @@ def restore(path: str | Path) -> None:
         col.add(data["ids"], data["embeddings"], data["metadatas"])
 
 
+def persist_snapshot() -> Path:
+    """Write a timestamped snapshot and return its path."""
+
+    store = _get_store()
+    snap_dir = _DIR / "snapshots"
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    path = snap_dir / stamp if hasattr(store, "_stores") else snap_dir / f"{stamp}.sqlite"
+    snapshot(path)
+    return path
+
+
+def restore_latest_snapshot() -> bool:
+    """Restore the most recent snapshot if available."""
+
+    snap_dir = _DIR / "snapshots"
+    if not snap_dir.exists():
+        return False
+    snaps = sorted(snap_dir.iterdir())
+    if not snaps:
+        return False
+    try:
+        restore(snaps[-1])
+        return True
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("failed to restore snapshot")
+        return False
+
+
 def cluster_vectors(k: int = 5, limit: int = 1000) -> List[Dict[str, Any]]:
     """Cluster stored vectors into ``k`` groups using FAISS or K-means."""
 
@@ -472,6 +501,8 @@ __all__ = [
     "query_vectors",
     "snapshot",
     "restore",
+    "persist_snapshot",
+    "restore_latest_snapshot",
     "configure",
     "add_vectors",
     "search_batch",
