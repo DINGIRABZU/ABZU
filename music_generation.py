@@ -29,6 +29,37 @@ MODEL_IDS = {
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 
 
+def _resolve_model_id(model: str) -> str:
+    """Return the full model identifier for ``model``.
+
+    ``model`` may be a key in :data:`MODEL_IDS` or a direct Hugging Face
+    identifier. A :class:`ValueError` is raised when the value is empty.
+    """
+
+    model_id = MODEL_IDS.get(model, model)
+    if not model_id:
+        raise ValueError("Model name cannot be empty")
+    return model_id
+
+
+def _validate_params(
+    temperature: float,
+    duration: int,
+    tempo: int | None,
+    seed: int | None,
+) -> None:
+    """Validate generation parameters and raise :class:`ValueError` on error."""
+
+    if not (0 < temperature <= 2):
+        raise ValueError("temperature must be between 0 and 2")
+    if duration <= 0:
+        raise ValueError("duration must be positive")
+    if tempo is not None and tempo <= 0:
+        raise ValueError("tempo must be positive")
+    if seed is not None and seed < 0:
+        raise ValueError("seed must be non-negative")
+
+
 class MusicGenerator(AudioProcessor):
     """Generate music from a text prompt using transformer models."""
 
@@ -53,14 +84,14 @@ class MusicGenerator(AudioProcessor):
         audio chunks as ``bytes``. Otherwise it returns the path to the written
         WAV file.
         """
-        model_id = MODEL_IDS.get(self.model)
-        if not model_id:
-            raise ValueError(f"Unsupported model '{self.model}'")
+        model_id = _resolve_model_id(self.model)
 
         if emotion:
             prompt = f"{prompt} in a {emotion} mood"
         if tempo:
             prompt = f"{prompt} at {tempo} BPM"
+
+        _validate_params(temperature, duration, tempo, seed)
 
         if hf_pipeline is None:
             raise ImportError("transformers is required for music generation")
@@ -123,9 +154,10 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("prompt", help="Description of the desired music")
     parser.add_argument(
         "--model",
-        choices=list(MODEL_IDS),
         default="musicgen",
-        help="Model to use (default: musicgen)",
+        help=
+        "Model key or HF id (default: musicgen). Available keys: "
+        + ", ".join(MODEL_IDS),
     )
     parser.add_argument("--emotion", help="Optional emotion to guide style")
     parser.add_argument("--tempo", type=int, help="Optional tempo in BPM")

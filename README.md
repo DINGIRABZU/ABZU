@@ -60,6 +60,26 @@ inanna play-music song.wav  # Analyze an audio file with the music demo
 
 Use `inanna -h` to view all available options and subcommands.
 
+## Music generation
+The ``music_generation.py`` script wraps Hugging Face text-to-audio models.
+It supports multiple models, parameter validation and optional streaming.
+
+Generate a clip with the default model:
+
+```bash
+python music_generation.py "lofi beat" --duration 8
+```
+
+Select a model or stream raw audio bytes to ``stdout``:
+
+```bash
+python music_generation.py "lofi beat" --model riffusion --stream > beat.wav
+```
+
+Options include ``--emotion``, ``--tempo``, ``--temperature``, ``--duration``
+and ``--seed``. ``--model`` accepts either a key from the built-in mapping or a
+full Hugging Face identifier.
+
 ## Agent Updates
 - [docs/release_notes.md](docs/release_notes.md) – recent changes and fixes.
 - [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.
