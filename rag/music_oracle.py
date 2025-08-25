@@ -55,14 +55,13 @@ def answer(
         text = f"Detected emotion {features['emotion']} at {features['tempo']} BPM. "
     text += snippet or "No related passages found."
 
-    out_path: Optional[Path] = None
+    music_path: Optional[Path] = None
     if play and features:
         arch = emotion_analysis.emotion_to_archetype(features["emotion"])
-        track = play_ritual_music.compose_ritual_music(
+        music_path = play_ritual_music.compose_ritual_music(
             features["emotion"], ritual, archetype=arch
         )
-        out_path = track.path
-    return text, out_path
+    return text, music_path
 
 
 def main(argv: List[str] | None = None) -> int:

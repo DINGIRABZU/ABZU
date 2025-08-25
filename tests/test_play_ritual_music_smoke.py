@@ -46,8 +46,9 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
 
     monkeypatch.setattr(prm.expressive_output, "play_audio", fake_play_audio)
 
-    out = tmp_path / "ritual.wav"
-    track = prm.compose_ritual_music("joy", "\u2609", out_path=out)
+    out = prm.compose_ritual_music(
+        "joy", "\u2609", output_dir=tmp_path, sample_rate=8000
+    )
 
-    assert track.path.exists()
-    assert played and played[0] == track.path
+    assert out.exists()
+    assert played and played[0] == out

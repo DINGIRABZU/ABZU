@@ -9,7 +9,6 @@ from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 from threading import Thread
-from typing import NamedTuple
 
 import numpy as np
 
@@ -123,23 +122,15 @@ def _write_wav(path: Path, data: np.ndarray, sample_rate: int = 44100) -> None:
         wf.writeframes(pcm.tobytes())
 
 
-class RitualTrack(NamedTuple):
-    """Container for generated ritual music."""
-
-    path: Path
-    wave: np.ndarray
-    tempo: float
-    melody: list[str]
-
-
 def compose_ritual_music(
     emotion: str,
     ritual: str,
     *,
     archetype: str | None = None,
     hide: bool = False,
-    out_path: Path = Path("ritual.wav"),
-) -> RitualTrack:
+    output_dir: Path | None = None,
+    sample_rate: int = 44100,
+) -> Path:
     """Generate a simple melody and optionally hide ritual steps."""
 
     tempo, melody, wave_type, arch = emotion_params.resolve(emotion, archetype)
@@ -157,18 +148,24 @@ def compose_ritual_music(
     if hide:
         wave = stego.embed_phrase(wave, ritual, emotion)
 
+    out_dir = output_dir or Path(".")
+    out_path = out_dir / "ritual.wav"
+
     if sf is not None:
-        sf.write(out_path, wave, 44100)
+        sf.write(out_path, wave, sample_rate)
     else:
-        _write_wav(out_path, wave, 44100)
+        _write_wav(out_path, wave, sample_rate)
 
     if sf is not None:
         Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
     elif sa is not None:
         pcm = (np.clip(wave, -1.0, 1.0) * 32767).astype(np.int16)
-        Thread(target=lambda: sa.play_buffer(pcm, 1, 2, 44100).wait_done(), daemon=True).start()
+        Thread(
+            target=lambda: sa.play_buffer(pcm, 1, 2, sample_rate).wait_done(),
+            daemon=True,
+        ).start()
 
-    return RitualTrack(path=out_path, wave=wave, tempo=tempo, melody=melody)
+    return out_path
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -184,7 +181,10 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
 
     compose_ritual_music(
-        args.emotion, args.ritual, hide=args.stego, out_path=Path(args.output)
+        args.emotion,
+        args.ritual,
+        hide=args.stego,
+        output_dir=Path(args.output).parent,
     )
     # Playback handled inside compose_ritual_music
 
