@@ -6,6 +6,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -30,3 +32,31 @@ def test_propose_mutations(tmp_path, monkeypatch):
 
     assert any("awful" in s and "bad" in s for s in suggestions)
     assert any("ugly" in s and "good" in s for s in suggestions)
+
+
+def test_main_writes_mutation_file(tmp_path, monkeypatch):
+    mfile = tmp_path / "mutations.txt"
+    monkeypatch.setattr(lm, "MUTATION_FILE", mfile)
+    monkeypatch.setattr(lm, "load_insights", lambda path=None: {})
+    monkeypatch.setattr(lm, "propose_mutations", lambda data: ["a", "b"])
+    lm.main(["--run"])
+    assert mfile.read_text(encoding="utf-8").splitlines() == ["a", "b"]
+
+
+def test_main_rolls_back_on_write_error(tmp_path, monkeypatch):
+    mfile = tmp_path / "mutations.txt"
+    mfile.write_text("old", encoding="utf-8")
+    monkeypatch.setattr(lm, "MUTATION_FILE", mfile)
+    monkeypatch.setattr(lm, "load_insights", lambda path=None: {})
+    monkeypatch.setattr(lm, "propose_mutations", lambda data: ["new"])
+    orig_write = Path.write_text
+
+    def fail_write(self, *args, **kwargs):
+        if self == mfile:
+            raise OSError("nope")
+        return orig_write(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", fail_write)
+    with pytest.raises(OSError):
+        lm.main(["--run"])
+    assert mfile.read_text(encoding="utf-8") == "old"
