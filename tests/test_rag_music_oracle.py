@@ -28,7 +28,9 @@ sys.modules.setdefault("config", config_mod)
 # Minimal play_ritual_music stub
 audio_pkg = types.ModuleType("audio")
 fake_play = types.ModuleType("play_ritual_music")
-fake_play.compose_ritual_music = lambda *a, **k: Path("out.wav")
+fake_play.compose_ritual_music = lambda *a, **k: types.SimpleNamespace(
+    path=Path("out.wav"), wave=None, sample_rate=44100
+)
 audio_pkg.play_ritual_music = fake_play
 sys.modules.setdefault("audio", audio_pkg)
 sys.modules.setdefault("audio.play_ritual_music", fake_play)
@@ -57,7 +59,9 @@ def test_answer_with_audio(tmp_path, monkeypatch):
     monkeypatch.setattr(
         rmo.play_ritual_music,
         "compose_ritual_music",
-        lambda e, r, **k: tmp_path / "out.wav",
+        lambda e, r, **k: types.SimpleNamespace(
+            path=tmp_path / "out.wav", wave=None, sample_rate=44100
+        ),
     )
 
     text, out = rmo.answer("How does this MP3 express grief?", audio, play=True)
