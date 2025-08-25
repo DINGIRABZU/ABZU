@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import List, Tuple
+from functools import lru_cache
 
 from INANNA_AI import emotion_analysis, sonic_emotion_mapper
 from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (
@@ -15,6 +16,13 @@ from MUSIC_FOUNDATION.inanna_music_COMPOSER_ai import (
 EMOTION_MAP = Path(__file__).resolve().parent / "emotion_music_map.yaml"
 
 
+@lru_cache(maxsize=None)
+def _load_map() -> dict:
+    """Load and cache the emotion music mapping from YAML."""
+
+    return load_emotion_music_map(EMOTION_MAP)
+
+
 def resolve(emotion: str, archetype: str | None = None) -> Tuple[float, List[str], str, str]:
     """Return tempo, melody, wave type and resolved archetype."""
 
@@ -24,7 +32,7 @@ def resolve(emotion: str, archetype: str | None = None) -> Tuple[float, List[str
         except Exception:  # pragma: no cover
             archetype = "Everyman"
 
-    mapping = load_emotion_music_map(EMOTION_MAP)
+    mapping = _load_map()
     params = sonic_emotion_mapper.map_emotion_to_sound(emotion, archetype)
 
     tempo, _scale, melody, _rhythm = select_music_params(
