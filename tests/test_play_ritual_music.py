@@ -32,12 +32,8 @@ def test_play_ritual_music_cli(tmp_path, monkeypatch):
     monkeypatch.setattr(
         prm.waveform.layer_generators, "compose_human_layer", dummy_compose
     )
-    class DummyBackend:
-        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
-            prm.backends._write_wav(path, wave, sample_rate)
-
-    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
     monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.backends, "sa", None)
     monkeypatch.setattr(prm.waveform, "sf", object())
 
     out = tmp_path / "ritual.wav"
@@ -56,24 +52,21 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
         prm.waveform.layer_generators, "compose_human_layer", dummy_compose
     )
     monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.backends, "sa", None)
     monkeypatch.setattr(prm.waveform, "sf", object())
-
-    called = {}
-
-    class DummyBackend:
-        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
-            called["sample_rate"] = sample_rate
-            prm.backends._write_wav(path, wave, sample_rate)
-
-    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
 
     out = prm.compose_ritual_music(
         "joy", "\u2609", output_dir=tmp_path, sample_rate=8000
     )
 
+    import wave as _wave
+
+    with _wave.open(str(out), "rb") as wf:
+        sample_rate = wf.getframerate()
+
     assert out.exists()
     assert out == tmp_path / "ritual.wav"
-    assert called["sample_rate"] == 8000
+    assert sample_rate == 8000
 
 
 def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
@@ -86,6 +79,7 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
 
     # Simulate missing soundfile in both modules
     monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.backends, "sa", None)
     monkeypatch.setattr(prm.waveform, "sf", None)
 
     called: dict[str, bool] = {}
@@ -103,12 +97,6 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
         prm.waveform.layer_generators, "compose_human_layer", fail_compose
     )
 
-    class DummyBackend:
-        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
-            prm.backends._write_wav(path, wave, sample_rate)
-
-    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
-
     out = prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
 
     assert out.exists()
@@ -122,6 +110,7 @@ def test_encode_phrase_increases_size(tmp_path, monkeypatch):
         prm.emotion_params, "resolve", lambda *a, **k: (120.0, ["C4"], "sine", "albedo")
     )
     monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.backends, "sa", None)
     monkeypatch.setattr(prm.waveform, "sf", object())
 
     def dummy_compose(
@@ -132,12 +121,6 @@ def test_encode_phrase_increases_size(tmp_path, monkeypatch):
     monkeypatch.setattr(
         prm.waveform.layer_generators, "compose_human_layer", dummy_compose
     )
-
-    class DummyBackend:
-        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
-            prm.backends._write_wav(path, wave, sample_rate)
-
-    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
 
     calls = {"count": 0}
 
