@@ -26,7 +26,13 @@ except Exception:  # pragma: no cover - optional dependency
 class MemoryStore:
     """Persist vectors in SQLite while enabling fast similarity search via FAISS."""
 
-    def __init__(self, db_path: str | Path, pool_size: int = 5):
+    def __init__(
+        self,
+        db_path: str | Path,
+        pool_size: int = 5,
+        *,
+        snapshot_interval: int = 0,
+    ) -> None:
         if faiss is None or np is None:  # pragma: no cover - dependency check
             raise RuntimeError("faiss and numpy are required for MemoryStore")
         self.db_path = Path(db_path)
@@ -45,6 +51,9 @@ class MemoryStore:
         self.ids: List[str] = []
         self.metadata: Dict[str, Dict[str, Any]] = {}
         self.index: faiss.Index | None = None
+        self.snapshot_interval = max(0, snapshot_interval)
+        self._op_count = 0
+        self.snapshot_dir = self.db_path.parent / "snapshots"
         self._load()
 
     # ------------------------------------------------------------------
@@ -98,6 +107,7 @@ class MemoryStore:
                     (id_, vec.tobytes(), json.dumps(metadata)),
                 )
                 conn.commit()
+            self._after_mutation()
 
     # ------------------------------------------------------------------
     def delete(self, ids: Sequence[str]) -> None:
@@ -110,6 +120,7 @@ class MemoryStore:
                 conn.execute(f"DELETE FROM memory WHERE id IN ({marks})", list(ids))
                 conn.commit()
             self._load()
+            self._after_mutation()
 
     # ------------------------------------------------------------------
     def search(
@@ -147,6 +158,7 @@ class MemoryStore:
                 )
                 conn.commit()
             self._load()
+            self._after_mutation()
 
     # ------------------------------------------------------------------
     def snapshot(self, path: str | Path) -> None:
@@ -172,6 +184,20 @@ class MemoryStore:
                 )
                 self._pool.put(conn)
             self._load()
+
+    # ------------------------------------------------------------------
+    def _after_mutation(self) -> None:
+        if self.snapshot_interval <= 0:
+            return
+        self._op_count += 1
+        if self._op_count < self.snapshot_interval:
+            return
+        self._op_count = 0
+        self.snapshot_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            self.snapshot(self.snapshot_dir / self.db_path.name)
+        except Exception:
+            pass
 
 
 class ShardedMemoryStore:

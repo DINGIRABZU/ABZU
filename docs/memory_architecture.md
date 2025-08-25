@@ -19,6 +19,15 @@ lightweight reader/writer lock. Recording a spiral acquires the write lock
 while queries take the read lock, allowing concurrent reads but exclusive
 writes.
 
+## Schema Evolution
+
+Entries are stored as standalone JSON objects.  New fields can therefore be
+introduced to the decision payload over time without requiring a migration of
+existing records.  Older entries simply omit the additional keys and continue
+to be readable.  Rebuilding the index via maintenance utilities such as
+`prune_spirals` recreates the inverted and full‑text structures in the latest
+format, keeping the log forwards compatible.
+
 ## Utilities
 
 The `memory.cortex` module exposes helpers to manage the log:

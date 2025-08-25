@@ -58,3 +58,13 @@ def test_memory_store_roundtrip(tmp_path, monkeypatch):
     store.restore(snap)
     res3 = store.search(new_vec, 1)
     assert res3 and res3[0][2]["foo"] == "baz"
+
+
+def test_auto_snapshot(tmp_path, monkeypatch):
+    _patch_faiss(monkeypatch)
+    db = tmp_path / "store.sqlite"
+    store = ms.MemoryStore(db, snapshot_interval=1)
+    vec = np.array([1.0, 0.0], dtype="float32")
+    store.add("a", vec, {})
+    snap_dir = db.parent / "snapshots"
+    assert snap_dir.exists() and any(snap_dir.iterdir())

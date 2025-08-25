@@ -129,3 +129,32 @@ def test_fulltext_and_concurrent_queries(tmp_path, monkeypatch):
 
     idx = json.loads(index_file.read_text(encoding="utf-8"))
     assert "_fulltext" in idx
+
+
+def test_concurrent_reads_and_writes(tmp_path, monkeypatch):
+    """Ensure simultaneous reads and writes remain consistent."""
+    log_file = tmp_path / "spiral.jsonl"
+    index_file = tmp_path / "index.json"
+    monkeypatch.setattr(cortex_memory, "CORTEX_MEMORY_FILE", log_file)
+    monkeypatch.setattr(cortex_memory, "CORTEX_INDEX_FILE", index_file)
+
+    node = DummyNode("X")
+
+    def writer(i: int) -> None:
+        cortex_memory.record_spiral(
+            node, {"num": i, "tags": [f"t{i}"]}
+        )
+
+    def reader(i: int) -> None:
+        cortex_memory.query_spirals(tags=[f"t{i}"])
+
+    with ThreadPoolExecutor(max_workers=10) as ex:
+        for i in range(10):
+            ex.submit(writer, i)
+            ex.submit(reader, i)
+
+    lines = log_file.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 10
+    for i in range(10):
+        res = cortex_memory.query_spirals(tags=[f"t{i}"])
+        assert res and res[0]["decision"]["num"] == i

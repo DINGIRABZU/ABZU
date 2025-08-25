@@ -118,6 +118,9 @@ def configure(
         _DIST = DistributedMemory(
             redis_url or "redis://localhost:6379/0", client=redis_client
         )
+    if shards != _SHARDS or snapshot_interval != _SNAPSHOT_INTERVAL:
+        _STORE = None
+        _COLLECTION = None
     _SHARDS = max(1, shards)
     _SNAPSHOT_INTERVAL = max(1, snapshot_interval)
     _OP_COUNT = 0
@@ -162,7 +165,9 @@ def _get_store() -> Any:
                     snapshot_interval=_SNAPSHOT_INTERVAL,
                 )
             else:
-                _STORE = _MemoryStore(_DIR / "memory.sqlite")
+                _STORE = _MemoryStore(
+                    _DIR / "memory.sqlite", snapshot_interval=_SNAPSHOT_INTERVAL
+                )
             if _DIST is not None and not getattr(_STORE, "ids", []):
                 _DIST.restore_to(_STORE)
     return _STORE
