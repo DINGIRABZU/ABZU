@@ -526,6 +526,19 @@ orchestrator works with several engines:
   PY
   ```
 
+- **Piper**
+
+  ```bash
+  pip install piper-tts
+  mkdir -p voices
+  curl -L -o voices/en_US-amy-medium.onnx \
+    https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium.onnx
+  python - <<'PY'
+  from piper import PiperVoice
+  PiperVoice.load("voices/en_US-amy-medium.onnx")
+  PY
+  ```
+
 Each example caches the model files in the backend's default location so later
 runs avoid network access.
 
