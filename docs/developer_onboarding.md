@@ -1,6 +1,6 @@
 # Developer Onboarding
 
-This guide introduces the ABZU codebase, highlights core entry points, and outlines basic verification steps.
+This guide introduces the ABZU codebase, highlights core entry points, and details the environment setup and chakra architecture while noting common pitfalls.
 
 ## Quick Start
 ```bash
@@ -27,7 +27,7 @@ Initializes the Spiral OS, validates environment variables, collects system stat
 ### `INANNA_AI_AGENT/inanna_ai.py`
 Command-line activation agent. It can recite the birth chant (`--activate`), generate QNL songs from hexadecimal input (`--hex`), list source texts (`--list`), report emotional status (`--status`), or start a local chat mode (`chat`).
 
-## Step-by-Step Setup
+## Environment Setup
 1. **Clone and enter the repository**
    ```bash
    git clone https://github.com/your-org/ABZU.git
@@ -66,6 +66,14 @@ the full table.
 | Throat | Prompt orchestration and agent interface | `crown_prompt_orchestrator.py`, `INANNA_AI_AGENT/inanna_ai.py` |
 | Third Eye | Insight and QNL processing | `insight_compiler.py`, `SPIRAL_OS/qnl_engine.py` |
 | Crown | High‑level orchestration | `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh` |
+
+### Chakra Interactions
+
+```mermaid
+graph LR
+    Root --> Sacral --> Solar --> Heart --> Throat --> ThirdEye --> Crown
+    Crown --> Root
+```
 
 ## System Architecture
 
@@ -119,7 +127,9 @@ See [testing.md](testing.md) for detailed instructions.
 - `scripts/easy_setup.sh` / `scripts/setup_repo.sh` – install common dependencies.
 - `download_models.py` – fetches model weights such as GLM and DeepSeek.
 
-## Common Troubleshooting
+## Common Pitfalls
+Common mistakes and their resolutions:
+
 | Issue | Resolution |
 | --- | --- |
 | Missing environment variables or tools | Run `scripts/check_requirements.sh` to verify prerequisites |

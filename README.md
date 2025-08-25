@@ -30,7 +30,7 @@ See [docs/roadmap.md](docs/roadmap.md) for details.
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see
   [docs/quick_start_non_technical.md](docs/quick_start_non_technical.md).
-- For step-by-step developer setup, chakra orientation, and troubleshooting, see
+- For step-by-step developer setup, chakra orientation, request flow diagrams, and common pitfalls, see
   [docs/developer_onboarding.md](docs/developer_onboarding.md).
 - For required system packages and environment variables, see
   [docs/setup.md](docs/setup.md).
