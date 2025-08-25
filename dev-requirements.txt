@@ -46,7 +46,7 @@ requests==2.32.4
     # via spiral-os (pyproject.toml)
 scikit-learn==1.7.1
     # via spiral-os (pyproject.toml)
-scipy==1.11.4
+scipy==1.13.1
     # via spiral-os (pyproject.toml)
 soundfile==0.13.1
     # via spiral-os (pyproject.toml)

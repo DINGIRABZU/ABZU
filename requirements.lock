@@ -4,6 +4,8 @@
 #
 #    pip-compile --output-file=requirements.lock dev-requirements.txt requirements.txt
 #
+# Locked versions for numpy, scipy and opencv-python ensure reproducible builds.
+#
 altair==5.5.0
     # via streamlit
 annotated-types==0.7.0
