@@ -14,11 +14,16 @@ import logging
 import os
 import subprocess
 import hashlib
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
 import yaml
+
+project_root = Path(__file__).resolve().parent / "src"
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 from core import feedback_logging
 from core.utils.seed import seed_all
@@ -92,9 +97,7 @@ def log_retraining(outcome: str, model_path: Path | None) -> None:
             encoding="utf-8",
         )
     with LOG_FILE.open("a", encoding="utf-8") as fh:
-        fh.write(
-            f"| {datetime.utcnow().isoformat()} | {outcome} | {model_hash} |\n"
-        )
+        fh.write(f"| {datetime.utcnow().isoformat()} | {outcome} | {model_hash} |\n")
 
 
 def _load_permissions() -> List[Dict[str, List[str]]]:

@@ -8,6 +8,8 @@ import time
 from contextlib import asynccontextmanager
 from io import BytesIO
 from typing import AsyncIterator, Iterator, Optional, TypedDict
+import sys
+from pathlib import Path
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, Security, Request
@@ -16,6 +18,10 @@ from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from PIL import Image
 from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field
+
+project_root = Path(__file__).resolve().parent / "src"
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 import corpus_memory_logging
 import music_generation
@@ -93,13 +99,22 @@ app.include_router(webrtc_connector.router)
 
 Instrumentator().instrument(app).expose(app)
 
+
 @app.middleware("http")
 async def log_request_time(request: Request, call_next):
     start = time.perf_counter()
     response = await call_next(request)
     duration = time.perf_counter() - start
-    logger.info("request completed", extra={"path": request.url.path, "method": request.method, "duration": duration})
+    logger.info(
+        "request completed",
+        extra={
+            "path": request.url.path,
+            "method": request.method,
+            "duration": duration,
+        },
+    )
     return response
+
 
 _avatar_stream: Optional[Iterator[np.ndarray]] = None
 
