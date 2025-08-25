@@ -19,14 +19,7 @@ from SPIRAL_OS import qnl_engine
 
 audio_pkg = types.ModuleType("audio")
 fake_play = types.ModuleType("play_ritual_music")
-
-
-class _Track:
-    def __init__(self, path: Path):
-        self.path = path
-
-
-fake_play.compose_ritual_music = lambda *a, **k: _Track(Path("out.wav"))
+fake_play.compose_ritual_music = lambda *a, **k: Path("out.wav")
 audio_pkg.play_ritual_music = fake_play
 sys.modules.setdefault("audio", audio_pkg)
 sys.modules.setdefault("audio.play_ritual_music", fake_play)
@@ -74,7 +67,7 @@ def test_rag_music_pipeline(tmp_path, monkeypatch):
 
     def fake_compose(emotion, ritual, archetype=None):
         qnl_engine.hex_to_song("deadbeef")
-        return _Track(tmp_path / "out.wav")
+        return tmp_path / "out.wav"
 
     monkeypatch.setattr(rmo.play_ritual_music, "compose_ritual_music", fake_compose)
 
