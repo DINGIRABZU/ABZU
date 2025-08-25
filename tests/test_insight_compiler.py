@@ -6,6 +6,7 @@ import json
 import logging
 import sys
 from pathlib import Path
+import hashlib
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -103,11 +104,16 @@ def test_manifest_version_bumps(tmp_path, monkeypatch):
     manifest = json.loads(manifest_file.read_text())
     assert manifest["version"] == "0.1.1"
     first_time = manifest["updated"]
+    checksum = hashlib.sha256(insight_file.read_bytes()).hexdigest()
+    assert manifest["checksums"]["insight_matrix"] == checksum
+    assert "intent_matrix" in manifest["checksums"]
 
     ic.update_insights([log])
     manifest = json.loads(manifest_file.read_text())
     assert manifest["version"] == "0.1.2"
     assert manifest["updated"] != first_time
+    checksum2 = hashlib.sha256(insight_file.read_bytes()).hexdigest()
+    assert manifest["checksums"]["insight_matrix"] == checksum2
 
 
 def test_manifest_history_records_updates(tmp_path, monkeypatch):
@@ -119,13 +125,21 @@ def test_manifest_history_records_updates(tmp_path, monkeypatch):
     log = {"intent": "open portal", "tone": "calm", "success": True}
     ic.update_insights([log])
     manifest = json.loads(manifest_file.read_text())
+    first_checksum = hashlib.sha256(insight_file.read_bytes()).hexdigest()
     assert manifest["history"][0]["version"] == "0.1.0"
     assert manifest["history"][0]["updated"]
+    assert (
+        manifest["history"][0]["checksums"]["insight_matrix"] == first_checksum
+    )
 
     ic.update_insights([log])
     manifest = json.loads(manifest_file.read_text())
+    second_checksum = hashlib.sha256(insight_file.read_bytes()).hexdigest()
     assert [h["version"] for h in manifest["history"]] == ["0.1.0", "0.1.1"]
     assert manifest["version"] == "0.1.1"
+    assert (
+        manifest["history"][1]["checksums"]["insight_matrix"] == second_checksum
+    )
 
 
 def test_connector_invoked(tmp_path, monkeypatch):

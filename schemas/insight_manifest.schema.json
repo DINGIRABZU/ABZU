@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["version", "updated", "checksums", "history"],
+  "properties": {
+    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "updated": {"type": "string"},
+    "checksums": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["version", "updated", "checksums"],
+        "properties": {
+          "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+          "updated": {"type": "string"},
+          "checksums": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}

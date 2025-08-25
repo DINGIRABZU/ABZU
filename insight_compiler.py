@@ -49,18 +49,44 @@ def _bump_version(version: str) -> str:
 
 
 def _update_manifest(now: str) -> None:
-    """Write a companion manifest tagging insight updates with a version."""
-    manifest = {"version": "0.1.0", "updated": "", "history": []}
+    """Write a companion manifest tagging insight updates with version and checksums."""
+
+    def _checksum(path: Path) -> str:
+        import hashlib
+
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    checksums = {}
+    if INSIGHT_FILE.exists():
+        checksums["insight_matrix"] = _checksum(INSIGHT_FILE)
+    if _INTENT_FILE.exists():
+        checksums["intent_matrix"] = _checksum(_INTENT_FILE)
+
+    manifest: Dict[str, Any] = {
+        "version": "0.1.0",
+        "updated": "",
+        "checksums": checksums,
+        "history": [],
+    }
     if INSIGHT_MANIFEST_FILE.exists():
         try:
             manifest = json.loads(INSIGHT_MANIFEST_FILE.read_text(encoding="utf-8"))
             manifest["history"] = manifest.get("history", [])
             manifest["version"] = _bump_version(manifest.get("version", "0.1.0"))
         except Exception:  # pragma: no cover - malformed manifest
-            manifest = {"version": "0.1.0", "updated": "", "history": []}
+            manifest = {
+                "version": "0.1.0",
+                "updated": "",
+                "checksums": checksums,
+                "history": [],
+            }
+
     manifest["updated"] = now
+    manifest["checksums"] = checksums
     manifest.setdefault("history", [])
-    manifest["history"].append({"version": manifest["version"], "updated": now})
+    manifest["history"].append(
+        {"version": manifest["version"], "updated": now, "checksums": checksums}
+    )
     INSIGHT_MANIFEST_FILE.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
