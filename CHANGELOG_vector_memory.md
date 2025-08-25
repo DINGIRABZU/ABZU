@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### API Changes
 - Added `VersionInfo` dataclass and `__version__` constant for explicit semantic versioning.
+- Introduced automatic snapshots, on-disk compaction and `cluster_vectors` helper.
 
 ### Bug Fixes
 - None.

@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, cast
+import sqlite3
 
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
@@ -27,6 +28,16 @@ try:  # pragma: no cover - optional dependency
     import numpy as np
 except Exception:  # pragma: no cover - optional dependency
     np = cast(Any, None)
+
+try:  # pragma: no cover - optional dependency
+    import faiss  # type: ignore
+except Exception:  # pragma: no cover - optional dependency
+    faiss = cast(Any, None)
+
+try:  # pragma: no cover - optional dependency
+    from sklearn.cluster import KMeans
+except Exception:  # pragma: no cover - optional dependency
+    KMeans = cast(Any, None)
 
 try:  # pragma: no cover - optional dependency
     from memory_store import MemoryStore as _MemoryStore, ShardedMemoryStore
@@ -74,6 +85,7 @@ _COMPACTION_THREAD: threading.Thread | None = None
 _COMPACTION_STOP = threading.Event()
 _COMPACTION_INTERVAL = 0.0
 _DECAY_THRESHOLD = 0.01
+_OP_COUNT = 0
 
 
 def configure(
@@ -93,6 +105,7 @@ def configure(
 
     global _DIR, _EMBED, _STORE, _DIST, _COLLECTION, _SHARDS, _SNAPSHOT_INTERVAL
     global _DECAY_STRATEGY, _DECAY_SECONDS, _COMPACTION_INTERVAL, _DECAY_THRESHOLD
+    global _OP_COUNT
     if db_path is not None:
         _DIR = Path(db_path)
         _STORE = None
@@ -107,6 +120,7 @@ def configure(
         )
     _SHARDS = max(1, shards)
     _SNAPSHOT_INTERVAL = max(1, snapshot_interval)
+    _OP_COUNT = 0
     if decay_strategy is not None:
         _DECAY_STRATEGY = decay_strategy
     if decay_seconds is not None:
@@ -161,6 +175,42 @@ def _get_collection() -> Any:
     return _get_store()
 
 
+def _vacuum_files() -> None:
+    store = _get_store()
+    paths: List[Path] = []
+    if hasattr(store, "db_path"):
+        paths.append(Path(getattr(store, "db_path")))
+    if hasattr(store, "_stores"):
+        for sub in getattr(store, "_stores", []):
+            if hasattr(sub, "db_path"):
+                paths.append(Path(getattr(sub, "db_path")))
+    for path in paths:
+        try:
+            with sqlite3.connect(path) as conn:
+                conn.execute("VACUUM")
+        except Exception:  # pragma: no cover - best effort
+            logger.exception("vacuum failed for %s", path)
+
+
+def _after_write() -> None:
+    global _OP_COUNT
+    _OP_COUNT += 1
+    if _OP_COUNT < _SNAPSHOT_INTERVAL:
+        return
+    _OP_COUNT = 0
+    store = _get_store()
+    snap_dir = _DIR / "snapshots"
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        if hasattr(store, "_stores"):
+            store.snapshot(snap_dir)
+        else:
+            store.snapshot(snap_dir / "memory.sqlite")
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("snapshot failed")
+    _vacuum_files()
+
+
 def add_vector(text: str, metadata: Dict[str, Any]) -> None:
     """Embed ``text`` and store it with ``metadata``."""
     meta = dict(metadata)
@@ -187,6 +237,7 @@ def add_vector(text: str, metadata: Dict[str, Any]) -> None:
         except Exception:  # pragma: no cover - best effort backup
             logger.exception("distributed backup failed for %s", id_)
     _log("add", text, meta)
+    _after_write()
 
 
 def add_vectors(texts: List[str], metadatas: List[Dict[str, Any]]) -> None:
@@ -292,6 +343,7 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
     if _DIST is not None:
         _DIST.backup(old_id, emb_list, meta)
     _log("rewrite", new_text, meta)
+    _after_write()
     return True
 
 
@@ -325,6 +377,7 @@ def _compact(threshold: float) -> None:
             stale.append(id_)
     if stale:
         store.delete(stale)
+        _after_write()
 
 
 def _compactor() -> None:
@@ -373,6 +426,40 @@ def restore(path: str | Path) -> None:
         col.add(data["ids"], data["embeddings"], data["metadatas"])
 
 
+def cluster_vectors(k: int = 5, limit: int = 1000) -> List[Dict[str, Any]]:
+    """Cluster stored vectors into ``k`` groups using FAISS or K-means."""
+
+    store = _get_store()
+    ids = list(store.metadata.keys())
+    if np is None or not ids:
+        return []
+    limit = min(limit, len(ids))
+    vectors: List[Any] = []
+    for idx, id_ in enumerate(ids[:limit]):
+        if hasattr(store, "index") and getattr(store, "index", None) is not None:
+            vectors.append(store.index.reconstruct(idx))
+        else:
+            meta = store.metadata[id_]
+            vectors.append(_EMBED(meta.get("text", "")))
+    arr = np.asarray(vectors, dtype="float32")
+    if faiss is not None:
+        km = faiss.Kmeans(arr.shape[1], k, niter=20, verbose=False)
+        km.train(arr)
+        _, assign = km.index.search(arr, 1)
+        labels = assign.ravel()
+    elif KMeans is not None:  # pragma: no cover - fallback
+        km = KMeans(n_clusters=k, n_init="auto", random_state=0)
+        labels = km.fit_predict(arr)
+    else:  # pragma: no cover - no backend
+        raise RuntimeError("no clustering backend available")
+    clusters: List[Dict[str, Any]] = []
+    for idx in range(k):
+        members = int(np.sum(labels == idx))
+        if members:
+            clusters.append({"cluster": int(idx), "count": members})
+    return clusters
+
+
 __all__ = [
     "add_vector",
     "search",
@@ -383,5 +470,6 @@ __all__ = [
     "configure",
     "add_vectors",
     "search_batch",
+    "cluster_vectors",
     "LOG_FILE",
 ]

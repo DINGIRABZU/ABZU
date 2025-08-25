@@ -7,12 +7,19 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 import vector_memory
 from src.core.utils.seed import seed_all
 
 
 seed_all(123)
+
+
+pytestmark = pytest.mark.skipif(
+    getattr(vector_memory, "faiss", None) is None or getattr(vector_memory, "np", None) is None,
+    reason="faiss and numpy required",
+)
 
 
 def _embed(_: str) -> np.ndarray:
@@ -96,3 +103,43 @@ def test_background_compaction(monkeypatch, tmp_path: Path) -> None:
     items = vector_memory.query_vectors(limit=10)
     texts = [i["text"] for i in items]
     assert "stale" not in texts
+
+
+def test_auto_snapshot_and_compaction(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(vector_memory, "_DIST", None)
+    dbdir = tmp_path / "snapcomp"
+    vector_memory.configure(
+        db_path=dbdir,
+        embedder=_embed,
+        snapshot_interval=1,
+        decay_strategy="exponential",
+        decay_seconds=0.1,
+    )
+    old_ts = (datetime.utcnow() - timedelta(seconds=10)).isoformat()
+    vector_memory.add_vector("old", {"timestamp": old_ts})
+    snap_dir = dbdir / "snapshots"
+    assert snap_dir.exists() and any(snap_dir.iterdir())
+    vector_memory._compact(0.5)
+    items = vector_memory.query_vectors(limit=10)
+    assert all(i["text"] != "old" for i in items)
+
+
+def test_clustering(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(vector_memory, "_DIST", None)
+    dbdir = tmp_path / "cluster"
+    if getattr(vector_memory, "faiss", None) is None and getattr(
+        vector_memory, "KMeans", None
+    ) is None:
+        pytest.skip("no clustering backend available")
+
+    def emb(text: str) -> np.ndarray:
+        if text.startswith("a"):
+            return np.array([1.0, 0.0], dtype=float)
+        return np.array([0.0, 1.0], dtype=float)
+
+    vector_memory.configure(db_path=dbdir, embedder=emb, snapshot_interval=100)
+    for t in ["a1", "a2", "b1", "b2"]:
+        vector_memory.add_vector(t, {})
+    clusters = vector_memory.cluster_vectors(k=2, limit=10)
+    counts = sorted(c["count"] for c in clusters)
+    assert counts == [2, 2]
