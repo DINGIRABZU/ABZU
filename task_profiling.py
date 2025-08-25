@@ -5,20 +5,7 @@ Instantiates a shared profiler at import time for quick access.
 
 from __future__ import annotations
 
-import os
-import sys
-from pathlib import Path
 from typing import Any, Dict, List
-
-project_root = Path(__file__).resolve().parent / "src"
-src_path = str(project_root)
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
-    # also expose src on PYTHONPATH for subprocesses
-    current = os.environ.get("PYTHONPATH", "")
-    os.environ["PYTHONPATH"] = (
-        f"{src_path}{os.pathsep}{current}" if current else src_path
-    )
 
 from core.task_profiler import TaskProfiler
 
