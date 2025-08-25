@@ -63,9 +63,13 @@ def test_optional_metadata(tmp_path, monkeypatch):
         source_type="score",
         genre="jazz",
         instrument="piano",
+        feedback="great session",
+        rating=4.5,
     )
 
     entry = cml.load_interactions()[0]
     assert entry["source_type"] == "score"
     assert entry["genre"] == "jazz"
     assert entry["instrument"] == "piano"
+    assert entry["feedback"] == "great session"
+    assert entry["rating"] == 4.5

@@ -9,3 +9,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Track history of insight matrix updates in `insight_manifest.json`.
+- Nightly GitHub Actions job runs `insight_compiler.py` and commits matrix updates.
