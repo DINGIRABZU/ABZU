@@ -3,6 +3,8 @@
 Provides shortcut imports for frequently used components.
 """
 
+# Ensures `core` is recognized as a package when installed in editable mode.
+
 from __future__ import annotations
 
 from .config import load_config
