@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 
 import start_dev_agents
@@ -45,4 +46,8 @@ def test_triage_writes_transcript(monkeypatch, tmp_path):
 
     files = list(triage_dir.glob("*.jsonl"))
     assert len(files) == 1
-    assert files[0].read_text().strip()
+    content = files[0].read_text().strip()
+    assert content
+    for line in content.splitlines():
+        record = json.loads(line)
+        assert record["outcome"] == "ok"
