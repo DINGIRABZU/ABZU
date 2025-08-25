@@ -11,12 +11,21 @@ handlers:
     filters: [emotion]
     maxBytes: 1048576
     backupCount: 5
+  audio:
+    class: logging.handlers.RotatingFileHandler
+    formatter: json
+    filename: logs/audio.log
+    encoding: utf-8
+    maxBytes: 1048576
+    backupCount: 5
 filters:
   emotion:
     '()': logging_filters.EmotionFilter
 loggers:
   src.audio.play_ritual_music:
     level: INFO
+    handlers: [file, audio]
+    propagate: false
 root:
   level: INFO
   handlers: [file]

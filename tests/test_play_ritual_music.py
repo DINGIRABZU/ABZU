@@ -7,7 +7,6 @@ import types
 from pathlib import Path
 
 import numpy as np
-import soundfile as sf
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -27,7 +26,7 @@ def test_play_ritual_music_cli(tmp_path, monkeypatch):
     ):
         wave = np.zeros(100, dtype=np.float32)
         if wav_path:
-            sf.write(wav_path, wave, sample_rate)
+            prm.backends._write_wav(Path(wav_path), wave, sample_rate)
         return wave
 
     monkeypatch.setattr(
@@ -38,6 +37,8 @@ def test_play_ritual_music_cli(tmp_path, monkeypatch):
             prm.backends._write_wav(path, wave, sample_rate)
 
     monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
+    monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.waveform, "sf", object())
 
     out = tmp_path / "ritual.wav"
     prm.main(["--emotion", "joy", "--ritual", "\u2609", "--output", str(out)])
@@ -54,6 +55,8 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
     monkeypatch.setattr(
         prm.waveform.layer_generators, "compose_human_layer", dummy_compose
     )
+    monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.waveform, "sf", object())
 
     called = {}
 
@@ -82,7 +85,7 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
     )
 
     # Simulate missing soundfile in both modules
-    monkeypatch.setattr(prm, "sf", None)
+    monkeypatch.setattr(prm.backends, "sf", None)
     monkeypatch.setattr(prm.waveform, "sf", None)
 
     called: dict[str, bool] = {}
@@ -118,7 +121,8 @@ def test_encode_phrase_increases_size(tmp_path, monkeypatch):
     monkeypatch.setattr(
         prm.emotion_params, "resolve", lambda *a, **k: (120.0, ["C4"], "sine", "albedo")
     )
-    monkeypatch.setattr(prm, "sf", None)
+    monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.waveform, "sf", object())
 
     def dummy_compose(
         tempo, melody, *, sample_rate=44100, wav_path=None, wave_type="sine"
