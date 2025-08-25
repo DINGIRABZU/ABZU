@@ -10,6 +10,10 @@ context, consult
 [docs/chakra_versions.json](docs/chakra_versions.json), and
 [docs/chakra_koan_system.md](docs/chakra_koan_system.md).
 
+When bumping versions in
+[docs/chakra_versions.json](docs/chakra_versions.json), record the change in
+[CHANGELOG.md](CHANGELOG.md).
+
 ## Setup
 
 Use Python 3.10 or later. Install development dependencies with:
