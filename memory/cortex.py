@@ -2,17 +2,21 @@ from __future__ import annotations
 
 """Lightweight spiral memory stored as JSON lines.
 
-The module now maintains a simple inverted index for semantic ``tags`` and uses
-read/write locks to guard concurrent access to the underlying files.
+The module maintains an inverted index for semantic ``tags`` and a companion
+full‑text index allowing substring lookups. Read/write locks guard concurrent
+access to the underlying files and queries may be executed in parallel via a
+thread pool helper.
 """
 
 import json
+import re
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import asdict, is_dataclass
 from datetime import datetime
 from pathlib import Path
 from threading import Condition, Lock
-from typing import Any, Dict, Iterable, List, Protocol, Optional, Set
+from typing import Any, Dict, Iterable, List, Protocol, Optional, Sequence, Set
 
 from aspect_processor import analyze_phonetic, analyze_semantic, analyze_temporal
 
@@ -87,6 +91,14 @@ def _write_locked() -> Iterable[None]:
         _LOCK.release_write()
 
 
+_TOKEN_RE = re.compile(r"[\w']+")
+
+
+def _tokens(text: str) -> List[str]:
+    """Return lowercase word tokens from ``text``."""
+    return [t.lower() for t in _TOKEN_RE.findall(text)]
+
+
 def _state_text(node: SpiralNode) -> str:
     """Return JSON string describing ``node`` state."""
     if is_dataclass(node):
@@ -125,6 +137,7 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
             index = json.loads(CORTEX_INDEX_FILE.read_text(encoding="utf-8"))
         entry_id = int(index.get("_next_id", 0))
         index["_next_id"] = entry_id + 1
+        ft = index.setdefault("_fulltext", {})
 
         entry = {
             "id": entry_id,
@@ -139,37 +152,54 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
 
         for tag in tags:
             index.setdefault(tag, []).append(entry_id)
+            for tok in _tokens(tag):
+                ft.setdefault(tok, []).append(entry_id)
         CORTEX_INDEX_FILE.write_text(json.dumps(index, ensure_ascii=False), encoding="utf-8")
 
 
 def query_spirals(
     filter: Optional[Dict[str, Any]] | None = None,
     tags: Optional[List[str]] = None,
+    text: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
-    """Return recorded spiral entries filtered by decision values or tags."""
+    """Return recorded spiral entries filtered by decision values or tags.
+
+    ``tags`` performs exact tag matching while ``text`` does a full‑text search
+    against tag tokens.
+    """
 
     if filter is not None and not isinstance(filter, dict):
         raise ValueError("filter must be a dictionary or None")
     if tags and (not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)):
         raise ValueError("tags must be a list of strings")
+    if text is not None and not isinstance(text, str):
+        raise ValueError("text must be a string or None")
 
     if not CORTEX_MEMORY_FILE.exists():
         return []
 
     ids: Optional[Set[int]] = None
-    if tags:
-        if CORTEX_INDEX_FILE.exists():
-            index = json.loads(CORTEX_INDEX_FILE.read_text(encoding="utf-8"))
-        else:
-            index = {}
-        for tag in tags:
-            tag_ids = set(index.get(tag, []))
-            ids = tag_ids if ids is None else ids & tag_ids
-        if ids is None:
-            ids = set()
-
-    entries: List[Dict[str, Any]] = []
     with _read_locked():
+        index: Dict[str, Any] = {}
+        if (tags or text) and CORTEX_INDEX_FILE.exists():
+            index = json.loads(CORTEX_INDEX_FILE.read_text(encoding="utf-8"))
+        if tags:
+            for tag in tags:
+                tag_ids = set(index.get(tag, []))
+                ids = tag_ids if ids is None else ids & tag_ids
+            if ids is None:
+                ids = set()
+        if text:
+            ft_index = index.get("_fulltext", {})
+            txt_ids: Optional[Set[int]] = None
+            for tok in _tokens(text):
+                tok_ids = set(ft_index.get(tok, []))
+                txt_ids = tok_ids if txt_ids is None else txt_ids & tok_ids
+            if txt_ids is None:
+                txt_ids = set()
+            ids = txt_ids if ids is None else ids & txt_ids
+
+        entries: List[Dict[str, Any]] = []
         with CORTEX_MEMORY_FILE.open("r", encoding="utf-8") as fh:
             for line in fh:
                 try:
@@ -191,6 +221,19 @@ def query_spirals(
     return entries
 
 
+def query_spirals_concurrent(requests: Sequence[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+    """Execute multiple :func:`query_spirals` calls concurrently.
+
+    Each mapping in ``requests`` is passed as keyword arguments to
+    :func:`query_spirals`. The function returns a list of results in the same
+    order.
+    """
+
+    with ThreadPoolExecutor() as exe:
+        futures = [exe.submit(query_spirals, **req) for req in requests]
+        return [f.result() for f in futures]
+
+
 def prune_spirals(keep: int) -> None:
     """Keep only the newest ``keep`` entries in memory."""
 
@@ -203,11 +246,12 @@ def prune_spirals(keep: int) -> None:
         lines = CORTEX_MEMORY_FILE.read_text(encoding="utf-8").splitlines()
         if len(lines) <= keep:
             return
-        keep_lines = lines[-keep:]
+        keep_lines = lines[:keep]
         CORTEX_MEMORY_FILE.write_text("\n".join(keep_lines) + "\n", encoding="utf-8")
 
         # rebuild index
-        index: Dict[str, Any] = {"_next_id": len(keep_lines)}
+        index: Dict[str, Any] = {"_next_id": len(keep_lines), "_fulltext": {}}
+        ft = index["_fulltext"]
         for i, line in enumerate(keep_lines):
             try:
                 data = json.loads(line)
@@ -216,20 +260,28 @@ def prune_spirals(keep: int) -> None:
             for tag in data.get("decision", {}).get("tags", []):
                 if isinstance(tag, str):
                     index.setdefault(tag, []).append(i)
+                    for tok in _tokens(tag):
+                        ft.setdefault(tok, []).append(i)
         CORTEX_INDEX_FILE.write_text(json.dumps(index, ensure_ascii=False), encoding="utf-8")
 
 
-def export_spirals(path: Path, tags: Optional[List[str]] = None, filter: Optional[Dict[str, Any]] = None) -> None:
-    """Export spiral entries matching ``tags`` and ``filter`` to ``path``."""
+def export_spirals(
+    path: Path,
+    tags: Optional[List[str]] = None,
+    filter: Optional[Dict[str, Any]] = None,
+    text: Optional[str] = None,
+) -> None:
+    """Export spiral entries matching ``tags``/``text`` and ``filter`` to ``path``."""
 
     path = Path(path)
-    entries = query_spirals(filter=filter, tags=tags)
+    entries = query_spirals(filter=filter, tags=tags, text=text)
     path.write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 __all__ = [
     "record_spiral",
     "query_spirals",
+    "query_spirals_concurrent",
     "prune_spirals",
     "export_spirals",
     "CORTEX_MEMORY_FILE",
