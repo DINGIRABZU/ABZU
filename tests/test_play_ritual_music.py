@@ -59,14 +59,9 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
         "joy", "\u2609", output_dir=tmp_path, sample_rate=8000
     )
 
-    import wave as _wave
-
-    with _wave.open(str(out), "rb") as wf:
-        sample_rate = wf.getframerate()
-
-    assert out.exists()
-    assert out == tmp_path / "ritual.wav"
-    assert sample_rate == 8000
+    assert out.path.exists()
+    assert out.path == tmp_path / "ritual.wav"
+    assert out.sample_rate == 8000
 
 
 def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
@@ -99,7 +94,7 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
 
     out = prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
 
-    assert out.exists()
+    assert out.path.exists()
     assert called["used"]
 
 
@@ -147,4 +142,4 @@ def test_encode_phrase_increases_size(tmp_path, monkeypatch):
     )
 
     assert calls["count"] == 1
-    assert out_hidden.stat().st_size > out_plain.stat().st_size
+    assert out_hidden.path.stat().st_size > out_plain.path.stat().st_size

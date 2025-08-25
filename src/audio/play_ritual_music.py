@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+from dataclasses import dataclass
 from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
@@ -11,15 +12,19 @@ from pathlib import Path
 import logging
 import numpy as np
 
+from . import backends, emotion_params, stego, waveform
+
 logger = logging.getLogger(__name__)
 
-from . import backends
 
-import importlib
+@dataclass
+class RitualTrack:
+    """Dataclass representing a generated ritual track."""
 
-emotion_params = importlib.import_module(".emotion_params", __package__)
-stego = importlib.import_module(".stego", __package__)
-waveform = importlib.import_module(".waveform", __package__)
+    path: Path
+    wave: np.ndarray
+    sample_rate: int
+
 
 # Small overlay samples encoded as base64 WAV data
 ARCHETYPE_MIXES: dict[str, str] = {
@@ -99,6 +104,47 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     return _synth()
 
 
+def map_emotion(
+    emotion: str, archetype: str | None = None
+) -> tuple[float, list[str], str, str]:
+    """Resolve music parameters for ``emotion`` and ``archetype``."""
+
+    return emotion_params.resolve(emotion, archetype)
+
+
+def synthesize_waveform(
+    tempo: float,
+    melody: list[str],
+    wave_type: str,
+    sample_rate: int,
+) -> np.ndarray:
+    """Generate a waveform for the given ``melody``."""
+
+    if waveform.sf is None:
+        return waveform._synthesize_melody(
+            tempo, melody, wave_type=wave_type, sample_rate=sample_rate
+        )
+    return waveform.synthesize(melody, tempo, wave_type)
+
+
+def encode_stego(
+    wave: np.ndarray, ritual: str, emotion: str, *, hide: bool
+) -> np.ndarray:
+    """Optionally embed a secret phrase into ``wave``."""
+
+    if hide:
+        return stego.embed_phrase(wave, ritual, emotion)
+    return wave
+
+
+def playback(path: Path, wave: np.ndarray, sample_rate: int) -> None:
+    """Play ``wave`` using the best available backend."""
+
+    backend = backends.get_backend()
+    logger.info("Using audio backend %s", backend.__class__.__name__)
+    backend.play(path, wave, sample_rate)
+
+
 def compose_ritual_music(
     emotion: str,
     ritual: str,
@@ -107,17 +153,12 @@ def compose_ritual_music(
     hide: bool = False,
     output_dir: Path | None = None,
     sample_rate: int = 44100,
-) -> Path:
+) -> RitualTrack:
     """Generate a simple melody and optionally hide ritual steps."""
 
-    tempo, melody, wave_type, arch = emotion_params.resolve(emotion, archetype)
+    tempo, melody, wave_type, arch = map_emotion(emotion, archetype)
     logger.info("Selected archetype '%s'", arch)
-    if waveform.sf is None:
-        wave = waveform._synthesize_melody(
-            tempo, melody, wave_type=wave_type, sample_rate=sample_rate
-        )
-    else:
-        wave = waveform.synthesize(melody, tempo, wave_type)
+    wave = synthesize_waveform(tempo, melody, wave_type, sample_rate)
 
     mix = _get_archetype_mix(arch)
     if mix.size:
@@ -128,17 +169,14 @@ def compose_ritual_music(
         if max_val > 0:
             wave /= max_val
 
-    if hide:
-        wave = stego.embed_phrase(wave, ritual, emotion)
+    wave = encode_stego(wave, ritual, emotion, hide=hide)
 
     out_dir = output_dir or Path(".")
     out_path = out_dir / "ritual.wav"
 
-    backend = backends.get_backend()
-    logger.info("Using audio backend %s", backend.__class__.__name__)
-    backend.play(out_path, wave, sample_rate)
+    playback(out_path, wave, sample_rate)
 
-    return out_path
+    return RitualTrack(out_path, wave, sample_rate)
 
 
 def main(argv: list[str] | None = None) -> None:

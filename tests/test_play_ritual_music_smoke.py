@@ -55,5 +55,5 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
         "joy", "\u2609", output_dir=tmp_path, sample_rate=22050
     )
 
-    assert out.exists()
-    assert played and played[0] == out
+    assert out.path.exists()
+    assert played and played[0] == out.path
