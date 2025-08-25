@@ -25,9 +25,28 @@ jobs:
           pip install -r requirements.txt || true
       - name: Run auto retrain
         run: python auto_retrain.py --run
+      - name: Upload model artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrained-model
+          path: artifacts/
       - name: Upload retraining log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: retraining-log
           path: docs/retraining_log.md
+
+  deploy:
+    needs: retrain
+    runs-on: ubuntu-latest
+    if: needs.retrain.result == 'success'
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: retrained-model
+          path: artifacts
+      - name: Deploy to production
+        run: echo "Deploying model to production"

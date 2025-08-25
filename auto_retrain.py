@@ -14,6 +14,7 @@ import logging
 import os
 import subprocess
 import hashlib
+import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
@@ -44,6 +45,7 @@ NOVELTY_THRESHOLD = feedback_logging.NOVELTY_THRESHOLD
 COHERENCE_THRESHOLD = feedback_logging.COHERENCE_THRESHOLD
 MODEL_REGISTRY_NAME = os.getenv("MODEL_REGISTRY_NAME", "inanna-model")
 LOG_FILE = Path("docs/retraining_log.md")
+ARTIFACT_DIR = Path("artifacts")
 
 
 logger = logging.getLogger(__name__)
@@ -95,6 +97,19 @@ def log_retraining(outcome: str, model_path: Path | None) -> None:
         fh.write(
             f"| {datetime.utcnow().isoformat()} | {outcome} | {model_hash} |\n"
         )
+
+
+def store_artifact(model_path: Path) -> Path:
+    """Copy ``model_path`` into ``ARTIFACT_DIR`` and return new location."""
+    ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    target = ARTIFACT_DIR / f"model-{timestamp}{model_path.suffix}"
+    try:
+        shutil.copy2(model_path, target)
+        return target
+    except Exception:
+        logger.exception("failed to store artifact")
+        return model_path
 
 
 def _load_permissions() -> List[Dict[str, List[str]]]:
@@ -309,6 +324,7 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
         if args.run:
             model_path = trigger_finetune(dataset, validator)
             if model_path:
+                model_path = store_artifact(model_path)
                 registry_id = push_to_registry(model_path)
                 outcome = f"registered {registry_id}" if registry_id else "trained"
                 log_retraining(outcome, model_path)
