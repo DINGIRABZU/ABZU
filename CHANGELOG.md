@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linked chakra koan and version files from README and CONTRIBUTING.
 - Added chakra status table in `docs/chakra_status.md` outlining capabilities,
   limitations and planned evolutions for each layer.
+- Linked release notes to `docs/chakra_versions.json` and `CHANGELOG.md`.
 
 ### Quality
 
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Track semantic versions for each chakra layer in
   `docs/chakra_versions.json`.
 - Record each chakra version bump in this changelog.
+- Bumped `root` and `crown` chakras to `1.0.1`.
 
 ### Insight Matrix
 
