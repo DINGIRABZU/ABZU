@@ -71,6 +71,8 @@ file so you don't need to export the variables manually:
   scores as JSON
 - `ARCHETYPE_SCORE_QUEUE_PATH` – optional file path where archetypal scores
   are appended as JSON lines when the webhook is not set
+- `ARCHETYPE_SCORE_WEBHOOK_HEADERS` – JSON object of HTTP headers added when
+  posting archetypal scores to the webhook
 
 Provide `GLM_API_URL` and `GLM_API_KEY` in `secrets.env` to point to your
 production GLM service.  The helper scripts read these variables on startup.

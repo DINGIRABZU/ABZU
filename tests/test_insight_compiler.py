@@ -128,18 +128,14 @@ def test_manifest_history_records_updates(tmp_path, monkeypatch):
     first_checksum = hashlib.sha256(insight_file.read_bytes()).hexdigest()
     assert manifest["history"][0]["version"] == "0.1.0"
     assert manifest["history"][0]["updated"]
-    assert (
-        manifest["history"][0]["checksums"]["insight_matrix"] == first_checksum
-    )
+    assert manifest["history"][0]["checksums"]["insight_matrix"] == first_checksum
 
     ic.update_insights([log])
     manifest = json.loads(manifest_file.read_text())
     second_checksum = hashlib.sha256(insight_file.read_bytes()).hexdigest()
     assert [h["version"] for h in manifest["history"]] == ["0.1.0", "0.1.1"]
     assert manifest["version"] == "0.1.1"
-    assert (
-        manifest["history"][1]["checksums"]["insight_matrix"] == second_checksum
-    )
+    assert manifest["history"][1]["checksums"]["insight_matrix"] == second_checksum
 
 
 def test_connector_invoked(tmp_path, monkeypatch):
@@ -150,12 +146,17 @@ def test_connector_invoked(tmp_path, monkeypatch):
 
     called: dict = {}
 
-    def fake_post(url, json, timeout):  # noqa: A002 - match requests signature
+    def fake_post(
+        url, json, headers=None, timeout=3
+    ):  # noqa: A002 - match requests signature
         called["url"] = url
         called["json"] = json
+        called["headers"] = headers
+        called["timeout"] = timeout
         return object()
 
     monkeypatch.setenv("ARCHETYPE_SCORE_WEBHOOK_URL", "http://example.com")
+    monkeypatch.setenv("ARCHETYPE_SCORE_WEBHOOK_HEADERS", json.dumps({"X-Test": "1"}))
     monkeypatch.setattr(ic.requests, "post", fake_post)
 
     logs = [
@@ -172,6 +173,7 @@ def test_connector_invoked(tmp_path, monkeypatch):
     assert called["url"] == "http://example.com"
     assert "open portal" in called["json"]
     assert "action_success_rate" in called["json"]["open portal"]
+    assert called["headers"] == {"X-Test": "1"}
 
 
 def test_logging_filter_integration(tmp_path, monkeypatch, caplog):
@@ -223,7 +225,9 @@ def test_broadcast_scores_handles_errors(monkeypatch, tmp_path):
 
     # Webhook error
     monkeypatch.setenv("ARCHETYPE_SCORE_WEBHOOK_URL", "http://example.com")
-    monkeypatch.setattr(ic.requests, "post", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom")))
+    monkeypatch.setattr(
+        ic.requests, "post", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom"))
+    )
 
     # Queue path error (non-existent directory)
     monkeypatch.setenv("ARCHETYPE_SCORE_QUEUE_PATH", str(tmp_path / "no" / "queue.log"))
