@@ -43,6 +43,13 @@ def test_main_writes_mutation_file(tmp_path, monkeypatch):
     assert mfile.read_text(encoding="utf-8").splitlines() == ["a", "b"]
 
 
+def test_main_returns_suggestions_without_run(monkeypatch):
+    monkeypatch.setattr(lm, "load_insights", lambda path=None: {})
+    monkeypatch.setattr(lm, "propose_mutations", lambda data: ["x"])
+    out = lm.main([])
+    assert out == ["x"]
+
+
 def test_main_rolls_back_on_write_error(tmp_path, monkeypatch):
     mfile = tmp_path / "mutations.txt"
     mfile.write_text("old", encoding="utf-8")

@@ -119,6 +119,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "performance" / "test_vector_memory_performance.py"),
     str(ROOT / "tests" / "test_auto_retrain.py"),
     str(ROOT / "tests" / "test_autoretrain_full.py"),
+    str(ROOT / "tests" / "test_learning_mutator.py"),
     str(ROOT / "tests" / "test_server.py"),
     str(ROOT / "tests" / "test_server_endpoints.py"),
     str(ROOT / "tests" / "test_insight_compiler.py"),

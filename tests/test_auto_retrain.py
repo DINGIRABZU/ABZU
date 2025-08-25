@@ -37,6 +37,48 @@ def test_build_dataset_includes_mutations(monkeypatch):
     ]
 
 
+def test_push_to_registry_logs_artifact(monkeypatch, tmp_path):
+    model = tmp_path / "model.bin"
+    model.write_text("data", encoding="utf-8")
+
+    calls = {}
+
+    class DummyRun:
+        info = SimpleNamespace(run_id="123")
+
+    def start_run(run_name):
+        calls["run"] = run_name
+
+        class Ctx:
+            def __enter__(self):
+                return DummyRun()
+
+            def __exit__(self, exc_type, exc, tb):
+                pass
+
+        return Ctx()
+
+    def log_artifact(path, artifact_path=None):
+        calls["artifact"] = (path, artifact_path)
+
+    def register_model(uri, name):
+        calls["register"] = (uri, name)
+        return SimpleNamespace(version="v1")
+
+    dummy_mlflow = SimpleNamespace(
+        start_run=start_run,
+        log_artifact=log_artifact,
+        register_model=register_model,
+    )
+    monkeypatch.setitem(sys.modules, "mlflow", dummy_mlflow)
+
+    version = auto_retrain.push_to_registry(model)
+
+    assert version == "v1"
+    assert calls["artifact"] == (str(model), "model")
+    assert calls["register"][0].endswith("/model")
+
+
 def test_main_invokes_api(tmp_path, monkeypatch):
     insight = {}
     feedback = [

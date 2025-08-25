@@ -48,6 +48,8 @@ jobs:
       - *install-deps
       - name: Run tests
         run: pytest
+      - name: Run auto retrain and learning mutator tests
+        run: pytest tests/test_auto_retrain.py tests/test_learning_mutator.py
       - name: Run interaction log tests
         run: pytest tests/test_interactions_jsonl_integrity.py
       - name: Profiling
