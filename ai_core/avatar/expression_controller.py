@@ -2,7 +2,7 @@ from __future__ import annotations
 
 """Generate rudimentary facial landmarks based on dialogue cues."""
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 Landmarks = Dict[str, List[Tuple[int, int]]]
 
@@ -38,4 +38,30 @@ def generate_landmarks(dialogue: str) -> Landmarks:
     return _NEUTRAL
 
 
-__all__ = ["generate_landmarks", "Landmarks"]
+# --- Phoneme to blendshape mapping -------------------------------------------------
+
+_VOWELS = set("aeiouəɐɑæʌɔʊɪe")
+
+_CONSONANT_BLENDSHAPES = {
+    "m": "closed",
+    "b": "closed",
+    "p": "closed",
+    "f": "teeth",
+    "v": "teeth",
+}
+
+
+def _phoneme_to_blendshape(phoneme: str) -> str:
+    base = phoneme.lower()[0]
+    if base in _VOWELS:
+        return "open"
+    return _CONSONANT_BLENDSHAPES.get(base, "rest")
+
+
+def map_phonemes_to_blendshapes(phonemes: Sequence[str]) -> List[str]:
+    """Map IPA phonemes to simple facial blendshape labels."""
+
+    return [_phoneme_to_blendshape(p) for p in phonemes]
+
+
+__all__ = ["generate_landmarks", "Landmarks", "map_phonemes_to_blendshapes"]

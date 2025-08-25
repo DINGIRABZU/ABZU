@@ -17,3 +17,5 @@ requests==2.32.4
     # via spiral-os (pyproject.toml)
 scipy==1.13.1
     # via spiral-os (pyproject.toml)
+phonemizer==3.3.0
+    # for phoneme extraction
