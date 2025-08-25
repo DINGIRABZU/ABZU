@@ -10,6 +10,8 @@ testing and style guidance. Then follow the [setup guide](docs/setup.md) to conf
 environment. The [documentation index](docs/index.md) lists additional guides.
 Current ratings, past scores and milestone validation results are tracked in
 [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
+For the project's guiding vision and mission, see
+[docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
 
 ## Build Tools
 Some dependencies compile native extensions such as SciPy. Install the system
