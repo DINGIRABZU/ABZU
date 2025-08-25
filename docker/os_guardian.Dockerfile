@@ -6,7 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /workspace
 
-COPY requirements.txt .
+# Use the locked requirements for deterministic builds
+COPY requirements.lock .
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -28,7 +29,7 @@ RUN apt-get update && \
         firefox-esr \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.lock
 
 FROM python:3.10-slim
 
@@ -57,7 +58,9 @@ RUN apt-get update && \
 WORKDIR /workspace
 
 COPY --from=builder /wheels /wheels
-RUN pip install --no-cache-dir --no-index --find-links=/wheels /wheels/* && rm -rf /wheels
+COPY requirements.lock .
+RUN pip install --no-cache-dir --no-index --find-links=/wheels --require-hashes -r requirements.lock \
+    && rm -rf /wheels requirements.lock
 
 COPY . .
 
