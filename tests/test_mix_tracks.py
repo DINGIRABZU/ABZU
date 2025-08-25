@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import logging
 import numpy as np
 import soundfile as sf
 
@@ -14,7 +15,8 @@ sys.path.insert(0, str(ROOT))
 from audio.mix_tracks import main
 
 
-def test_mix_tracks_cli(tmp_path):
+def test_mix_tracks_cli(tmp_path, caplog):
+    caplog.set_level(logging.INFO)
     sr = 44100
     t = np.linspace(0, 0.25, sr // 4, endpoint=False)
     tone1 = 0.5 * np.sin(2 * np.pi * 220 * t)
@@ -49,6 +51,8 @@ def test_mix_tracks_cli(tmp_path):
     info = sf.info(out)
     assert info.samplerate == 44100
     assert info.subtype.startswith("PCM_16")
+    assert any("Wrote mix to" in r.message for r in caplog.records)
+    assert any("Wrote preview to" in r.message for r in caplog.records)
 
 
 def test_mix_tracks_with_qnl_text(tmp_path, monkeypatch):

@@ -43,13 +43,19 @@ def test_mix_tracks_json_instructions(tmp_path, monkeypatch):
     monkeypatch.setattr(dsp_engine, "compress", lambda d, s, th, ra: (d, s))
 
     argv_backup = sys.argv.copy()
+    out_dir = tmp_path / "custom_out"
     monkeypatch.chdir(tmp_path)
-    sys.argv = ["mix_tracks.py", "--instructions", str(inst_path)]
+    sys.argv = [
+        "mix_tracks.py",
+        "--instructions",
+        str(inst_path),
+        "--output-dir",
+        str(out_dir),
+    ]
     try:
         main()
     finally:
         sys.argv = argv_backup
 
-    out_dir = tmp_path / "output"
     assert (out_dir / "final.wav").exists()
     assert (out_dir / "preview.wav").exists()
