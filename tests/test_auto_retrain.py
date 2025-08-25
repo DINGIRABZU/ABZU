@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import sys
 import types
 from pathlib import Path
 from types import SimpleNamespace
+
+import pytest
 
 from tests.helpers.config_stub import build_settings
 
@@ -133,3 +136,47 @@ def test_trigger_finetune_rolls_back_on_failure(monkeypatch, caplog):
 
     assert calls == {"ft": True, "rb": True}
     assert any("failed to trigger fine-tune" in r.message for r in caplog.records)
+
+
+def test_retrain_model_invokes_finetune_and_vector(monkeypatch):
+    calls = {}
+
+    monkeypatch.setattr(
+        auto_retrain,
+        "trigger_finetune",
+        lambda ds: calls.setdefault("ft", ds),
+    )
+
+    class DummyVM:
+        _EMBED = "e"
+
+        def configure(self, embedder=None):
+            calls["vm"] = embedder
+
+    monkeypatch.setattr(auto_retrain, "_vector_memory", DummyVM())
+
+    def start_run(run_name):
+        calls["run"] = run_name
+
+        class Ctx:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, tb):
+                pass
+
+        return Ctx()
+
+    def log_param(name, value):
+        calls["param"] = (name, value)
+
+    dummy_mlflow = SimpleNamespace(start_run=start_run, log_param=log_param)
+    monkeypatch.setitem(sys.modules, "mlflow", dummy_mlflow)
+
+    dataset = [{"prompt": "p", "completion": "c"}]
+    asyncio.run(auto_retrain.retrain_model(dataset, run_name="test"))
+
+    assert calls["ft"] == dataset
+    assert calls["vm"] == "e"
+    assert calls["run"] == "test"
+    assert calls["param"] == ("examples", 1)
