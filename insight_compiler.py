@@ -3,9 +3,12 @@ from __future__ import annotations
 """Aggregate interaction logs into an insight matrix."""
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
+
+import requests
 
 INSIGHT_FILE = Path(__file__).resolve().parent / "insight_matrix.json"
 
@@ -32,6 +35,23 @@ def load_insights() -> Dict[str, Any]:
         except Exception:
             return {}
     return {}
+
+
+def _broadcast_scores(scores: Dict[str, Any]) -> None:
+    """Send archetypal scores to a webhook or message queue if configured."""
+    webhook = os.getenv("ARCHETYPE_SCORE_WEBHOOK_URL")
+    queue_path = os.getenv("ARCHETYPE_SCORE_QUEUE_PATH")
+    if webhook:
+        try:
+            requests.post(webhook, json=scores, timeout=3)
+        except Exception:  # pragma: no cover - network failure is non-critical
+            pass
+    if queue_path:
+        try:
+            with open(queue_path, "a", encoding="utf-8") as handle:
+                handle.write(json.dumps(scores) + "\n")
+        except Exception:  # pragma: no cover - queue path may be invalid
+            pass
 
 
 def update_insights(log_entries: List[dict]) -> None:
@@ -114,6 +134,16 @@ def update_insights(log_entries: List[dict]) -> None:
         info["last_updated"] = now
 
     INSIGHT_FILE.write_text(json.dumps(insights, indent=2), encoding="utf-8")
+
+    scores = {
+        pattern: {
+            "action_success_rate": info.get("action_success_rate", 0.0),
+            "best_tone": info.get("best_tone", ""),
+            "resonance_index": info.get("resonance_index", {}),
+        }
+        for pattern, info in insights.items()
+    }
+    _broadcast_scores(scores)
 
 
 __all__ = ["update_insights", "load_insights", "INSIGHT_FILE"]
