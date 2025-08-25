@@ -89,3 +89,25 @@ def test_rewrite_vector_delete_failure(monkeypatch, caplog):
         with pytest.raises(RuntimeError):
             vector_memory.rewrite_vector("old", "new")
     assert "Failed to delete vector old" in caplog.text
+
+
+def test_persist_and_restore_snapshot(monkeypatch, tmp_path):
+    class DummyStore:
+        def __init__(self):
+            self.restored = None
+
+        def snapshot(self, path):  # type: ignore[no-untyped-def]
+            Path(path).write_text("snap", encoding="utf-8")
+
+        def restore(self, path):  # type: ignore[no-untyped-def]
+            self.restored = Path(path)
+
+    store = DummyStore()
+    monkeypatch.setattr(vector_memory, "_DIR", tmp_path)
+    monkeypatch.setattr(vector_memory, "_get_store", lambda: store)
+    monkeypatch.setattr(vector_memory, "_get_collection", lambda: store)
+
+    snap_path = vector_memory.persist_snapshot()
+    assert snap_path.exists()
+    assert vector_memory.restore_latest_snapshot()
+    assert store.restored == snap_path

@@ -44,6 +44,21 @@ def test_main_returns_suggestions_without_run(monkeypatch):
     assert out == ["x"]
 
 
+def test_main_preserves_file_on_exception(tmp_path, monkeypatch):
+    mfile = tmp_path / "mutations.txt"
+    mfile.write_text("old", encoding="utf-8")
+    monkeypatch.setattr(lm, "MUTATION_FILE", mfile)
+    monkeypatch.setattr(lm, "load_insights", lambda path=None: {})
+
+    def boom(_data):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(lm, "propose_mutations", boom)
+    with pytest.raises(RuntimeError):
+        lm.main(["--run"])
+    assert mfile.read_text(encoding="utf-8") == "old"
+
+
 def test_main_rolls_back_on_write_error(tmp_path, monkeypatch):
     mfile = tmp_path / "mutations.txt"
     mfile.write_text("old", encoding="utf-8")

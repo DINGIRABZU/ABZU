@@ -108,6 +108,26 @@ def test_main_invokes_api(tmp_path, monkeypatch):
     assert calls.get("data") == [{"prompt": "open", "completion": "door"}]
 
 
+def test_main_logs_failure_when_trigger_fails(tmp_path, monkeypatch, caplog):
+    ins = tmp_path / "insight.json"
+    ins.write_text(json.dumps(MOCK_INSIGHTS), encoding="utf-8")
+    fb = tmp_path / "feed.json"
+    fb.write_text(json.dumps(MOCK_FEEDBACK[:1]), encoding="utf-8")
+    monkeypatch.setattr(auto_retrain, "INSIGHT_FILE", ins)
+    monkeypatch.setattr(auto_retrain.feedback_logging, "LOG_FILE", fb)
+    monkeypatch.setattr(auto_retrain, "LOG_FILE", tmp_path / "log.md")
+    monkeypatch.setattr(auto_retrain, "NOVELTY_THRESHOLD", 0.0)
+    monkeypatch.setattr(auto_retrain, "COHERENCE_THRESHOLD", 0.0)
+    monkeypatch.setattr(auto_retrain, "system_idle", lambda: True)
+    monkeypatch.setattr(auto_retrain, "_load_vector_logs", lambda: [{}])
+    monkeypatch.setattr(auto_retrain, "trigger_finetune", lambda ds, validator=None: None)
+
+    with caplog.at_level(logging.ERROR):
+        auto_retrain.main(["--run"])
+
+    assert any("Fine-tuning failed" in r.message for r in caplog.records)
+
+
 def test_load_json_logs_error(tmp_path, caplog):
     missing = tmp_path / "none.json"
     with caplog.at_level(logging.ERROR):
