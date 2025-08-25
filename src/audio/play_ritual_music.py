@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 from threading import Thread
@@ -90,8 +91,12 @@ ARCHETYPE_MIXES: dict[str, str] = {
 }
 
 
+@lru_cache(maxsize=1)
 def load_ritual_profile(path: Path = RITUAL_PROFILE) -> dict:
-    """Return ritual mappings loaded from ``path`` if available."""
+    """Return ritual mappings loaded from ``path`` if available.
+
+    Results are cached to avoid repeated file reads.
+    """
     if path.exists():
         with path.open("r", encoding="utf-8") as fh:
             data = json.load(fh)
@@ -167,7 +172,9 @@ def _synthesize_melody(
     segments: list[np.ndarray] = []
     for note in melody:
         freq = _note_to_freq_simple(str(note))
-        t = np.linspace(0, beat_duration, int(sample_rate * beat_duration), endpoint=False)
+        t = np.linspace(
+            0, beat_duration, int(sample_rate * beat_duration), endpoint=False
+        )
         if wave_type == "square":
             seg = 0.5 * np.sign(np.sin(2 * np.pi * freq * t))
         else:
@@ -202,11 +209,15 @@ def compose_ritual_music(
     archetype: str | None = None,
     hide: bool = False,
     out_path: Path = Path("ritual.wav"),
+    sample_rate: int = 44100,
+    output_dir: Path = Path("."),
 ) -> Path:
     """Generate a simple melody and optionally hide ritual steps.
 
-    Uses ``soundfile`` when available. When ``soundfile`` is missing the melody
-    is synthesized with NumPy, written using the :mod:`wave` module and played
+    The WAV file is written to ``output_dir / out_path`` and played back. The
+    ``sample_rate`` parameter controls the synthesis rate and defaults to
+    ``44100``. Uses ``soundfile`` when available; otherwise the melody is
+    synthesized with NumPy, written using the :mod:`wave` module and played
     through ``simpleaudio`` if installed.
     """
     if archetype is None:
@@ -214,6 +225,9 @@ def compose_ritual_music(
             archetype = emotion_analysis.get_current_archetype()
         except Exception:
             archetype = "Everyman"
+
+    if not out_path.is_absolute():
+        out_path = output_dir / out_path
 
     mapping = load_emotion_music_map(EMOTION_MAP)
     params = sonic_emotion_mapper.map_emotion_to_sound(emotion, archetype)
@@ -235,13 +249,19 @@ def compose_ritual_music(
         wave = layer_generators.compose_human_layer(
             tempo,
             melody,
+            sample_rate=sample_rate,
             wav_path=str(out_path),
             wave_type=wave_type,
         )
     else:
-        wave = _synthesize_melody(tempo, melody, wave_type=wave_type)
+        wave = _synthesize_melody(
+            tempo,
+            melody,
+            wave_type=wave_type,
+            sample_rate=sample_rate,
+        )
 
-    mix = _get_archetype_mix(archetype)
+    mix = _get_archetype_mix(archetype, sample_rate)
     if mix.size:
         if mix.size < wave.size:
             mix = np.pad(mix, (0, wave.size - mix.size))
@@ -251,9 +271,9 @@ def compose_ritual_music(
             wave /= max_val
 
     if sf is not None:
-        sf.write(out_path, wave, 44100)
+        sf.write(out_path, wave, sample_rate)
     else:
-        _write_wav(out_path, wave, 44100)
+        _write_wav(out_path, wave, sample_rate)
 
     if hide:
         profile = load_ritual_profile()
@@ -267,15 +287,20 @@ def compose_ritual_music(
             if max_val > 0:
                 wave /= max_val
             if sf is not None:
-                sf.write(out_path, wave, 44100)
+                sf.write(out_path, wave, sample_rate)
             else:
-                _write_wav(out_path, wave, 44100)
+                _write_wav(out_path, wave, sample_rate)
 
     if sf is not None:
-        Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
+        Thread(
+            target=expressive_output.play_audio, args=(out_path,), daemon=True
+        ).start()
     elif sa is not None:
         pcm = (np.clip(wave, -1.0, 1.0) * 32767).astype(np.int16)
-        Thread(target=lambda: sa.play_buffer(pcm, 1, 2, 44100).wait_done(), daemon=True).start()
+        Thread(
+            target=lambda: sa.play_buffer(pcm, 1, 2, sample_rate).wait_done(),
+            daemon=True,
+        ).start()
     return out_path
 
 

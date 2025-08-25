@@ -27,12 +27,14 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
         tempo: float,
         melody: list[int],
         *,
+        sample_rate: int = 44100,
         wav_path: str | None = None,
         wave_type: str = "sine",
     ) -> np.ndarray:
+        assert sample_rate == 22050
         wave: np.ndarray = np.zeros(100, dtype=np.float32)
         if wav_path:
-            sf.write(wav_path, wave, 44100)
+            sf.write(wav_path, wave, sample_rate)
         return wave
 
     monkeypatch.setattr(prm.layer_generators, "compose_human_layer", dummy_compose)
@@ -44,8 +46,9 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
 
     monkeypatch.setattr(prm.expressive_output, "play_audio", fake_play_audio)
 
-    out = tmp_path / "ritual.wav"
-    prm.compose_ritual_music("joy", "\u2609", out_path=out)
+    out = prm.compose_ritual_music(
+        "joy", "\u2609", output_dir=tmp_path, sample_rate=22050
+    )
 
     assert out.exists()
     assert played and played[0] == out
