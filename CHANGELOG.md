@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Track semantic versions for each chakra layer in `docs/chakra_versions.json`.
 - Changelog automatically records chakra version bumps.
 
+### Insight Matrix
+
+- Record versioned history of insight matrix updates in `insight_manifest.json`.
+
 ## [0.1.0] - 2025-08-23
 
 ### Added

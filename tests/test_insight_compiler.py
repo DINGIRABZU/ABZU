@@ -110,6 +110,24 @@ def test_manifest_version_bumps(tmp_path, monkeypatch):
     assert manifest["updated"] != first_time
 
 
+def test_manifest_history_records_updates(tmp_path, monkeypatch):
+    insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
+    monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
+
+    log = {"intent": "open portal", "tone": "calm", "success": True}
+    ic.update_insights([log])
+    manifest = json.loads(manifest_file.read_text())
+    assert manifest["history"][0]["version"] == "0.1.0"
+    assert manifest["history"][0]["updated"]
+
+    ic.update_insights([log])
+    manifest = json.loads(manifest_file.read_text())
+    assert [h["version"] for h in manifest["history"]] == ["0.1.0", "0.1.1"]
+    assert manifest["version"] == "0.1.1"
+
+
 def test_connector_invoked(tmp_path, monkeypatch):
     insight_file = tmp_path / "insights.json"
     manifest_file = tmp_path / "manifest.json"
@@ -177,4 +195,3 @@ def test_logging_filter_integration(tmp_path, monkeypatch, caplog):
     data = json.loads(insight_file.read_text())
     assert data["open portal"]["counts"]["emotions"]["joy"]["total"] == 1
     assert data["open portal"]["counts"]["total"] == 1
-
