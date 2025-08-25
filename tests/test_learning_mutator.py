@@ -60,3 +60,18 @@ def test_main_rolls_back_on_write_error(tmp_path, monkeypatch):
     with pytest.raises(OSError):
         lm.main(["--run"])
     assert mfile.read_text(encoding="utf-8") == "old"
+
+
+def test_propose_mutations_emotion_driven(monkeypatch):
+    matrix = {"meh": {"counts": {"total": 4, "success": 1}}}
+    monkeypatch.setattr(lm, "load_intents", lambda path=lm.INTENT_FILE: {})
+    monkeypatch.setattr(
+        lm.emotion_registry, "get_current_layer", lambda: "rubedo_layer"
+    )
+    monkeypatch.setattr(lm.emotion_registry, "get_last_emotion", lambda: "anger")
+    monkeypatch.setattr(lm.emotion_registry, "get_resonance_level", lambda: 0.9)
+
+    suggestions = lm.propose_mutations(matrix)
+
+    assert any("nigredo_layer" in s for s in suggestions)
+    assert any("Fuse rubedo_layer with citrinitas_layer" in s for s in suggestions)
