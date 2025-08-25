@@ -21,6 +21,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from functools import lru_cache
 
 import numpy as np
 import yaml
@@ -49,6 +50,7 @@ SCALE_MELODIES = {
 }
 
 
+@lru_cache(maxsize=None)
 def load_emotion_music_map(path: Path = CONFIG_PATH) -> dict:
     """Return emotion-to-music mapping loaded from ``path`` if available."""
     if path.exists():

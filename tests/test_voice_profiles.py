@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 from INANNA_AI import db_storage, utils, voice_evolution
 
 voice_evolution.vector_memory.query_vectors = lambda *a, **k: []
+voice_evolution.load_emotion_music_map.cache_clear()
 
 
 def test_voice_profile_storage(tmp_path):

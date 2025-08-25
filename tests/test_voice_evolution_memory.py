@@ -22,6 +22,7 @@ import emotional_state
 from INANNA_AI import voice_evolution
 
 
+voice_evolution.load_emotion_music_map.cache_clear()
 def test_evolve_with_memory_updates_styles(tmp_path, monkeypatch, mock_emotion_state):
     log_file = tmp_path / "log.jsonl"
     monkeypatch.setattr(corpus_memory_logging, "INTERACTIONS_FILE", log_file)

@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 from INANNA_AI import voice_evolution
 
 voice_evolution.vector_memory.query_vectors = lambda *a, **k: []
+voice_evolution.load_emotion_music_map.cache_clear()
 
 
 def test_update_from_history_modifies_style(monkeypatch):
