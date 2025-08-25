@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Verified repository passes `ruff` and `black` checks.
 
+### Chakra Versions
+
+- Track semantic versions for each chakra layer in `docs/chakra_versions.json`.
+
 ## [0.1.0] - 2025-08-23
 
 ### Added
