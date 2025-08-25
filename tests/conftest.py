@@ -142,6 +142,10 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_interactions_jsonl.py"),
     str(ROOT / "tests" / "test_interactions_jsonl_integrity.py"),
     str(ROOT / "tests" / "test_corpus_memory_logging.py"),
+    str(ROOT / "tests" / "test_music_generation.py"),
+    str(ROOT / "tests" / "test_music_generation_emotion.py"),
+    str(ROOT / "tests" / "test_music_generation_streaming.py"),
+    str(ROOT / "tests" / "test_music_backends_missing.py"),
 }
 
 

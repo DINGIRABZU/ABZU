@@ -23,8 +23,9 @@ def test_generate_from_text_creates_file(tmp_path, monkeypatch):
         calls["model"] = model
 
         class P:
-            def __call__(self, prompt):
+            def __call__(self, prompt, **params):
                 calls["prompt"] = prompt
+                calls["params"] = params
                 return [{"audio": b"WAV"}]
 
         return P()
@@ -40,4 +41,5 @@ def test_generate_from_text_creates_file(tmp_path, monkeypatch):
         "task": "text-to-audio",
         "model": mg.MODEL_IDS["musicgen"],
         "prompt": "beat",
+        "params": {"temperature": 1.0, "duration": 5, "stream": False},
     }
