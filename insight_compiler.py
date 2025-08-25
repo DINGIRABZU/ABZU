@@ -50,17 +50,18 @@ def _bump_version(version: str) -> str:
 
 def _update_manifest(now: str) -> None:
     """Write a companion manifest tagging insight updates with a version."""
-    manifest = {"version": "0.1.0"}
+    manifest = {"version": "0.1.0", "updated": "", "history": []}
     if INSIGHT_MANIFEST_FILE.exists():
         try:
             manifest = json.loads(INSIGHT_MANIFEST_FILE.read_text(encoding="utf-8"))
+            manifest["history"] = manifest.get("history", [])
             manifest["version"] = _bump_version(manifest.get("version", "0.1.0"))
         except Exception:  # pragma: no cover - malformed manifest
-            manifest = {"version": "0.1.0"}
+            manifest = {"version": "0.1.0", "updated": "", "history": []}
     manifest["updated"] = now
-    INSIGHT_MANIFEST_FILE.write_text(
-        json.dumps(manifest, indent=2), encoding="utf-8"
-    )
+    manifest.setdefault("history", [])
+    manifest["history"].append({"version": manifest["version"], "updated": now})
+    INSIGHT_MANIFEST_FILE.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
 def _broadcast_scores(scores: Dict[str, Any]) -> None:
