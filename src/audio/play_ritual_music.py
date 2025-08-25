@@ -112,7 +112,12 @@ def compose_ritual_music(
 
     tempo, melody, wave_type, arch = emotion_params.resolve(emotion, archetype)
     logger.info("Selected archetype '%s'", arch)
-    wave = waveform.synthesize(melody, tempo, wave_type)
+    if waveform.sf is None:
+        wave = waveform._synthesize_melody(
+            tempo, melody, wave_type=wave_type, sample_rate=sample_rate
+        )
+    else:
+        wave = waveform.synthesize(melody, tempo, wave_type)
 
     mix = _get_archetype_mix(arch)
     if mix.size:
