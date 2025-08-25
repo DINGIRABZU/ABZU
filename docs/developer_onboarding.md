@@ -1,6 +1,6 @@
 # Developer Onboarding
 
-This guide introduces the ABZU codebase, highlights core entry points, and details the environment setup and chakra architecture while noting common pitfalls.
+This guide introduces the ABZU codebase, highlights core entry points, and details the environment setup, chakra architecture, and troubleshooting tips. For a guided CLI quick‑start run the [onboarding wizard](onboarding/wizard.py). Additional architecture diagrams are available in [architecture.md](architecture.md).
 
 ## Quick Start
 ```bash
@@ -10,6 +10,13 @@ python -m venv .venv && source .venv/bin/activate
 scripts/easy_setup.sh
 python download_models.py glm41v_9b --int8
 bash scripts/smoke_console_interface.sh  # see docs/testing.md for more
+```
+
+### CLI Quick‑Start
+Run the interactive wizard to scaffold the environment and launch the CLI:
+
+```bash
+python docs/onboarding/wizard.py
 ```
 
 ## Repository Layout
@@ -50,6 +57,7 @@ Command-line activation agent. It can recite the birth chant (`--activate`), gen
    ```bash
    python download_models.py glm41v_9b --int8
    ```
+   For system package requirements and optional dependency groups, see [setup.md](setup.md).
 
 ## Chakra Overview
 
@@ -76,6 +84,7 @@ graph LR
 ```
 
 ## System Architecture
+For detailed diagrams and component relationships, see [architecture.md](architecture.md).
 
 ```mermaid
 graph TD
@@ -127,7 +136,7 @@ See [testing.md](testing.md) for detailed instructions.
 - `scripts/easy_setup.sh` / `scripts/setup_repo.sh` – install common dependencies.
 - `download_models.py` – fetches model weights such as GLM and DeepSeek.
 
-## Common Pitfalls
+## Troubleshooting Tips
 Common mistakes and their resolutions:
 
 | Issue | Resolution |

@@ -2,7 +2,9 @@
 
 Thank you for your interest in improving ABZU! This guide covers environment
 setup, coding conventions, testing, and the pull request process. For a hands-on
-orientation to the codebase, see the [developer onboarding guide](docs/developer_onboarding.md).
+orientation to the codebase—including environment setup, chakra overview,
+architecture diagrams, a CLI quick-start, and troubleshooting tips—see the
+[developer onboarding guide](docs/developer_onboarding.md).
 
 For the project's overarching direction and boundaries, review
 [docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
