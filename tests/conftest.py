@@ -118,6 +118,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_insight_compiler.py"),
     str(ROOT / "tests" / "test_glm_command.py"),
     str(ROOT / "tests" / "test_media_audio.py"),
+    str(ROOT / "tests" / "test_audio_backends.py"),
     str(ROOT / "tests" / "test_video_stream_helpers.py"),
     str(ROOT / "tests" / "test_media_video.py"),
     str(ROOT / "tests" / "test_media_avatar.py"),
