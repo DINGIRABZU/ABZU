@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import argparse
 import base64
-from dataclasses import dataclass
+import json
+from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 from threading import Thread
+from typing import NamedTuple
 
 import numpy as np
 
@@ -78,6 +80,7 @@ ARCHETYPE_MIXES: dict[str, str] = {
 }
 
 
+@lru_cache(maxsize=None)
 def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     """Return a small overlay sample for ``archetype`` or synthesize one."""
 
@@ -120,8 +123,7 @@ def _write_wav(path: Path, data: np.ndarray, sample_rate: int = 44100) -> None:
         wf.writeframes(pcm.tobytes())
 
 
-@dataclass
-class RitualTrack:
+class RitualTrack(NamedTuple):
     """Container for generated ritual music."""
 
     path: Path
