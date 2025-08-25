@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 from typing import Any, Dict, Iterable
+from functools import lru_cache
 
 import yaml
 
@@ -53,8 +54,12 @@ def load_voice_config(path: Path = CONFIG_PATH) -> Dict[str, Dict[str, Any]]:
     return {}
 
 
+@lru_cache(maxsize=1)
 def load_emotion_music_map(path: Path = MUSIC_MAP_PATH) -> Dict[str, Dict[str, Any]]:
-    """Return emotion-to-music mapping loaded from ``path``."""
+    """Return emotion-to-music mapping loaded from ``path``.
+
+    Results are cached to avoid reloading the YAML file.
+    """
     if path.exists():
         with path.open("r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}

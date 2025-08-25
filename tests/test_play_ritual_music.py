@@ -59,7 +59,9 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
 
     monkeypatch.setattr(prm, "sa", _DummySA())
 
-    out = tmp_path / "ritual.wav"
-    prm.compose_ritual_music("joy", "\u2609", out_path=out)
+    out = prm.compose_ritual_music(
+        "joy", "\u2609", output_dir=tmp_path, sample_rate=8000
+    )
 
     assert out.exists()
+    assert out == tmp_path / "ritual.wav"

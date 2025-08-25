@@ -4,6 +4,10 @@
 
 If `--play` is specified the module also invokes `play_ritual_music.compose_ritual_music()` to generate a short melody representing the detected emotion. The resulting text answer and optional audio path are printed to the console.
 
+By default the music is rendered at a 44.1 kHz sample rate and written as
+`ritual.wav` in the current directory. The `compose_ritual_music()` helper
+accepts `sample_rate` and `output_dir` arguments to override these defaults.
+
 ## Usage
 
 ```bash
