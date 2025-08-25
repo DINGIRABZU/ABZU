@@ -14,6 +14,9 @@ handlers:
 filters:
   emotion:
     '()': logging_filters.EmotionFilter
+loggers:
+  src.audio.play_ritual_music:
+    level: INFO
 root:
   level: INFO
   handlers: [file]

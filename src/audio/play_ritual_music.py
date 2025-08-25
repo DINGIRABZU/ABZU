@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import argparse
 import base64
-import json
 from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 from threading import Thread
 
+import logging
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 try:  # pragma: no cover - optional dependency
     import soundfile as sf
@@ -21,6 +23,11 @@ try:  # pragma: no cover - optional dependency
     import simpleaudio as sa
 except Exception:  # pragma: no cover - optional dependency
     sa = None  # type: ignore
+
+if sf is None and sa is None:  # pragma: no cover - optional dependency
+    logger.warning(
+        "No audio playback backend; install soundfile or simpleaudio to enable playback"
+    )
 
 from core import expressive_output
 
@@ -134,6 +141,7 @@ def compose_ritual_music(
     """Generate a simple melody and optionally hide ritual steps."""
 
     tempo, melody, wave_type, arch = emotion_params.resolve(emotion, archetype)
+    logger.info("Selected archetype '%s'", arch)
     wave = waveform.synthesize(melody, tempo, wave_type)
 
     mix = _get_archetype_mix(arch)
@@ -157,13 +165,21 @@ def compose_ritual_music(
         _write_wav(out_path, wave, sample_rate)
 
     if sf is not None:
-        Thread(target=expressive_output.play_audio, args=(out_path,), daemon=True).start()
+        logger.info("Playback using soundfile backend")
+        Thread(
+            target=expressive_output.play_audio,
+            args=(out_path,),
+            daemon=True,
+        ).start()
     elif sa is not None:
+        logger.info("Playback using simpleaudio backend")
         pcm = (np.clip(wave, -1.0, 1.0) * 32767).astype(np.int16)
         Thread(
             target=lambda: sa.play_buffer(pcm, 1, 2, sample_rate).wait_done(),
             daemon=True,
         ).start()
+    else:
+        logger.info("Audio playback disabled; WAV available at %s", out_path)
 
     return out_path
 
