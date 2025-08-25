@@ -47,6 +47,20 @@ for frame in stream_avatar_audio(Path("chant.wav")):
     pass  # render or encode the frame
 ```
 
+The repository previously included a small `sample_voice.wav` clip for quick
+tests. To keep the documentation lightweight the binary asset was removed. You
+can synthesise a silent placeholder instead:
+
+```python
+import numpy as np
+import soundfile as sf
+
+sf.write("sample_voice.wav", np.zeros(16000), 16000)
+```
+
+Any external WAV file can also be used; public domain samples are available at
+[https://people.sc.fsu.edu/~jburkardt/data/wav/](https://people.sc.fsu.edu/~jburkardt/data/wav/).
+
 Generate a short sovereign voice sample from hexadecimal bytes and animate it:
 
 ```bash
