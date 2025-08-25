@@ -10,7 +10,7 @@ import numpy as np
 import soundfile as sf
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("EmotiVoice", types.ModuleType("EmotiVoice"))
@@ -30,7 +30,9 @@ def test_play_ritual_music_cli(tmp_path, monkeypatch):
             sf.write(wav_path, wave, sample_rate)
         return wave
 
-    monkeypatch.setattr(prm.layer_generators, "compose_human_layer", dummy_compose)
+    monkeypatch.setattr(
+        prm.waveform.layer_generators, "compose_human_layer", dummy_compose
+    )
     monkeypatch.setattr(prm.expressive_output, "play_audio", lambda p, loop=False: None)
 
     out = tmp_path / "ritual.wav"
@@ -46,7 +48,10 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
         return np.zeros(100, dtype=np.float32)
 
     monkeypatch.setattr(prm, "sf", None)
-    monkeypatch.setattr(prm.layer_generators, "compose_human_layer", dummy_compose)
+    monkeypatch.setattr(prm.waveform, "sf", None)
+    monkeypatch.setattr(
+        prm.waveform.layer_generators, "compose_human_layer", dummy_compose
+    )
     monkeypatch.setattr(prm.expressive_output, "play_audio", lambda p, loop=False: None)
 
     class _DummyPB:
@@ -60,6 +65,6 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
     monkeypatch.setattr(prm, "sa", _DummySA())
 
     out = tmp_path / "ritual.wav"
-    prm.compose_ritual_music("joy", "\u2609", out_path=out)
+    track = prm.compose_ritual_music("joy", "\u2609", out_path=out)
 
-    assert out.exists()
+    assert track.path.exists()

@@ -11,7 +11,7 @@ import pytest
 import soundfile as sf
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("EmotiVoice", types.ModuleType("EmotiVoice"))
@@ -35,7 +35,9 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
             sf.write(wav_path, wave, 44100)
         return wave
 
-    monkeypatch.setattr(prm.layer_generators, "compose_human_layer", dummy_compose)
+    monkeypatch.setattr(
+        prm.waveform.layer_generators, "compose_human_layer", dummy_compose
+    )
 
     played: list[Path] = []
 
@@ -45,7 +47,7 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(prm.expressive_output, "play_audio", fake_play_audio)
 
     out = tmp_path / "ritual.wav"
-    prm.compose_ritual_music("joy", "\u2609", out_path=out)
+    track = prm.compose_ritual_music("joy", "\u2609", out_path=out)
 
-    assert out.exists()
-    assert played and played[0] == out
+    assert track.path.exists()
+    assert played and played[0] == track.path
