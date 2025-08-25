@@ -379,7 +379,7 @@ class MoGEOrchestrator:
                 steps = self._invocation_engine.invoke_ritual("silence_introspection")
                 self._memory_logger.log_ritual_result("silence_introspection", steps)
         except Exception:
-            pass
+            logger.exception("analyze_audio failed")
 
         return result
 
