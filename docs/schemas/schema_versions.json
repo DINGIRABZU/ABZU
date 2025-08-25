@@ -1,0 +1,14 @@
+{
+  "insight_manifest.schema.json": {
+    "version": "1.0.0",
+    "sha256": "c93fd5a704c0b0edce3c9f107c0b13dc0eb0d7842f3e473e48bd9d263127c345"
+  },
+  "insight_matrix.schema.json": {
+    "version": "1.0.0",
+    "sha256": "bd5445d97bef43858e694a3a3e1b7d1d74bbcebe12b750cf0397e00d5a61cc31"
+  },
+  "intent_matrix.schema.json": {
+    "version": "1.0.0",
+    "sha256": "0302e49782bc38b436a5eca8de591aac89eb94d1698500c2879d2c163d29a3af"
+  }
+}
