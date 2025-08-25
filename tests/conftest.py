@@ -126,6 +126,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_emotion_state.py"),
     str(ROOT / "tests" / "test_orchestrator.py"),
     str(ROOT / "tests" / "test_play_ritual_music_smoke.py"),
+    str(ROOT / "tests" / "test_play_ritual_music.py"),
     str(ROOT / "tests" / "test_transformation_smoke.py"),
     str(ROOT / "tests" / "test_hex_to_glyphs_smoke.py"),
 }
