@@ -4,6 +4,9 @@ Thank you for your interest in improving ABZU! This guide covers environment
 setup, coding conventions, testing, and the pull request process. For a hands-on
 orientation to the codebase, see the [developer onboarding guide](docs/developer_onboarding.md).
 
+For the project's overarching direction and boundaries, review
+[docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
+
 For details on chakra module architecture, version history, and contemplative
 context, consult
 [docs/chakra_architecture.md](docs/chakra_architecture.md),
@@ -78,4 +81,3 @@ coverage report
 - Request review from a maintainer and address feedback promptly.
 
 By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
-
