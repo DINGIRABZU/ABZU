@@ -10,6 +10,11 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Tuple
 
 try:  # pragma: no cover - optional dependency
+    from prometheus_client import Histogram
+except ImportError:  # pragma: no cover - optional dependency
+    Histogram = None  # type: ignore[assignment]
+
+try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
@@ -32,6 +37,20 @@ _HOOKS: Dict[Tuple[str, str | None], str] = {}
 
 _SYMBOL_RE = re.compile(r"[^\w\s\[\]#]+")
 _EMO_RE = re.compile(r"\[(\w+)\]|#(\w+)")
+
+INVOKE_LATENCY = (
+    Histogram("invocation_duration_seconds", "Time spent in invoke()")
+    if Histogram is not None
+    else None
+)
+RITUAL_LATENCY = (
+    Histogram(
+        "ritual_invocation_duration_seconds",
+        "Time spent in invoke_ritual()",
+    )
+    if Histogram is not None
+    else None
+)
 
 
 def register_invocation(
@@ -131,7 +150,12 @@ def invoke(text: str, orchestrator: MoGEOrchestrator | None = None) -> List[Any]
         if callable(method):
             results.append(method(symbols, emotion))
     duration = time.perf_counter() - start
-    logger.info("invoke completed", extra={"symbols": symbols, "emotion": emotion, "duration": duration})
+    if INVOKE_LATENCY is not None:
+        INVOKE_LATENCY.observe(duration)
+    logger.info(
+        "invoke completed",
+        extra={"symbols": symbols, "emotion": emotion, "duration": duration},
+    )
     return results
 
 
@@ -160,6 +184,8 @@ def invoke_ritual(name: str) -> List[str]:
     else:
         info = {}
     duration = time.perf_counter() - start
+    if RITUAL_LATENCY is not None:
+        RITUAL_LATENCY.observe(duration)
     logger.info("ritual invoked", extra={"ritual": name, "duration": duration})
     return steps
 

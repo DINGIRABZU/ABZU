@@ -15,6 +15,11 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from PIL import Image
 from prometheus_fastapi_instrumentator import Instrumentator
+
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Histogram
+except ImportError:  # pragma: no cover - optional dependency
+    Histogram = None  # type: ignore[assignment]
 from pydantic import BaseModel, Field
 
 import corpus_memory_logging
@@ -27,6 +32,16 @@ from crown_config import settings
 from glm_shell import send_command
 
 logger = logging.getLogger(__name__)
+
+REQUEST_LATENCY = (
+    Histogram(
+        "http_request_duration_seconds",
+        "HTTP request latency",
+        ["path", "method"],
+    )
+    if Histogram is not None
+    else None
+)
 
 # --- OAuth2 security configuration ---
 oauth2_scheme = OAuth2PasswordBearer(
@@ -93,13 +108,24 @@ app.include_router(webrtc_connector.router)
 
 Instrumentator().instrument(app).expose(app)
 
+
 @app.middleware("http")
 async def log_request_time(request: Request, call_next):
     start = time.perf_counter()
     response = await call_next(request)
     duration = time.perf_counter() - start
-    logger.info("request completed", extra={"path": request.url.path, "method": request.method, "duration": duration})
+    if REQUEST_LATENCY is not None:
+        REQUEST_LATENCY.labels(request.url.path, request.method).observe(duration)
+    logger.info(
+        "request completed",
+        extra={
+            "path": request.url.path,
+            "method": request.method,
+            "duration": duration,
+        },
+    )
     return response
+
 
 _avatar_stream: Optional[Iterator[np.ndarray]] = None
 
