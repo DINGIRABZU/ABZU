@@ -38,6 +38,7 @@ inanna play-music song.wav  # Analyze an audio file with the music demo
 - [docs/release_notes.md](docs/release_notes.md) – recent changes and fixes.
 - [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.
 - [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md) – component ratings, past scores, milestone validation results and remediation checklists.
+- [CHANGELOG.md](CHANGELOG.md) – chakra version history.
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see

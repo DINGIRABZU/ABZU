@@ -22,7 +22,11 @@ CHAKRA_MODULES: dict[str, list[str]] = {
     "solar_plexus": ["learning_mutator.py", "state_transition_engine.py"],
     "heart": ["voice_avatar_config.yaml", "vector_memory.py"],
     "throat": ["crown_prompt_orchestrator.py", "INANNA_AI_AGENT/inanna_ai.py"],
-    "third_eye": ["insight_compiler.py", "SPIRAL_OS/qnl_engine.py", "seven_dimensional_music.py"],
+    "third_eye": [
+        "insight_compiler.py",
+        "SPIRAL_OS/qnl_engine.py",
+        "seven_dimensional_music.py",
+    ],
     "crown": ["init_crown_agent.py", "start_spiral_os.py", "crown_model_launcher.sh"],
 }
 
@@ -38,15 +42,20 @@ def get_version() -> str:
     return data["project"]["version"]
 
 
-def update_changelog(version: str) -> None:
-    """Insert a release heading into ``CHANGELOG.md``."""
+def update_changelog(version: str, chakra_updates: dict[str, str]) -> None:
+    """Insert a release heading into ``CHANGELOG.md``.
+
+    ``chakra_updates`` maps chakra names to their new semantic versions.
+    """
     path = Path("CHANGELOG.md")
     text = path.read_text()
-    heading = (
-        f"## [{version}] - {date.today().isoformat()}\n"
-        "\n"
-        "- Component health report: see `component_status.md`\n"
-    )
+    lines = [f"## [{version}] - {date.today().isoformat()}\n", "\n"]
+    if chakra_updates:
+        lines.append("### Chakra Versions\n")
+        lines.extend(f"- {chakra}: {ver}\n" for chakra, ver in chakra_updates.items())
+        lines.append("\n")
+    lines.append("- Component health report: see `component_status.md`\n")
+    heading = "".join(lines)
     updated = text.replace("## [Unreleased]", f"## [Unreleased]\n\n{heading}")
     path.write_text(updated)
 
@@ -67,14 +76,12 @@ def _changed_files() -> list[str]:
     If no tag is found, fall back to listing tracked files.
     """
     try:
-        tag = (
-            subprocess.run(
-                ["git", "describe", "--tags", "--abbrev=0"],
-                capture_output=True,
-                text=True,
-                check=True,
-            ).stdout.strip()
-        )
+        tag = subprocess.run(
+            ["git", "describe", "--tags", "--abbrev=0"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
         diff = subprocess.run(
             ["git", "diff", "--name-only", f"{tag}..HEAD"],
             capture_output=True,
@@ -83,11 +90,9 @@ def _changed_files() -> list[str]:
         ).stdout
         files = [f for f in diff.splitlines() if f]
     except subprocess.CalledProcessError:
-        files = (
-            subprocess.run(
-                ["git", "ls-files"], capture_output=True, text=True, check=True
-            ).stdout.splitlines()
-        )
+        files = subprocess.run(
+            ["git", "ls-files"], capture_output=True, text=True, check=True
+        ).stdout.splitlines()
     return files
 
 
@@ -103,28 +108,38 @@ def _chakra_changed(changed: list[str], paths: list[str]) -> bool:
     return False
 
 
-def bump_chakra_versions() -> None:
-    """Increment versions for chakras with modified modules."""
+def bump_chakra_versions() -> dict[str, str]:
+    """Increment versions for chakras with modified modules.
+
+    Returns a mapping of chakra names to their updated versions. If the
+    version file does not exist it is created with ``1.0.0`` for each chakra
+    and an empty mapping is returned.
+    """
     path = Path("docs/chakra_versions.json")
     if not path.exists():
-        return
+        path.write_text(
+            json.dumps({c: "1.0.0" for c in CHAKRA_MODULES}, indent=2) + "\n"
+        )
+        return {}
     versions = json.loads(path.read_text())
-    changed = _changed_files()
-    updated = False
+    changed_files = _changed_files()
+    updates: dict[str, str] = {}
     for chakra, modules in CHAKRA_MODULES.items():
-        if _chakra_changed(changed, modules):
+        if _chakra_changed(changed_files, modules):
             major, minor, patch = map(int, versions[chakra].split("."))
-            versions[chakra] = f"{major}.{minor}.{patch + 1}"
-            updated = True
-    if updated:
+            new_version = f"{major}.{minor}.{patch + 1}"
+            versions[chakra] = new_version
+            updates[chakra] = new_version
+    if updates:
         path.write_text(json.dumps(versions, indent=2) + "\n")
+    return updates
 
 
 def main() -> None:
     """Update changelog, tag the release and build a wheel."""
-    bump_chakra_versions()
+    chakra_updates = bump_chakra_versions()
     version = get_version()
-    update_changelog(version)
+    update_changelog(version, chakra_updates)
     tag_version(version)
     build_wheel()
 
