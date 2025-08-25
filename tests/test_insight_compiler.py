@@ -82,3 +82,33 @@ def test_resonance_index_increases(tmp_path, monkeypatch):
     ic.update_insights([log])
     data = json.loads(insight_file.read_text())
     assert data["conjure fire"]["resonance_index"]["joy"] == 2
+
+
+def test_connector_invoked(tmp_path, monkeypatch):
+    insight_file = tmp_path / "insights.json"
+    monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+
+    called: dict = {}
+
+    def fake_post(url, json, timeout):  # noqa: A002 - match requests signature
+        called["url"] = url
+        called["json"] = json
+        return object()
+
+    monkeypatch.setenv("ARCHETYPE_SCORE_WEBHOOK_URL", "http://example.com")
+    monkeypatch.setattr(ic.requests, "post", fake_post)
+
+    logs = [
+        {
+            "intent": "open portal",
+            "tone": "joy",
+            "emotion": "joy",
+            "responded_with": "text",
+            "success": True,
+        }
+    ]
+    ic.update_insights(logs)
+
+    assert called["url"] == "http://example.com"
+    assert "open portal" in called["json"]
+    assert "action_success_rate" in called["json"]["open portal"]

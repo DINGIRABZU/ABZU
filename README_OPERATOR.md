@@ -67,6 +67,10 @@ file so you don't need to export the variables manually:
   `docker-compose.yml`)
 - `TELEGRAM_BOT_TOKEN` – token for the Telegram bot
 - `DISCORD_BOT_TOKEN` – token for the Discord bot
+- `ARCHETYPE_SCORE_WEBHOOK_URL` – optional webhook that receives archetypal
+  scores as JSON
+- `ARCHETYPE_SCORE_QUEUE_PATH` – optional file path where archetypal scores
+  are appended as JSON lines when the webhook is not set
 
 Provide `GLM_API_URL` and `GLM_API_KEY` in `secrets.env` to point to your
 production GLM service.  The helper scripts read these variables on startup.
