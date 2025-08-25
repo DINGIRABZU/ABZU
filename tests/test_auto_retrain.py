@@ -13,6 +13,7 @@ from types import SimpleNamespace
 import pytest
 
 from tests.helpers.config_stub import build_settings
+from tests.helpers.mock_training_data import MOCK_FEEDBACK, MOCK_INSIGHTS
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -80,22 +81,13 @@ def test_push_to_registry_logs_artifact(monkeypatch, tmp_path):
 
 
 def test_main_invokes_api(tmp_path, monkeypatch):
-    insight = {}
-    feedback = [
-        {
-            "intent": "open",
-            "action": "door",
-            "success": True,
-            "response_quality": 1.0,
-            "memory_overlap": 0.0,
-        }
-    ]
     ins = tmp_path / "insight.json"
-    ins.write_text(json.dumps(insight), encoding="utf-8")
+    ins.write_text(json.dumps(MOCK_INSIGHTS), encoding="utf-8")
     fb = tmp_path / "feed.json"
-    fb.write_text(json.dumps(feedback), encoding="utf-8")
+    fb.write_text(json.dumps(MOCK_FEEDBACK[:1]), encoding="utf-8")
     monkeypatch.setattr(auto_retrain, "INSIGHT_FILE", ins)
     monkeypatch.setattr(auto_retrain.feedback_logging, "LOG_FILE", fb)
+    monkeypatch.setattr(auto_retrain, "LOG_FILE", tmp_path / "log.md")
     monkeypatch.setattr(auto_retrain, "NOVELTY_THRESHOLD", 0.0)
     monkeypatch.setattr(auto_retrain, "COHERENCE_THRESHOLD", 0.0)
     monkeypatch.setattr(auto_retrain, "system_idle", lambda: True)
@@ -255,3 +247,24 @@ def test_build_dataset_respects_validator(monkeypatch):
         {"prompt": "good", "completion": "ok"},
         {"prompt": "PATCH", "completion": "allowed"},
     ]
+
+
+def test_store_artifact_copies_file(tmp_path, monkeypatch):
+    model = tmp_path / "m.bin"
+    model.write_text("x", encoding="utf-8")
+    dest = tmp_path / "art"
+    monkeypatch.setattr(auto_retrain, "ARTIFACT_DIR", dest)
+    stored = auto_retrain.store_artifact(model)
+    assert stored.exists()
+    assert stored.read_text(encoding="utf-8") == "x"
+    assert stored.parent == dest
+
+
+def test_log_retraining_creates_entry(tmp_path, monkeypatch):
+    log = tmp_path / "log.md"
+    monkeypatch.setattr(auto_retrain, "LOG_FILE", log)
+    model = tmp_path / "m.bin"
+    model.write_text("y", encoding="utf-8")
+    auto_retrain.log_retraining("ok", model)
+    content = log.read_text(encoding="utf-8")
+    assert "ok" in content
