@@ -1,7 +1,10 @@
 # Architecture
 
 This guide maps the core packages that shape the ABZU system and how they
-cooperate.
+cooperate. The diagram below highlights the end-to-end flow of a request as it
+travels through the chakra pipeline.
+
+![End-to-end request flow](assets/architecture.svg)
 
 ## SPIRAL_OS
 
@@ -95,3 +98,27 @@ sequenceDiagram
     O->>A: play or synthesize audio
     A-->>U: WAV file and metadata
 ```
+
+## Assumptions, Design Trade-offs, and Extension Points
+
+### Assumptions
+- Single-node deployment with direct access to local models and vector stores.
+- Sequential chakra processing where each layer receives the previous output.
+- Configuration files such as `voice_avatar_config.yaml` are present and
+  readable at runtime.
+
+### Design Trade-offs
+- The modular chakra chain favors clarity over raw throughput, introducing
+  additional IPC and data copying between layers.
+- Reliance on external vector databases enables flexible memory retrieval but
+  adds a network dependency and latency cost.
+- Mermaid diagrams in this document aid comprehension yet require preprocessing
+  for rendering outside Git platforms.
+
+### Extension Points
+- New chakras or modules can be inserted by extending the router in
+  `crown_prompt_orchestrator.py`.
+- Additional third-party services (e.g., alternative LLM APIs or databases) can
+  be wired into the existing interfaces.
+- Data schemas are JSON-based; new fields can be appended without breaking
+  existing consumers when following additive versioning.
