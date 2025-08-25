@@ -4,9 +4,11 @@ Thank you for your interest in improving ABZU! This guide covers environment
 setup, coding conventions, testing, and the pull request process. For a hands-on
 orientation to the codebase, see the [developer onboarding guide](docs/developer_onboarding.md).
 
-For details on chakra module architecture and version history, consult
-[docs/chakra_architecture.md](docs/chakra_architecture.md) and
-[docs/chakra_versions.json](docs/chakra_versions.json).
+For details on chakra module architecture, version history, and contemplative
+context, consult
+[docs/chakra_architecture.md](docs/chakra_architecture.md),
+[docs/chakra_versions.json](docs/chakra_versions.json), and
+[docs/chakra_koan_system.md](docs/chakra_koan_system.md).
 
 ## Setup
 
