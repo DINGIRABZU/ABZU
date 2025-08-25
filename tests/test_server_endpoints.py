@@ -127,6 +127,24 @@ def test_glm_command_requires_authorization(monkeypatch):
     assert wrong.status_code == 401
 
 
+def test_glm_command_rejects_disallowed_prefix(monkeypatch):
+    server = _load_server()
+    calls: list[tuple[str, dict]] = []
+
+    def fake_add_vector(text: str, meta: dict) -> None:
+        calls.append((text, meta))
+
+    monkeypatch.setattr(server.vector_memory, "add_vector", fake_add_vector)
+    with TestClient(server.app) as client:
+        resp = client.post(
+            "/glm-command",
+            json={"command": "echo hi"},
+            headers={"Authorization": "Bearer token"},
+        )
+    assert resp.status_code == 400
+    assert calls == [("echo hi", {"intent": "glm_command", "outcome": "rejected"})]
+
+
 def test_shutdown_closes_streams():
     server = _load_server()
     closed_vs.clear()
