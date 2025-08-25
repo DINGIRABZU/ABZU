@@ -11,6 +11,19 @@ environment. The [documentation index](docs/index.md) lists additional guides.
 Current ratings, past scores and milestone validation results are tracked in
 [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
 
+## Build Tools
+Some dependencies compile native extensions such as SciPy. Install the system
+toolchain before creating the virtual environment:
+
+```bash
+sudo apt-get update
+sudo apt-get install build-essential gfortran pkg-config
+```
+
+These packages provide the compilers and headers required to build wheels for
+the local platform. See [docs/setup.md](docs/setup.md) for additional system
+packages.
+
 ## Seven-Milestone Roadmap
 1. Virtual environment manager ✅
 2. Sandbox repository ✅
