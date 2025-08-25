@@ -95,13 +95,69 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     data = ARCHETYPE_MIXES.get(archetype.lower())
     sf_lib = backends.sf
     if data and sf_lib is not None:
-        raw = base64.b64decode(data)
+        joined = "".join(data) if isinstance(data, (tuple, list)) else data
+        raw = base64.b64decode(joined)
         wave, _ = sf_lib.read(BytesIO(raw), dtype="float32")
         return wave.astype(np.float32)
 
     if data:
         logger.warning("soundfile not available; synthesizing tone for '%s'", archetype)
     return _synth()
+
+
+@lru_cache(maxsize=None)
+def _note_to_freq(note: str) -> float:
+    """Return frequency in Hertz for a basic note like ``C4``."""
+
+    offsets = {
+        "C": -9,
+        "C#": -8,
+        "Db": -8,
+        "D": -7,
+        "D#": -6,
+        "Eb": -6,
+        "E": -5,
+        "F": -4,
+        "F#": -3,
+        "Gb": -3,
+        "G": -2,
+        "G#": -1,
+        "Ab": -1,
+        "A": 0,
+        "A#": 1,
+        "Bb": 1,
+        "B": 2,
+    }
+    name = note[:-1]
+    octave = int(note[-1])
+    semitone = offsets.get(name, 0) + 12 * (octave - 4)
+    return 440.0 * (2 ** (semitone / 12))
+
+
+def _synthesize_numpy(
+    tempo: float,
+    melody: list[str],
+    *,
+    wave_type: str = "sine",
+    sample_rate: int = 44100,
+) -> np.ndarray:
+    """Simple NumPy-based tone synthesizer used when ``soundfile`` is absent."""
+
+    beat = 60.0 / float(tempo)
+    segments: list[np.ndarray] = []
+    for note in melody:
+        freq = _note_to_freq(str(note))
+        t = np.linspace(0, beat, int(sample_rate * beat), endpoint=False)
+        if wave_type == "square":
+            seg = 0.5 * np.sign(np.sin(2 * np.pi * freq * t))
+        else:
+            seg = 0.5 * np.sin(2 * np.pi * freq * t)
+        segments.append(seg.astype(np.float32))
+    wave = np.concatenate(segments) if segments else np.zeros(1, dtype=np.float32)
+    max_val = float(np.max(np.abs(wave)))
+    if max_val > 0:
+        wave /= max_val
+    return wave.astype(np.float32)
 
 
 @lru_cache(maxsize=None)
@@ -123,7 +179,7 @@ def synthesize_waveform(
 
     if waveform.sf is None:
         logger.warning("soundfile library not available; using NumPy synthesis")
-        return waveform._synthesize_melody(
+        return _synthesize_numpy(
             tempo, melody, wave_type=wave_type, sample_rate=sample_rate
         )
     return waveform.synthesize(melody, tempo, wave_type)

@@ -84,7 +84,7 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
         called["used"] = True
         return np.zeros(100, dtype=np.float32)
 
-    monkeypatch.setattr(prm.waveform, "_synthesize_melody", dummy_synth)
+    monkeypatch.setattr(prm, "_synthesize_numpy", dummy_synth)
 
     def fail_compose(*args, **kwargs):  # pragma: no cover - should not run
         raise AssertionError("compose_human_layer should not be called")
@@ -92,6 +92,34 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
     monkeypatch.setattr(
         prm.waveform.layer_generators, "compose_human_layer", fail_compose
     )
+
+    out = prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
+
+    assert out.path.exists()
+    assert called["used"]
+
+
+def test_synthesize_melody_with_sf(tmp_path, monkeypatch):
+    """Ensure standard synthesis path is used when ``soundfile`` is present."""
+
+    monkeypatch.setattr(
+        prm.emotion_params, "resolve", lambda *a, **k: (120.0, ["C4"], "sine", "albedo")
+    )
+
+    called: dict[str, bool] = {}
+
+    def dummy_compose(
+        tempo, melody, *, sample_rate=44100, wav_path=None, wave_type="sine"
+    ):
+        called["used"] = True
+        return np.zeros(100, dtype=np.float32)
+
+    monkeypatch.setattr(
+        prm.waveform.layer_generators, "compose_human_layer", dummy_compose
+    )
+    monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.backends, "sa", None)
+    monkeypatch.setattr(prm.waveform, "sf", object())
 
     out = prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
 
@@ -109,6 +137,25 @@ def test_archetype_mix_fallback(monkeypatch, caplog):
 
     assert mix.size > 0
     assert "soundfile not available" in caplog.text
+
+
+def test_archetype_mix_soundfile_present(monkeypatch):
+    """Verify overlay is decoded with soundfile when available."""
+
+    called: dict[str, bool] = {}
+
+    def fake_read(buf, dtype="float32"):
+        called["used"] = True
+        return np.zeros(10, dtype=np.float32), 44100
+
+    fake_sf = types.SimpleNamespace(read=fake_read)
+    monkeypatch.setattr(prm.backends, "sf", fake_sf)
+    prm._get_archetype_mix.cache_clear()
+
+    mix = prm._get_archetype_mix("albedo")
+
+    assert called["used"]
+    assert mix.shape[0] == 10
 
 
 def test_encode_phrase_increases_size(tmp_path, monkeypatch):

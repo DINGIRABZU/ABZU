@@ -1,4 +1,11 @@
+# Mapping from emotions to musical parameters.
+# Loaded once via ``load_emotion_music_map`` which caches the parsed YAML
+# to avoid repeated disk reads. When the ``soundfile`` library is missing,
+# ``play_ritual_music.py`` falls back to a NumPy synthesizer using these
+# values so playback still succeeds.
+
 joy:
+
   tempo: 140
   scale: C_major
   rhythm: syncopated
