@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import importlib
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -66,17 +65,11 @@ sys.modules["connectors.webrtc_connector"] = webrtc_stub
 from crown_config import settings
 
 settings.glm_command_token = "token"
-
-
-def _load_server():
-    import server
-
-    return importlib.reload(server)
+import server
 
 
 def test_health_check():
     """`/health` returns a simple alive status."""
-    server = _load_server()
     with TestClient(server.app) as client:
         resp = client.get("/health")
     assert resp.status_code == 200
@@ -85,7 +78,6 @@ def test_health_check():
 
 def test_glm_command_exec(monkeypatch):
     """Authorized `/glm-command` executes whitelisted shell commands."""
-    server = _load_server()
     monkeypatch.setattr(server, "send_command", lambda c: "out")
     monkeypatch.setattr(server.vector_memory, "add_vector", lambda *a, **k: None)
     with TestClient(server.app) as client:
@@ -96,3 +88,10 @@ def test_glm_command_exec(monkeypatch):
         )
     assert resp.status_code == 200
     assert resp.json() == {"ok": True, "result": "out"}
+
+
+def test_glm_command_requires_auth():
+    """Missing token on `/glm-command` should return 401."""
+    with TestClient(server.app) as client:
+        resp = client.post("/glm-command", json={"command": "ls"})
+    assert resp.status_code == 401
