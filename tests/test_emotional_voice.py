@@ -44,6 +44,7 @@ sys.modules.setdefault("numpy", dummy_np)
 from INANNA_AI import emotional_synaptic_engine, speaking_engine, voice_evolution
 
 voice_evolution.vector_memory.query_vectors = lambda *a, **k: []
+voice_evolution.load_emotion_music_map.cache_clear()
 import corpus_memory_logging
 import emotional_state
 

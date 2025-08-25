@@ -18,6 +18,7 @@ sys.modules.setdefault("yaml", dummy_yaml)
 from MUSIC_FOUNDATION import inanna_music_COMPOSER_ai as composer
 
 
+composer.load_emotion_music_map.cache_clear()
 def test_get_emotion_music_params(monkeypatch):
     mapping = {"joy": {"tempo": 150, "scale": "C_major", "rhythm": "swing"}}
     monkeypatch.setattr(composer.emotional_state, "get_last_emotion", lambda: "joy")
