@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT))
 
 from memory import cortex as cortex_memory
 import json
+from concurrent.futures import ThreadPoolExecutor
 
 
 class DummyNode:
@@ -93,3 +94,38 @@ def test_prune(tmp_path, monkeypatch):
     res = cortex_memory.query_spirals(tags=["keep"])
     assert len(res) == 1
     assert res[0]["decision"]["action"] == "run"
+
+
+def test_fulltext_and_concurrent_queries(tmp_path, monkeypatch):
+    log_file = tmp_path / "spiral.jsonl"
+    index_file = tmp_path / "index.json"
+    monkeypatch.setattr(cortex_memory, "CORTEX_MEMORY_FILE", log_file)
+    monkeypatch.setattr(cortex_memory, "CORTEX_INDEX_FILE", index_file)
+
+    node = DummyNode("A")
+    cortex_memory.record_spiral(node, {"emotion": "joy", "tags": ["fast runner"]})
+
+    # full-text search
+    ft_res = cortex_memory.query_spirals(text="runner")
+    assert len(ft_res) == 1
+
+    # concurrent queries
+    requests = [{"tags": ["fast runner"]}, {"text": "runner"}]
+    results = cortex_memory.query_spirals_concurrent(requests)
+    assert results[0] == results[1]
+
+    # concurrent record/query race
+    def writer():
+        for i in range(20):
+            cortex_memory.record_spiral(node, {"action": f"a{i}", "tags": [f"tag{i}"]})
+
+    def reader():
+        for _ in range(20):
+            cortex_memory.query_spirals(text="runner")
+
+    with ThreadPoolExecutor() as ex:
+        ex.submit(writer)
+        ex.submit(reader)
+
+    idx = json.loads(index_file.read_text(encoding="utf-8"))
+    assert "_fulltext" in idx
