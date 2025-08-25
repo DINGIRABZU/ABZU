@@ -24,6 +24,15 @@ These packages provide the compilers and headers required to build wheels for
 the local platform. See [docs/setup.md](docs/setup.md) for additional system
 packages.
 
+## Docker Compose
+Launch the simple FastAPI server with:
+
+```bash
+docker compose up server
+```
+
+The service exposes `http://localhost:8000/health` for health checks.
+
 ## Seven-Milestone Roadmap
 1. Virtual environment manager ✅
 2. Sandbox repository ✅

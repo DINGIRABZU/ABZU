@@ -12,7 +12,7 @@ RUN apt-get update && \
 
 # Install pinned dependencies
 COPY requirements.lock ./
-RUN python -m pip install --no-cache-dir -r requirements.lock
+RUN python -m pip install --no-cache-dir --require-hashes -r requirements.lock
 
 COPY . .
 
