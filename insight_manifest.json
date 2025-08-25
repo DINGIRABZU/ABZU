@@ -1,6 +1,10 @@
 {
-  "_comment": "Tracks semantic versioning for insight matrix updates",
+  "_comment": "Tracks semantic versioning and integrity for matrices",
   "version": "0.1.0",
   "updated": "",
+  "checksums": {
+    "insight_matrix": "480ff274fc4ed763c28dbfb1f4854097a07393d9cf64c54bfc353b77e71bb5ad",
+    "intent_matrix": "f629eec91306ea172e3ed9174e4cde8eadc8c68dc2c959aef0ab8ae9edf434d7"
+  },
   "history": []
 }
