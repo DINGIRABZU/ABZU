@@ -9,13 +9,11 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-try:
-    from core.task_profiler import TaskProfiler
-except ModuleNotFoundError:  # pragma: no cover - fallback for source execution
-    project_root = Path(__file__).resolve().parent / "src"
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
-    from core.task_profiler import TaskProfiler
+project_root = Path(__file__).resolve().parent / "src"
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+from core.task_profiler import TaskProfiler
 
 _profiler = TaskProfiler()
 
