@@ -71,3 +71,93 @@ def test_play_ritual_music_fallback(tmp_path, monkeypatch):
     assert out.exists()
     assert out == tmp_path / "ritual.wav"
     assert called["sample_rate"] == 8000
+
+
+def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
+    """Ensure internal synthesis is used when ``soundfile`` is missing."""
+
+    # Avoid using external resolution logic
+    monkeypatch.setattr(
+        prm.emotion_params, "resolve", lambda *a, **k: (120.0, ["C4"], "sine", "albedo")
+    )
+
+    # Simulate missing soundfile in both modules
+    monkeypatch.setattr(prm, "sf", None)
+    monkeypatch.setattr(prm.waveform, "sf", None)
+
+    called: dict[str, bool] = {}
+
+    def dummy_synth(tempo, melody, *, wave_type="sine", sample_rate=44100):
+        called["used"] = True
+        return np.zeros(100, dtype=np.float32)
+
+    monkeypatch.setattr(prm.waveform, "_synthesize_melody", dummy_synth)
+
+    def fail_compose(*args, **kwargs):  # pragma: no cover - should not run
+        raise AssertionError("compose_human_layer should not be called")
+
+    monkeypatch.setattr(
+        prm.waveform.layer_generators, "compose_human_layer", fail_compose
+    )
+
+    class DummyBackend:
+        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
+            prm.backends._write_wav(path, wave, sample_rate)
+
+    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
+
+    out = prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
+
+    assert out.exists()
+    assert called["used"]
+
+
+def test_encode_phrase_increases_size(tmp_path, monkeypatch):
+    """Embedding a phrase should grow the output file size."""
+
+    monkeypatch.setattr(
+        prm.emotion_params, "resolve", lambda *a, **k: (120.0, ["C4"], "sine", "albedo")
+    )
+    monkeypatch.setattr(prm, "sf", None)
+
+    def dummy_compose(
+        tempo, melody, *, sample_rate=44100, wav_path=None, wave_type="sine"
+    ):
+        return np.zeros(100, dtype=np.float32)
+
+    monkeypatch.setattr(
+        prm.waveform.layer_generators, "compose_human_layer", dummy_compose
+    )
+
+    class DummyBackend:
+        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
+            prm.backends._write_wav(path, wave, sample_rate)
+
+    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
+
+    calls = {"count": 0}
+
+    def fake_encode_phrase(phrase):
+        calls["count"] += 1
+        return np.ones(200, dtype=np.float32)
+
+    monkeypatch.setattr(prm.stego, "encode_phrase", fake_encode_phrase)
+
+    def fake_embed_phrase(wave, ritual, emotion):
+        stego = prm.stego.encode_phrase("secret")
+        return np.concatenate([wave, stego])
+
+    monkeypatch.setattr(prm.stego, "embed_phrase", fake_embed_phrase)
+
+    plain_dir = tmp_path / "plain"
+    hidden_dir = tmp_path / "hidden"
+    plain_dir.mkdir()
+    hidden_dir.mkdir()
+
+    out_plain = prm.compose_ritual_music("joy", "\u2609", output_dir=plain_dir)
+    out_hidden = prm.compose_ritual_music(
+        "joy", "\u2609", output_dir=hidden_dir, hide=True
+    )
+
+    assert calls["count"] == 1
+    assert out_hidden.stat().st_size > out_plain.stat().st_size
