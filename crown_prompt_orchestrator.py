@@ -15,6 +15,11 @@ from datetime import datetime
 from importlib import import_module
 from pathlib import Path
 from typing import Any, Dict
+import sys
+
+project_root = Path(__file__).resolve().parent / "src"
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 import crown_decider
 import emotional_state

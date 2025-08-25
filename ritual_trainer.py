@@ -6,8 +6,13 @@ import argparse
 import json
 import logging
 import os
+import sys
 from pathlib import Path
 from typing import Any, Iterable, List
+
+project_root = Path(__file__).resolve().parent / "src"
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 import auto_retrain
 from core.utils.seed import seed_all

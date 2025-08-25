@@ -11,12 +11,17 @@ import fractions
 import importlib
 import logging
 import time
+import sys
 from pathlib import Path
 from typing import Any, Optional, Set, cast
 
 import numpy as np
 from fastapi import APIRouter, HTTPException, Request
 from numpy.typing import NDArray
+
+project_root = Path(__file__).resolve().parent / "src"
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 from core import avatar_expression_engine, video_engine
 from src.media.video.base import VideoProcessor
