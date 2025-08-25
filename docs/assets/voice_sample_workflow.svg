@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60">
+  <rect x="5" y="5" width="90" height="30" fill="#eef" stroke="#99f" />
+  <text x="10" y="25" font-size="12">Capture</text>
+  <rect x="105" y="5" width="90" height="30" fill="#efe" stroke="#9f9" />
+  <text x="115" y="25" font-size="12">EmotiVoice</text>
+  <rect x="205" y="5" width="90" height="30" fill="#fee" stroke="#f99" />
+  <text x="215" y="25" font-size="12">Output</text>
+  <line x1="95" y1="20" x2="105" y2="20" stroke="#000" />
+  <line x1="195" y1="20" x2="205" y2="20" stroke="#000" />
+</svg>
