@@ -12,6 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
+# Ensure the real SciPy package is loaded before tests potentially stub it.
+try:  # pragma: no cover - optional dependency
+    import scipy  # noqa: F401
+except Exception:  # pragma: no cover - SciPy not installed
+    pass
+
 # Provide a minimal `huggingface_hub` stub for tests so that modules depending on
 # it can be imported without pulling in the real library. The stub implements the
 # small surface area used in the codebase and performs no network operations.
