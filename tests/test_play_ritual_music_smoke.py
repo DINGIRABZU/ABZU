@@ -8,7 +8,6 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-import soundfile as sf
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -32,7 +31,7 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
     ) -> np.ndarray:
         wave: np.ndarray = np.zeros(100, dtype=np.float32)
         if wav_path:
-            sf.write(wav_path, wave, 44100)
+            prm.backends._write_wav(Path(wav_path), wave, 44100)
         return wave
 
     monkeypatch.setattr(
@@ -47,6 +46,8 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
             prm.backends._write_wav(path, wave, sample_rate)
 
     monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
+    monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.waveform, "sf", object())
 
     out = prm.compose_ritual_music(
         "joy", "\u2609", output_dir=tmp_path, sample_rate=22050

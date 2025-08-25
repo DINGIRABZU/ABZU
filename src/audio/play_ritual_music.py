@@ -14,7 +14,6 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 from . import backends
-sf = backends.sf
 
 import importlib
 
@@ -89,13 +88,14 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
         return tone.astype(np.float32)
 
     data = ARCHETYPE_MIXES.get(archetype.lower())
-    if data:
-        if sf is not None:
-            raw = base64.b64decode(data)
-            wave, _ = sf.read(BytesIO(raw), dtype="float32")
-            return wave.astype(np.float32)
-        return _synth()
+    sf_lib = backends.sf
+    if data and sf_lib is not None:
+        raw = base64.b64decode(data)
+        wave, _ = sf_lib.read(BytesIO(raw), dtype="float32")
+        return wave.astype(np.float32)
 
+    if data:
+        logger.info("soundfile not available; synthesizing tone for '%s'", archetype)
     return _synth()
 
 
@@ -130,6 +130,7 @@ def compose_ritual_music(
     out_path = out_dir / "ritual.wav"
 
     backend = backends.get_backend()
+    logger.info("Using audio backend %s", backend.__class__.__name__)
     backend.play(out_path, wave, sample_rate)
 
     return out_path
