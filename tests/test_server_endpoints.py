@@ -98,6 +98,14 @@ def test_health_check():
     assert resp.json() == {"status": "alive"}
 
 
+def test_ready_check():
+    server = _load_server()
+    with TestClient(server.app) as client:
+        resp = client.get("/ready")
+    assert resp.status_code == 200
+    assert resp.json() == {"status": "ready"}
+
+
 def test_glm_command_authorized(monkeypatch):
     server = _load_server()
     monkeypatch.setattr(server, "send_command", lambda c: f"ran {c}")

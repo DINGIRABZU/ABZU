@@ -450,8 +450,9 @@ appended to `data/feedback.json` for later training.
 
 ### Voice Model Installation
 
-The orchestrator can speak using several text-to-speech back-ends. Install
-their weights ahead of time to avoid network stalls during the first run.
+To enable speech output, install at least one supported text‑to‑speech back end
+and pre‑download its weights so the first invocation runs offline. The
+orchestrator works with several engines:
 
 - **XTTS (via `TTS`)**
 
@@ -489,6 +490,9 @@ their weights ahead of time to avoid network stalls during the first run.
   TTS("tts_models/en/vctk/vits")
   PY
   ```
+
+Each example caches the model files in the backend's default location so later
+runs avoid network access.
 
 Voice selection is controlled by `voice_config.yaml` and
 `voice_avatar_config.yaml`. Set `VOICE_CONFIG_PATH` or
