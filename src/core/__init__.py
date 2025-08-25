@@ -1,4 +1,7 @@
-"""Core package exposing primary services."""
+"""Core package exposing primary services.
+
+Provides shortcut imports for frequently used components.
+"""
 
 from __future__ import annotations
 
