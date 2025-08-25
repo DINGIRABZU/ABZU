@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation Audit
 
 - Ensure components have descriptions and data-flow references.
+- Linked chakra koan and version files from README and CONTRIBUTING.
 
 ### Quality
 
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Chakra Versions
 
 - Track semantic versions for each chakra layer in `docs/chakra_versions.json`.
+- Changelog automatically records chakra version bumps.
 
 ## [0.1.0] - 2025-08-23
 

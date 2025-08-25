@@ -52,6 +52,10 @@ inanna play-music song.wav  # Analyze an audio file with the music demo
 - [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.
 - [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md) – component ratings, past scores, milestone validation results and remediation checklists.
 - [CHANGELOG.md](CHANGELOG.md) – chakra version history.
+- [docs/chakra_koan_system.md](docs/chakra_koan_system.md) – meditative verses for
+  each chakra.
+- [docs/chakra_versions.json](docs/chakra_versions.json) – semantic version
+  numbers for chakra modules.
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see

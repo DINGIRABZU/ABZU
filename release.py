@@ -11,6 +11,7 @@ import json
 import subprocess
 from datetime import date
 from pathlib import Path
+from collections.abc import Iterable
 
 import tomllib
 
@@ -42,12 +43,85 @@ def get_version() -> str:
     return data["project"]["version"]
 
 
+def _record_unreleased_chakra_versions(updates: dict[str, str]) -> None:
+    """Append chakra version bumps to the Unreleased changelog section."""
+    if not updates:
+        return
+    path = Path("CHANGELOG.md")
+    lines = path.read_text().splitlines(keepends=True)
+    try:
+        unreleased = next(
+            i for i, line in enumerate(lines) if line.strip() == "## [Unreleased]"
+        )
+        chakra = next(
+            i
+            for i, line in enumerate(lines[unreleased:], start=unreleased)
+            if line.strip() == "### Chakra Versions"
+        )
+    except StopIteration:
+        return
+    section_start = chakra + 1
+    section_end = section_start
+    while section_end < len(lines) and not (
+        lines[section_end].startswith("### ") or lines[section_end].startswith("## ")
+    ):
+        section_end += 1
+    section = lines[section_start:section_end]
+    existing = {
+        line.split(":")[0][2:]: idx
+        for idx, line in enumerate(section)
+        if line.startswith("- ") and ": " in line
+    }
+    for chakra_name, ver in updates.items():
+        new_line = f"- {chakra_name}: {ver}\n"
+        if chakra_name in existing:
+            section[existing[chakra_name]] = new_line
+        else:
+            section.append(new_line)
+    lines[section_start:section_end] = section
+    path.write_text("".join(lines))
+
+
+def _clear_unreleased_chakra_versions(chakras: Iterable[str]) -> None:
+    """Remove chakra version entries from the Unreleased section."""
+    if not chakras:
+        return
+    path = Path("CHANGELOG.md")
+    lines = path.read_text().splitlines(keepends=True)
+    try:
+        unreleased = next(
+            i for i, line in enumerate(lines) if line.strip() == "## [Unreleased]"
+        )
+        chakra = next(
+            i
+            for i, line in enumerate(lines[unreleased:], start=unreleased)
+            if line.strip() == "### Chakra Versions"
+        )
+    except StopIteration:
+        return
+    section_start = chakra + 1
+    section_end = section_start
+    while section_end < len(lines) and not (
+        lines[section_end].startswith("### ") or lines[section_end].startswith("## ")
+    ):
+        section_end += 1
+    section = [
+        line
+        for line in lines[section_start:section_end]
+        if not any(line.startswith(f"- {c}:") for c in chakras)
+    ]
+    lines[section_start:section_end] = section
+    path.write_text("".join(lines))
+
+
 def update_changelog(version: str, chakra_updates: dict[str, str]) -> None:
     """Insert a release heading into ``CHANGELOG.md``.
 
     ``chakra_updates`` maps chakra names to their new semantic versions.
     """
     path = Path("CHANGELOG.md")
+    if chakra_updates:
+        _clear_unreleased_chakra_versions(chakra_updates.keys())
     text = path.read_text()
     lines = [f"## [{version}] - {date.today().isoformat()}\n", "\n"]
     if chakra_updates:
@@ -132,6 +206,7 @@ def bump_chakra_versions() -> dict[str, str]:
             updates[chakra] = new_version
     if updates:
         path.write_text(json.dumps(versions, indent=2) + "\n")
+        _record_unreleased_chakra_versions(updates)
     return updates
 
 
