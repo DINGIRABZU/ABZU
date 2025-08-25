@@ -1,7 +1,8 @@
 # Contributing
 
 Thank you for your interest in improving ABZU! This guide covers environment
-setup, coding conventions, testing, and the pull request process.
+setup, coding conventions, testing, and the pull request process. For a hands-on
+orientation to the codebase, see the [developer onboarding guide](docs/developer_onboarding.md).
 
 For details on chakra module architecture and version history, consult
 [docs/chakra_architecture.md](docs/chakra_architecture.md) and
