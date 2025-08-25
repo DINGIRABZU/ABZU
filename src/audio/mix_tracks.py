@@ -12,6 +12,7 @@ functions for simple automation.
 
 import argparse
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -30,23 +31,28 @@ from . import audio_ingestion, dsp_engine
 EMOTION_MAP = Path(__file__).resolve().parent.parent / "emotion_music_map.yaml"
 
 
-def _load(path: Path) -> tuple[np.ndarray, int]:
+def _load(path: Path, logger: logging.Logger = logging.getLogger(__name__)) -> tuple[np.ndarray, int]:
     if sf is None:
         raise RuntimeError("soundfile library not installed")
+    logger.debug("Loading %s", path)
     data, sr = sf.read(path, always_2d=False)
     return np.asarray(data, dtype=float), sr
 
 
-def _load_emotion_map() -> dict:
+def _load_emotion_map(logger: logging.Logger = logging.getLogger(__name__)) -> dict:
     try:
         with EMOTION_MAP.open("r") as f:
+            logger.debug("Loading emotion map from %s", EMOTION_MAP)
             return yaml.safe_load(f) or {}
     except FileNotFoundError:  # pragma: no cover - configuration optional
+        logger.debug("Emotion map not found at %s", EMOTION_MAP)
         return {}
 
 
 def mix_audio(
-    paths: list[Path], emotion: str | None = None
+    paths: list[Path],
+    emotion: str | None = None,
+    logger: logging.Logger = logging.getLogger(__name__),
 ) -> tuple[np.ndarray, int, dict[str, float | str | None]]:
     """Return mixed audio and transition info.
 
@@ -55,12 +61,12 @@ def mix_audio(
     The returned ``info`` dictionary contains the chosen ``tempo`` and ``key``.
     """
 
-    data, sr = _load(paths[0])
+    data, sr = _load(paths[0], logger=logger)
     mix = np.zeros_like(data, dtype=float)
     tempos: list[float] = []
     keys: list[str | None] = []
     for p in paths:
-        d, s = _load(p)
+        d, s = _load(p, logger=logger)
         if s != sr:
             raise ValueError("sample rates differ")
         tempos.append(audio_ingestion.extract_tempo(d, s))
@@ -76,32 +82,42 @@ def mix_audio(
     key = keys[0] if keys else None
 
     if emotion:
-        mapping = _load_emotion_map()
+        mapping = _load_emotion_map(logger=logger)
         emot_info = mapping.get(emotion, {})
         tempo = float(emot_info.get("tempo", tempo))
         key = emot_info.get("scale", key)
 
+    logger.info("Mixed tracks tempo=%s key=%s", tempo, key)
     return mix, sr, {"tempo": tempo, "key": key}
 
 
 def _apply_dsp(
-    data: np.ndarray, sr: int, params: dict[str, Any]
+    data: np.ndarray,
+    sr: int,
+    params: dict[str, Any],
+    logger: logging.Logger = logging.getLogger(__name__),
 ) -> tuple[np.ndarray, int]:
     """Apply basic DSP operations described by ``params``."""
 
     if "pitch" in params:
+        logger.debug("Applying pitch shift %s", params["pitch"])
         data, sr = dsp_engine.pitch_shift(data, sr, float(params["pitch"]))
     if "time" in params:
+        logger.debug("Applying time stretch %s", params["time"])
         data, sr = dsp_engine.time_stretch(data, sr, float(params["time"]))
     if "compress" in params:
         comp = params["compress"] or {}
         thresh = float(comp.get("threshold", -18.0))
         ratio = float(comp.get("ratio", 2.0))
+        logger.debug("Applying compression threshold=%s ratio=%s", thresh, ratio)
         data, sr = dsp_engine.compress(data, sr, thresh, ratio)
     return data, sr
 
 
-def mix_from_instructions(instr: dict[str, Any]) -> tuple[np.ndarray, int]:
+def mix_from_instructions(
+    instr: dict[str, Any],
+    logger: logging.Logger = logging.getLogger(__name__),
+) -> tuple[np.ndarray, int]:
     """Return mixed audio according to ``instr`` JSON structure.
 
     ``instr`` follows the format::
@@ -124,16 +140,16 @@ def mix_from_instructions(instr: dict[str, Any]) -> tuple[np.ndarray, int]:
         raise ValueError("no stems provided")
 
     first = Path(stems[0]["file"])
-    mix, sr = _load(first)
-    mix, sr = _apply_dsp(mix, sr, stems[0])
+    mix, sr = _load(first, logger=logger)
+    mix, sr = _apply_dsp(mix, sr, stems[0], logger=logger)
     max_len = mix.shape[0]
     buffers = [mix]
 
     for stem in stems[1:]:
-        data, s = _load(Path(stem["file"]))
+        data, s = _load(Path(stem["file"]), logger=logger)
         if s != sr:
             raise ValueError("sample rates differ")
-        data, s = _apply_dsp(data, s, stem)
+        data, s = _apply_dsp(data, s, stem, logger=logger)
         max_len = max(max_len, data.shape[0])
         buffers.append(data)
 
@@ -146,7 +162,11 @@ def mix_from_instructions(instr: dict[str, Any]) -> tuple[np.ndarray, int]:
     return mix, sr
 
 
-def main(args: list[str] | None = None) -> None:
+def main(
+    args: list[str] | None = None,
+    output_dir: Path = Path("output"),
+    logger: logging.Logger = logging.getLogger(__name__),
+) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("files", nargs="*")
     parser.add_argument("--instructions", type=Path)
@@ -155,22 +175,27 @@ def main(args: list[str] | None = None) -> None:
     parser.add_argument("--preview-duration", type=float, default=1.0)
     parser.add_argument("--qnl-text")
     parser.add_argument("--emotion")
+    parser.add_argument("--output-dir", type=Path, default=output_dir)
     opts = parser.parse_args(args)
+    output_dir = opts.output_dir
 
     if opts.instructions is not None:
         with opts.instructions.open() as f:
             instr = json.load(f)
-        mix, sr = mix_from_instructions(instr)
+        mix, sr = mix_from_instructions(instr, logger=logger)
         if sf is None:
             raise RuntimeError("soundfile library not installed")
-        out_dir = Path("output")
-        out_dir.mkdir(parents=True, exist_ok=True)
+        output_dir.mkdir(parents=True, exist_ok=True)
         out_name = instr.get("output", "final.wav")
-        sf.write(out_dir / out_name, mix, sr, subtype="PCM_16")
+        out_path = output_dir / out_name
+        sf.write(out_path, mix, sr, subtype="PCM_16")
+        logger.info("Wrote mix to %s", out_path)
         prev = instr.get("preview", {})
         prev_name = prev.get("file", "preview.wav")
         dur = int(sr * float(prev.get("duration", 1.0)))
-        sf.write(out_dir / prev_name, mix[:dur], sr, subtype="PCM_16")
+        prev_path = output_dir / prev_name
+        sf.write(prev_path, mix[:dur], sr, subtype="PCM_16")
+        logger.info("Wrote preview to %s", prev_path)
         return
 
     if not opts.files or not opts.output:
@@ -179,13 +204,15 @@ def main(args: list[str] | None = None) -> None:
     if opts.qnl_text:
         quantum_embed(opts.qnl_text)
 
-    mix, sr, info = mix_audio([Path(f) for f in opts.files], opts.emotion)
+    mix, sr, info = mix_audio([Path(f) for f in opts.files], opts.emotion, logger=logger)
     if sf is None:
         raise RuntimeError("soundfile library not installed")
     sf.write(opts.output, mix, sr, subtype="PCM_16")
+    logger.info("Wrote mix to %s", opts.output)
     if opts.preview:
         dur = int(sr * opts.preview_duration)
         sf.write(opts.preview, mix[:dur], sr, subtype="PCM_16")
+        logger.info("Wrote preview to %s", opts.preview)
 
 
 if __name__ == "__main__":
