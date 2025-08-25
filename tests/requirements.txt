@@ -18,6 +18,7 @@ pydantic
 opensmile
 aiortc
 uvicorn
+phonemizer
 gymnasium
 psutil
 beautifulsoup4
