@@ -11,3 +11,15 @@ This document summarizes the major modules aligned with each chakra layer, their
 | Throat | `crown_prompt_orchestrator.py`, `INANNA_AI_AGENT/inanna_ai.py` | Prompt orchestration and agent interface | Beta | None currently |
 | Third Eye | `insight_compiler.py`, `SPIRAL_OS/qnl_engine.py`, `seven_dimensional_music.py` | Insight and QNL processing | Experimental | QNL engine emits occasional warnings |
 | Crown | `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh` | High-level orchestration | Alpha | Startup scripts assume local model availability |
+
+## Service and Schema Mapping
+
+| Chakra | Modules | Third-party Services | Data Schemas |
+| --- | --- | --- | --- |
+| Root | `server.py`, `INANNA_AI/network_utils/` | FastAPI, GLM command API | `pcap` captures, `INANNA_AI_AGENT/network_utils_config.json` |
+| Sacral | `emotional_state.py`, `emotion_registry.py` | — | `data/emotion_registry.json` |
+| Solar Plexus | `learning_mutator.py`, `state_transition_engine.py` | — | `insight_matrix.json` |
+| Heart | `voice_avatar_config.yaml`, `vector_memory.py` | Vector database | `voice_avatar_config.yaml`, embedding records |
+| Throat | `crown_prompt_orchestrator.py`, `INANNA_AI_AGENT/inanna_ai.py` | LLM APIs | Prompt/response JSON payloads |
+| Third Eye | `insight_compiler.py`, `SPIRAL_OS/qnl_engine.py`, `seven_dimensional_music.py` | Audio toolchain | `mirror_thresholds.json`, QNL glyph sequences |
+| Crown | `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh` | Model runtime, container services | `pipeline` YAML, `ritual_profile.json` |

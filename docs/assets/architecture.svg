@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+    <style>
+      .node { fill:#fefefe; stroke:#333; }
+      text { font-family: sans-serif; font-size:12px; }
+    </style>
+  </defs>
+  <!-- Nodes -->
+  <rect class="node" x="20" y="100" width="100" height="40" />
+  <text x="40" y="125">Client</text>
+
+  <rect class="node" x="150" y="100" width="120" height="40" />
+  <text x="170" y="125">API Server</text>
+
+  <rect class="node" x="310" y="20" width="120" height="40" />
+  <text x="320" y="45">Root</text>
+
+  <rect class="node" x="310" y="80" width="120" height="40" />
+  <text x="320" y="105">Sacral</text>
+
+  <rect class="node" x="310" y="140" width="120" height="40" />
+  <text x="320" y="165">Solar Plexus</text>
+
+  <rect class="node" x="450" y="20" width="120" height="40" />
+  <text x="460" y="45">Heart</text>
+
+  <rect class="node" x="450" y="80" width="120" height="40" />
+  <text x="460" y="105">Throat</text>
+
+  <rect class="node" x="450" y="140" width="120" height="40" />
+  <text x="460" y="165">Third Eye</text>
+
+  <rect class="node" x="590" y="100" width="120" height="40" />
+  <text x="600" y="125">Crown</text>
+
+  <rect class="node" x="730" y="100" width="100" height="40" />
+  <text x="740" y="125">Response</text>
+
+  <!-- Arrows -->
+  <path d="M120 120 H150" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M270 120 L310 40" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M270 120 L310 100" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M270 120 L310 160" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M430 40 H450" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M430 100 H450" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M430 160 H450" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M570 120 H590" stroke="#333" marker-end="url(#arrow)" />
+  <path d="M710 120 H730" stroke="#333" marker-end="url(#arrow)" />
+</svg>
