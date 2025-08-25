@@ -48,5 +48,7 @@ jobs:
       - *install-deps
       - name: Run tests
         run: pytest
+      - name: Run interaction log tests
+        run: pytest tests/test_interactions_jsonl_integrity.py
       - name: Profiling
         run: python -m cProfile -m task_profiling
