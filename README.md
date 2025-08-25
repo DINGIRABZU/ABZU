@@ -27,6 +27,34 @@ These packages provide the compilers and headers required to build wheels for
 the local platform. See [docs/setup.md](docs/setup.md) for additional system
 packages.
 
+## Environment Setup
+
+Dependencies are locked with [pip-tools](https://github.com/jazzband/pip-tools).
+Regenerate the lock file whenever `requirements.txt` or
+`dev-requirements.txt` change:
+
+```bash
+pip-compile --allow-unsafe --generate-hashes \
+  --output-file=requirements.lock dev-requirements.txt requirements.txt
+```
+
+Install the pinned dependencies and the project in editable mode so
+`task_profiling.py` can import the `core` package:
+
+```bash
+pip install -r requirements.lock
+pip install -e .
+```
+
+### Docker image
+
+The provided `Dockerfile` installs from `requirements.lock` and performs an
+editable install of the project. Build the image with:
+
+```bash
+docker build -t abzu .
+```
+
 ## Docker Compose
 Launch the simple FastAPI server with:
 

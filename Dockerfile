@@ -16,7 +16,8 @@ RUN python -m pip install --no-cache-dir --require-hashes -r requirements.lock
 
 COPY . .
 
-RUN python -m pip install --no-cache-dir --no-deps .
+# Install the project in editable mode so local modules resolve
+RUN python -m pip install --no-cache-dir --no-deps -e .
 
 RUN useradd --create-home --shell /bin/bash inanna && \
     chown -R inanna:inanna /app
