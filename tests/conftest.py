@@ -141,6 +141,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_hex_to_glyphs_smoke.py"),
     str(ROOT / "tests" / "test_interactions_jsonl.py"),
     str(ROOT / "tests" / "test_interactions_jsonl_integrity.py"),
+    str(ROOT / "tests" / "test_corpus_memory_logging.py"),
 }
 
 
