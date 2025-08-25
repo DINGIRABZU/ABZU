@@ -4,11 +4,23 @@ This roadmap tracks progress toward the Spiral OS vision. See
 [project_overview.md](project_overview.md) for context and
 [developer_manual.md](developer_manual.md) for implementation notes.
 
-## Chakra Upgrade Timeline
+## Quarterly Chakra Targets
 
-Each chakra upgrade is tracked through a GitHub milestone and a dedicated issue.
-Use the milestone to group related work and reference the issue to monitor
-progress.
+The project upgrades one chakra each quarter in the order below.
+
+| Quarter | Chakra Focus |
+| --- | --- |
+| Q3 2024 | Root |
+| Q4 2024 | Sacral |
+| Q1 2025 | Solar Plexus |
+| Q2 2025 | Heart |
+| Q3 2025 | Throat |
+| Q4 2025 | Third Eye |
+| Q1 2026 | Crown |
+
+Each chakra upgrade has a target quarter and is tracked through a GitHub
+milestone and dedicated issue. Use the milestone to group related work and
+reference the issue to monitor progress.
 
 | Chakra | Target Quarter | Milestone | Issue |
 | --- | --- | --- | --- |

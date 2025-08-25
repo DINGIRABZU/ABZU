@@ -83,6 +83,21 @@ graph LR
     Crown --> Root
 ```
 
+## Quarterly Chakra Targets
+
+The roadmap assigns one chakra upgrade per quarter. See
+[roadmap.md](roadmap.md) for milestone links.
+
+| Quarter | Chakra |
+| --- | --- |
+| Q3 2024 | Root |
+| Q4 2024 | Sacral |
+| Q1 2025 | Solar Plexus |
+| Q2 2025 | Heart |
+| Q3 2025 | Throat |
+| Q4 2025 | Third Eye |
+| Q1 2026 | Crown |
+
 ## System Architecture
 For detailed diagrams and component relationships, see [architecture.md](architecture.md).
 
