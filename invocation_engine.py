@@ -53,11 +53,17 @@ def register_invocation(
         vector_memory.add_vector(
             symbols, {"symbols": symbols, "emotion": emotion or ""}
         )
-    except Exception:
+    except AttributeError as exc:
+        logger.warning(
+            "vector memory unavailable",
+            extra={"symbols": symbols, "emotion": emotion},
+            exc_info=exc,
+        )
+    except Exception as exc:
         logger.warning(
             "vector_memory.add_vector failed",
             extra={"symbols": symbols, "emotion": emotion},
-            exc_info=True,
+            exc_info=exc,
         )
 
 
@@ -95,7 +101,19 @@ def invoke(text: str, orchestrator: MoGEOrchestrator | None = None) -> List[Any]
             search_res = vector_memory.search(
                 symbols or text, filter={"emotion": emotion} if emotion else None, k=1
             )
-        except Exception:
+        except AttributeError as exc:
+            logger.warning(
+                "vector memory unavailable",
+                extra={"symbols": symbols, "emotion": emotion},
+                exc_info=exc,
+            )
+            search_res = []
+        except Exception as exc:
+            logger.warning(
+                "vector_memory.search failed",
+                extra={"symbols": symbols, "emotion": emotion},
+                exc_info=exc,
+            )
             search_res = []
         if search_res:
             meta = search_res[0]
@@ -122,9 +140,14 @@ def invoke_ritual(name: str) -> List[str]:
     start = time.perf_counter()
     try:
         data = json.loads(_RITUAL_FILE.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, json.JSONDecodeError) as exc:
         duration = time.perf_counter() - start
-        logger.error("failed to load %s", _RITUAL_FILE, extra={"duration": duration})
+        logger.error(
+            "failed to load %s",
+            _RITUAL_FILE,
+            extra={"duration": duration},
+            exc_info=exc,
+        )
         return []
     info = data.get(name)
     steps: List[str] = []
