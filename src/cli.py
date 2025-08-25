@@ -1,17 +1,15 @@
 """Unified command line interface for Spiral OS tools.
 
 The :mod:`inanna` command provides a lightweight wrapper around common
-developer tasks.  Heavy dependencies are imported lazily when a subcommand is
-invoked.  Available subcommands are:
+developer tasks. Heavy dependencies are imported lazily when a subcommand is
+invoked. Available subcommands are:
 
-``start``
-    Launch the Spiral OS startup sequence.
-``test``
-    Run the project's unit tests using :mod:`pytest`.
-``profile``
-    Profile the startup sequence with :mod:`cProfile`.
-``play-music``
-    Analyse a local audio file with the music demo.
+* ``start`` – launch the Spiral OS startup sequence
+* ``test`` – run the project's unit tests using :mod:`pytest`
+* ``profile`` – profile the startup sequence with :mod:`cProfile`
+* ``play-music`` – analyse a local audio file with the music demo
+
+For a full list of options run ``inanna -h``.
 """
 
 from __future__ import annotations

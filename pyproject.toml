@@ -107,6 +107,7 @@ crown-console = "cli.console_interface:run_repl"
 spiral-cortex = "cli.spiral_cortex_terminal:main"
 voice-cli = "cli.voice:main"
 spiral-os = "spiral_os.__main__:main"
+# Unified developer helper
 inanna = "cli:main"
 
 [tool.poetry.scripts]

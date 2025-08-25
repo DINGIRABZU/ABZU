@@ -58,6 +58,8 @@ inanna profile          # Profile system startup
 inanna play-music song.wav  # Analyze an audio file with the music demo
 ```
 
+Use `inanna -h` to view all available options and subcommands.
+
 ## Agent Updates
 - [docs/release_notes.md](docs/release_notes.md) – recent changes and fixes.
 - [docs/roadmap.md](docs/roadmap.md) – upcoming agent enhancements.
