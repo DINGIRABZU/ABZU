@@ -7,29 +7,14 @@ import base64
 from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
-from threading import Thread
 
 import logging
 import numpy as np
 
 logger = logging.getLogger(__name__)
 
-try:  # pragma: no cover - optional dependency
-    import soundfile as sf
-except Exception:  # pragma: no cover - optional dependency
-    sf = None  # type: ignore
-
-try:  # pragma: no cover - optional dependency
-    import simpleaudio as sa
-except Exception:  # pragma: no cover - optional dependency
-    sa = None  # type: ignore
-
-if sf is None and sa is None:  # pragma: no cover - optional dependency
-    logger.warning(
-        "No audio playback backend; install soundfile or simpleaudio to enable playback"
-    )
-
-from core import expressive_output
+from . import backends
+sf = backends.sf
 
 import importlib
 
@@ -114,21 +99,6 @@ def _get_archetype_mix(archetype: str, sample_rate: int = 44100) -> np.ndarray:
     return _synth()
 
 
-def _write_wav(path: Path, data: np.ndarray, sample_rate: int = 44100) -> None:
-    """Write ``data`` to ``path`` as a mono WAV using the standard library."""
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    import wave
-
-    clipped = np.clip(data, -1.0, 1.0)
-    pcm = (clipped * 32767).astype("<i2")
-    with wave.open(str(path), "wb") as wf:
-        wf.setnchannels(1)
-        wf.setsampwidth(2)
-        wf.setframerate(sample_rate)
-        wf.writeframes(pcm.tobytes())
-
-
 def compose_ritual_music(
     emotion: str,
     ritual: str,
@@ -159,27 +129,8 @@ def compose_ritual_music(
     out_dir = output_dir or Path(".")
     out_path = out_dir / "ritual.wav"
 
-    if sf is not None:
-        sf.write(out_path, wave, sample_rate)
-    else:
-        _write_wav(out_path, wave, sample_rate)
-
-    if sf is not None:
-        logger.info("Playback using soundfile backend")
-        Thread(
-            target=expressive_output.play_audio,
-            args=(out_path,),
-            daemon=True,
-        ).start()
-    elif sa is not None:
-        logger.info("Playback using simpleaudio backend")
-        pcm = (np.clip(wave, -1.0, 1.0) * 32767).astype(np.int16)
-        Thread(
-            target=lambda: sa.play_buffer(pcm, 1, 2, sample_rate).wait_done(),
-            daemon=True,
-        ).start()
-    else:
-        logger.info("Audio playback disabled; WAV available at %s", out_path)
+    backend = backends.get_backend()
+    backend.play(out_path, wave, sample_rate)
 
     return out_path
 

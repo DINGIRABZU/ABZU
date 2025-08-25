@@ -41,10 +41,12 @@ def test_compose_and_play(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
 
     played: list[Path] = []
 
-    def fake_play_audio(path: Path, loop: bool = False) -> None:
-        played.append(Path(path))
+    class DummyBackend:
+        def play(self, path: Path, wave: np.ndarray, sample_rate: int = 44100) -> None:
+            played.append(Path(path))
+            prm.backends._write_wav(path, wave, sample_rate)
 
-    monkeypatch.setattr(prm.expressive_output, "play_audio", fake_play_audio)
+    monkeypatch.setattr(prm.backends, "get_backend", lambda: DummyBackend())
 
     out = prm.compose_ritual_music(
         "joy", "\u2609", output_dir=tmp_path, sample_rate=22050
