@@ -444,6 +444,52 @@ instruction or press `Enter` to exit.  Use `--no-server` and
 written to several files under `INANNA_AI/audit_logs` and intent outcomes are
 appended to `data/feedback.json` for later training.
 
+### Voice Model Installation
+
+The orchestrator can speak using several text-to-speech back-ends. Install
+their weights ahead of time to avoid network stalls during the first run.
+
+- **XTTS (via `TTS`)**
+
+  ```bash
+  pip install TTS
+  python - <<'PY'
+  from TTS.api import TTS
+  TTS("tts_models/multilingual/multi-dataset/xtts_v2")
+  PY
+  ```
+
+- **Tortoise**
+
+  ```bash
+  pip install tortoise-tts
+  python -m tortoise.utils.download_models
+  ```
+
+- **Bark**
+
+  ```bash
+  pip install git+https://github.com/suno-ai/bark.git
+  python - <<'PY'
+  from bark import preload_models
+  preload_models()
+  PY
+  ```
+
+- **Coqui**
+
+  ```bash
+  pip install TTS
+  python - <<'PY'
+  from TTS.api import TTS
+  TTS("tts_models/en/vctk/vits")
+  PY
+  ```
+
+Voice selection is controlled by `voice_config.yaml` and
+`voice_avatar_config.yaml`. Set `VOICE_CONFIG_PATH` or
+`VOICE_AVATAR_CONFIG_PATH` to point to custom files.
+
 ### Voice configuration and emotion state
 
 Speech parameters are loaded from `voice_config.yaml` (or the path defined by
