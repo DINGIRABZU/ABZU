@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from functools import lru_cache
 
 import numpy as np
 
@@ -12,6 +13,7 @@ from MUSIC_FOUNDATION.synthetic_stego_engine import encode_phrase
 RITUAL_PROFILE = Path(__file__).resolve().parent / "ritual_profile.json"
 
 
+@lru_cache(maxsize=None)
 def load_ritual_profile(path: Path = RITUAL_PROFILE) -> dict:
     """Return ritual mappings loaded from ``path`` if available."""
     if path.exists():

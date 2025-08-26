@@ -19,14 +19,16 @@ import audio.backends as backends
 import audio.play_ritual_music as prm
 
 
-def test_get_backend_simpleaudio(monkeypatch):
+def test_get_backend_simpleaudio(monkeypatch, caplog):
     """SimpleAudioBackend is selected when soundfile is missing."""
     monkeypatch.setattr(backends, "sf", None)
     monkeypatch.setattr(backends, "sa", object())
 
-    backend = backends.get_backend()
+    with caplog.at_level("INFO"):
+        backend = backends.get_backend()
 
     assert isinstance(backend, backends.SimpleAudioBackend)
+    assert "Selected SimpleAudioBackend" in caplog.text
 
 
 def test_get_backend_noop(monkeypatch, caplog):
@@ -34,11 +36,12 @@ def test_get_backend_noop(monkeypatch, caplog):
     monkeypatch.setattr(backends, "sf", None)
     monkeypatch.setattr(backends, "sa", None)
 
-    with caplog.at_level("WARNING"):
+    with caplog.at_level("INFO"):
         backend = backends.get_backend()
 
     assert isinstance(backend, backends.NoOpBackend)
-    assert "No audio playback backend" in caplog.text
+    assert "Selected NoOpBackend" in caplog.text
+    assert "soundfile and simpleaudio libraries not installed" in caplog.text
 
 
 def test_archetype_mix_logs_when_soundfile_missing(monkeypatch, caplog):
