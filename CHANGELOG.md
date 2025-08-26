@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped `root` and `crown` chakras to `1.0.1`.
 - Bumped `sacral` chakra to `1.0.1`.
 - Bumped `heart` chakra to `1.0.1`.
+- Synced heart koan reference with the manifest.
 
 ### Insight Matrix
 

@@ -27,7 +27,7 @@ Power is the courage to dissolve.
 
 <a id="heart"></a>
 ## Heart — Anahata
-*Version: [1.0.0](chakra_versions.json#L14)*
+*Version: [1.0.1](chakra_versions.json#L14)*
 Two breaths meet and vanish.
 The space between them blossoms.
 Love is the echo of its own absence.
