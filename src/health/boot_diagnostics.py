@@ -27,9 +27,12 @@ def run_boot_checks() -> Dict[str, Optional[ModuleType]]:
         except ImportError as exc:  # module missing
             logger.error("Missing module %s: %s", name, exc)
             results[name] = None
+            # TODO: attempt automated recovery or stub module for continued operation
         except RuntimeError as exc:  # initialization failed
             logger.critical("Runtime failure in %s: %s", name, exc)
             results[name] = None
+            # TODO: isolate and restart failing module to support self-healing
     return results
+
 
 __all__ = ["run_boot_checks"]
