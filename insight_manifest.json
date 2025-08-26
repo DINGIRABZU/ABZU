@@ -1,9 +1,15 @@
 {
-  "_comment": "Tracks semantic versioning and integrity for matrices",
+  "_comment": "Tracks semantic versioning and integrity for matrices and thresholds",
   "version": "0.1.0",
   "updated": "",
+  "semantic_versions": {
+    "insight_matrix": "0.1.0",
+    "mirror_thresholds": "0.1.0",
+    "intent_matrix": "0.1.0"
+  },
   "checksums": {
     "insight_matrix": "480ff274fc4ed763c28dbfb1f4854097a07393d9cf64c54bfc353b77e71bb5ad",
+    "mirror_thresholds": "830e7e8f418bea804671121944da78df6af27cb9a77ef68fa9e3f743c535b0ef",
     "intent_matrix": "f629eec91306ea172e3ed9174e4cde8eadc8c68dc2c959aef0ab8ae9edf434d7"
   },
   "history": []
