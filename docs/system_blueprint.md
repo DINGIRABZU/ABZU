@@ -1,6 +1,14 @@
 # System Blueprint
 
-This blueprint summarizes chakra layers, core services, and operational flows for booting and maintaining the system.
+## Introduction
+
+The system blueprint acts as the master index for the ABZU platform, summarizing chakra layers, core services, and operational flows for booting and maintenance. For high-level orientation, consult:
+
+- [Documentation Index](index.md)
+- [Project Overview](project_overview.md)
+- [Architecture Overview](architecture_overview.md)
+- [Component Index](component_index.md)
+- [Recovery Playbook](recovery_playbook.md)
 
 ## Chakra Layers
 - **Root** – I/O and networking foundation
