@@ -10,7 +10,7 @@ RUN apt-get update && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/*
 
-# Install pinned dependencies from the lock file
+# Install pinned dependencies from the lock file for reproducible builds
 COPY requirements.lock ./
 RUN python -m pip install --no-cache-dir --require-hashes -r requirements.lock
 

@@ -41,6 +41,10 @@ pip-compile --allow-unsafe --generate-hashes \
   --output-file=requirements.lock dev-requirements.txt requirements.txt
 ```
 
+Key scientific packages like `numpy`, `scipy` and `opencv-python` are pinned in
+both requirement files. Regenerating the lock file captures these exact versions
+to ensure reproducible builds.
+
 Install the pinned dependencies and the project in editable mode so
 `task_profiling.py` can import the `core` package:
 
@@ -77,6 +81,7 @@ python scripts/vast_check.py http://localhost:8000
 Run the continuous integration checks locally:
 
 ```bash
+python -c "import scipy.sparse"  # ensure SciPy is available
 pre-commit run --all-files
 pytest --maxfail=1 -q
 ```
