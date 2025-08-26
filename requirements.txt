@@ -1,7 +1,7 @@
 # Runtime dependencies with pinned versions
-numpy==1.26.4
+numpy==2.2.6
     # via spiral-os (pyproject.toml)
-opencv-python==4.10.0.84
+opencv-python==4.12.0.88
     # via spiral-os (pyproject.toml)
 prometheus-client==0.20.0
     # via spiral-os (pyproject.toml)
@@ -15,7 +15,7 @@ pyyaml==6.0.2
     # via spiral-os (pyproject.toml)
 requests==2.32.4
     # via spiral-os (pyproject.toml)
-scipy==1.13.1
+scipy==1.16.1
     # via spiral-os (pyproject.toml)
 phonemizer==3.3.0
     # for phoneme extraction
