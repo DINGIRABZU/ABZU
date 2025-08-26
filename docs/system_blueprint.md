@@ -86,7 +86,7 @@ implementation details. Personality modules reside under
 ## Agents & Nazarick Hierarchy
 
 The ABZU stack relies on a network of Nazarick agents, each aligned with a chakra layer.
-Core roles include:
+For persona-level details consult the [Persona API Guide](persona_api_guide.md). Core roles include:
 
 - **Orchestration Master** (Crown) – oversees launch control and high-level coordination. See
   [orchestration_master.py](../orchestration_master.py).
@@ -97,9 +97,19 @@ Core roles include:
 - **Memory Scribe** (Heart) – maintains voice avatar configuration and memory storage using
   [memory_scribe.py](../memory_scribe.py).
 
-Additional Nazarick helpers cover specialized duties such as strategic simulation
-([agents/demiurge/strategic_simulator.py](../agents/demiurge/strategic_simulator.py)) and
-prompt arbitration ([agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_arbiter.py)).
+Key Nazarick members in `agents/` handle specialized duties:
+
+| Agent | Responsibility | Module |
+| --- | --- | --- |
+| Demiurge Strategic Simulator | Long-term planning and scenario stress-testing | [agents/demiurge/strategic_simulator.py](../agents/demiurge/strategic_simulator.py) |
+| Shalltear Fast Inference Agent | Burst compute and load shedding | [agents/shalltear/fast_inference_agent.py](../agents/shalltear/fast_inference_agent.py) |
+| Cocytus Prompt Arbiter | Logical sanitization and bias auditing | [agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_arbiter.py) |
+| Pandora Persona Emulator | Persona emulation and identity checks | [agents/pandora/persona_emulator.py](../agents/pandora/persona_emulator.py) |
+| Sebas Compassion Module | Emotional safety buffer and empathy modeling | [agents/sebas/compassion_module.py](../agents/sebas/compassion_module.py) |
+| Victim Security Canary | Intrusion detection and anomaly tracking | [agents/victim/security_canary.py](../agents/victim/security_canary.py) |
+| Pleiades Signal Router | Cross-agent signal routing | [agents/pleiades/signal_router.py](../agents/pleiades/signal_router.py) |
+| Land Graph Geo Knowledge | Ritual site queries via landscape graphs | [agents/land_graph/geo_knowledge.py](../agents/land_graph/geo_knowledge.py) |
+
 See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 [Component Index](component_index.md) for component explanations.
 
