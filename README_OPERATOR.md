@@ -109,6 +109,12 @@ records with tools like `jq` or `python -m json.tool`, and review quarantine
 and rotated files periodically. A nightly CI workflow invokes the logger and
 uploads rotated logs as build artifacts for auditing.
 
+Application logs defined in `logging_config.yaml` follow a similar policy.
+`INANNA_AI.log` rotates at 10 MB and keeps the seven most recent archives
+(`INANNA_AI.log.1` – `INANNA_AI.log.7`). Audio logs roll over at 1 MB with up to
+five backups. Each rotated file can be verified with standard checksum tools
+such as `sha256sum` to ensure integrity before archival.
+
 ## Script overview
 
 - **`INANNA_AI_AGENT/inanna_ai.py`** – Activation agent that loads source texts and can recite the INANNA birth chant or feed hex data into the QNL engine. Use `--list` to show available texts.
