@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped `root` and `crown` chakras to `1.0.1`.
 - Bumped `sacral` chakra to `1.0.1`.
 - Bumped `heart` chakra to `1.0.1`.
+- Bumped `solar_plexus` chakra to `1.1.0` after learning pipeline updates; see `docs/chakra_koan_system.md#solar`.
+- Bumped `throat` chakra to `1.0.1` fixing prompt orchestration; see `docs/chakra_koan_system.md#throat`.
 - Synced heart koan reference with the manifest.
 
 ### Insight Matrix

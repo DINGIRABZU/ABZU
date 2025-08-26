@@ -8,7 +8,7 @@
     "koan": "chakra_koan_system.md#sacral"
   },
   "solar_plexus": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "koan": "chakra_koan_system.md#solar"
   },
   "heart": {
@@ -16,7 +16,7 @@
     "koan": "chakra_koan_system.md#heart"
   },
   "throat": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "koan": "chakra_koan_system.md#throat"
   },
   "third_eye": {
