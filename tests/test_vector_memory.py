@@ -7,6 +7,7 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
+import json
 
 import numpy as np
 import pytest
@@ -111,3 +112,23 @@ def test_persist_and_restore_snapshot(monkeypatch, tmp_path):
     assert snap_path.exists()
     assert vector_memory.restore_latest_snapshot()
     assert store.restored == snap_path
+
+
+def test_persist_clusters(monkeypatch, tmp_path):
+    monkeypatch.setattr(vector_memory, "_DIR", tmp_path)
+    monkeypatch.setattr(
+        vector_memory,
+        "cluster_vectors",
+        lambda k=5, limit=1000: [{"cluster": 0, "count": 1}],
+    )
+
+    path = vector_memory.persist_clusters()
+    assert path.exists()
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data == [{"cluster": 0, "count": 1}]
+
+    manifest = tmp_path / "snapshots" / "clusters_manifest.json"
+    assert manifest.exists()
+    assert str(path) in json.loads(manifest.read_text(encoding="utf-8"))
+
+    assert vector_memory.load_latest_clusters() == data
