@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import logging
 import sys
 from pathlib import Path
@@ -18,12 +17,15 @@ import learning_mutator as lm
 
 
 def test_propose_mutations(monkeypatch):
-    monkeypatch.setattr(
-        lm, "load_intents", lambda path=lm.INTENT_FILE: MOCK_INTENTS
-    )
+    monkeypatch.setattr(lm, "load_intents", lambda path=lm.INTENT_FILE: MOCK_INTENTS)
     suggestions = lm.propose_mutations(MOCK_INSIGHTS)
     assert any("awful" in s and "bad" in s for s in suggestions)
     assert any("ugly" in s and "open" in s for s in suggestions)
+
+
+def test_propose_mutations_empty(monkeypatch):
+    monkeypatch.setattr(lm, "load_intents", lambda path=lm.INTENT_FILE: {})
+    assert lm.propose_mutations({}) == []
 
 
 def test_main_writes_mutation_file(tmp_path, monkeypatch, caplog):

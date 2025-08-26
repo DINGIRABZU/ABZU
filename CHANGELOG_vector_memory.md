@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced automatic snapshots, on-disk compaction and `cluster_vectors` helper.
 - Added `persist_snapshot` and `restore_latest_snapshot` helpers for manual snapshot persistence.
 - `snapshot` now records snapshot paths in `snapshots/manifest.json`.
+- Added `persist_clusters` and `load_latest_clusters` to persist clustering results.
 
 ### Bug Fixes
 - None.

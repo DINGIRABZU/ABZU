@@ -74,7 +74,7 @@ class VersionInfo:
     patch: int
 
 
-__version__ = VersionInfo(0, 1, 2)
+__version__ = VersionInfo(0, 1, 3)
 _STORE: Any | None = None
 _STORE_LOCK = threading.RLock()
 _DIST: Any | None = None
@@ -512,6 +512,57 @@ def cluster_vectors(k: int = 5, limit: int = 1000) -> List[Dict[str, Any]]:
     return clusters
 
 
+def persist_clusters(
+    k: int = 5,
+    limit: int = 1000,
+    path: str | Path | None = None,
+) -> Path:
+    """Persist cluster statistics to ``path`` and return it."""
+
+    snap_dir = _DIR / "snapshots"
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    clusters = cluster_vectors(k=k, limit=limit)
+    if path is None:
+        stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        path = snap_dir / f"clusters-{stamp}.json"
+    else:
+        path = Path(path)
+    path.write_text(json.dumps(clusters, indent=2), encoding="utf-8")
+
+    manifest = snap_dir / "clusters_manifest.json"
+    try:
+        entries = (
+            json.loads(manifest.read_text(encoding="utf-8"))
+            if manifest.exists()
+            else []
+        )
+        path_str = str(path)
+        if path_str not in entries:
+            entries.append(path_str)
+            manifest.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("failed to update cluster manifest")
+    return path
+
+
+def load_latest_clusters() -> List[Dict[str, Any]]:
+    """Return the most recently persisted clusters if available."""
+
+    snap_dir = _DIR / "snapshots"
+    manifest = snap_dir / "clusters_manifest.json"
+    if not manifest.exists():
+        return []
+    try:
+        entries = json.loads(manifest.read_text(encoding="utf-8"))
+        if not entries:
+            return []
+        latest = Path(entries[-1])
+        return json.loads(latest.read_text(encoding="utf-8"))
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("failed to load cluster manifest")
+        return []
+
+
 __all__ = [
     "add_vector",
     "search",
@@ -521,6 +572,8 @@ __all__ = [
     "restore",
     "persist_snapshot",
     "restore_latest_snapshot",
+    "persist_clusters",
+    "load_latest_clusters",
     "configure",
     "add_vectors",
     "search_batch",

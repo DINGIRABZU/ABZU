@@ -25,6 +25,12 @@ sys.modules.setdefault("config", config)
 import auto_retrain
 
 
+def test_compute_metrics_with_mock_data():
+    novelty, coherence = auto_retrain.compute_metrics(MOCK_INSIGHTS, MOCK_FEEDBACK)
+    assert novelty == 0.0
+    assert coherence == pytest.approx(0.9)
+
+
 def test_build_dataset_includes_mutations(monkeypatch):
     feedback = [
         {"intent": "open", "action": "door", "success": True},
@@ -120,7 +126,9 @@ def test_main_logs_failure_when_trigger_fails(tmp_path, monkeypatch, caplog):
     monkeypatch.setattr(auto_retrain, "COHERENCE_THRESHOLD", 0.0)
     monkeypatch.setattr(auto_retrain, "system_idle", lambda: True)
     monkeypatch.setattr(auto_retrain, "_load_vector_logs", lambda: [{}])
-    monkeypatch.setattr(auto_retrain, "trigger_finetune", lambda ds, validator=None: None)
+    monkeypatch.setattr(
+        auto_retrain, "trigger_finetune", lambda ds, validator=None: None
+    )
 
     with caplog.at_level(logging.ERROR):
         auto_retrain.main(["--run"])
