@@ -1,5 +1,7 @@
 # Development Checklists
 
+Quick links: [Developer Onboarding](developer_onboarding.md) | [Developer Etiquette](developer_etiquette.md)
+
 ## Mandatory Steps for Any Code Change
 - Update related documentation and examples.
 - Run `ruff` for linting.
