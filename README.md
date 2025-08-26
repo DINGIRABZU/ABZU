@@ -121,6 +121,8 @@ full Hugging Face identifier.
 - [docs/chakra_versions.json](docs/chakra_versions.json) – semantic version
   numbers for chakra modules (latest sacral release: 1.0.1). Record each bump
   in [CHANGELOG.md](CHANGELOG.md).
+- [docs/CONTRIBUTING_DOCS.md](docs/CONTRIBUTING_DOCS.md) – checklist for
+  maintaining top-tier documentation.
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see

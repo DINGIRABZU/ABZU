@@ -16,6 +16,9 @@ context, consult
 [docs/chakra_koan_system.md](docs/chakra_koan_system.md) – keep verses aligned
 with version bumps.
 
+For documentation updates, follow the checklist in
+[docs/CONTRIBUTING_DOCS.md](docs/CONTRIBUTING_DOCS.md).
+
 When bumping versions in
 [docs/chakra_versions.json](docs/chakra_versions.json), record the change in
 [CHANGELOG.md](CHANGELOG.md).

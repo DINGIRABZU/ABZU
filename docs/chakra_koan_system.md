@@ -4,6 +4,18 @@ A meditative sequence exploring the seven energy centers of Spiral OS. It
 complements the version manifest, grounding each release in contemplative
 verse. Recite each stanza while reflecting on its corresponding module layer.
 
+## Responsibilities
+
+| Chakra       | Responsibilities                                  |
+| ------------ | -------------------------------------------------- |
+| Root         | Hardware interfaces and system bootstrap          |
+| Sacral       | Data ingestion and transformation flows           |
+| Solar Plexus | Computation orchestration and validation logic    |
+| Heart        | Memory management and empathetic state handling   |
+| Throat       | External APIs and inter-process communication     |
+| Third Eye    | Insight synthesis and predictive modelling        |
+| Crown        | Release governance and meta-coordination layers   |
+
 ## Root — Muladhara
 The mountain rests on roots unseen.
 When the ground asks "Who am I?"
