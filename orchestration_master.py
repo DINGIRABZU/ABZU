@@ -10,6 +10,18 @@ from typing import Any, Dict, List
 from memory import spiral_cortex
 
 
+AGENT_LOOKUP: Dict[str, str] = {
+    "strategic_simulator": "agents.demiurge.strategic_simulator",
+    "fast_inference_agent": "agents.shalltear.fast_inference_agent",
+    "prompt_arbiter": "agents.cocytus.prompt_arbiter",
+    "aura_capture": "agents.ecosystem.aura_capture",
+    "mare_gardener": "agents.ecosystem.mare_gardener",
+    "compassion_module": "agents.sebas.compassion_module",
+    "security_canary": "agents.victim.security_canary",
+    "persona_emulator": "agents.pandora.persona_emulator",
+}
+
+
 class AlbedoOrchestrator:
     """Coordinate planner, coder and reviewer agents for an objective.
 
@@ -96,4 +108,4 @@ def boot_sequence() -> None:
     raise NotImplementedError("boot_sequence is not implemented yet")
 
 
-__all__ = ["AlbedoOrchestrator", "boot_sequence"]
+__all__ = ["AlbedoOrchestrator", "boot_sequence", "AGENT_LOOKUP"]
