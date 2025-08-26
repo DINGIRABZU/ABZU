@@ -249,3 +249,13 @@ following the startup order. For persistent issues, consult the
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Workflow](development_workflow.md)
 - [Coding Style](coding_style.md)
+
+## Operations & Monitoring
+
+These guides support the startup order, health check practices, and recovery
+procedures outlined above:
+
+- [Operations Guide](operations.md)
+- [Monitoring Guide](monitoring.md)
+- [Deployment Guide](deployment.md)
+- [Testing Guide](testing.md)
