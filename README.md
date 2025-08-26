@@ -12,8 +12,10 @@ See [docs/insight_system.md](docs/insight_system.md) for insight manifest usage 
 schema validation steps.
 Vital workflows and recovery procedures live in [docs/essential_services.md](docs/essential_services.md).
 New contributors should review the [developer onboarding guide](docs/developer_onboarding.md)
-for a structured walkthrough of the codebase. Current ratings, past scores and milestone validation
-results are tracked in [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
+for a structured walkthrough of the codebase. A minimal emotion→music→insight example
+is available in [examples/ritual_demo.py](examples/ritual_demo.py). Current ratings,
+past scores and milestone validation results are tracked in
+[docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
 For the project's guiding vision and mission, see
 [docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
 

@@ -145,6 +145,12 @@ See [testing.md](testing.md) for detailed instructions.
    ```bash
    pytest --maxfail=1 -q
    ```
+4. **Ritual demo** – link emotion, music and insight:
+   ```bash
+   python examples/ritual_demo.py
+   ```
+   The script sets an emotion, composes a short ritual track and logs an
+   insight entry to `data/spiral_cortex_memory.jsonl`.
 
 ## Setup Scripts
 - `scripts/check_requirements.sh` – loads `secrets.env`, ensures required commands are present, and verifies essential environment variables.
