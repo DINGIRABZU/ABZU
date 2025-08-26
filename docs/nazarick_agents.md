@@ -11,3 +11,18 @@ This guide summarizes core agents within ABZU's Nazarick system. Each agent alig
 
 These agents draw from the chakra structure outlined in the [Developer Onboarding guide](developer_onboarding.md) and [Chakra Architecture](chakra_architecture.md).
 
+## Additional Agents
+
+| Agent | Responsibilities | Path |
+| --- | --- | --- |
+| Demiurge Strategic Simulator | Long-term planning, failure forecasting, scenario stress-testing | [agents/demiurge/strategic_simulator.py](../agents/demiurge/strategic_simulator.py) |
+| Shalltear Fast Inference Agent | Burst compute, load shedding, monitors API quotas | [agents/shalltear/fast_inference_agent.py](../agents/shalltear/fast_inference_agent.py) |
+| Cocytus Prompt Arbiter | Logical sanitization, legal parsing, audits model bias | [agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_arbiter.py) |
+| Ecosystem Aura Capture | Data harvesting, environmental telemetry, sensor health checks | [agents/ecosystem/aura_capture.py](../agents/ecosystem/aura_capture.py) |
+| Ecosystem Mare Gardener | Infrastructure metrics, performance trend analysis, capacity planning advisories | [agents/ecosystem/mare_gardener.py](../agents/ecosystem/mare_gardener.py) |
+| Sebas Compassion Module | Empathy modeling, emotional safety buffer, conflict signal resolution | [agents/sebas/compassion_module.py](../agents/sebas/compassion_module.py) |
+| Victim Security Canary | Security alerts, intrusion detection, anomaly threshold tracking | [agents/victim/security_canary.py](../agents/victim/security_canary.py) |
+| Pandora Persona Emulator | Persona emulation, scenario roleplay, identity consistency checks | [agents/pandora/persona_emulator.py](../agents/pandora/persona_emulator.py) |
+| Pleiades Star Map Utility | Celestial navigation utilities, cosmic alignment calculations | [agents/pleiades/star_map.py](../agents/pleiades/star_map.py) |
+| Pleiades Signal Router Utility | Cross-agent signal routing, fallback relay strategies | [agents/pleiades/signal_router.py](../agents/pleiades/signal_router.py) |
+
