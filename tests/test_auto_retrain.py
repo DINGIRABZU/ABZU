@@ -200,6 +200,38 @@ def test_trigger_finetune_rolls_back_on_failure(monkeypatch, caplog):
     assert any("failed to trigger fine-tune" in r.message for r in caplog.records)
 
 
+def test_has_permission_respects_manifest(tmp_path, monkeypatch):
+    perm = tmp_path / "permissions.yml"
+    perm.write_text(
+        "paths:\n- path: data/*.json\n  operations: [read]\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(auto_retrain, "PERMISSIONS_FILE", perm)
+    target = tmp_path / "data" / "file.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("{}", encoding="utf-8")
+    assert auto_retrain.has_permission(target, "read")
+    assert not auto_retrain.has_permission(target, "write")
+
+
+def test_load_vector_logs_reads_entries(tmp_path, monkeypatch):
+    log = tmp_path / "vector.log"
+    log.write_text("{}\n{\"a\":1}\n", encoding="utf-8")
+    dummy_vm = SimpleNamespace(LOG_FILE=log)
+    monkeypatch.setattr(auto_retrain, "vector_memory", dummy_vm)
+    monkeypatch.setattr(auto_retrain, "has_permission", lambda *_: True)
+    entries = auto_retrain._load_vector_logs()
+    assert entries == [{}, {"a": 1}]
+
+
+def test_system_idle_checks_lock(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(auto_retrain, "has_permission", lambda *_: True)
+    assert auto_retrain.system_idle()
+    (tmp_path / "training.lock").write_text("", encoding="utf-8")
+    assert not auto_retrain.system_idle()
+
+
 def test_retrain_model_invokes_finetune_and_vector(monkeypatch):
     calls = {}
 

@@ -186,6 +186,12 @@ def _get_store() -> Any:
                 )
             if _DIST is not None and not getattr(_STORE, "ids", []):
                 _DIST.restore_to(_STORE)
+            # Load the most recent snapshot when no vectors exist on disk
+            if not getattr(_STORE, "ids", []):
+                try:  # pragma: no cover - best effort
+                    restore_latest_snapshot()
+                except Exception:  # pragma: no cover - defensive
+                    logger.exception("snapshot restore failed")
     return _STORE
 
 

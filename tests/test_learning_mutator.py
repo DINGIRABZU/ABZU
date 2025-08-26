@@ -80,6 +80,18 @@ def test_main_rolls_back_on_write_error(tmp_path, monkeypatch):
     assert mfile.read_text(encoding="utf-8") == "old"
 
 
+def test_load_insights_and_intents(tmp_path):
+    ins = tmp_path / "ins.json"
+    ins.write_text("{\"a\":1}", encoding="utf-8")
+    intents = tmp_path / "int.json"
+    intents.write_text("{\"x\":1}", encoding="utf-8")
+    assert lm.load_insights(ins) == {"a": 1}
+    assert lm.load_intents(intents) == {"x": 1}
+    missing = tmp_path / "missing.json"
+    assert lm.load_insights(missing) == {}
+    assert lm.load_intents(missing) == {}
+
+
 def test_propose_mutations_emotion_driven(monkeypatch):
     matrix = {"meh": {"counts": {"total": 4, "success": 1}}}
     monkeypatch.setattr(lm, "load_intents", lambda path=lm.INTENT_FILE: {})

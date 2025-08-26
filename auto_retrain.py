@@ -31,7 +31,7 @@ try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
-    vector_memory = _vector_memory
+vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 
 seed_all(int(os.getenv("SEED", "0")))
