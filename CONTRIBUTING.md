@@ -6,6 +6,10 @@ orientation to the codebase—including environment setup, chakra overview,
 architecture diagrams, a CLI quick-start, and troubleshooting tips—see the
 [developer onboarding guide](docs/developer_onboarding.md).
 
+Before committing changes, review the
+[development checklists](docs/development_checklist.md) for mandatory steps and
+guidance on adding modules, updating APIs, or altering data schemas.
+
 For the project's overarching direction and boundaries, review
 [docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
 
