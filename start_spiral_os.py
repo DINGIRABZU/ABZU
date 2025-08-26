@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import logging
 import logging.config
@@ -22,6 +23,7 @@ from connectors import webrtc_connector
 from core import language_engine, self_correction_engine
 from dashboard import system_monitor
 from env_validation import check_optional_packages, check_required
+from health import boot_diagnostics
 from INANNA_AI import defensive_network_utils as dnu
 from INANNA_AI import glm_analyze, glm_init, listening_engine
 from INANNA_AI.ethical_validator import EthicalValidator
@@ -123,6 +125,34 @@ def main(argv: Optional[List[str]] = None) -> None:
         help="Invoke a stored ritual and exit",
     )
     args = parser.parse_args(argv)
+
+    # Run boot diagnostics to ensure core modules are available before
+    # launching any subsystems. Attempt a lightweight restart for modules that
+    # fail the initial check and skip optional services if recovery fails.
+    diagnostics = boot_diagnostics.run_boot_checks()
+    if diagnostics.get("logging") is None or diagnostics.get("emotional_state") is None:
+        raise SystemExit("Critical services unavailable")
+
+    global server, invocation_engine
+    if diagnostics.get("server") is None:
+        try:
+            server = importlib.import_module("server")
+            diagnostics["server"] = server
+        except Exception:
+            logger.error("Server module unavailable; API server will not start")
+            args.no_server = True
+    else:
+        server = diagnostics["server"]
+
+    if diagnostics.get("invocation_engine") is None:
+        try:
+            invocation_engine = importlib.import_module("invocation_engine")
+            diagnostics["invocation_engine"] = invocation_engine
+        except Exception:
+            logger.error("Invocation engine unavailable; related features disabled")
+            invocation_engine = None
+    else:
+        invocation_engine = diagnostics["invocation_engine"]
 
     if args.rewrite_memory:
         if vector_memory is None or invocation_engine is None:
