@@ -221,3 +221,39 @@ Common mistakes and their resolutions:
 | **Spiral Memory** | Vector database storing long-term state |
 | **GENESIS** | Source texts used to assemble activation chants |
 | **RAG** | Retrieval‑augmented generation pipeline under `rag/` |
+
+## First Contribution Walkthrough
+
+1. **Fork and clone the repository**
+   - Fork ABZU on GitHub, then clone your fork:
+   ```bash
+   git clone https://github.com/<your-username>/ABZU.git
+   cd ABZU
+   ```
+
+2. **Create a virtual environment and install dependencies**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   scripts/easy_setup.sh
+   ```
+
+3. **Create a feature branch and make a small change**
+   ```bash
+   git checkout -b my-first-change
+   # edit a file, e.g., docs/developer_onboarding.md
+   ```
+
+4. **Run linting, tests, and other checks**
+   ```bash
+   pre-commit run --all-files
+   pytest
+   ```
+
+5. **Commit, push, and open a pull request**
+   ```bash
+   git commit -am "feat: my first change"
+   git push origin my-first-change
+   ```
+   Open a pull request on GitHub. See [CONTRIBUTING.md](../CONTRIBUTING.md) for deeper guidelines.
+
