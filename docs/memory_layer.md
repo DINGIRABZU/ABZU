@@ -37,3 +37,27 @@ with ThreadPoolExecutor(max_workers=4) as ex:
     for i in range(10):
         ex.submit(writer, i)
 ```
+
+## Snapshot restoration
+
+Vector embeddings can be backed up and recovered using helper functions from
+`vector_memory`. Writing a snapshot saves the current collection under the
+configured database directory:
+
+```python
+from vector_memory import persist_snapshot, restore_latest_snapshot
+
+snap = persist_snapshot()  # writes to <db_path>/snapshots
+```
+
+If the main database files are lost, the most recent snapshot can be restored
+before continuing operations:
+
+```python
+restored = restore_latest_snapshot()
+assert restored, "no snapshot found"
+```
+
+The `snapshots/manifest.json` file tracks available snapshots and is updated
+whenever a new one is persisted.
+
