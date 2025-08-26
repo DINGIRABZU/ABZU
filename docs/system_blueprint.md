@@ -38,21 +38,24 @@ The system blueprint acts as the master index for the ABZU platform, summarizing
 ## Essential Services
 ### Chat Gateway
 - **Layer:** Throat
+- **Purpose:** Provide the user messaging interface and route requests to internal agents. See [Communication Interfaces](communication_interfaces.md).
 - **Startup:** Launch after the memory store is available.
 - **Health Check:** Probe `/chat/health` and watch latency.
 - **Recovery:** Restart the gateway or verify network configuration.
 
 ### Memory Store
 - **Layer:** Heart
+- **Purpose:** Persist conversations and embeddings for retrieval across sessions. See [Memory Architecture](memory_architecture.md) and [Vector Memory](vector_memory.md).
 - **Startup:** Start first to provide persistence for later services.
 - **Health Check:** Ping the database and confirm vector index readiness.
 - **Recovery:** Restore the database, replay deferred writes, and relaunch.
 
 ### CROWN LLM
 - **Layer:** Crown
+- **Purpose:** Execute high‑level reasoning and language generation. See [CROWN Overview](CROWN_OVERVIEW.md) and [LLM Models](LLM_MODELS.md).
 - **Startup:** Initialize once the chat gateway is online and model weights are present.
 - **Health Check:** Send a dummy prompt and inspect response time.
-- **Recovery:** Reload weights with `crown_model_launcher.sh` or switch to a fallback model. See [CROWN Overview](CROWN_OVERVIEW.md).
+- **Recovery:** Reload weights with `crown_model_launcher.sh` or switch to a fallback model.
 
 ## Non‑Essential Services
 ### Audio Device
