@@ -1,0 +1,24 @@
+# Mapping of outsider entities to categories and tone-based templates.
+entities:
+  scout: recruit
+  merchant: neutral
+  spy: suspect
+  raider: dangerous
+
+templates:
+  recruit:
+    analytic: "Recruit {entity}, analysis indicates trust {trust} within {state}."
+    diplomatic: "Recruit {entity}, diplomacy thrives at trust {trust} in {state}."
+    warning: "Recruit {entity}, caution: trust {trust} amidst {state}."
+  neutral:
+    analytic: "Neutral {entity}, review shows {state} at trust {trust}."
+    diplomatic: "Neutral {entity}, relations steady at trust {trust} while in {state}."
+    warning: "Neutral {entity}, warning: trust {trust} affects {state}."
+  suspect:
+    analytic: "Suspect {entity}, scrutiny notes {state} with trust {trust}."
+    diplomatic: "Suspect {entity}, limited accord at trust {trust} during {state}."
+    warning: "Suspect {entity}, threat detected at trust {trust}; {state} compromised."
+  dangerous:
+    analytic: "Dangerous {entity}, risk analysis for {state} at trust {trust}."
+    diplomatic: "Dangerous {entity}, diplomacy tenuous at trust {trust}; maintain {state}."
+    warning: "Dangerous {entity}, imminent danger with trust {trust}; {state} failing."
