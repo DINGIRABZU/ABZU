@@ -42,3 +42,15 @@ def test_emotion_filter_handles_invalid_data(caplog):
     assert record.emotion is None
     assert record.resonance is None
     assert "returned invalid data" in caplog.text
+
+
+def test_filter_applies_metadata_via_logger(caplog):
+    """Ensure logger filters attach emotion metadata."""
+    logging_filters.set_emotion_provider(lambda: ("calm", 0.5))
+    logger = logging.getLogger("emotion-metadata")
+    logger.addFilter(logging_filters.EmotionFilter())
+    with caplog.at_level(logging.INFO):
+        logger.info("spell")
+    record = caplog.records[0]
+    assert record.emotion == "calm"
+    assert record.resonance == 0.5

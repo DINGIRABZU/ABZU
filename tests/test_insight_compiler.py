@@ -253,3 +253,25 @@ def test_json_files_match_schema():
         data = json.loads((ROOT / json_name).read_text())
         schema = json.loads((ROOT / "schemas" / schema_name).read_text())
         jsonschema.validate(data, schema)
+
+
+def test_update_insights_validates_schema(tmp_path, monkeypatch):
+    insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
+    monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
+
+    calls = {"insights": 0, "manifest": 0}
+
+    def fake_validate(data, schema):  # pragma: no cover - simple counter
+        if "checksums" in data:
+            calls["manifest"] += 1
+        else:
+            calls["insights"] += 1
+
+    monkeypatch.setattr(ic.jsonschema, "validate", fake_validate)
+
+    ic.update_insights([{"intent": "open portal", "success": True}])
+
+    assert calls["insights"] == 1
+    assert calls["manifest"] == 1
