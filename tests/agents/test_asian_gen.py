@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from agents.asian_gen.creative_engine import CreativeEngine
 
 
@@ -43,3 +45,11 @@ def test_sentencepiece_fallback(monkeypatch):
 
     output = engine.generate("hello", locale="ja")
     assert isinstance(output, str) and output
+
+
+def test_sentencepiece_missing(monkeypatch, tmp_path):
+    monkeypatch.setattr("agents.asian_gen.creative_engine.spm", None)
+    monkeypatch.setattr("agents.asian_gen.creative_engine.AutoTokenizer", None)
+    engine = CreativeEngine(spm_path=str(tmp_path / "spm.model"))
+    with pytest.raises(RuntimeError, match="sentencepiece not installed"):
+        engine._load_tokenizer()
