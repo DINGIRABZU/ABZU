@@ -1,0 +1,54 @@
+from __future__ import annotations
+
+"""Bio-adaptive narrator using biosignal streams to craft stories.
+
+This module ingests biosignals via :mod:`biosppy` and uses a
+:mod:`transformers` text generation pipeline to narrate the subject's
+state. The main entry point is :func:`generate_story`.
+"""
+
+from typing import Iterable
+
+import numpy as np
+from biosppy.signals import ecg
+
+try:  # pragma: no cover
+    from transformers import pipeline  # type: ignore
+except Exception:  # pragma: no cover
+    def pipeline(*args, **kwargs):  # type: ignore
+        raise ImportError("transformers pipeline unavailable") from None
+
+
+def generate_story(bio_stream: Iterable[float]) -> str:
+    """Generate a short story from a biosignal stream.
+
+    Parameters
+    ----------
+    bio_stream:
+        Sequence of raw biosignal samples such as ECG.
+
+    Returns
+    -------
+    str
+        Narrative text describing the subject.
+    """
+    samples = np.asarray(list(bio_stream), dtype=float)
+    if samples.size == 0:
+        raise ValueError("bio_stream must contain at least one sample")
+
+    # Extract heart rate using biosppy. The function returns a namedtuple or
+    # dict; both provide a ``heart_rate`` entry.
+    result = ecg.ecg(signal=samples, sampling_rate=1000.0, show=False)
+    heart_rate = (
+        result.get("heart_rate") if isinstance(result, dict) else getattr(result, "heart_rate", [])
+    )
+    avg_rate = float(np.mean(heart_rate)) if np.size(heart_rate) else 60.0
+
+    prompt = (
+        f"The subject's heart beats at {avg_rate:.1f} BPM. "
+        "Compose a reflective tale about their journey."
+    )
+
+    generator = pipeline("text-generation", model="distilgpt2")
+    text = generator(prompt, max_new_tokens=30, num_return_sequences=1)[0]["generated_text"]
+    return text

@@ -25,4 +25,5 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
 | Pandora Persona Emulator | Persona emulation, scenario roleplay, identity consistency checks | [agents/pandora/persona_emulator.py](../agents/pandora/persona_emulator.py) |
 | Pleiades Star Map Utility | Celestial navigation utilities, cosmic alignment calculations | [agents/pleiades/star_map.py](../agents/pleiades/star_map.py) |
 | Pleiades Signal Router Utility | Cross-agent signal routing, fallback relay strategies | [agents/pleiades/signal_router.py](../agents/pleiades/signal_router.py) |
+| Bana Bio-Adaptive Narrator | Biosignal-driven narrative generation | [agents/bana/bio_adaptive_narrator.py](../agents/bana/bio_adaptive_narrator.py) |
 
