@@ -128,10 +128,11 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 
 ### Memory Systems
 - **Layer:** Heart
-- **Purpose:** Persist conversations and embeddings for retrieval across sessions. See [Memory Architecture](memory_architecture.md) and [Vector Memory](vector_memory.md).
+- **Purpose:** Persist conversations and embeddings for retrieval across sessions.
+  See [Memory Architecture](memory_architecture.md) and [Vector Memory](vector_memory.md).
 - **Startup:** Start first to provide persistence for later services.
 - **Health Check:** Ping the database and confirm vector index readiness.
-- **Recovery:** Restore the database, replay deferred writes, and relaunch.
+- **Recovery:** Restore the database, replay deferred writes, then relaunch.
 
 ### Chat2DB Interface
 - **Layer:** Heart
