@@ -3,7 +3,7 @@
 Quick links: [Developer Onboarding](developer_onboarding.md) | [Developer Etiquette](developer_etiquette.md)
 
 ## Mandatory Steps for Any Code Change
-- Update related documentation and examples.
+- Update related documentation and examples. The CI workflow fails if Python modules are changed without matching updates in `docs/`.
 - Run `ruff` for linting.
 - Run `black` for formatting.
 - Run `mypy` for static type checks.
