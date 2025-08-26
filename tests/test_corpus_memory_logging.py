@@ -73,3 +73,27 @@ def test_optional_metadata(tmp_path, monkeypatch):
     assert entry["instrument"] == "piano"
     assert entry["feedback"] == "great session"
     assert entry["rating"] == 4.5
+
+
+def test_rotation(tmp_path, monkeypatch):
+    log_path = tmp_path / "interactions.jsonl"
+    monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
+    monkeypatch.setattr(cml, "MAX_BYTES", 200)
+    monkeypatch.setattr(cml, "BACKUP_COUNT", 1)
+
+    logger = logging.getLogger("corpus_memory_logging.file")
+    for h in list(logger.handlers):
+        logger.removeHandler(h)
+        h.close()
+
+    for i in range(100):
+        cml.log_interaction(str(i), {}, {}, "ok")
+        if log_path.with_name(log_path.name + ".1").exists():
+            break
+
+    rotated = log_path.with_name(log_path.name + ".1")
+    assert rotated.exists()
+
+    for path in (rotated, log_path):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            json.loads(line)

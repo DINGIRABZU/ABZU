@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+  schedule:
+    - cron: "0 0 * * *"
 
 # Reusable anchors keep the workflow maintainable
 jobs:
@@ -57,3 +59,24 @@ jobs:
         run: pytest tests/test_interactions_jsonl_integrity.py
       - name: Profiling
         run: python -m cProfile -m task_profiling
+  corpus-memory-log-rotation:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - *checkout
+      - *setup-python
+      - *install-deps
+      - name: Exercise corpus memory log rotation
+        run: |
+          python - <<'PY'
+          import os
+          os.environ['CORPUS_LOG_MAX_BYTES'] = '200'
+          import corpus_memory_logging as cml
+          log = cml.INTERACTIONS_FILE
+          log.parent.mkdir(parents=True, exist_ok=True)
+          if log.exists():
+              log.unlink()
+          for i in range(100):
+              cml.log_interaction(str(i), {}, {}, 'ok')
+          assert log.with_name(log.name + '.1').exists()
+          PY

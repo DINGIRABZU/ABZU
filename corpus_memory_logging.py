@@ -4,12 +4,44 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Any, List
 
 INTERACTIONS_FILE = Path("data/interactions.jsonl")
+MAX_BYTES = int(os.getenv("CORPUS_LOG_MAX_BYTES", 1_048_576))
+BACKUP_COUNT = int(os.getenv("CORPUS_LOG_BACKUP_COUNT", 5))
 logger = logging.getLogger(__name__)
+file_logger = logging.getLogger(__name__ + ".file")
+file_logger.propagate = False
+file_logger.setLevel(logging.INFO)
+
+
+def _ensure_file_logger() -> logging.Logger:
+    """Configure and return the rotating file logger."""
+    if file_logger.handlers:
+        handler = file_logger.handlers[0]
+        needs_update = (
+            getattr(handler, "baseFilename", "") != str(INTERACTIONS_FILE)
+            or getattr(handler, "maxBytes", None) != MAX_BYTES
+            or getattr(handler, "backupCount", None) != BACKUP_COUNT
+        )
+        if not needs_update:
+            return file_logger
+        file_logger.removeHandler(handler)
+        handler.close()
+    INTERACTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    handler = RotatingFileHandler(
+        INTERACTIONS_FILE,
+        maxBytes=MAX_BYTES,
+        backupCount=BACKUP_COUNT,
+        encoding="utf-8",
+    )
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    file_logger.addHandler(handler)
+    return file_logger
 
 
 def log_interaction(
@@ -51,10 +83,7 @@ def log_interaction(
         entry["feedback"] = feedback
     if rating is not None:
         entry["rating"] = rating
-    INTERACTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with INTERACTIONS_FILE.open("a", encoding="utf-8") as fh:
-        fh.write(json.dumps(entry, ensure_ascii=False))
-        fh.write("\n")
+    _ensure_file_logger().info(json.dumps(entry, ensure_ascii=False))
     logger.info("logged interaction to %s", INTERACTIONS_FILE)
 
 
@@ -82,10 +111,7 @@ def log_ritual_result(name: str, steps: List[str]) -> None:
         "ritual": name,
         "steps": steps,
     }
-    INTERACTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with INTERACTIONS_FILE.open("a", encoding="utf-8") as fh:
-        fh.write(json.dumps(entry, ensure_ascii=False))
-        fh.write("\n")
+    _ensure_file_logger().info(json.dumps(entry, ensure_ascii=False))
     logger.info("logged ritual %s to %s", name, INTERACTIONS_FILE)
 
 
