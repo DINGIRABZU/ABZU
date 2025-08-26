@@ -10,8 +10,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 import tempfile
+import logging
+import os
 
 try:  # pragma: no cover - optional dependency
     import sentencepiece as spm
@@ -24,6 +26,9 @@ except Exception:  # pragma: no cover
     AutoTokenizer = None  # type: ignore
     pipeline = None  # type: ignore
 
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
+
 
 @dataclass
 class CreativeEngine:
@@ -31,8 +36,15 @@ class CreativeEngine:
 
     model_name: str = "facebook/mbart-large-50-many-to-many-mmt"
     spm_path: Optional[str] = None
+    log_level: Optional[Union[int, str]] = None
 
     def __post_init__(self) -> None:
+        level: Union[int, str, None] = (
+            self.log_level or os.getenv("CREATIVE_ENGINE_LOG_LEVEL")
+        )
+        if isinstance(level, str):
+            level = getattr(logging, level.upper(), logging.INFO)
+        logger.setLevel(level if isinstance(level, int) else logging.INFO)
         try:
             self.tokenizer = self._load_tokenizer()
         except RuntimeError:
@@ -43,17 +55,21 @@ class CreativeEngine:
     def _load_tokenizer(self):
         if AutoTokenizer is not None:
             try:
-                return AutoTokenizer.from_pretrained(
+                tokenizer = AutoTokenizer.from_pretrained(
                     self.model_name, local_files_only=True
                 )
+                logger.info("Loaded AutoTokenizer")
+                return tokenizer
             except Exception:
-                pass
+                logger.info("AutoTokenizer unavailable; falling back")
         if self.spm_path:
             if spm is None:
                 raise RuntimeError("sentencepiece not installed")
             sp = spm.SentencePieceProcessor()
             sp.load(self.spm_path)
+            logger.info("Using SentencePiece fallback")
             return sp
+        logger.error("No tokenizer available")
         raise RuntimeError("No tokenizer available")
 
     def _ensure_sentencepiece_model(self) -> str:
@@ -74,16 +90,20 @@ class CreativeEngine:
 
     def _build_generator(self):
         if pipeline is None:
+            logger.info("Transformers pipeline not available")
             return None
         try:
-            return pipeline(
+            gen = pipeline(
                 "text-generation",
                 model=self.model_name,
                 tokenizer=self.tokenizer,
                 device=-1,
                 model_kwargs={"local_files_only": True},
             )
+            logger.info("Built transformers generator")
+            return gen
         except Exception:
+            logger.warning("Failed to initialize transformers generator")
             return None
 
     def generate(self, prompt: str, locale: str) -> str:
