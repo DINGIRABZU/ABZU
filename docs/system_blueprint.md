@@ -75,6 +75,26 @@ For deeper guidance on operations and reliability, refer to:
     [Chakra Architecture](chakra_architecture.md),
     [Chakra Koan](chakra_koan_system.md#crown)
 
+## Agents & Nazarick Hierarchy
+
+The ABZU stack relies on a network of Nazarick agents, each aligned with a chakra layer.
+Core roles include:
+
+- **Orchestration Master** (Crown) – oversees launch control and high-level coordination. See
+  [orchestration_master.py](../orchestration_master.py).
+- **Prompt Orchestrator** (Throat) – routes prompts and manages agent interfaces via
+  [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py).
+- **QNL Engine** (Third Eye) – performs insight and Quantum Narrative Language processing in
+  [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py).
+- **Memory Scribe** (Heart) – maintains voice avatar configuration and memory storage using
+  [memory_scribe.py](../memory_scribe.py).
+
+Additional Nazarick helpers cover specialized duties such as strategic simulation
+([agents/demiurge/strategic_simulator.py](../agents/demiurge/strategic_simulator.py)) and
+prompt arbitration ([agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_arbiter.py)).
+See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
+[Component Index](component_index.md) for component explanations.
+
 ## Essential Services
 ### Chat Gateway
 - **Layer:** Throat
