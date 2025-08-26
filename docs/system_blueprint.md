@@ -2,12 +2,20 @@
 
 ## Introduction
 
-The system blueprint acts as the master index for the ABZU platform, summarizing chakra layers, core services, and operational flows for booting and maintenance. For high-level orientation, consult:
+The system blueprint acts as the master index for the ABZU platform, summarizing
+chakra layers, core services, and operational flows for booting and maintenance.
+For high-level orientation, consult:
 
 - [Documentation Index](index.md)
 - [Project Overview](project_overview.md)
 - [Architecture Overview](architecture_overview.md)
 - [Component Index](component_index.md)
+
+For deeper guidance on operations and reliability, refer to:
+
+- [Deployment Guide](deployment.md)
+- [Monitoring](monitoring.md)
+- [Testing](testing.md)
 - [Recovery Playbook](recovery_playbook.md)
 
 ## Chakra Layers
@@ -77,6 +85,12 @@ The system blueprint acts as the master index for the ABZU platform, summarizing
 - **Recovery:** Restart the encoder or disable streaming.
 
 ## Staged Startup Order
+The stack boots in discrete stages. Deployment scripts or Kubernetes manifests
+advance to the next step only after the current service reports a passing
+`/ready` check. This sequencing prevents race conditions during rollouts and is
+recommended for both local runs and production deployments described in
+[deployment.md](deployment.md).
+
 1. Memory Store (Heart)
 2. Chat Gateway (Throat)
 3. CROWN LLM (Crown)
@@ -84,10 +98,36 @@ The system blueprint acts as the master index for the ABZU platform, summarizing
 5. Avatar
 6. Video
 
-## Health Checks
-- Each service exposes `/health` and `/ready` endpoints.
-- `scripts/vast_check.py` aggregates health status across services.
+Each step should report readiness before continuing. After the final service
+comes online, run the smoke tests in [testing.md](testing.md) to confirm the
+system responds as expected.
 
-## Recovery Paths
-- Stop the failed service, confirm dependencies, and restart following the startup order.
-- For persistent issues, consult `docs/recovery_playbook.md` to restore from snapshots.
+## Health Checks
+Robust health checks keep the system stable and observable.
+
+- Each service exposes `/health` and `/ready` endpoints. Liveness probes confirm
+  the process is running, while readiness probes gate traffic until dependencies
+  are satisfied.
+- `scripts/vast_check.py` aggregates health status across services and feeds
+  metrics into the logging and telemetry pipeline outlined in
+  [monitoring.md](monitoring.md).
+- During deployment, configure these checks so orchestration platforms only
+  advance when readiness reports success.
+
+## Failure Scenarios and Recovery Steps
+- **Memory store unavailable** – Chat gateway returns 503 or CROWN LLM waits
+  indefinitely. Restore from snapshots as outlined in
+  [recovery_playbook.md](recovery_playbook.md) and restart from step 1.
+- **Chat gateway unhealthy** – `/chat/health` fails due to missing network
+  routes or misconfigured credentials. Recheck deployment settings in
+  [deployment.md](deployment.md) and redeploy once dependencies respond.
+- **CROWN LLM model load failure** – Health probes timeout or responses degrade.
+  Reload weights, switch to a fallback model, and validate with prompts from
+  [testing.md](testing.md).
+- **Non‑essential service stalled** – Avatar or video `/ready` endpoints remain
+  false. Inspect logs using the guidance in [monitoring.md](monitoring.md) and
+  restart the affected component without disrupting core services.
+
+General guidance: stop the failed service, confirm dependencies, and restart
+following the startup order. For persistent issues, consult the
+[Recovery Playbook](recovery_playbook.md) to restore from snapshots.
