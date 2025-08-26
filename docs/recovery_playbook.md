@@ -1,19 +1,33 @@
 # Recovery Playbook
 
-This guide outlines steps to restore vector memory state from snapshots.
+This guide outlines how to restore **vector memory** from persisted snapshots
+and bring the narrative log back into alignment.
 
-1. **Locate snapshots**
-   - Snapshot files are listed in `snapshots/manifest.json` under the vector memory directory.
-   - Each entry records the absolute path of a persisted snapshot.
-2. **Select a snapshot**
-   - Choose the desired path from the manifest. The last entry is typically the most recent.
-3. **Restore**
-   - Use `vector_memory.restore(<path>)` to load a specific snapshot, or
-     call `vector_memory.restore_latest_snapshot()` to automatically load
-     the newest entry.
-4. **Verify**
-   - After restoration, run existing workflows or tests to ensure the
-     vector store has returned to the expected state.
+## Restoring a Snapshot
 
-This procedure provides a repeatable method for recovery using the
-snapshot manifest.
+1. Review `snapshots/manifest.json` to locate available snapshot paths.
+2. Load a specific snapshot:
+
+   ```python
+   from vector_memory import restore
+   restore("path/to/snapshot.sqlite")
+   ```
+
+   To load the most recent snapshot automatically:
+
+   ```python
+   from vector_memory import restore_latest_snapshot
+   restore_latest_snapshot()
+   ```
+
+## Narrative Resynchronization
+
+Every call to `vector_memory.snapshot()` records a narrative `sacrifice`
+entry in `data/narrative.log`. After restoring a snapshot:
+
+1. Inspect the log for the last sacrifice entry to confirm the restored path.
+2. Append new narrative events as activity resumes so the story timeline
+   stays continuous.
+
+This process ensures both data and narrative context are brought back
+together after a system recovery.
