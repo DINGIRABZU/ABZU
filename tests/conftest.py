@@ -152,6 +152,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_cortex_memory.py"),
     str(ROOT / "tests" / "test_voice_cloner_cli.py"),
     str(ROOT / "tests" / "test_security_canary.py"),
+    str(ROOT / "tests" / "agents" / "test_land_graph_geo_knowledge.py"),
 }
 
 

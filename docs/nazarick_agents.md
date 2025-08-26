@@ -27,4 +27,5 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
 | Pleiades Signal Router Utility | Cross-agent signal routing, fallback relay strategies | [agents/pleiades/signal_router.py](../agents/pleiades/signal_router.py) |
 | Bana Bio-Adaptive Narrator | Biosignal-driven narrative generation | [agents/bana/bio_adaptive_narrator.py](../agents/bana/bio_adaptive_narrator.py) |
 | Asian Gen Creative Engine | Multilingual generation with locale codes, offline SentencePiece fallbacks | [agents/asian_gen/creative_engine.py](../agents/asian_gen/creative_engine.py) |
+| Land Graph Geo Knowledge | Landscape graph, ritual site queries | [agents/land_graph/geo_knowledge.py](../agents/land_graph/geo_knowledge.py) |
 
