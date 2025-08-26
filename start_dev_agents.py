@@ -1,4 +1,7 @@
-"""Command line launcher for the development agent cycle."""
+"""Command line launcher for the development agent cycle.
+
+Supports optional guardian tiers and narrative logging at runtime.
+"""
 
 from __future__ import annotations
 
@@ -11,6 +14,7 @@ from datetime import datetime
 from pathlib import Path
 
 from env_validation import check_required
+from memory import spiral_cortex
 from tools.dev_orchestrator import DevAssistantService, run_dev_cycle
 
 
@@ -89,6 +93,15 @@ def main() -> int:
         "--config",
         help="Path to JSON config with environment settings",
     )
+    parser.add_argument(
+        "--guardian-tier",
+        type=int,
+        help="Guardian access tier for the run",
+    )
+    parser.add_argument(
+        "--narrative-log",
+        help="File to append narrative summaries to",
+    )
     args = parser.parse_args()
 
     if args.objective is not None and not args.objective.strip():
@@ -126,6 +139,12 @@ def main() -> int:
         os.environ["CODER_MODEL"] = args.coder_model
     if args.reviewer_model:
         os.environ["REVIEWER_MODEL"] = args.reviewer_model
+    if args.guardian_tier is not None:
+        os.environ["GUARDIAN_TIER"] = str(args.guardian_tier)
+    if args.narrative_log:
+        os.environ["NARRATIVE_LOG"] = args.narrative_log
+
+    spiral_cortex.log_insight("start_dev_agents", [vars(args)], sentiment=0.0)
 
     if args.stop:
         stop_file = log_path.with_suffix(".stop")
@@ -163,7 +182,19 @@ def main() -> int:
         objective = (
             f"Fix failing tests: {' '.join(args.triage)}\nPytest log tail:\n{tail}"
         )
-        run_dev_cycle(objective, repo=Path.cwd(), max_iterations=args.max_iterations)
+        result = run_dev_cycle(objective, repo=Path.cwd(), max_iterations=args.max_iterations)
+        if args.narrative_log:
+            try:  # pragma: no cover - best effort
+                with open(args.narrative_log, "a", encoding="utf-8") as fh:
+                    fh.write(
+                        json.dumps({
+                            "objective": objective,
+                            "steps": result.get("plan"),
+                        })
+                        + "\n"
+                    )
+            except Exception:
+                logger.debug("Failed to write narrative log", exc_info=True)
         if INTERACTIONS_FILE.exists():
             with INTERACTIONS_FILE.open("r", encoding="utf-8") as fh:
                 lines = fh.read().splitlines()
@@ -215,6 +246,12 @@ def main() -> int:
         "tests": tests,
     }
     logger.info("Summary: %s", summary)
+    if args.narrative_log:
+        try:  # pragma: no cover - best effort
+            with open(args.narrative_log, "a", encoding="utf-8") as fh:
+                fh.write(json.dumps(summary) + "\n")
+        except Exception:
+            logger.debug("Failed to write narrative log", exc_info=True)
     logger.info("Planner/coder/reviewer cycle finished")
     return 0
 

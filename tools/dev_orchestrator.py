@@ -25,6 +25,7 @@ from typing import Any, Dict, List
 
 from corpus_memory_logging import log_interaction
 from INANNA_AI.glm_integration import GLMIntegration
+from orchestration_master import AlbedoOrchestrator
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -261,68 +262,14 @@ def run_dev_cycle(
     repo: str | Path | None = None,
     max_iterations: int | None = None,
 ) -> Dict[str, Any]:
-    """Coordinate planning, coding, review, testing and commit.
+    """Delegate scheduling to :class:`AlbedoOrchestrator`.
 
-    Applies to ``objective``. Processing stops when all planned tasks are
-    handled or ``max_iterations`` is reached.
+    ``objective`` is forwarded to the orchestrator which coordinates planning,
+    coding, review, testing and optional commits.
     """
-    queue: Queue[str] = Queue()
-    repo_path = Path(repo) if repo is not None else None
 
-    planner_glm = _glm_from_env("PLANNER_MODEL")
-    coder_glm = _glm_from_env("CODER_MODEL")
-    reviewer_glm = _glm_from_env("REVIEWER_MODEL")
-
-    planner = Planner(
-        "planner", "Plan development tasks", planner_glm, objective, queue
-    )
-    coder = Coder("coder", "Write code", coder_glm, objective, queue)
-    reviewer = Reviewer(
-        "reviewer",
-        "Review code",
-        reviewer_glm,
-        objective,
-        queue,
-    )
-
-    plan_steps = planner.plan()
-    results: List[Dict[str, str]] = []
-    iterations = 0
-    while not queue.empty():
-        if max_iterations is not None and iterations >= max_iterations:
-            break
-        task = queue.get()
-        logger.info("Executing task %s", task)
-        code = coder.code(task)
-        review = reviewer.review(task, code)
-        results.append(
-            {
-                "task": task,
-                "code": code,
-                "review": review,
-            }
-        )
-        logger.info("Completed task %s", task)
-        iterations += 1
-
-    if not queue.empty():
-        logger.info(
-            "Max iterations reached with %s tasks remaining",
-            queue.qsize(),
-        )
-
-    test_result: Dict[str, Any] | None = None
-    if repo_path is not None:
-        test_result = _run_tests(repo_path)
-        if test_result["returncode"] == 0:
-            _commit(repo_path, f"Auto commit: {objective}")
-
-    return {
-        "objective": objective,
-        "plan": plan_steps,
-        "results": results,
-        "tests": test_result,
-    }
+    orchestrator = AlbedoOrchestrator(repo=repo, max_iterations=max_iterations)
+    return orchestrator.start(objective)
 
 
 __all__ = [
