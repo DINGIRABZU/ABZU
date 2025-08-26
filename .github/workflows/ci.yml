@@ -57,6 +57,9 @@ PY
       - name: Mypy
         run: mypy
 
+      - name: Validate templates and schemas
+        run: python scripts/validate_configs.py
+
       - name: Run tests
         run: pytest --cov
 
