@@ -77,3 +77,24 @@ PY
           echo "CI checks failed. See the onboarding and architecture guides for help:" \
           && echo "https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_BASE_REF/docs/developer_onboarding.md" \
           && echo "https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_BASE_REF/docs/architecture.md"
+
+  server-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install fastapi httpx numpy pytest pytest-cov
+
+      - name: Run server smoke tests
+        env:
+          PYTHONPATH: .
+        run: pytest --noconftest --override-ini="addopts=" tests/test_server.py

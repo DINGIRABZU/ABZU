@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import importlib
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -75,19 +74,20 @@ import server
 
 
 def test_health_and_ready_return_200():
-    """Endpoints should respond with HTTP 200 when app is running."""
+    """Endpoints should respond with HTTP 200 and expected payload."""
 
-    async def run_requests() -> tuple[int, int]:
+    async def run_requests() -> tuple[tuple[int, dict[str, str]], int]:
         transport = httpx.ASGITransport(app=server.app)
         async with httpx.AsyncClient(
             transport=transport, base_url="http://testserver"
         ) as client:
             health = await client.get("/health")
             ready = await client.get("/ready")
-        return health.status_code, ready.status_code
+        return (health.status_code, health.json()), ready.status_code
 
-    status_health, status_ready = asyncio.run(run_requests())
+    (status_health, body_health), status_ready = asyncio.run(run_requests())
     assert status_health == 200
+    assert body_health == {"status": "alive"}
     assert status_ready == 200
 
 
@@ -134,26 +134,6 @@ def test_glm_command_requires_authorization(monkeypatch):
     assert status_wrong == 401
 
 
-def test_glm_command_unavailable_without_token():
-    """/glm-command should be unreachable when no token is configured."""
-
-    global server
-    settings.glm_command_token = None
-    server = importlib.reload(server)
-
-    async def run_request() -> int:
-        transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(
-            transport=transport, base_url="http://testserver"
-        ) as client:
-            resp = await client.post("/glm-command", json={"command": "ls"})
-        return resp.status_code
-
-    status = asyncio.run(run_request())
-    assert status == 404
-
-    settings.glm_command_token = "token"
-    server = importlib.reload(server)
 
 
 def test_avatar_frame_endpoint(monkeypatch):

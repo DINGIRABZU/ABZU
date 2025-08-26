@@ -14,10 +14,16 @@ pip install piper-tts
 
 ## 2. Download a voice model
 
-Create a directory for model weights and fetch a voice file. The example below
-downloads an English voice for Piper and loads it once to populate the cache.
-Any ONNX voice from the Piper repository can be substituted for a different
-language or style:
+Create a directory for model weights and fetch a voice file. ABZU ships with a
+helper to download a few common voices:
+
+```bash
+python download_models.py piper-en-amy-medium
+```
+
+The example below downloads an English voice for Piper and loads it once to
+populate the cache. Any ONNX voice from the Piper repository can be substituted
+for a different language or style:
 
 ```bash
 mkdir -p voices
@@ -42,6 +48,11 @@ custom locations if the files live outside the repository.
 ## 5. Verify synthesis
 
 Start the CLI with `abzu start --speak` or launch the FastAPI server and
-confirm speech is produced. Once cached, the engine will reuse the downloaded
-weights on subsequent runs.
+confirm speech is produced. For a quick command-line check you can run:
+
+```bash
+python -m src.cli.voice "Hello world"
+```
+
+Once cached, the engine will reuse the downloaded weights on subsequent runs.
 
