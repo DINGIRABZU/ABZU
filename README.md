@@ -10,6 +10,7 @@ testing and style guidance. Then follow the [setup guide](docs/setup.md) to conf
 environment. The [documentation index](docs/index.md) lists additional guides.
 See [docs/insight_system.md](docs/insight_system.md) for insight manifest usage and
 schema validation steps.
+Vital workflows and recovery procedures live in [docs/essential_services.md](docs/essential_services.md).
 New contributors should review the [developer onboarding guide](docs/developer_onboarding.md)
 for a structured walkthrough of the codebase. Current ratings, past scores and milestone validation
 results are tracked in [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
@@ -65,6 +66,20 @@ docker compose up server
 ```
 
 The service exposes `http://localhost:8000/health` for health checks.
+
+## Health Scanner and CI
+Verify the stack with the health scanner:
+
+```bash
+python scripts/vast_check.py http://localhost:8000
+```
+
+Run the continuous integration checks locally:
+
+```bash
+pre-commit run --all-files
+pytest --maxfail=1 -q
+```
 
 ## Seven-Milestone Roadmap
 1. Virtual environment manager ✅
@@ -129,6 +144,8 @@ full Hugging Face identifier.
   [docs/developer_onboarding.md](docs/developer_onboarding.md).
 - For required system packages and environment variables, see
   [docs/setup.md](docs/setup.md).
+- For vital workflows, fallback logic, and recovery steps, see
+  [docs/essential_services.md](docs/essential_services.md).
 - For Docker image build steps and audio binary checks, see
   [docs/docker_build_audio_tools.md](docs/docker_build_audio_tools.md).
 - Before running any scripts, copy `secrets.env.template` to `secrets.env`,

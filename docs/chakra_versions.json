@@ -1,9 +1,30 @@
 {
-  "root": "1.0.1",
-  "sacral": "1.0.1",
-  "solar_plexus": "1.0.0",
-  "heart": "1.0.0",
-  "throat": "1.0.0",
-  "third_eye": "1.0.0",
-  "crown": "1.0.1"
+  "root": {
+    "version": "1.0.1",
+    "koan": "chakra_koan_system.md#root"
+  },
+  "sacral": {
+    "version": "1.0.1",
+    "koan": "chakra_koan_system.md#sacral"
+  },
+  "solar_plexus": {
+    "version": "1.0.0",
+    "koan": "chakra_koan_system.md#solar"
+  },
+  "heart": {
+    "version": "1.0.0",
+    "koan": "chakra_koan_system.md#heart"
+  },
+  "throat": {
+    "version": "1.0.0",
+    "koan": "chakra_koan_system.md#throat"
+  },
+  "third_eye": {
+    "version": "1.0.0",
+    "koan": "chakra_koan_system.md#third_eye"
+  },
+  "crown": {
+    "version": "1.0.1",
+    "koan": "chakra_koan_system.md#crown"
+  }
 }
