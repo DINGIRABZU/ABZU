@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mirror Thresholds",
+  "type": "object",
+  "required": ["_comment", "default"],
+  "properties": {
+    "_comment": {"type": "string"},
+    "default": {"type": "number"}
+  },
+  "additionalProperties": {"type": "number"}
+}

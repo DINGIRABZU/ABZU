@@ -15,6 +15,7 @@ INSIGHT_MANIFEST_FILE = Path(__file__).resolve().parent / "insight_manifest.json
 
 # Map ritual glyphs to intents
 _INTENT_FILE = Path(__file__).resolve().parent / "intent_matrix.json"
+_MIRROR_FILE = Path(__file__).resolve().parent / "mirror_thresholds.json"
 try:
     _INTENT_MAP: Dict[str, Dict[str, Any]] = json.loads(
         _INTENT_FILE.read_text(encoding="utf-8")
@@ -59,12 +60,17 @@ def _update_manifest(now: str) -> None:
     checksums = {}
     if INSIGHT_FILE.exists():
         checksums["insight_matrix"] = _checksum(INSIGHT_FILE)
+    if _MIRROR_FILE.exists():
+        checksums["mirror_thresholds"] = _checksum(_MIRROR_FILE)
     if _INTENT_FILE.exists():
         checksums["intent_matrix"] = _checksum(_INTENT_FILE)
+
+    versions = {name: "0.1.0" for name in checksums}
 
     manifest: Dict[str, Any] = {
         "version": "0.1.0",
         "updated": "",
+        "semantic_versions": versions,
         "checksums": checksums,
         "history": [],
     }
@@ -73,19 +79,34 @@ def _update_manifest(now: str) -> None:
             manifest = json.loads(INSIGHT_MANIFEST_FILE.read_text(encoding="utf-8"))
             manifest["history"] = manifest.get("history", [])
             manifest["version"] = _bump_version(manifest.get("version", "0.1.0"))
+            versions = manifest.get("semantic_versions", versions)
+            old_checksums = manifest.get("checksums", {})
+            for name, checksum in checksums.items():
+                old = old_checksums.get(name)
+                if old and old != checksum:
+                    versions[name] = _bump_version(versions.get(name, "0.1.0"))
+                else:
+                    versions.setdefault(name, "0.1.0")
         except Exception:  # pragma: no cover - malformed manifest
             manifest = {
                 "version": "0.1.0",
                 "updated": "",
+                "semantic_versions": versions,
                 "checksums": checksums,
                 "history": [],
             }
 
     manifest["updated"] = now
     manifest["checksums"] = checksums
+    manifest["semantic_versions"] = versions
     manifest.setdefault("history", [])
     manifest["history"].append(
-        {"version": manifest["version"], "updated": now, "checksums": checksums}
+        {
+            "version": manifest["version"],
+            "updated": now,
+            "checksums": checksums,
+            "semantic_versions": versions,
+        }
     )
     INSIGHT_MANIFEST_FILE.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 

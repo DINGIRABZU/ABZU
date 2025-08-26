@@ -7,6 +7,7 @@ import logging
 import sys
 from pathlib import Path
 import hashlib
+import jsonschema
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -107,6 +108,9 @@ def test_manifest_version_bumps(tmp_path, monkeypatch):
     checksum = hashlib.sha256(insight_file.read_bytes()).hexdigest()
     assert manifest["checksums"]["insight_matrix"] == checksum
     assert "intent_matrix" in manifest["checksums"]
+    mirror_checksum = hashlib.sha256((ROOT / "mirror_thresholds.json").read_bytes()).hexdigest()
+    assert manifest["checksums"]["mirror_thresholds"] == mirror_checksum
+    assert manifest["semantic_versions"]["insight_matrix"] == "0.1.0"
 
     ic.update_insights([log])
     manifest = json.loads(manifest_file.read_text())
@@ -114,6 +118,7 @@ def test_manifest_version_bumps(tmp_path, monkeypatch):
     assert manifest["updated"] != first_time
     checksum2 = hashlib.sha256(insight_file.read_bytes()).hexdigest()
     assert manifest["checksums"]["insight_matrix"] == checksum2
+    assert manifest["semantic_versions"]["insight_matrix"] == "0.1.1"
 
 
 def test_manifest_history_records_updates(tmp_path, monkeypatch):
@@ -129,6 +134,7 @@ def test_manifest_history_records_updates(tmp_path, monkeypatch):
     assert manifest["history"][0]["version"] == "0.1.0"
     assert manifest["history"][0]["updated"]
     assert manifest["history"][0]["checksums"]["insight_matrix"] == first_checksum
+    assert manifest["history"][0]["semantic_versions"]["insight_matrix"] == "0.1.0"
 
     ic.update_insights([log])
     manifest = json.loads(manifest_file.read_text())
@@ -136,6 +142,7 @@ def test_manifest_history_records_updates(tmp_path, monkeypatch):
     assert [h["version"] for h in manifest["history"]] == ["0.1.0", "0.1.1"]
     assert manifest["version"] == "0.1.1"
     assert manifest["history"][1]["checksums"]["insight_matrix"] == second_checksum
+    assert manifest["history"][1]["semantic_versions"]["insight_matrix"] == "0.1.1"
 
 
 def test_connector_invoked(tmp_path, monkeypatch):
@@ -233,3 +240,16 @@ def test_broadcast_scores_handles_errors(monkeypatch, tmp_path):
     monkeypatch.setenv("ARCHETYPE_SCORE_QUEUE_PATH", str(tmp_path / "no" / "queue.log"))
 
     ic.update_insights(logs)  # Should not raise despite errors
+
+
+def test_json_files_match_schema():
+    files = [
+        ("insight_matrix.json", "insight_matrix.schema.json"),
+        ("intent_matrix.json", "intent_matrix.schema.json"),
+        ("mirror_thresholds.json", "mirror_thresholds.schema.json"),
+        ("insight_manifest.json", "insight_manifest.schema.json"),
+    ]
+    for json_name, schema_name in files:
+        data = json.loads((ROOT / json_name).read_text())
+        schema = json.loads((ROOT / "schemas" / schema_name).read_text())
+        jsonschema.validate(data, schema)
