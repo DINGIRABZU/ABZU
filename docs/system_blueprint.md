@@ -126,7 +126,7 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 - **Health Check:** Probe `/chat/health` and watch latency.
 - **Recovery:** Restart the gateway or verify network configuration.
 
-### Memory Store
+### Memory Systems
 - **Layer:** Heart
 - **Purpose:** Persist conversations and embeddings for retrieval across sessions. See [Memory Architecture](memory_architecture.md) and [Vector Memory](vector_memory.md).
 - **Startup:** Start first to provide persistence for later services.
