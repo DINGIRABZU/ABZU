@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 from memory import cortex as cortex_memory
 import json
 from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import Process
 
 
 class DummyNode:
@@ -37,6 +38,17 @@ class DummyNode:
     def decide(self):
         self.calls.append("decide")
         return {"action": self.val}
+
+
+def process_writer(log_path: str, index_path: str, start: int, end: int) -> None:
+    from memory import cortex as cortex_memory
+
+    cortex_memory.CORTEX_MEMORY_FILE = Path(log_path)
+    cortex_memory.CORTEX_INDEX_FILE = Path(index_path)
+
+    node = DummyNode("P")
+    for i in range(start, end):
+        cortex_memory.record_spiral(node, {"num": i, "tags": [f"p{i}"]})
 
 
 def test_record_and_query(tmp_path, monkeypatch):
@@ -198,3 +210,42 @@ def test_concurrent_writers_index_integrity(tmp_path, monkeypatch):
     assert len(entries) == 30
     idx = json.loads(index_file.read_text(encoding="utf-8"))
     assert idx.get("_next_id") == 30
+
+
+def test_hash_lookup(tmp_path, monkeypatch):
+    log_file = tmp_path / "spiral.jsonl"
+    index_file = tmp_path / "index.json"
+    monkeypatch.setattr(cortex_memory, "CORTEX_MEMORY_FILE", log_file)
+    monkeypatch.setattr(cortex_memory, "CORTEX_INDEX_FILE", index_file)
+
+    node = DummyNode("H")
+    cortex_memory.record_spiral(node, {"tags": ["quick"]})
+    h = cortex_memory.hash_tag("quick")
+
+    ids = cortex_memory.search_index(tag_hashes=[h])
+    assert ids == {0}
+
+    res = cortex_memory.query_spirals(tag_hashes=[h])
+    assert len(res) == 1
+    assert res[0]["decision"]["tags"] == ["quick"]
+
+
+def test_process_concurrent_writers(tmp_path):
+    log_file = tmp_path / "spiral.jsonl"
+    index_file = tmp_path / "index.json"
+
+    procs = [
+        Process(target=process_writer, args=(str(log_file), str(index_file), i * 5, (i + 1) * 5))
+        for i in range(4)
+    ]
+    for p in procs:
+        p.start()
+    for p in procs:
+        p.join()
+
+    cortex_memory.CORTEX_MEMORY_FILE = log_file
+    cortex_memory.CORTEX_INDEX_FILE = index_file
+    entries = cortex_memory.query_spirals()
+    assert len(entries) == 20
+    idx = json.loads(index_file.read_text(encoding="utf-8"))
+    assert idx.get("_next_id") == 20

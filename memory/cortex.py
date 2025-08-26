@@ -20,6 +20,9 @@ from typing import Any, Dict, Iterable, List, Protocol, Optional, Sequence, Set
 
 from aspect_processor import analyze_phonetic, analyze_semantic, analyze_temporal
 
+import hashlib
+import fcntl
+
 
 class SpiralNode(Protocol):
     """Protocol describing the minimal spiral node interface."""
@@ -75,20 +78,30 @@ _LOCK = _RWLock()
 
 @contextmanager
 def _read_locked() -> Iterable[None]:
-    _LOCK.acquire_read()
-    try:
-        yield
-    finally:
-        _LOCK.release_read()
+    lock_path = CORTEX_INDEX_FILE.with_suffix(".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, "w") as lf:
+        fcntl.flock(lf, fcntl.LOCK_SH)
+        _LOCK.acquire_read()
+        try:
+            yield
+        finally:
+            _LOCK.release_read()
+            fcntl.flock(lf, fcntl.LOCK_UN)
 
 
 @contextmanager
 def _write_locked() -> Iterable[None]:
-    _LOCK.acquire_write()
-    try:
-        yield
-    finally:
-        _LOCK.release_write()
+    lock_path = CORTEX_INDEX_FILE.with_suffix(".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, "w") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        _LOCK.acquire_write()
+        try:
+            yield
+        finally:
+            _LOCK.release_write()
+            fcntl.flock(lf, fcntl.LOCK_UN)
 
 
 _TOKEN_RE = re.compile(r"[\w']+")
@@ -97,6 +110,11 @@ _TOKEN_RE = re.compile(r"[\w']+")
 def _tokens(text: str) -> List[str]:
     """Return lowercase word tokens from ``text``."""
     return [t.lower() for t in _TOKEN_RE.findall(text)]
+
+
+def hash_tag(tag: str) -> str:
+    """Return a stable SHA256 hash for ``tag``."""
+    return hashlib.sha256(tag.encode("utf-8")).hexdigest()
 
 
 def _state_text(node: SpiralNode) -> str:
@@ -138,6 +156,7 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
         entry_id = int(index.get("_next_id", 0))
         index["_next_id"] = entry_id + 1
         ft = index.setdefault("_fulltext", {})
+        hashes = index.setdefault("_hash", {})
 
         entry = {
             "id": entry_id,
@@ -152,6 +171,8 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
 
         for tag in tags:
             index.setdefault(tag, []).append(entry_id)
+            tag_hash = hash_tag(tag)
+            hashes.setdefault(tag_hash, []).append(entry_id)
             for tok in _tokens(tag):
                 ft.setdefault(tok, []).append(entry_id)
         CORTEX_INDEX_FILE.write_text(json.dumps(index, ensure_ascii=False), encoding="utf-8")
@@ -160,8 +181,9 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
 def search_index(
     tags: Optional[List[str]] = None,
     text: Optional[str] = None,
+    tag_hashes: Optional[List[str]] = None,
 ) -> Set[int]:
-    """Return entry identifiers matching ``tags`` and ``text``.
+    """Return entry identifiers matching ``tags``, ``text`` or ``tag_hashes``.
 
     Only the index file is consulted, making this function inexpensive for
     metadata lookups without reading the full memory log.
@@ -171,6 +193,8 @@ def search_index(
         raise ValueError("tags must be a list of strings")
     if text is not None and not isinstance(text, str):
         raise ValueError("text must be a string or None")
+    if tag_hashes and (not isinstance(tag_hashes, list) or not all(isinstance(h, str) for h in tag_hashes)):
+        raise ValueError("tag_hashes must be a list of strings")
     if not CORTEX_INDEX_FILE.exists():
         return set()
 
@@ -183,6 +207,13 @@ def search_index(
             for tag in tags:
                 tag_ids = set(index.get(tag, []))
                 ids = tag_ids if ids is None else ids & tag_ids
+            if ids is None:
+                ids = set()
+        if tag_hashes:
+            hash_index = index.get("_hash", {})
+            for h in tag_hashes:
+                h_ids = set(hash_index.get(h, []))
+                ids = h_ids if ids is None else ids & h_ids
             if ids is None:
                 ids = set()
         if text:
@@ -201,11 +232,13 @@ def query_spirals(
     filter: Optional[Dict[str, Any]] | None = None,
     tags: Optional[List[str]] = None,
     text: Optional[str] = None,
+    tag_hashes: Optional[List[str]] = None,
 ) -> List[Dict[str, Any]]:
     """Return recorded spiral entries filtered by decision values or tags.
 
     ``tags`` performs exact tag matching while ``text`` does a full‑text search
-    against tag tokens.
+    against tag tokens. ``tag_hashes`` matches tags by their hashed value as
+    returned by :func:`hash_tag`.
     """
 
     if filter is not None and not isinstance(filter, dict):
@@ -214,11 +247,13 @@ def query_spirals(
         raise ValueError("tags must be a list of strings")
     if text is not None and not isinstance(text, str):
         raise ValueError("text must be a string or None")
+    if tag_hashes and (not isinstance(tag_hashes, list) or not all(isinstance(h, str) for h in tag_hashes)):
+        raise ValueError("tag_hashes must be a list of strings")
 
     if not CORTEX_MEMORY_FILE.exists():
         return []
 
-    ids = search_index(tags=tags, text=text) if (tags or text) else None
+    ids = search_index(tags=tags, text=text, tag_hashes=tag_hashes) if (tags or text or tag_hashes) else None
 
     entries: List[Dict[str, Any]] = []
     with _read_locked():
@@ -303,6 +338,7 @@ def export_spirals(
 __all__ = [
     "record_spiral",
     "search_index",
+    "hash_tag",
     "query_spirals",
     "query_spirals_concurrent",
     "prune_spirals",
