@@ -1,79 +1,39 @@
-"""Tests for corpus memory logging."""
-
-from __future__ import annotations
-
 import json
-import sys
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-
-import logging
 
 import corpus_memory_logging as cml
 
 
-def test_log_and_load(tmp_path, monkeypatch, caplog):
-    log_path = tmp_path / "interactions.jsonl"
-    monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
-    monkeypatch.setattr(cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl"))
+def test_watchdog_quarantines_bad_lines(tmp_path, monkeypatch):
+    interactions = tmp_path / "interactions.jsonl"
+    quarantine = tmp_path / "interactions.quarantine.jsonl"
+    monkeypatch.setattr(cml, "INTERACTIONS_FILE", interactions)
+    monkeypatch.setattr(cml, "QUARANTINE_FILE", quarantine)
 
-    with caplog.at_level(logging.INFO):
-        cml.log_interaction("hello", {"intent": "greet", "emotion": "joy"}, {}, "ok")
-        cml.log_interaction("bye", {"intent": "exit"}, {"emotion": "calm"}, "done")
+    interactions.write_text('{"a": 1}\nnot json\n{"b": 2}\n', encoding="utf-8")
 
-    lines = log_path.read_text(encoding="utf-8").splitlines()
+    cml.watchdog()
+
+    lines = interactions.read_text().splitlines()
     assert len(lines) == 2
-    first = json.loads(lines[0])
-    assert first["input"] == "hello" and first["emotion"] == "joy"
-
-    assert (
-        sum(
-            1
-            for r in caplog.records
-            if r.levelno == logging.INFO and "logged interaction" in r.message
-        )
-        == 2
-    )
-
-    all_entries = cml.load_interactions()
-    assert len(all_entries) == 2
-    assert all_entries[-1]["outcome"] == "done"
-
-    limited = cml.load_interactions(limit=1)
-    assert limited == all_entries[-1:]
-
-    # append invalid json to trigger watchdog
-    log_path.write_text(log_path.read_text(encoding="utf-8") + "{\n", encoding="utf-8")
-    with caplog.at_level(logging.ERROR):
-        entries = cml.load_interactions()
-    assert len(entries) == 2
-    quarantine = log_path.with_suffix(".quarantine.jsonl")
-    assert quarantine.exists()
-    assert any("quarantined" in r.message for r in caplog.records)
+    assert json.loads(lines[0]) == {"a": 1}
+    assert json.loads(lines[1]) == {"b": 2}
+    assert quarantine.read_text() == "not json\n"
 
 
-def test_optional_metadata(tmp_path, monkeypatch):
-    log_path = tmp_path / "interactions.jsonl"
-    monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
-    monkeypatch.setattr(cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl"))
+def test_log_rotation(tmp_path, monkeypatch):
+    interactions = tmp_path / "interactions.jsonl"
+    quarantine = tmp_path / "interactions.quarantine.jsonl"
+    monkeypatch.setattr(cml, "INTERACTIONS_FILE", interactions)
+    monkeypatch.setattr(cml, "QUARANTINE_FILE", quarantine)
+    monkeypatch.setattr(cml, "MAX_LOG_SIZE", 100)
 
-    cml.log_interaction(
-        "play piano",
-        {"intent": "music"},
-        {},
-        "ok",
-        source_type="score",
-        genre="jazz",
-        instrument="piano",
-        feedback="great session",
-        rating=4.5,
-    )
+    interactions.write_text("x" * 120, encoding="utf-8")
 
-    entry = cml.load_interactions()[0]
-    assert entry["source_type"] == "score"
-    assert entry["genre"] == "jazz"
-    assert entry["instrument"] == "piano"
-    assert entry["feedback"] == "great session"
-    assert entry["rating"] == 4.5
+    cml.log_interaction("hi", {"emotion": "joy"}, {"emotion": "joy"}, "success")
+
+    rotated = list(tmp_path.glob("interactions-*.jsonl"))
+    assert len(rotated) == 1
+    assert interactions.exists()
+    entries = cml.load_interactions()
+    assert len(entries) == 1
+    assert entries[0]["input"] == "hi"

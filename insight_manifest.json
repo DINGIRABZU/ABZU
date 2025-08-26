@@ -1,7 +1,7 @@
 {
   "_comment": "Tracks semantic versioning and integrity for matrices and thresholds",
   "version": "0.1.0",
-  "updated": "",
+  "updated": "2025-08-26T00:00:00Z",
   "semantic_versions": {
     "insight_matrix": "0.1.0",
     "mirror_thresholds": "0.1.0",
