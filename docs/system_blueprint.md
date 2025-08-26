@@ -131,3 +131,9 @@ Robust health checks keep the system stable and observable.
 General guidance: stop the failed service, confirm dependencies, and restart
 following the startup order. For persistent issues, consult the
 [Recovery Playbook](recovery_playbook.md) to restore from snapshots.
+
+## Contributor Resources
+
+- [Developer Onboarding](developer_onboarding.md)
+- [Development Workflow](development_workflow.md)
+- [Coding Style](coding_style.md)
