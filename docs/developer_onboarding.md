@@ -15,6 +15,16 @@ The codebase is organized across seven chakra‑themed module directories:
 
 This guide introduces the ABZU codebase, highlights core entry points, and covers environment setup, chakra architecture overview, CLI usage, and troubleshooting tips. For a guided CLI quick‑start run the [onboarding wizard](onboarding/wizard.py). Additional architecture diagrams are available in [architecture.md](architecture.md).
 
+## Prerequisites
+- docker
+- nc
+- sox
+- ffmpeg
+- curl
+- jq
+- wget
+- aria2c
+
 ## Quick Start
 ```bash
 git clone https://github.com/your-org/ABZU.git
@@ -71,6 +81,24 @@ Command-line activation agent. It can recite the birth chant (`--activate`), gen
    python download_models.py glm41v_9b --int8
    ```
    For system package requirements and optional dependency groups, see [setup.md](setup.md).
+
+### Environment Variables
+Set the following variables in `secrets.env` or your shell:
+- `HF_TOKEN`
+- `GLM_API_URL`
+- `GLM_API_KEY`
+- `OPENAI_API_KEY`
+- `GITHUB_TOKEN`
+- model endpoint settings (e.g., `MODEL_ENDPOINT`)
+
+### Core CI Commands
+Run these commands before committing changes:
+```bash
+make verify-deps
+pre-commit run --all-files
+make test
+make test-deterministic
+```
 
 ## Chakra Overview
 
