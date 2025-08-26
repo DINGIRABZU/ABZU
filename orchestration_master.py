@@ -19,6 +19,7 @@ AGENT_LOOKUP: Dict[str, str] = {
     "compassion_module": "agents.sebas.compassion_module",
     "security_canary": "agents.victim.security_canary",
     "persona_emulator": "agents.pandora.persona_emulator",
+    "vanna_data": "agents.vanna_data",
 }
 
 
@@ -57,9 +58,7 @@ class AlbedoOrchestrator:
         planner = _tools.Planner(
             "planner", "Plan development tasks", planner_glm, objective, queue
         )
-        coder = _tools.Coder(
-            "coder", "Write code", coder_glm, objective, queue
-        )
+        coder = _tools.Coder("coder", "Write code", coder_glm, objective, queue)
         reviewer = _tools.Reviewer(
             "reviewer", "Review code", reviewer_glm, objective, queue
         )
@@ -79,9 +78,7 @@ class AlbedoOrchestrator:
             iterations += 1
 
         if not queue.empty():
-            logger.info(
-                "Max iterations reached with %s tasks remaining", queue.qsize()
-            )
+            logger.info("Max iterations reached with %s tasks remaining", queue.qsize())
 
         test_result: Dict[str, Any] | None = None
         if self.repo is not None:
