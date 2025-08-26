@@ -98,8 +98,12 @@ demonstrate practical startup sequences. Core roles include:
   [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py).
 - **QNL Engine** (Third Eye) – performs insight and Quantum Narrative Language processing in
   [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py).
-- **Memory Scribe** (Heart) – maintains voice avatar configuration and memory storage using
-  [memory_scribe.py](../memory_scribe.py).
+- **Memory Scribe** (Heart) – maintains voice avatar configuration and memory storage through
+  [Chat2DB](chat2db.md). It integrates
+  [memory_scribe.py](../memory_scribe.py),
+  [memory_store.py](../memory_store.py), and
+  [INANNA_AI/db_storage.py](../INANNA_AI/db_storage.py)
+  to persist conversations and embeddings.
 
 Key Nazarick members in `agents/` handle specialized duties:
 
@@ -144,6 +148,7 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 ### Chat Gateway
 - **Layer:** Throat
 - **Purpose:** Provide the user messaging interface and route requests to internal agents. See [Communication Interfaces](communication_interfaces.md).
+- **Chat2DB:** Logs conversations and retrieves context through the [Chat2DB interface](chat2db.md).
 - **Startup:** Launch after the memory store is available.
 - **Health Check:** Probe `/chat/health` and watch latency.
 - **Recovery:** Restart the gateway or verify network configuration.
