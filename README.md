@@ -26,6 +26,19 @@ For the project's guiding vision and mission, see
 
 For an end-to-end request pipeline and chakra status summary, see [docs/data_flow.md](docs/data_flow.md) and [docs/chakra_overview.md](docs/chakra_overview.md).
 
+## JSON Schema Validation
+
+Core configuration files ship with JSON Schemas under the `schemas/` directory.
+Validate them to ensure local edits remain well formed:
+
+```bash
+python scripts/validate_schemas.py
+# or individually
+python -m jsonschema schemas/insight_matrix.schema.json insight_matrix.json
+python -m jsonschema schemas/mirror_thresholds.schema.json mirror_thresholds.json
+python -m jsonschema schemas/intent_matrix.schema.json intent_matrix.json
+```
+
 ## Build Tools
 Some dependencies compile native extensions such as SciPy. Install the system
 toolchain before creating the virtual environment:

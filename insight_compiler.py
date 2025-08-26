@@ -11,21 +11,32 @@ from typing import Any, Dict, List
 import jsonschema
 import requests
 
+SCHEMAS_DIR = Path(__file__).resolve().parent / "schemas"
+
+
+def _load_json(path: Path, schema_file: Path) -> Dict[str, Any]:
+    """Return parsed JSON from ``path`` validated against ``schema_file``."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        schema = json.loads(schema_file.read_text(encoding="utf-8"))
+        jsonschema.validate(data, schema)
+        return data
+    except Exception:  # pragma: no cover - optional files
+        return {}
+
+
 INSIGHT_FILE = Path(__file__).resolve().parent / "insight_matrix.json"
 INSIGHT_MANIFEST_FILE = Path(__file__).resolve().parent / "insight_manifest.json"
-SCHEMAS_DIR = Path(__file__).resolve().parent / "schemas"
 INSIGHT_SCHEMA_FILE = SCHEMAS_DIR / "insight_matrix.schema.json"
 MANIFEST_SCHEMA_FILE = SCHEMAS_DIR / "insight_manifest.schema.json"
+INTENT_SCHEMA_FILE = SCHEMAS_DIR / "intent_matrix.schema.json"
+MIRROR_SCHEMA_FILE = SCHEMAS_DIR / "mirror_thresholds.schema.json"
 
 # Map ritual glyphs to intents
 _INTENT_FILE = Path(__file__).resolve().parent / "intent_matrix.json"
 _MIRROR_FILE = Path(__file__).resolve().parent / "mirror_thresholds.json"
-try:
-    _INTENT_MAP: Dict[str, Dict[str, Any]] = json.loads(
-        _INTENT_FILE.read_text(encoding="utf-8")
-    )
-except Exception:  # pragma: no cover - file may be missing
-    _INTENT_MAP = {}
+_INTENT_MAP: Dict[str, Dict[str, Any]] = _load_json(_INTENT_FILE, INTENT_SCHEMA_FILE)
+_MIRROR_THRESHOLDS: Dict[str, Any] = _load_json(_MIRROR_FILE, MIRROR_SCHEMA_FILE)
 
 _GLYPHS: Dict[str, set[str]] = {}
 for _name, _info in _INTENT_MAP.items():

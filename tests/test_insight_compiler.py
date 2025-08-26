@@ -8,9 +8,12 @@ import sys
 from pathlib import Path
 import hashlib
 import jsonschema
+from datetime import datetime
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+FIXTURES = Path(__file__).parent / "fixtures" / "insight_compiler"
 
 import insight_compiler as ic  # noqa: E402
 import logging_filters  # noqa: E402
@@ -275,3 +278,46 @@ def test_update_insights_validates_schema(tmp_path, monkeypatch):
 
     assert calls["insights"] == 1
     assert calls["manifest"] == 1
+
+
+def test_update_insights_regression(tmp_path, monkeypatch):
+    """Regression test using versioned fixtures for insight updates."""
+    insight_file = tmp_path / "insights.json"
+    manifest_file = tmp_path / "manifest.json"
+    monkeypatch.setattr(ic, "INSIGHT_FILE", insight_file)
+    monkeypatch.setattr(ic, "INSIGHT_MANIFEST_FILE", manifest_file)
+
+    class FixedDateTime(datetime):
+        @classmethod
+        def utcnow(cls):
+            return cls(2024, 1, 1, 0, 0, 0)
+
+    monkeypatch.setattr(ic, "datetime", FixedDateTime)
+
+    logs1 = [
+        {
+            "intent": "open portal",
+            "tone": "joy",
+            "emotion": "joy",
+            "responded_with": "text",
+            "success": True,
+        }
+    ]
+    ic.update_insights(logs1)
+    data1 = json.loads(insight_file.read_text())
+    expected1 = json.loads((FIXTURES / "v1.json").read_text())
+    assert data1 == expected1
+
+    logs2 = [
+        {
+            "intent": "open portal",
+            "tone": "joy",
+            "emotion": "sad",
+            "responded_with": "voice",
+            "success": False,
+        }
+    ]
+    ic.update_insights(logs2)
+    data2 = json.loads(insight_file.read_text())
+    expected2 = json.loads((FIXTURES / "v2.json").read_text())
+    assert data2 == expected2
