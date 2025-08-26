@@ -1,0 +1,27 @@
+{
+  "open portal": {
+    "counts": {
+      "total": 1,
+      "success": 1,
+      "tones": {
+        "joy": {
+          "total": 1,
+          "success": 1
+        }
+      },
+      "emotions": {
+        "joy": {
+          "total": 1,
+          "success": 1
+        }
+      },
+      "responded_with": {
+        "text": 1
+      }
+    },
+    "resonance_index": {},
+    "best_tone": "joy",
+    "action_success_rate": 1.0,
+    "last_updated": "2024-01-01T00:00:00"
+  }
+}
