@@ -104,6 +104,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_memory_persistence.py"),
     str(ROOT / "tests" / "test_start_dev_agents_triage.py"),
     str(ROOT / "tests" / "test_gateway.py"),
+    str(ROOT / "tests" / "test_core_scipy_smoke.py"),
     str(ROOT / "tests" / "test_download_models.py"),
     str(ROOT / "tests" / "test_download_model.py"),
     str(ROOT / "tests" / "test_api_endpoints.py"),
