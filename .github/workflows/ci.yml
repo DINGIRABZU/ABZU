@@ -9,6 +9,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure docs updated
+        run: |
+          git fetch origin $GITHUB_BASE_REF --depth=1
+          CODE_CHANGED=$(git diff --name-only origin/$GITHUB_BASE_REF...HEAD | grep -E '\.py$' | grep -v '^tests/' || true)
+          DOCS_CHANGED=$(git diff --name-only origin/$GITHUB_BASE_REF...HEAD | grep -E '^docs/.*\.md$' || true)
+          if [ -n "$CODE_CHANGED" ] && [ -z "$DOCS_CHANGED" ]; then
+            echo "Modules were modified without corresponding documentation updates:"
+            echo "$CODE_CHANGED"
+            exit 1
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -54,3 +67,10 @@ PY
           if grep -E "ERROR|MISSING" health.log; then
             exit 1
           fi
+
+      - name: Failure guidance
+        if: failure()
+        run: |
+          echo "CI checks failed. See the onboarding and architecture guides for help:" \
+          && echo "https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_BASE_REF/docs/developer_onboarding.md" \
+          && echo "https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_BASE_REF/docs/architecture.md"
