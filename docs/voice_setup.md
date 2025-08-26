@@ -15,7 +15,9 @@ pip install piper-tts
 ## 2. Download a voice model
 
 Create a directory for model weights and fetch a voice file. The example below
-downloads an English voice for Piper and loads it once to populate the cache:
+downloads an English voice for Piper and loads it once to populate the cache.
+Any ONNX voice from the Piper repository can be substituted for a different
+language or style:
 
 ```bash
 mkdir -p voices

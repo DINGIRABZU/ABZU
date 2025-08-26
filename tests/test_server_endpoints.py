@@ -1,8 +1,9 @@
-"""Test health check and GLM command FastAPI routes.
+"""Exercise lightweight server endpoints.
 
-The server normally depends on numerous subsystems. These tests provide the
-minimum stubs required to import the application and exercise the lightweight
-``/health`` endpoint along with the authenticated ``/glm-command`` route.
+The production application pulls in many subsystems. These tests stub the
+minimum pieces required to import :mod:`server` and verify that the ``/health``
+endpoint responds with an ``alive`` status and that the privileged
+``/glm-command`` route executes whitelisted commands only when authorized.
 """
 
 from __future__ import annotations

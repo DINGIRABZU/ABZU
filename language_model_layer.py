@@ -3,10 +3,14 @@ from __future__ import annotations
 """Helpers for preparing language model insights for spoken summaries.
 
 The insight system generates structured metrics describing how well different
-prompt patterns perform. This module provides utilities that turn those
-metrics into short, natural language phrases. The resulting text can then be
-spoken by a text-to-speech backend or written to logs for debugging and
-analysis.
+prompt patterns perform. This module provides utilities that turn those metrics
+into short natural language phrases. The resulting text can then be spoken by a
+text-to-speech backend or written to logs for debugging and analysis.
+
+Each insight entry is mapped to a single sentence describing the success rate
+and suggested delivery tone. Only lightweight, side‑effect free helpers live
+here so the module can be reused by the CLI, the server or other tools without
+pulling in heavy dependencies.
 """
 
 from typing import Dict

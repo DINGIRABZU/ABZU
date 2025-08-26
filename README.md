@@ -536,7 +536,8 @@ appended to `data/feedback.json` for later training.
 ### Voice Model Installation
 
 To enable speech output, install at least one supported text‑to‑speech back end
-and pre‑download its weights so the first invocation runs offline. The
+and pre‑download its weights so the first invocation runs offline. Store the
+voice models under a ``voices`` directory to allow reuse across runs. The
 orchestrator works with several engines:
 
 - **XTTS (via `TTS`)**
@@ -576,7 +577,10 @@ orchestrator works with several engines:
   PY
   ```
 
-- **Piper**
+  - **Piper**
+
+  Piper voices are distributed as standalone ONNX files. Download a model and
+  place it in a dedicated ``voices`` directory before first use:
 
   ```bash
   pip install piper-tts

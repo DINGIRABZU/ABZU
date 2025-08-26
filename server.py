@@ -1,4 +1,17 @@
-"""Simple FastAPI application for health checks."""
+"""Minimal FastAPI server exposing health and utility endpoints.
+
+The application powers local development tools and provides a few routes used
+in tests:
+
+* ``/health`` returns a plain liveness status.
+* ``/glm-command`` executes a limited shell command when authorized.
+* ``/avatar-frame`` streams the current video frame for the operator console.
+* ``/music`` generates short audio clips with optional feedback logging.
+
+Authentication is handled by a lightweight OAuth2 bearer token system. Real
+deployments would integrate with a dedicated identity provider and persistent
+storage.
+"""
 
 from __future__ import annotations
 
@@ -74,7 +87,12 @@ if settings.glm_command_token:
 def get_current_user(
     security_scopes: SecurityScopes, token: str = Security(oauth2_scheme)
 ) -> TokenInfo:
-    """Validate ``token`` and enforce required ``security_scopes``."""
+    """Validate ``token`` and enforce ``security_scopes``.
+
+    Tokens are looked up in the in-memory ``_TOKENS`` dictionary. A ``401``
+    error is raised when the token is missing or unknown and a ``403`` error is
+    raised when it lacks one of the requested scopes.
+    """
 
     token_info = _TOKENS.get(token)
     if not token_info:
@@ -96,7 +114,12 @@ def get_current_user(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Manage startup and shutdown tasks for the FastAPI app."""
+    """Manage startup and shutdown tasks for the FastAPI app.
+
+    The context manager yields control to FastAPI and, once the server begins
+    shutting down, closes any open WebRTC or video streaming connections so the
+    test harness and local development environment exit cleanly.
+    """
     yield
     await video_stream.close_peers()
     await webrtc_connector.close_peers()
