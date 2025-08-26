@@ -25,3 +25,9 @@ flowchart LR
 
 - During this test run, the CLI setup encountered dependency initialization issues, preventing the prompt from appearing.
 - `start_avatar_console.sh` reported a permission error for `start_crown_console.sh` and the WebRTC video stream did not start.
+
+## Common test failure modes
+
+- Missing pytest plugins such as `pytest-cov` will cause command-line options errors. Install required dev dependencies.
+- Duplicate or conflicting test module names can trigger collection errors like "import file mismatch". Remove `__pycache__` files or rename tests to be unique.
+- ImportError during test collection often indicates missing runtime dependencies or incorrect module paths. Verify imports such as `core.load_config` exist or adjust `PYTHONPATH`.
