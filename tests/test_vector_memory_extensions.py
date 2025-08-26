@@ -143,3 +143,21 @@ def test_clustering(monkeypatch, tmp_path: Path) -> None:
     clusters = vector_memory.cluster_vectors(k=2, limit=10)
     counts = sorted(c["count"] for c in clusters)
     assert counts == [2, 2]
+
+
+def test_cluster_vectors_with_insufficient_points(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(vector_memory, "_DIST", None)
+    if getattr(vector_memory, "faiss", None) is None and getattr(
+        vector_memory, "KMeans", None
+    ) is None:
+        pytest.skip("no clustering backend available")
+
+    def emb(_: str) -> np.ndarray:
+        return np.array([1.0], dtype=float)
+
+    vector_memory.configure(
+        db_path=tmp_path / "solo", embedder=emb, snapshot_interval=100
+    )
+    vector_memory.add_vector("only", {})
+    clusters = vector_memory.cluster_vectors(k=5, limit=10)
+    assert clusters == [{"cluster": 0, "count": 1}]
