@@ -10,13 +10,14 @@ text-to-speech backend or written to logs for debugging and analysis.
 Each insight entry is mapped to a single sentence describing the success rate
 and suggested delivery tone. Only lightweight, side‑effect free helpers live
 here so the module can be reused by the CLI, the server or other tools without
-pulling in heavy dependencies.
+pulling in heavy dependencies.  Missing fields are handled gracefully so callers
+may pass partially filled mappings without defensive checks.
 """
 
-from typing import Dict
+from typing import Dict, Optional
 
 
-def convert_insights_to_spelling(insights: Dict[str, dict]) -> str:
+def convert_insights_to_spelling(insights: Optional[Dict[str, dict]]) -> str:
     """Return a spoken summary of ``insights``.
 
     The mapping is expected to contain intent names as keys. Each value may
@@ -26,13 +27,17 @@ def convert_insights_to_spelling(insights: Dict[str, dict]) -> str:
     leak into the summary.
 
     When ``total`` is present the function calculates the success rate as a
-    percentage and appends the recommended tone. If ``total`` is missing or set
-    to zero a placeholder message notes that no data exists for that intent.
+    percentage and appends the recommended tone. If ``total`` is missing, not an
+    integer or set to zero a placeholder message notes that no data exists for
+    that intent.  The recommended tone falls back to ``"neutral"`` when the
+    field is missing or empty.  ``success`` values greater than ``total`` and any
+    negative numbers are clipped to keep the percentage within sensible bounds.
 
     Parameters
     ----------
     insights:
         Mapping of intent names to dictionaries containing insight statistics.
+        ``None`` or an empty mapping returns an empty string.
 
     Returns
     -------
@@ -48,15 +53,23 @@ def convert_insights_to_spelling(insights: Dict[str, dict]) -> str:
     'For pattern greet, success rate is 75 percent. Recommended tone is warm.'
     """
 
+    if not insights:
+        return ""
+
     phrases = []
     for name, info in insights.items():
         if name.startswith("_"):
             continue
-        counts = info.get("counts", {})
-        total = counts.get("total", 0)
-        success = counts.get("success", 0)
-        best_tone = info.get("best_tone") or "neutral"
-        if total:
+        counts = info.get("counts") or {}
+        try:
+            total = int(counts.get("total", 0))
+            success = int(counts.get("success", 0))
+        except (TypeError, ValueError):
+            total, success = 0, 0
+        total = max(total, 0)
+        success = max(min(success, total), 0)
+        best_tone = (info.get("best_tone") or "neutral").strip() or "neutral"
+        if total > 0:
             rate = round(success / total * 100)
             phrases.append(
                 f"For pattern {name}, success rate is {rate} percent. "

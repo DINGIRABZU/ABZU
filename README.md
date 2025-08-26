@@ -607,16 +607,16 @@ For a more detailed walkthrough of installing external voice models, see
 #### Step-by-step voice model setup
 
 1. **Install a backend** – choose one of the engines above and install it with
-   `pip install ...`.
+   ``pip install ...``.
 2. **Download the weights** – run the provided Python snippet for the selected
-   backend to cache the model files locally.
-3. **Configure voices** – copy or edit `voice_config.yaml` and
-   `voice_avatar_config.yaml` to tune pitch, speed and tone for each
+   backend to cache the model files locally and warm up the engine.
+3. **Configure voices** – copy or edit ``voice_config.yaml`` and
+   ``voice_avatar_config.yaml`` to tune pitch, speed and tone for each
    archetype.
-4. **Set environment variables** – optionally point `VOICE_CONFIG_PATH`,
-   `VOICE_AVATAR_CONFIG_PATH` or `VOICE_TONE_PATH` to custom locations.
-5. **Verify synthesis** – start the CLI with `abzu start --speak` or invoke the
-   FastAPI server and confirm speech is produced.
+4. **Set environment variables** – optionally point ``VOICE_CONFIG_PATH``,
+   ``VOICE_AVATAR_CONFIG_PATH`` or ``VOICE_TONE_PATH`` to custom locations.
+5. **Verify synthesis** – start the CLI with ``abzu start --speak`` or invoke
+   the FastAPI server and confirm speech is produced.
 
 Voice selection is controlled by `voice_config.yaml` and
 `voice_avatar_config.yaml`. Set `VOICE_CONFIG_PATH` or

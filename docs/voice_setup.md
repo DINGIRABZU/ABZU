@@ -29,13 +29,17 @@ PiperVoice.load("voices/en_US-amy-medium.onnx")
 PY
 ```
 
-## 3. Configure ABZU
+## 3. Configure voices
 
 Copy or edit `voice_config.yaml` and `voice_avatar_config.yaml` to adjust
-volume, pitch and tone. Environment variables such as `VOICE_CONFIG_PATH` and
-`VOICE_AVATAR_CONFIG_PATH` can point to custom locations.
+volume, pitch and tone for each archetype.
 
-## 4. Verify synthesis
+## 4. Set environment variables (optional)
+
+Point `VOICE_CONFIG_PATH`, `VOICE_AVATAR_CONFIG_PATH` or `VOICE_TONE_PATH` to
+custom locations if the files live outside the repository.
+
+## 5. Verify synthesis
 
 Start the CLI with `abzu start --speak` or launch the FastAPI server and
 confirm speech is produced. Once cached, the engine will reuse the downloaded

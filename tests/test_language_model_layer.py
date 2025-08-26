@@ -22,3 +22,15 @@ def test_convert_insights_to_spelling():
     )
     result = lml.convert_insights_to_spelling(insights)
     assert result == expected
+
+
+def test_convert_insights_to_spelling_defaults():
+    """Missing data and tone fall back to safe defaults."""
+    assert lml.convert_insights_to_spelling(None) == ""
+    result = lml.convert_insights_to_spelling(
+        {"ask": {"counts": {"total": 2, "success": 1}}}
+    )
+    assert (
+        result
+        == "For pattern ask, success rate is 50 percent. Recommended tone is neutral."
+    )
