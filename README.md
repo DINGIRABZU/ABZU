@@ -19,6 +19,8 @@ past scores and milestone validation results are tracked in
 For the project's guiding vision and mission, see
 [docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
 
+For an end-to-end request pipeline and chakra status summary, see [docs/data_flow.md](docs/data_flow.md) and [docs/chakra_overview.md](docs/chakra_overview.md).
+
 ## Build Tools
 Some dependencies compile native extensions such as SciPy. Install the system
 toolchain before creating the virtual environment:

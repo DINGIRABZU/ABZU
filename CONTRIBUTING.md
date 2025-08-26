@@ -15,6 +15,8 @@ context, consult
 manifest in [docs/chakra_versions.json](docs/chakra_versions.json) with its
 verses in [docs/chakra_koan_system.md](docs/chakra_koan_system.md) – keep them
 aligned with version bumps.
+For a request pipeline diagram and chakra quality table, see [docs/data_flow.md](docs/data_flow.md) and [docs/chakra_overview.md](docs/chakra_overview.md).
+
 Operational fallbacks and recovery steps are outlined in
 [docs/essential_services.md](docs/essential_services.md).
 
