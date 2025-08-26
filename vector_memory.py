@@ -74,7 +74,7 @@ class VersionInfo:
     patch: int
 
 
-__version__ = VersionInfo(0, 1, 1)
+__version__ = VersionInfo(0, 1, 2)
 _STORE: Any | None = None
 _STORE_LOCK = threading.RLock()
 _DIST: Any | None = None
@@ -416,6 +416,22 @@ def snapshot(path: str | Path) -> None:
         data = col.get()
         Path(path).write_text(json.dumps(data), encoding="utf-8")
 
+    snap_dir = _DIR / "snapshots"
+    manifest = snap_dir / "manifest.json"
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        entries = (
+            json.loads(manifest.read_text(encoding="utf-8"))
+            if manifest.exists()
+            else []
+        )
+        path_str = str(path)
+        if path_str not in entries:
+            entries.append(path_str)
+            manifest.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("failed to update snapshot manifest")
+
 
 def restore(path: str | Path) -> None:
     """Load collection data from ``path`` replacing existing entries."""
@@ -438,7 +454,9 @@ def persist_snapshot() -> Path:
     snap_dir = _DIR / "snapshots"
     snap_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    path = snap_dir / stamp if hasattr(store, "_stores") else snap_dir / f"{stamp}.sqlite"
+    path = (
+        snap_dir / stamp if hasattr(store, "_stores") else snap_dir / f"{stamp}.sqlite"
+    )
     snapshot(path)
     return path
 
