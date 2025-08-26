@@ -83,4 +83,4 @@ None at the moment.
 
 ## Developer Docs
 
-New contributors should start with the [developer onboarding guide](docs/developer_onboarding.md) for setup steps, chakra overview, CLI usage and troubleshooting tips. Chakra module versions live in [docs/chakra_versions.json](docs/chakra_versions.json) and are paired with the verses in [docs/chakra_koan_system.md](docs/chakra_koan_system.md).
+New contributors should start with the [developer onboarding guide](docs/developer_onboarding.md) for setup steps, chakra overview, CLI usage and troubleshooting tips. A minimal emotion→music→insight example lives in [examples/ritual_demo.py](examples/ritual_demo.py). Chakra module versions live in [docs/chakra_versions.json](docs/chakra_versions.json) and are paired with the verses in [docs/chakra_koan_system.md](docs/chakra_koan_system.md).
