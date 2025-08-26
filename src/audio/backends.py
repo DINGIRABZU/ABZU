@@ -84,4 +84,5 @@ def get_backend():
     logger.warning(
         "soundfile and simpleaudio libraries not installed; audio playback disabled"
     )
+    logger.info("Selected NoOpBackend")
     return NoOpBackend()

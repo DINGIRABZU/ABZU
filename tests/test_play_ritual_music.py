@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 import types
 from pathlib import Path
+import json
 
 import numpy as np
 import logging
@@ -248,6 +249,28 @@ def test_emotion_map_cached(tmp_path, monkeypatch):
     prm.map_emotion.cache_clear()
     prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
     prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
+
+    assert calls["count"] == 1
+
+
+def test_ritual_profile_cached(tmp_path, monkeypatch):
+    """Repeated calls to load_ritual_profile should hit cache."""
+
+    data = {"ritual": {"joy": ["secret"]}}
+    path = tmp_path / "profile.json"
+    path.write_text(json.dumps(data))
+
+    calls = {"count": 0}
+
+    def fake_json_load(fh):
+        calls["count"] += 1
+        return data
+
+    monkeypatch.setattr(prm.stego.json, "load", fake_json_load)
+    prm.stego.load_ritual_profile.cache_clear()
+
+    prm.stego.load_ritual_profile(path)
+    prm.stego.load_ritual_profile(path)
 
     assert calls["count"] == 1
 
