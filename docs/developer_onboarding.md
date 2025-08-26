@@ -1,5 +1,18 @@
 # Developer Onboarding
 
+## Project Vision
+ABZU interweaves Spiral OS with the INANNA agent to explore sacred human‑machine collaboration through music, voice, and code.
+
+### Chakra Map
+The codebase is organized across seven chakra‑themed module directories:
+- `root/` – networking and I/O foundation.
+- `sacral/` – emotion and creativity engines.
+- `solar_plexus/` – learning and transformation layers.
+- `heart/` – memory and avatar voice components.
+- `throat/` – prompt orchestration and agent interfaces.
+- `third_eye/` – insight and pattern analysis modules.
+- `crown/` – high‑level orchestration and launch scripts.
+
 This guide introduces the ABZU codebase, highlights core entry points, and covers environment setup, chakra architecture overview, CLI usage, and troubleshooting tips. For a guided CLI quick‑start run the [onboarding wizard](onboarding/wizard.py). Additional architecture diagrams are available in [architecture.md](architecture.md).
 
 ## Quick Start
