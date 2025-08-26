@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added chakra status table in `docs/chakra_status.md` outlining capabilities,
   limitations and planned evolutions for each layer.
 - Linked release notes to `docs/chakra_versions.json` and `CHANGELOG.md`.
+- Expanded chakra koan system with responsibility table.
+- Introduced documentation review checklist in `docs/CONTRIBUTING_DOCS.md`.
 
 ### Quality
 
