@@ -1,7 +1,8 @@
 """FAISS/SQLite-backed text vector store with decay and operation logging.
 
 Persists entries under ``settings.vector_db_path`` and logs to
-``data/vector_memory.log`` on each modification."""
+``data/vector_memory.log`` on each modification. Includes narrative hooks so
+vectors can reference story events for downstream retrieval."""
 
 from __future__ import annotations
 
