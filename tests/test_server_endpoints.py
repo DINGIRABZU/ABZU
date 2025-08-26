@@ -101,3 +101,15 @@ def test_glm_command_requires_auth():
     with TestClient(server.app) as client:
         resp = client.post("/glm-command", json={"command": "ls"})
     assert resp.status_code == 401
+
+
+def test_glm_command_rejects_disallowed(monkeypatch):
+    """Commands outside the allow list return a 400 error."""
+    monkeypatch.setattr(server.vector_memory, "add_vector", lambda *a, **k: None)
+    with TestClient(server.app) as client:
+        resp = client.post(
+            "/glm-command",
+            json={"command": "echo hi"},
+            headers={"Authorization": "Bearer token"},
+        )
+    assert resp.status_code == 400
