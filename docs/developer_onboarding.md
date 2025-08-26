@@ -1,6 +1,6 @@
 # Developer Onboarding
 
-This guide introduces the ABZU codebase, highlights core entry points, and details the environment setup, chakra architecture, and troubleshooting tips. For a guided CLI quick‑start run the [onboarding wizard](onboarding/wizard.py). Additional architecture diagrams are available in [architecture.md](architecture.md).
+This guide introduces the ABZU codebase, highlights core entry points, and covers environment setup, chakra architecture overview, CLI usage, and troubleshooting tips. For a guided CLI quick‑start run the [onboarding wizard](onboarding/wizard.py). Additional architecture diagrams are available in [architecture.md](architecture.md).
 
 ## Quick Start
 ```bash
@@ -12,7 +12,7 @@ python download_models.py glm41v_9b --int8
 bash scripts/smoke_console_interface.sh  # see docs/testing.md for more
 ```
 
-### CLI Quick‑Start
+### CLI Usage
 Run the interactive wizard to scaffold the environment and launch the CLI:
 
 ```bash

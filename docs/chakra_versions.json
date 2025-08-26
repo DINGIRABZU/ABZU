@@ -26,5 +26,8 @@
   "crown": {
     "version": "1.0.1",
     "koan": "chakra_koan_system.md#crown"
+  },
+  "meta": {
+    "linked_doc": "chakra_koan_system.md"
   }
 }
