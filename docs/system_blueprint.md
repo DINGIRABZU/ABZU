@@ -75,6 +75,14 @@ For deeper guidance on operations and reliability, refer to:
     [Chakra Architecture](chakra_architecture.md),
     [Chakra Koan](chakra_koan_system.md#crown)
 
+## Personality Layers
+
+Personality modules shape archetypal behaviors across the stack. **Albedo** acts
+as the coordinator, directing prompts through its alchemical states and ensuring
+persona continuity. See [Albedo Personality Layer](ALBEDO_LAYER.md) for
+implementation details. Personality modules reside under
+[`INANNA_AI/personality_layers/`](../INANNA_AI/personality_layers/).
+
 ## Agents & Nazarick Hierarchy
 
 The ABZU stack relies on a network of Nazarick agents, each aligned with a chakra layer.
