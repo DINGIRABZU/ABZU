@@ -1,0 +1,37 @@
+name: Nightly Logger
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+      - name: Invoke logger
+        run: |
+          python - <<'PY'
+import json
+import corpus_memory_logging as cml
+cml.MAX_LOG_SIZE = 1
+cml.INTERACTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
+# pre-populate to force rotation
+cml.INTERACTIONS_FILE.write_text(json.dumps({'pre': 1}) + '\n', encoding='utf-8')
+cml.log_interaction('nightly run', {'emotion': 'none'}, {'emotion': 'none'}, 'ok')
+PY
+      - name: Archive logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: corpus-logs
+          path: data/*.jsonl*
+          if-no-files-found: ignore

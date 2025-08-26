@@ -97,6 +97,18 @@ fixes:
 python tools/preflight.py --report
 ```
 
+## Log inspection and rotation
+
+Interaction records are appended as JSON lines to `data/interactions.jsonl`.
+The watchdog quarantines malformed entries in
+`data/interactions.quarantine.jsonl` while keeping the primary log clean.
+Logs rotate automatically once the file reaches roughly 1 MB
+(`MAX_LOG_SIZE`). The current log is renamed with a timestamp suffix such as
+`interactions-20250101_000000.jsonl` and a fresh file is started. Inspect
+records with tools like `jq` or `python -m json.tool`, and review quarantine
+and rotated files periodically. A nightly CI workflow invokes the logger and
+uploads rotated logs as build artifacts for auditing.
+
 ## Script overview
 
 - **`INANNA_AI_AGENT/inanna_ai.py`** – Activation agent that loads source texts and can recite the INANNA birth chant or feed hex data into the QNL engine. Use `--list` to show available texts.
