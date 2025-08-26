@@ -1,19 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
-
-import sentencepiece as spm
-
 from agents.asian_gen.creative_engine import CreativeEngine
-
-
-def _build_sp_model(tmp_path: Path) -> Path:
-    text_file = tmp_path / "text.txt"
-    text_file.write_text("hello world\nこんにちは 世界\n")
-    spm.SentencePieceTrainer.train(
-        input=str(text_file), model_prefix=str(tmp_path / "m"), vocab_size=32
-    )
-    return tmp_path / "m.model"
 
 
 def test_locale_routed_generation(monkeypatch):
@@ -48,12 +35,11 @@ def test_locale_routed_generation(monkeypatch):
     assert text == "response"
 
 
-def test_sentencepiece_fallback(monkeypatch, tmp_path):
+def test_sentencepiece_fallback(monkeypatch):
     monkeypatch.setattr("agents.asian_gen.creative_engine.AutoTokenizer", None)
     monkeypatch.setattr("agents.asian_gen.creative_engine.pipeline", None)
 
-    model_path = _build_sp_model(tmp_path)
-    engine = CreativeEngine(spm_path=str(model_path))
+    engine = CreativeEngine()
 
     output = engine.generate("hello", locale="ja")
     assert isinstance(output, str) and output

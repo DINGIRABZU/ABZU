@@ -9,7 +9,9 @@ operations still function offline.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
+import tempfile
 
 import sentencepiece as spm
 
@@ -28,7 +30,11 @@ class CreativeEngine:
     spm_path: Optional[str] = None
 
     def __post_init__(self) -> None:
-        self.tokenizer = self._load_tokenizer()
+        try:
+            self.tokenizer = self._load_tokenizer()
+        except RuntimeError:
+            self.spm_path = self._ensure_sentencepiece_model()
+            self.tokenizer = self._load_tokenizer()
         self.generator = self._build_generator()
 
     def _load_tokenizer(self):
@@ -44,6 +50,22 @@ class CreativeEngine:
             sp.load(self.spm_path)
             return sp
         raise RuntimeError("No tokenizer available")
+
+    def _ensure_sentencepiece_model(self) -> str:
+        """Train and cache a tiny SentencePiece model."""
+        corpus = Path(__file__).with_name("data") / "corpus.txt"
+        cache_dir = Path(tempfile.gettempdir()) / "asian_gen_spm"
+        model_file = cache_dir / "spm.model"
+        if not model_file.exists():
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            spm.SentencePieceTrainer.train(
+                input=str(corpus),
+                model_prefix=str(cache_dir / "spm"),
+                vocab_size=64,
+                model_type="unigram",
+                character_coverage=1.0,
+            )
+        return str(model_file)
 
     def _build_generator(self):
         if pipeline is None:
