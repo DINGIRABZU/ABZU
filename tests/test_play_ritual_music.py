@@ -158,6 +158,18 @@ def test_archetype_mix_soundfile_present(monkeypatch):
     assert mix.shape[0] == 10
 
 
+def test_archetype_mix_unknown_archetype(monkeypatch):
+    """Unknown archetypes should fall back to synthesized tones."""
+
+    monkeypatch.setattr(prm.backends, "sf", object())
+    prm._get_archetype_mix.cache_clear()
+
+    mix = prm._get_archetype_mix("mystic", sample_rate=8000)
+
+    assert mix.size > 0
+    assert np.any(mix)
+
+
 def test_encode_phrase_increases_size(tmp_path, monkeypatch):
     """Embedding a phrase should grow the output file size."""
 
