@@ -17,5 +17,6 @@ requests==2.32.4
     # via spiral-os (pyproject.toml)
 scipy==1.16.1
     # via spiral-os (pyproject.toml)
+    # provides sparse matrix utilities required by smoke tests
 phonemizer==3.3.0
     # for phoneme extraction
