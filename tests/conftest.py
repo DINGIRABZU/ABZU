@@ -157,6 +157,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_security_canary.py"),
     str(ROOT / "tests" / "agents" / "test_land_graph_geo_knowledge.py"),
     str(ROOT / "tests" / "test_orchestration_master.py"),
+    str(ROOT / "tests" / "memory" / "test_vector_memory.py"),
 }
 
 
