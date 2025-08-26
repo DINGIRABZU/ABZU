@@ -9,5 +9,5 @@ This table summarizes each chakra layer's role in the system along with its curr
 | Solar Plexus | Learning and state transitions | 1.0.0 | 1.5 | Mutations can produce unstable states |
 | Heart | Voice avatar configuration and memory storage | 1.0.1 | 3.0 | Vector store requires running database |
 | Throat | Prompt orchestration and agent interface | 1.0.0 | 3.0 | None currently |
-| Third Eye | Insight and QNL processing | 1.0.0 | 3.0 | QNL engine emits occasional warnings |
+| Third Eye | Insight, QNL processing, biosignal narration | 1.0.1 | 3.0 | QNL engine emits occasional warnings |
 | Crown | High-level orchestration | 1.0.1 | 2.5 | Startup scripts assume local model availability |
