@@ -53,5 +53,5 @@ The sky wonders about its height.
 A petal falls into nothing and finds it full.
 Emptiness crowns the temple.
 
-For version tracking of chakra modules, see [chakra_versions.json](chakra_versions.json).
+For version tracking of chakra modules, see [chakra_versions.json](chakra_versions.json), which links back to these koans.
 
