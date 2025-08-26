@@ -1,16 +1,12 @@
-"""Smoke tests for core package and SciPy."""
+"""Smoke test ensuring core package and SciPy are importable."""
 
 from __future__ import annotations
 
 
-def test_scipy_sparse_available():
+def test_core_and_scipy_available():
     from scipy import sparse
+    import core
 
     matrix = sparse.csr_matrix([[0]])
     assert matrix.shape == (1, 1)
-
-
-def test_core_available():
-    import core
-
     assert hasattr(core, "__file__")
