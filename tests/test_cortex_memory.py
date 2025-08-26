@@ -158,3 +158,43 @@ def test_concurrent_reads_and_writes(tmp_path, monkeypatch):
     for i in range(10):
         res = cortex_memory.query_spirals(tags=[f"t{i}"])
         assert res and res[0]["decision"]["num"] == i
+
+
+def test_search_index_and_combined_lookup(tmp_path, monkeypatch):
+    log_file = tmp_path / "spiral.jsonl"
+    index_file = tmp_path / "index.json"
+    monkeypatch.setattr(cortex_memory, "CORTEX_MEMORY_FILE", log_file)
+    monkeypatch.setattr(cortex_memory, "CORTEX_INDEX_FILE", index_file)
+
+    node = DummyNode("Z")
+    cortex_memory.record_spiral(node, {"tags": ["fast", "runner"]})
+    cortex_memory.record_spiral(node, {"tags": ["fast"]})
+    cortex_memory.record_spiral(node, {"tags": ["runner"]})
+
+    ids = cortex_memory.search_index(tags=["fast"], text="runner")
+    assert ids == {0}
+
+    res = cortex_memory.query_spirals(tags=["fast"], text="runner")
+    assert len(res) == 1
+    assert set(res[0]["decision"]["tags"]) == {"fast", "runner"}
+
+
+def test_concurrent_writers_index_integrity(tmp_path, monkeypatch):
+    log_file = tmp_path / "spiral.jsonl"
+    index_file = tmp_path / "index.json"
+    monkeypatch.setattr(cortex_memory, "CORTEX_MEMORY_FILE", log_file)
+    monkeypatch.setattr(cortex_memory, "CORTEX_INDEX_FILE", index_file)
+
+    node = DummyNode("W")
+
+    def writer(i: int) -> None:
+        cortex_memory.record_spiral(node, {"num": i, "tags": [f"tag{i}"]})
+
+    with ThreadPoolExecutor(max_workers=5) as ex:
+        for i in range(30):
+            ex.submit(writer, i)
+
+    entries = cortex_memory.query_spirals()
+    assert len(entries) == 30
+    idx = json.loads(index_file.read_text(encoding="utf-8"))
+    assert idx.get("_next_id") == 30

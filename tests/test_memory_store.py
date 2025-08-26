@@ -68,3 +68,26 @@ def test_auto_snapshot(tmp_path, monkeypatch):
     store.add("a", vec, {})
     snap_dir = db.parent / "snapshots"
     assert snap_dir.exists() and any(snap_dir.iterdir())
+
+
+def test_memory_store_fallback_and_migration(tmp_path, monkeypatch):
+    monkeypatch.setattr(ms, "faiss", None)
+    monkeypatch.setattr(ms, "np", None)
+    import sqlite3
+
+    db = tmp_path / "store.sqlite"
+    # create legacy schema without metadata column
+    conn = sqlite3.connect(db)
+    conn.execute("CREATE TABLE memory (id TEXT PRIMARY KEY, vector BLOB)")
+    conn.commit()
+    conn.close()
+
+    store = ms.MemoryStore(db)
+    store.add("a", [1.0, 0.0], {"foo": "bar"})
+    res = store.search([1.0, 0.0], 1)
+    assert res and res[0][0] == "a"
+    assert res[0][2]["foo"] == "bar"
+
+    with sqlite3.connect(db) as conn:
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(memory)")]
+    assert "metadata" in cols

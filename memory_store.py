@@ -1,4 +1,8 @@
-"""FAISS-backed in-memory vector store with SQLite persistence."""
+"""FAISS-backed in-memory vector store with SQLite persistence.
+
+The store transparently falls back to a pure Python implementation when
+optional dependencies such as ``faiss`` or ``numpy`` are unavailable.
+"""
 
 from __future__ import annotations
 
@@ -33,27 +37,22 @@ class MemoryStore:
         *,
         snapshot_interval: int = 0,
     ) -> None:
-        if faiss is None or np is None:  # pragma: no cover - dependency check
-            raise RuntimeError("faiss and numpy are required for MemoryStore")
         self.db_path = Path(db_path)
         self._pool_size = pool_size
         self._pool: Queue[sqlite3.Connection] = Queue(maxsize=pool_size)
         for _ in range(pool_size):
             conn = sqlite3.connect(self.db_path, check_same_thread=False)
-            conn.execute(
-                (
-                    "CREATE TABLE IF NOT EXISTS memory (id TEXT PRIMARY KEY, "
-                    "vector BLOB, metadata TEXT)"
-                )
-            )
+            self._ensure_schema(conn)
             self._pool.put(conn)
         self._lock = threading.RLock()
         self.ids: List[str] = []
         self.metadata: Dict[str, Dict[str, Any]] = {}
         self.index: faiss.Index | None = None
+        self._vectors: List[List[float]] = []  # fallback storage when FAISS unavailable
         self.snapshot_interval = max(0, snapshot_interval)
         self._op_count = 0
         self.snapshot_dir = self.db_path.parent / "snapshots"
+        self._use_faiss = faiss is not None and np is not None
         self._load()
 
     # ------------------------------------------------------------------
@@ -66,6 +65,33 @@ class MemoryStore:
             self._pool.put(conn)
 
     # ------------------------------------------------------------------
+    def _ensure_schema(self, conn: sqlite3.Connection) -> None:
+        """Create tables and perform simple migrations."""
+
+        conn.execute(
+            (
+                "CREATE TABLE IF NOT EXISTS memory (id TEXT PRIMARY KEY, "
+                "vector BLOB, metadata TEXT)"
+            )
+        )
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT)"
+        )
+        cur = conn.execute("SELECT value FROM meta WHERE key='version'")
+        row = cur.fetchone()
+        version = int(row[0]) if row else 0
+        if version < 1:
+            # previous schema may have lacked the metadata column
+            info = conn.execute("PRAGMA table_info(memory)").fetchall()
+            cols = {c[1] for c in info}
+            if "metadata" not in cols:
+                conn.execute("ALTER TABLE memory ADD COLUMN metadata TEXT")
+            conn.execute(
+                "INSERT OR REPLACE INTO meta (key, value) VALUES ('version', '1')"
+            )
+        conn.commit()
+
+    # ------------------------------------------------------------------
     def _load(self) -> None:
         with self._lock:
             with self._connection() as conn:
@@ -73,38 +99,55 @@ class MemoryStore:
                 rows = cur.fetchall()
             self.ids = []
             self.metadata = {}
+            self._vectors = []
             if not rows:
                 self.index = None
                 return
-            first = rows[0]
-            vec = np.frombuffer(first[1], dtype="float32")
-            self.index = faiss.IndexFlatL2(len(vec))
-            vectors = [vec]
-            self.ids.append(first[0])
-            self.metadata[first[0]] = json.loads(first[2]) if first[2] else {}
-            for id_, vec_blob, meta_json in rows[1:]:
-                v = np.frombuffer(vec_blob, dtype="float32")
-                vectors.append(v)
-                self.ids.append(id_)
-                self.metadata[id_] = json.loads(meta_json) if meta_json else {}
-            self.index.add(np.vstack(vectors))
+            if self._use_faiss:
+                first = rows[0]
+                vec = np.frombuffer(first[1], dtype="float32")
+                self.index = faiss.IndexFlatL2(len(vec))
+                vectors = [vec]
+                self.ids.append(first[0])
+                self.metadata[first[0]] = json.loads(first[2]) if first[2] else {}
+                for id_, vec_blob, meta_json in rows[1:]:
+                    v = np.frombuffer(vec_blob, dtype="float32")
+                    vectors.append(v)
+                    self.ids.append(id_)
+                    self.metadata[id_] = json.loads(meta_json) if meta_json else {}
+                self.index.add(np.vstack(vectors))
+            else:
+                for id_, vec_blob, meta_json in rows:
+                    try:
+                        vec = json.loads(vec_blob)
+                    except Exception:
+                        vec = []
+                    self.ids.append(id_)
+                    self._vectors.append([float(x) for x in vec])
+                    self.metadata[id_] = json.loads(meta_json) if meta_json else {}
 
     # ------------------------------------------------------------------
     def add(self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]) -> None:
         with self._lock:
-            if self.index is None:
-                self.index = faiss.IndexFlatL2(len(vector))
-            vec = np.asarray(vector, dtype="float32")
-            self.index.add(vec[None, :])
             self.ids.append(id_)
             self.metadata[id_] = dict(metadata)
+            if self._use_faiss:
+                if self.index is None:
+                    self.index = faiss.IndexFlatL2(len(vector))
+                vec = np.asarray(vector, dtype="float32")
+                self.index.add(vec[None, :])
+                vec_blob = vec.tobytes()
+            else:
+                vec_list = [float(x) for x in vector]
+                self._vectors.append(vec_list)
+                vec_blob = json.dumps(vec_list)
             with self._connection() as conn:
                 conn.execute(
                     (
                         "INSERT OR REPLACE INTO memory (id, vector, metadata) "
                         "VALUES (?, ?, ?)"
                     ),
-                    (id_, vec.tobytes(), json.dumps(metadata)),
+                    (id_, vec_blob, json.dumps(metadata)),
                 )
                 conn.commit()
             self._after_mutation()
@@ -127,17 +170,28 @@ class MemoryStore:
         self, vector: Sequence[float], k: int
     ) -> List[Tuple[str, List[float], Dict[str, Any]]]:
         with self._lock:
-            if self.index is None or not self.ids:
+            if not self.ids:
                 return []
-            vec = np.asarray(vector, dtype="float32")[None, :]
             k = min(k, len(self.ids))
-            distances, indices = self.index.search(vec, k)
             results: List[Tuple[str, List[float], Dict[str, Any]]] = []
-            for idx in indices[0]:
-                if idx == -1:
-                    continue
-                id_ = self.ids[int(idx)]
-                emb = self.index.reconstruct(int(idx)).tolist()
+            if self._use_faiss and self.index is not None:
+                vec = np.asarray(vector, dtype="float32")[None, :]
+                distances, indices = self.index.search(vec, k)
+                for idx in indices[0]:
+                    if idx == -1:
+                        continue
+                    id_ = self.ids[int(idx)]
+                    emb = self.index.reconstruct(int(idx)).tolist()
+                    meta = dict(self.metadata.get(id_, {}))
+                    results.append((id_, emb, meta))
+                return results
+            # fallback search
+            vec = [float(x) for x in vector]
+            dists = [sum((a - b) ** 2 for a, b in zip(v, vec)) for v in self._vectors]
+            idxs = sorted(range(len(dists)), key=lambda i: dists[i])[:k]
+            for idx in idxs:
+                id_ = self.ids[idx]
+                emb = list(self._vectors[idx])
                 meta = dict(self.metadata.get(id_, {}))
                 results.append((id_, emb, meta))
             return results
@@ -147,14 +201,19 @@ class MemoryStore:
         self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]
     ) -> None:
         with self._lock:
-            vec = np.asarray(vector, dtype="float32")
+            if self._use_faiss:
+                vec = np.asarray(vector, dtype="float32")
+                vec_blob = vec.tobytes()
+            else:
+                vec = [float(x) for x in vector]
+                vec_blob = json.dumps(vec)
             with self._connection() as conn:
                 conn.execute(
                     (
                         "INSERT OR REPLACE INTO memory (id, vector, metadata) "
                         "VALUES (?, ?, ?)"
                     ),
-                    (id_, vec.tobytes(), json.dumps(metadata)),
+                    (id_, vec_blob, json.dumps(metadata)),
                 )
                 conn.commit()
             self._load()
@@ -176,12 +235,7 @@ class MemoryStore:
             shutil.copy(path, self.db_path)
             for _ in range(self._pool_size):
                 conn = sqlite3.connect(self.db_path, check_same_thread=False)
-                conn.execute(
-                    (
-                        "CREATE TABLE IF NOT EXISTS memory (id TEXT PRIMARY KEY, "
-                        "vector BLOB, metadata TEXT)"
-                    )
-                )
+                self._ensure_schema(conn)
                 self._pool.put(conn)
             self._load()
 
