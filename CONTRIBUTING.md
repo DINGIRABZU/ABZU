@@ -11,10 +11,10 @@ For the project's overarching direction and boundaries, review
 
 For details on chakra module architecture, version history, and contemplative
 context, consult
-[docs/chakra_architecture.md](docs/chakra_architecture.md),
-[docs/chakra_versions.json](docs/chakra_versions.json), and
-[docs/chakra_koan_system.md](docs/chakra_koan_system.md) – keep verses aligned
-with version bumps.
+[docs/chakra_architecture.md](docs/chakra_architecture.md) and the paired
+manifest in [docs/chakra_versions.json](docs/chakra_versions.json) with its
+verses in [docs/chakra_koan_system.md](docs/chakra_koan_system.md) – keep them
+aligned with version bumps.
 Operational fallbacks and recovery steps are outlined in
 [docs/essential_services.md](docs/essential_services.md).
 

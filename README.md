@@ -137,10 +137,10 @@ full Hugging Face identifier.
 - [docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md) – component ratings, past scores, milestone validation results and remediation checklists.
 - [CHANGELOG.md](CHANGELOG.md) – chakra version history.
 - [docs/chakra_koan_system.md](docs/chakra_koan_system.md) – meditative verses for
-  each chakra.
+  each chakra, cross‑referenced from the version manifest.
 - [docs/chakra_versions.json](docs/chakra_versions.json) – semantic version
-  numbers for chakra modules (latest sacral release: 1.0.1). Record each bump
-  in [CHANGELOG.md](CHANGELOG.md).
+  numbers for chakra modules (latest sacral release: 1.0.1) linked back to the
+  koan. Record each bump in [CHANGELOG.md](CHANGELOG.md).
 
 ## Additional Documentation
 - For a quick start geared toward non-technical users, see
