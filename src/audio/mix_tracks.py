@@ -15,6 +15,7 @@ import json
 import logging
 from pathlib import Path
 from typing import Any
+from functools import lru_cache
 
 import numpy as np
 import yaml
@@ -39,13 +40,15 @@ def _load(path: Path, logger: logging.Logger = logging.getLogger(__name__)) -> t
     return np.asarray(data, dtype=float), sr
 
 
-def _load_emotion_map(logger: logging.Logger = logging.getLogger(__name__)) -> dict:
+@lru_cache(maxsize=None)
+def _load_emotion_map(path: Path = EMOTION_MAP) -> dict:
+    logger = logging.getLogger(__name__)
     try:
-        with EMOTION_MAP.open("r") as f:
-            logger.debug("Loading emotion map from %s", EMOTION_MAP)
+        with path.open("r") as f:
+            logger.debug("Loading emotion map from %s", path)
             return yaml.safe_load(f) or {}
     except FileNotFoundError:  # pragma: no cover - configuration optional
-        logger.debug("Emotion map not found at %s", EMOTION_MAP)
+        logger.debug("Emotion map not found at %s", path)
         return {}
 
 
@@ -82,7 +85,7 @@ def mix_audio(
     key = keys[0] if keys else None
 
     if emotion:
-        mapping = _load_emotion_map(logger=logger)
+        mapping = _load_emotion_map()
         emot_info = mapping.get(emotion, {})
         tempo = float(emot_info.get("tempo", tempo))
         key = emot_info.get("scale", key)

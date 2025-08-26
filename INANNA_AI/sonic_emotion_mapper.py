@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict
+from functools import lru_cache
 
 import yaml
 
@@ -12,6 +13,7 @@ _MUSIC_MAP_PATH = Path(__file__).resolve().parents[1] / "emotion_music_map.yaml"
 _QNL_MAP_PATH = Path(__file__).resolve().parents[1] / "qnl_to_music_layer_map.yaml"
 
 
+@lru_cache(maxsize=None)
 def _load_mapping(path: Path) -> Dict[str, Dict[str, Any]]:
     if path.exists():
         with path.open("r", encoding="utf-8") as fh:

@@ -30,3 +30,24 @@ def test_mix_audio_averages_analysis(monkeypatch):
     mix, sr, info = mix_tracks.mix_audio([Path("a.wav"), Path("b.wav")])
     assert info["tempo"] == 110.0
     assert info["key"] == "C:maj"
+
+
+def test_load_emotion_map_cached(tmp_path, monkeypatch):
+    """Ensure the emotion map YAML is read only once."""
+
+    path = tmp_path / "map.yaml"
+    path.write_text("joy: {tempo: 120}")
+
+    calls = {"count": 0}
+
+    def fake_safe_load(f):
+        calls["count"] += 1
+        return {}
+
+    monkeypatch.setattr(mix_tracks.yaml, "safe_load", lambda f: fake_safe_load(f))
+    mix_tracks._load_emotion_map.cache_clear()
+
+    mix_tracks._load_emotion_map(path)
+    mix_tracks._load_emotion_map(path)
+
+    assert calls["count"] == 1
