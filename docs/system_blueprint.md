@@ -95,6 +95,63 @@ prompt arbitration ([agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_
 See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 [Component Index](component_index.md) for component explanations.
 
+### Specialized Agents and Orchestrators
+
+- **Vanna Data Agent** – translates natural-language prompts into SQL via the
+  `vanna` library and records both results and narrative summaries. Module:
+  [`agents/vanna_data.py`](../agents/vanna_data.py), function:
+  [`query_db`](../agents/vanna_data.py#L49).
+- **GeoKnowledge Graph** – maintains a lightweight geospatial knowledge graph
+  using NetworkX with optional GeoPandas support for site and path queries.
+  Module: [`agents/land_graph/geo_knowledge.py`](../agents/land_graph/geo_knowledge.py),
+  class: `GeoKnowledge`.
+- **Albedo Orchestrator** – config-driven development orchestrator that can
+  register optional agents like `vanna_data` and `landgraph` through the
+  `AGENT_LOOKUP` mapping. Module: [`orchestration_master.py`](../orchestration_master.py),
+  class: `AlbedoOrchestrator`.
+- **OS Guardian Planner** – LangChain-based planner that sequences perception
+  and action tools, storing generated plans in a vector store for reuse.
+  Module: [`os_guardian/planning.py`](../os_guardian/planning.py), class:
+  `GuardianPlanner`.
+- **Development Cycle Orchestrator** – lightweight planner/coder/reviewer loop
+  that optionally leverages Microsoft Autogen and vector memory. Module:
+  [`tools/dev_orchestrator.py`](../tools/dev_orchestrator.py), classes:
+  `Planner`, `Coder`, `Reviewer`, `DevAssistantService`.
+
+## Memory Systems
+
+Inanna AI layers multiple specialized memories that record different facets of
+experience. Each store can be queried directly or through a unified search
+interface. See [Memory Architecture](memory_architecture.md) for an overview.
+
+- **Cortex Memory** – persistent application state with semantic tag indexes.
+  Docs: [Memory Layer](memory_layer.md), [Cortex Search](memory_cortex.md).
+  Module: [`memory/cortex.py`](../memory/cortex.py).
+- **Emotional Memory** – SQLite log of emotional feature vectors capturing the
+  agent's mood. Module: [`memory/emotional.py`](../memory/emotional.py).
+- **Mental Memory** – Neo4j-backed task graph with optional reinforcement
+  learning hooks. Module: [`memory/mental.py`](../memory/mental.py).
+- **Spiritual Memory** – ontology mapping events to symbols for ritual insight.
+  Module: [`memory/spiritual.py`](../memory/spiritual.py).
+- **Narrative Memory** – story beats linking actors, actions and symbolism.
+  Module: [`memory/narrative_engine.py`](../memory/narrative_engine.py).
+- **Vector Memory** – FAISS/SQLite text embedding store with decay, snapshots
+  and optional Redis backup. Docs: [Vector Memory](vector_memory.md).
+  Modules: [`vector_memory.py`](../vector_memory.py),
+  [`memory_store.py`](../memory_store.py), [`distributed_memory.py`](../distributed_memory.py).
+- **Spiral Memory** – cross-layer event registry that can generate sacred
+  glyphs for significant moments. Module: [`spiral_memory.py`](../spiral_memory.py).
+- **Spiral Cortex Insights** – JSONL log of retrieval snippets for the spiral
+  cortex. Module: [`memory/spiral_cortex.py`](../memory/spiral_cortex.py).
+- **Music Memory** – persistent store for music embeddings tagged with emotion.
+  Module: [`memory/music_memory.py`](../memory/music_memory.py).
+- **Sacred Glyph Memory** – VAE-based generator storing latent vectors and
+  images derived from layer embeddings. Module: [`memory/sacred.py`](../memory/sacred.py).
+- **Corpus Interaction Log** – rotating log of conversations and ritual
+  results. Module: [`corpus_memory_logging.py`](../corpus_memory_logging.py).
+- **Unified Memory Search** – aggregates cortex, spiral and vector memories into
+  a single result set. Module: [`memory/search.py`](../memory/search.py).
+
 ## Essential Services
 ### Chat Gateway
 - **Layer:** Throat
@@ -109,6 +166,15 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 - **Startup:** Start first to provide persistence for later services.
 - **Health Check:** Ping the database and confirm vector index readiness.
 - **Recovery:** Restore the database, replay deferred writes, and relaunch.
+
+### Chat2DB Interface
+- **Layer:** Heart
+- **Purpose:** Bridge the chat gateway with both the SQLite conversation log and the vector memory store.
+- **Docs:** [Chat2DB Interface](chat2db.md)
+- **Modules:** [`INANNA_AI/db_storage.py`](../INANNA_AI/db_storage.py), [`spiral_vector_db/__init__.py`](../spiral_vector_db/__init__.py)
+- **Startup:** Initialize after the memory store is ready.
+- **Health Check:** Perform a test read/write against each store.
+- **Recovery:** Recreate the database tables or rebuild the vector index.
 
 ### CROWN LLM
 - **Layer:** Crown
