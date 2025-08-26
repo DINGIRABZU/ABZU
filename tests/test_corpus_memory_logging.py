@@ -25,15 +25,24 @@ def test_log_rotation(tmp_path, monkeypatch):
     quarantine = tmp_path / "interactions.quarantine.jsonl"
     monkeypatch.setattr(cml, "INTERACTIONS_FILE", interactions)
     monkeypatch.setattr(cml, "QUARANTINE_FILE", quarantine)
-    monkeypatch.setattr(cml, "MAX_LOG_SIZE", 100)
+    monkeypatch.setattr(cml, "MAX_LOG_SIZE", 50)
 
-    interactions.write_text("x" * 120, encoding="utf-8")
+    # pre-populate with valid JSON lines that exceed MAX_LOG_SIZE
+    entry = json.dumps({"x": "y" * 20})
+    interactions.write_text(entry + "\n" + entry + "\n", encoding="utf-8")
 
+    # this write should trigger a rotation and start a fresh log
     cml.log_interaction("hi", {"emotion": "joy"}, {"emotion": "joy"}, "success")
 
     rotated = list(tmp_path.glob("interactions-*.jsonl"))
     assert len(rotated) == 1
+
+    # rotated file preserves JSONL integrity
+    rotated_lines = rotated[0].read_text().splitlines()
+    assert all(json.loads(line) for line in rotated_lines)
+
+    # current log contains only the new entry
     assert interactions.exists()
-    entries = cml.load_interactions()
-    assert len(entries) == 1
-    assert entries[0]["input"] == "hi"
+    current_lines = interactions.read_text().splitlines()
+    assert len(current_lines) == 1
+    assert json.loads(current_lines[0])["input"] == "hi"
