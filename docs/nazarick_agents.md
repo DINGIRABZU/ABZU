@@ -29,3 +29,50 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
 | Asian Gen Creative Engine | Multilingual generation with locale codes, offline SentencePiece fallbacks | [agents/asian_gen/creative_engine.py](../agents/asian_gen/creative_engine.py) |
 | Land Graph Geo Knowledge | Landscape graph, ritual site queries | [agents/land_graph/geo_knowledge.py](../agents/land_graph/geo_knowledge.py) |
 
+## Bana Bio-Adaptive Narrator
+
+- **Role:** Biosignal-driven narrative generation.
+- **Chakra:** Heart
+- **Dependencies:** `biosppy`, `transformers`, `numpy`
+- **Quick start:**
+
+  ```python
+  from agents.bana.bio_adaptive_narrator import generate_story
+
+  story = generate_story([0.0, 0.1, 0.2])
+  print(story)
+  ```
+
+## AsianGen Creative Engine
+
+- **Role:** Multilingual text generation with locale codes and offline fallbacks.
+- **Chakra:** Throat
+- **Dependencies:** `transformers`, `sentencepiece`
+- **Quick start:**
+
+  ```python
+  from agents.asian_gen.creative_engine import CreativeEngine
+
+  engine = CreativeEngine()
+  text = engine.generate("hello", locale="ja_JP")
+  print(text)
+  ```
+
+## LandGraph Geo Knowledge
+
+- **Role:** Landscape graph utilities and ritual site queries.
+- **Chakra:** Root
+- **Dependencies:** `networkx`, `geopandas` *(optional)*
+- **Quick start:**
+
+  ```python
+  from agents.land_graph.geo_knowledge import GeoKnowledge
+
+  gk = GeoKnowledge()
+  gk.add_site("home", lon=0.0, lat=0.0, category="ritual_site")
+  gk.add_site("mountain", lon=1.0, lat=1.0)
+  gk.add_path("home", "mountain")
+  node, data = gk.nearest_ritual_site(lon=0.2, lat=0.1)
+  print(node, data)
+  ```
+

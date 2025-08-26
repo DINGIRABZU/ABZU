@@ -118,6 +118,11 @@ the full table.
 | Third Eye | Insight and QNL processing | `insight_compiler.py`, `SPIRAL_OS/qnl_engine.py` |
 | Crown | High‑level orchestration | `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh` |
 
+Specialized Nazarick agents extend these layers, including
+[Bana Bio-Adaptive Narrator](nazarick_agents.md#bana-bio-adaptive-narrator) (Heart),
+[AsianGen Creative Engine](nazarick_agents.md#asiangen-creative-engine) (Throat), and
+[LandGraph Geo Knowledge](nazarick_agents.md#landgraph-geo-knowledge) (Root).
+
 ### Chakra Interactions
 
 ```mermaid
