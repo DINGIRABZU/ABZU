@@ -58,9 +58,14 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
   print(text)
   ```
 
-  If no tokenizer or model weights are present, the engine trains a tiny
-  SentencePiece model on a bundled corpus at runtime to keep basic tokenization
-  functionality available offline.
+- **Fallback:** If no tokenizer or model weights are found, the engine trains a
+  minimal SentencePiece model on-the-fly from the bundled corpus and caches it
+  in a temporary directory. The cached model is reused between runs and no
+  binary artifact is committed to Git.
+- **Testing offline:** Verify this path by disabling network access and running
+  `pytest tests/agents/test_asian_gen.py::test_sentencepiece_fallback`.
+- **Logging:** Pass `log_level="INFO"` or set the `CREATIVE_ENGINE_LOG_LEVEL`
+  environment variable to trace which tokenizer is selected.
 
 ## LandGraph Geo Knowledge
 
