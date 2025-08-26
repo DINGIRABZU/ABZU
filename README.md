@@ -7,6 +7,8 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Documentation Index](docs/index.md)
 - [Developer Onboarding](docs/developer_onboarding.md)
 - [Nazarick Agents](docs/nazarick_agents.md)
+- [Chakra Koan System](docs/chakra_koan_system.md)
+- [Chakra Version Manifest](docs/chakra_versions.json)
 
 ## Start Here
 Begin with the [CRYSTAL CODEX](CRYSTAL_CODEX.md) for mission, LWM architecture diagrams,
@@ -25,6 +27,7 @@ For the project's guiding vision and mission, see
 [docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
 
 For an end-to-end request pipeline and chakra status summary, see [docs/data_flow.md](docs/data_flow.md) and [docs/chakra_overview.md](docs/chakra_overview.md).
+Meditative verses and the corresponding version manifest live in [docs/chakra_koan_system.md](docs/chakra_koan_system.md) and [docs/chakra_versions.json](docs/chakra_versions.json).
 
 ## JSON Schema Validation
 

@@ -6,29 +6,29 @@ For a meditative reflection on these layers, see [chakra_koan_system.md](chakra_
 
 ## Chakra Layers and Modules
 
-1. **Root – Muladhara**
+1. **[Root – Muladhara](chakra_koan_system.md#root)**
    - Foundation for hardware and network access.
    - Example modules: `server.py`, `INANNA_AI.network_utils.py`.
-2. **Sacral – Svadhisthana**
+2. **[Sacral – Svadhisthana](chakra_koan_system.md#sacral)**
    - Creativity and emotion processing.
    - Example modules: `emotional_state.py`, `emotion_registry.py`, `play_ritual_music.py`.
-3. **Solar Plexus – Manipura**
+3. **[Solar Plexus – Manipura](chakra_koan_system.md#solar)**
    - Transformation and energetic drive.
    - Example modules: `learning_mutator.py`, `state_transition_engine.py`.
-4. **Heart – Anahata**
+4. **[Heart – Anahata](chakra_koan_system.md#heart)**
    - Empathy and memory of connections.
    - Example modules: `voice_avatar_config.yaml`, `voice_layer_albedo.py`, `vector_memory.py`.
-5. **Throat – Vishuddha**
+5. **[Throat – Vishuddha](chakra_koan_system.md#throat)**
    - Vocal expression and orchestration.
    - Example modules: `orchestrator.py`, `crown_prompt_orchestrator.py`, `INANNA_AI_AGENT/inanna_ai.py`.
    - `emotion_music_map.yaml` links emotions to musical keys used for voice pitch.
    - The `Citrinitas` style offers a bright vocal timbre for enlightened messages.
    - The **Sonic Core** (`audio_engine.py`, `avatar_expression_engine.py`) turns QNL phrases into sound and syncs avatar expressions.
-6. **Third Eye – Ajna**
+6. **[Third Eye – Ajna](chakra_koan_system.md#third_eye)**
    - Insight, pattern recognition and quantum narrative.
    - Example modules: `insight_compiler.py`, `seven_plane_analyzer.py`, `SPIRAL_OS/qnl_engine.py` (requires `numpy` for waveform synthesis).
    - `ml.archetype_cluster` groups memory entries into archetype clusters for higher-level summaries.
-7. **Crown – Sahasrara**
+7. **[Crown – Sahasrara](chakra_koan_system.md#crown)**
    - Cosmic connection and initialization rites.
    - Example modules: `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh`.
 
