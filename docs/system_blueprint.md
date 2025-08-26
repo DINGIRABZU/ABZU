@@ -110,6 +110,15 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 - **Health Check:** Ping the database and confirm vector index readiness.
 - **Recovery:** Restore the database, replay deferred writes, and relaunch.
 
+### Chat2DB Interface
+- **Layer:** Heart
+- **Purpose:** Bridge the chat gateway with both the SQLite conversation log and the vector memory store.
+- **Docs:** [Chat2DB Interface](chat2db.md)
+- **Modules:** [`INANNA_AI/db_storage.py`](../INANNA_AI/db_storage.py), [`spiral_vector_db/__init__.py`](../spiral_vector_db/__init__.py)
+- **Startup:** Initialize after the memory store is ready.
+- **Health Check:** Perform a test read/write against each store.
+- **Recovery:** Recreate the database tables or rebuild the vector index.
+
 ### CROWN LLM
 - **Layer:** Crown
 - **Purpose:** Execute high‑level reasoning and language generation. See [CROWN Overview](CROWN_OVERVIEW.md) and [LLM Models](LLM_MODELS.md).
