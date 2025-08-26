@@ -17,6 +17,7 @@ import corpus_memory_logging as cml
 def test_log_and_load(tmp_path, monkeypatch, caplog):
     log_path = tmp_path / "interactions.jsonl"
     monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
+    monkeypatch.setattr(cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl"))
 
     with caplog.at_level(logging.INFO):
         cml.log_interaction("hello", {"intent": "greet", "emotion": "joy"}, {}, "ok")
@@ -43,17 +44,20 @@ def test_log_and_load(tmp_path, monkeypatch, caplog):
     limited = cml.load_interactions(limit=1)
     assert limited == all_entries[-1:]
 
-    # append invalid json to trigger error log
+    # append invalid json to trigger watchdog
     log_path.write_text(log_path.read_text(encoding="utf-8") + "{\n", encoding="utf-8")
     with caplog.at_level(logging.ERROR):
         entries = cml.load_interactions()
     assert len(entries) == 2
-    assert any("invalid json line" in r.message for r in caplog.records)
+    quarantine = log_path.with_suffix(".quarantine.jsonl")
+    assert quarantine.exists()
+    assert any("quarantined" in r.message for r in caplog.records)
 
 
 def test_optional_metadata(tmp_path, monkeypatch):
     log_path = tmp_path / "interactions.jsonl"
     monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
+    monkeypatch.setattr(cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl"))
 
     cml.log_interaction(
         "play piano",

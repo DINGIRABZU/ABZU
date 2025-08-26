@@ -104,6 +104,20 @@ def test_api_capture_and_synthesize(tmp_path):
     assert out.exists()
 
 
+def test_api_synthesize_missing_voice(tmp_path):
+    """Synthesis should return an error when speaker model is absent."""
+
+    client = TestClient(app)
+    out = tmp_path / "out.wav"
+    r = client.post(
+        "/voice/synthesize",
+        json={"text": "hi", "speaker": "ghost", "out": str(out)},
+    )
+    assert r.status_code == 200
+    data = r.json()
+    assert "error" in data and "ghost" in data["error"]
+
+
 def test_voice_cloner_smoke(tmp_path):
     cloner = VoiceCloner()
     sample = tmp_path / "s.wav"
