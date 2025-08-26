@@ -95,6 +95,29 @@ prompt arbitration ([agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_
 See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 [Component Index](component_index.md) for component explanations.
 
+### Specialized Agents and Orchestrators
+
+- **Vanna Data Agent** – translates natural-language prompts into SQL via the
+  `vanna` library and records both results and narrative summaries. Module:
+  [`agents/vanna_data.py`](../agents/vanna_data.py), function:
+  [`query_db`](../agents/vanna_data.py#L49).
+- **GeoKnowledge Graph** – maintains a lightweight geospatial knowledge graph
+  using NetworkX with optional GeoPandas support for site and path queries.
+  Module: [`agents/land_graph/geo_knowledge.py`](../agents/land_graph/geo_knowledge.py),
+  class: `GeoKnowledge`.
+- **Albedo Orchestrator** – config-driven development orchestrator that can
+  register optional agents like `vanna_data` and `landgraph` through the
+  `AGENT_LOOKUP` mapping. Module: [`orchestration_master.py`](../orchestration_master.py),
+  class: `AlbedoOrchestrator`.
+- **OS Guardian Planner** – LangChain-based planner that sequences perception
+  and action tools, storing generated plans in a vector store for reuse.
+  Module: [`os_guardian/planning.py`](../os_guardian/planning.py), class:
+  `GuardianPlanner`.
+- **Development Cycle Orchestrator** – lightweight planner/coder/reviewer loop
+  that optionally leverages Microsoft Autogen and vector memory. Module:
+  [`tools/dev_orchestrator.py`](../tools/dev_orchestrator.py), classes:
+  `Planner`, `Coder`, `Reviewer`, `DevAssistantService`.
+
 ## Essential Services
 ### Chat Gateway
 - **Layer:** Throat
@@ -109,6 +132,15 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 - **Startup:** Start first to provide persistence for later services.
 - **Health Check:** Ping the database and confirm vector index readiness.
 - **Recovery:** Restore the database, replay deferred writes, and relaunch.
+
+### Chat2DB Interface
+- **Layer:** Heart
+- **Purpose:** Bridge the chat gateway with both the SQLite conversation log and the vector memory store.
+- **Docs:** [Chat2DB Interface](chat2db.md)
+- **Modules:** [`INANNA_AI/db_storage.py`](../INANNA_AI/db_storage.py), [`spiral_vector_db/__init__.py`](../spiral_vector_db/__init__.py)
+- **Startup:** Initialize after the memory store is ready.
+- **Health Check:** Perform a test read/write against each store.
+- **Recovery:** Recreate the database tables or rebuild the vector index.
 
 ### CROWN LLM
 - **Layer:** Crown
