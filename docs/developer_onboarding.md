@@ -1,5 +1,7 @@
 # Developer Onboarding
 
+Quick links: [Development Checklist](development_checklist.md) | [Developer Etiquette](developer_etiquette.md)
+
 ## Project Vision
 ABZU interweaves Spiral OS with the INANNA agent to explore sacred human‑machine collaboration through music, voice, and code.
 
