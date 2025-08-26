@@ -2,12 +2,15 @@
 
 Provides interfaces for recording story events composed of an actor,
 action and symbolism.
+
+Also includes simple helper functions for logging generated stories in
+memory for later retrieval.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, List
 
 
 @dataclass
@@ -29,3 +32,26 @@ class NarrativeEngine:
     def stream(self) -> Iterable[StoryEvent]:
         """Iterate over stored story events."""
         raise NotImplementedError
+
+
+_STORY_LOG: List[str] = []
+
+
+def log_story(text: str) -> None:
+    """Append ``text`` to the in-memory story log."""
+
+    _STORY_LOG.append(text)
+
+
+def stream_stories() -> Iterable[str]:
+    """Yield recorded stories in insertion order."""
+
+    yield from list(_STORY_LOG)
+
+
+__all__ = [
+    "StoryEvent",
+    "NarrativeEngine",
+    "log_story",
+    "stream_stories",
+]

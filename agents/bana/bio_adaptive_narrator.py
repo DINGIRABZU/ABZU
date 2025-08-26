@@ -10,16 +10,22 @@ state. The main entry point is :func:`generate_story`.
 from typing import Iterable
 
 import numpy as np
-from biosppy.signals import ecg
 
-try:  # pragma: no cover
+try:  # pragma: no cover - optional dependency
+    from biosppy.signals import ecg
+except Exception:  # pragma: no cover - dependency may be missing
+    ecg = None  # type: ignore
+
+from memory import narrative_engine
+
+try:  # pragma: no cover - optional dependency
     from transformers import pipeline  # type: ignore
-except Exception:  # pragma: no cover
+except Exception:  # pragma: no cover - dependency may be missing
     def pipeline(*args, **kwargs):  # type: ignore
         raise ImportError("transformers pipeline unavailable") from None
 
 
-def generate_story(bio_stream: Iterable[float]) -> str:
+def generate_story(bio_stream: Iterable[float], sampling_rate: float = 1000.0) -> str:
     """Generate a short story from a biosignal stream.
 
     Parameters
@@ -35,10 +41,17 @@ def generate_story(bio_stream: Iterable[float]) -> str:
     samples = np.asarray(list(bio_stream), dtype=float)
     if samples.size == 0:
         raise ValueError("bio_stream must contain at least one sample")
+    if sampling_rate <= 0:
+        raise ValueError("sampling_rate must be positive")
+    if samples.size < int(sampling_rate):
+        raise ValueError("bio_stream length must be >= sampling_rate")
+
+    if ecg is None:
+        raise ImportError("biosppy is required for ECG processing")
 
     # Extract heart rate using biosppy. The function returns a namedtuple or
     # dict; both provide a ``heart_rate`` entry.
-    result = ecg.ecg(signal=samples, sampling_rate=1000.0, show=False)
+    result = ecg.ecg(signal=samples, sampling_rate=sampling_rate, show=False)
     heart_rate = (
         result.get("heart_rate") if isinstance(result, dict) else getattr(result, "heart_rate", [])
     )
@@ -49,6 +62,13 @@ def generate_story(bio_stream: Iterable[float]) -> str:
         "Compose a reflective tale about their journey."
     )
 
-    generator = pipeline("text-generation", model="distilgpt2")
-    text = generator(prompt, max_new_tokens=30, num_return_sequences=1)[0]["generated_text"]
+    try:
+        generator = pipeline("text-generation", model="distilgpt2")
+    except Exception as exc:  # pragma: no cover - optional dependency
+        raise RuntimeError("transformers pipeline unavailable") from exc
+
+    text = generator(prompt, max_new_tokens=30, num_return_sequences=1)[0][
+        "generated_text"
+    ]
+    narrative_engine.log_story(text)
     return text
