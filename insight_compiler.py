@@ -8,10 +8,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
+import jsonschema
 import requests
 
 INSIGHT_FILE = Path(__file__).resolve().parent / "insight_matrix.json"
 INSIGHT_MANIFEST_FILE = Path(__file__).resolve().parent / "insight_manifest.json"
+SCHEMAS_DIR = Path(__file__).resolve().parent / "schemas"
+INSIGHT_SCHEMA_FILE = SCHEMAS_DIR / "insight_matrix.schema.json"
+MANIFEST_SCHEMA_FILE = SCHEMAS_DIR / "insight_manifest.schema.json"
 
 # Map ritual glyphs to intents
 _INTENT_FILE = Path(__file__).resolve().parent / "intent_matrix.json"
@@ -29,11 +33,19 @@ for _name, _info in _INTENT_MAP.items():
         _GLYPHS.setdefault(_name, set()).add(_g)
 
 
+def _validate_json(data: Dict[str, Any], schema_file: Path) -> None:
+    """Validate ``data`` against ``schema_file``."""
+    schema = json.loads(schema_file.read_text(encoding="utf-8"))
+    jsonschema.validate(data, schema)
+
+
 def load_insights() -> Dict[str, Any]:
     """Return the current insight matrix as a dictionary."""
     if INSIGHT_FILE.exists():
         try:
-            return json.loads(INSIGHT_FILE.read_text(encoding="utf-8"))
+            data = json.loads(INSIGHT_FILE.read_text(encoding="utf-8"))
+            _validate_json(data, INSIGHT_SCHEMA_FILE)
+            return data
         except Exception:
             return {}
     return {}
@@ -108,6 +120,7 @@ def _update_manifest(now: str) -> None:
             "semantic_versions": versions,
         }
     )
+    _validate_json(manifest, MANIFEST_SCHEMA_FILE)
     INSIGHT_MANIFEST_FILE.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
@@ -220,7 +233,7 @@ def update_insights(log_entries: List[dict]) -> None:
         info["best_tone"] = best_tone
         info["action_success_rate"] = round(succ / total, 3) if total else 0.0
         info["last_updated"] = now
-
+    _validate_json(insights, INSIGHT_SCHEMA_FILE)
     INSIGHT_FILE.write_text(json.dumps(insights, indent=2), encoding="utf-8")
     _update_manifest(now)
 
