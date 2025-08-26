@@ -6,6 +6,8 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,8 +58,6 @@ PY
         run: mypy
 
       - name: Run tests
-        env:
-          PYTHONPATH: src
         run: pytest --cov
 
       - name: Profiling
@@ -80,6 +80,8 @@ PY
 
   server-smoke:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .:src
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -92,9 +94,7 @@ PY
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install fastapi httpx numpy pytest pytest-cov
+          pip install fastapi==0.116.1 httpx==0.28.1 numpy==2.2.6 scipy==1.16.1 pytest==8.4.1 pytest-cov==5.0.0
 
       - name: Run server smoke tests
-        env:
-          PYTHONPATH: .
         run: pytest --noconftest --override-ini="addopts=" tests/test_server.py

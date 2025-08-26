@@ -18,5 +18,9 @@ requests==2.32.4
 scipy==1.16.1
     # via spiral-os (pyproject.toml)
     # provides sparse matrix utilities required by smoke tests
+scikit-learn==1.7.1
+    # optional: machine learning utilities built on SciPy
+soundfile==0.13.1
+    # optional: audio processing features
 phonemizer==3.3.0
     # for phoneme extraction
