@@ -38,6 +38,7 @@ def replay(src: Path) -> None:
             try:
                 entry = json.loads(line)
             except json.JSONDecodeError:
+                # TODO: attempt to repair or quarantine corrupted log lines
                 continue
             if entry.get("operation") != "add":
                 continue
@@ -46,6 +47,7 @@ def replay(src: Path) -> None:
             try:
                 add_vector(text, meta)
             except Exception:
+                # TODO: log and quarantine entries that fail to replay
                 continue
 
 
