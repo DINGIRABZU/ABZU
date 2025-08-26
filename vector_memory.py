@@ -486,6 +486,9 @@ def cluster_vectors(k: int = 5, limit: int = 1000) -> List[Dict[str, Any]]:
     if np is None or not ids:
         return []
     limit = min(limit, len(ids))
+    k = min(k, limit)
+    if k <= 0 or limit <= 0:
+        return []
     vectors: List[Any] = []
     for idx, id_ in enumerate(ids[:limit]):
         if hasattr(store, "index") and getattr(store, "index", None) is not None:
