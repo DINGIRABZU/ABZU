@@ -19,29 +19,61 @@ For deeper guidance on operations and reliability, refer to:
 - [Recovery Playbook](recovery_playbook.md)
 
 ## Chakra Layers
-- **Root** – I/O and networking foundation that manages hardware access and network
-  connectivity. It anchors the stack and brings services online. See
-  [Root Chakra Overview](root_chakra_overview.md) and
-  [Chakra Architecture](chakra_architecture.md).
-- **Sacral** – Emotion engine translating sensory input into emotional context
-  that guides creative responses. Refer to [Memory Emotion](memory_emotion.md)
-  and [Chakra Architecture](chakra_architecture.md).
-- **Solar Plexus** – Learning and state transition layer that adapts behavior
-  through mutation and retraining cycles. See [Learning Pipeline](learning_pipeline.md)
-  and [Chakra Architecture](chakra_architecture.md).
-- **Heart** – Voice avatar configuration and memory storage anchoring persistent
-  knowledge and user personas. See [Memory Layer](memory_layer.md) and
-  [Chakra Architecture](chakra_architecture.md).
-- **Throat** – Prompt orchestration and agent interface linking users to the
-  system through gateways and scripts. Refer to
-  [Communication Interfaces](communication_interfaces.md) and
-  [Chakra Architecture](chakra_architecture.md).
-- **Third Eye** – Insight, QNL processing, and biosignal narration synthesizing
-  perceptions into narrative threads. See [Insight System](insight_system.md) and
-  [Chakra Architecture](chakra_architecture.md).
-- **Crown** – High-level orchestration coordinating modules and startup rituals.
-  See [CROWN Overview](CROWN_OVERVIEW.md) and
-  [Chakra Architecture](chakra_architecture.md).
+- **Root**
+  - **Purpose:** I/O and networking foundation managing hardware access and network
+    connectivity to anchor the stack.
+  - **Heat:** High
+  - **Links:** [Chakra Overview](chakra_overview.md),
+    [Chakra Status](chakra_status.md),
+    [Chakra Architecture](chakra_architecture.md),
+    [Chakra Koan](chakra_koan_system.md#root)
+- **Sacral**
+  - **Purpose:** Emotion engine translating sensory input into emotional context that
+    guides creative responses.
+  - **Heat:** Medium
+  - **Links:** [Chakra Overview](chakra_overview.md),
+    [Chakra Status](chakra_status.md),
+    [Chakra Architecture](chakra_architecture.md),
+    [Chakra Koan](chakra_koan_system.md#sacral)
+- **Solar Plexus**
+  - **Purpose:** Learning and state transition layer adapting behavior through
+    mutation and retraining cycles.
+  - **Heat:** High
+  - **Links:** [Chakra Overview](chakra_overview.md),
+    [Chakra Status](chakra_status.md),
+    [Chakra Architecture](chakra_architecture.md),
+    [Chakra Koan](chakra_koan_system.md#solar)
+- **Heart**
+  - **Purpose:** Voice avatar configuration and memory storage anchoring persistent
+    knowledge and user personas.
+  - **Heat:** Medium
+  - **Links:** [Chakra Overview](chakra_overview.md),
+    [Chakra Status](chakra_status.md),
+    [Chakra Architecture](chakra_architecture.md),
+    [Chakra Koan](chakra_koan_system.md#heart)
+- **Throat**
+  - **Purpose:** Prompt orchestration and agent interface linking users to the system
+    through gateways and scripts.
+  - **Heat:** Medium
+  - **Links:** [Chakra Overview](chakra_overview.md),
+    [Chakra Status](chakra_status.md),
+    [Chakra Architecture](chakra_architecture.md),
+    [Chakra Koan](chakra_koan_system.md#throat)
+- **Third Eye**
+  - **Purpose:** Insight, QNL processing, and biosignal narration synthesizing
+    perceptions into narrative threads.
+  - **Heat:** Low
+  - **Links:** [Chakra Overview](chakra_overview.md),
+    [Chakra Status](chakra_status.md),
+    [Chakra Architecture](chakra_architecture.md),
+    [Chakra Koan](chakra_koan_system.md#third_eye)
+- **Crown**
+  - **Purpose:** High-level orchestration coordinating modules and startup rituals.
+  - **Heat:** Medium
+  - **Links:** [Chakra Overview](chakra_overview.md),
+    [Chakra Status](chakra_status.md),
+    [Chakra Architecture](chakra_architecture.md),
+    [Chakra Koan](chakra_koan_system.md#crown)
 
 ## Essential Services
 ### Chat Gateway
