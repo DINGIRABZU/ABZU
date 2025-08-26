@@ -100,6 +100,18 @@ def test_synthesize_melody_without_sf(tmp_path, monkeypatch):
     assert called["used"]
 
 
+def test_synthesize_waveform_warns_without_sf(monkeypatch, caplog):
+    """``synthesize_waveform`` should warn when ``soundfile`` is missing."""
+
+    monkeypatch.setattr(prm.waveform, "sf", None)
+
+    with caplog.at_level(logging.WARNING):
+        wave = prm.synthesize_waveform(120.0, ["C4"], "sine", 8000)
+
+    assert wave.size > 0
+    assert "soundfile library not available" in caplog.text
+
+
 def test_synthesize_melody_with_sf(tmp_path, monkeypatch):
     """Ensure standard synthesis path is used when ``soundfile`` is present."""
 
@@ -281,7 +293,11 @@ def test_playback_logs_output_path(tmp_path, monkeypatch, caplog):
     monkeypatch.setattr(prm.backends, "sf", None)
     monkeypatch.setattr(prm.backends, "sa", None)
     monkeypatch.setattr(prm.waveform, "sf", None)
-    monkeypatch.setattr(prm, "_synthesize_numpy", lambda *a, **k: np.zeros(10, dtype=np.float32))
+
+    def tiny_synth(*a, **k):
+        return np.zeros(10, dtype=np.float32)
+
+    monkeypatch.setattr(prm, "_synthesize_numpy", tiny_synth)
 
     with caplog.at_level(logging.INFO):
         track = prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)

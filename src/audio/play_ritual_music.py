@@ -11,6 +11,7 @@ from pathlib import Path
 
 import logging
 import numpy as np
+import yaml
 
 from . import backends, emotion_params, stego, waveform
 
@@ -73,6 +74,21 @@ ARCHETYPE_MIXES: dict[str, str] = {
         "W/M98w==",
     ),
 }
+
+
+@lru_cache(maxsize=None)
+def _load_emotion_music_map(path: Path = emotion_params.EMOTION_MAP) -> dict:
+    """Load and cache the emotion→music mapping from YAML."""
+
+    if path.exists():
+        with path.open("r", encoding="utf-8") as fh:
+            data = yaml.safe_load(fh) or {}
+        return {k.lower(): v for k, v in data.items() if isinstance(v, dict)}
+    return {}
+
+
+# Ensure downstream helpers reuse the cached loader
+emotion_params.load_emotion_music_map = _load_emotion_music_map
 
 
 @lru_cache(maxsize=None)
