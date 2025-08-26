@@ -14,10 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added chakra status table in `docs/chakra_status.md` outlining capabilities,
   limitations and planned evolutions for each layer.
 - Linked release notes to `docs/chakra_versions.json` and `CHANGELOG.md`.
+- Added recovery playbook documenting snapshot restoration steps.
 
 ### Quality
 
 - Verified repository passes `ruff` and `black` checks.
+
+### Vector Memory
+
+- `snapshot` logs paths to `snapshots/manifest.json` for recovery tracking.
 
 ### Chakra Versions
 
@@ -26,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Record each chakra version bump in this changelog.
 - Bumped `root` and `crown` chakras to `1.0.1`.
 - Bumped `sacral` chakra to `1.0.1`.
+- Bumped `heart` chakra to `1.0.1`.
 
 ### Insight Matrix
 

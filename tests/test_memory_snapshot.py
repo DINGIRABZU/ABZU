@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+import json
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -35,9 +36,14 @@ def test_vector_memory_snapshot_restore(tmp_path, monkeypatch):
             self.data = {"ids": [], "embeddings": [], "metadatas": []}
 
         def add(self, ids, embeddings, metadatas):
-            self.data["ids"].extend(ids)
-            self.data["embeddings"].extend(embeddings)
-            self.data["metadatas"].extend(metadatas)
+            if isinstance(ids, list):
+                self.data["ids"].extend(ids)
+                self.data["embeddings"].extend(embeddings)
+                self.data["metadatas"].extend(metadatas)
+            else:
+                self.data["ids"].append(ids)
+                self.data["embeddings"].append(embeddings)
+                self.data["metadatas"].append(metadatas)
 
         def get(self, ids=None):
             if ids is None:
@@ -59,10 +65,15 @@ def test_vector_memory_snapshot_restore(tmp_path, monkeypatch):
     monkeypatch.setattr(vector_memory, "_COLLECTION", col)
     monkeypatch.setattr(vector_memory, "_get_collection", lambda: col)
     monkeypatch.setattr(vector_memory, "_EMBED", lambda s: [1.0, 0.0])
+    monkeypatch.setattr(vector_memory, "_DIR", tmp_path)
 
     vector_memory.add_vector("hello", {})
     snap = tmp_path / "vm.json"
     vector_memory.snapshot(snap)
+
+    manifest = tmp_path / "snapshots" / "manifest.json"
+    assert manifest.exists()
+    assert str(snap) in json.loads(manifest.read_text())
 
     col.data = {"ids": [], "embeddings": [], "metadatas": []}
     vector_memory.restore(snap)
