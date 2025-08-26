@@ -1,4 +1,9 @@
-"""Tests for FastAPI server endpoints."""
+"""Test health check and GLM command FastAPI routes.
+
+The server normally depends on numerous subsystems. These tests provide the
+minimum stubs required to import the application and exercise the lightweight
+``/health`` endpoint along with the authenticated ``/glm-command`` route.
+"""
 
 from __future__ import annotations
 

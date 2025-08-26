@@ -575,6 +575,9 @@ orchestrator works with several engines:
 Each example caches the model files in the backend's default location so later
 runs avoid network access.
 
+For a more detailed walkthrough of installing external voice models, see
+[docs/voice_setup.md](docs/voice_setup.md).
+
 #### Step-by-step voice model setup
 
 1. **Install a backend** – choose one of the engines above and install it with

@@ -1,33 +1,40 @@
 from __future__ import annotations
 
-"""Language model helpers for converting insight metrics to speech-ready text.
+"""Helpers for preparing language model insights for spoken summaries.
 
-The functions in this module transform structured insight data produced by
-other components into short human readable statements. These statements can be
-fed directly into a text-to-speech engine or logged for later analysis.
+The insight system generates structured metrics describing how well different
+prompt patterns perform. This module provides utilities that turn those
+metrics into short, natural language phrases. The resulting text can then be
+spoken by a text-to-speech backend or written to logs for debugging and
+analysis.
 """
 
 from typing import Dict
 
 
 def convert_insights_to_spelling(insights: Dict[str, dict]) -> str:
-    """Return spoken phrases summarizing ``insights``.
+    """Return a spoken summary of ``insights``.
+
+    The mapping is expected to contain intent names as keys. Each value may
+    provide a ``counts`` dictionary with ``total`` and ``success`` integers and
+    an optional ``best_tone`` describing the most effective emotional delivery.
+    Keys prefixed with an underscore are skipped so auxiliary metadata does not
+    leak into the summary.
+
+    When ``total`` is present the function calculates the success rate as a
+    percentage and appends the recommended tone. If ``total`` is missing or set
+    to zero a placeholder message notes that no data exists for that intent.
 
     Parameters
     ----------
     insights:
         Mapping of intent names to dictionaries containing insight statistics.
-        Each value may include a ``counts`` mapping with ``total`` and
-        ``success`` integers and an optional ``best_tone`` string describing the
-        most effective emotional tone.
 
     Returns
     -------
     str
         A space separated summary where each intent is described by its success
-        rate and recommended tone. Keys starting with an underscore are
-        ignored. If an intent has no ``total`` count, the summary notes that no
-        data is available.
+        rate and recommended tone.
 
     Examples
     --------
