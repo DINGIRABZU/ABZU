@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   limitations and planned evolutions for each layer.
 - Linked release notes to `docs/chakra_versions.json` and `CHANGELOG.md`.
 - Added recovery playbook documenting snapshot restoration steps.
+- Mapped cortex, emotional, mental, spiritual and narrative memory stores in
+  `docs/memory_architecture.md`.
 
 ### Quality
 
@@ -23,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Vector Memory
 
 - `snapshot` logs paths to `snapshots/manifest.json` for recovery tracking.
+- Comments mention narrative hooks for cross-story references.
+
+### Narrative Engine
+
+- Stubbed `memory/narrative_engine.py` defining story event interfaces.
 
 ### Chakra Versions
 
@@ -35,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped `solar_plexus` chakra to `1.1.0` after learning pipeline updates; see `docs/chakra_koan_system.md#solar`.
 - Bumped `throat` chakra to `1.0.1` fixing prompt orchestration; see `docs/chakra_koan_system.md#throat`.
 - Synced heart koan reference with the manifest.
+- Bumped `third_eye` chakra to `1.0.1` for narrative memory integration.
 
 ### Insight Matrix
 
