@@ -66,6 +66,7 @@ def test_vector_memory_snapshot_restore(tmp_path, monkeypatch):
     monkeypatch.setattr(vector_memory, "_get_collection", lambda: col)
     monkeypatch.setattr(vector_memory, "_EMBED", lambda s: [1.0, 0.0])
     monkeypatch.setattr(vector_memory, "_DIR", tmp_path)
+    monkeypatch.setattr(vector_memory, "NARRATIVE_LOG", tmp_path / "narrative.log")
 
     vector_memory.add_vector("hello", {})
     snap = tmp_path / "vm.json"
@@ -73,7 +74,12 @@ def test_vector_memory_snapshot_restore(tmp_path, monkeypatch):
 
     manifest = tmp_path / "snapshots" / "manifest.json"
     assert manifest.exists()
-    assert str(snap) in json.loads(manifest.read_text())
+    assert json.loads(manifest.read_text()) == [str(snap)]
+
+    narr = tmp_path / "narrative.log"
+    log_entry = json.loads(narr.read_text().splitlines()[0])
+    assert log_entry["action"] == "sacrifice"
+    assert log_entry["symbolism"] == str(snap)
 
     col.data = {"ids": [], "embeddings": [], "metadatas": []}
     vector_memory.restore(snap)

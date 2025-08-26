@@ -11,7 +11,7 @@ import logging
 import math
 import threading
 import uuid
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, cast
@@ -19,6 +19,7 @@ import sqlite3
 
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
+from memory.narrative_engine import StoryEvent
 
 try:  # pragma: no cover - optional dependency
     from distributed_memory import DistributedMemory
@@ -63,6 +64,7 @@ _DECAY_SECONDS = 86_400.0  # one day
 _DECAY_STRATEGY = "exponential"
 
 LOG_FILE = Path("data/vector_memory.log")
+NARRATIVE_LOG = Path("data/narrative.log")
 logger = logging.getLogger(__name__)
 
 
@@ -149,6 +151,19 @@ def _log(op: str, text: str, meta: Dict[str, Any]) -> None:
             fh.write("\n")
     except Exception:  # pragma: no cover - safeguard
         logger.exception("failed to log vector_memory operation")
+
+
+def _log_narrative(actor: str, action: str, symbolism: str | None = None) -> None:
+    """Record a narrative event to ``NARRATIVE_LOG``."""
+
+    try:
+        NARRATIVE_LOG.parent.mkdir(parents=True, exist_ok=True)
+        event = asdict(StoryEvent(actor=actor, action=action, symbolism=symbolism))
+        with NARRATIVE_LOG.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(event))
+            fh.write("\n")
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("failed to log narrative event")
 
 
 def _get_store() -> Any:
@@ -427,9 +442,9 @@ def snapshot(path: str | Path) -> None:
             else []
         )
         path_str = str(path)
-        if path_str not in entries:
-            entries.append(path_str)
-            manifest.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+        entries.append(path_str)
+        manifest.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+        _log_narrative("vector_memory", "sacrifice", path_str)
     except Exception:  # pragma: no cover - best effort
         logger.exception("failed to update snapshot manifest")
 
