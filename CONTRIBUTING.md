@@ -15,6 +15,8 @@ context, consult
 [docs/chakra_versions.json](docs/chakra_versions.json), and
 [docs/chakra_koan_system.md](docs/chakra_koan_system.md) – keep verses aligned
 with version bumps.
+Operational fallbacks and recovery steps are outlined in
+[docs/essential_services.md](docs/essential_services.md).
 
 When bumping versions in
 [docs/chakra_versions.json](docs/chakra_versions.json), record the change in
@@ -60,11 +62,13 @@ mypy            # type check
 
 ## Testing
 
-Execute smoke tests and the unit test suite before submitting changes:
+Execute smoke tests, the health scanner, and the unit test suite before submitting changes:
 
 ```bash
 scripts/smoke_console_interface.sh
 scripts/smoke_avatar_console.sh
+python scripts/vast_check.py http://localhost:8000
+pre-commit run --all-files
 pytest --maxfail=1 -q
 ```
 
