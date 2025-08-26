@@ -86,7 +86,11 @@ implementation details. Personality modules reside under
 ## Agents & Nazarick Hierarchy
 
 The ABZU stack relies on a network of Nazarick agents, each aligned with a chakra layer.
-For persona-level details consult the [Persona API Guide](persona_api_guide.md). Core roles include:
+For persona-level details consult the [Persona API Guide](persona_api_guide.md).
+These agents drive the musical avatar; see [Music Avatar Architecture](music_avatar_architecture.md) and the
+[Avatar Pipeline](avatar_pipeline.md) for rendering and animation flows.
+Lifecycle scripts like [`start_dev_agents.py`](../start_dev_agents.py) and [`launch_servants.sh`](../launch_servants.sh)
+demonstrate practical startup sequences. Core roles include:
 
 - **Orchestration Master** (Crown) – oversees launch control and high-level coordination. See
   [orchestration_master.py](../orchestration_master.py).
