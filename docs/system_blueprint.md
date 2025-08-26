@@ -59,16 +59,19 @@ The system blueprint acts as the master index for the ABZU platform, summarizing
 
 ## Non‑Essential Services
 ### Audio Device
+- **Purpose:** Manage audio capture and playback. See [Audio Ingestion](audio_ingestion.md) and [Voice Setup](voice_setup.md).
 - **Startup:** Activate after essential services.
 - **Health Check:** Run an audio loopback test.
 - **Recovery:** Reinitialize the audio backend or fall back to silent mode.
 
 ### Avatar
+- **Purpose:** Render the musical persona and drive animations. See [Music Avatar Architecture](music_avatar_architecture.md), [Avatar Pipeline](avatar_pipeline.md), and [Nazarick Agents](nazarick_agents.md).
 - **Startup:** Launch after the audio device using Nazarick helpers.
 - **Health Check:** Verify avatar frame rendering.
-- **Recovery:** Reload avatar assets or restart the pipeline. Related agents are cataloged in [Nazarick Agents](nazarick_agents.md).
+- **Recovery:** Reload avatar assets or restart the pipeline.
 
 ### Video
+- **Purpose:** Stream generative visuals. See [Video Generation](video_generation.md).
 - **Startup:** Final stage.
 - **Health Check:** Probe the video stream endpoint.
 - **Recovery:** Restart the encoder or disable streaming.
