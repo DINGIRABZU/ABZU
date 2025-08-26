@@ -12,6 +12,11 @@ This document summarizes the major modules aligned with each chakra layer, their
 | Third Eye | `insight_compiler.py`, `SPIRAL_OS/qnl_engine.py`, `seven_dimensional_music.py` | Insight and QNL processing | Experimental | QNL engine emits occasional warnings |
 | Crown | `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh` | High-level orchestration | Alpha | Startup scripts assume local model availability |
 
+Additional Nazarick agents expand these layers:
+[Bana Bio-Adaptive Narrator](nazarick_agents.md#bana-bio-adaptive-narrator) (Heart),
+[AsianGen Creative Engine](nazarick_agents.md#asiangen-creative-engine) (Throat), and
+[LandGraph Geo Knowledge](nazarick_agents.md#landgraph-geo-knowledge) (Root).
+
 ## Service and Schema Mapping
 
 | Chakra | Modules | Third-party Services | Data Schemas |
