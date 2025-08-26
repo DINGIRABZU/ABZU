@@ -200,6 +200,7 @@ def playback(path: Path, wave: np.ndarray, sample_rate: int) -> None:
 
     backend = backends.get_backend()
     logger.info("Using audio backend %s", backend.__class__.__name__)
+    logger.info("Writing audio output to %s", path)
     backend.play(path, wave, sample_rate)
 
 

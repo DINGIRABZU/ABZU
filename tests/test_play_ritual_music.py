@@ -250,3 +250,19 @@ def test_emotion_map_cached(tmp_path, monkeypatch):
     prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
 
     assert calls["count"] == 1
+
+
+def test_playback_logs_output_path(tmp_path, monkeypatch, caplog):
+    """Playback should log backend choice and output path."""
+
+    monkeypatch.setattr(prm.backends, "sf", None)
+    monkeypatch.setattr(prm.backends, "sa", None)
+    monkeypatch.setattr(prm.waveform, "sf", None)
+    monkeypatch.setattr(prm, "_synthesize_numpy", lambda *a, **k: np.zeros(10, dtype=np.float32))
+
+    with caplog.at_level(logging.INFO):
+        track = prm.compose_ritual_music("joy", "\u2609", output_dir=tmp_path)
+
+    assert track.path.exists()
+    assert "Using audio backend NoOpBackend" in caplog.text
+    assert f"Writing audio output to {track.path}" in caplog.text
