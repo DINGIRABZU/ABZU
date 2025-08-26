@@ -157,6 +157,46 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
         CORTEX_INDEX_FILE.write_text(json.dumps(index, ensure_ascii=False), encoding="utf-8")
 
 
+def search_index(
+    tags: Optional[List[str]] = None,
+    text: Optional[str] = None,
+) -> Set[int]:
+    """Return entry identifiers matching ``tags`` and ``text``.
+
+    Only the index file is consulted, making this function inexpensive for
+    metadata lookups without reading the full memory log.
+    """
+
+    if tags and (not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)):
+        raise ValueError("tags must be a list of strings")
+    if text is not None and not isinstance(text, str):
+        raise ValueError("text must be a string or None")
+    if not CORTEX_INDEX_FILE.exists():
+        return set()
+
+    with _read_locked():
+        index: Dict[str, Any] = json.loads(
+            CORTEX_INDEX_FILE.read_text(encoding="utf-8")
+        )
+        ids: Optional[Set[int]] = None
+        if tags:
+            for tag in tags:
+                tag_ids = set(index.get(tag, []))
+                ids = tag_ids if ids is None else ids & tag_ids
+            if ids is None:
+                ids = set()
+        if text:
+            ft_index = index.get("_fulltext", {})
+            txt_ids: Optional[Set[int]] = None
+            for tok in _tokens(text):
+                tok_ids = set(ft_index.get(tok, []))
+                txt_ids = tok_ids if txt_ids is None else txt_ids & tok_ids
+            if txt_ids is None:
+                txt_ids = set()
+            ids = txt_ids if ids is None else ids & txt_ids
+    return ids or set()
+
+
 def query_spirals(
     filter: Optional[Dict[str, Any]] | None = None,
     tags: Optional[List[str]] = None,
@@ -178,28 +218,10 @@ def query_spirals(
     if not CORTEX_MEMORY_FILE.exists():
         return []
 
-    ids: Optional[Set[int]] = None
-    with _read_locked():
-        index: Dict[str, Any] = {}
-        if (tags or text) and CORTEX_INDEX_FILE.exists():
-            index = json.loads(CORTEX_INDEX_FILE.read_text(encoding="utf-8"))
-        if tags:
-            for tag in tags:
-                tag_ids = set(index.get(tag, []))
-                ids = tag_ids if ids is None else ids & tag_ids
-            if ids is None:
-                ids = set()
-        if text:
-            ft_index = index.get("_fulltext", {})
-            txt_ids: Optional[Set[int]] = None
-            for tok in _tokens(text):
-                tok_ids = set(ft_index.get(tok, []))
-                txt_ids = tok_ids if txt_ids is None else txt_ids & tok_ids
-            if txt_ids is None:
-                txt_ids = set()
-            ids = txt_ids if ids is None else ids & txt_ids
+    ids = search_index(tags=tags, text=text) if (tags or text) else None
 
-        entries: List[Dict[str, Any]] = []
+    entries: List[Dict[str, Any]] = []
+    with _read_locked():
         with CORTEX_MEMORY_FILE.open("r", encoding="utf-8") as fh:
             for line in fh:
                 try:
@@ -280,6 +302,7 @@ def export_spirals(
 
 __all__ = [
     "record_spiral",
+    "search_index",
     "query_spirals",
     "query_spirals_concurrent",
     "prune_spirals",
