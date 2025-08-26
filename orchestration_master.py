@@ -20,6 +20,9 @@ AGENT_LOOKUP: Dict[str, str] = {
     "security_canary": "agents.victim.security_canary",
     "persona_emulator": "agents.pandora.persona_emulator",
     "vanna_data": "agents.vanna_data",
+    "bana": "agents.bana",
+    "asiangen": "agents.asiangen",
+    "landgraph": "agents.landgraph",
 }
 
 
@@ -50,6 +53,8 @@ class AlbedoOrchestrator:
         from tools import dev_orchestrator as _tools
 
         queue: Queue[str] = Queue()
+
+        launch_agents_from_config()
 
         planner_glm = _tools._glm_from_env("PLANNER_MODEL")
         coder_glm = _tools._glm_from_env("CODER_MODEL")
@@ -100,9 +105,55 @@ class AlbedoOrchestrator:
         }
 
 
+def launch_agents_from_config(config_path: Path | None = None) -> Dict[str, bool]:
+    """Launch optional agents based on a YAML configuration."""
+
+    import importlib
+
+    logger = logging.getLogger(__name__)
+    launched: Dict[str, bool] = {}
+
+    if config_path is None:
+        config_path = Path(__file__).with_name("pipeline") / "agents.yaml"
+
+    if not Path(config_path).exists():
+        return launched
+
+    try:
+        import yaml
+    except Exception:  # pragma: no cover - yaml is optional
+        logger.warning("PyYAML not installed; skipping optional agents")
+        return launched
+
+    with open(config_path, "r", encoding="utf-8") as fh:
+        config = yaml.safe_load(fh) or {}
+
+    for name, settings in config.items():
+        if not isinstance(settings, dict) or not settings.get("enabled"):
+            continue
+        module_path = AGENT_LOOKUP.get(name)
+        if module_path is None:
+            logger.warning("Unknown agent %s in configuration", name)
+            continue
+        try:
+            module = importlib.import_module(module_path)
+            launch = getattr(module, "launch", None)
+            if callable(launch):
+                launch()
+            launched[name] = True
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.warning("Could not launch %s: %s", name, exc)
+    return launched
+
+
 def boot_sequence() -> None:
     """Placeholder for system boot logic."""
     raise NotImplementedError("boot_sequence is not implemented yet")
 
 
-__all__ = ["AlbedoOrchestrator", "boot_sequence", "AGENT_LOOKUP"]
+__all__ = [
+    "AlbedoOrchestrator",
+    "boot_sequence",
+    "AGENT_LOOKUP",
+    "launch_agents_from_config",
+]
