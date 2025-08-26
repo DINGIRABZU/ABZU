@@ -13,7 +13,10 @@ from pathlib import Path
 from typing import Optional
 import tempfile
 
-import sentencepiece as spm
+try:  # pragma: no cover - optional dependency
+    import sentencepiece as spm
+except Exception:  # pragma: no cover
+    spm = None
 
 try:  # pragma: no cover - optional dependency
     from transformers import AutoTokenizer, pipeline
@@ -46,6 +49,8 @@ class CreativeEngine:
             except Exception:
                 pass
         if self.spm_path:
+            if spm is None:
+                raise RuntimeError("sentencepiece not installed")
             sp = spm.SentencePieceProcessor()
             sp.load(self.spm_path)
             return sp
