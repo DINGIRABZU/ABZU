@@ -1,0 +1,44 @@
+# Mapping of rivals to levels and message templates by trust and intent.
+# Supports teaching (CITRINITAS) and wrath (NIGREDO) messaging.
+
+entities:
+  clementine: 1
+  slane: 2
+  empire: 3
+  kingdom: 4
+
+templates:
+  teaching:
+    "1":
+      "0": "Level 1 {entity}, no teaching at trust {trust}. Seek {state} wisdom."
+      "5": "Level 1 {entity}, at trust {trust}, learn the ways of {state}."
+      "10": "Level 1 {entity}, trust {trust} grants full {state} enlightenment."
+    "2":
+      "0": "Level 2 {entity}, knowledge denied at trust {trust}. {state} remains distant."
+      "5": "Level 2 {entity}, partial instruction offered at trust {trust}. Pursue {state}."
+      "10": "Level 2 {entity}, trust {trust} compels mastery of {state}."
+    "3":
+      "0": "Level 3 {entity}, secrets sealed with trust {trust}. {state} is forbidden."
+      "5": "Level 3 {entity}, trust {trust} earns limited {state} guidance."
+      "10": "Level 3 {entity}, trust {trust} reveals all {state} teachings."
+    "4":
+      "0": "Level 4 {entity}, your trust {trust} bars {state} lessons."
+      "5": "Level 4 {entity}, with trust {trust}, accept basic {state} tutoring."
+      "10": "Level 4 {entity}, trust {trust} unlocks complete {state} doctrine."
+  wrath:
+    "1":
+      "0": "Level 1 {entity}, wrath descends at trust {trust}. {state} devours you."
+      "5": "Level 1 {entity}, anger stirs at trust {trust}. Endure {state}."
+      "10": "Level 1 {entity}, fury at trust {trust} unleashes total {state}."
+    "2":
+      "0": "Level 2 {entity}, trust {trust} triggers {state} wrath."
+      "5": "Level 2 {entity}, {state} vengeance smolders at trust {trust}."
+      "10": "Level 2 {entity}, trust {trust} meets overwhelming {state} fury."
+    "3":
+      "0": "Level 3 {entity}, at trust {trust}, {state} consumes hope."
+      "5": "Level 3 {entity}, {state} burns steadily at trust {trust}."
+      "10": "Level 3 {entity}, trust {trust} ignites boundless {state} wrath."
+    "4":
+      "0": "Level 4 {entity}, trust {trust} cannot escape {state} punishment."
+      "5": "Level 4 {entity}, with trust {trust}, {state} scourges persist."
+      "10": "Level 4 {entity}, trust {trust} endures absolute {state} devastation."
