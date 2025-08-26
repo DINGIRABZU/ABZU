@@ -1,0 +1,24 @@
+# Mapping of entities to their rank and message templates by trust level.
+entities:
+  shalltear: 1
+  demiurge: 2
+  cocytus: 3
+  sebas: 4
+
+templates:
+  "1":
+    "0": "Rank 1 {entity}, your loyalty is questioned at trust {trust}. Maintain {state}."
+    "5": "Rank 1 {entity}, your performance is acceptable with trust {trust}. State {state} persists."
+    "10": "Rank 1 {entity}, supreme devotion acknowledged at trust {trust}. Achieve {state}."
+  "2":
+    "0": "Rank 2 {entity}, doubts arise at trust {trust}. {state} wavers."
+    "5": "Rank 2 {entity}, continue operations with trust {trust} and state {state}."
+    "10": "Rank 2 {entity}, exceptional service noted at trust {trust}. Proceed in {state}."
+  "3":
+    "0": "Rank 3 {entity}, trust {trust} is insufficient for {state}."
+    "5": "Rank 3 {entity}, trust {trust} maintains {state}."
+    "10": "Rank 3 {entity}, trust {trust} solidifies {state}."
+  "4":
+    "0": "Rank 4 {entity}, trust {trust} below expectations; {state} constrained."
+    "5": "Rank 4 {entity}, trust {trust} keeps {state} steady."
+    "10": "Rank 4 {entity}, trust {trust} empowers {state} fully."
