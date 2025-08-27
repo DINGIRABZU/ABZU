@@ -73,14 +73,23 @@ def install_packages(venv_path: Path, packages: list[str]) -> None:
     subprocess.run(cmd, check=True)
 
 
+def read_layers(config_path: Path) -> dict[str, list[str]]:
+    """Return mapping of layer name to package list from ``config_path``."""
+
+    data = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    raw_layers = data.get("layers") or {}
+    layers: dict[str, list[str]] = {}
+    for name, packages in raw_layers.items():
+        layers[name] = list(packages or [])
+    return layers
+
+
 def install_layers(config_path: Path, venv_path: Path) -> None:
     """Install dependencies for each layer defined in ``config_path``."""
 
-    data = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
-    layers = data.get("layers", {})
-    for name, packages in layers.items():
+    for name, packages in read_layers(config_path).items():
         LOGGER.info("\n--- Installing layer: %s ---", name)
-        install_packages(venv_path, list(packages or []))
+        install_packages(venv_path, packages)
 
 
 def main() -> None:  # pragma: no cover - CLI helper
