@@ -7,6 +7,18 @@ startup progress. The agent forms a feedback loop with CROWN LLM to heal
 faulty modules and ensures the system can cycle back to a ready state
 without manual intervention.
 
+## Ignition Workflow
+
+`agents/razar/boot_orchestrator.py` drives the initial boot sequence. It
+parses `docs/system_blueprint.md` to derive component priorities and
+regenerates `docs/Ignition.md` with a status column. Each component is
+launched in priority order using commands from
+`config/razar_config.yaml`. After a component reports healthy via
+`agents/razar/health_checks.py` the marker flips to ✅ and progress is
+persisted to `logs/razar_state.json` so later runs resume from the last
+successful step. Failures are marked ❌ and halt the sequence. Invoke the
+workflow with `python -m agents.razar.boot_orchestrator`.
+
 ## Perpetual Ignition Loop
 
 RAZAR runs a perpetual ignition loop that:

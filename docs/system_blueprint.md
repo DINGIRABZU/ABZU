@@ -22,8 +22,10 @@ Start with these core references:
 
 RAZAR operates as service 0, validating the environment and enforcing the
 startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
-operators can track health at a glance. Read the
-[RAZAR Agent](RAZAR_AGENT.md) guide for its perpetual ignition loop,
+operators can track health at a glance. The
+[RAZAR Agent ignition workflow](RAZAR_AGENT.md#ignition-workflow) explains
+how priorities are derived and progress is persisted. The broader
+[RAZAR Agent](RAZAR_AGENT.md) guide covers its perpetual ignition loop,
 CROWN LLM diagnostics, and shutdown–repair–restart handshake, and see
 [nazarick_agents.md](nazarick_agents.md) for the in‑world servant lineup.
 When issues surface, consult the [Recovery Playbook](recovery_playbook.md)
