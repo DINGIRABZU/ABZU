@@ -106,6 +106,30 @@ module, config, suggestion = load_remote_agent_from_git(
 Each invocation records configurations and patch suggestions to
 `logs/razar_remote_agents.json` for audit and replay.
 
+## Lifecycle Bus and Recovery Protocol
+
+`agents/razar/lifecycle_bus.py` exposes a lightweight Redis pub/sub layer used
+by RAZAR components. Status updates are published to the ``razar:status``
+channel and persisted in a Redis hash of the same name so operators can query
+the last reported state for any component.  Issues and control messages travel
+over ``razar:issues`` and ``razar:control`` respectively.
+
+When a component encounters an unrecoverable error it sends a JSON payload to
+the ZeroMQ endpoint managed by
+`agents/razar/recovery_manager.py`. The payload must include ``module`` and may
+optionally provide a serialisable ``state`` snapshot. The recovery manager:
+
+1. Broadcasts a ``pause`` instruction on the lifecycle bus.
+2. Saves the provided state under ``recovery_state/<module>.json``.
+3. Requests a patch from the remote code agent via
+   ``code_repair.repair_module``.
+4. Signals a restart for the module through the bus.
+5. Sends a ``restore`` control so the component reloads its saved state and
+   finally broadcasts ``resume`` to re‑enable the system.
+
+This protocol ensures components can be halted, patched and resumed without
+human intervention while maintaining state continuity.
+
 ## Crown Link Protocol
 
 Diagnostics and repair hand‑offs are transported over a lightweight WebSocket

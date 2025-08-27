@@ -38,6 +38,9 @@ python -m razar.status_dashboard
 
 The dashboard also links to quarantine logs and the boot history.
 
+For protocol details of the lifecycle bus and automated recovery flow, see
+the [RAZAR Agent guide](RAZAR_AGENT.md#lifecycle-bus-and-recovery-protocol).
+
 If RAZAR cannot restart a component, rebuild the virtual environment and rerun
 the manager. Removing `logs/razar_state.json` forces a full restart sequence.
 
