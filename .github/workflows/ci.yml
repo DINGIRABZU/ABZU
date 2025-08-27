@@ -34,6 +34,13 @@ jobs:
             pyproject.toml
             requirements.txt
             dev-requirements.txt
+      - name: Cache model downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            INANNA_AI/models
+          key: ${{ runner.os }}-models-${{ hashFiles('download_models.py') }}
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
