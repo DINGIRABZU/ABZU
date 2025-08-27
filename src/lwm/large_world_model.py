@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Iterable, Dict, List, Tuple
+from typing import Any, Iterable, Dict, List, Tuple, TYPE_CHECKING
+
+if TYPE_CHECKING:  # pragma: no cover - imported only for type hints
+    from vision.yoloe_adapter import Detection
 
 
 class LargeWorldModel:
@@ -11,7 +14,8 @@ class LargeWorldModel:
 
     The implementation is a lightweight stand‑in for heavy NeRF or Gaussian
     splatting systems. It records provided frame paths and produces a list of
-    pseudo 3D points for testing and introspection.
+    pseudo 3D points for testing and introspection.  Detection hooks allow
+    upstream vision modules to attach YOLOE bounding boxes for each frame.
     """
 
     def __init__(self) -> None:
@@ -57,3 +61,25 @@ class LargeWorldModel:
         """Return stored detections keyed by frame index."""
 
         return self._detections
+
+    def ingest_yoloe_detections(
+        self, frame_index: int, detections: List["Detection"]
+    ) -> None:
+        """Input hook storing full YOLOE ``detections`` for ``frame_index``.
+
+        The bounding boxes are retained in ``_detections`` and a rich detection
+        payload is attached to the scene under the ``detections`` key when a
+        scene exists.
+        """
+
+        self._detections[frame_index] = [d.box for d in detections]
+        if self._scene is not None:
+            details = [
+                {
+                    "label": d.label,
+                    "confidence": d.confidence,
+                    "box": d.box,
+                }
+                for d in detections
+            ]
+            self._scene.setdefault("detections", {})[frame_index] = details
