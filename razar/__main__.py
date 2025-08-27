@@ -3,7 +3,9 @@ from __future__ import annotations
 """Command line utilities for operating the RAZAR lifecycle bus."""
 
 import argparse
+from pathlib import Path
 
+from agents.razar.ignition_builder import build_ignition
 from agents.razar.lifecycle_bus import LifecycleBus
 
 
@@ -24,6 +26,10 @@ def _cmd_stop(args: argparse.Namespace) -> None:
     print(f"Stop signal sent to {args.component}")
 
 
+def _cmd_build_ignition(args: argparse.Namespace) -> None:
+    build_ignition(Path(args.blueprint), Path(args.output))
+
+
 def main() -> None:  # pragma: no cover - CLI entry point
     parser = argparse.ArgumentParser(description="RAZAR lifecycle utilities")
     parser.add_argument(
@@ -40,6 +46,21 @@ def main() -> None:  # pragma: no cover - CLI entry point
     p_stop = sub.add_parser("stop", help="Request a component to stop")
     p_stop.add_argument("component", help="Component name")
     p_stop.set_defaults(func=_cmd_stop)
+
+    p_ignition = sub.add_parser(
+        "build-ignition", help="Regenerate docs/Ignition.md from the blueprint"
+    )
+    p_ignition.add_argument(
+        "--blueprint",
+        default=Path(__file__).resolve().parents[1] / "docs" / "system_blueprint.md",
+        help="Path to system_blueprint.md",
+    )
+    p_ignition.add_argument(
+        "--output",
+        default=Path(__file__).resolve().parents[1] / "docs" / "Ignition.md",
+        help="Output path for Ignition.md",
+    )
+    p_ignition.set_defaults(func=_cmd_build_ignition)
 
     args = parser.parse_args()
     if hasattr(args, "func"):
