@@ -27,6 +27,16 @@ This guide introduces the ABZU codebase, highlights core entry points, and cover
 - wget
 - aria2c
 
+## Security Checklist
+- Store API keys and credentials in `secrets.env`; never commit secrets to
+  version control and rotate them regularly.
+- Run `pre-commit run --all-files` and `bandit -r . -x tests,docs --severity-level high --confidence-level high` before pushing
+  changes.
+- Review dependency updates and keep your environment patched.
+- Use least-privilege tokens for third-party services.
+- See [security_model.md](security_model.md) for more on threat surfaces and
+  mitigation strategies.
+
 ## Quick Start
 ```bash
 git clone https://github.com/your-org/ABZU.git
