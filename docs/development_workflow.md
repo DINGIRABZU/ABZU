@@ -74,7 +74,12 @@ Priorities](developer_onboarding.md#assigning-component-priorities) for a
 walkthrough. When introducing or modifying a service:
 
 1. Set its **Priority** metadata in [system_blueprint.md](system_blueprint.md).
-2. Validate the ignition sequence using RAZAR's CLI:
+2. Regenerate `Ignition.md` from the blueprint:
+
+   ```bash
+   python -m razar build-ignition
+   ```
+3. Validate the ignition sequence using RAZAR's runtime manager:
 
    ```bash
    python -m agents.razar.runtime_manager config/razar_config.yaml
