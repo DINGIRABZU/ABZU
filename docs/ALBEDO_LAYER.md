@@ -64,6 +64,15 @@ and the current emotional weight from :mod:`INANNA_AI.emotion_analysis`.
 layer.generate_response("I love Alice", quantum_context="entangled")
 ```
 
+## Object context for avatar selection
+
+External vision modules can influence which avatar texture the Albedo layer
+uses. Feed :class:`vision.yoloe_adapter.Detection` objects into
+``agents.albedo.consume_detections`` to update the current avatar based on the
+scene. Detected objects are matched against a small mapping; for example a
+``"cat"`` detection selects ``avatars/cat.png``. This hook allows environmental
+context to steer avatar presentation alongside conversational state.
+
 ## Examples
 
 The persona inspects each message to detect emotional keywords and entity types.

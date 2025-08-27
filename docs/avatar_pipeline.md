@@ -74,3 +74,14 @@ from core.avatar_expression_engine import stream_avatar_audio
 for _ in stream_avatar_audio(Path("qnl_hex_song.wav")):
     pass
 ```
+
+## Object-aware avatar selection
+
+The video engine can adapt the visible avatar based on the current visual
+context. A :class:`vision.yoloe_adapter.YOLOEAdapter` analyses incoming frames
+and emits :class:`vision.yoloe_adapter.Detection` objects. These detections are
+forwarded to :func:`agents.albedo.consume_detections`, which maps recognised
+objects to avatar textures. For example, a ``"cat"`` detection selects
+``avatars/cat.png`` while a ``"dog"`` detection loads ``avatars/dog.png``. When
+no known objects are present the default texture is used. This allows external
+scene objects to dynamically influence the avatar's appearance.
