@@ -13,7 +13,8 @@ The orchestrator builds or validates the dedicated virtual environment and
 records the last successful component in a `.state` file. Monitor the
 `/health` endpoint to confirm the environment hash and heartbeat.
 
-Use ``razar.mission_logger`` to record progress as components start:
+Use ``razar.mission_logger`` to record progress as components start (see
+[logging guidelines](logging_guidelines.md) for event types and examples):
 
 ```bash
 python -m razar.mission_logger log gateway success
@@ -22,7 +23,8 @@ python -m razar.mission_logger summary
 
 Entries are stored in ``logs/razar.log``. The ``summary`` command prints the
 last successful component and lists pending tasks based on the most recent
-status for each component.
+status for each component. For a full chronological view, run ``razar
+timeline`` to reconstruct the mission sequence.
 
 If RAZAR cannot restart a component, rebuild the virtual environment and rerun
 the manager. Removing the `.state` file forces a full restart sequence.
