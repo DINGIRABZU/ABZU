@@ -53,6 +53,20 @@ ruff check .
 Fix any reported issues before pushing to ensure the CI pipeline remains
 green.
 
+## Ignition Chain
+
+Component priorities drive startup order. When introducing or modifying a
+service:
+
+1. Set its **Priority** metadata in [system_blueprint.md](system_blueprint.md).
+2. Validate the ignition sequence using RAZAR's CLI:
+
+   ```bash
+   python -m agents.razar.runtime_manager config/razar_config.yaml
+   ```
+
+For deeper instructions, see [RAZAR_AGENT.md](RAZAR_AGENT.md).
+
 ## Style and Contribution
 
 Code follows the guidelines in [CODE_STYLE.md](../CODE_STYLE.md). Commits should
