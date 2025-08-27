@@ -35,6 +35,28 @@ RAZAR runs a perpetual ignition loop that:
    monitor the stack.  The loop never exits on its own—it continually
    verifies that previously healthy services stay responsive.
 
+### Iterative Boot Loop
+
+The loop now tracks launch metrics on every pass. Each component receives
+exponential backoff and retry attempts. After a configurable number of
+failures, stubborn modules are quarantined and skipped on future runs. Metrics
+and the best performing sequence are persisted to `logs/razar_boot_history.json`
+for later analysis.
+
+```mermaid
+flowchart TD
+    start((Start)) --> launch[Launch component]
+    launch --> check{Health check?}
+    check -- pass --> record[Record success]
+    record --> next{More components?}
+    next -- yes --> launch
+    next -- no --> persist[Persist metrics]
+    check -- fail --> retry[Backoff & retry]
+    retry --> check
+    retry -- exceeded --> quarantine[Quarantine]
+    quarantine --> record
+```
+
 ## Adaptive Startup Orchestrator
 
 The `razar/adaptive_orchestrator.py` helper experiments with different
