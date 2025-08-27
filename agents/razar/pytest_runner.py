@@ -20,6 +20,15 @@ from typing import Dict, Iterable, List
 
 import pytest
 import yaml
+import logging
+
+try:  # pragma: no cover - optional repair dependency
+    from . import code_repair
+except Exception:  # pragma: no cover - runtime guard
+    code_repair = None  # type: ignore
+
+
+logger = logging.getLogger(__name__)
 
 PRIORITY_LEVELS = ("P1", "P2", "P3", "P4", "P5")
 STATE_FILE = "pytest_last_failed.json"
@@ -75,6 +84,45 @@ def _last_failed(repo_root: Path) -> str:
     return ""
 
 
+def _guess_module_path(repo_root: Path, nodeid: str) -> tuple[Path, Path]:
+    """Return module and test paths for ``nodeid``.
+
+    The helper strips the ``tests/`` prefix and ``test_`` prefix to guess the
+    source module corresponding to a failing test.  If no matching module is
+    found, the test file itself is returned as the target for repair.
+    """
+
+    test_rel = Path(nodeid.split("::")[0])
+    test_path = repo_root / test_rel
+    stripped = test_rel
+    if stripped.parts and stripped.parts[0] == "tests":
+        stripped = Path(*stripped.parts[1:])
+    candidate = repo_root / stripped.with_name(stripped.name.replace("test_", "", 1))
+    module_path = candidate if candidate.exists() else test_path
+    return module_path, test_path
+
+
+def _attempt_repair(repo_root: Path, nodeid: str, error: str, log_path: Path) -> bool:
+    """Use :mod:`code_repair` to patch the failing module."""
+
+    if code_repair is None:  # pragma: no cover - optional dependency
+        logger.debug("code_repair module unavailable")
+        return False
+
+    module_path, test_path = _guess_module_path(repo_root, nodeid)
+    try:
+        repaired = code_repair.repair_module(module_path, [test_path], error)
+    except Exception as exc:  # pragma: no cover - runtime guard
+        logger.error("repair failed: %s", exc)
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(f"repair exception: {exc}\n")
+        return False
+
+    with log_path.open("a", encoding="utf-8") as fh:
+        fh.write(f"repair {'succeeded' if repaired else 'failed'} for {module_path}\n")
+    return repaired
+
+
 def run_pytest(
     priorities: Iterable[str] | None,
     resume: bool,
@@ -119,7 +167,23 @@ def run_pytest(
         if exit_code != 0:
             failing = _last_failed(repo_root)
             _save_state(state_path, tier, failing)
-            break
+
+            repaired = False
+            if failing:
+                repaired = _attempt_repair(
+                    repo_root, failing, stream.getvalue(), log_path
+                )
+                if repaired:
+                    rerun_args = ["-p", "pytest_order", failing.split("::")[0]]
+                    rerun_code = pytest.main(rerun_args)
+                    with log_path.open("a", encoding="utf-8") as fh:
+                        fh.write(f"rerun exit code {rerun_code}\n")
+                    if rerun_code == 0:
+                        exit_code = 0
+                        _clear_state(state_path)
+                        continue
+            if not repaired:
+                break
 
     if exit_code == 0:
         _clear_state(state_path)
