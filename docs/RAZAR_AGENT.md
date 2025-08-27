@@ -57,3 +57,30 @@ python agents/razar/runtime_manager.py config/razar_config.yaml
 Each component entry in the configuration specifies a `command` and `priority`.
 After every successful start the manager records the component name in
 `logs/razar_state.json`, allowing subsequent runs to skip completed steps.
+
+## Prioritized Test Execution
+
+Tests can be executed in priority tiers using `agents/razar/pytest_runner.py`.
+The mapping of test files to tiers is stored in `tests/priority_map.yaml` with
+levels `P1` through `P5`.
+
+Run all tests in order of priority:
+
+```bash
+python agents/razar/pytest_runner.py
+```
+
+Execute only selected tiers (for example P1 and P2):
+
+```bash
+python agents/razar/pytest_runner.py --priority P1 P2
+```
+
+Resume from the last failing test session:
+
+```bash
+python agents/razar/pytest_runner.py --resume
+```
+
+Output from each invocation is written to `logs/pytest_priority.log` for
+inspection by other RAZAR components.
