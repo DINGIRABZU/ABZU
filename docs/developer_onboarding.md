@@ -56,9 +56,10 @@ python docs/onboarding/wizard.py
 
 ## Getting Started with RAZAR
 
-See [RAZAR_AGENT.md](RAZAR_AGENT.md) for a detailed reference. RAZAR
-prepares a clean environment and boots components in sequence. For a
-local run:
+See [RAZAR_AGENT.md](RAZAR_AGENT.md) for a detailed reference. As
+service 0, RAZAR’s mission is to verify dependencies, enforce component
+priorities, and log health to [Ignition.md](Ignition.md). For a local
+run:
 
 1. **Build the RAZAR environment**
    ```bash
@@ -79,12 +80,13 @@ local run:
 
 ## Assigning Component Priorities
 
-RAZAR boots services based on the priority table in [Ignition.md](Ignition.md).
-Lower numbers start first. To register a new component:
+RAZAR boots services based on the priority table in
+[Ignition.md](Ignition.md). Lower numbers start first. To register a new
+component and have RAZAR track it:
 
 1. Define its `Priority` metadata in [system_blueprint.md](system_blueprint.md).
-2. Regenerate `Ignition.md` so the new entry is grouped under the correct
-   priority:
+2. Regenerate `Ignition.md` so the new entry is grouped under the
+   correct priority and initialized with a ⚠️ status marker:
 
    ```bash
    python -m razar build-ignition
