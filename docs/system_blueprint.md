@@ -370,8 +370,10 @@ procedures outlined above:
 
 ## LLM Console Alternatives
 
-The repository includes a minimal `web_console/` that streams avatar video and
-routes simple commands to the backend. The following open‑source consoles offer
+The repository includes a minimal `web_console/` front end with a single command
+input. It streams avatar video via WebRTC, shows emotion glyphs, logs events,
+and exposes a lightweight music‑generation UI. However, it lacks authentication,
+chat history, and multi‑user support. The following open‑source consoles offer
 richer features for experimenting or deploying chat interfaces.
 
 ### Gradio
@@ -402,4 +404,6 @@ richer features for experimenting or deploying chat interfaces.
 - **Link:** <https://github.com/open-webui/open-webui>
 
 Each project can replace or augment the bundled `web_console/` depending on the
-desired trade‑off between simplicity and features.
+desired trade‑off between simplicity and features. Chainlit pairs well with the
+existing Python services for rapid prototypes, while OpenWebUI targets full
+deployments with user accounts and persistent chats.
