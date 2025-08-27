@@ -17,6 +17,18 @@ This guide covers building versioned images and deploying them using Kubernetes 
    docker push registry.example.com/abzu:${APP_VERSION}
    ```
 
+## OpenWebUI
+
+1. Define the FastAPI endpoint that OpenWebUI should use:
+   ```bash
+   export FASTAPI_BASE_URL=http://localhost:8000
+   ```
+2. Launch the interface:
+   ```bash
+   docker compose -f docker-compose.openwebui.yml up
+   ```
+   The UI is available at http://localhost:3000.
+
 ## Kubernetes
 
 Reference manifests live in `deployment/kubernetes`. Apply them with:
