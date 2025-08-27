@@ -30,3 +30,13 @@ layers:
 ```
 
 Add or modify packages as required by updating this file and re-running the builder.
+
+## Health Checks
+
+RAZAR probes each component through `agents/razar/health_checks.py` after a
+startup command succeeds.  Service‑specific functions can examine logs or
+metrics and return `True` when the component is healthy.  For the Vision
+Adapter (YOLOE), a check might confirm that prediction FPS stays above a target
+threshold.  Failed checks automatically quarantine the component via
+`quarantine_manager.py`, preventing unstable services from continuing in the
+boot sequence.

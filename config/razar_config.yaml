@@ -9,6 +9,11 @@ components:
   - name: crown_llm
     priority: 2
     command: "echo 'starting crown_llm'"
+  - name: vision_adapter
+    priority: 2
+    command: "echo 'starting vision_adapter'"
+    stop: "echo 'stopping vision_adapter'"
+    quarantine_on_fail: true
   - name: audio_device
     priority: 3
     command: "echo 'starting audio_device'"
