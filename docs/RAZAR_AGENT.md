@@ -18,3 +18,18 @@ Once the environment is cleared, RAZAR launches the system in order:
 RAZAR does not reside within the Nazarick agent hierarchy. Its sole mission is
 to ready the host and then hand off control to the internal agents once both
 Inanna and the CROWN model are running.
+
+## Recreating the Environment
+When the runtime becomes polluted or dependencies drift, rebuild the virtual
+environment before starting services:
+
+1. Define package lists for each component layer in `razar_env.yaml`.
+2. Execute the builder from the repository root:
+   ```bash
+   python -m razar.environment_builder --venv .razar_venv
+   ```
+   The script verifies the Python version, creates the virtual environment and
+   installs all layer packages.
+3. Re-run the RAZAR runtime manager to launch components.
+
+These steps guarantee a clean foundation for Inanna and CROWN.

@@ -1,0 +1,7 @@
+layers:
+  razar:
+    - pyyaml
+  inanna:
+    - requests
+  crown:
+    - numpy
