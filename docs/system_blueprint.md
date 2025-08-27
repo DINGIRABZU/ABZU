@@ -148,6 +148,18 @@ consciousness and songs:
     [Chakra Architecture](chakra_architecture.md),
     [Chakra Koan](chakra_koan_system.md#crown)
 
+The Crown hosts the primary GLM-4.1V-9B model, obtained with
+`download_models.py glm41v_9b` or through `crown_model_launcher.sh`.
+It expects `GLM_API_URL` and `GLM_API_KEY` to reach the serving
+endpoint. Supporting DeepSeek-V3, Mistral-8x22B and Kimi-K2 servants
+are registered via `init_crown_agent.py` and booted with
+`launch_servants.sh`, which reads `DEEPSEEK_URL`, `MISTRAL_URL`,
+`KIMI_K2_URL` or the aggregate `SERVANT_MODELS` variable. Routing is
+guided by `_EMOTION_MODEL_MATRIX`: joy and excited map to DeepSeek,
+stress, fear and sadness route to Mistral, while calm or neutral tones
+use GLM. See [LLM Models](LLM_MODELS.md) for
+`MoGEOrchestrator` heuristics and further context.
+
 ## Personality Layers
 
 Personality modules shape archetypal behaviors across the stack. **Albedo** acts
