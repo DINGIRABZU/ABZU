@@ -21,6 +21,20 @@ Start with these core references:
 - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md) – vision, channel hierarchy, and architectural stack
 
+### Chakra Layer Relationships
+
+The stack ascends through seven chakra layers:
+
+1. **Root** – networking and I/O foundation
+2. **Sacral** – emotion engine
+3. **Solar Plexus** – learning and state transitions
+4. **Heart** – memory and voice
+5. **Throat** – prompt orchestration and agent interface
+6. **Third Eye** – insight and QNL processing
+7. **Crown** – high‑level orchestration
+
+See [Chakra Architecture](chakra_architecture.md) for component mappings.
+
 RAZAR operates as service 0, validating the environment and enforcing the
 startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
 operators can track health at a glance. The
