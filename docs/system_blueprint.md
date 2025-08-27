@@ -324,6 +324,14 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 - **Health Check:** Send a dummy prompt and inspect response time.
 - **Recovery:** Reload weights with `crown_model_launcher.sh` or switch to a fallback model.
 
+### Vision Adapter (YOLOE)
+- **Layer:** Third Eye
+- **Priority:** 2
+- **Purpose:** Detect objects with YOLOE and stream bounding boxes to the Large World Model for the 2D→3D pipeline.
+- **Startup:** Launch once core messaging services are online.
+- **Health Check:** Verify prediction FPS meets the expected threshold.
+- **Recovery:** Reload YOLOE weights or restart the adapter.
+
 ## Non‑Essential Services
 ### Audio Device
 - **Priority:** 3
@@ -357,9 +365,10 @@ recommended for both local runs and production deployments described in
 1. Memory Store (Heart, priority 1)
 2. Chat Gateway (Throat, priority 2)
 3. CROWN LLM (Crown, priority 2)
-4. Audio Device (priority 3)
-5. Avatar (priority 4)
-6. Video (priority 5)
+4. Vision Adapter (Third Eye, priority 2)
+5. Audio Device (priority 3)
+6. Avatar (priority 4)
+7. Video (priority 5)
 
 Each step should report readiness before continuing. After the final service
 comes online, run the smoke tests in [testing.md](testing.md) to confirm the

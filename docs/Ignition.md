@@ -17,21 +17,22 @@ RAZAR coordinates system boot and records runtime health. Components are grouped
 | --- | --- | --- | --- |
 | 2 | Chat Gateway | Probe `/chat/health` and watch latency. | ⚠️ |
 | 3 | CROWN LLM | Send a dummy prompt and inspect response time. | ⚠️ |
+| 4 | Vision Adapter (YOLOE) | Verify prediction FPS meets target. | ⚠️ |
 
 ## Priority 3
 | Order | Component | Health Check | Status |
 | --- | --- | --- | --- |
-| 4 | Audio Device | Run an audio loopback test. | ⚠️ |
+| 5 | Audio Device | Run an audio loopback test. | ⚠️ |
 
 ## Priority 4
 | Order | Component | Health Check | Status |
 | --- | --- | --- | --- |
-| 5 | Avatar | Verify avatar frame rendering. | ⚠️ |
+| 6 | Avatar | Verify avatar frame rendering. | ⚠️ |
 
 ## Priority 5
 | Order | Component | Health Check | Status |
 | --- | --- | --- | --- |
-| 6 | Video | Probe the video stream endpoint. | ⚠️ |
+| 7 | Video | Probe the video stream endpoint. | ⚠️ |
 
 ## Regeneration
 RAZAR monitors component events and rewrites this file whenever a priority or health state changes. Status markers update to:
