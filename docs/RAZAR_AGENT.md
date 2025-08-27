@@ -1,122 +1,54 @@
-# RAZAR Agent Environment
+# RAZAR Agent
 
-This document describes how to build the Python environment for the RAZAR components.
+RAZAR acts as service 0 in the ABZU stack. It verifies the runtime
+environment, sequenced component priorities, and continually rewrites
+[Ignition.md](Ignition.md) with health markers so operators can track
+startup progress. The agent forms a feedback loop with CROWN LLM to heal
+faulty modules and ensures the system can cycle back to a ready state
+without manual intervention.
 
-## Building the environment
+## Perpetual Ignition Loop
 
-`razar/environment_builder.py` manages creation of a virtual environment and installs
-packages for each component layer defined in `razar_env.yaml`.
+RAZAR runs a perpetual ignition loop that:
 
-```bash
-python razar/environment_builder.py --venv .razar_venv
-```
+1. Reads component priorities from `Ignition.md` and
+   `config/razar_config.yaml`.
+2. Builds the dedicated virtual environment and installs dependencies
+   defined in `razar_env.yaml`.
+3. Boots each component in priority order using
+   `agents/razar/runtime_manager.py`.
+4. Probes `/ready` and `/health` endpoints via
+   `agents/razar/health_checks.py`.
+5. Rewrites the status column in `Ignition.md` (✅/⚠️/❌) and loops back to
+   monitor the stack.  The loop never exits on its own—it continually
+   verifies that previously healthy services stay responsive.
 
-The script ensures a compatible Python version, creates the virtual environment and
-installs dependencies layer by layer.
+## CROWN LLM Diagnostics and Patching
 
-## Configuration
+When a component fails a health check, RAZAR collects logs and test
+artifacts and asks the CROWN LLM for repair guidance.  The
+`agents/razar/code_repair.py` helper submits the failing module and error
+context to the LLM, receives a patch suggestion, and validates the result
+in a sandbox.  Successful patches are committed back to the repository
+and the component is marked ready for reactivation.
 
-Dependencies are declared in `razar_env.yaml` under the `layers` key. Each entry maps a
-layer name to a list of packages:
+## Shutdown–Repair–Restart Handshake
 
-```yaml
-layers:
-  razar:
-    - pyyaml
-  inanna:
-    - requests
-  crown:
-    - numpy
-```
+RAZAR performs a handshake with unhealthy services:
 
-Add or modify packages as required by updating this file and re-running the builder.
+1. **Shutdown** – instruct the component to stop gracefully and move its
+   metadata to `quarantine/`.
+2. **Repair** – run diagnostics, solicit a patch from the CROWN LLM, and
+   rerun the module's tests.
+3. **Restart** – if tests pass, call
+   `quarantine_manager.reactivate_component` and relaunch via the runtime
+   manager.  Status in `Ignition.md` returns to ✅.
 
-## Health Checks
+This handshake guarantees that faulty code is isolated, repaired, and
+brought back online under explicit operator control.
 
-RAZAR probes each component through `agents/razar/health_checks.py` after a
-startup command succeeds.  Service‑specific functions can examine logs or
-metrics and return `True` when the component is healthy.  For the Vision
-Adapter (YOLOE), a check might confirm that prediction FPS stays above a target
-threshold.  Failed checks automatically quarantine the component via
-`quarantine_manager.py`, preventing unstable services from continuing in the
-boot sequence.
+## Further Reading
 
-## Runtime Manager
-
-`agents/razar/runtime_manager.py` boots the configured components in order of
-their priority. On first run it builds a dedicated virtual environment and
-installs the packages declared for each component in `razar_env.yaml`.  The
-manager tracks progress so interrupted boots can resume where they left off and
-quarantines modules that fail to start or pass a health check.
-
-Launch the sequence by providing the path to `razar_config.yaml`:
-
-```bash
-python agents/razar/runtime_manager.py config/razar_config.yaml
-```
-
-Each component entry in the configuration specifies a `command` and `priority`.
-After every successful start the manager records the component name in
-`logs/razar_state.json`, allowing subsequent runs to skip completed steps.
-If a component fails, its metadata is moved to the `quarantine/` directory and
-an entry is appended to `docs/quarantine_log.md`.
-
-### Recovery
-
-1. **Resume** – rerun the manager; it continues after the last healthy step
-   recorded in `logs/razar_state.json`.
-2. **Full restart** – remove `logs/razar_state.json` and rerun the manager to
-   rebuild the stack from the first component.
-3. **Quarantine review** – inspect `quarantine/` and
-   `docs/quarantine_log.md` for details on failed modules. Resolve issues, then
-   remove the component's JSON file and rerun to retry.
-
-## Prioritized Test Execution
-
-Tests can be executed in priority tiers using
-`agents/razar/pytest_runner.py`. The mapping of test files to tiers is stored in
-`tests/priority_map.yaml` with levels `P1` through `P5`.
-
-The runner executes one tier at a time using the `pytest-order` plugin so that
-high‑priority smoke tests fail fast. After any failure the runner records the
-failing test node and tier in `logs/pytest_last_failed.json`. Subsequent runs
-with `--resume` continue from that point.
-
-Run all tests in order of priority:
-
-```bash
-python agents/razar/pytest_runner.py
-```
-
-Execute only selected tiers (for example P1 and P2):
-
-```bash
-python agents/razar/pytest_runner.py --priority P1 P2
-```
-
-Resume from the last failing test session:
-
-```bash
-python agents/razar/pytest_runner.py --resume
-```
-
-Output from each invocation is appended to `logs/pytest_priority.log` for
-inspection by other RAZAR components.
-
-## Automated Code Repair
-
-`agents/razar/code_repair.py` automates patching of failing modules. The helper
-collects the failing source and error message, queries the CROWN LLM (or fallback
-models) for a patch suggestion and evaluates the result in a sandbox:
-
-1. **Context gathering** – read the module source and failing test output.
-2. **Patch request** – submit the context to `GLMIntegration` or alternate
-   models for a code fix.
-3. **Sandbox tests** – write the patched module to a temporary directory and
-   execute the module's test files with `pytest` using that sandbox on the
-   `PYTHONPATH`.
-4. **Reactivation** – if tests succeed, copy the patched file back to the
-   repository and reintroduce the module via `quarantine_manager.reactivate_component`.
-
-This workflow allows RAZAR to iteratively heal quarantined components without
-manually editing the repository.
+- [System Blueprint](system_blueprint.md)
+- [Nazarick Agents](nazarick_agents.md)
+- [Developer Onboarding](developer_onboarding.md)
