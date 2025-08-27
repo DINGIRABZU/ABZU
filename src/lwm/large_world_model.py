@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Dict, List, Tuple
 
 
 class LargeWorldModel:
@@ -16,6 +16,7 @@ class LargeWorldModel:
 
     def __init__(self) -> None:
         self._scene: dict[str, Any] | None = None
+        self._detections: Dict[int, List[Tuple[int, int, int, int]]] = {}
 
     def from_frames(self, frames: Iterable[Path]) -> dict[str, Any]:
         """Generate a 3D scene representation from ``frames``.
@@ -42,3 +43,17 @@ class LargeWorldModel:
     def inspect_scene(self) -> dict[str, Any]:
         """Return the last generated scene."""
         return self._scene or {}
+
+    # ------------------------------------------------------------------
+    # Detection handling
+    def ingest_detections(
+        self, frame_index: int, boxes: List[Tuple[int, int, int, int]]
+    ) -> None:
+        """Store detection ``boxes`` for ``frame_index``."""
+
+        self._detections[frame_index] = boxes
+
+    def get_detections(self) -> Dict[int, List[Tuple[int, int, int, int]]]:
+        """Return stored detections keyed by frame index."""
+
+        return self._detections
