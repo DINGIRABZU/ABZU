@@ -2,20 +2,46 @@ from __future__ import annotations
 
 """Health check routines for RAZAR runtime components.
 
-This module defines simple probe functions and a ``run`` helper that executes
-checks for named services.  Each check returns ``True`` on success.  If a check
-fails and a restart command is configured the component is restarted once before
-reporting failure.
+This module defines probe functions for runtime services and a ``run`` helper
+that executes checks for named services.  Each check returns ``True`` on
+success.  If a check fails and a restart command is configured the component is
+restarted once before reporting failure.  Health status and latency metrics are
+exported via Prometheus when the ``prometheus_client`` package is available.
 """
 
 import json
 import logging
 import subprocess
+import time
 import urllib.request
 from pathlib import Path
 from typing import Callable, Dict, List
 
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Gauge, start_http_server
+except Exception:  # pragma: no cover - optional dependency
+    Gauge = start_http_server = None  # type: ignore
+
 LOGGER = logging.getLogger("agents.razar.health_checks")
+
+HEALTH_GAUGE: Gauge | None = None
+LATENCY_GAUGE: Gauge | None = None
+
+
+def init_metrics(port: int = 9350) -> None:
+    """Start a Prometheus server if the client library is installed."""
+
+    global HEALTH_GAUGE, LATENCY_GAUGE
+    if Gauge is None or start_http_server is None or HEALTH_GAUGE is not None:
+        return
+    HEALTH_GAUGE = Gauge("service_health_status", "1=healthy,0=unhealthy", ["service"])
+    LATENCY_GAUGE = Gauge(
+        "service_health_latency_seconds",
+        "Health check latency in seconds",
+        ["service"],
+    )
+    start_http_server(port)
+    LOGGER.info("Prometheus metrics exposed on port %s", port)
 
 
 def ready_signal(url: str, timeout: int = 5) -> bool:
@@ -56,6 +82,7 @@ def verify_log(path: Path, phrase: str) -> bool:
 # Example service-specific probes
 # ---------------------------------------------------------------------------
 
+
 def check_basic_service() -> bool:
     """Example check for a basic HTTP service."""
     return ping_endpoint("http://localhost:8000/healthz")
@@ -90,6 +117,37 @@ RESTART_COMMANDS: Dict[str, List[str]] = {
 }
 
 
+# Maximum allowed latency in seconds for each check
+THRESHOLDS: Dict[str, float] = {
+    "basic_service": 0.5,
+    "complex_service": 0.5,
+    "inanna_ai": 1.0,
+    "crown_llm": 1.0,
+}
+
+
+def _execute(func: Callable[[], bool], name: str) -> bool:
+    """Execute ``func`` and record Prometheus metrics."""
+
+    init_metrics()
+    start = time.perf_counter()
+    result = func()
+    duration = time.perf_counter() - start
+    threshold = THRESHOLDS.get(name)
+    if result and threshold is not None and duration > threshold:
+        LOGGER.warning(
+            "Health check for %s exceeded latency %.3fs > %.3fs",
+            name,
+            duration,
+            threshold,
+        )
+        result = False
+    if HEALTH_GAUGE is not None:
+        HEALTH_GAUGE.labels(name).set(1 if result else 0)  # type: ignore[call-arg]
+        LATENCY_GAUGE.labels(name).set(duration)  # type: ignore[call-arg]
+    return result
+
+
 def run(name: str) -> bool:
     """Run the health check registered for ``name``.
 
@@ -102,7 +160,7 @@ def run(name: str) -> bool:
     if not func:
         LOGGER.info("No health check defined for %s", name)
         return True
-    if func():
+    if _execute(func, name):
         return True
     LOGGER.warning("Health check failed for %s", name)
     cmd = RESTART_COMMANDS.get(name)
@@ -113,4 +171,24 @@ def run(name: str) -> bool:
     except Exception as exc:  # pragma: no cover - system dependent
         LOGGER.error("Restart command failed for %s: %s", name, exc)
         return False
-    return func()
+    return _execute(func, name)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Run health checks and expose Prometheus metrics"
+    )
+    parser.add_argument(
+        "--interval",
+        type=float,
+        default=30.0,
+        help="Seconds between check cycles",
+    )
+    args = parser.parse_args()
+
+    while True:
+        for service in CHECKS:
+            run(service)
+        time.sleep(args.interval)
