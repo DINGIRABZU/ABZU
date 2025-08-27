@@ -46,6 +46,16 @@ If RAZAR cannot restart components, rebuild the virtual environment and rerun
 the manager. Deleting the `.state` file next to the configuration forces a
 full restart cycle.
 
+## Boot history
+
+Component activity is written to `logs/razar.log` in JSON lines. Refer to the
+[logging guidelines](logging_guidelines.md) for event types and usage. To
+reconstruct the boot history and identify failures chronologically, run:
+
+```bash
+python -m razar timeline
+```
+
 ## Status dashboard
 
 Use the status dashboard for a quick snapshot of the current boot attempt and

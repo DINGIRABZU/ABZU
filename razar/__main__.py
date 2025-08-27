@@ -32,7 +32,7 @@ def _cmd_build_ignition(args: argparse.Namespace) -> None:
 
 
 def _cmd_timeline(_: argparse.Namespace) -> None:
-    """Print the chronological mission log."""
+    """Print the chronological boot history from the mission log."""
 
     for entry in mission_logger.timeline():
         details = f" - {entry['details']}" if entry.get("details") else ""

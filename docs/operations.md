@@ -16,11 +16,12 @@ environment hash and heartbeat. Failed components are automatically moved to
 `quarantine/`, classified by `razar.issue_analyzer`, and logged in
 `docs/quarantine_log.md` with their issue type and suggested fix.
 
-Use ``razar.mission_logger`` to record progress as components start (see
+Use ``razar.mission_logger`` to record progress as components start, report
+health results, enter quarantine and receive patches (see
 [logging guidelines](logging_guidelines.md) for event types and examples):
 
 ```bash
-python -m razar.mission_logger log gateway success
+python -m razar.mission_logger log gateway success --event start
 python -m razar.mission_logger summary
 ```
 

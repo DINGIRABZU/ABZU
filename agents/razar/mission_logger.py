@@ -5,15 +5,15 @@ from __future__ import annotations
 This module records lifecycle events for RAZAR components in a JSON lines log
 stored at ``logs/razar.log``. Each entry captures:
 
-- ``event`` – type of event such as ``launch`` or ``health_check``
+- ``event`` – type of event such as ``start`` or ``health``
 - ``component`` – component name
 - ``status`` – outcome or note for the event
 - ``timestamp`` – ISO-8601 time in UTC
 - ``details`` – optional free-form text
 
-Utility helpers are provided for the common events of component launches,
-health checks, quarantines and recovery actions. The log can be summarised to
-find the last successful component or rendered as a chronological timeline for
+Utility helpers are provided for the common events of component starts, health
+results, quarantines and applied patches. The log can be summarised to find the
+last successful component or rendered as a chronological timeline for
 debugging.
 """
 
@@ -80,18 +80,18 @@ def log_event(
         fh.write(json.dumps(record) + "\n")
 
 
-def log_launch(component: str, status: str, details: str | None = None) -> None:
-    """Record a component launch event."""
+def log_start(component: str, status: str, details: str | None = None) -> None:
+    """Record that a component has started."""
 
-    log_event("launch", component, status, details)
+    log_event("start", component, status, details)
 
 
-def log_health_check(
+def log_health(
     component: str, status: str, details: str | None = None
 ) -> None:
-    """Record a health check event."""
+    """Record a health result for a component."""
 
-    log_event("health_check", component, status, details)
+    log_event("health", component, status, details)
 
 
 def log_quarantine(component: str, reason: str, details: str | None = None) -> None:
@@ -100,10 +100,21 @@ def log_quarantine(component: str, reason: str, details: str | None = None) -> N
     log_event("quarantine", component, reason, details)
 
 
-def log_recovery(component: str, action: str, details: str | None = None) -> None:
-    """Record that recovery actions were taken for a component."""
+def log_patch(component: str, patch: str, details: str | None = None) -> None:
+    """Record that a patch has been applied to a component."""
 
-    log_event("recovery", component, action, details)
+    log_event("patch", component, patch, details)
+
+
+# ---------------------------------------------------------------------------
+# Backwards compatibility aliases
+# ---------------------------------------------------------------------------
+
+# Older helpers used different terminology. Keep them as thin wrappers so
+# existing scripts continue to work.
+log_launch = log_start
+log_health_check = log_health
+log_recovery = log_patch
 
 
 # ---------------------------------------------------------------------------
@@ -199,7 +210,7 @@ def main() -> None:  # pragma: no cover - CLI helper
     p_log.add_argument(
         "--event",
         default="info",
-        help="Event type such as launch, health_check, quarantine, recovery",
+        help="Event type such as start, health, quarantine or patch",
     )
     p_log.add_argument("--details", help="Optional additional information")
     p_log.set_defaults(func=_cmd_log)
