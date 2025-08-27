@@ -1,9 +1,44 @@
 # RAZAR Agent
 
-The RAZAR runtime manager prepares a dedicated Python environment and starts
-system components in priority order. It is invoked automatically by
-`start_dev_agents.py` and `launch_servants.sh`, but it can also be run
-stand‑alone for experimentation.
+RAZAR acts as the external startup orchestrator for ABZU. It prepares a
+dedicated Python environment, validates prerequisites, and launches chakra
+layers in priority order before internal agents take over.
+
+## External Role
+
+RAZAR runs outside the chakra stack, managing its own virtual environment and
+invoking services from a clean slate. It performs pre‑flight checks, installs
+declared dependencies, and then hands off control once the stack reports
+readiness.
+
+## Objectives
+
+- Bootstrap chakra layers according to a defined priority sequence.
+- Ensure required packages are present before any service starts.
+- Persist progress so restarts resume from the last successful component.
+
+## Invariants
+
+- Startup order is never skipped; each layer waits for the previous one to
+  signal readiness.
+- The orchestration state file is the only artifact written by RAZAR.
+- Failures trigger retries but never bypass health checks.
+
+## Chakra Layer Startup
+
+```mermaid
+flowchart TD
+    RAZAR[RAZAR Orchestrator]
+    subgraph Startup Sequence
+        A[Memory Store]
+        B[Chat Gateway]
+        C[CROWN LLM]
+        D[Audio Device]
+        E[Avatar]
+        F[Video]
+    end
+    RAZAR --> A --> B --> C --> D --> E --> F
+```
 
 ## Configuration
 
