@@ -23,6 +23,20 @@ RAZAR runs a perpetual ignition loop that:
    monitor the stack.  The loop never exits on its own—it continually
    verifies that previously healthy services stay responsive.
 
+## Adaptive Startup Orchestrator
+
+The `razar/adaptive_orchestrator.py` helper experiments with different
+component start orders defined in `component_priorities.yaml`.  Each run
+records the overall time to reach a ready state and any failure points, then
+stores the results in `logs/razar_boot_history.json` so future launches can
+reuse the quickest sequence.
+
+### CLI Options
+
+- `--strategy` – choose `priority` (default) to start components in declared
+  order or `random` to explore shuffled sequences.
+- `--resume` – reuse the best sequence from previous history entries.
+
 ## CROWN LLM Diagnostics and Patching
 
 When a component fails a health check, RAZAR collects logs and test
