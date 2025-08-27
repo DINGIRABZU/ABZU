@@ -21,6 +21,10 @@ For deeper guidance on operations and reliability, refer to:
 
 Before any chakra layer activates, the external [RAZAR Agent](RAZAR_AGENT.md)
 prepares a clean environment outside Nazarick and initiates the boot sequence.
+Progress for each component is written to ``logs/razar.log`` via
+``razar.mission_logger``, which records the component, status and timestamp for
+later review. The ``summary`` command reports the last successful component and
+any pending tasks.
 
 ## Ethics & Mission
 
