@@ -4,32 +4,32 @@ This guide summarizes core agents within ABZU's Nazarick system. Each agent alig
 
 [Chat2DB](chat2db.md) bridges the SQLite log and vector store so agents can persist transcripts and retrieve relevant context.
 
-| Agent | Role | Chakra | Memory Scope | External Libraries | Stub |
-| --- | --- | --- | --- | --- | --- |
-| Orchestration Master | High-level orchestration and launch control | Crown | `pipeline` YAML, `ritual_profile.json` | Model runtime, container services | [orchestration_master.py](../orchestration_master.py) |
-| Prompt Orchestrator | Prompt routing, agent interface, context recall via [Chat2DB](chat2db.md) | Throat | Prompt/response JSON payloads | LLM APIs | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
-| QNL Engine | Insight and QNL processing | Third Eye | `mirror_thresholds.json`, QNL glyph sequences | Audio toolchain | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
-| Memory Scribe | Voice avatar configuration and memory storage via [Chat2DB](chat2db.md) | Heart | `voice_avatar_config.yaml`, embedding records | Vector database | [memory_scribe.py](../memory_scribe.py) |
+| Agent | Role | Chakra | Memory Scope | External Libraries | Channel | Stub |
+| --- | --- | --- | --- | --- | --- | --- |
+| Orchestration Master | High-level orchestration and launch control | Crown | `pipeline` YAML, `ritual_profile.json` | Model runtime, container services | 7 / Throne Room | [orchestration_master.py](../orchestration_master.py) |
+| Prompt Orchestrator | Prompt routing, agent interface, context recall via [Chat2DB](chat2db.md) | Throat | Prompt/response JSON payloads | LLM APIs | 5 / Signal Hall | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
+| QNL Engine | Insight and QNL processing | Third Eye | `mirror_thresholds.json`, QNL glyph sequences | Audio toolchain | 6 / Insight Observatory | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
+| Memory Scribe | Voice avatar configuration and memory storage via [Chat2DB](chat2db.md) | Heart | `voice_avatar_config.yaml`, embedding records | Vector database | 4 / Memory Vault | [memory_scribe.py](../memory_scribe.py) |
 
 These agents draw from the chakra structure outlined in the [Developer Onboarding guide](developer_onboarding.md) and [Chakra Architecture](chakra_architecture.md).
 
 ## Additional Agents
 
-| Agent | Responsibilities | Path |
-| --- | --- | --- |
-| Demiurge Strategic Simulator | Long-term planning, failure forecasting, scenario stress-testing | [agents/demiurge/strategic_simulator.py](../agents/demiurge/strategic_simulator.py) |
-| Shalltear Fast Inference Agent | Burst compute, load shedding, monitors API quotas | [agents/shalltear/fast_inference_agent.py](../agents/shalltear/fast_inference_agent.py) |
-| Cocytus Prompt Arbiter | Logical sanitization, legal parsing, audits model bias | [agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_arbiter.py) |
-| Ecosystem Aura Capture | Data harvesting, environmental telemetry, sensor health checks | [agents/ecosystem/aura_capture.py](../agents/ecosystem/aura_capture.py) |
-| Ecosystem Mare Gardener | Infrastructure metrics, performance trend analysis, capacity planning advisories | [agents/ecosystem/mare_gardener.py](../agents/ecosystem/mare_gardener.py) |
-| Sebas Compassion Module | Empathy modeling, emotional safety buffer, conflict signal resolution | [agents/sebas/compassion_module.py](../agents/sebas/compassion_module.py) |
-| Victim Security Canary | Security alerts, intrusion detection, anomaly threshold tracking | [agents/victim/security_canary.py](../agents/victim/security_canary.py) |
-| Pandora Persona Emulator | Persona emulation, scenario roleplay, identity consistency checks | [agents/pandora/persona_emulator.py](../agents/pandora/persona_emulator.py) |
-| Pleiades Star Map Utility | Celestial navigation utilities, cosmic alignment calculations | [agents/pleiades/star_map.py](../agents/pleiades/star_map.py) |
-| Pleiades Signal Router Utility | Cross-agent signal routing, fallback relay strategies | [agents/pleiades/signal_router.py](../agents/pleiades/signal_router.py) |
-| Bana Bio-Adaptive Narrator | Biosignal-driven narrative generation | [agents/bana/bio_adaptive_narrator.py](../agents/bana/bio_adaptive_narrator.py) |
-| Asian Gen Creative Engine | Multilingual generation with locale codes, runtime SentencePiece fallback | [agents/asian_gen/creative_engine.py](../agents/asian_gen/creative_engine.py) |
-| Land Graph Geo Knowledge | Landscape graph, ritual site queries | [agents/land_graph/geo_knowledge.py](../agents/land_graph/geo_knowledge.py) |
+| Agent | Responsibilities | Channel | Path |
+| --- | --- | --- | --- |
+| Demiurge Strategic Simulator | Long-term planning, failure forecasting, scenario stress-testing | 7 / Lava Pits | [agents/demiurge/strategic_simulator.py](../agents/demiurge/strategic_simulator.py) |
+| Shalltear Fast Inference Agent | Burst compute, load shedding, monitors API quotas | 1‑3 / Catacombs | [agents/shalltear/fast_inference_agent.py](../agents/shalltear/fast_inference_agent.py) |
+| Cocytus Prompt Arbiter | Logical sanitization, legal parsing, audits model bias | 5 / Glacier Prison | [agents/cocytus/prompt_arbiter.py](../agents/cocytus/prompt_arbiter.py) |
+| Ecosystem Aura Capture | Data harvesting, environmental telemetry, sensor health checks | 6 / Jungle Aerie | [agents/ecosystem/aura_capture.py](../agents/ecosystem/aura_capture.py) |
+| Ecosystem Mare Gardener | Infrastructure metrics, performance trend analysis, capacity planning advisories | 6 / Jungle Grove | [agents/ecosystem/mare_gardener.py](../agents/ecosystem/mare_gardener.py) |
+| Sebas Compassion Module | Empathy modeling, emotional safety buffer, conflict signal resolution | 9 / Royal Suite | [agents/sebas/compassion_module.py](../agents/sebas/compassion_module.py) |
+| Victim Security Canary | Security alerts, intrusion detection, anomaly threshold tracking | 8 / Sacrificial Chamber | [agents/victim/security_canary.py](../agents/victim/security_canary.py) |
+| Pandora Persona Emulator | Persona emulation, scenario roleplay, identity consistency checks | 10 / Treasure Vault | [agents/pandora/persona_emulator.py](../agents/pandora/persona_emulator.py) |
+| Pleiades Star Map Utility | Celestial navigation utilities, cosmic alignment calculations | 9 / Maid Quarters | [agents/pleiades/star_map.py](../agents/pleiades/star_map.py) |
+| Pleiades Signal Router Utility | Cross-agent signal routing, fallback relay strategies | 9 / Relay Wing | [agents/pleiades/signal_router.py](../agents/pleiades/signal_router.py) |
+| Bana Bio-Adaptive Narrator | Biosignal-driven narrative generation | 4 / Biosphere Lab | [agents/bana/bio_adaptive_narrator.py](../agents/bana/bio_adaptive_narrator.py) |
+| Asian Gen Creative Engine | Multilingual generation with locale codes, runtime SentencePiece fallback | 5 / Scriptorium | [agents/asian_gen/creative_engine.py](../agents/asian_gen/creative_engine.py) |
+| Land Graph Geo Knowledge | Landscape graph, ritual site queries | 1 / Cartography Room | [agents/land_graph/geo_knowledge.py](../agents/land_graph/geo_knowledge.py) |
 
 ## Bana Bio-Adaptive Narrator
 
