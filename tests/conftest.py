@@ -163,6 +163,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "memory" / "test_vector_memory.py"),
     str(ROOT / "tests" / "test_smoke_imports.py"),
     str(ROOT / "tests" / "agents" / "razar" / "test_ignition_builder.py"),
+    str(ROOT / "tests" / "agents" / "razar" / "test_ignition_generation.py"),
     str(ROOT / "tests" / "agents" / "razar" / "test_runtime_manager.py"),
     str(ROOT / "tests" / "agents" / "razar" / "test_boot_sequence.py"),
     str(ROOT / "tests" / "memory" / "test_sharded_memory_store.py"),

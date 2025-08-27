@@ -17,7 +17,7 @@ RAZAR coordinates system boot and records runtime health. Components are grouped
 | --- | --- | --- | --- |
 | 2 | Chat Gateway | Probe `/chat/health` and watch latency. | ⚠️ |
 | 3 | CROWN LLM | Send a dummy prompt and inspect response time. | ⚠️ |
-| 4 | Vision Adapter (YOLOE) | Verify prediction FPS meets target. | ⚠️ |
+| 4 | Vision Adapter | Verify prediction FPS meets the expected threshold. | ⚠️ |
 
 ## Priority 3
 | Order | Component | Health Check | Status |

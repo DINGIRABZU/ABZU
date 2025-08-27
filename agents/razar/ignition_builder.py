@@ -3,7 +3,7 @@
 The builder scans ``docs/system_blueprint.md`` for component priorities and
 produces a grouped table showing the boot order. Each entry starts with a
 status marker so RAZAR can later flip it to ``✅`` or ``❌`` as components report
-their health.
+their health. ``⚠️`` is used for components that have not yet reported a state.
 """
 
 from __future__ import annotations
@@ -14,7 +14,10 @@ from pathlib import Path
 from typing import Dict, List
 
 
-DEFAULT_STATUS = "⚠️"
+STATUS_HEALTHY = "✅"
+STATUS_WARN = "⚠️"
+STATUS_ERROR = "❌"
+DEFAULT_STATUS = STATUS_WARN
 
 
 def parse_system_blueprint(path: Path) -> List[Dict[str, object]]:
