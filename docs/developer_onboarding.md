@@ -56,10 +56,11 @@ python docs/onboarding/wizard.py
 
 ## Getting Started with RAZAR
 
-See [RAZAR_AGENT.md](RAZAR_AGENT.md) for a detailed reference. As
-service 0, RAZAR’s mission is to verify dependencies, enforce component
-priorities, and log health to [Ignition.md](Ignition.md). For a local
-run:
+See [RAZAR_AGENT.md](RAZAR_AGENT.md) for a detailed reference on its
+perpetual ignition loop, CROWN diagnostic interface, and
+shutdown–repair–restart handshake. As service 0, RAZAR’s mission is to
+verify dependencies, enforce component priorities, and log health to
+[Ignition.md](Ignition.md). For a local run:
 
 1. **Build the RAZAR environment**
    ```bash

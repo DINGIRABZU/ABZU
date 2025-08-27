@@ -1,6 +1,6 @@
 # Nazarick Agents
 
-This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md), which performs pre-creation checks, manages the isolated virtual environment, and handles restart logic before these internal services come online. See the [RAZAR Agent](RAZAR_AGENT.md) guide for its external role, objectives, and invariants.
+This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md), which performs pre-creation checks, manages the isolated virtual environment, and cycles its perpetual ignition loop before these internal services come online. See the [RAZAR Agent](RAZAR_AGENT.md) guide for its CROWN diagnostics and shutdown–repair–restart handshake.
 
 [Chat2DB](chat2db.md) bridges the SQLite log and vector store so agents can persist transcripts and retrieve relevant context.
 

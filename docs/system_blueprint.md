@@ -22,15 +22,17 @@ Start with these core references:
 
 RAZAR operates as service 0, validating the environment and enforcing the
 startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
-operators can track health at a glance. Read the [RAZAR Agent](RAZAR_AGENT.md)
-guide for its mission and interfaces, and see
-[nazarick_agents.md](nazarick_agents.md) for the in‑world servant lineup. When
-issues surface, consult the [Recovery Playbook](recovery_playbook.md) and
-[Monitoring Guide](monitoring.md).
+operators can track health at a glance. Read the
+[RAZAR Agent](RAZAR_AGENT.md) guide for its perpetual ignition loop,
+CROWN LLM diagnostics, and shutdown–repair–restart handshake, and see
+[nazarick_agents.md](nazarick_agents.md) for the in‑world servant lineup.
+When issues surface, consult the [Recovery Playbook](recovery_playbook.md)
+and [Monitoring Guide](monitoring.md).
 
 For deployment and reliability details, see:
 
-- [RAZAR Agent](RAZAR_AGENT.md) – external startup orchestrator
+- [RAZAR Agent](RAZAR_AGENT.md) – external startup orchestrator with
+  a perpetual ignition loop and CROWN diagnostic interface
 - Runtime Manager (`agents/razar/runtime_manager.py`) – sequentially starts
   components, installs their dependencies from `razar_env.yaml`, quarantines
   failures and resumes from the last successful one stored in
@@ -282,12 +284,12 @@ index so agents can persist and retrieve context. It relies on
 
 ## Essential Services
 ### RAZAR Startup Orchestrator
-Prepares the runtime environment, fetches remote agents declared in `razar_config.yaml`, logs startup progress, triggers prioritized tests, and hosts the ZeroMQ recovery channel. See [RAZAR Agent](RAZAR_AGENT.md).
+Prepares the runtime environment, fetches remote agents declared in `razar_config.yaml`, logs startup progress, triggers prioritized tests, and hosts the ZeroMQ recovery channel. See [RAZAR Agent](RAZAR_AGENT.md) for its ignition loop and repair handshake.
 - **Layer:** External
 - **Priority:** 0
 - **Startup:** Runs first to build or validate the Python `venv` and broadcast lifecycle events on `messaging.lifecycle_bus`.
 - **Health Check:** Confirm the environment hash and orchestrator heartbeat.
-- **Verification:** Ensure Inanna AI and CROWN LLM report readiness; see [Final Verification Sequence](RAZAR_AGENT.md#final-verification-sequence).
+- **Verification:** Ensure Inanna AI and CROWN LLM report readiness; the shutdown–repair–restart handshake is detailed in [RAZAR Agent](RAZAR_AGENT.md).
 - **Recovery:** Rebuild the `venv` and restart RAZAR.
 
 ### Chat Gateway
