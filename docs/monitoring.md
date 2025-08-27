@@ -26,6 +26,26 @@ Several JSON fields are emitted by the system:
 - `path` and `method` for HTTP requests handled by the FastAPI middleware.
 - `duration` in seconds for any of the above operations.
 
+## RAZAR health
+
+Launch the RAZAR orchestrator before scraping metrics so it can supervise
+services and report status:
+
+```bash
+python -m agents.razar.runtime_manager config/razar_config.yaml
+```
+
+RAZAR provides a `/health` endpoint exposing an environment hash and heartbeat.
+Probe it directly or via Prometheus to verify the orchestrator is running:
+
+```bash
+curl http://localhost:9300/health
+```
+
+If RAZAR cannot restart components, rebuild the virtual environment and rerun
+the manager. Deleting the `.state` file next to the configuration forces a
+full restart cycle.
+
 ## Timing metrics
 
 Latency histograms are exported via Prometheus:
