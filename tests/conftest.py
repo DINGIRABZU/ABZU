@@ -168,6 +168,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "agents" / "razar" / "test_module_builder.py"),
     str(ROOT / "tests" / "memory" / "test_sharded_memory_store.py"),
     str(ROOT / "tests" / "vision" / "test_yoloe_adapter.py"),
+    str(ROOT / "tests" / "test_command_dispatch.py"),
 }
 
 
