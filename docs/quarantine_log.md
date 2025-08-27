@@ -1,18 +1,13 @@
 # Quarantine Log
 
-Failed modules are moved to the `quarantine/` directory and categorized by
-issue type. Each entry below includes a suggested fix to guide restoration.
-Remote agents may submit additional diagnostic information using
-`quarantine_manager.record_diagnostics`.
+Failed components are moved to the `quarantine/` directory and recorded below.
 
-## Restoring modules
+## Restoring components
 
-To reinstate a module once it is fixed:
+To reinstate a component once it is fixed:
 
-1. Return the file from `quarantine/` to its original location.
+1. Remove its JSON file from the `quarantine/` directory.
 2. Append a `resolved` entry in this log with any relevant notes.
-3. Invoke `reactivate_component` with `verified=True` to record a manual or
-   automated reactivation.
 
-| Timestamp (UTC) | Module | Issue Type | Suggested Fix |
-|-----------------|--------|------------|---------------|
+| Timestamp (UTC) | Component | Action | Details |
+|-----------------|-----------|--------|---------|

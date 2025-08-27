@@ -14,6 +14,7 @@ import json
 import logging
 import shlex
 import subprocess
+import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List
@@ -23,7 +24,7 @@ try:  # pragma: no cover - dependency is handled in tests
 except Exception as exc:  # pragma: no cover
     raise RuntimeError("pyyaml is required for the boot orchestrator") from exc
 
-from . import health_checks
+from . import health_checks, quarantine_manager
 from .ignition_builder import DEFAULT_STATUS, parse_system_blueprint
 
 LOGGER = logging.getLogger(__name__)
@@ -39,6 +40,7 @@ class BootOrchestrator:
         config: Path | None = None,
         ignition: Path | None = None,
         state: Path | None = None,
+        retries: int = 3,
     ) -> None:
         root = Path(__file__).resolve().parents[2]
         self.blueprint_path = blueprint or root / "docs" / "system_blueprint.md"
@@ -50,6 +52,7 @@ class BootOrchestrator:
         self.statuses: Dict[str, str] = {
             str(comp["name"]): DEFAULT_STATUS for comp in self.components
         }
+        self.retries = retries
 
     # ------------------------------------------------------------------
     # State helpers
@@ -136,28 +139,32 @@ class BootOrchestrator:
     def _launch(self, comp: Dict[str, object], commands: Dict[str, str]) -> None:
         name = str(comp.get("name"))
         cmd = commands.get(name) or f"echo launching {name}"
-        LOGGER.info("Starting component %s", name)
-        result = subprocess.run(
-            shlex.split(cmd) if isinstance(cmd, str) else cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-        )
-        if result.returncode != 0:
+
+        for attempt in range(1, self.retries + 2):
+            LOGGER.info("Starting component %s (attempt %s)", name, attempt)
+            result = subprocess.run(
+                shlex.split(cmd) if isinstance(cmd, str) else cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+            if result.returncode == 0 and health_checks.run(name):
+                self.statuses[name] = "✅"
+                self.save_state(name)
+                self.write_ignition()
+                return
+
             LOGGER.error("Component %s failed: %s", name, result.stdout)
-            self.statuses[name] = "❌"
-            self.write_ignition()
-            raise RuntimeError(f"{name} failed to start")
-
-        if not health_checks.run(name):
-            LOGGER.error("Health check failed for %s", name)
-            self.statuses[name] = "❌"
-            self.write_ignition()
-            raise RuntimeError(f"Health check failed for {name}")
-
-        self.statuses[name] = "✅"
-        self.save_state(name)
-        self.write_ignition()
+            if attempt > self.retries:
+                quarantine_manager.quarantine_component(
+                    comp,
+                    "launch failure",
+                    diagnostics={"output": result.stdout},
+                )
+                self.statuses[name] = "❌"
+                self.write_ignition()
+                raise RuntimeError(f"{name} failed to start")
+            time.sleep(1)
 
     # ------------------------------------------------------------------
     # Public API
@@ -179,6 +186,12 @@ class BootOrchestrator:
                 LOGGER.info("Resuming after component %s", last)
 
         for comp in self.components[start_index:]:
+            name = str(comp.get("name"))
+            if quarantine_manager.is_quarantined(name):
+                LOGGER.info("Skipping quarantined component %s", name)
+                self.statuses[name] = "❌"
+                self.write_ignition()
+                continue
             try:
                 self._launch(comp, commands)
             except RuntimeError:
@@ -197,10 +210,11 @@ def main() -> None:  # pragma: no cover - CLI helper
     parser.add_argument(
         "--config", type=Path, default=root / "config" / "razar_config.yaml"
     )
+    parser.add_argument("--ignition", type=Path, default=root / "docs" / "Ignition.md")
     parser.add_argument(
-        "--ignition", type=Path, default=root / "docs" / "Ignition.md"
+        "--state", type=Path, default=root / "logs" / "razar_state.json"
     )
-    parser.add_argument("--state", type=Path, default=root / "logs" / "razar_state.json")
+    parser.add_argument("--retries", type=int, default=3)
     args = parser.parse_args()
 
     orchestrator = BootOrchestrator(
@@ -208,6 +222,7 @@ def main() -> None:  # pragma: no cover - CLI helper
         config=args.config,
         ignition=args.ignition,
         state=args.state,
+        retries=args.retries,
     )
     success = orchestrator.run()
     raise SystemExit(0 if success else 1)
@@ -215,4 +230,3 @@ def main() -> None:  # pragma: no cover - CLI helper
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry point
     main()
-
