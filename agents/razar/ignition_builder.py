@@ -1,4 +1,10 @@
-"""Generate Ignition.md from system_blueprint.md."""
+"""Build ``docs/Ignition.md`` from the system blueprint.
+
+The builder scans ``docs/system_blueprint.md`` for component priorities and
+produces a grouped table showing the boot order. Each entry starts with a
+status marker so RAZAR can later flip it to ``✅`` or ``❌`` as components report
+their health.
+"""
 
 from __future__ import annotations
 
@@ -6,6 +12,9 @@ import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List
+
+
+DEFAULT_STATUS = "⚠️"
 
 
 def parse_system_blueprint(path: Path) -> List[Dict[str, object]]:
@@ -88,7 +97,9 @@ def build_ignition(system_blueprint: Path, output: Path) -> None:
         lines.append("| --- | --- | --- | --- |")
         for comp in sorted(groups[priority], key=lambda c: c["order"]):
             health_check = comp["health_check"] or "-"
-            lines.append(f"| {comp['order']} | {comp['name']} | {health_check} | ⚠️ |")
+            lines.append(
+                f"| {comp['order']} | {comp['name']} | {health_check} | {DEFAULT_STATUS} |"
+            )
         lines.append("")
 
     lines.extend(
