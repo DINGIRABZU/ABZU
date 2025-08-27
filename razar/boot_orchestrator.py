@@ -12,9 +12,11 @@ import argparse
 import json
 import logging
 import subprocess
+import time
 from pathlib import Path
 from typing import Any, Dict, List
 
+from . import health_checks
 from .quarantine_manager import is_quarantined, quarantine_component
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
@@ -30,32 +32,18 @@ def load_config(path: Path) -> List[Dict[str, Any]]:
     return data.get("components", [])
 
 
-def run_health_check(command: List[str] | None, timeout: int = 10) -> bool:
-    """Run ``command`` and return ``True`` if it exits successfully."""
-
-    if not command:
-        return True
-    try:
-        result = subprocess.run(
-            command, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout
-        )
-    except (subprocess.TimeoutExpired, OSError) as exc:  # pragma: no cover - defensive
-        LOGGER.error("Health check command failed: %s", exc)
-        return False
-    return result.returncode == 0
-
-
 def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
     """Launch ``component`` and run its health check."""
 
-    LOGGER.info("Launching %s", component.get("name"))
+    name = component.get("name")
+    LOGGER.info("Launching %s", name)
     proc = subprocess.Popen(component["command"])
-    if not run_health_check(component.get("health_check")):
-        LOGGER.error("Health check failed for %s", component.get("name"))
+    if not health_checks.run(name):
+        LOGGER.error("Health check failed for %s", name)
         proc.terminate()
         proc.wait()
-        raise RuntimeError(f"Health check failed for {component.get('name')}")
-    LOGGER.info("%s started successfully", component.get("name"))
+        raise RuntimeError(f"Health check failed for {name}")
+    LOGGER.info("%s started successfully", name)
     return proc
 
 
@@ -64,7 +52,12 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Launch components from configuration")
     default_cfg = Path(__file__).with_name("boot_config.json")
-    parser.add_argument("--config", type=Path, default=default_cfg, help="Path to configuration file")
+    parser.add_argument(
+        "--config", type=Path, default=default_cfg, help="Path to configuration file"
+    )
+    parser.add_argument(
+        "--retries", type=int, default=3, help="Retries for failed launches"
+    )
     args = parser.parse_args()
 
     log_file = Path(__file__).with_name("boot_orchestrator.log")
@@ -82,12 +75,17 @@ def main() -> None:
             if is_quarantined(name):
                 LOGGER.info("Skipping quarantined component %s", name)
                 continue
-            try:
-                proc = launch_component(comp)
-                processes.append(proc)
-            except Exception as exc:
-                quarantine_component(comp, str(exc))
-                raise
+            for attempt in range(1, args.retries + 2):
+                try:
+                    proc = launch_component(comp)
+                    processes.append(proc)
+                    break
+                except Exception as exc:
+                    LOGGER.error("Attempt %s failed for %s: %s", attempt, name, exc)
+                    if attempt > args.retries:
+                        quarantine_component(comp, str(exc))
+                        raise
+                    time.sleep(1)
         LOGGER.info("All components launched")
         for proc in processes:
             proc.wait()
