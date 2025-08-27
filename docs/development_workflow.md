@@ -53,6 +53,20 @@ ruff check .
 Fix any reported issues before pushing to ensure the CI pipeline remains
 green.
 
+## Continuous Integration
+
+Pull requests trigger the workflow defined in
+`.github/workflows/ci.yml`. It runs `pre-commit` and the full pytest suite
+to keep the codebase healthy. Model downloads are cached between runs so
+tests execute quickly without repeatedly fetching weights.
+
+To reproduce the checks locally before pushing changes:
+
+```bash
+pre-commit run --all-files
+pytest
+```
+
 ## Ignition Chain
 
 Component priorities drive startup order. When introducing or modifying a
