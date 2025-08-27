@@ -40,3 +40,9 @@ The Crown router looks up previous expression decisions in `vector_memory`. When
 ## Session Logger
 
 Running the console interface now writes audio clips under `logs/audio/` and avatar frames to `logs/video/`. These helpers live in `tools/session_logger.py` and make it easier to review how voice modulation and streaming evolve across sessions.
+
+## Automated Module Repair
+
+The Crown stack can defer failing components to the RAZAR agent for automatic
+patching. See [RAZAR Agent](RAZAR_AGENT.md) for details on the repair workflow
+that queries an LLM for fixes and reintroduces modules after successful tests.

@@ -97,3 +97,21 @@ python agents/razar/pytest_runner.py --resume
 
 Output from each invocation is written to `logs/pytest_priority.log` for
 inspection by other RAZAR components.
+
+## Automated Code Repair
+
+`agents/razar/code_repair.py` automates patching of failing modules. The helper
+collects the failing source and error message, queries the CROWN LLM (or fallback
+models) for a patch suggestion and evaluates the result in a sandbox:
+
+1. **Context gathering** – read the module source and failing test output.
+2. **Patch request** – submit the context to `GLMIntegration` or alternate
+   models for a code fix.
+3. **Sandbox tests** – write the patched module to a temporary directory and
+   execute the module's test files with `pytest` using that sandbox on the
+   `PYTHONPATH`.
+4. **Reactivation** – if tests succeed, copy the patched file back to the
+   repository and reintroduce the module via `quarantine_manager.reactivate_component`.
+
+This workflow allows RAZAR to iteratively heal quarantined components without
+manually editing the repository.
