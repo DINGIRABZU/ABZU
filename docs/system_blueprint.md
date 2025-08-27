@@ -18,6 +18,15 @@ Start with these core references:
 - [Personality Layers](ALBEDO_LAYER.md) – archetypal behavior modules and persona API hooks
 - [Operational Guides](operations.md) – runbooks for deployment and maintenance
 - [Vision System](vision_system.md) – YOLOE features, licensing, and GPU guidance
+- [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
+
+RAZAR operates as service 0, validating the environment and enforcing the
+startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
+operators can track health at a glance. Read the [RAZAR Agent](RAZAR_AGENT.md)
+guide for its mission and interfaces, and see
+[nazarick_agents.md](nazarick_agents.md) for the in‑world servant lineup. When
+issues surface, consult the [Recovery Playbook](recovery_playbook.md) and
+[Monitoring Guide](monitoring.md).
 
 For deployment and reliability details, see:
 
