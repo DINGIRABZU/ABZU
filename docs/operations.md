@@ -29,6 +29,15 @@ last successful component and lists pending tasks based on the most recent
 status for each component. For a full chronological view, run ``razar
 timeline`` to reconstruct the mission sequence.
 
+For a real-time snapshot of boot progress and component priorities, launch the
+status dashboard:
+
+```bash
+python -m razar.status_dashboard
+```
+
+The dashboard also links to quarantine logs and the boot history.
+
 If RAZAR cannot restart a component, rebuild the virtual environment and rerun
 the manager. Removing `logs/razar_state.json` forces a full restart sequence.
 

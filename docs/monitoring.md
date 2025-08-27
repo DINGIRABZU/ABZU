@@ -46,6 +46,18 @@ If RAZAR cannot restart components, rebuild the virtual environment and rerun
 the manager. Deleting the `.state` file next to the configuration forces a
 full restart cycle.
 
+## Status dashboard
+
+Use the status dashboard for a quick snapshot of the current boot attempt and
+component states:
+
+```bash
+python -m razar.status_dashboard
+```
+
+The output lists each component with its priority and criticality and provides
+links to the quarantine log and boot history.
+
 ## Health check metrics
 
 `agents/razar/health_checks.py` performs service probes with per-service latency
