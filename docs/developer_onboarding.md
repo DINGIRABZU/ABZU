@@ -115,6 +115,22 @@ Set the following variables in `secrets.env` or your shell:
 - `GITHUB_TOKEN`
 - model endpoint settings (e.g., `MODEL_ENDPOINT`)
 
+### Open Web UI Setup
+Launch the optional browser interface once the FastAPI backend is running:
+
+```bash
+pip install open-webui
+FASTAPI_BASE_URL=http://localhost:8000 open-webui serve
+```
+
+Or start it via Docker Compose:
+
+```bash
+docker compose -f docker-compose.openwebui.yml up
+```
+
+See [open_web_ui.md](open_web_ui.md) for architecture details.
+
 ### Core CI Commands
 Run these commands before committing changes:
 ```bash
