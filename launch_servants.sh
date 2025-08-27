@@ -31,6 +31,13 @@ else
     exit 1
 fi
 
+# Start RAZAR runtime manager before launching servants; it orchestrates components by priority
+log "Starting RAZAR runtime manager"
+if ! python -m agents.razar.runtime_manager "${RAZAR_CONFIG:-config/razar_config.yaml}" >>"$LOG_FILE" 2>&1; then
+    log "RAZAR failed to start"
+    exit 1
+fi
+
 SERVANTS_FILE="${SERVANT_ENDPOINTS_FILE:-$ROOT/servant_endpoints.tmp}"
 : >"$SERVANTS_FILE"
 

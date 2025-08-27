@@ -16,6 +16,7 @@ from pathlib import Path
 from env_validation import check_required
 from memory import spiral_cortex
 from tools.dev_orchestrator import DevAssistantService, run_dev_cycle
+from agents.razar.runtime_manager import RuntimeManager
 
 
 def load_env(path: Path) -> None:
@@ -45,6 +46,14 @@ def load_env(path: Path) -> None:
         value = value.strip()
         os.environ[key] = value
         os.putenv(key, value)
+
+
+def start_razar(config: str = "config/razar_config.yaml") -> None:
+    """Invoke the RAZAR runtime manager to launch prerequisites in priority order."""
+
+    manager = RuntimeManager(Path(config))
+    if not manager.run():
+        raise RuntimeError("RAZAR failed to start components")
 
 
 def main() -> int:
@@ -144,6 +153,9 @@ def main() -> int:
     if args.narrative_log:
         os.environ["NARRATIVE_LOG"] = args.narrative_log
 
+    razar_config = os.environ.get("RAZAR_CONFIG", "config/razar_config.yaml")
+    start_razar(razar_config)
+
     spiral_cortex.log_insight("start_dev_agents", [vars(args)], sentiment=0.0)
 
     if args.stop:
@@ -182,15 +194,19 @@ def main() -> int:
         objective = (
             f"Fix failing tests: {' '.join(args.triage)}\nPytest log tail:\n{tail}"
         )
-        result = run_dev_cycle(objective, repo=Path.cwd(), max_iterations=args.max_iterations)
+        result = run_dev_cycle(
+            objective, repo=Path.cwd(), max_iterations=args.max_iterations
+        )
         if args.narrative_log:
             try:  # pragma: no cover - best effort
                 with open(args.narrative_log, "a", encoding="utf-8") as fh:
                     fh.write(
-                        json.dumps({
-                            "objective": objective,
-                            "steps": result.get("plan"),
-                        })
+                        json.dumps(
+                            {
+                                "objective": objective,
+                                "steps": result.get("plan"),
+                            }
+                        )
                         + "\n"
                     )
             except Exception:
