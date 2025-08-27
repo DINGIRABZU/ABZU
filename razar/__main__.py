@@ -9,6 +9,7 @@ from agents.razar.ignition_builder import build_ignition
 from agents.razar.lifecycle_bus import LifecycleBus
 from agents.razar import mission_logger
 from agents.razar.blueprint_synthesizer import synthesize
+from agents.razar import retro_bootstrap
 
 
 def _cmd_status(args: argparse.Namespace) -> None:
@@ -59,6 +60,14 @@ def _cmd_map(_: argparse.Namespace) -> None:
         pass
 
 
+def _cmd_bootstrap(args: argparse.Namespace) -> None:
+    """Rebuild modules from documentation references."""
+
+    if args.from_docs:
+        for path in retro_bootstrap.bootstrap_from_docs():
+            print(path)
+
+
 def main() -> None:  # pragma: no cover - CLI entry point
     parser = argparse.ArgumentParser(description="RAZAR lifecycle utilities")
     parser.add_argument(
@@ -96,6 +105,10 @@ def main() -> None:  # pragma: no cover - CLI entry point
 
     p_map = sub.add_parser("map", help="Visualize component relationships")
     p_map.set_defaults(func=_cmd_map)
+
+    p_bootstrap = sub.add_parser("bootstrap", help="Rebuild modules")
+    p_bootstrap.add_argument("--from-docs", action="store_true", help="Reconstruct modules referenced in docs")
+    p_bootstrap.set_defaults(func=_cmd_bootstrap)
 
     args = parser.parse_args()
     if hasattr(args, "func"):
