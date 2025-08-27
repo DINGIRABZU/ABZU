@@ -27,6 +27,38 @@ status for each component.
 If RAZAR cannot restart a component, rebuild the virtual environment and rerun
 the manager. Removing the `.state` file forces a full restart sequence.
 
+## RAZAR failure runbook
+
+1. **Summarize status**
+   ```bash
+   python -m razar.mission_logger summary
+   ```
+   Review `logs/razar.log` for the last successful component.
+2. **Reset state**
+   Remove `config/razar_config.state` to re-run the full sequence.
+3. **Rebuild environment**
+   ```bash
+   python -m razar.environment_builder --config razar_env.yaml
+   python -m agents.razar.runtime_manager config/razar_config.yaml
+   ```
+4. **Quarantine persistent failures**
+   ```python
+   from razar import quarantine_manager as qm
+   qm.quarantine_component({"name": "gateway"}, "health check failed")
+   ```
+
+## Quarantine management
+
+- Quarantined components are written to the `quarantine/` directory and logged
+  in [quarantine_log.md](quarantine_log.md).
+- To restore a component, remove its JSON file from `quarantine/` and record a
+  resolved entry:
+  ```python
+  from razar import quarantine_manager as qm
+  qm.resolve_component("gateway", note="reconfigured credentials")
+  ```
+  Append notes to `docs/quarantine_log.md` for auditability.
+
 ## Dependency audits
 
 Use `tools/dependency_audit.py` to ensure installed packages match the pinned
