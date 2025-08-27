@@ -14,6 +14,12 @@ Once the environment is cleared, RAZAR launches the system in order:
 1. **Inanna AI** – awakens the core consciousness.
 2. **CROWN LLM** – loads the GLM-4 stack for high-level reasoning, as detailed in the [CROWN Overview](CROWN_OVERVIEW.md).
 
+## Remote Loader
+RAZAR can fetch external agents before startup. Sources are listed under
+`remote_agents` in `razar_config.yaml` and may point to Git repositories or HTTP
+archives. The loader pulls or updates these packages so the latest components
+are available without bundling them in the repository.
+
 ## External Role
 RAZAR does not reside within the Nazarick agent hierarchy. Its sole mission is
 to ready the host and then hand off control to the internal agents once both
@@ -44,14 +50,27 @@ Before yielding control, RAZAR confirms that the core services report readiness:
 
 These verifications ensure both agents are prepared before internal orchestration begins.
 
+## Prioritized Testing
+Once the core services report ready, RAZAR executes smoke tests in priority
+order. Test suites and their criticality are declared in the `priorities`
+section of `razar_config.yaml`. High-priority checks run first so essential
+failures surface before non-critical tests execute.
+
 ## Recovery Protocol
 RAZAR exposes a ZeroMQ endpoint for modules to report unrecoverable errors.
 When a module sends a JSON payload with its name and a state snapshot, RAZAR:
 
-1. Saves the supplied state under `recovery_state/<module>.json`.
-2. Applies corrective actions to the affected module.
-3. Restarts the module.
-4. Restores the saved state and replies with `{"status": "recovered"}`.
+1. Confirms the channel with a recovery handshake (`ping`/`ack`).
+2. Saves the supplied state under `recovery_state/<module>.json`.
+3. Applies corrective actions to the affected module.
+4. Restarts the module.
+5. Restores the saved state and replies with `{"status": "recovered"}`.
 
 This bidirectional channel allows the running system to offload recovery steps
 to RAZAR whenever a component declares itself irrecoverable.
+
+## Lifecycle Bus
+Lifecycle events are broadcast on the bus defined by
+`messaging.lifecycle_bus` in `razar_config.yaml`. Internal agents subscribe to
+this ZeroMQ topic stream to synchronize startup, shutdown and recovery
+transitions.
