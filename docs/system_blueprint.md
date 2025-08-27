@@ -5,6 +5,7 @@
 The system blueprint maps ABZU’s chakra layers, core services, and agents. Start with these core references:
 
 - [Documentation Index](index.md)
+- [Documentation Index v2](INDEX.md)
 - [Architecture Overview](architecture_overview.md)
 - [Component Index](component_index.md)
 - [Chakra Architecture](chakra_architecture.md)
