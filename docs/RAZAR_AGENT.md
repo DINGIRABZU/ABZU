@@ -46,6 +46,18 @@ context to the LLM, receives a patch suggestion, and validates the result
 in a sandbox.  Successful patches are committed back to the repository
 and the component is marked ready for reactivation.
 
+## Crown Link Protocol
+
+Diagnostics and repair hand‑offs are transported over a lightweight WebSocket
+channel implemented in `razar/crown_link.py`. Two message shapes are used:
+
+- **Status updates** – `{"type": "status", "component": "decoder", "result": "failed", "log_snippet": "..."}`
+- **Repair requests** – `{"type": "repair", "stack_trace": "...", "config_summary": "..."}`
+
+The `build_patch_prompt` helper fills the `PATCH_PROMPT_TEMPLATE` so the
+GLM‑4.1V‑9B model replies with a JSON object describing the patch, tests to run,
+and a short rationale.
+
 ## Shutdown–Repair–Restart Handshake
 
 RAZAR performs a handshake with unhealthy services:
