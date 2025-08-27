@@ -31,3 +31,28 @@ entry in `data/narrative.log`. After restoring a snapshot:
 
 This process ensures both data and narrative context are brought back
 together after a system recovery.
+
+## Component Recovery
+
+When a component fails during boot:
+
+1. Review `razar/boot_orchestrator.log` for error details.
+2. Run the component's health check manually to validate the fix:
+
+   ```python
+   from razar.health_checks import run
+   run("basic_service")
+   ```
+
+3. Once the check passes, restart the boot sequence. If failures persist,
+   quarantine the component and investigate configuration or environment
+   issues before reattempting.
+
+## Escalation Paths
+
+- **First failure** – developer on duty addresses the issue and restores the
+  service.
+- **Repeated failures** – notify the operations channel and create an
+  incident ticket.
+- **Prolonged outage** – escalate to the infrastructure lead for broader
+  coordination and resolution.
