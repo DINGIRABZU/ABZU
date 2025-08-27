@@ -1,5 +1,9 @@
 """RAZAR agents."""
 
+from agents.nazarick.ethics_manifesto import Manifesto
+from agents.nazarick.trust_matrix import TrustMatrix
+from ..guardian import run_validated_task
+
 from .remote_loader import (
     load_remote_agent,
     load_remote_agent_from_git,
@@ -7,9 +11,23 @@ from .remote_loader import (
 )
 from .lifecycle_bus import LifecycleBus
 
+_manifesto = Manifesto()
+_trust_matrix = TrustMatrix()
+_AGENT = "razar"
+
+
+def execute_task(action: str, entity: str, task, *args, **kwargs):
+    """Run ``task`` after ethics and trust checks."""
+
+    return run_validated_task(
+        _manifesto, _trust_matrix, _AGENT, action, entity, task, *args, **kwargs
+    )
+
+
 __all__ = [
     "load_remote_agent",
     "load_remote_agent_from_git",
     "load_remote_gpt_agent",
     "LifecycleBus",
+    "execute_task",
 ]
