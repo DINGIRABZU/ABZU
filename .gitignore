@@ -5,7 +5,8 @@ oracle_output/
 OPENAI_API_KEY.env
 secrets.env
 INANNA_AI/models/
-logs/
+logs/*
+!logs/razar_state.json
 
 # Ignore Blender files
 *.blend

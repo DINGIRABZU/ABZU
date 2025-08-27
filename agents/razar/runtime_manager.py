@@ -2,12 +2,14 @@
 
 This module ensures a Python virtual environment exists and uses it to
 sequentially start system components based on their priority. Progress is
-logged and the last successfully started component is cached so the manager can
-resume from that point after a failure.
+logged and the last successfully started component is cached in
+``logs/razar_state.json`` so the manager can resume from that point after a
+failure.
 """
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import subprocess
@@ -37,8 +39,9 @@ class RuntimeManager:
         venv_path: Path | None = None,
     ) -> None:
         self.config_path = config_path
-        self.state_path = state_path or config_path.with_suffix(".state")
+        self.state_path = state_path or Path("logs/razar_state.json")
         self.venv_path = venv_path or config_path.parent / ".razar_venv"
+
     # ------------------------------------------------------------------
     # Virtual environment handling
     # ------------------------------------------------------------------
@@ -76,11 +79,18 @@ class RuntimeManager:
         """Return the name of the last successful component."""
 
         if self.state_path.exists():
-            return self.state_path.read_text(encoding="utf-8").strip()
+            try:
+                data = json.loads(self.state_path.read_text(encoding="utf-8"))
+                return str(data.get("last_component", ""))
+            except json.JSONDecodeError:
+                return ""
         return ""
 
     def save_state(self, name: str) -> None:
-        self.state_path.write_text(name, encoding="utf-8")
+        self.state_path.parent.mkdir(parents=True, exist_ok=True)
+        self.state_path.write_text(
+            json.dumps({"last_component": name}), encoding="utf-8"
+        )
 
     # ------------------------------------------------------------------
     # Component execution
@@ -142,7 +152,9 @@ class RuntimeManager:
                     result.stdout,
                 )
                 quarantine_manager.quarantine_component(
-                    comp, f"exit code {result.returncode}", diagnostics={"output": result.stdout}
+                    comp,
+                    f"exit code {result.returncode}",
+                    diagnostics={"output": result.stdout},
                 )
                 return False
 
