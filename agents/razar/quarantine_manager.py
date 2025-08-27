@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 import json
 import shutil
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 # Determine project root from the module location (``agents/razar`` -> repo root)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -46,6 +46,25 @@ def _append_log(name: str, action: str, details: str) -> None:
         fh.write(f"| {ts} | {name} | {action} | {details} |\n")
 
 
+def _metadata_path(name: str) -> Path:
+    return QUARANTINE_DIR / f"{name}.json"
+
+
+def _load_metadata(name: str) -> Dict[str, Any]:
+    path = _metadata_path(name)
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+
+def _write_metadata(name: str, data: Dict[str, Any]) -> None:
+    with _metadata_path(name).open("w", encoding="utf-8") as fh:
+        json.dump(data, fh, indent=2)
+
+
 def is_quarantined(name: str) -> bool:
     """Return ``True`` if ``name`` is quarantined."""
 
@@ -60,12 +79,23 @@ def quarantine_component(
     reason: str,
     diagnostics: Dict[str, Any] | None = None,
 ) -> None:
-    """Move ``component`` metadata to quarantine and record ``reason``."""
+    """Move ``component`` metadata to quarantine and record ``reason``.
+
+    ``attempts`` is incremented each time the component is quarantined. A
+    ``patches_applied`` list tracks patch identifiers added via
+    :func:`record_patch`.
+    """
 
     _init_paths()
     name = component.get("name", "unknown")
-    with (QUARANTINE_DIR / f"{name}.json").open("w", encoding="utf-8") as fh:
-        json.dump(component, fh, indent=2)
+    existing = _load_metadata(name)
+    data: Dict[str, Any] = {
+        **component,
+        "reason": reason,
+        "attempts": int(existing.get("attempts", 0)) + 1,
+        "patches_applied": existing.get("patches_applied", []),
+    }
+    _write_metadata(name, data)
     _append_log(name, "quarantined", reason)
     if diagnostics:
         record_diagnostics(name, diagnostics)
@@ -101,6 +131,18 @@ def record_diagnostics(name: str, data: Dict[str, Any]) -> None:
     _init_paths()
     serialized = json.dumps(data, sort_keys=True)
     _append_log(name, "diagnostic", serialized)
+
+
+def record_patch(name: str, patch: str) -> None:
+    """Record that ``patch`` was applied to ``name``."""
+
+    _init_paths()
+    data = _load_metadata(name)
+    patches: List[str] = list(data.get("patches_applied", []))
+    patches.append(patch)
+    data["patches_applied"] = patches
+    _write_metadata(name, data)
+    _append_log(name, "patch", patch)
 
 
 def reactivate_component(
