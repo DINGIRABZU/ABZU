@@ -96,6 +96,16 @@ docker compose up server
 
 The service exposes `http://localhost:8000/health` for health checks.
 
+### Open Web UI quickstart
+Install the front end and connect it to the local server:
+
+```bash
+pip install open-webui
+FASTAPI_BASE_URL=http://localhost:8000 open-webui serve
+```
+
+The UI listens on `http://localhost:3000` by default.
+
 ## Health Scanner and CI
 Verify the stack with the health scanner:
 
