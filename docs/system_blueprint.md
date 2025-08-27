@@ -63,8 +63,8 @@ stack.
   restarts resume from the last healthy component.
 - [Environment Builder](../razar/environment_builder.py) – materialises the
   dedicated virtual environment defined in `razar_env.yaml`.
-- [Doc Sync](../razar/doc_sync.py) – regenerates `docs/Ignition.md` from the
-  priority registry.
+- [Doc Sync](../agents/razar/doc_sync.py) – regenerates `docs/Ignition.md`,
+  refreshes the system blueprint and updates component docs.
 - [Health Checks](../razar/health_checks.py) – probes `/ready` and `/health`
   endpoints.
 - [Issue Analyzer](../razar/issue_analyzer.py) – classifies failures as
