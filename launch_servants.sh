@@ -31,7 +31,8 @@ else
     exit 1
 fi
 
-# Start RAZAR runtime manager before launching servants; it orchestrates components by priority
+# Start RAZAR runtime manager before launching servants. This prepares the
+# virtual environment and prerequisite components.
 log "Starting RAZAR runtime manager"
 if ! python -m agents.razar.runtime_manager "${RAZAR_CONFIG:-config/razar_config.yaml}" >>"$LOG_FILE" 2>&1; then
     log "RAZAR failed to start"

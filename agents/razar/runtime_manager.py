@@ -12,7 +12,7 @@ import logging
 import os
 import subprocess
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Sequence
 import venv
 
 try:
@@ -40,15 +40,32 @@ class RuntimeManager:
     # ------------------------------------------------------------------
     # Virtual environment handling
     # ------------------------------------------------------------------
-    def ensure_venv(self) -> None:
-        """Create a virtual environment if missing."""
+    def ensure_venv(self, dependencies: Sequence[str] | None = None) -> None:
+        """Create a virtual environment and install ``dependencies``.
+
+        Parameters
+        ----------
+        dependencies:
+            An optional sequence of package specifications understood by
+            ``pip``. They are installed into the managed virtual environment in
+            the order provided. Installation is skipped if the sequence is
+            empty.
+        """
 
         if not self.venv_path.exists():
             logger.info("Creating virtual environment at %s", self.venv_path)
-            builder = venv.EnvBuilder(with_pip=False)
+            builder = venv.EnvBuilder(with_pip=True)
             builder.create(self.venv_path)
         else:
             logger.info("Using existing virtual environment at %s", self.venv_path)
+
+        if dependencies:
+            bin_dir = "Scripts" if os.name == "nt" else "bin"
+            pip_path = self.venv_path / bin_dir / "pip"
+            cmd = [str(pip_path), "install", *dependencies]
+            logger.info("Installing dependencies: %s", " ".join(dependencies))
+            # Best effort install; failures propagate to caller
+            subprocess.run(cmd, check=True)
 
     # ------------------------------------------------------------------
     # State persistence helpers
@@ -73,9 +90,14 @@ class RuntimeManager:
         env["PATH"] = str(self.venv_path / bin_dir) + os.pathsep + env.get("PATH", "")
         return env
 
-    def _load_components(self) -> List[Dict[str, object]]:
+    def _load_config(self) -> Dict[str, object]:
+        """Load and return the full YAML configuration."""
+
         data = yaml.safe_load(self.config_path.read_text(encoding="utf-8"))
-        components = data.get("components", []) if isinstance(data, dict) else []
+        return data if isinstance(data, dict) else {}
+
+    def _load_components(self, config: Dict[str, object]) -> List[Dict[str, object]]:
+        components = config.get("components", [])
         return sorted(components, key=lambda c: int(c.get("priority", 0)))
 
     def _starting_index(self, components: Iterable[Dict[str, object]]) -> int:
@@ -90,8 +112,10 @@ class RuntimeManager:
     def run(self) -> bool:
         """Run components in order. Returns ``True`` if all succeed."""
 
-        self.ensure_venv()
-        components = self._load_components()
+        config = self._load_config()
+        dependencies = config.get("dependencies", [])
+        self.ensure_venv(dependencies)
+        components = self._load_components(config)
         start = self._starting_index(components)
         env = self._env()
 
