@@ -132,6 +132,10 @@ class RuntimeManager:
         start = self._starting_index(components)
         env = self._env()
 
+        last = self.load_state()
+        if last:
+            logger.info("Resuming after component %s", last)
+
         for comp in components[start:]:
             name = comp.get("name", "<unknown>")
             command = comp.get("command", "")
@@ -164,8 +168,10 @@ class RuntimeManager:
                 return False
 
             logger.info("Component %s started successfully", name)
-            self.save_state(str(name))
+            last = str(name)
+            self.save_state(last)
 
+        logger.info("Boot sequence complete. Last component: %s", last)
         return True
 
 
