@@ -33,8 +33,13 @@ def test_run_pytest_logs_and_plans(monkeypatch, tmp_path):
         called["plan"] = True
         return {module_path.stem: {"steps": ["x"]}}
 
+    def fake_crown(*args, **kwargs):
+        called["crown"] = True
+        return ""
+
     monkeypatch.setattr(pr.mission_logger, "log_event", fake_log_event)
     monkeypatch.setattr(pr.planning_engine, "plan", fake_plan)
+    monkeypatch.setattr(pr, "_send_failure_to_crown", fake_crown)
 
     code = pr.run_pytest(["P1"], False, log_path, map_path, state_path)
     assert code != 0
@@ -44,3 +49,4 @@ def test_run_pytest_logs_and_plans(monkeypatch, tmp_path):
     assert "tests/test_example.py" in state["nodeid"]
     assert called["plan"] is True
     assert called["log"][1] == module_path.stem
+    assert called["crown"] is True
