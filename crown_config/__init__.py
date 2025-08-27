@@ -119,6 +119,12 @@ class Settings(BaseSettings):
         None,
         validation_alias=AliasChoices("GLM_COMMAND_TOKEN"),
     )
+    openwebui_username: str | None = Field(
+        None, validation_alias=AliasChoices("OPENWEBUI_USERNAME")
+    )
+    openwebui_password: str | None = Field(
+        None, validation_alias=AliasChoices("OPENWEBUI_PASSWORD")
+    )
     crown_tts_backend: str = Field(
         "gtts", validation_alias=AliasChoices("CROWN_TTS_BACKEND")
     )

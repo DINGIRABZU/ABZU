@@ -25,6 +25,7 @@ Configuration values such as the log directory and default pcap path are read fr
 Several variables influence the Root layer:
 
 - `GLM_COMMAND_TOKEN` – authorises `/glm-command` requests.
+- `OPENWEBUI_USERNAME` and `OPENWEBUI_PASSWORD` – credentials for the `/token` login endpoint used by OpenWebUI clients.
 - `WEB_CONSOLE_API_URL` – enables WebRTC connectors when present.
 - `GLM_API_URL` and `GLM_API_KEY` – endpoint and key for the GLM service.
 - `HF_TOKEN` – Hugging Face token for model downloads.
