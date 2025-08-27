@@ -69,8 +69,9 @@ pytest
 
 ## Ignition Chain
 
-Component priorities drive startup order. When introducing or modifying a
-service:
+Component priorities drive startup order. See [Assigning Component
+Priorities](developer_onboarding.md#assigning-component-priorities) for a
+walkthrough. When introducing or modifying a service:
 
 1. Set its **Priority** metadata in [system_blueprint.md](system_blueprint.md).
 2. Validate the ignition sequence using RAZAR's CLI:

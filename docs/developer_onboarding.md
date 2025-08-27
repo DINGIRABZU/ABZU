@@ -76,6 +76,27 @@ local run:
 | Environment hash mismatch | Rebuild the virtual environment with `python -m razar.environment_builder --config razar_env.yaml`. |
 | Component fails repeatedly | Quarantine it with `razar.quarantine_manager.quarantine_component` and review the [RAZAR failure runbook](operations.md#razar-failure-runbook). |
 
+## Assigning Component Priorities
+
+RAZAR boots services based on the priority table in [Ignition.md](Ignition.md).
+Lower numbers start first. To register a new component:
+
+1. Define its `Priority` metadata in [system_blueprint.md](system_blueprint.md).
+2. Add the component under the matching **Priority N** section of
+   `Ignition.md` with a placeholder status.
+
+Example workflow:
+
+```bash
+# Add "Telemetry Service" to docs/Ignition.md under Priority 2
+python -m razar.environment_builder --config razar_env.yaml
+python -m agents.razar.runtime_manager config/razar_config.yaml
+```
+
+The runtime manager reads `Ignition.md`, launches each component in order, and
+rewrites the Status column with health results. Commit the updated file so the
+startup sequence remains auditable.
+
 ## Repository Layout
 - `core/` – language processing and self-correction engines.
 - `INANNA_AI/` – model logic, memory systems, and ritual analysis modules.
