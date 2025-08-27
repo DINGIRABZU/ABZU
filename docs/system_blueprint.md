@@ -19,6 +19,7 @@ Start with these core references:
 - [Operational Guides](operations.md) – runbooks for deployment and maintenance
 - [Vision System](vision_system.md) – YOLOE features, licensing, and GPU guidance
 - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
+- [Great Tomb of Nazarick](great_tomb_of_nazarick.md) – vision, channel hierarchy, and architectural stack
 
 RAZAR operates as service 0, validating the environment and enforcing the
 startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
@@ -281,7 +282,7 @@ modules reside under [`INANNA_AI/personality_layers/`](../INANNA_AI/personality_
 The ABZU stack relies on a network of Nazarick agents aligned with chakra layers.
 
 - **Purpose:** Coordinate specialized duties and drive the musical avatar.
-- **Links:** [CROWN Overview](CROWN_OVERVIEW.md), [Nazarick Agents](nazarick_agents.md), [Persona API Guide](persona_api_guide.md), [Music Avatar Architecture](music_avatar_architecture.md), [Avatar Pipeline](avatar_pipeline.md).
+- **Links:** [CROWN Overview](CROWN_OVERVIEW.md), [Nazarick Agents](nazarick_agents.md), [Great Tomb of Nazarick](great_tomb_of_nazarick.md), [Persona API Guide](persona_api_guide.md), [Music Avatar Architecture](music_avatar_architecture.md), [Avatar Pipeline](avatar_pipeline.md).
 
 Lifecycle scripts like [`start_dev_agents.py`](../start_dev_agents.py) and [`launch_servants.sh`](../launch_servants.sh)
 demonstrate practical startup sequences. Core roles include:
