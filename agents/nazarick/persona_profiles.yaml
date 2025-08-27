@@ -1,0 +1,10 @@
+profiles:
+  default:
+    tone: neutral
+    template: "[{agent}] {event_type}: {payload}"
+  shalltear:
+    tone: gothic
+    template: "In a {tone} murmur, {agent} recounts {event_type}: {payload}"
+  demiurge:
+    tone: scheming
+    template: "With {tone} precision, {agent} orchestrates {event_type}: {payload}"
