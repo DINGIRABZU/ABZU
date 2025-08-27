@@ -24,3 +24,13 @@ soundfile==0.13.1
     # optional: audio processing features
 phonemizer==3.3.0
     # for phoneme extraction
+fastapi==0.116.1
+    # via citadel event processor
+redis==5.0.3
+    # optional: event processing
+aiokafka==0.10.0
+    # optional: event processing
+asyncpg==0.29.0
+    # optional: event processing
+neo4j==5.23.1
+    # optional: event processing

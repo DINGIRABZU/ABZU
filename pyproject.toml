@@ -73,6 +73,13 @@ ultralytics = ["ultralytics==8.3.179"]
 optuna = ["optuna==3.6.1"]
 shap = ["shap==0.45.0"]
 
+citadel = [
+    "redis==5.0.3",
+    "aiokafka==0.10.0",
+    "asyncpg==0.29.0",
+    "neo4j==5.23.1",
+]
+
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
 dev = [
