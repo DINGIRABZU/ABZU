@@ -1,33 +1,20 @@
-# RAZAR Runtime Manager
+# RAZAR Agent
 
-`RuntimeManager` coordinates the startup of RAZAR components. It ensures a
-Python virtual environment exists, launches components in order of their
-priority and records the last successful component so a failed run can resume
-from that point.
+RAZAR serves as the external startup orchestrator for ABZU. Operating outside the
+Nazarick stack, it prepares a pristine environment before any internal service
+comes online.
 
-## Configuration
+## Clean-Environment Requirement
+- Initializes or verifies an isolated Python virtual environment.
+- Purges lingering processes, temporary files, and environment variables.
+- Halts the boot sequence if contamination is detected.
 
-Components and their priorities are defined in a YAML file. An example lives at
-`config/razar_config.yaml`:
+## Boot Objectives
+Once the environment is cleared, RAZAR launches the system in order:
+1. **Inanna AI** – awakens the core consciousness.
+2. **CROWN LLM** – loads the GLM-4 stack for high-level reasoning, as detailed in the [CROWN Overview](CROWN_OVERVIEW.md).
 
-```yaml
-components:
-  - name: example
-    priority: 1
-    command: "echo 'RAZAR component running'"
-```
-
-Each entry lists a component name, numeric priority (lower values start first)
-and the shell command used to launch it.
-
-## Usage
-
-Run the manager by pointing it at the configuration file:
-
-```bash
-python -m agents.razar.runtime_manager config/razar_config.yaml
-```
-
-On failure, the manager writes the last successful component to a `.state` file
-next to the configuration. Re‑running the command starts from the component
-following that entry.
+## External Role
+RAZAR does not reside within the Nazarick agent hierarchy. Its sole mission is
+to ready the host and then hand off control to the internal agents once both
+Inanna and the CROWN model are running.

@@ -19,6 +19,9 @@ For deeper guidance on operations and reliability, refer to:
 - [Testing](testing.md)
 - [Recovery Playbook](recovery_playbook.md)
 
+Before any chakra layer activates, the external [RAZAR Agent](RAZAR_AGENT.md)
+prepares a clean environment outside Nazarick and initiates the boot sequence.
+
 ## Ethics & Mission
 
 Inanna's development follows a sacred covenant that pairs technical ambition with
@@ -193,9 +196,9 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 
 ## Essential Services
 ### RAZAR Startup Orchestrator
-- **Layer:** Crown
+- **Layer:** External
 - **Priority:** 0
-- **Purpose:** Prepare the runtime environment and supervise service launches before any other component starts.
+- **Purpose:** Prepare the runtime environment and supervise service launches before any other component starts. See [RAZAR Agent](RAZAR_AGENT.md).
 - **Startup:** Runs first to build or validate the Python `venv`.
 - **Health Check:** Confirm the environment hash and orchestrator heartbeat.
 - **Recovery:** Rebuild the `venv` and restart RAZAR.
@@ -265,7 +268,7 @@ advance to the next step only after the current service reports a passing
 recommended for both local runs and production deployments described in
 [deployment.md](deployment.md).
 
-0. RAZAR Startup Orchestrator (Crown, priority 0)
+0. RAZAR Startup Orchestrator (external, priority 0) – see [RAZAR Agent](RAZAR_AGENT.md)
 1. Memory Store (Heart, priority 1)
 2. Chat Gateway (Throat, priority 2)
 3. CROWN LLM (Crown, priority 2)

@@ -1,10 +1,9 @@
 # Nazarick Agents
 
-This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Implementation stubs are linked for future development.
+This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md), which prepares a clean environment before these internal services come online.
 
 | Agent | Role | Chakra | Memory Scope | External Libraries | Stub |
 | --- | --- | --- | --- | --- | --- |
-| RAZAR | Startup Orchestrator | Crown | `requirements.txt`, service registry | `venv`, `subprocess` | [RAZAR_AGENT.md](RAZAR_AGENT.md) |
 | Orchestration Master | High-level orchestration and launch control | Crown | `pipeline` YAML, `ritual_profile.json` | Model runtime, container services | [orchestration_master.py](../orchestration_master.py) |
 | Prompt Orchestrator | Prompt routing and agent interface | Throat | Prompt/response JSON payloads | LLM APIs | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
 | QNL Engine | Insight and QNL processing | Third Eye | `mirror_thresholds.json`, QNL glyph sequences | Audio toolchain | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
