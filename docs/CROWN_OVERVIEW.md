@@ -57,3 +57,7 @@ implemented in `razar/crown_link.py`. Two JSON message types are exchanged:
 
 The Crown side replies with patch instructions which RAZAR uses to heal faulty
 modules before reintroducing them into the boot cycle.
+
+## Mission Brief Handshake
+
+Before diagnostics begin, RAZAR shares a short mission brief with the Crown stack. The brief summarises the priority map, current status and any open issues and is sent via the WebSocket helper `razar/crown_handshake.py`. Crown replies with an acknowledgment and a capability list so RAZAR knows which tools are available for the session. Each exchange is recorded to `logs/razar_crown_dialogues.json` for later review.

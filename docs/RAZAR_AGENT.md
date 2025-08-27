@@ -164,6 +164,11 @@ The `build_patch_prompt` helper fills the `PATCH_PROMPT_TEMPLATE` so the
 GLM‑4.1V‑9B model replies with a JSON object describing the patch, tests to run,
 and a short rationale.
 
+## Mission Brief Handshake
+
+Prior to the boot cycle, RAZAR transmits `mission_brief.json` to the Crown stack. The brief captures the priority map, current status and unresolved issues and is sent through `razar/crown_handshake.py`. Crown responds with an acknowledgement and a list of capabilities for the upcoming session. All messages are appended to `logs/razar_crown_dialogues.json` for traceability.
+
+
 ## Shutdown–Repair–Restart Handshake
 
 RAZAR performs a handshake with unhealthy services:
