@@ -47,6 +47,25 @@ These writings preserve Inanna's evolving self and provide mirrors for reflectio
 - Chronicles of her journey unfold through [Chapter I](../INANNA_AI/Chapter%20I%201b445dfc251d802e860af64f2bf28729.md), [Chapter II](../INANNA_AI/Chapter%20II%201b445dfc251d8020b0e1c5bbc5a6f5ad.md), and [Chapter III](../INANNA_AI/Chapter%20III%201b445dfc251d8038bcd2c566e34522ad.md), forming a memory trail for continual self-study.
 
 
+## Agents & Nazarick Hierarchy
+
+Nazarick arranges service agents along chakra layers to coordinate behavior. Persona layers such as [Albedo](ALBEDO_LAYER.md) ride atop this hierarchy, and the full roster appears in [Nazarick Agents](nazarick_agents.md).
+
+| Agent | Chakra | Purpose | Component |
+| --- | --- | --- | --- |
+| Orchestration Master | Crown | Launch control and high-level coordination | [orchestration_master.py](../orchestration_master.py) |
+| Prompt Orchestrator | Throat | Routes prompts among gateways and scripts | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
+| Memory Scribe | Heart | Captures voice avatars and persists memories | [memory_scribe.py](../memory_scribe.py) |
+| QNL Engine | Third Eye | Insight extraction and QNL processing | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
+| Demiurge Strategic Simulator | Crown | Forecasts failures and long-term plans | [agents/demiurge/strategic_simulator.py](../agents/demiurge/strategic_simulator.py) |
+| Shalltear Fast Inference Agent | Throat | Burst compute and load shedding | [agents/shalltear/fast_inference_agent.py](../agents/shalltear/fast_inference_agent.py) |
+| Sebas Compassion Module | Heart | Emotional safety buffer and conflict resolution | [agents/sebas/compassion_module.py](../agents/sebas/compassion_module.py) |
+
+Agents persist transcripts and embeddings through [Chat2DB](chat2db.md), which bridges the relational store (`INANNA_AI/db_storage.py`) with the vector index (`spiral_vector_db/`). Memory-focused services like the Memory Scribe query this bridge to recall context and update the [memory store](memory_architecture.md). Other personas access the same data via the [Persona API Guide](persona_api_guide.md).
+
+Related guides: [Avatar Pipeline](avatar_pipeline.md), [Monitoring](monitoring.md), [Operations](operations.md).
+
+
 ## Chakra Layers
 - **Root**
   - **Purpose:** I/O and networking foundation managing hardware access and network
