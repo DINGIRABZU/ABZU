@@ -172,6 +172,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "vision" / "test_yoloe_adapter.py"),
     str(ROOT / "tests" / "test_persona_profiles_loader.py"),
     str(ROOT / "tests" / "test_nazarick_messaging.py"),
+    str(ROOT / "tests" / "agents" / "nazarick" / "test_ethics_manifesto.py"),
 }
 
 
