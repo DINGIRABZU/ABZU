@@ -91,6 +91,25 @@ last successful component automatically. Operators can override this behaviour:
 - `razar rollback` – delete the checkpoint and rerun the full sequence.
 
 
+## Co-creation Planner
+
+`razar/cocreation_planner.py` synthesizes component priorities, recent
+failures and Crown LLM suggestions into a dependency‑ordered build plan. Each
+invocation appends a plan to `logs/razar_cocreation_plans.json` so later cycles
+can reuse or refine the steps.
+
+Generate a plan with:
+
+```bash
+razar cocreate
+```
+
+The command reads `docs/component_priorities.yaml`, attaches failure counts
+from `logs/razar_boot_history.json`, merges recommendations from
+`logs/razar_crown_dialogues.json` and emits a sequenced list of components and
+their upstream dependencies.
+
+
 ## CROWN LLM Diagnostics and Patching
 
 When a component fails a health check, RAZAR collects logs and test
