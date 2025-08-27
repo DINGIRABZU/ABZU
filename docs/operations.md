@@ -13,7 +13,8 @@ The orchestrator builds or validates the dedicated virtual environment using
 `razar_env.yaml` and records the last successful component in
 `logs/razar_state.json`. Monitor the `/health` endpoint to confirm the
 environment hash and heartbeat. Failed components are automatically moved to
-`quarantine/` and logged in `docs/quarantine_log.md`.
+`quarantine/`, classified by `razar.issue_analyzer`, and logged in
+`docs/quarantine_log.md` with their issue type and suggested fix.
 
 Use ``razar.mission_logger`` to record progress as components start (see
 [logging guidelines](logging_guidelines.md) for event types and examples):
@@ -46,16 +47,17 @@ the manager. Removing `logs/razar_state.json` forces a full restart sequence.
    python -m agents.razar.runtime_manager config/razar_config.yaml
    ```
 4. **Review quarantine**
-   Inspect `quarantine/` and `docs/quarantine_log.md` for components isolated by
-   the runtime manager. After applying fixes, remove the component's JSON file
-   and optionally record a resolved entry with `quarantine_manager.resolve_component`.
+   Inspect `quarantine/` and `docs/quarantine_log.md` for modules isolated by
+   the runtime manager. Each entry includes an issue type to aid triage.
+   After applying fixes, return the module to its original path and optionally
+   record a resolved entry with `quarantine_manager.resolve_component`.
 
 ## Quarantine management
 
-- Quarantined components are written to the `quarantine/` directory and logged
-  in [quarantine_log.md](quarantine_log.md).
-- To restore a component, remove its JSON file from `quarantine/` and record a
-  resolved entry:
+- Quarantined modules are written to the `quarantine/` directory and logged in
+  [quarantine_log.md](quarantine_log.md) with their issue type and suggested fix.
+- To restore a module, return its file from `quarantine/`, remove any metadata
+  JSON, and record a resolved entry:
   ```python
   from razar import quarantine_manager as qm
   qm.resolve_component("gateway", note="reconfigured credentials")
