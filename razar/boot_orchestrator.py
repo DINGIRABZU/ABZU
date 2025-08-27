@@ -4,7 +4,8 @@ from __future__ import annotations
 
 The orchestrator launches components from basic to complex as defined in the
 configuration file. A health check hook runs after each launch and any failure
-halts the boot sequence.
+halts the boot sequence. Failed components are quarantined and skipped on
+subsequent runs.
 """
 
 import argparse
@@ -13,6 +14,8 @@ import logging
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, List
+
+from .quarantine_manager import is_quarantined, quarantine_component
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
 
@@ -75,8 +78,16 @@ def main() -> None:
     processes: List[subprocess.Popen] = []
     try:
         for comp in components:
-            proc = launch_component(comp)
-            processes.append(proc)
+            name = comp.get("name", "")
+            if is_quarantined(name):
+                LOGGER.info("Skipping quarantined component %s", name)
+                continue
+            try:
+                proc = launch_component(comp)
+                processes.append(proc)
+            except Exception as exc:
+                quarantine_component(comp, str(exc))
+                raise
         LOGGER.info("All components launched")
         for proc in processes:
             proc.wait()
