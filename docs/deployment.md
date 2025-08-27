@@ -1,6 +1,6 @@
 # Deployment
 
-This guide covers building versioned images and deploying them using Kubernetes or a serverless platform.
+This guide covers building versioned images and deploying them using Kubernetes or a serverless platform. For vision module dependencies and GPU sizing, see the [Vision System](vision_system.md) guide.
 
 ## Build and publish images
 
