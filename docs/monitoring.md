@@ -46,6 +46,37 @@ If RAZAR cannot restart components, rebuild the virtual environment and rerun
 the manager. Deleting the `.state` file next to the configuration forces a
 full restart cycle.
 
+## Health check metrics
+
+`agents/razar/health_checks.py` performs service probes with per-service latency
+thresholds. When the `prometheus_client` package is installed the script
+exposes metrics on port `9350`:
+
+```bash
+python -m agents.razar.health_checks --interval 30
+```
+
+Metrics exported:
+
+- `service_health_status` – `1` when healthy, `0` when a probe fails.
+- `service_health_latency_seconds` – latency for each probe.
+
+Add the endpoint to the Prometheus configuration:
+
+```yaml
+- job_name: 'razar-health'
+  static_configs:
+    - targets: ['razar-health:9350']
+```
+
+Start the bundled monitoring stack to explore dashboards in Grafana:
+
+```bash
+docker compose -f monitoring/docker-compose.yml up
+```
+
+Grafana listens on `http://localhost:3000` and Prometheus on `http://localhost:9090`.
+
 ## Timing metrics
 
 Latency histograms are exported via Prometheus:
