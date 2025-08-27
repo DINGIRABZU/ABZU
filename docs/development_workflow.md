@@ -74,19 +74,30 @@ file’s status markers (✅/⚠️/❌) reflect component health. See [Assignin
 Component Priorities](developer_onboarding.md#assigning-component-priorities)
 for a walkthrough. When introducing or modifying a service:
 
-1. Set its **Priority** metadata in [system_blueprint.md](system_blueprint.md).
+1. Add an entry to [system_blueprint.md](system_blueprint.md) with its
+   **Priority**, startup command, health check, and recovery notes.
 2. Regenerate `Ignition.md` and refresh `system_blueprint.md` with current
    status and boot order:
 
    ```bash
    python -m razar.doc_sync
    ```
-3. Run the runtime manager to start services and update the status column:
+3. Run the boot orchestrator to execute the ignition sequence:
+
+   ```bash
+   python -m agents.razar.boot_orchestrator
+   ```
+4. Start services with the runtime manager and update the status column:
 
    ```bash
    python -m agents.razar.runtime_manager config/razar_config.yaml
    ```
-4. Commit the revised `Ignition.md` so the launch history remains auditable.
+5. Execute the prioritized test tiers:
+
+   ```bash
+   python -m agents.razar.pytest_runner --priority P1 P2
+   ```
+6. Commit the revised `Ignition.md` so the launch history remains auditable.
 
 For deeper instructions, see [RAZAR_AGENT.md](RAZAR_AGENT.md).
 
