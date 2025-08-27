@@ -3,10 +3,11 @@
 The runner reads :mod:`tests/priority_map.yaml` to determine which test files
 belong to priority tiers ``P1`` through ``P5``.  Tiers are executed in order so
 critical smoke tests can fail fast.  The location of the last failing test is
-persisted in ``logs/pytest_last_failed.json`` so subsequent invocations with the
+persisted in ``logs/pytest_state.json`` so subsequent invocations with the
 ``--resume`` flag continue from the failing tier using pytest's ``--last-failed``
-support.  Output from each tier is appended to ``logs/pytest_priority.log`` for
-downstream analysis.
+support.  When a tier fails the failure context is relayed to
+``planning_engine`` so future runs can target repairs.  Output from each tier is
+appended to ``logs/pytest_priority.log`` for downstream analysis.
 """
 
 from __future__ import annotations
@@ -27,11 +28,17 @@ try:  # pragma: no cover - optional repair dependency
 except Exception:  # pragma: no cover - runtime guard
     code_repair = None  # type: ignore
 
+try:  # pragma: no cover - optional planning dependency
+    from . import planning_engine, mission_logger
+except Exception:  # pragma: no cover - runtime guard
+    planning_engine = None  # type: ignore
+    mission_logger = None  # type: ignore
+
 
 logger = logging.getLogger(__name__)
 
 PRIORITY_LEVELS = ("P1", "P2", "P3", "P4", "P5")
-STATE_FILE = "pytest_last_failed.json"
+STATE_FILE = "pytest_state.json"
 
 
 def load_priority_map(map_path: Path) -> Dict[str, List[str]]:
@@ -102,6 +109,30 @@ def _guess_module_path(repo_root: Path, nodeid: str) -> tuple[Path, Path]:
     return module_path, test_path
 
 
+def _notify_planning_engine(
+    repo_root: Path, nodeid: str, error: str, log_path: Path
+) -> None:
+    """Record failure details and trigger planning for ``nodeid``."""
+
+    if planning_engine is None:  # pragma: no cover - optional dependency
+        return
+
+    module_path, _ = _guess_module_path(repo_root, nodeid)
+    component = module_path.stem
+    try:
+        if mission_logger is not None:
+            mission_logger.log_event("test", component, "failure", error)
+        plan = planning_engine.plan()
+        component_plan = plan.get(component)
+        if component_plan:
+            with log_path.open("a", encoding="utf-8") as fh:
+                fh.write(
+                    f"planning for {component}: {json.dumps(component_plan)}\n"
+                )
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.error("planning feedback failed: %s", exc)
+
+
 def _attempt_repair(repo_root: Path, nodeid: str, error: str, log_path: Path) -> bool:
     """Use :mod:`code_repair` to patch the failing module."""
 
@@ -170,6 +201,7 @@ def run_pytest(
 
             repaired = False
             if failing:
+                _notify_planning_engine(repo_root, failing, stream.getvalue(), log_path)
                 repaired = _attempt_repair(
                     repo_root, failing, stream.getvalue(), log_path
                 )
@@ -204,7 +236,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument(
         "--resume",
         action="store_true",
-        help="Resume from last failing tests using pytest's --last-failed option",
+        help="Resume from last failing tests using progress stored in logs/pytest_state.json",
     )
     args = parser.parse_args(list(argv) if argv is not None else None)
 
