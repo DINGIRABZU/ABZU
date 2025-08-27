@@ -34,3 +34,7 @@ asyncpg==0.29.0
     # optional: event processing
 neo4j==5.23.1
     # optional: event processing
+python-socketio==5.13.0
+    # optional: websocket support
+vanna==0.7.9
+    # optional: NLQ queries

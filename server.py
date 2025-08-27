@@ -55,6 +55,8 @@ from connectors import webrtc_connector
 from core import feedback_logging, video_engine
 from crown_config import settings
 from glm_shell import send_command
+from communication.floor_channel_socket import socket_app
+from nlq_api import router as nlq_router
 
 logger = logging.getLogger(__name__)
 
@@ -157,8 +159,6 @@ def get_current_user(
     return token_info
 
 
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Manage startup and shutdown tasks for the FastAPI app.
@@ -175,8 +175,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 app = FastAPI(lifespan=lifespan)
 app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
+app.include_router(nlq_router)
 
 Instrumentator().instrument(app).expose(app)
+app.mount("/ws", socket_app)
 
 
 @app.post("/token")
