@@ -86,6 +86,8 @@ sys.modules.setdefault("crown_prompt_orchestrator", crown_mod)
 from crown_config import settings
 
 settings.glm_command_token = "token"
+settings.openwebui_username = "user"
+settings.openwebui_password = "pass"
 import server
 server.record_task_flow = lambda *a, **k: None
 
@@ -233,10 +235,15 @@ def test_openwebui_chat_endpoint():
         async with httpx.AsyncClient(
             transport=transport, base_url="http://testserver"
         ) as client:
+            login = await client.post(
+                "/token",
+                data={"username": "user", "password": "pass"},
+            )
+            token = login.json()["access_token"]
             resp = await client.post(
                 "/openwebui-chat",
                 json={"model": "stub", "messages": [{"role": "user", "content": "hi"}]},
-                headers={"Authorization": "Bearer token"},
+                headers={"Authorization": f"Bearer {token}"},
             )
         return resp.status_code, resp.json()
 
@@ -261,7 +268,28 @@ def test_openwebui_chat_requires_authorization():
             )
         return resp.status_code
 
-    status = asyncio.run(run_request({}))
+    status_missing = asyncio.run(run_request({}))
+    status_bad = asyncio.run(
+        run_request({"Authorization": "Bearer bad-token"})
+    )
+    assert status_missing == 401
+    assert status_bad == 401
+
+
+def test_openwebui_login_rejects_invalid_credentials():
+    """/token should return 401 for invalid login."""
+
+    async def run_request() -> int:
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
+            resp = await client.post(
+                "/token", data={"username": "user", "password": "wrong"}
+            )
+        return resp.status_code
+
+    status = asyncio.run(run_request())
     assert status == 401
 
 

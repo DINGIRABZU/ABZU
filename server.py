@@ -26,9 +26,13 @@ import uuid
 
 import numpy as np
 import yaml
-from fastapi import FastAPI, HTTPException, Security, Request
+from fastapi import Depends, FastAPI, HTTPException, Security, Request
 from fastapi.responses import FileResponse, JSONResponse
-from fastapi.security import OAuth2PasswordBearer, SecurityScopes
+from fastapi.security import (
+    OAuth2PasswordBearer,
+    OAuth2PasswordRequestForm,
+    SecurityScopes,
+)
 from PIL import Image
 from prometheus_fastapi_instrumentator import Instrumentator
 
@@ -111,6 +115,20 @@ if settings.glm_command_token:
     }
 
 
+# In-memory user database mapping usernames to passwords and tokens
+_USERS: dict[str, dict[str, str]] = {}
+if settings.openwebui_username and settings.openwebui_password:
+    _user_token = uuid.uuid4().hex
+    _USERS[settings.openwebui_username] = {
+        "password": settings.openwebui_password,
+        "token": _user_token,
+    }
+    _TOKENS[_user_token] = {
+        "sub": settings.openwebui_username,
+        "scopes": {"avatar:read", "music:write", "music:read"},
+    }
+
+
 def get_current_user(
     security_scopes: SecurityScopes, token: str = Security(oauth2_scheme)
 ) -> TokenInfo:
@@ -139,6 +157,8 @@ def get_current_user(
     return token_info
 
 
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Manage startup and shutdown tasks for the FastAPI app.
@@ -157,6 +177,16 @@ app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
 
 Instrumentator().instrument(app).expose(app)
+
+
+@app.post("/token")
+def login(form_data: OAuth2PasswordRequestForm = Depends()) -> dict[str, str]:
+    """Validate user credentials and return an access token."""
+    user = _USERS.get(form_data.username)
+    if not user or user["password"] != form_data.password:
+        logger.warning("Invalid login for %s", form_data.username)
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return {"access_token": user["token"], "token_type": "bearer"}
 
 
 @app.middleware("http")
