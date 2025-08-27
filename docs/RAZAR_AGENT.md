@@ -68,6 +68,15 @@ context to the LLM, receives a patch suggestion, and validates the result
 in a sandbox.  Successful patches are committed back to the repository
 and the component is marked ready for reactivation.
 
+## Prioritized Pytest Runner
+
+`agents/razar/pytest_runner.py` drives tiered test execution.  Test files are
+grouped into priorities in `tests/priority_map.yaml` and executed sequentially
+with the `pytest-order` plug‑in.  Output from each tier is appended to
+`logs/pytest_priority.log`.  When a test fails, the runner invokes the code
+repair workflow to solicit a patch, applies it in a temporary workspace, and
+reruns the affected tests before resuming the remaining tiers.
+
 ## Remote Agent Registration
 
 External helper agents can be loaded at runtime via

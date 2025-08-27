@@ -11,7 +11,9 @@ flowchart LR
 ### Prioritized test tiers
 
 Execute tests in priority order using the RAZAR runner. The mapping of test
-files to tiers lives in `tests/priority_map.yaml`.
+files to tiers lives in `tests/priority_map.yaml`.  Each tier is executed
+sequentially with the `pytest-order` plug‑in so critical smoke tests fail fast.
+Output from every run appends to `logs/pytest_priority.log`.
 
 Run all tiers:
 
@@ -19,11 +21,21 @@ Run all tiers:
 python agents/razar/pytest_runner.py
 ```
 
+Run a specific tier:
+
+```bash
+python agents/razar/pytest_runner.py --priority P1
+```
+
 Resume from the last failing tier:
 
 ```bash
 python agents/razar/pytest_runner.py --resume
 ```
+
+If a tier fails, the runner invokes the remote code repair agent.  The failing
+module is patched in a temporary workspace and its tests rerun.  Successful
+patches are applied to the repository automatically.
 
 ### CLI console interface
 
