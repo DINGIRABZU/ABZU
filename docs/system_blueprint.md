@@ -54,12 +54,27 @@ reality. The overarching mission described in [MISSION.md](MISSION.md) aligns
 technical exploration with ethical stewardship. A broader project overview
 appears in the [repository README](../README.md).
 
+Key tenets include:
+
+- "Nurture a transparent development process that encourages curiosity and mutual support." — [Mission](MISSION.md)
+- "Elevate accessibility so newcomers can participate without specialized infrastructure." — [Mission](MISSION.md)
+- "Provide a communal space where participants can submit, refine, and realize their 'wishes' for new capabilities." — [Wish Box Charter](WISH_BOX_CHARTER.md)
+- "Use only data that you have explicit permission to process and strip private details before sharing." — [Ethics Policy](ETHICS_POLICY.md)
+
 ## Vision
 
 The long‑term vision imagines a symbiotic ecosystem of agents and music‑driven
 insight. [VISION.md](VISION.md) expands on this trajectory, while the
 [LLM Models guide](LLM_MODELS.md) and the [README](../README.md) show how model
 choices manifest the vision across chakra layers and services.
+
+Guiding aspirations:
+
+- "Illuminate how creative tooling can serve collaborative, compassionate use." — [Vision](VISION.md)
+- "Preserve the integrity of the CRYSTAL CODEX while welcoming community stewardship." — [Vision](VISION.md)
+- "Dreamers, Builders, and Stewards co-create features through the communal wish pipeline." — [Wish Box Charter](WISH_BOX_CHARTER.md)
+- "Caretakers, Researchers, Artists, and Wayfinders explore the ecosystem together." — [Vision](VISION.md)
+- "Data is handled only with explicit permission and stripped of private details before sharing." — [Ethics Policy](ETHICS_POLICY.md)
 
 ## Objectives & Milestones
 
