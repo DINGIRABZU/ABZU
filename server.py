@@ -20,7 +20,8 @@ import logging
 import time
 from contextlib import asynccontextmanager
 from io import BytesIO
-from typing import AsyncIterator, Iterator, Optional, TypedDict
+from typing import Any, AsyncIterator, Iterator, Optional, TypedDict
+import uuid
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, Security, Request
@@ -34,6 +35,9 @@ try:  # pragma: no cover - optional dependency
 except ImportError:  # pragma: no cover - optional dependency
     Histogram = None  # type: ignore[assignment]
 from pydantic import BaseModel, Field
+
+from crown_prompt_orchestrator import crown_prompt_orchestrator
+from INANNA_AI.glm_integration import GLMIntegration
 
 import corpus_memory_logging
 import music_generation
@@ -55,6 +59,8 @@ REQUEST_LATENCY = (
     if Histogram is not None
     else None
 )
+
+_glm = GLMIntegration()
 
 # --- OAuth2 security configuration ---
 oauth2_scheme = OAuth2PasswordBearer(
@@ -173,6 +179,43 @@ def health_check() -> dict[str, str]:
 def readiness_check() -> dict[str, str]:
     """Return service readiness status."""
     return {"status": "ready"}
+
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+
+class ChatCompletionRequest(BaseModel):
+    model: str | None = None
+    messages: list[ChatMessage]
+
+
+@app.post("/openwebui-chat")
+def openwebui_chat(
+    req: ChatCompletionRequest,
+    current_user: dict = Security(get_current_user),
+) -> dict[str, Any]:
+    """Return an OpenAI-style chat completion."""
+    user_content = ""
+    for msg in req.messages:
+        if msg.role == "user":
+            user_content = msg.content
+    result = crown_prompt_orchestrator(user_content, _glm)
+    return {
+        "id": f"chatcmpl-{uuid.uuid4().hex}",
+        "object": "chat.completion",
+        "created": int(time.time()),
+        "model": result.get("model", req.model or "unknown"),
+        "choices": [
+            {
+                "index": 0,
+                "message": {"role": "assistant", "content": result.get("text", "")},
+                "finish_reason": "stop",
+            }
+        ],
+        "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
+    }
 
 
 class ShellCommand(BaseModel):

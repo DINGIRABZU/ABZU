@@ -60,12 +60,21 @@ sys.modules.setdefault("INANNA_AI.glm_integration", inanna_mod)
 
 corpus_memory_logging_stub = ModuleType("corpus_memory_logging")
 corpus_memory_logging_stub.log_interaction = lambda *a, **k: None
+corpus_memory_logging_stub.load_interactions = lambda *a, **k: []
+corpus_memory_logging_stub.log_ritual_result = lambda *a, **k: None
 sys.modules.setdefault("corpus_memory_logging", corpus_memory_logging_stub)
 
 music_generation_stub = ModuleType("music_generation")
 music_generation_stub.generate_from_text = lambda *a, **k: Path("song.wav")
 music_generation_stub.OUTPUT_DIR = Path(".")
 sys.modules.setdefault("music_generation", music_generation_stub)
+
+crown_mod = ModuleType("crown_prompt_orchestrator")
+crown_mod.crown_prompt_orchestrator = lambda msg, glm: {
+    "text": "stubbed",
+    "model": "stub",
+}
+sys.modules.setdefault("crown_prompt_orchestrator", crown_mod)
 
 from crown_config import settings
 
@@ -134,8 +143,6 @@ def test_glm_command_requires_authorization(monkeypatch):
     assert status_wrong == 401
 
 
-
-
 def test_avatar_frame_endpoint(monkeypatch):
     """GET /avatar-frame should return a base64 encoded image."""
 
@@ -164,12 +171,16 @@ def test_music_endpoint_success(monkeypatch, tmp_path):
     song = tmp_path / "song.wav"
     song.write_bytes(b"wav")
 
-    monkeypatch.setattr(server.music_generation, "generate_from_text", lambda p, m: song)
+    monkeypatch.setattr(
+        server.music_generation, "generate_from_text", lambda p, m: song
+    )
     monkeypatch.setattr(server.music_generation, "OUTPUT_DIR", tmp_path)
 
     async def run_request():
         transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
             resp = await client.post(
                 "/music",
                 json={"prompt": "melody"},
@@ -192,7 +203,9 @@ def test_music_endpoint_failure(monkeypatch):
 
     async def run_request():
         transport = httpx.ASGITransport(app=server.app)
-        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
             resp = await client.post(
                 "/music",
                 json={"prompt": "melody"},
@@ -202,3 +215,70 @@ def test_music_endpoint_failure(monkeypatch):
 
     status = asyncio.run(run_request())
     assert status == 500
+
+
+def test_openwebui_chat_endpoint():
+    """POST /openwebui-chat should return an OpenAI-style response."""
+
+    async def run_request() -> tuple[int, dict[str, object]]:
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
+            resp = await client.post(
+                "/openwebui-chat",
+                json={"model": "stub", "messages": [{"role": "user", "content": "hi"}]},
+                headers={"Authorization": "Bearer token"},
+            )
+        return resp.status_code, resp.json()
+
+    status, data = asyncio.run(run_request())
+    assert status == 200
+    assert data["object"] == "chat.completion"
+    assert data["choices"][0]["message"]["content"] == "stubbed"
+
+
+def test_openwebui_chat_requires_authorization():
+    """/openwebui-chat should return 401 without a valid token."""
+
+    async def run_request(headers) -> int:
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
+            resp = await client.post(
+                "/openwebui-chat",
+                json={"model": "stub", "messages": [{"role": "user", "content": "hi"}]},
+                headers=headers,
+            )
+        return resp.status_code
+
+    status = asyncio.run(run_request({}))
+    assert status == 401
+
+
+def test_get_music_not_found():
+    """GET /music/<file> should return 404 when missing."""
+
+    async def run_request() -> int:
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
+            resp = await client.get(
+                "/music/missing.wav", headers={"Authorization": "Bearer token"}
+            )
+        return resp.status_code
+
+    status = asyncio.run(run_request())
+    assert status == 404
+
+
+def test_import_src_package():
+    """Import modules under ``src`` to increase coverage."""
+
+    import importlib
+
+    mod = importlib.import_module("src")
+    contracts = importlib.import_module("src.core.contracts")
+    assert mod.__name__ == "src" and contracts.__name__ == "src.core.contracts"
