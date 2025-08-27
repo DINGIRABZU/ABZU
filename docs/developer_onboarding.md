@@ -107,6 +107,32 @@ The runtime manager reads `Ignition.md`, launches each component in order, and
 rewrites the Status column with health results. Commit the updated file so the
 startup sequence remains auditable.
 
+### Adding Components to `system_blueprint.md`
+
+1. Open [system_blueprint.md](system_blueprint.md) and add a subsection for the
+   new service under the appropriate chakra. Include its **Priority**, startup
+   command, health check, and recovery notes.
+2. Regenerate the ignition plan so the component appears with a pending status:
+
+   ```bash
+   python -m razar.doc_sync
+   ```
+3. Commit both files to version control.
+
+### Boot Orchestrator and Prioritized Tests
+
+Run the lightweight boot orchestrator to execute the ignition sequence:
+
+```bash
+python -m agents.razar.boot_orchestrator
+```
+
+After services start, execute the tiered test suites:
+
+```bash
+python -m agents.razar.pytest_runner --priority P1 P2
+```
+
 ## Repository Layout
 - `core/` – language processing and self-correction engines.
 - `INANNA_AI/` – model logic, memory systems, and ritual analysis modules.
