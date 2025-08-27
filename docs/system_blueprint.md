@@ -28,6 +28,13 @@ Progress for each component is written to ``logs/razar.log`` via
 later review. The ``summary`` command reports the last successful component and
 any pending tasks.
 
+Beyond startup, RAZAR also hosts a ZeroMQ recovery channel. Components that
+encounter an unrecoverable error send a payload with their name and state
+snapshot. RAZAR saves this state, applies fixes, restarts the module, and then
+restores the saved state before replying with a confirmation. This protocol
+allows the running system to offload complex recovery steps to the external
+agent.
+
 ## Ethics & Mission
 
 Inanna's development follows a sacred covenant that pairs technical ambition with
