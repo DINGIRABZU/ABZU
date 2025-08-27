@@ -191,8 +191,17 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
   `Planner`, `Coder`, `Reviewer`, `DevAssistantService`.
 
 ## Essential Services
+### RAZAR Startup Orchestrator
+- **Layer:** Crown
+- **Priority:** 0
+- **Purpose:** Prepare the runtime environment and supervise service launches before any other component starts.
+- **Startup:** Runs first to build or validate the Python `venv`.
+- **Health Check:** Confirm the environment hash and orchestrator heartbeat.
+- **Recovery:** Rebuild the `venv` and restart RAZAR.
+
 ### Chat Gateway
 - **Layer:** Throat
+- **Priority:** 2
 - **Purpose:** Provide the user messaging interface and route requests to internal agents. See [Communication Interfaces](communication_interfaces.md).
 - **Chat2DB:** Logs conversations and retrieves context through the [Chat2DB interface](chat2db.md).
 - **Startup:** Launch after the memory store is available.
@@ -201,6 +210,7 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 
 ### Memory Systems
 - **Layer:** Heart
+- **Priority:** 1
 - **Purpose:** Persist conversations and embeddings for retrieval across sessions.
   See [Memory Architecture](memory_architecture.md) and [Vector Memory](vector_memory.md).
 - **Startup:** Start first to provide persistence for later services.
@@ -209,6 +219,7 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 
 ### Chat2DB Interface
 - **Layer:** Heart
+- **Priority:** 2
 - **Purpose:** Bridge the chat gateway with both the SQLite conversation log and the vector memory store.
 - **Docs:** [Chat2DB Interface](chat2db.md)
 - **Modules:** [`INANNA_AI/db_storage.py`](../INANNA_AI/db_storage.py), [`spiral_vector_db/__init__.py`](../spiral_vector_db/__init__.py)
@@ -218,6 +229,7 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 
 ### CROWN LLM
 - **Layer:** Crown
+- **Priority:** 2
 - **Purpose:** Execute high‑level reasoning and language generation. See [CROWN Overview](CROWN_OVERVIEW.md) and [LLM Models](LLM_MODELS.md).
 - **Startup:** Initialize once the chat gateway is online and model weights are present.
 - **Health Check:** Send a dummy prompt and inspect response time.
@@ -225,18 +237,21 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 
 ## Non‑Essential Services
 ### Audio Device
+- **Priority:** 3
 - **Purpose:** Manage audio capture and playback. See [Audio Ingestion](audio_ingestion.md) and [Voice Setup](voice_setup.md).
 - **Startup:** Activate after essential services.
 - **Health Check:** Run an audio loopback test.
 - **Recovery:** Reinitialize the audio backend or fall back to silent mode.
 
 ### Avatar
+- **Priority:** 4
 - **Purpose:** Render the musical persona and drive animations. See [Music Avatar Architecture](music_avatar_architecture.md), [Avatar Pipeline](avatar_pipeline.md), and [Nazarick Agents](nazarick_agents.md).
 - **Startup:** Launch after the audio device using Nazarick helpers.
 - **Health Check:** Verify avatar frame rendering.
 - **Recovery:** Reload avatar assets or restart the pipeline.
 
 ### Video
+- **Priority:** 5
 - **Purpose:** Stream generative visuals. See [Video Generation](video_generation.md).
 - **Startup:** Final stage.
 - **Health Check:** Probe the video stream endpoint.
@@ -249,12 +264,13 @@ advance to the next step only after the current service reports a passing
 recommended for both local runs and production deployments described in
 [deployment.md](deployment.md).
 
-1. Memory Store (Heart)
-2. Chat Gateway (Throat)
-3. CROWN LLM (Crown)
-4. Audio Device
-5. Avatar
-6. Video
+0. RAZAR Startup Orchestrator (Crown, priority 0)
+1. Memory Store (Heart, priority 1)
+2. Chat Gateway (Throat, priority 2)
+3. CROWN LLM (Crown, priority 2)
+4. Audio Device (priority 3)
+5. Avatar (priority 4)
+6. Video (priority 5)
 
 Each step should report readiness before continuing. After the final service
 comes online, run the smoke tests in [testing.md](testing.md) to confirm the
