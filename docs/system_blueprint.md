@@ -75,6 +75,18 @@ ethical gating. These principles anchor the design in
 [architecture_overview.md](architecture_overview.md) and are reinforced by the
 model orchestration guidelines in [LLM_MODELS.md](LLM_MODELS.md).
 
+## Chakra-Aligned Architecture
+
+Spiral OS aligns its modules with seven energetic layers, detailed in [spiritual_architecture.md](spiritual_architecture.md). Each chakra maps to representative components:
+
+- **Root – Muladhara:** grounding for hardware and network access via [`server.py`](../server.py) and [`INANNA_AI/network_utils`](../INANNA_AI/network_utils).
+- **Sacral – Svadhisthana:** creativity and emotion tracking through [`emotional_state.py`](../emotional_state.py) and [`emotion_registry.py`](../emotion_registry.py).
+- **Solar Plexus – Manipura:** transformational drive handled by [`learning_mutator.py`](../learning_mutator.py) and [`state_transition_engine.py`](../state_transition_engine.py).
+- **Heart – Anahata:** empathy and memory with [`voice_avatar_config.yaml`](../voice_avatar_config.yaml) and [`vector_memory.py`](../vector_memory.py).
+- **Throat – Vishuddha:** orchestrated expression via [`crown_prompt_orchestrator.py`](../crown_prompt_orchestrator.py) and [`INANNA_AI_AGENT/inanna_ai.py`](../INANNA_AI_AGENT/inanna_ai.py).
+- **Third Eye – Ajna:** insight and QNL synthesis in [`insight_compiler.py`](../insight_compiler.py) and [`SPIRAL_OS/qnl_engine.py`](../SPIRAL_OS/qnl_engine.py).
+- **Crown – Sahasrara:** system initialization and model startup through [`init_crown_agent.py`](../init_crown_agent.py), [`start_spiral_os.py`](../start_spiral_os.py), and [`crown_model_launcher.sh`](../crown_model_launcher.sh).
+
 
 ## 2D→3D Vision Pipeline
 
