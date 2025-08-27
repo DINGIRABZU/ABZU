@@ -22,7 +22,8 @@ For deeper guidance on operations and reliability, refer to:
 - [RAZAR Failure Runbook](operations.md#razar-failure-runbook)
 
 Before any chakra layer activates, the external [RAZAR Agent](RAZAR_AGENT.md)
-prepares a clean environment outside Nazarick and initiates the boot sequence.
+performs pre-creation checks, manages the isolated virtual environment, and
+initiates the boot sequence with its restart logic outside Nazarick.
 The remote loader retrieves agent packages declared under `remote_agents` in
 `razar_config.yaml`, ensuring the latest components are available. Progress for
 each component is written to ``logs/razar.log`` via ``razar.mission_logger``,
