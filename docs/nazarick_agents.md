@@ -1,6 +1,6 @@
 # Nazarick Agents
 
-This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md), which prepares a clean environment before these internal services come online.
+This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md), which performs pre-creation checks, manages the isolated virtual environment, and handles restart logic before these internal services come online.
 
 | Agent | Role | Chakra | Memory Scope | External Libraries | Stub |
 | --- | --- | --- | --- | --- | --- |
