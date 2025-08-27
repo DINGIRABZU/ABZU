@@ -14,6 +14,7 @@ For high-level orientation, consult:
 For deeper guidance on operations and reliability, refer to:
 
 - [Deployment Guide](deployment.md)
+- [Ignition Sequence](Ignition.md)
 - [Monitoring](monitoring.md)
 - [Testing](testing.md)
 - [Recovery Playbook](recovery_playbook.md)
