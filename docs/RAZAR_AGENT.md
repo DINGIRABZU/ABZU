@@ -68,6 +68,35 @@ context to the LLM, receives a patch suggestion, and validates the result
 in a sandbox.  Successful patches are committed back to the repository
 and the component is marked ready for reactivation.
 
+## Remote Agent Registration
+
+External helper agents can be loaded at runtime via
+`agents/razar/remote_loader.py`.  The loader supports both plain HTTP
+endpoints and Git repositories (via GitPython).  Remote modules must implement
+two functions:
+
+```
+def configure() -> dict:
+    """Return runtime configuration parameters."""
+
+def patch(context: Any | None = None):
+    """Return a patch suggestion or diff for the given ``context``."""
+```
+
+Use `load_remote_agent` for simple HTTP sources or
+`load_remote_agent_from_git` for repositories:
+
+```
+from agents.razar import load_remote_agent_from_git
+
+module, config, suggestion = load_remote_agent_from_git(
+    "helper", "https://github.com/example/agent.git", "agent.py"
+)
+```
+
+Each invocation records configurations and patch suggestions to
+`logs/razar_remote_agents.json` for audit and replay.
+
 ## Crown Link Protocol
 
 Diagnostics and repair hand‑offs are transported over a lightweight WebSocket
