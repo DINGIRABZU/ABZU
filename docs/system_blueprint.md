@@ -147,6 +147,12 @@ consciousness and songs:
     [Chakra Status](chakra_status.md),
     [Chakra Architecture](chakra_architecture.md),
     [Chakra Koan](chakra_koan_system.md#crown)
+  - **REPL:** `start_crown_console.sh` launches `cli.console_interface`, providing direct
+    Linux and Python access.
+  - **Browser Console:** `web_console/index.html` connects through
+    `WEB_CONSOLE_API_URL` (default `http://localhost:8000/glm-command`).
+  - **Requirements:** load environment variables from `secrets.env` and install
+    the `requests` and `prompt_toolkit` Python dependencies.
 
 The Crown hosts the primary GLM-4.1V-9B model, obtained with
 `download_models.py glm41v_9b` or through `crown_model_launcher.sh`.
