@@ -1,3 +1,4 @@
+import json
 import logging
 
 import yaml
@@ -42,7 +43,8 @@ def test_runtime_manager_resume(tmp_path, caplog):
     assert (tmp_path / "alpha.txt").exists()
     assert not (tmp_path / "beta.txt").exists()
     assert not (tmp_path / "gamma.txt").exists()
-    assert state_path.read_text(encoding="utf-8") == "alpha"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert state["last_component"] == "alpha"
     exec_path = (tmp_path / "alpha.txt").read_text(encoding="utf-8")
     assert str(venv_path) in exec_path
 
@@ -55,5 +57,6 @@ def test_runtime_manager_resume(tmp_path, caplog):
     assert success
     assert (tmp_path / "beta.txt").exists()
     assert (tmp_path / "gamma.txt").exists()
-    assert state_path.read_text(encoding="utf-8") == "gamma"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert state["last_component"] == "gamma"
     assert any("Starting component beta" in r.message for r in caplog.records)

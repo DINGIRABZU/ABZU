@@ -7,6 +7,7 @@ from pathlib import Path
 
 from agents.razar.ignition_builder import build_ignition
 from agents.razar.lifecycle_bus import LifecycleBus
+from agents.razar import mission_logger
 
 
 def _cmd_status(args: argparse.Namespace) -> None:
@@ -28,6 +29,16 @@ def _cmd_stop(args: argparse.Namespace) -> None:
 
 def _cmd_build_ignition(args: argparse.Namespace) -> None:
     build_ignition(Path(args.blueprint), Path(args.output))
+
+
+def _cmd_timeline(_: argparse.Namespace) -> None:
+    """Print the chronological mission log."""
+
+    for entry in mission_logger.timeline():
+        details = f" - {entry['details']}" if entry.get("details") else ""
+        print(
+            f"{entry['timestamp']} {entry['event']} {entry['component']}: {entry['status']}{details}"
+        )
 
 
 def main() -> None:  # pragma: no cover - CLI entry point
@@ -61,6 +72,9 @@ def main() -> None:  # pragma: no cover - CLI entry point
         help="Output path for Ignition.md",
     )
     p_ignition.set_defaults(func=_cmd_build_ignition)
+
+    p_timeline = sub.add_parser("timeline", help="Show event timeline")
+    p_timeline.set_defaults(func=_cmd_timeline)
 
     args = parser.parse_args()
     if hasattr(args, "func"):
