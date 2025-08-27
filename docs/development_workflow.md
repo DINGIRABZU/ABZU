@@ -75,10 +75,11 @@ Component Priorities](developer_onboarding.md#assigning-component-priorities)
 for a walkthrough. When introducing or modifying a service:
 
 1. Set its **Priority** metadata in [system_blueprint.md](system_blueprint.md).
-2. Regenerate `Ignition.md` from the blueprint so RAZAR picks up the new entry:
+2. Regenerate `Ignition.md` and refresh `system_blueprint.md` with current
+   status and boot order:
 
    ```bash
-   python -m razar build-ignition
+   python -m razar.doc_sync
    ```
 3. Run the runtime manager to start services and update the status column:
 

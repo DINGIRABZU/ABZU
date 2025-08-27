@@ -16,7 +16,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List
 
-from . import health_checks
+from . import doc_sync, health_checks
 from .quarantine_manager import is_quarantined, quarantine_component
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
@@ -87,6 +87,7 @@ def main() -> None:
                         raise
                     time.sleep(1)
         LOGGER.info("All components launched")
+        doc_sync.sync_docs()
         for proc in processes:
             proc.wait()
     except Exception:  # pragma: no cover - logs on failure
