@@ -39,3 +39,12 @@ interactions and fetch relevant context during dialogue.
 The interface is stateless; components import these helpers as needed. See the
 [system blueprint](system_blueprint.md#chat2db-interface) for how Chat2DB fits in
 the overall stack.
+
+## Agent Interactions
+Chat2DB sits between the chat gateway and memory utilities. Agents interact with it in several ways:
+
+- **Chat Gateway** logs each user and model utterance via `save_interaction` and retrieves recent history with `fetch_interactions`.
+- **Memory Scribe** persists transcripts and voice configurations, pushing embeddings through `insert_embeddings` for later recall.
+- **Prompt Orchestrator and development helpers** query `fetch_interactions` and `query_embeddings` to build context-aware prompts.
+
+Because the API exposes simple functions, agents import these helpers directly without maintaining additional state.
