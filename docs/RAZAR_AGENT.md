@@ -40,3 +40,20 @@ Adapter (YOLOE), a check might confirm that prediction FPS stays above a target
 threshold.  Failed checks automatically quarantine the component via
 `quarantine_manager.py`, preventing unstable services from continuing in the
 boot sequence.
+
+## Runtime Manager
+
+`agents/razar/runtime_manager.py` boots the configured components in order of
+their priority. The manager creates a virtual environment on first run,
+installs any listed dependencies and tracks progress so that interrupted boots
+can resume where they left off.
+
+Launch the sequence by providing the path to `razar_config.yaml`:
+
+```bash
+python agents/razar/runtime_manager.py config/razar_config.yaml
+```
+
+Each component entry in the configuration specifies a `command` and `priority`.
+After every successful start the manager records the component name in
+`logs/razar_state.json`, allowing subsequent runs to skip completed steps.
