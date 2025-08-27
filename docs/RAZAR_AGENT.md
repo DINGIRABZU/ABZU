@@ -33,3 +33,13 @@ environment before starting services:
 3. Re-run the RAZAR runtime manager to launch components.
 
 These steps guarantee a clean foundation for Inanna and CROWN.
+
+## Final Verification Sequence
+Before yielding control, RAZAR confirms that the core services report readiness:
+
+1. Query `http://localhost:8000/ready` and expect `{"status": "ready"}` from Inanna AI.
+2. Query `http://localhost:8001/ready` and expect `{"status": "ready"}` from CROWN LLM.
+3. If either check fails, RAZAR invokes the corresponding restart script (`run_inanna.sh` or `crown_model_launcher.sh`) and repeats the probe once.
+4. Persistent failures mark the mission incomplete and halt the startup sequence.
+
+These verifications ensure both agents are prepared before internal orchestration begins.

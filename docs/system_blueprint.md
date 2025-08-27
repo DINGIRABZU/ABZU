@@ -205,6 +205,7 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 - **Purpose:** Prepare the runtime environment and supervise service launches before any other component starts. See [RAZAR Agent](RAZAR_AGENT.md).
 - **Startup:** Runs first to build or validate the Python `venv`.
 - **Health Check:** Confirm the environment hash and orchestrator heartbeat.
+- **Verification:** Ensure Inanna AI and CROWN LLM report readiness; see [Final Verification Sequence](RAZAR_AGENT.md#final-verification-sequence).
 - **Recovery:** Rebuild the `venv` and restart RAZAR.
 
 ### Chat Gateway
