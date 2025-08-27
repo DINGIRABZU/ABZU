@@ -417,3 +417,5 @@ deployments with user accounts and persistent chats.
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Workflow](development_workflow.md)
 - [Coding Style](coding_style.md)
+- Index Markdown docs with `python tools/doc_indexer.py` to regenerate `docs/INDEX.md`; existing entries stay intact and new versions of generated files are appended.
+
