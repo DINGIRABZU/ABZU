@@ -8,6 +8,7 @@ from pathlib import Path
 from agents.razar.ignition_builder import build_ignition
 from agents.razar.lifecycle_bus import LifecycleBus
 from agents.razar import mission_logger
+from agents.razar.blueprint_synthesizer import synthesize
 
 
 def _cmd_status(args: argparse.Namespace) -> None:
@@ -39,6 +40,23 @@ def _cmd_timeline(_: argparse.Namespace) -> None:
         print(
             f"{entry['timestamp']} {entry['event']} {entry['component']}: {entry['status']}{details}"
         )
+
+
+def _cmd_map(_: argparse.Namespace) -> None:
+    """Build and display the component dependency graph."""
+
+    graph = synthesize()
+    try:
+        for node in sorted(graph.nodes):
+            targets = sorted(Path(t).name for _, t in graph.out_edges(node))
+            name = Path(node).name
+            if targets:
+                deps = ", ".join(targets)
+                print(f"{name}: {deps}")
+            else:
+                print(f"{name}: (no links)")
+    except BrokenPipeError:  # pragma: no cover - stream closed by pipe
+        pass
 
 
 def main() -> None:  # pragma: no cover - CLI entry point
@@ -75,6 +93,9 @@ def main() -> None:  # pragma: no cover - CLI entry point
 
     p_timeline = sub.add_parser("timeline", help="Show event timeline")
     p_timeline.set_defaults(func=_cmd_timeline)
+
+    p_map = sub.add_parser("map", help="Visualize component relationships")
+    p_map.set_defaults(func=_cmd_map)
 
     args = parser.parse_args()
     if hasattr(args, "func"):
