@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import subprocess
+import shlex
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
 import venv
@@ -136,8 +137,7 @@ class RuntimeManager:
             command = comp.get("command", "")
             logger.info("Starting component %s", name)
             result = subprocess.run(
-                command,
-                shell=True,
+                shlex.split(command) if isinstance(command, str) else command,
                 env=env,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,

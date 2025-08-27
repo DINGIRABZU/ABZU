@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import logging
 import subprocess
+import shlex
 from pathlib import Path
 
 import yaml
@@ -29,7 +30,10 @@ def deploy_pipeline(path: str | Path) -> None:
         command = step if isinstance(step, str) else step.get("run")
         if command:
             try:
-                subprocess.run(command, shell=True, check=True)
+                subprocess.run(
+                    shlex.split(command) if isinstance(command, str) else command,
+                    check=True,
+                )
             except subprocess.CalledProcessError as exc:
                 logger.error(
                     "Command failed with exit code %s: %s", exc.returncode, command
