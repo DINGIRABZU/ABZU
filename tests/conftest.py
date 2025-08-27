@@ -161,6 +161,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_orchestration_master.py"),
     str(ROOT / "tests" / "memory" / "test_vector_memory.py"),
     str(ROOT / "tests" / "test_smoke_imports.py"),
+    str(ROOT / "tests" / "agents" / "razar" / "test_ignition_builder.py"),
 }
 
 
