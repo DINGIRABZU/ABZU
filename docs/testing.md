@@ -8,6 +8,23 @@ flowchart LR
 
 ## Manual smoke tests
 
+### Prioritized test tiers
+
+Execute tests in priority order using the RAZAR runner. The mapping of test
+files to tiers lives in `tests/priority_map.yaml`.
+
+Run all tiers:
+
+```bash
+python agents/razar/pytest_runner.py
+```
+
+Resume from the last failing tier:
+
+```bash
+python agents/razar/pytest_runner.py --resume
+```
+
 ### CLI console interface
 
 1. From the repository root, run `python -m cli.console_interface`.

@@ -73,9 +73,14 @@ an entry is appended to `docs/quarantine_log.md`.
 
 ## Prioritized Test Execution
 
-Tests can be executed in priority tiers using `agents/razar/pytest_runner.py`.
-The mapping of test files to tiers is stored in `tests/priority_map.yaml` with
-levels `P1` through `P5`.
+Tests can be executed in priority tiers using
+`agents/razar/pytest_runner.py`. The mapping of test files to tiers is stored in
+`tests/priority_map.yaml` with levels `P1` through `P5`.
+
+The runner executes one tier at a time using the `pytest-order` plugin so that
+high‑priority smoke tests fail fast. After any failure the runner records the
+failing test node and tier in `logs/pytest_last_failed.json`. Subsequent runs
+with `--resume` continue from that point.
 
 Run all tests in order of priority:
 
@@ -95,7 +100,7 @@ Resume from the last failing test session:
 python agents/razar/pytest_runner.py --resume
 ```
 
-Output from each invocation is written to `logs/pytest_priority.log` for
+Output from each invocation is appended to `logs/pytest_priority.log` for
 inspection by other RAZAR components.
 
 ## Automated Code Repair
