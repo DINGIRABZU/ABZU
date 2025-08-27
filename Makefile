@@ -1,5 +1,5 @@
 .RECIPEPREFIX := >
-.PHONY: install-minimal install-audio install-vision install-full verify-deps test test-deterministic train-deterministic
+.PHONY: install-minimal install-audio install-vision install-full verify-deps test test-deterministic train-deterministic bench
 
 SEED ?= 0
 
@@ -27,4 +27,7 @@ test-deterministic:
 
 train-deterministic:
 >SEED=$(SEED) python auto_retrain.py --dry-run
+
+bench:
+>python benchmarks/run_benchmarks.py
 
