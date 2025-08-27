@@ -328,21 +328,17 @@ General guidance: stop the failed service, confirm dependencies, and restart
 following the startup order. For persistent issues, consult the
 [Recovery Playbook](recovery_playbook.md) to restore from snapshots.
 
-## Operational Guides
+## Operations & Monitoring
 
 These guides support the startup order, health check practices, and recovery
-procedures outlined above:
+procedures outlined above. RAZAR’s logs (`logs/razar.log`) feed into the
+monitoring pipeline to surface orchestration events and anomalies.
 
 - [Operations Guide](operations.md)
 - [Monitoring Guide](monitoring.md)
 - [Deployment Guide](deployment.md)
 - [Testing Guide](testing.md)
-
-## Contributor Resources
-
-- [Developer Onboarding](developer_onboarding.md)
-- [Development Workflow](development_workflow.md)
-- [Coding Style](coding_style.md)
+- [Recovery Playbook](recovery_playbook.md)
 
 ## LLM Console Alternatives
 
@@ -385,3 +381,9 @@ Each project can replace or augment the bundled `web_console/` depending on the
 desired trade‑off between simplicity and features. Chainlit pairs well with the
 existing Python services for rapid prototypes, while OpenWebUI targets full
 deployments with user accounts and persistent chats.
+
+## Contributor Resources
+
+- [Developer Onboarding](developer_onboarding.md)
+- [Development Workflow](development_workflow.md)
+- [Coding Style](coding_style.md)
