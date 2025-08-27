@@ -19,8 +19,7 @@ import shlex
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
 import venv
-
-from . import health_checks, quarantine_manager
+from . import checkpoint_manager, health_checks, quarantine_manager
 
 try:
     import yaml
@@ -86,19 +85,10 @@ class RuntimeManager:
     def load_state(self) -> str:
         """Return the name of the last successful component."""
 
-        if self.state_path.exists():
-            try:
-                data = json.loads(self.state_path.read_text(encoding="utf-8"))
-                return str(data.get("last_component", ""))
-            except json.JSONDecodeError:
-                return ""
-        return ""
+        return checkpoint_manager.load_checkpoint(self.state_path)
 
     def save_state(self, name: str) -> None:
-        self.state_path.parent.mkdir(parents=True, exist_ok=True)
-        self.state_path.write_text(
-            json.dumps({"last_component": name}), encoding="utf-8"
-        )
+        checkpoint_manager.save_checkpoint(name, self.state_path)
 
     # ------------------------------------------------------------------
     # Component execution
@@ -142,8 +132,7 @@ class RuntimeManager:
         components = config.get("components", [])
         return sorted(components, key=lambda c: int(c.get("priority", 0)))
 
-    def _starting_index(self, components: Iterable[Dict[str, object]]) -> int:
-        last = self.load_state()
+    def _starting_index(self, components: Iterable[Dict[str, object]], last: str) -> int:
         if not last:
             return 0
         for idx, comp in enumerate(components):
@@ -161,15 +150,18 @@ class RuntimeManager:
         # packages which keeps test environments light-weight.
         dependencies = self._env_dependencies(components)
         self.ensure_venv(dependencies)
-        start = self._starting_index(components)
+        last = self.load_state()
+        start = self._starting_index(components, last)
         env = self._env()
 
-        last = self.load_state()
         if last:
             logger.info("Resuming after component %s", last)
 
         for comp in components[start:]:
             name = comp.get("name", "<unknown>")
+            if quarantine_manager.is_quarantined(str(name)):
+                logger.warning("Skipping quarantined component %s", name)
+                continue
             command = comp.get("command", "")
             logger.info("Starting component %s", name)
             result = subprocess.run(
