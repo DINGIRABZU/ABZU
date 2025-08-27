@@ -24,3 +24,7 @@ data/training/
 
 # Local virtual environment
 .venv/
+node_modules/
+floor_client/node_modules/
+floor_client/dist/
+floor_client/package-lock.json
