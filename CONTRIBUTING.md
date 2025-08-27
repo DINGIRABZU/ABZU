@@ -90,6 +90,10 @@ coverage report
 
 - Keep changes focused; submit separate PRs for unrelated fixes.
 - Ensure documentation is updated and tests pass.
+- Record project-wide documentation or architectural changes in
+  [docs/system_blueprint.md](docs/system_blueprint.md) by adding a new
+  version entry; do not modify or remove prior content. After updates, run
+  `python tools/doc_indexer.py` to refresh `docs/INDEX.md`.
 - Lint Markdown files with `markdownlint` and verify links using `markdown-link-check`.
 - Request review from a maintainer and address feedback promptly.
 
