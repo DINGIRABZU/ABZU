@@ -403,6 +403,8 @@ richer features for experimenting or deploying chat interfaces.
 - **Setup:** `pip install open-webui && open-webui serve` or via Docker
   `docker run -p 3000:8080 ghcr.io/open-webui/open-webui`.
 - **Link:** <https://github.com/open-webui/open-webui>
+- **Guide:** See [Open Web UI Integration Guide](open_web_ui.md) for architecture,
+  dependencies, and event flow.
 
 Each project can replace or augment the bundled `web_console/` depending on the
 desired trade‑off between simplicity and features. Chainlit pairs well with the
