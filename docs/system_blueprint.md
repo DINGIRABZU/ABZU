@@ -175,7 +175,7 @@ demonstrate practical startup sequences. Core roles include:
 
 - **Orchestration Master** (Crown) – oversees launch control and high-level coordination. See
   [orchestration_master.py](../orchestration_master.py).
-- **Prompt Orchestrator** (Throat) – routes prompts and manages agent interfaces via
+- **Prompt Orchestrator** (Throat) – routes prompts, pulls recent context from [Chat2DB](chat2db.md), and manages agent interfaces via
   [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py).
 - **QNL Engine** (Third Eye) – performs insight and Quantum Narrative Language processing in
   [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py).
@@ -231,7 +231,7 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 index so agents can persist and retrieve context. It relies on
 [`INANNA_AI/db_storage.py`](../INANNA_AI/db_storage.py) and
 [`spiral_vector_db/`](../spiral_vector_db/) for storage and is documented in the
-[Memory Architecture](memory_architecture.md).
+[Memory Architecture](memory_architecture.md). Agents like the Memory Scribe and Prompt Orchestrator call this layer to save transcripts and fetch context before crafting responses.
 
 ## Essential Services
 ### RAZAR Startup Orchestrator
