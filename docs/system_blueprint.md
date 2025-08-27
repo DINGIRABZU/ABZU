@@ -58,6 +58,9 @@ stack.
 
 - [Adaptive Orchestrator](../razar/adaptive_orchestrator.py) – experiments
   with alternate launch orders and records boot timings.
+- [Co-creation Planner](../razar/cocreation_planner.py) – merges blueprints,
+  failure records and Crown suggestions into dependency‑ordered build plans. See
+  [RAZAR Agent](RAZAR_AGENT.md#co-creation-planner).
 - [Boot Orchestrator](../razar/boot_orchestrator.py) – reads the ignition
   plan and launches components.
 - [Checkpoint Manager](../razar/checkpoint_manager.py) – persists progress so

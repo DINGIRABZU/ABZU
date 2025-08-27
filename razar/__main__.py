@@ -10,6 +10,7 @@ from agents.razar.lifecycle_bus import LifecycleBus
 from agents.razar import mission_logger
 from agents.razar.blueprint_synthesizer import synthesize
 from agents.razar import retro_bootstrap
+from . import cocreation_planner
 
 
 def _cmd_status(args: argparse.Namespace) -> None:
@@ -68,6 +69,15 @@ def _cmd_bootstrap(args: argparse.Namespace) -> None:
             print(path)
 
 
+def _cmd_cocreate(_: argparse.Namespace) -> None:
+    """Generate a dependency ordered build plan."""
+
+    plan = cocreation_planner.run()
+    for step in plan:
+        deps = ", ".join(step["depends_on"]) or "(none)"
+        print(f"{step['component']} <- {deps}")
+
+
 def main() -> None:  # pragma: no cover - CLI entry point
     parser = argparse.ArgumentParser(description="RAZAR lifecycle utilities")
     parser.add_argument(
@@ -109,6 +119,9 @@ def main() -> None:  # pragma: no cover - CLI entry point
     p_bootstrap = sub.add_parser("bootstrap", help="Rebuild modules")
     p_bootstrap.add_argument("--from-docs", action="store_true", help="Reconstruct modules referenced in docs")
     p_bootstrap.set_defaults(func=_cmd_bootstrap)
+
+    p_cocreate = sub.add_parser("cocreate", help="Generate co-creation plan")
+    p_cocreate.set_defaults(func=_cmd_cocreate)
 
     args = parser.parse_args()
     if hasattr(args, "func"):
