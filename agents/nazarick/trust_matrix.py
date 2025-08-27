@@ -10,7 +10,7 @@ interactions. Entity types and rank mappings mirror the Nazarick manifesto.
 from enum import Enum
 from pathlib import Path
 import sqlite3
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Any
 
 
 class EntityType(str, Enum):
@@ -45,7 +45,9 @@ class TrustMatrix:
     """Track and evaluate trust for Nazarick interactions."""
 
     def __init__(self, db_path: Optional[Path | str] = None) -> None:
-        self.db_path = Path(db_path) if db_path is not None else Path("memory") / "trust.db"
+        self.db_path = (
+            Path(db_path) if db_path is not None else Path("memory") / "trust.db"
+        )
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._conn = sqlite3.connect(self.db_path)
         self._conn.execute(
@@ -127,6 +129,27 @@ class TrustMatrix:
             intent = "teaching" if trust >= 5 else "wrath"
             return f"rival_level{rank}_{intent}"
         return "outsider_standard"
+
+    # ------------------------------------------------------------------
+    # Public evaluation helpers
+    # ------------------------------------------------------------------
+    def evaluate_entity(self, name: str) -> Dict[str, Any]:
+        """Return structured evaluation metadata for ``name``.
+
+        The result includes the entity classification, rank, current trust
+        score and recommended protocol.
+        """
+
+        etype, rank = self.classify(name)
+        trust = self.get_trust(name)
+        protocol = self.lookup_protocol(name)
+        return {
+            "entity": name,
+            "type": etype.value,
+            "rank": rank,
+            "trust": trust,
+            "protocol": protocol,
+        }
 
     def close(self) -> None:
         """Close the underlying database connection."""
