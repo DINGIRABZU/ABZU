@@ -1,0 +1,21 @@
+# Nazarick persona profiles mapping agent identifiers to metadata.
+# Fields: agent_id, floor, channel, voice_style, chakra_alignment.
+
+- agent_id: demiurge
+  floor: 7
+  channel: "Lava Pits"
+  voice_style: strategic
+  chakra_alignment: crown
+
+- agent_id: shalltear
+  floor: "1-3"
+  channel: "Catacombs"
+  voice_style: dramatic
+  chakra_alignment: root
+
+- agent_id: cocytus
+  floor: 5
+  channel: "Glacier Prison"
+  voice_style: stoic
+  chakra_alignment: throat
+
