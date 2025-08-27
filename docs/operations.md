@@ -1,5 +1,21 @@
 # Operations
 
+## RAZAR startup
+
+Launch the RAZAR runtime manager before any other component to prepare the
+environment and start services in priority order:
+
+```bash
+python -m agents.razar.runtime_manager config/razar_config.yaml
+```
+
+The orchestrator builds or validates the dedicated virtual environment and
+records the last successful component in a `.state` file. Monitor the
+`/health` endpoint to confirm the environment hash and heartbeat.
+
+If RAZAR cannot restart a component, rebuild the virtual environment and rerun
+the manager. Removing the `.state` file forces a full restart sequence.
+
 ## Dependency audits
 
 Use `tools/dependency_audit.py` to ensure installed packages match the pinned
