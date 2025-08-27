@@ -9,6 +9,10 @@ Thank you for considering a contribution!
 3. Ensure tests and linters pass locally.
 4. Open a pull request with a summary of your changes.
 
+## Component Registry
+
+Add new modules to [component_priorities.yaml](component_priorities.yaml) with a priority (P1–P5), criticality tag (core or optional), and relevant issue categories (config, runtime, integration). RAZAR uses this registry to schedule startup and classify errors.
+
 ## Code Quality
 
 - Follow the project's [coding style](coding_style.md).

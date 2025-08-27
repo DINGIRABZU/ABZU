@@ -90,6 +90,7 @@ coverage report
 
 - Keep changes focused; submit separate PRs for unrelated fixes.
 - Ensure documentation is updated and tests pass.
+- Register new modules in [docs/component_priorities.yaml](docs/component_priorities.yaml) with a priority (P1–P5), criticality tag, and issue categories so RAZAR can orchestrate startup.
 - Record project-wide documentation or architectural changes in
   [docs/system_blueprint.md](docs/system_blueprint.md) by adding a new
   version entry; do not modify or remove prior content. After updates, run
