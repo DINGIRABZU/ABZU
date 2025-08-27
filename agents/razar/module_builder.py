@@ -20,7 +20,7 @@ import tempfile
 from typing import Iterable, Mapping, Tuple
 import os
 
-from . import planning_engine, remote_loader
+from . import doc_sync, planning_engine, remote_loader
 
 
 def _write_boilerplate(path: Path) -> None:
@@ -117,4 +117,5 @@ def build(
     final_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.move(str(module_path), final_path)
     shutil.rmtree(sandbox, ignore_errors=True)
+    doc_sync.sync_docs()
     return final_path

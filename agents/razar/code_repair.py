@@ -18,7 +18,7 @@ from typing import Iterable, Sequence
 
 from INANNA_AI.glm_integration import GLMIntegration
 
-from . import quarantine_manager
+from . import doc_sync, quarantine_manager
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +72,7 @@ def _apply_patch(
     quarantine_manager.reactivate_component(
         module_path.stem, verified=True, automated=True
     )
+    doc_sync.sync_docs()
     return True
 
 
