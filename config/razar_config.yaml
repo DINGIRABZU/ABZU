@@ -1,4 +1,20 @@
+dependencies: []
 components:
-  - name: example
+  - name: memory_store
     priority: 1
-    command: "echo 'RAZAR component running'"
+    command: "echo 'starting memory_store'"
+  - name: chat_gateway
+    priority: 2
+    command: "echo 'starting chat_gateway'"
+  - name: crown_llm
+    priority: 2
+    command: "echo 'starting crown_llm'"
+  - name: audio_device
+    priority: 3
+    command: "echo 'starting audio_device'"
+  - name: avatar
+    priority: 4
+    command: "echo 'starting avatar'"
+  - name: video
+    priority: 5
+    command: "echo 'starting video'"

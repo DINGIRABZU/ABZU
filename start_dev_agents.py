@@ -153,6 +153,8 @@ def main() -> int:
     if args.narrative_log:
         os.environ["NARRATIVE_LOG"] = args.narrative_log
 
+    # Ensure infrastructure components are up before proceeding with the
+    # development cycle.
     razar_config = os.environ.get("RAZAR_CONFIG", "config/razar_config.yaml")
     start_razar(razar_config)
 
