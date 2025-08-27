@@ -1,12 +1,10 @@
-"""Run pytest suites by priority tiers for RAZAR.
+"""Run prioritized pytest suites for RAZAR.
 
-This runner leverages the :mod:`pytest` test framework together with the
-``pytest-order`` plugin to categorise tests into five priority levels: ``P1``
-through ``P5``. Tests should mark their priority with ``@pytest.mark.p1`` ...
-``@pytest.mark.p5``. The runner exposes command line flags to execute specific
-priority levels or resume from the last failing test session. All output is
-written to ``logs/pytest_priority.log`` for consumption by RAZAR's decision
-engine.
+The runner reads :mod:`tests/priority_map.yaml` to determine which test files
+belong to priority tiers ``P1`` through ``P5``.  Command line flags allow
+executing a subset of tiers and resuming from the last failing session using
+``pytest``'s ``--last-failed`` mechanism.  Output is written to
+``logs/pytest_priority.log`` for downstream analysis.
 """
 
 from __future__ import annotations
@@ -14,60 +12,65 @@ from __future__ import annotations
 import argparse
 import contextlib
 from io import StringIO
-import os
-from typing import Iterable, List
+from pathlib import Path
+from typing import Dict, Iterable, List
 
 import pytest
-import pytest_order  # ensure plugin is loaded
+import yaml
 
-# Mapping of priority marker names to their execution order
-PRIORITY_ORDER = {
-    "p1": 1,
-    "p2": 2,
-    "p3": 3,
-    "p4": 4,
-    "p5": 5,
-}
+PRIORITY_LEVELS = ("P1", "P2", "P3", "P4", "P5")
 
 
-class PriorityPlugin:
-    """Translate priority markers into ``pytest-order`` indices."""
+def load_priority_map(map_path: Path) -> Dict[str, List[str]]:
+    """Load the priority mapping from ``map_path``.
 
-    def pytest_configure(self, config: pytest.Config) -> None:  # pragma: no cover - pytest hook
-        for name in PRIORITY_ORDER:
-            config.addinivalue_line("markers", f"{name}: priority level {name.upper()}")
+    The YAML file should map priority keys (``P1``–``P5``) to lists of test
+    paths.  Unknown keys are ignored.
+    """
 
-    def pytest_collection_modifyitems(
-        self, session: pytest.Session, config: pytest.Config, items: List[pytest.Item]
-    ) -> None:  # pragma: no cover - pytest hook
-        for item in items:
-            for marker, order in PRIORITY_ORDER.items():
-                if marker in item.keywords:
-                    item.add_marker(pytest.mark.order(order))
-                    break
+    if not map_path.exists():
+        return {}
+
+    data = yaml.safe_load(map_path.read_text("utf-8")) or {}
+    mapping: Dict[str, List[str]] = {}
+    for key, value in data.items():
+        key_upper = str(key).upper()
+        if key_upper in PRIORITY_LEVELS and isinstance(value, list):
+            mapping[key_upper] = [str(v) for v in value]
+    return mapping
 
 
-def run_pytest(priority: Iterable[str] | None, resume: bool, log_path: str) -> int:
-    """Execute pytest with the given options and write output to ``log_path``."""
+def run_pytest(
+    priorities: Iterable[str] | None,
+    resume: bool,
+    log_path: Path,
+    map_path: Path,
+) -> int:
+    """Execute pytest for the selected priority tiers."""
 
-    args: List[str] = []
-    if priority:
-        expr = " or ".join(p.lower() for p in priority)
-        args.extend(["-m", expr])
+    priority_map = load_priority_map(map_path)
+    selected = [p.upper() for p in (priorities or PRIORITY_LEVELS)]
+    tests: List[str] = []
+    for tier in selected:
+        tests.extend(priority_map.get(tier, []))
+
+    if not tests:
+        # Avoid running the entire suite if nothing matches
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text("No tests matched given priorities\n", "utf-8")
+        return 0
+
+    args: List[str] = tests
     if resume:
-        # ``--failed-first`` ensures any remaining tests run after the failures
+        # ``--failed-first`` runs previously failing tests before the rest
         args.extend(["--last-failed", "--failed-first"])
 
-    os.makedirs(os.path.dirname(log_path), exist_ok=True)
-
+    log_path.parent.mkdir(parents=True, exist_ok=True)
     stream = StringIO()
-    plugin = PriorityPlugin()
     with contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
-        exit_code = pytest.main(args, plugins=[plugin])
+        exit_code = pytest.main(args)
 
-    with open(log_path, "w", encoding="utf-8") as log_file:
-        log_file.write(stream.getvalue())
-
+    log_path.write_text(stream.getvalue(), "utf-8")
     return exit_code
 
 
@@ -77,20 +80,23 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run prioritized pytest suites")
     parser.add_argument(
         "--priority",
-        choices=["P1", "P2", "P3", "P4", "P5"],
+        choices=list(PRIORITY_LEVELS),
         nargs="*",
-        help="Run only the specified priority levels.",
+        help="Run only the specified priority levels",
     )
     parser.add_argument(
         "--resume",
         action="store_true",
-        help="Resume from last failing tests using pytest's --last-failed option.",
+        help="Resume from last failing tests using pytest's --last-failed option",
     )
     args = parser.parse_args(list(argv) if argv is not None else None)
 
-    log_path = os.path.join("logs", "pytest_priority.log")
-    return run_pytest(args.priority, args.resume, log_path)
+    repo_root = Path(__file__).resolve().parents[2]
+    log_path = repo_root / "logs" / "pytest_priority.log"
+    map_path = repo_root / "tests" / "priority_map.yaml"
+    return run_pytest(args.priority, args.resume, log_path, map_path)
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
