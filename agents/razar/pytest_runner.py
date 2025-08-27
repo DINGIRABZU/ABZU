@@ -6,8 +6,10 @@ critical smoke tests can fail fast.  The location of the last failing test is
 persisted in ``logs/pytest_state.json`` so subsequent invocations with the
 ``--resume`` flag continue from the failing tier using pytest's ``--last-failed``
 support.  When a tier fails the failure context is relayed to
-``planning_engine`` so future runs can target repairs.  Output from each tier is
-appended to ``logs/pytest_priority.log`` for downstream analysis.
+``planning_engine`` and broadcast to the CROWN stack for repair suggestions.
+Suggested patches are recorded and the local repair helper may apply them before
+continuing.  Output from each tier is appended to ``logs/pytest_priority.log``
+for downstream analysis.
 """
 
 from __future__ import annotations
@@ -15,6 +17,8 @@ from __future__ import annotations
 import argparse
 import contextlib
 import json
+import os
+import asyncio
 from io import StringIO
 from pathlib import Path
 from typing import Dict, Iterable, List
@@ -33,6 +37,12 @@ try:  # pragma: no cover - optional planning dependency
 except Exception:  # pragma: no cover - runtime guard
     planning_engine = None  # type: ignore
     mission_logger = None  # type: ignore
+
+try:  # pragma: no cover - optional crown link dependency
+    from .crown_link import BlueprintReport, CrownLink
+except Exception:  # pragma: no cover - runtime guard
+    BlueprintReport = None  # type: ignore
+    CrownLink = None  # type: ignore
 
 
 logger = logging.getLogger(__name__)
@@ -133,6 +143,41 @@ def _notify_planning_engine(
         logger.error("planning feedback failed: %s", exc)
 
 
+def _send_failure_to_crown(
+    repo_root: Path, nodeid: str, error: str, log_path: Path
+) -> str:
+    """Send failing context to CROWN and return any patch suggestion."""
+
+    if CrownLink is None or BlueprintReport is None:  # pragma: no cover - optional
+        return ""
+
+    module_path, _ = _guess_module_path(repo_root, nodeid)
+    try:
+        excerpt = module_path.read_text("utf-8")
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.error("module read failed: %s", exc)
+        excerpt = ""
+
+    report = BlueprintReport(blueprint_excerpt=excerpt, failure_log=error)
+    url = os.environ.get("CROWN_WS_URL", "ws://127.0.0.1:8765")
+
+    async def _exchange() -> dict:
+        async with CrownLink(url) as link:
+            return await link.exchange(report)
+
+    try:
+        resp = asyncio.run(_exchange())
+    except Exception as exc:  # pragma: no cover - runtime guard
+        logger.error("crown exchange failed: %s", exc)
+        return ""
+
+    patch = resp.get("patch", "")
+    if patch:
+        with log_path.open("a", encoding="utf-8") as fh:
+            fh.write(f"crown patch for {module_path}: {patch}\n")
+    return patch
+
+
 def _attempt_repair(repo_root: Path, nodeid: str, error: str, log_path: Path) -> bool:
     """Use :mod:`code_repair` to patch the failing module."""
 
@@ -202,6 +247,7 @@ def run_pytest(
             repaired = False
             if failing:
                 _notify_planning_engine(repo_root, failing, stream.getvalue(), log_path)
+                _send_failure_to_crown(repo_root, failing, stream.getvalue(), log_path)
                 repaired = _attempt_repair(
                     repo_root, failing, stream.getvalue(), log_path
                 )

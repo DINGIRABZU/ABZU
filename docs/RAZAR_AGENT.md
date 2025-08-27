@@ -121,12 +121,14 @@ and the component is marked ready for reactivation.
 
 ## Prioritized Pytest Runner
 
-`agents/razar/pytest_runner.py` drives tiered test execution.  Test files are
+`agents/razar/pytest_runner.py` drives tiered test execution. Test files are
 grouped into priorities in `tests/priority_map.yaml` and executed sequentially
-with the `pytest-order` plug‑in.  Output from each tier is appended to
-`logs/pytest_priority.log`.  When a test fails, the runner invokes the code
-repair workflow to solicit a patch, applies it in a temporary workspace, and
-reruns the affected tests before resuming the remaining tiers.
+with the `pytest-order` plug‑in. Progress is persisted to
+`logs/pytest_state.json` so `--resume` picks up from the last failing tier and
+output from each tier is appended to `logs/pytest_priority.log`. When a test
+fails the runner forwards the context to the CROWN stack for patch suggestions,
+invokes the code repair workflow in a temporary workspace, and reruns the
+affected tests before resuming the remaining tiers.
 
 ## Remote Agent Registration
 
