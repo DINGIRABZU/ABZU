@@ -11,6 +11,7 @@ exported via Prometheus when the ``prometheus_client`` package is available.
 
 import json
 import logging
+import os
 import subprocess
 import time
 import urllib.request
@@ -94,13 +95,24 @@ def check_complex_service() -> bool:
 
 
 def check_inanna_ready() -> bool:
-    """Confirm Inanna AI reports readiness."""
-    return ready_signal("http://localhost:8000/ready")
+    """Confirm Inanna AI reports readiness.
+
+    The service port can be overridden with the ``INANNA_PORT`` environment
+    variable to support custom deployments.
+    """
+
+    port = os.getenv("INANNA_PORT", "8000")
+    return ready_signal(f"http://localhost:{port}/ready")
 
 
 def check_crown_ready() -> bool:
-    """Confirm CROWN LLM reports readiness."""
-    return ready_signal("http://localhost:8001/ready")
+    """Confirm CROWN LLM reports readiness.
+
+    ``CROWN_PORT`` may override the default port of ``8001``.
+    """
+
+    port = os.getenv("CROWN_PORT", "8001")
+    return ready_signal(f"http://localhost:{port}/ready")
 
 
 CHECKS: Dict[str, Callable[[], bool]] = {
