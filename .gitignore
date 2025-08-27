@@ -8,6 +8,7 @@ INANNA_AI/models/
 logs/*
 !logs/razar_state.json
 !logs/razar_remote_agents.json
+!logs/razar_boot_history.json
 
 # Ignore Blender files
 *.blend
