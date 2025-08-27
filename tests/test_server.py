@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import sys
 from pathlib import Path
-from types import ModuleType
+from types import ModuleType, SimpleNamespace
 
 import httpx
 import numpy as np
@@ -24,6 +24,13 @@ core_mod.video_engine = video_engine_stub
 core_mod.feedback_logging = feedback_logging_stub
 sys.modules.setdefault("core.video_engine", video_engine_stub)
 sys.modules.setdefault("core.feedback_logging", feedback_logging_stub)
+# Stub optional dependencies used by memory.mental
+core_utils_stub = ModuleType("core.utils")
+optional_deps_stub = ModuleType("optional_deps")
+optional_deps_stub.lazy_import = lambda name: SimpleNamespace(__stub__=True)
+core_utils_stub.optional_deps = optional_deps_stub
+sys.modules.setdefault("core.utils", core_utils_stub)
+sys.modules.setdefault("core.utils.optional_deps", optional_deps_stub)
 from fastapi import APIRouter
 
 video_stream_stub = ModuleType("video_stream")
@@ -80,6 +87,7 @@ from crown_config import settings
 
 settings.glm_command_token = "token"
 import server
+server.record_task_flow = lambda *a, **k: None
 
 
 def test_health_and_ready_return_200():
