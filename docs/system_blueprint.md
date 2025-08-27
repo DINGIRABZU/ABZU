@@ -367,3 +367,39 @@ procedures outlined above:
 - [Monitoring Guide](monitoring.md)
 - [Deployment Guide](deployment.md)
 - [Testing Guide](testing.md)
+
+## LLM Console Alternatives
+
+The repository includes a minimal `web_console/` that streams avatar video and
+routes simple commands to the backend. The following open‑source consoles offer
+richer features for experimenting or deploying chat interfaces.
+
+### Gradio
+- **Pros:** Quick Python API for wrapping functions with a web UI; great for
+  demos and one‑off experiments.
+- **Cons:** Single‑user focus and limited conversation management compared to
+  dedicated chat consoles.
+- **Setup:** `pip install gradio` then serve a function with
+  `gradio.ChatInterface(fn).launch()`.
+- **Link:** <https://github.com/gradio-app/gradio>
+
+### Chainlit
+- **Pros:** Built‑in chat history, asynchronous flows, and custom components
+  tailored to LLM apps.
+- **Cons:** Requires Python backend and more configuration than the static
+  `web_console/`.
+- **Setup:** `pip install chainlit` and run your entry point with
+  `chainlit run app.py`.
+- **Link:** <https://github.com/Chainlit/chainlit>
+
+### OpenWebUI
+- **Pros:** Full‑featured web chat with multi‑user support, model management, and
+  authentication.
+- **Cons:** Heavier runtime that pulls in Node/Python dependencies and a
+  database for persistent sessions.
+- **Setup:** `pip install open-webui && open-webui serve` or via Docker
+  `docker run -p 3000:8080 ghcr.io/open-webui/open-webui`.
+- **Link:** <https://github.com/open-webui/open-webui>
+
+Each project can replace or augment the bundled `web_console/` depending on the
+desired trade‑off between simplicity and features.
