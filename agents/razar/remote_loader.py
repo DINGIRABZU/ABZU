@@ -1,8 +1,10 @@
 """Download and load remote RAZAR agents at runtime.
 
 This utility can pull Python modules from arbitrary HTTP endpoints or Git
-repositories and load them with :mod:`importlib`.  Remote agents must expose a
-standard interface consisting of ``configure()`` and ``patch()`` functions.
+repositories and load them with :mod:`importlib`.  It can also interact with
+HTTP‑based GPT services such as GLM‑4 through :mod:`requests`.  Remote agents
+must expose a standard interface consisting of ``configure()`` and
+``patch()`` functions.
 
 ``configure()`` should return a dictionary describing runtime parameters while
 ``patch()`` may return suggestions or diff strings used for self‑repair.  Both
@@ -180,3 +182,56 @@ def load_remote_agent_from_git(
         raise FileNotFoundError(f"Agent module {module_path} not found in repo {repo_url}")
 
     return _load_and_log(path, name, patch_context)
+
+
+def load_remote_gpt_agent(
+    name: str,
+    base_url: str,
+    *,
+    params: Dict[str, Any] | None = None,
+    patch_context: Any | None = None,
+) -> Tuple[Dict[str, Any], Any]:
+    """Interact with an HTTP‑based GPT agent using :mod:`requests`.
+
+    The endpoint at ``base_url`` must expose ``/configure`` and ``/patch`` routes
+    accepting JSON payloads and returning JSON responses.
+
+    Parameters
+    ----------
+    name:
+        Identifier for the agent, used for logging.
+    base_url:
+        Base URL of the GPT agent service.
+    params:
+        Optional parameters sent in the ``configure`` request body.
+    patch_context:
+        Optional value passed to the agent's ``patch`` endpoint.
+    """
+
+    config: Dict[str, Any] = {}
+    suggestion: Any | None = None
+
+    url = base_url.rstrip("/")
+
+    try:
+        response = requests.post(f"{url}/configure", json=params or {}, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+        if isinstance(data, dict):
+            config = data
+        else:  # pragma: no cover - defensive
+            logger.warning("configure() for %s did not return a JSON object", name)
+    except Exception as exc:  # pragma: no cover - runtime safeguard
+        logger.error("configure() request for %s failed: %s", name, exc)
+
+    try:
+        payload = {"context": patch_context} if patch_context is not None else {}
+        response = requests.post(f"{url}/patch", json=payload, timeout=60)
+        response.raise_for_status()
+        suggestion = response.json()
+    except Exception as exc:  # pragma: no cover - runtime safeguard
+        logger.error("patch() request for %s failed: %s", name, exc)
+
+    _persist_log(name, config=config if config else None, suggestion=suggestion)
+
+    return config, suggestion
