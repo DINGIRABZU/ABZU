@@ -3,7 +3,10 @@ from __future__ import annotations
 """Utilities for quarantining failing components.
 
 Components that fail during boot are moved to the top-level ``quarantine``
-folder and logged in ``docs/quarantine_log.md``.
+folder and logged in ``docs/quarantine_log.md``. Remote agents may submit
+additional diagnostic information which is recorded alongside quarantine
+events. Once a patch is verified, components can be reactivated either
+manually or automatically.
 """
 
 from datetime import datetime
@@ -45,13 +48,28 @@ def is_quarantined(name: str) -> bool:
     return (QUARANTINE_DIR / f"{name}.json").exists()
 
 
-def quarantine_component(component: Dict[str, Any], reason: str) -> None:
-    """Move ``component`` to quarantine and record ``reason``."""
+def quarantine_component(
+    component: Dict[str, Any], reason: str, diagnostics: Dict[str, Any] | None = None
+) -> None:
+    """Move ``component`` to quarantine and record ``reason``.
+
+    Parameters
+    ----------
+    component:
+        Component metadata.
+    reason:
+        Why the component was quarantined.
+    diagnostics:
+        Optional diagnostic information supplied by remote agents.
+    """
+
     _init_paths()
     name = component.get("name", "unknown")
     with (QUARANTINE_DIR / f"{name}.json").open("w") as fh:
         json.dump(component, fh, indent=2)
     _append_log(name, "quarantined", reason)
+    if diagnostics:
+        record_diagnostics(name, diagnostics)
 
 
 def resolve_component(name: str, note: str | None = None) -> None:
@@ -61,3 +79,50 @@ def resolve_component(name: str, note: str | None = None) -> None:
     if target.exists():
         target.unlink()
     _append_log(name, "resolved", note or "")
+
+
+def record_diagnostics(name: str, data: Dict[str, Any]) -> None:
+    """Append diagnostic ``data`` for ``name`` to the log.
+
+    ``data`` is serialized to JSON so it can be embedded in the Markdown log
+    table. Remote code agents may call this function directly to submit
+    information about a failure.
+    """
+
+    _init_paths()
+    serialized = json.dumps(data, sort_keys=True)
+    _append_log(name, "diagnostic", serialized)
+
+
+def reactivate_component(
+    name: str,
+    *,
+    verified: bool,
+    automated: bool = False,
+    note: str | None = None,
+) -> None:
+    """Reinstate ``name`` after a verified patch.
+
+    Parameters
+    ----------
+    name:
+        Component to reactivate.
+    verified:
+        ``True`` when a patch has been verified. ``False`` raises a
+        :class:`ValueError`.
+    automated:
+        Set to ``True`` if the reactivation was triggered automatically.
+    note:
+        Optional additional context to include in the log entry.
+    """
+
+    if not verified:
+        raise ValueError("Patch must be verified before reactivation")
+
+    _init_paths()
+    target = QUARANTINE_DIR / f"{name}.json"
+    if target.exists():
+        target.unlink()
+    mode = "auto" if automated else "manual"
+    detail = f"{mode}{': ' + note if note else ''}"
+    _append_log(name, "reactivated", detail)
