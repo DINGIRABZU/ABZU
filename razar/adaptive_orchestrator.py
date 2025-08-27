@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import yaml
+from . import checkpoint_manager
 
 LOGGER = logging.getLogger("razar.adaptive_orchestrator")
 
@@ -60,15 +61,22 @@ def generate_sequence(strategy: str, components: List[str]) -> List[str]:
     return shuffled
 
 
-def run_sequence(sequence: List[str]) -> Dict[str, Any]:
-    """Simulate running ``sequence`` and gather metrics."""
+def run_sequence(sequence: List[str], start_index: int = 0) -> Dict[str, Any]:
+    """Simulate running ``sequence`` and gather metrics.
+
+    ``start_index`` indicates how many components in ``sequence`` have already
+    completed successfully. After each component starts the current progress is
+    written to :mod:`checkpoint_manager` so that an interrupted run can resume.
+    """
 
     start = time.monotonic()
     failures: List[str] = []
-    for comp in sequence:
+    for idx, comp in enumerate(sequence[start_index:], start=start_index):
         LOGGER.info("Starting %s", comp)
         time.sleep(0.01)  # placeholder for real startup
+        checkpoint_manager.save_checkpoint(sequence, idx + 1)
     duration = time.monotonic() - start
+    checkpoint_manager.clear_checkpoint()
     return {"sequence": sequence, "time_to_ready": duration, "failures": failures}
 
 
@@ -123,6 +131,18 @@ def main() -> None:
 
     components = load_priorities()
     history = load_history()
+
+    checkpoint = checkpoint_manager.load_checkpoint()
+    if checkpoint:
+        seq = checkpoint.get('sequence', [])
+        start = int(checkpoint.get('last_success', 0))
+        if seq:
+            record = run_sequence(seq, start)
+            history['history'].append(record)
+            if is_better(record, history.get('best')):
+                history['best'] = record
+            save_history(history)
+            return
 
     sequences: List[List[str]] = []
     if args.resume and history.get("best"):
