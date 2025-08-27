@@ -7,6 +7,16 @@ startup progress. The agent forms a feedback loop with CROWN LLM to heal
 faulty modules and ensures the system can cycle back to a ready state
 without manual intervention.
 
+## Narrative Stream Utility
+
+Use `razar narrative` to watch the evolving story log. The command tails
+`logs/nazarick_story.log` and falls back to in-memory stories from
+`memory.narrative_engine.stream_stories` when the log is missing.
+
+```bash
+razar narrative
+```
+
 ## Ignition Workflow
 
 `agents/razar/boot_orchestrator.py` drives the initial boot sequence. It
