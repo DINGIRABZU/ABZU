@@ -7,6 +7,8 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, Tuple, Union
 
+from agents import emit_event
+
 from albedo import Magnitude, State
 from albedo.state_machine import AlbedoStateMachine, EntityCategory
 from memory.trust_registry import (
@@ -116,6 +118,16 @@ def update_trust(
     state = state_machine.transition(magnitude, category)
     _log_interaction(entity, outcome_str, magnitude, state)
     _save_scores()
+    emit_event(
+        "albedo",
+        "trust_update",
+        {
+            "entity": entity,
+            "outcome": outcome_str,
+            "magnitude": int(magnitude),
+            "state": state.value,
+        },
+    )
     return magnitude, state
 
 
