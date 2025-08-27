@@ -25,6 +25,17 @@ python start_dev_agents.py --objective "Refactor audio engine" --planner-model g
 
 `start_dev_agents.py` records the conversation to `data/interactions.jsonl` and logs events to `logs/dev_agent.log`.
 
+## Module Sandbox
+
+Use a temporary sandbox to trial CROWN-generated patches:
+
+```bash
+python -m razar.module_sandbox path/to/module --patch change.diff
+```
+
+The helper clones selected components into a temp directory, applies patches or scaffolds, runs `pytest` on the touched modules and copies the results back only when tests pass.
+
+
 ## Testing
 
 Run the test suite before committing changes:
