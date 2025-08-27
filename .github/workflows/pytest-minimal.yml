@@ -1,0 +1,19 @@
+name: pytest-minimal
+
+on:
+  pull_request:
+
+jobs:
+  minimal:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install pytest numpy
+      - name: Run tests
+        run: pytest tests/agents/razar/test_boot_sequence.py tests/memory
