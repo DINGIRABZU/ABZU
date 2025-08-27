@@ -9,9 +9,11 @@ environment and start services in priority order:
 python -m agents.razar.runtime_manager config/razar_config.yaml
 ```
 
-The orchestrator builds or validates the dedicated virtual environment and
-records the last successful component in a `.state` file. Monitor the
-`/health` endpoint to confirm the environment hash and heartbeat.
+The orchestrator builds or validates the dedicated virtual environment using
+`razar_env.yaml` and records the last successful component in
+`logs/razar_state.json`. Monitor the `/health` endpoint to confirm the
+environment hash and heartbeat. Failed components are automatically moved to
+`quarantine/` and logged in `docs/quarantine_log.md`.
 
 Use ``razar.mission_logger`` to record progress as components start (see
 [logging guidelines](logging_guidelines.md) for event types and examples):
@@ -27,7 +29,7 @@ status for each component. For a full chronological view, run ``razar
 timeline`` to reconstruct the mission sequence.
 
 If RAZAR cannot restart a component, rebuild the virtual environment and rerun
-the manager. Removing the `.state` file forces a full restart sequence.
+the manager. Removing `logs/razar_state.json` forces a full restart sequence.
 
 ## RAZAR failure runbook
 
@@ -37,17 +39,16 @@ the manager. Removing the `.state` file forces a full restart sequence.
    ```
    Review `logs/razar.log` for the last successful component.
 2. **Reset state**
-   Remove `config/razar_config.state` to re-run the full sequence.
+   Remove `logs/razar_state.json` to re-run the full sequence.
 3. **Rebuild environment**
    ```bash
    python -m razar.environment_builder --config razar_env.yaml
    python -m agents.razar.runtime_manager config/razar_config.yaml
    ```
-4. **Quarantine persistent failures**
-   ```python
-   from razar import quarantine_manager as qm
-   qm.quarantine_component({"name": "gateway"}, "health check failed")
-   ```
+4. **Review quarantine**
+   Inspect `quarantine/` and `docs/quarantine_log.md` for components isolated by
+   the runtime manager. After applying fixes, remove the component's JSON file
+   and optionally record a resolved entry with `quarantine_manager.resolve_component`.
 
 ## Quarantine management
 

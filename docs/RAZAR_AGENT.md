@@ -44,9 +44,10 @@ boot sequence.
 ## Runtime Manager
 
 `agents/razar/runtime_manager.py` boots the configured components in order of
-their priority. The manager creates a virtual environment on first run,
-installs any listed dependencies and tracks progress so that interrupted boots
-can resume where they left off.
+their priority. On first run it builds a dedicated virtual environment and
+installs the packages declared for each component in `razar_env.yaml`.  The
+manager tracks progress so interrupted boots can resume where they left off and
+quarantines modules that fail to start or pass a health check.
 
 Launch the sequence by providing the path to `razar_config.yaml`:
 
@@ -57,6 +58,18 @@ python agents/razar/runtime_manager.py config/razar_config.yaml
 Each component entry in the configuration specifies a `command` and `priority`.
 After every successful start the manager records the component name in
 `logs/razar_state.json`, allowing subsequent runs to skip completed steps.
+If a component fails, its metadata is moved to the `quarantine/` directory and
+an entry is appended to `docs/quarantine_log.md`.
+
+### Recovery
+
+1. **Resume** – rerun the manager; it continues after the last healthy step
+   recorded in `logs/razar_state.json`.
+2. **Full restart** – remove `logs/razar_state.json` and rerun the manager to
+   rebuild the stack from the first component.
+3. **Quarantine review** – inspect `quarantine/` and
+   `docs/quarantine_log.md` for details on failed modules. Resolve issues, then
+   remove the component's JSON file and rerun to retry.
 
 ## Prioritized Test Execution
 

@@ -1,10 +1,12 @@
 """RAZAR runtime manager.
 
 This module ensures a Python virtual environment exists and uses it to
-sequentially start system components based on their priority. Progress is
-logged and the last successfully started component is cached in
-``logs/razar_state.json`` so the manager can resume from that point after a
-failure.
+sequentially start system components based on their priority. Component
+dependencies are resolved from ``razar_env.yaml`` and installed into the
+managed environment.  Progress is logged and the last successfully started
+component is cached in ``logs/razar_state.json`` so the manager can resume from
+that point after a failure.  Components that fail their startup command or a
+subsequent health check are quarantined via ``quarantine_manager``.
 """
 
 from __future__ import annotations
@@ -38,10 +40,15 @@ class RuntimeManager:
         *,
         state_path: Path | None = None,
         venv_path: Path | None = None,
+        env_path: Path | None = None,
     ) -> None:
         self.config_path = config_path
         self.state_path = state_path or Path("logs/razar_state.json")
         self.venv_path = venv_path or config_path.parent / ".razar_venv"
+        # ``razar_env.yaml`` lives at the repository root and lists dependencies
+        # for each component layer.  Allow ``env_path`` to be overridden for
+        # tests but default to the project-level file.
+        self.env_path = env_path or Path(__file__).resolve().parents[2] / "razar_env.yaml"
 
     # ------------------------------------------------------------------
     # Virtual environment handling
@@ -109,6 +116,28 @@ class RuntimeManager:
         data = yaml.safe_load(self.config_path.read_text(encoding="utf-8"))
         return data if isinstance(data, dict) else {}
 
+    def _env_dependencies(self, components: Sequence[Dict[str, object]]) -> List[str]:
+        """Return dependency list for ``components`` from ``razar_env.yaml``."""
+
+        if not self.env_path.exists():
+            return []
+
+        raw = yaml.safe_load(self.env_path.read_text(encoding="utf-8")) or {}
+        layers = raw.get("layers", {})
+        deps: List[str] = []
+        for comp in components:
+            name = comp.get("name")
+            if name in layers:
+                deps.extend(layers[name])
+        # Remove duplicates while preserving order
+        seen: set[str] = set()
+        unique: List[str] = []
+        for dep in deps:
+            if dep not in seen:
+                seen.add(dep)
+                unique.append(dep)
+        return unique
+
     def _load_components(self, config: Dict[str, object]) -> List[Dict[str, object]]:
         components = config.get("components", [])
         return sorted(components, key=lambda c: int(c.get("priority", 0)))
@@ -126,9 +155,12 @@ class RuntimeManager:
         """Run components in order. Returns ``True`` if all succeed."""
 
         config = self._load_config()
-        dependencies = config.get("dependencies", [])
-        self.ensure_venv(dependencies)
         components = self._load_components(config)
+        # Install dependencies declared for the target components in
+        # ``razar_env.yaml``.  Components without entries require no additional
+        # packages which keeps test environments light-weight.
+        dependencies = self._env_dependencies(components)
+        self.ensure_venv(dependencies)
         start = self._starting_index(components)
         env = self._env()
 
