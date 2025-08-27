@@ -15,6 +15,7 @@ Start with these core references:
 - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
 - [Personality Layers](ALBEDO_LAYER.md) – archetypal behavior modules and persona API hooks
 - [Operational Guides](operations.md) – runbooks for deployment and maintenance
+- [Vision System](vision_system.md) – YOLOE features, licensing, and GPU guidance
 
 For deployment and reliability details, see:
 
