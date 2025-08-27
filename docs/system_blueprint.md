@@ -29,6 +29,8 @@ CROWN LLM diagnostics, and shutdown–repair–restart handshake, and see
 When issues surface, consult the [Recovery Playbook](recovery_playbook.md)
 and [Monitoring Guide](monitoring.md).
 
+Component priorities, criticality tags, and issue categories are tracked in [component_priorities.yaml](component_priorities.yaml). RAZAR reads this registry to map the startup sequence, escalate failures by criticality, and label alerts as configuration, runtime, or integration issues.
+
 For deployment and reliability details, see:
 
 - [RAZAR Agent](RAZAR_AGENT.md) – external startup orchestrator with
