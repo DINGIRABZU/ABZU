@@ -226,7 +226,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `src/init_crown_agent.py` | Load Crown agent configuration and expose model endpoints. | yaml |
 | `src/lwm/__init__.py` | No description | None |
 | `src/lwm/config_model.py` | Configuration model for the Large World Model. | omegaconf |
-| `src/lwm/large_world_model.py` | Minimal Large World Model converting 2D frames into a 3D scene. | None |
+| `src/lwm/large_world_model.py` | Minimal Large World Model converting 2D frames into a 3D scene and capturing YOLOE detections. | None |
 | `src/media/__init__.py` | Unified media interfaces for audio, video, and avatar. | None |
 | `src/media/audio/__init__.py` | Audio generation and playback interface. | None |
 | `src/media/audio/base.py` | Audio-specific media processing interfaces. | None |
@@ -512,3 +512,4 @@ Generated automatically. Lists each Python file with its description and externa
 | `vector_memory.py` | FAISS/SQLite-backed text vector store with decay and operation logging. | MUSIC_FOUNDATION, crown_config, numpy |
 | `video_stream.py` | Provide WebRTC streaming for avatar audio and video. | aiortc, core, fastapi, numpy, soundfile, src |
 | `vocal_isolation.py` | Helpers for isolating vocals and other stems using external tools. | src |
+| `vision/yoloe_adapter.py` | YOLOE wrapper emitting detections to the LargeWorldModel. | numpy, ultralytics |
