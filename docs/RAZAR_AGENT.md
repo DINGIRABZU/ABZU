@@ -1,26 +1,33 @@
-# RAZAR Agent
+# RAZAR Runtime Manager
 
-RAZAR serves as the startup orchestrator for Nazarick, acting as "service 0". It prepares the runtime before any other agent activates.
+`RuntimeManager` coordinates the startup of RAZAR components. It ensures a
+Python virtual environment exists, launches components in order of their
+priority and records the last successful component so a failed run can resume
+from that point.
 
-## Component Priority
+## Configuration
 
-RAZAR ranks downstream components on a 1‑5 scale:
+Components and their priorities are defined in a YAML file. An example lives at
+`config/razar_config.yaml`:
 
-1. **Critical** – mandatory for boot.
-2. **Required** – core functionality.
-3. **Important** – enhances core but can start later.
-4. **Optional** – noncritical utilities.
-5. **Experimental** – development or diagnostic helpers.
+```yaml
+components:
+  - name: example
+    priority: 1
+    command: "echo 'RAZAR component running'"
+```
 
-This classification guides launch order and restart policy.
+Each entry lists a component name, numeric priority (lower values start first)
+and the shell command used to launch it.
 
-## Virtual Environment Management and Restart Logic
+## Usage
 
-RAZAR ensures a clean Python virtual environment:
+Run the manager by pointing it at the configuration file:
 
-- creates or updates the `venv` at startup,
-- verifies required packages against `requirements.txt`,
-- injects paths into `PYTHONPATH` for launched services.
+```bash
+python -m agents.razar.runtime_manager config/razar_config.yaml
+```
 
-If a component exits or the environment hash changes, RAZAR restarts the affected process. Repeated failures trigger a full environment rebuild and orchestrator restart.
-
+On failure, the manager writes the last successful component to a `.state` file
+next to the configuration. Re‑running the command starts from the component
+following that entry.
