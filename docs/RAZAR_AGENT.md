@@ -33,9 +33,19 @@ reuse the quickest sequence.
 
 ### CLI Options
 
-- `--strategy` – choose `priority` (default) to start components in declared
+- `--strategy` – choose `priority` \(default\) to start components in declared
   order or `random` to explore shuffled sequences.
 - `--resume` – reuse the best sequence from previous history entries.
+
+### Checkpoint recovery
+
+The adaptive orchestrator persists its progress to `logs/razar_checkpoint.json`.
+If RAZAR restarts, the orchestrator loads this checkpoint and continues from the
+last successful component automatically. Operators can override this behaviour:
+
+- `razar resume` – force continuation from the saved checkpoint.
+- `razar rollback` – delete the checkpoint and rerun the full sequence.
+
 
 ## CROWN LLM Diagnostics and Patching
 
