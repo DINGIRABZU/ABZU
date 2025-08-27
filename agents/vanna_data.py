@@ -18,6 +18,7 @@ from uuid import uuid4
 from core.utils.optional_deps import lazy_import
 from memory.mental import record_task_flow
 from memory.narrative_engine import NarrativeEngine, StoryEvent
+from agents import emit_event
 
 vanna = lazy_import("vanna")
 logger = logging.getLogger(__name__)
@@ -57,6 +58,7 @@ def query_db(prompt: str) -> List[Dict[str, Any]]:
     if getattr(vanna, "__stub__", False):  # pragma: no cover - optional dep
         raise RuntimeError("vanna library is not installed")
 
+    emit_event("vanna_data", "task_delegated", {"prompt": prompt})
     sql, df, *_ = vanna.ask(prompt)  # type: ignore[attr-defined]
     rows = df.to_dict("records") if df is not None else []
 
@@ -73,6 +75,12 @@ def query_db(prompt: str) -> List[Dict[str, Any]]:
         _narrative_engine.record(event)
     except Exception:  # pragma: no cover - best effort
         logger.debug("narrative memory recording failed", exc_info=True)
+
+    emit_event(
+        "vanna_data",
+        "task_completed",
+        {"prompt": prompt, "rows": len(rows)},
+    )
 
     return rows
 

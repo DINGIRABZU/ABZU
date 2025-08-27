@@ -14,6 +14,8 @@ import json
 import shutil
 from typing import Any, Dict, List
 
+from agents import emit_event
+
 # Determine project root from the module location (``agents/razar`` -> repo root)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 QUARANTINE_DIR = PROJECT_ROOT / "quarantine"
@@ -99,6 +101,7 @@ def quarantine_component(
     _append_log(name, "quarantined", reason)
     if diagnostics:
         record_diagnostics(name, diagnostics)
+    emit_event("razar", "component_quarantined", {"name": name, "reason": reason})
 
 
 def quarantine_module(path: str | Path, reason: str) -> Path:
@@ -111,6 +114,11 @@ def quarantine_module(path: str | Path, reason: str) -> Path:
     target = QUARANTINE_DIR / src.name
     shutil.move(str(src), target)
     _append_log(src.name, "quarantined", reason)
+    emit_event(
+        "razar",
+        "module_quarantined",
+        {"module": src.name, "reason": reason},
+    )
     return target
 
 
@@ -123,6 +131,7 @@ def resolve_component(name: str, note: str | None = None) -> None:
         if target.exists():
             target.unlink()
     _append_log(name, "resolved", note or "")
+    emit_event("razar", "component_resolved", {"name": name, "note": note})
 
 
 def record_diagnostics(name: str, data: Dict[str, Any]) -> None:
@@ -131,6 +140,7 @@ def record_diagnostics(name: str, data: Dict[str, Any]) -> None:
     _init_paths()
     serialized = json.dumps(data, sort_keys=True)
     _append_log(name, "diagnostic", serialized)
+    emit_event("razar", "diagnostic_recorded", {"name": name, "data": data})
 
 
 def record_patch(name: str, patch: str) -> None:
@@ -143,6 +153,7 @@ def record_patch(name: str, patch: str) -> None:
     data["patches_applied"] = patches
     _write_metadata(name, data)
     _append_log(name, "patch", patch)
+    emit_event("razar", "patch_recorded", {"name": name, "patch": patch})
 
 
 def reactivate_component(
@@ -165,3 +176,8 @@ def reactivate_component(
     mode = "auto" if automated else "manual"
     detail = f"{mode}{': ' + note if note else ''}"
     _append_log(name, "reactivated", detail)
+    emit_event(
+        "razar",
+        "component_reactivated",
+        {"name": name, "mode": mode, "note": note},
+    )

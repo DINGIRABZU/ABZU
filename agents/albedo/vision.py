@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Iterable, Mapping
 
+from agents import emit_event
+
 from vision.yoloe_adapter import Detection
 
 # Mapping of object labels to avatar texture paths
@@ -39,6 +41,7 @@ def consume_detections(detections: Iterable[Detection]) -> str:
             break
     else:
         _current_avatar = DEFAULT_AVATAR
+    emit_event("albedo", "avatar_selected", {"avatar": _current_avatar})
     return _current_avatar
 
 
