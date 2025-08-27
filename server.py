@@ -20,10 +20,12 @@ import logging
 import time
 from contextlib import asynccontextmanager
 from io import BytesIO
+from pathlib import Path
 from typing import Any, AsyncIterator, Iterator, Optional, TypedDict
 import uuid
 
 import numpy as np
+import yaml
 from fastapi import FastAPI, HTTPException, Security, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
@@ -36,8 +38,10 @@ except ImportError:  # pragma: no cover - optional dependency
     Histogram = None  # type: ignore[assignment]
 from pydantic import BaseModel, Field
 
+from agents.razar.lifecycle_bus import LifecycleBus
 from crown_prompt_orchestrator import crown_prompt_orchestrator
 from INANNA_AI.glm_integration import GLMIntegration
+from memory.mental import record_task_flow
 
 import corpus_memory_logging
 import music_generation
@@ -61,6 +65,23 @@ REQUEST_LATENCY = (
 )
 
 _glm = GLMIntegration()
+
+# Lifecycle bus configuration -------------------------------------------------
+try:
+    _BUS_URL = (
+        yaml.safe_load(Path("razar_config.yaml").read_text())
+        .get("messaging", {})
+        .get("lifecycle_bus")
+    )
+except Exception:
+    _BUS_URL = None
+
+_LIFECYCLE_BUS: LifecycleBus | None = None
+if _BUS_URL:
+    try:  # pragma: no cover - optional redis dependency
+        _LIFECYCLE_BUS = LifecycleBus(url=_BUS_URL)
+    except Exception:
+        _LIFECYCLE_BUS = None
 
 # --- OAuth2 security configuration ---
 oauth2_scheme = OAuth2PasswordBearer(
@@ -197,25 +218,55 @@ def openwebui_chat(
     current_user: dict = Security(get_current_user),
 ) -> dict[str, Any]:
     """Return an OpenAI-style chat completion."""
-    user_content = ""
-    for msg in req.messages:
-        if msg.role == "user":
-            user_content = msg.content
-    result = crown_prompt_orchestrator(user_content, _glm)
-    return {
-        "id": f"chatcmpl-{uuid.uuid4().hex}",
-        "object": "chat.completion",
-        "created": int(time.time()),
-        "model": result.get("model", req.model or "unknown"),
-        "choices": [
+    if _LIFECYCLE_BUS is not None:
+        _LIFECYCLE_BUS.publish_status("openwebui_session", "start")
+    try:
+        user_content = ""
+        for msg in req.messages:
+            if msg.role == "user":
+                user_content = msg.content
+        result = crown_prompt_orchestrator(user_content, _glm)
+        corpus_memory_logging.log_interaction(
+            user_content,
             {
-                "index": 0,
-                "message": {"role": "assistant", "content": result.get("text", "")},
-                "finish_reason": "stop",
-            }
-        ],
-        "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
-    }
+                "intent": "openwebui_chat",
+                "model": result.get("model", req.model or "unknown"),
+            },
+            {"response": result.get("text", "")},
+            "success",
+        )
+        record_task_flow(
+            "openwebui_chat",
+            {
+                "user": user_content,
+                "response": result.get("text", ""),
+                "model": result.get("model", req.model or "unknown"),
+            },
+        )
+        return {
+            "id": f"chatcmpl-{uuid.uuid4().hex}",
+            "object": "chat.completion",
+            "created": int(time.time()),
+            "model": result.get("model", req.model or "unknown"),
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": result.get("text", ""),
+                    },
+                    "finish_reason": "stop",
+                }
+            ],
+            "usage": {
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_tokens": 0,
+            },
+        }
+    finally:
+        if _LIFECYCLE_BUS is not None:
+            _LIFECYCLE_BUS.publish_status("openwebui_session", "end")
 
 
 class ShellCommand(BaseModel):

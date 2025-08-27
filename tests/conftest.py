@@ -122,6 +122,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_autoretrain_full.py"),
     str(ROOT / "tests" / "test_learning_mutator.py"),
     str(ROOT / "tests" / "test_server.py"),
+    str(ROOT / "tests" / "test_openwebui_state_updates.py"),
     str(ROOT / "tests" / "test_server_endpoints.py"),
     str(ROOT / "tests" / "test_insight_compiler.py"),
     str(ROOT / "tests" / "test_glm_command.py"),
