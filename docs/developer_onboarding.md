@@ -44,6 +44,28 @@ Run the interactive wizard to scaffold the environment and launch the CLI:
 python docs/onboarding/wizard.py
 ```
 
+## Getting Started with RAZAR
+
+RAZAR prepares a clean environment and boots components in sequence. For a
+local run:
+
+1. **Build the RAZAR environment**
+   ```bash
+   python -m razar.environment_builder --config razar_env.yaml
+   ```
+2. **Launch the runtime manager**
+   ```bash
+   python -m agents.razar.runtime_manager config/razar_config.yaml
+   ```
+
+### Troubleshooting RAZAR
+
+| Symptom | Resolution |
+| --- | --- |
+| Runtime stops on a component | Inspect `logs/razar.log` and `python -m razar.mission_logger summary` to find the failing step. Remove `config/razar_config.state` to force a full restart. |
+| Environment hash mismatch | Rebuild the virtual environment with `python -m razar.environment_builder --config razar_env.yaml`. |
+| Component fails repeatedly | Quarantine it with `razar.quarantine_manager.quarantine_component` and review the [RAZAR failure runbook](operations.md#razar-failure-runbook). |
+
 ## Repository Layout
 - `core/` – language processing and self-correction engines.
 - `INANNA_AI/` – model logic, memory systems, and ritual analysis modules.

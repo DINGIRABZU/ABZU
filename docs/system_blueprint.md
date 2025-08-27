@@ -18,6 +18,8 @@ For deeper guidance on operations and reliability, refer to:
 - [Monitoring](monitoring.md)
 - [Testing](testing.md)
 - [Recovery Playbook](recovery_playbook.md)
+- [Getting Started with RAZAR](developer_onboarding.md#getting-started-with-razar)
+- [RAZAR Failure Runbook](operations.md#razar-failure-runbook)
 
 Before any chakra layer activates, the external [RAZAR Agent](RAZAR_AGENT.md)
 prepares a clean environment outside Nazarick and initiates the boot sequence.
