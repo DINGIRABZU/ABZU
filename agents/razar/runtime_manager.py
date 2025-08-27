@@ -15,6 +15,8 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
 import venv
 
+from . import health_checks, quarantine_manager
+
 try:
     import yaml
 except ImportError as exc:  # pragma: no cover - dependencies handled by tests
@@ -132,18 +134,25 @@ class RuntimeManager:
                 text=True,
                 cwd=str(self.config_path.parent),
             )
-            if result.returncode == 0:
-                logger.info("Component %s started successfully", name)
-                self.save_state(str(name))
-                continue
+            if result.returncode != 0:
+                logger.error(
+                    "Component %s failed with code %s\n%s",
+                    name,
+                    result.returncode,
+                    result.stdout,
+                )
+                quarantine_manager.quarantine_component(
+                    comp, f"exit code {result.returncode}", diagnostics={"output": result.stdout}
+                )
+                return False
 
-            logger.error(
-                "Component %s failed with code %s\n%s",
-                name,
-                result.returncode,
-                result.stdout,
-            )
-            return False
+            if not health_checks.run(str(name)):
+                logger.error("Health check failed for %s", name)
+                quarantine_manager.quarantine_component(comp, "health check failed")
+                return False
+
+            logger.info("Component %s started successfully", name)
+            self.save_state(str(name))
 
         return True
 
