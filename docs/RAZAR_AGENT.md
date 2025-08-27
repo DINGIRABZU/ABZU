@@ -43,3 +43,15 @@ Before yielding control, RAZAR confirms that the core services report readiness:
 4. Persistent failures mark the mission incomplete and halt the startup sequence.
 
 These verifications ensure both agents are prepared before internal orchestration begins.
+
+## Recovery Protocol
+RAZAR exposes a ZeroMQ endpoint for modules to report unrecoverable errors.
+When a module sends a JSON payload with its name and a state snapshot, RAZAR:
+
+1. Saves the supplied state under `recovery_state/<module>.json`.
+2. Applies corrective actions to the affected module.
+3. Restarts the module.
+4. Restores the saved state and replies with `{"status": "recovered"}`.
+
+This bidirectional channel allows the running system to offload recovery steps
+to RAZAR whenever a component declares itself irrecoverable.
