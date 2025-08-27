@@ -23,17 +23,27 @@ For deeper guidance on operations and reliability, refer to:
 
 Before any chakra layer activates, the external [RAZAR Agent](RAZAR_AGENT.md)
 prepares a clean environment outside Nazarick and initiates the boot sequence.
-Progress for each component is written to ``logs/razar.log`` via
-``razar.mission_logger``, which records the component, status and timestamp for
-later review. The ``summary`` command reports the last successful component and
-any pending tasks.
+The remote loader retrieves agent packages declared under `remote_agents` in
+`razar_config.yaml`, ensuring the latest components are available. Progress for
+each component is written to ``logs/razar.log`` via ``razar.mission_logger``,
+which records the component, status, timestamp and test priority for later
+review. The ``summary`` command reports the last successful component and any
+pending tasks.
 
-Beyond startup, RAZAR also hosts a ZeroMQ recovery channel. Components that
-encounter an unrecoverable error send a payload with their name and state
-snapshot. RAZAR saves this state, applies fixes, restarts the module, and then
-restores the saved state before replying with a confirmation. This protocol
-allows the running system to offload complex recovery steps to the external
-agent.
+After services report ready, RAZAR triggers prioritized tests defined in
+`razar_config.yaml`. Critical smoke tests run first so foundational failures
+surface before optional suites execute.
+
+Beyond startup, RAZAR hosts a ZeroMQ recovery channel with an explicit handshake
+step. Components that encounter an unrecoverable error send a payload with their
+name and state snapshot. RAZAR acknowledges the message, saves the state,
+applies fixes, restarts the module, and then restores the saved state before
+replying with a confirmation. This protocol allows the running system to offload
+complex recovery steps to the external agent.
+
+Lifecycle events are also broadcast on a dedicated bus defined by
+`messaging.lifecycle_bus` in `razar_config.yaml`, allowing agents to subscribe to
+startup, shutdown and recovery notifications.
 
 ## Ethics & Mission
 
