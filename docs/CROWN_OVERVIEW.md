@@ -46,3 +46,14 @@ Running the console interface now writes audio clips under `logs/audio/` and ava
 The Crown stack can defer failing components to the RAZAR agent for automatic
 patching. See [RAZAR Agent](RAZAR_AGENT.md) for details on the repair workflow
 that queries an LLM for fixes and reintroduces modules after successful tests.
+
+## Crown Link Protocol
+
+RAZAR communicates with the Crown stack over a small WebSocket interface
+implemented in `razar/crown_link.py`. Two JSON message types are exchanged:
+
+- **Status updates** – `{"type": "status", "component": "state_engine", "result": "ok", "log_snippet": "..."}`
+- **Repair requests** – `{"type": "repair", "stack_trace": "...", "config_summary": "..."}`
+
+The Crown side replies with patch instructions which RAZAR uses to heal faulty
+modules before reintroducing them into the boot cycle.
