@@ -19,6 +19,7 @@ Start with these core references:
 - [Operational Guides](operations.md) – runbooks for deployment and maintenance
 - [Vision System](vision_system.md) – YOLOE features, licensing, and GPU guidance
 - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
+- [Nazarick Narrative System](nazarick_narrative_system.md) – narrative scribe, persona registry, and event flow
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md) – vision, channel hierarchy, and architectural stack
 
 ### Chakra Layer Relationships
