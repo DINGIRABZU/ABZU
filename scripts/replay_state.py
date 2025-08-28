@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import shutil
+import logging
 from pathlib import Path
 
 try:  # pragma: no cover - optional dependency
@@ -18,6 +19,31 @@ try:  # pragma: no cover - optional dependency
     from spiral_memory import REGISTRY_DB
 except Exception:  # pragma: no cover - optional dependency
     REGISTRY_DB = Path("data/spiral_registry.db")  # type: ignore[assignment]
+
+QUARANTINE_DIR = Path("quarantine")
+CORRUPT_LOG = QUARANTINE_DIR / "vector_memory_corrupt.log"
+FAILED_LOG = QUARANTINE_DIR / "vector_memory_failed.jsonl"
+
+logger = logging.getLogger(__name__)
+
+
+def _repair_line(line: str) -> str | None:
+    """Try to fix common JSON line issues and return repaired line."""
+    candidate = line.strip()
+    if candidate.count("{") > candidate.count("}"):
+        candidate += "}" * (candidate.count("{") - candidate.count("}"))
+    try:
+        json.loads(candidate)
+    except json.JSONDecodeError:
+        return None
+    return candidate
+
+
+def _quarantine(text: str, path: Path) -> None:
+    """Append ``text`` to ``path`` within the quarantine directory."""
+    QUARANTINE_DIR.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as fh:
+        fh.write(f"{text}\n")
 
 
 def replay(src: Path) -> None:
@@ -38,16 +64,21 @@ def replay(src: Path) -> None:
             try:
                 entry = json.loads(line)
             except json.JSONDecodeError:
-                # TODO: attempt to repair or quarantine corrupted log lines
-                continue
+                repaired = _repair_line(line)
+                if repaired is None:
+                    logger.warning("Quarantining corrupt log line")
+                    _quarantine(line.strip(), CORRUPT_LOG)
+                    continue
+                entry = json.loads(repaired)
             if entry.get("operation") != "add":
                 continue
             text = entry.get("text", "")
             meta = entry.get("metadata", {})
             try:
                 add_vector(text, meta)
-            except Exception:
-                # TODO: log and quarantine entries that fail to replay
+            except Exception as exc:
+                logger.error("Replay failed: %s", exc)
+                _quarantine(json.dumps(entry), FAILED_LOG)
                 continue
 
 
