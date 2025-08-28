@@ -41,11 +41,11 @@ Other interactive entry points should be skipped or patched similarly.
 ### Prioritized test tiers
 
 Execute tests in priority order using the RAZAR runner. The mapping of test
-files to tiers lives in `tests/priority_map.yaml`.  Each tier is executed
-sequentially with the `pytest-order` plug‑in so critical smoke tests fail fast.
-Progress is persisted to `logs/pytest_state.json` so subsequent runs with
-`--resume` continue from the last failing tier. Output from every run appends
-to `logs/pytest_priority.log`.  A minimal mapping looks like:
+files to tiers lives in `tests/priority_map.yaml`. Tiers run sequentially so
+critical smoke tests fail fast. Progress is persisted to `logs/pytest_state.json`
+so subsequent runs with `--resume` continue from the last failing test. Output
+from every run appends to `logs/pytest_priority.log`.  A minimal mapping looks
+like:
 
 ```yaml
 P1:
@@ -68,16 +68,11 @@ Run a specific tier:
 python agents/razar/pytest_runner.py --priority P1
 ```
 
-Resume from the last failing tier:
+Resume from the last failing test:
 
 ```bash
 python agents/razar/pytest_runner.py --resume
 ```
-
-If a tier fails the runner sends the failing test context to the CROWN stack for
-patch suggestions and invokes the remote code repair agent. The failing module
-is patched in a temporary workspace and its tests rerun. Successful patches are
-applied to the repository automatically.
 
 ### CLI console interface
 
