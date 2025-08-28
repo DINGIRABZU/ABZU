@@ -1,6 +1,7 @@
 # AGENTS
 
 - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation.
+- Complete the onboarding checklist in [docs/onboarding/README.md](docs/onboarding/README.md) and confirm each item before starting code changes.
 - Follow the naming and structuring conventions described there when creating new docs.
 - Review and refresh [docs/system_blueprint.md](docs/system_blueprint.md) before committing changes to components or documentation.
 - Consult [docs/The_Absolute_Protocol.md](docs/The_Absolute_Protocol.md) for core contribution rules.
