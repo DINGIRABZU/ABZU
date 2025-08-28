@@ -1,22 +1,31 @@
-"""Build ``docs/Ignition.md`` from the system blueprint.
+"""Update ``docs/Ignition.md`` from the component priority registry.
 
-The builder scans ``docs/system_blueprint.md`` for component priorities and
-produces a grouped table showing the boot order. Each entry starts with a
-status marker so RAZAR can later flip it to ``✅`` or ``❌`` as components report
-their health.
+This module reads component definitions from ``docs/component_priorities.yaml``
+and writes a grouped table to ``docs/Ignition.md``.  Status markers
+(``✅``/``⚠️``/``❌``) are derived from the last successful component recorded in
+``logs/razar_state.json`` and the quarantine registry.  The original blueprint
+parsing helper :func:`parse_system_blueprint` is retained for compatibility with
+the boot orchestrator.
 """
 
 from __future__ import annotations
 
+import json
 import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List
 
+import yaml
+
+from . import quarantine_manager
 
 DEFAULT_STATUS = "⚠️"
 
 
+# ---------------------------------------------------------------------------
+# Legacy blueprint parsing
+# ---------------------------------------------------------------------------
 def parse_system_blueprint(path: Path) -> List[Dict[str, object]]:
     """Extract component data from ``system_blueprint.md``.
 
@@ -55,9 +64,7 @@ def parse_system_blueprint(path: Path) -> List[Dict[str, object]]:
         priority = int(match.group(3))
         health_check = ""
         for meta_name, data in meta.items():
-            if name.lower().startswith(
-                meta_name.lower()
-            ) or meta_name.lower().startswith(name.lower()):
+            if name.lower().startswith(meta_name.lower()) or meta_name.lower().startswith(name.lower()):
                 health_check = data["health_check"]
                 break
         components.append(
@@ -72,10 +79,68 @@ def parse_system_blueprint(path: Path) -> List[Dict[str, object]]:
     return components
 
 
-def build_ignition(system_blueprint: Path, output: Path) -> None:
-    """Build the Ignition markdown file."""
+# ---------------------------------------------------------------------------
+# Registry based Ignition builder
+# ---------------------------------------------------------------------------
+def _load_registry(path: Path) -> List[Dict[str, object]]:
+    """Return components sorted by priority from ``path``."""
 
-    components = parse_system_blueprint(system_blueprint)
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    components: List[Dict[str, object]] = []
+    for name, meta in data.items():
+        prio_raw = str(meta.get("priority", "P999"))
+        try:
+            priority = int(prio_raw.lstrip("P"))
+        except Exception:  # pragma: no cover - defensive
+            priority = 999
+        components.append({"name": name, "priority": priority})
+    components.sort(key=lambda c: (c["priority"], c["name"]))
+    for idx, comp in enumerate(components, start=1):
+        comp["order"] = idx
+    return components
+
+
+def _load_last_component(path: Path | None) -> str:
+    """Return the last successfully started component from ``path``."""
+
+    if not path or not path.exists():
+        return ""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return str(data.get("last_component", ""))
+    except Exception:  # pragma: no cover - defensive
+        return ""
+
+
+def _compute_statuses(components: List[Dict[str, object]], last: str) -> Dict[str, str]:
+    """Map component names to status markers."""
+
+    statuses: Dict[str, str] = {}
+    after_last = False
+    for comp in components:
+        name = str(comp["name"])
+        if quarantine_manager.is_quarantined(name):
+            statuses[name] = "❌"
+            continue
+        if not last:
+            statuses[name] = DEFAULT_STATUS
+            continue
+        if after_last:
+            statuses[name] = DEFAULT_STATUS
+            continue
+        statuses[name] = "✅"
+        if name == last:
+            after_last = True
+    return statuses
+
+
+def build_ignition(registry: Path, output: Path, *, state: Path | None = None) -> None:
+    """Build the Ignition markdown file from ``registry`` and ``state``."""
+
+    components = _load_registry(registry)
+    last = _load_last_component(state)
+    statuses = _compute_statuses(components, last)
+
     groups: Dict[int, List[Dict[str, object]]] = defaultdict(list)
     for comp in components:
         groups[int(comp["priority"])].append(comp)
@@ -91,16 +156,33 @@ def build_ignition(system_blueprint: Path, output: Path) -> None:
         "",
     ]
 
+    orch_status = "✅" if last else DEFAULT_STATUS
+    lines.extend(
+        [
+            "## Priority 0",
+            "| Order | Component | Health Check | Status |",
+            "| --- | --- | --- | --- |",
+            (
+                "| 0 | RAZAR Startup Orchestrator | "
+                "Confirm the environment hash and orchestrator heartbeat. | "
+                f"{orch_status} |"
+            ),
+            "",
+        ]
+    )
+
     for priority in sorted(groups):
         lines.append(f"## Priority {priority}")
         lines.append("| Order | Component | Health Check | Status |")
         lines.append("| --- | --- | --- | --- |")
-        for comp in sorted(groups[priority], key=lambda c: c["order"]):
-            health_check = comp["health_check"] or "-"
-            lines.append(
-                f"| {comp['order']} | {comp['name']} | {health_check} | "
-                f"{DEFAULT_STATUS} |",
+        for comp in groups[priority]:
+            overrides = {"crown_llm": "CROWN LLM"}
+            name = overrides.get(
+                comp["name"], comp["name"].replace("_", " ").title()
             )
+            status = statuses.get(comp["name"], DEFAULT_STATUS)
+            lines.append(f"| {comp['order']} | {name} | - | {status} |")
+        lines.append("")
 
     lines.extend(
         [
@@ -123,10 +205,15 @@ def build_ignition(system_blueprint: Path, output: Path) -> None:
     output.write_text("\n".join(lines), encoding="utf-8")
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover - CLI helper
     root = Path(__file__).resolve().parents[2]
-    build_ignition(root / "docs" / "system_blueprint.md", root / "docs" / "Ignition.md")
+    build_ignition(
+        root / "docs" / "component_priorities.yaml",
+        root / "docs" / "Ignition.md",
+        state=root / "logs" / "razar_state.json",
+    )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover - module CLI
     main()
+

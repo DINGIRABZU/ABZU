@@ -1,66 +1,103 @@
+import json
 import os
 import subprocess
 import sys
+import types
 from pathlib import Path
+
+# Provide lightweight stubs so importing ``agents.razar`` works without heavy
+# dependencies.  These mirror the helpers used in the CLI test but are executed
+# at module import time so ``build_ignition`` can be imported safely.
+guardian = types.ModuleType("agents.guardian")
+
+def _run_validated_task(*a, **k):
+    task = k.get("task")
+    return task(*a, **k) if callable(task) else None
+
+
+guardian.run_validated_task = _run_validated_task
+sys.modules.setdefault("agents.guardian", guardian)
+cocytus = types.ModuleType("agents.cocytus")
+cocytus.__path__ = []
+sys.modules.setdefault("agents.cocytus", cocytus)
+pa = types.ModuleType("agents.cocytus.prompt_arbiter")
+
+def _arbitrate(*a, **k):
+    return None
+
+
+pa.arbitrate = _arbitrate
+sys.modules.setdefault("agents.cocytus.prompt_arbiter", pa)
 
 from agents.razar.ignition_builder import build_ignition
 
 
-def test_build_ignition(tmp_path: Path) -> None:
-    blueprint = tmp_path / "system_blueprint.md"
-    blueprint.write_text(
-        """
-### Alpha
-- **Priority:** 1
-- **Health Check:** check alpha
-
-### Beta
-- **Priority:** 2
-- **Health Check:** check beta
-
-## Staged Startup Order
-0. Alpha (priority 1)
-1. Beta (priority 2)
-        """,
+def _write_registry(path: Path) -> None:
+    path.write_text(
+        (
+            "alpha:\n"
+            "  priority: P1\n"
+            "  criticality: core\n"
+            "  issue_categories:\n"
+            "    - runtime\n"
+            "beta:\n"
+            "  priority: P2\n"
+            "  criticality: optional\n"
+            "  issue_categories:\n"
+            "    - config\n"
+        ),
         encoding="utf-8",
     )
 
+
+def test_build_ignition_statuses(tmp_path: Path) -> None:
+    registry = tmp_path / "component_priorities.yaml"
+    _write_registry(registry)
+    state = tmp_path / "razar_state.json"
+    state.write_text(json.dumps({"last_component": "alpha"}), encoding="utf-8")
+
     output = tmp_path / "Ignition.md"
-    build_ignition(blueprint, output)
+    build_ignition(registry, output, state=state)
 
     content = output.read_text(encoding="utf-8")
-    assert "## Priority 1" in content
-    assert "## Priority 2" in content
-    assert "| 0 | Alpha | check alpha | ⚠️ |" in content
-    assert "| 1 | Beta | check beta | ⚠️ |" in content
+    assert "| 1 | Alpha | - | ✅ |" in content
+    assert "| 2 | Beta | - | ⚠️ |" in content
+
+
+def test_quarantined_component_marked(monkeypatch, tmp_path: Path) -> None:
+    registry = tmp_path / "component_priorities.yaml"
+    _write_registry(registry)
+    output = tmp_path / "Ignition.md"
+
+    monkeypatch.setattr(
+        "agents.razar.ignition_builder.quarantine_manager.is_quarantined",
+        lambda name: name == "beta",
+    )
+    build_ignition(registry, output)
+    content = output.read_text(encoding="utf-8")
+    assert "| 2 | Beta | - | ❌ |" in content
 
 
 def test_cli_build_ignition(tmp_path: Path) -> None:
-    blueprint = tmp_path / "system_blueprint.md"
-    blueprint.write_text(
-        """
-### Gamma
-- **Priority:** 1
-
-## Staged Startup Order
-0. Gamma (priority 1)
-        """,
-        encoding="utf-8",
-    )
-
+    registry = tmp_path / "component_priorities.yaml"
+    _write_registry(registry)
+    state = tmp_path / "razar_state.json"
     output = tmp_path / "Ignition.md"
+
     cmd = [
         sys.executable,
         "-m",
         "razar",
         "build-ignition",
-        "--blueprint",
-        str(blueprint),
+        "--registry",
+        str(registry),
+        "--state",
+        str(state),
         "--output",
         str(output),
     ]
-    # Inject lightweight stubs for guardian and cocytus via ``sitecustomize`` so
-    # the CLI runs without heavy dependencies.
+
+    # Inject lightweight stubs for guardian and cocytus so the CLI imports work.
     stubs = tmp_path / "stubs"
     stubs.mkdir()
     (stubs / "sitecustomize.py").write_text(
@@ -88,4 +125,4 @@ def test_cli_build_ignition(tmp_path: Path) -> None:
     subprocess.run(cmd, check=True, env=env)
 
     content = output.read_text(encoding="utf-8")
-    assert "| 0 | Gamma | - | ⚠️ |" in content
+    assert "| 1 | Alpha | - | ⚠️ |" in content

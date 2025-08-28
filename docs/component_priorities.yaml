@@ -1,3 +1,4 @@
+# Component priority registry for RAZAR ignition
 memory_store:
   priority: P1
   criticality: core
