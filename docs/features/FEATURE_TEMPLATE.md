@@ -18,3 +18,6 @@ Identify modules or packages that will change.
 ## Rollback Plan
 Steps to revert the feature if issues arise.
 
+## Reference
+After finalizing the specification, list the file in [Blueprint Export](../BLUEPRINT_EXPORT.md) under **Feature Specs**.
+
