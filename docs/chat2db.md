@@ -29,8 +29,8 @@ Agents → Chat Gateway → Chat2DB → {SQLite, Vector Store}
    from spiral_vector_db import init_db
 
    db_storage.init_db()
-   init_db()  # sets up the Chroma collection
-   ```
+ init_db()  # sets up the Chroma collection
+  ```
 2. Record a message:
    ```python
    db_storage.save_interaction("hello", "neutral", "response.wav")
@@ -41,6 +41,10 @@ Agents → Chat Gateway → Chat2DB → {SQLite, Vector Store}
 
    insert_embeddings([{"text": "hello world"}])
    matches = query_embeddings("hello")
+   ```
+4. Retrieve conversation history:
+   ```python
+   history = db_storage.fetch_interactions(limit=10)
    ```
 The interface is stateless; components import these helpers as needed. See the
 [system blueprint](system_blueprint.md#chat2db-interface) for how Chat2DB fits in
