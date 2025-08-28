@@ -1,11 +1,13 @@
 """Update ``docs/Ignition.md`` from the component priority registry.
 
-This module reads component definitions from ``docs/component_priorities.yaml``
-and writes a grouped table to ``docs/Ignition.md``.  Status markers
-(``✅``/``⚠️``/``❌``) are derived from the last successful component recorded in
-``logs/razar_state.json`` and the quarantine registry.  The original blueprint
-parsing helper :func:`parse_system_blueprint` is retained for compatibility with
-the boot orchestrator.
+Components are defined in ``docs/component_priorities.yaml`` with three pieces
+of metadata: ``priority`` (``P1``–``P5``), ``criticality`` and ``issue_type``.
+The builder groups entries by priority and writes a Markdown table to
+``docs/Ignition.md``.  Status markers (``✅``/``⚠️``/``❌``) are derived from the
+last successful component recorded in ``logs/razar_state.json`` and the
+quarantine registry.  The original blueprint parsing helper
+:func:`parse_system_blueprint` is retained for compatibility with the boot
+orchestrator.
 """
 
 from __future__ import annotations
