@@ -10,6 +10,7 @@ from .remote_loader import (
     load_remote_gpt_agent,
 )
 from .lifecycle_bus import LifecycleBus
+from . import pytest_runner
 
 _manifesto = Manifesto()
 _trust_matrix = TrustMatrix()
@@ -30,4 +31,5 @@ __all__ = [
     "load_remote_gpt_agent",
     "LifecycleBus",
     "execute_task",
+    "pytest_runner",
 ]

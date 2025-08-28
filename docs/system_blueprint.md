@@ -113,8 +113,9 @@ how priorities are derived and progress is persisted. The broader
 [RAZAR Agent](RAZAR_AGENT.md) guide covers its perpetual ignition loop,
 CROWN LLM diagnostics, and shutdown–repair–restart handshake, and see
 [nazarick_agents.md](nazarick_agents.md) for the in‑world servant lineup.
-When issues surface, consult the [Recovery Playbook](recovery_playbook.md)
-and [Monitoring Guide](monitoring.md).
+When issues surface, consult the [Recovery Playbook](recovery_playbook.md),
+the [Error Registry](error_registry.md) and the
+[Monitoring Guide](monitoring.md).
 
 ### RAZAR: Pre‑Creation Agent
 

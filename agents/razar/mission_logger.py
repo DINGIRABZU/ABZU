@@ -5,15 +5,16 @@ from __future__ import annotations
 This module records lifecycle events for RAZAR components in a JSON lines log
 stored at ``logs/razar.log``. Each entry captures:
 
-- ``event`` – type of event such as ``start`` or ``health``
+- ``event`` – type of event such as ``start``, ``error`` or ``recovery``
 - ``component`` – component name
 - ``status`` – outcome or note for the event
 - ``timestamp`` – ISO-8601 time in UTC
 - ``details`` – optional free-form text
 
-Utility helpers are provided for the common events of component starts, health
-results, quarantines and applied patches. The log can be summarised to find the
-last successful component or rendered as a chronological timeline for
+Utility helpers are provided for common events including component starts,
+errors and recovery attempts. Additional helpers retain backward compatible
+names for health checks, quarantines and patches. The log can be summarised to
+find the last successful component or rendered as a chronological timeline for
 debugging.
 """
 
@@ -106,6 +107,18 @@ def log_patch(component: str, patch: str, details: str | None = None) -> None:
     log_event("patch", component, patch, details)
 
 
+def log_error(component: str, error: str, details: str | None = None) -> None:
+    """Record that a component encountered an error."""
+
+    log_event("error", component, error, details)
+
+
+def log_recovery(component: str, status: str, details: str | None = None) -> None:
+    """Record a recovery attempt for a component."""
+
+    log_event("recovery", component, status, details)
+
+
 # ---------------------------------------------------------------------------
 # Backwards compatibility aliases
 # ---------------------------------------------------------------------------
@@ -114,7 +127,6 @@ def log_patch(component: str, patch: str, details: str | None = None) -> None:
 # existing scripts continue to work.
 log_launch = log_start
 log_health_check = log_health
-log_recovery = log_patch
 
 
 # ---------------------------------------------------------------------------

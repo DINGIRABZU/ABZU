@@ -1,6 +1,8 @@
 # Recovery Playbook
 
 This playbook outlines how RAZAR restores service after a component failure.
+Recurring problems and their fixes are cataloged in the
+[Error Registry](error_registry.md).
 
 ## Boot sequence
 
