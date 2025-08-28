@@ -116,8 +116,11 @@ coverage report
 
 ### Review Process
 
-- **Maintainer review (required):** Every PR must be reviewed by at least one project maintainer.
-- **Domain expert review (optional):** For changes touching specialized areas such as security, infrastructure, or ML pipelines, request a review from a domain expert. Mention the domain in the PR description and tag the appropriate expert or ask a maintainer to loop them in.
-- **Reviewer expectations:** Ensure tests and linters pass, confirm documentation and style guidelines are followed, and provide constructive feedback. Escalate to additional reviewers if deeper expertise is needed.
+ABZU uses two reviewer tiers:
+
+1. **Maintainer review (required):** Every PR must be reviewed by at least one project maintainer.
+2. **Domain expert review (optional):** For changes touching specialized areas such as security, infrastructure, or ML pipelines, request a review from a domain expert. Mention the domain in the PR description and tag the appropriate expert or ask a maintainer to loop them in.
+
+**Reviewer expectations:** Ensure tests and linters pass, confirm documentation and style guidelines are followed, and provide constructive feedback. Escalate to additional reviewers if deeper expertise is needed.
 
 By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
