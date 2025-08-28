@@ -31,3 +31,9 @@ repos:
     entry: python scripts/check_key_documents.py
     language: system
     pass_filenames: false
+  - id: doc-indexer
+    name: Regenerate documentation index
+    entry: python tools/doc_indexer.py
+    language: system
+    pass_filenames: false
+    files: ^docs/
