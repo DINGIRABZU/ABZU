@@ -44,5 +44,5 @@ Using only the documents above you can reconstruct the project:
 With the architecture, workflow, and validation steps in hand, you can implement new features or adjust existing modules. Reference domain-specific guides in the `docs/` directory and follow the security practices outlined in [Security Model](security_model.md).
 
 ## 8. Share Knowledge
-Update documentation when adding features so others can replicate your work. The [Developer Manual](developer_manual.md) and [Contribution Guide](contribution_guide.md) describe expectations for pull requests and reviews.
+Update documentation when adding features so others can replicate your work. The [Developer Manual](developer_manual.md) and [Contribution Guide](contribution_guide.md) describe expectations for pull requests and reviews. Ensure the pull request template checkboxes for [AGENTS.md](../AGENTS.md) and [The Absolute Protocol](The_Absolute_Protocol.md) are completed.
 

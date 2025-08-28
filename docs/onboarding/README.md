@@ -14,3 +14,8 @@ Follow this reading order before contributing:
    - [Spiral Cortex Terminal](../spiral_cortex_terminal.md)
 
 Confirm each item before starting code changes.
+
+When submitting a pull request, ensure you can check:
+
+- [ ] [AGENTS.md](../AGENTS.md) instructions followed
+- [ ] [The Absolute Protocol](../The_Absolute_Protocol.md) consulted

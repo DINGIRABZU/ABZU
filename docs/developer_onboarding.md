@@ -408,3 +408,4 @@ Common mistakes and their resolutions:
    ```
 
    Open a pull request on GitHub. See [CONTRIBUTING.md](../CONTRIBUTING.md) for deeper guidelines.
+   Confirm that the PR template checkboxes for [AGENTS.md](../AGENTS.md) instructions and [The Absolute Protocol](The_Absolute_Protocol.md) are checked.
