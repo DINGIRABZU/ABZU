@@ -21,7 +21,7 @@ pip install -r dev-requirements.txt
 pre-commit install
 ```
 
-For a full onboarding walkthrough, see the [Onboarding Guide](onboarding_guide.md). Additional reference documents are listed in the [Blueprint Export](BLUEPRINT_EXPORT.md).
+For a full onboarding walkthrough, see the [Onboarding Walkthrough](onboarding_walkthrough.md) text guide. Additional reference documents are listed in the [Blueprint Export](BLUEPRINT_EXPORT.md).
 
 ## Repository Structure
 
@@ -56,6 +56,7 @@ pytest
 
 ## Further Reading
 
+- [Onboarding Walkthrough](onboarding_walkthrough.md)
 - [Onboarding Guide](onboarding_guide.md)
 - [Blueprint Export](BLUEPRINT_EXPORT.md)
 - [Contribution Guide](contribution_guide.md)

@@ -1,6 +1,6 @@
 # Onboarding Guide
 
-This guide walks through setting up the project and shows how a new contributor can rebuild or extend the system using only the documentation. For day-to-day development practices, see the [Contributor Handbook](CONTRIBUTOR_HANDBOOK.md).
+This guide walks through setting up the project and shows how a new contributor can rebuild or extend the system using only the documentation. A step-by-step [Onboarding Walkthrough](onboarding_walkthrough.md) replaces the previous video tour. For day-to-day development practices, see the [Contributor Handbook](CONTRIBUTOR_HANDBOOK.md).
 
 ## 1. Survey the Blueprint
 Begin with the [Blueprint Export](BLUEPRINT_EXPORT.md) to locate foundational documents. Each entry provides a permalink template for a specific version of the file.
