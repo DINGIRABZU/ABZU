@@ -59,25 +59,25 @@ modules cataloged in [component_index.md](component_index.md).
 
 | Floor | Channel | Chakra | Agents |
 | --- | --- | --- | --- |
-| 7 | <a id="throne-room"></a>Throne Room | Crown | [Orchestration Master](nazarick_agents.md#orchestration-master) |
-| 5 | <a id="signal-hall"></a>Signal Hall | Throat | [Prompt Orchestrator](nazarick_agents.md#prompt-orchestrator) |
-| 6 | <a id="insight-observatory"></a>Insight Observatory | Third Eye | [QNL Engine](nazarick_agents.md#qnl-engine) |
-| 4 | <a id="memory-vault"></a>Memory Vault | Heart | [Memory Scribe](nazarick_agents.md#memory-scribe) |
-| 7 | <a id="lava-pits"></a>Lava Pits | Crown | [Demiurge Strategic Simulator](nazarick_agents.md#demiurge-strategic-simulator) |
-| 1-3 | <a id="catacombs"></a>Catacombs | Root–Solar Plexus | [Shalltear Fast Inference Agent](nazarick_agents.md#shalltear-fast-inference-agent) |
-| 5 | <a id="glacier-prison"></a>Glacier Prison | Throat | [Cocytus Prompt Arbiter](nazarick_agents.md#cocytus-prompt-arbiter) |
-| 6 | <a id="jungle-aerie"></a>Jungle Aerie | Third Eye | [Ecosystem Aura Capture](nazarick_agents.md#ecosystem-aura-capture) |
-| 6 | <a id="jungle-grove"></a>Jungle Grove | Third Eye | [Ecosystem Mare Gardener](nazarick_agents.md#ecosystem-mare-gardener) |
-| 9 | <a id="royal-suite"></a>Royal Suite | Crown | [Sebas Compassion Module](nazarick_agents.md#sebas-compassion-module) |
-| 8 | <a id="sacrificial-chamber"></a>Sacrificial Chamber | Crown | [Victim Security Canary](nazarick_agents.md#victim-security-canary) |
-| 10 | <a id="treasure-vault"></a>Treasure Vault | Crown | [Pandora Persona Emulator](nazarick_agents.md#pandora-persona-emulator) |
-| 9 | <a id="maid-quarters"></a>Maid Quarters | Crown | [Pleiades Star Map Utility](nazarick_agents.md#pleiades-star-map-utility) |
-| 9 | <a id="relay-wing"></a>Relay Wing | Crown | [Pleiades Signal Router Utility](nazarick_agents.md#pleiades-signal-router-utility) |
-| 4 | <a id="biosphere-lab"></a>Biosphere Lab | Heart | [Bana Bio-Adaptive Narrator](nazarick_agents.md#bana-bio-adaptive-narrator) |
-| 5 | <a id="scriptorium"></a>Scriptorium | Throat | [AsianGen Creative Engine](nazarick_agents.md#asian-gen-creative-engine) |
-| 1 | <a id="cartography-room"></a>Cartography Room | Root | [LandGraph Geo Knowledge](nazarick_agents.md#land-graph-geo-knowledge) |
+| 7 | <a id="floor-7-throne-room"></a>Throne Room | Crown | [Orchestration Master](nazarick_agents.md#orchestration-master) |
+| 5 | <a id="floor-5-signal-hall"></a>Signal Hall | Throat | [Prompt Orchestrator](nazarick_agents.md#prompt-orchestrator) |
+| 6 | <a id="floor-6-insight-observatory"></a>Insight Observatory | Third Eye | [QNL Engine](nazarick_agents.md#qnl-engine) |
+| 4 | <a id="floor-4-memory-vault"></a>Memory Vault | Heart | [Memory Scribe](nazarick_agents.md#memory-scribe) |
+| 7 | <a id="floor-7-lava-pits"></a>Lava Pits | Crown | [Demiurge Strategic Simulator](nazarick_agents.md#demiurge-strategic-simulator) |
+| 1-3 | <a id="floor-1-3-catacombs"></a>Catacombs | Root–Solar Plexus | [Shalltear Fast Inference Agent](nazarick_agents.md#shalltear-fast-inference-agent) |
+| 5 | <a id="floor-5-glacier-prison"></a>Glacier Prison | Throat | [Cocytus Prompt Arbiter](nazarick_agents.md#cocytus-prompt-arbiter) |
+| 6 | <a id="floor-6-jungle-aerie"></a>Jungle Aerie | Third Eye | [Ecosystem Aura Capture](nazarick_agents.md#ecosystem-aura-capture) |
+| 6 | <a id="floor-6-jungle-grove"></a>Jungle Grove | Third Eye | [Ecosystem Mare Gardener](nazarick_agents.md#ecosystem-mare-gardener) |
+| 9 | <a id="floor-9-royal-suite"></a>Royal Suite | Crown | [Sebas Compassion Module](nazarick_agents.md#sebas-compassion-module) |
+| 8 | <a id="floor-8-sacrificial-chamber"></a>Sacrificial Chamber | Crown | [Victim Security Canary](nazarick_agents.md#victim-security-canary) |
+| 10 | <a id="floor-10-treasure-vault"></a>Treasure Vault | Crown | [Pandora Persona Emulator](nazarick_agents.md#pandora-persona-emulator) |
+| 9 | <a id="floor-9-maid-quarters"></a>Maid Quarters | Crown | [Pleiades Star Map Utility](nazarick_agents.md#pleiades-star-map-utility) |
+| 9 | <a id="floor-9-relay-wing"></a>Relay Wing | Crown | [Pleiades Signal Router Utility](nazarick_agents.md#pleiades-signal-router-utility) |
+| 4 | <a id="floor-4-biosphere-lab"></a>Biosphere Lab | Heart | [Bana Bio-Adaptive Narrator](nazarick_agents.md#bana-bio-adaptive-narrator) |
+| 5 | <a id="floor-5-scriptorium"></a>Scriptorium | Throat | [AsianGen Creative Engine](nazarick_agents.md#asian-gen-creative-engine) |
+| 1 | <a id="floor-1-cartography-room"></a>Cartography Room | Root | [LandGraph Geo Knowledge](nazarick_agents.md#land-graph-geo-knowledge) |
 
-### Chat2DB Interface and Dependency Flow
+### <a id="chat2db-interface"></a>Chat2DB Interface and Dependency Flow
 
 [Chat2DB](chat2db.md) bridges the chat gateway, relational log and vector
 search store. It depends on `INANNA_AI/db_storage.py` for SQLite tables and
@@ -621,4 +621,8 @@ deployments with user accounts and persistent chats.
 - [Development Workflow](development_workflow.md)
 - [Coding Style](coding_style.md)
 - Index Markdown docs with `python tools/doc_indexer.py` to regenerate `docs/INDEX.md`; existing entries stay intact and new versions of generated files are appended.
+
+---
+
+Backlinks: [System Blueprint](system_blueprint.md) | [Component Index](component_index.md)
 
