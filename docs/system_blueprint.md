@@ -24,6 +24,8 @@ interlock.
   - [RAZAR Agent](RAZAR_AGENT.md) – pre-creation mandate, priority boot order with health checks and quarantine, and a handshake with the CROWN LLM and servant models
   - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
   - [ALBEDO Layer](ALBEDO_LAYER.md) – persona modules and archetypal behavior hooks
+  - [Persona API Guide](persona_api_guide.md) – conventions for persona profiles and hooks
+  - [Nazarick Manifesto](nazarick_manifesto.md) – narrative charter governing personas
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
 - **Operational guides**
   - [Operations Guide](operations.md) – runbooks for deployment and maintenance
@@ -60,9 +62,11 @@ interlock.
 ### Agent & Nazarick Hierarchy
 
 Agents follow a Nazarick-inspired command chain. The roster and roles live in
-[nazarick_agents.md](nazarick_agents.md). Persona behaviors originate from
-[persona_api_guide.md](persona_api_guide.md) and are implemented in component
-modules cataloged in [component_index.md](component_index.md).
+[nazarick_agents.md](nazarick_agents.md). Component implementations are
+cataloged in [component_index.md](component_index.md), while personalities draw
+from the [ALBEDO Layer](ALBEDO_LAYER.md) and
+[Persona API Guide](persona_api_guide.md). Agents persist dialogue context
+through the [Chat2DB Interface](chat2db.md).
 
 ### Floor and Channel Hierarchy
 
