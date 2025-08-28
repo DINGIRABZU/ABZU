@@ -13,7 +13,7 @@ Replace `<commit>` in each permalink with the desired commit hash to reference a
 | Minimal Setup | Lightweight environment setup steps | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/setup_minimal.md |
 | Full Setup | Complete environment configuration | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/setup_full.md |
 | Developer Onboarding | Codebase walkthrough for contributors | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/developer_onboarding.md |
-| Onboarding Guide | Rebuild or extend the system using only documentation | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/onboarding_guide.md |
+| Onboarding Guide v1.0.0 | Rebuild or extend the system using only documentation | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/onboarding_guide.md |
 | Development Workflow | Standard development cycle and procedures | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/development_workflow.md |
 | Testing Guide | Test suite overview and execution instructions | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/testing.md |
 | Security Model | Security posture and threat considerations | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/security_model.md |
