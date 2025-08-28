@@ -48,10 +48,15 @@ This guide introduces the ABZU codebase, highlights core entry points, and cover
 git clone https://github.com/your-org/ABZU.git
 cd ABZU
 python -m venv .venv && source .venv/bin/activate
+pip install -e .
 scripts/easy_setup.sh
 python download_models.py glm41v_9b --int8
 bash scripts/smoke_console_interface.sh  # see docs/testing.md for more
 ```
+
+Running `pip install -e .` installs the repository in editable mode so modules like
+`core.load_config` are discoverable. If you prefer not to install the package,
+append `PYTHONPATH=src` when invoking tools or tests.
 
 ### CLI Usage
 

@@ -14,6 +14,15 @@ The test suite expects certain plugins to be available:
 
 Install them with `pip install -r dev-requirements.txt`.
 
+The project uses a `src` layout. Install the repository in editable mode or
+prepend the source path when running tests to avoid import errors:
+
+```bash
+pip install -e .
+# or
+PYTHONPATH=src pytest
+```
+
 ## Manual smoke tests
 
 ### Prioritized test tiers
