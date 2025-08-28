@@ -38,13 +38,11 @@ def _write_registry(path: Path) -> None:
             "alpha:\n"
             "  priority: P1\n"
             "  criticality: core\n"
-            "  issue_categories:\n"
-            "    - runtime\n"
+            "  issue_type: runtime\n"
             "beta:\n"
             "  priority: P2\n"
             "  criticality: optional\n"
-            "  issue_categories:\n"
-            "    - config\n"
+            "  issue_type: config\n"
         ),
         encoding="utf-8",
     )
@@ -76,6 +74,18 @@ def test_quarantined_component_marked(monkeypatch, tmp_path: Path) -> None:
     build_ignition(registry, output)
     content = output.read_text(encoding="utf-8")
     assert "| 2 | Beta | - | ❌ |" in content
+
+
+def test_build_ignition_defaults(tmp_path: Path) -> None:
+    """When no state is supplied all components default to a warning marker."""
+
+    registry = tmp_path / "component_priorities.yaml"
+    _write_registry(registry)
+    output = tmp_path / "Ignition.md"
+    build_ignition(registry, output)
+    content = output.read_text(encoding="utf-8")
+    assert "| 1 | Alpha | - | ⚠️ |" in content
+    assert "| 2 | Beta | - | ⚠️ |" in content
 
 
 def test_cli_build_ignition(tmp_path: Path) -> None:

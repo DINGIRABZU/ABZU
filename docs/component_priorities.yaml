@@ -2,39 +2,28 @@
 memory_store:
   priority: P1
   criticality: core
-  issue_categories:
-    - config
-    - runtime
+  issue_type: runtime
 chat_gateway:
   priority: P2
   criticality: core
-  issue_categories:
-    - runtime
-    - integration
+  issue_type: runtime
 crown_llm:
   priority: P2
   criticality: core
-  issue_categories:
-    - config
-    - runtime
+  issue_type: config
 vision_adapter:
   priority: P2
   criticality: optional
-  issue_categories:
-    - integration
+  issue_type: integration
 audio_device:
   priority: P3
   criticality: optional
-  issue_categories:
-    - runtime
+  issue_type: runtime
 avatar:
   priority: P4
   criticality: optional
-  issue_categories:
-    - runtime
-    - integration
+  issue_type: integration
 video:
   priority: P5
   criticality: optional
-  issue_categories:
-    - integration
+  issue_type: integration
