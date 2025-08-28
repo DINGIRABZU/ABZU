@@ -2,6 +2,39 @@
 
 Generated automatically. Lists each Python file with its description and external dependencies. See the [Great Tomb of Nazarick](great_tomb_of_nazarick.md) for objectives, channel hierarchy, tech stack, and chakra alignment.
 
+## Storage Schemas
+### TimescaleDB
+```mermaid
+erDiagram
+    agent_events {
+        TIMESTAMPTZ time PK
+        TEXT agent_id
+        TEXT event_type
+        JSONB payload
+    }
+```
+- Hypertable with 30-day retention and indexes on `agent_id` and `event_type`.
+
+```sql
+SELECT * FROM agent_events
+WHERE event_type = 'ritual'
+ORDER BY time DESC LIMIT 10;
+```
+
+### Neo4j
+```mermaid
+graph TD
+    A[Agent] -->|EMITTED| E[Event]
+```
+- Unique `Agent.agent_id` with indexes on `Event.timestamp` and `event_type`.
+
+```cypher
+MATCH (a:Agent)-[:EMITTED]->(e:Event)
+WHERE a.agent_id = 'Aura'
+RETURN e
+ORDER BY e.timestamp DESC LIMIT 10;
+```
+
 | File | Description | Dependencies |
 | --- | --- | --- |
 | `INANNA_AI/__init__.py` | Core package for the INANNA AI helpers. | None |

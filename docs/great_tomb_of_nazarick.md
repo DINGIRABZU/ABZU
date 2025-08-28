@@ -58,3 +58,39 @@ bus. Each event contains the following fields:
    - **Neo4j** for relational exploration of agent interactions.
 3. Downstream services can query either store to reconstruct the activity
    history of the Great Tomb.
+
+## Database Schemas
+### TimescaleDB
+```mermaid
+erDiagram
+    agent_events {
+        TIMESTAMPTZ time PK
+        TEXT agent_id
+        TEXT event_type
+        JSONB payload
+    }
+```
+- Hypertable on `time` with indexes on `(agent_id, time)` and `event_type`.
+- Retention policy removes data older than 30 days.
+
+```sql
+-- recent events for an agent
+SELECT * FROM agent_events
+WHERE agent_id = 'Cocytus'
+ORDER BY time DESC
+LIMIT 100;
+```
+
+### Neo4j
+```mermaid
+graph TD
+    A[Agent] -->|EMITTED| E[Event]
+```
+- `Agent.agent_id` is unique with indexed `Event.timestamp` and `event_type`.
+
+```cypher
+// collaborators sorted by interaction count
+MATCH (a1:Agent)-[:EMITTED]->(e:Event)<-[:EMITTED]-(a2:Agent)
+RETURN a1.agent_id AS source, a2.agent_id AS collaborator, COUNT(e) AS interactions
+ORDER BY interactions DESC;
+```
