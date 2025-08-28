@@ -687,6 +687,10 @@ deployments with user accounts and persistent chats.
 - [Documentation Index](index.md) – curated entry points.
 - Regenerate [INDEX.md](INDEX.md) with `python tools/doc_indexer.py` for a full inventory; existing entries stay intact and new versions of generated files are appended.
 
+## Version History
+
+- 2025-08-28: Added blueprint synchronization check to ensure the blueprint is updated when core services change.
+
 ---
 
 Backlinks: [System Blueprint](system_blueprint.md) | [Component Index](component_index.md)

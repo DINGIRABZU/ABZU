@@ -107,6 +107,9 @@ PY
             requirements.txt
             dev-requirements.txt
 
+      - name: Ensure blueprint synchronized
+        run: git diff --name-only origin/$GITHUB_BASE_REF...HEAD | xargs python scripts/ensure_blueprint_sync.py
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
