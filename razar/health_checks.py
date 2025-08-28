@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import subprocess
+import time
 import urllib.request
 from pathlib import Path
 from typing import Callable, Dict, List
@@ -12,32 +13,40 @@ from typing import Callable, Dict, List
 LOGGER = logging.getLogger("razar.health_checks")
 
 
-def ready_signal(url: str, timeout: int = 5) -> bool:
+def ready_signal(url: str, timeout: int = 5, retries: int = 3, interval: float = 1.0) -> bool:
     """Return ``True`` if ``url`` reports a ready status."""
-    try:
-        with urllib.request.urlopen(
-            url, timeout=timeout
-        ) as resp:  # nosec B310 - trusted endpoints
-            if not 200 <= resp.status < 300:
-                return False
-            data = resp.read()
-        payload = json.loads(data)
-    except Exception as exc:  # pragma: no cover - network dependent
-        LOGGER.error("Ready check failed for %s: %s", url, exc)
-        return False
-    return payload.get("status") == "ready"
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(
+                url, timeout=timeout
+            ) as resp:  # nosec B310 - trusted endpoints
+                if not 200 <= resp.status < 300:
+                    raise RuntimeError(f"status {resp.status}")
+                data = resp.read()
+            payload = json.loads(data)
+            return payload.get("status") == "ready"
+        except Exception as exc:  # pragma: no cover - network dependent
+            LOGGER.error("Ready check failed for %s (attempt %s/%s): %s", url, attempt + 1, retries, exc)
+            time.sleep(interval)
+    return False
 
 
-def ping_endpoint(url: str, timeout: int = 5) -> bool:
+def ping_endpoint(url: str, timeout: int = 5, retries: int = 3, interval: float = 1.0) -> bool:
     """Return ``True`` if ``url`` responds within ``timeout`` seconds."""
-    try:
-        with urllib.request.urlopen(
-            url, timeout=timeout
-        ) as resp:  # nosec B310 - trusted endpoints
-            return 200 <= resp.status < 300
-    except Exception as exc:  # pragma: no cover - network dependent
-        LOGGER.error("Ping failed for %s: %s", url, exc)
-        return False
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(
+                url, timeout=timeout
+            ) as resp:  # nosec B310 - trusted endpoints
+                if 200 <= resp.status < 300:
+                    return True
+                raise RuntimeError(f"status {resp.status}")
+        except Exception as exc:  # pragma: no cover - network dependent
+            LOGGER.error(
+                "Ping failed for %s (attempt %s/%s): %s", url, attempt + 1, retries, exc
+            )
+            time.sleep(interval)
+    return False
 
 
 def verify_log(path: Path, phrase: str) -> bool:
