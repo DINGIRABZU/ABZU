@@ -15,6 +15,7 @@ The system blueprint maps ABZU’s chakra layers, core services, and agents.
   - [Chakra Architecture](chakra_architecture.md) – maps responsibilities and heat zones
   - [Per‑chakra guides](root_chakra_overview.md) – deep dives into individual layers
 - **Agent ecosystem**
+  - [RAZAR Agent](RAZAR_AGENT.md) – startup orchestrator and CROWN handshake
   - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
   - [ALBEDO Layer](ALBEDO_LAYER.md) – persona modules and archetypal behavior hooks
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
@@ -43,8 +44,7 @@ See [Chakra Architecture](chakra_architecture.md) for component mappings.
 
 RAZAR operates as service 0, validating the environment and enforcing the
 startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
-operators can track health at a glance. The
-[RAZAR Agent ignition workflow](RAZAR_AGENT.md#ignition-workflow) explains
+operators can track health at a glance. The [RAZAR Agent](RAZAR_AGENT.md) explains
 how priorities are derived and progress is persisted. The broader
 [RAZAR Agent](RAZAR_AGENT.md) guide covers its perpetual ignition loop,
 CROWN LLM diagnostics, and shutdown–repair–restart handshake, and see
@@ -65,7 +65,7 @@ stack.
   with alternate launch orders and records boot timings.
 - [Co-creation Planner](../razar/cocreation_planner.py) – merges blueprints,
   failure records and Crown suggestions into dependency‑ordered build plans. See
-  [RAZAR Agent](RAZAR_AGENT.md#co-creation-planner).
+  [RAZAR Agent](RAZAR_AGENT.md).
 - [Boot Orchestrator](../razar/boot_orchestrator.py) – reads the ignition
   plan and launches components.
 - [Checkpoint Manager](../razar/checkpoint_manager.py) – persists progress so
