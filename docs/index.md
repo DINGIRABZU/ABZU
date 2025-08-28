@@ -4,7 +4,7 @@ Curated starting points for understanding and operating the project. For an exha
 
 ## Architecture
 - [Architecture Overview](architecture_overview.md)
-- [Blueprint Export](BLUEPRINT_EXPORT.md)
+- [Blueprint Export](BLUEPRINT_EXPORT.md) – versioned snapshot of key documents
 - [Detailed Architecture](architecture.md)
 ## Nazarick
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
@@ -21,6 +21,6 @@ Curated starting points for understanding and operating the project. For an exha
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Checklist](development_checklist.md)
 - [Documentation Protocol](documentation_protocol.md)
-- [Onboarding Guide](onboarding_guide.md) (v1.0.0, updated 2025-08-28)
+- [Onboarding Guide](onboarding_guide.md) – step-by-step rebuild using docs alone (v1.0.0, updated 2025-08-28)
 - [Feature Specifications](features/README.md)
 - [Example Feature](features/example_feature.md)
