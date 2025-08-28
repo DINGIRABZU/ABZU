@@ -22,14 +22,26 @@ Steps to reproduce the behavior:
 
 A clear and concise description of what you expected to happen.
 
+## Actual behavior
+
+What actually happened when running the steps above. Include any error messages or unexpected results.
+
 ## Screenshots
 
 If applicable, add screenshots to help explain your problem.
 
 ## Environment
 
+Provide detailed information to help reproduce the issue:
+
+- Commit hash: [e.g. a1b2c3d]
 - OS: [e.g. Ubuntu 22.04]
 - Python version: [e.g. 3.11]
+- Environment details (virtualenv, Docker, hardware, relevant packages): [...]
+
+## Related context
+
+Mention related modules, past tickets, or external links that provide additional background.
 
 ## Additional context
 
