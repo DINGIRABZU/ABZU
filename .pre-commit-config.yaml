@@ -37,3 +37,7 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/
+  - id: ensure-blueprint-sync
+    name: Ensure blueprint updated with core changes
+    entry: python scripts/ensure_blueprint_sync.py
+    language: system

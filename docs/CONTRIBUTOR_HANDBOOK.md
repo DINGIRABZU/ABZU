@@ -49,7 +49,8 @@ pytest
 1. Create or update tests in `tests/`.
 2. Implement the feature in `src/` or relevant modules.
 3. Update documentation in `docs/`.
-4. Run `pre-commit run --files <changed_files>` and `pytest`.
+4. If `src/` or top-level service files change, update `docs/system_blueprint.md`; a pre-commit hook enforces this.
+5. Run `pre-commit run --files <changed_files>` and `pytest`.
 
 ### Submitting a Pull Request
 
