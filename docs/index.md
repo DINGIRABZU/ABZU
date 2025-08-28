@@ -16,5 +16,6 @@ Central resources for understanding and operating the project.
 
 ## Development
 - [Developer Onboarding](developer_onboarding.md)
+- [Documentation Protocol](documentation_protocol.md)
 - [Development Checklist](development_checklist.md)
 - [Developer Etiquette](developer_etiquette.md)

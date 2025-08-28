@@ -1,6 +1,6 @@
 # Developer Onboarding
 
-Quick links: [Development Checklist](development_checklist.md) | [Developer Etiquette](developer_etiquette.md) | [Vision System](vision_system.md)
+Quick links: [Development Checklist](development_checklist.md) | [Developer Etiquette](developer_etiquette.md) | [Documentation Protocol](documentation_protocol.md) | [Vision System](vision_system.md)
 
 ## Project Vision
 
