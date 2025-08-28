@@ -55,6 +55,25 @@ client implemented in `agents/razar/crown_link.py`.
 Every request/response pair is appended to
 `logs/razar_crown_dialogues.json` for later inspection.
 
+## Emergency Reconstruction
+
+RAZAR can reconstruct a minimal project skeleton when the repository is
+unavailable. The command
+
+```bash
+razar bootstrap --from-docs
+```
+
+scans the documentation for links to Python modules and regenerates those
+modules in a fresh workspace. Paths to the rebuilt files are printed for
+inspection.
+
+### Limitations
+
+- Only modules referenced in Markdown links are recreated.
+- The workspace does not include dependencies, data files or configuration.
+- Generated modules are skeletal and require manual review before use.
+
 ## Further Reading
 
 - [Nazarick Agents](nazarick_agents.md)
