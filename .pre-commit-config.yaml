@@ -1,27 +1,33 @@
 # Run `pre-commit autoupdate` after dependency upgrades.
 repos:
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.11
-    hooks:
-      - id: ruff
-        args: ["--fix"]
-  - repo: https://github.com/psf/black
-    rev: 24.4.2
-    hooks:
-      - id: black
-        language_version: python3
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.1.0
-    hooks:
-      - id: flake8
-  - repo: https://github.com/pycqa/pydocstyle
-    rev: 6.3.0
-    hooks:
-      - id: pydocstyle
-  - repo: local
-    hooks:
-      - id: check-key-documents
-        name: Check key documents exist
-        entry: python scripts/check_key_documents.py
-        language: system
-        pass_filenames: false
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.12.11
+  hooks:
+  - id: ruff
+    args:
+    - --fix
+- repo: https://github.com/psf/black
+  rev: 24.4.2
+  hooks:
+  - id: black
+    language_version: python3
+- repo: https://github.com/pycqa/flake8
+  rev: 7.1.0
+  hooks:
+  - id: flake8
+- repo: https://github.com/pycqa/pydocstyle
+  rev: 6.3.0
+  hooks:
+  - id: pydocstyle
+- repo: local
+  hooks:
+  - id: confirm-reading
+    name: Confirm onboarding reading
+    entry: python scripts/confirm_reading.py
+    language: system
+    pass_filenames: false
+  - id: check-key-documents
+    name: Check key documents exist
+    entry: python scripts/check_key_documents.py
+    language: system
+    pass_filenames: false
