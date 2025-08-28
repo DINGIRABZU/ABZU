@@ -37,3 +37,22 @@ python -m agents.razar.runtime_manager config/razar_config.yaml
 `start_dev_agents.py` and `launch_servants.sh` call RAZAR before performing
 other work. You can override the configuration file by setting
 `RAZAR_CONFIG` in the environment.
+
+## Remote Agent Pipeline
+
+RAZAR can extend its capabilities at runtime by pulling helper agents from
+remote locations.  The :mod:`agents.razar.remote_loader` utility supports three
+strategies:
+
+1. **HTTP modules** – download a single Python file from an HTTP(S) endpoint,
+   load it with ``importlib`` and execute its ``configure()`` and ``patch()``
+   hooks.
+2. **Git repositories** – clone a repository via **GitPython** and load a
+   specified module path.
+3. **HTTP GPT services** – interact with a JSON API exposing ``/configure`` and
+   ``/patch`` routes using :mod:`requests`.
+
+Each agent's configuration and any patch suggestions are recorded in
+``logs/razar_remote_agents.json``.  The ``patch_on_test_failure`` helper will
+request a patch from a remote agent when tests fail, apply the returned diff in
+a sandbox and re-run the test suite before committing the change.
