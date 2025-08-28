@@ -15,7 +15,7 @@ import logging
 import logging.config
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, Iterable, List, Sequence
 
 import yaml
 
@@ -233,8 +233,15 @@ def show_status() -> tuple[str | None, str | None]:
     return emotion, layer
 
 
-def chat_loop(model_dir: str | Path = MODEL_PATH) -> None:
-    """Interactive chat with a local language model."""
+def chat_loop(
+    model_dir: str | Path = MODEL_PATH,
+    prompts: Iterable[str] | None = None,
+) -> None:
+    """Interactive chat with a local language model.
+
+    When ``prompts`` is provided, the iterator supplies user inputs instead of
+    reading from ``input()``.  This enables non‑interactive testing.
+    """
     if importlib.util.find_spec("transformers") is None:
         raise RuntimeError(
             "Chat requires the 'transformers' package. Install it with "
@@ -244,8 +251,15 @@ def chat_loop(model_dir: str | Path = MODEL_PATH) -> None:
     mdl, tok = model.load_model(model_dir)
     gen_model = mdl
     print("Enter 'exit' to quit.")
+    iterator = iter(prompts) if prompts is not None else None
     while True:
-        prompt = input("You: ")
+        if iterator is not None:
+            try:
+                prompt = next(iterator)
+            except StopIteration:
+                break
+        else:
+            prompt = input("You: ")
         if prompt.strip().lower() in {"exit", "quit"}:
             break
         inputs = tok(prompt, return_tensors="pt")
@@ -254,7 +268,7 @@ def chat_loop(model_dir: str | Path = MODEL_PATH) -> None:
         print(f"INANNA: {reply}")
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None, prompts: Iterable[str] | None = None) -> None:
     config_path = BASE_DIR.parent / "logging_config.yaml"
     if config_path.exists():
         with config_path.open("r", encoding="utf-8") as f:
@@ -291,11 +305,11 @@ def main() -> None:
         help="Path to the local model directory",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.command == "chat":
         try:
-            chat_loop(Path(args.model_dir))
+            chat_loop(Path(args.model_dir), prompts=prompts)
         except RuntimeError as exc:  # pragma: no cover - user feedback
             print(exc)
         return

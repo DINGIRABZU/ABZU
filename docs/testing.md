@@ -23,6 +23,19 @@ pip install -e .
 PYTHONPATH=src pytest
 ```
 
+## Handling interactive prompts
+
+Some modules expose command line chat loops that wait for `input()`.
+For automated tests, supply predetermined prompts or mock `input` so
+tests do not hang.  The `inanna_ai` CLI accepts a `prompts` iterable:
+
+```python
+from INANNA_AI_AGENT import inanna_ai
+inanna_ai.main(["chat"], prompts=["hello", "exit"])
+```
+
+Other interactive entry points should be skipped or patched similarly.
+
 ## Manual smoke tests
 
 ### Prioritized test tiers

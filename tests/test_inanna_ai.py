@@ -128,15 +128,7 @@ def test_chat_subparser(monkeypatch, capsys):
 
     monkeypatch.setattr(inanna_ai.model, "load_model", fake_load_model)
 
-    inputs = iter(["hello", "exit"])
-    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
-
-    argv_backup = sys.argv.copy()
-    sys.argv = ["INANNA_AI.py", "chat"]
-    try:
-        inanna_ai.main()
-    finally:
-        sys.argv = argv_backup
+    inanna_ai.main(["chat"], prompts=["hello", "exit"])
 
     out = capsys.readouterr().out
     assert "Quantum Ritual Boot" in out
@@ -162,15 +154,8 @@ def test_chat_model_dir_option(monkeypatch):
         return dummy_model, dummy_tokenizer
 
     monkeypatch.setattr(inanna_ai.model, "load_model", fake_load_model)
-    inputs = iter(["exit"])
-    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-    argv_backup = sys.argv.copy()
-    sys.argv = ["INANNA_AI.py", "chat", "--model-dir", "custom"]
-    try:
-        inanna_ai.main()
-    finally:
-        sys.argv = argv_backup
+    inanna_ai.main(["chat", "--model-dir", "custom"], prompts=["exit"])
 
     assert seen.get("path") == Path("custom")
 
