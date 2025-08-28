@@ -8,6 +8,33 @@ launches each service in priority order. By aligning this startup flow with the
 architecture outlined in the [System Blueprint](system_blueprint.md), RAZAR acts
 as the bootstrap agent that grounds ABZU in a coherent foundation.
 
+## Architecture
+
+The RAZAR agent coordinates multiple modules during startup. The diagram below
+highlights the primary interactions:
+
+```mermaid
+graph TD
+    BO[Boot Orchestrator] --> EB[Environment Builder]
+    BO --> RM[Runtime Manager]
+    RM --> HC[Health Checks]
+    RM --> QM[Quarantine Manager]
+    BO --> DS[Documentation Sync]
+    BO --> CP[Checkpoint Manager]
+    BO --> CL[Crown Link]
+    BO --> AO[Adaptive Orchestrator]
+    AO --> CP
+    BO --> PCP[Co-creation Planner]
+    PCP --> RM
+```
+
+Boot Orchestrator derives the launch order, invoking the Environment Builder to
+prepare isolated dependencies. The Runtime Manager starts services, running
+Health Checks and isolating failures through the Quarantine Manager.
+Documentation Sync, Checkpoint Manager, Crown Link, Adaptive Orchestrator, and
+Co-creation Planner provide additional coordination around the core boot flow.
+The Mermaid source lives at [assets/razar_architecture.mmd](assets/razar_architecture.mmd).
+
 ## Prioritized pytest runner
 
 `agents/razar/pytest_runner.py` executes repository tests grouped by priority
