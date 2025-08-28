@@ -7,6 +7,7 @@ Replace `<commit>` in each permalink with the desired commit hash to reference a
 |---|---|---|
 | CRYSTAL CODEX | Mission, architecture diagrams, and setup walkthrough | https://github.com/DINGIRABZU/ABZU/blob/<commit>/CRYSTAL_CODEX.md |
 | Repository README | High-level project overview and entry points | https://github.com/DINGIRABZU/ABZU/blob/<commit>/README.md |
+| The Absolute Protocol | Consolidated contribution rules and workflows | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/The_Absolute_Protocol.md |
 | System Blueprint | Overall system blueprint and component map | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/system_blueprint.md |
 | Architecture Overview | Component interactions and architectural layers | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/architecture_overview.md |
 | Setup Guide | Standard environment setup instructions | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/setup.md |

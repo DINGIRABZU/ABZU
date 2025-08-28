@@ -16,6 +16,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [How to Use](how_to_use.md)
 
 ## Development
+- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.0, updated 2025-08-28)
 - [Developer Etiquette](developer_etiquette.md)
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Checklist](development_checklist.md)
