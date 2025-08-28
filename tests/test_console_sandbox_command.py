@@ -7,6 +7,7 @@ import subprocess
 import types
 
 from cli import console_interface
+import cli.sandbox_helper as sandbox_helper
 
 
 class DummySession:
@@ -53,12 +54,12 @@ def _setup(monkeypatch, tmp_path, run_behavior):
     monkeypatch.setattr(console_interface, "_wait_for_glm_ready", lambda: object())
     monkeypatch.setattr(console_interface, "MoGEOrchestrator", lambda: object())
     monkeypatch.setattr(
-        console_interface,
+        sandbox_helper,
         "sandbox_session",
         types.SimpleNamespace(create_sandbox=fake_create, apply_patch=fake_apply),
     )
     monkeypatch.setattr(
-        console_interface,
+        sandbox_helper,
         "virtual_env_manager",
         types.SimpleNamespace(install_requirements=fake_install, run=fake_run),
     )

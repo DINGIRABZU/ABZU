@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-import subprocess
 import time
 from pathlib import Path
 
@@ -22,7 +21,10 @@ from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown
 from memory.search import query_all
 from rag.orchestrator import MoGEOrchestrator
-from tools import sandbox_session, session_logger, virtual_env_manager
+from tools import session_logger
+from .music_helper import play_music
+from .sandbox_helper import run_sandbox
+from .voice_clone_helper import clone_voice
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
@@ -104,31 +106,8 @@ def run_repl(argv: list[str] | None = None) -> None:
     speak = args.speak
     voice_clone: voice_cloner.VoiceCloner | None = None
 
-    def _play_music(prompt: str) -> None:
-        """Generate and play music for ``prompt``."""
-        try:
-            result = orch.route(
-                prompt,
-                {},
-                text_modality=False,
-                voice_modality=False,
-                music_modality=True,
-            )
-            music_path = result.get("music_path")
-            if not music_path:
-                print("No music generated.")
-                return
-            session_logger.log_audio(Path(music_path))
-            try:
-                speaking_engine.play_wav(music_path)
-            except Exception:  # pragma: no cover - playback may fail
-                logger.exception("music playback failed")
-            print(f"Music saved to {music_path}")
-        except Exception:  # pragma: no cover - generation may fail
-            logger.exception("music generation failed")
-
     if args.music:
-        _play_music(args.music)
+        play_music(orch, args.music)
         return
 
     session = PromptSession(history=FileHistory(str(HISTORY_FILE)))
@@ -158,59 +137,15 @@ def run_repl(argv: list[str] | None = None) -> None:
                 continue
             if command.startswith("/music"):
                 _, _, music_prompt = command.partition(" ")
-                if music_prompt:
-                    _play_music(music_prompt)
-                else:
-                    print("Usage: /music <prompt>")
+                play_music(orch, music_prompt)
                 continue
             if command.startswith("/clone-voice"):
                 _, _, sample_text = command.partition(" ")
-                try:
-                    voice_clone = voice_cloner.VoiceCloner()
-                    sample_path = Path("data/voice_sample.wav")
-                    out_path = Path("data/voice_clone.wav")
-                    voice_clone.capture_sample(sample_path)
-                    voice_clone.synthesize(
-                        sample_text or "Voice clone ready.", out_path
-                    )
-                    speaking_engine.play_wav(str(out_path))
-                    print("Cloned voice registered for future replies.")
-                except Exception as exc:
-                    logger.error("Voice cloning unavailable: %s", exc)
-                    voice_clone = None
+                voice_clone = clone_voice(sample_text)
                 continue
             if command.startswith("/sandbox"):
                 _, _, patch_path_str = command.partition(" ")
-                if not patch_path_str:
-                    print("Usage: /sandbox <patch-file>")
-                    continue
-                patch_file = Path(patch_path_str)
-                try:
-                    patch_text = patch_file.read_text()
-                except Exception as exc:
-                    logger.error("Unable to read patch file: %s", exc)
-                    continue
-                repo_root = Path(__file__).resolve().parents[1]
-                try:
-                    sandbox_root = sandbox_session.create_sandbox(
-                        repo_root, virtual_env_manager
-                    )
-                    sandbox_session.apply_patch(sandbox_root, patch_text)
-                    env = sandbox_root / ".venv"
-                    req_file = sandbox_root / "tests" / "requirements.txt"
-                    virtual_env_manager.install_requirements(env, req_file)
-                    try:
-                        result = virtual_env_manager.run(
-                            env, ["pytest"], cwd=sandbox_root
-                        )
-                        print(result.stdout)
-                        print("Sandbox tests passed.")
-                    except subprocess.CalledProcessError as exc:
-                        logger.error("%s", exc.stdout)
-                        logger.error("%s", exc.stderr)
-                        logger.error("Sandbox tests failed.")
-                except Exception as exc:
-                    logger.error("Sandbox error: %s", exc)
+                run_sandbox(patch_path_str)
                 continue
             print(f"Unknown command: {command}")
             continue
