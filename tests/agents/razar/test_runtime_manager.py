@@ -16,6 +16,7 @@ def test_runtime_manager_resume(failing_runtime, caplog):
     assert not (tmp_path / "gamma.txt").exists()
     state = json.loads((tmp_path / "run.state").read_text(encoding="utf-8"))
     assert state["last_component"] == "alpha"
+    assert state["history"] == ["alpha"]
     assert (quarantine_dir / "beta.json").exists()
 
     # Second run – fix beta command, reactivate and ensure resume
@@ -28,6 +29,7 @@ def test_runtime_manager_resume(failing_runtime, caplog):
     assert (tmp_path / "gamma.txt").exists()
     state = json.loads((tmp_path / "run.state").read_text(encoding="utf-8"))
     assert state["last_component"] == "gamma"
+    assert state["history"] == ["alpha", "beta", "gamma"]
     assert any("Starting component beta" in r.message for r in caplog.records)
 
 
@@ -46,4 +48,7 @@ def test_runtime_manager_skips_quarantined(failing_runtime, caplog):
     assert (tmp_path / "gamma.txt").exists()
     state = json.loads((tmp_path / "run.state").read_text(encoding="utf-8"))
     assert state["last_component"] == "gamma"
-    assert any("Skipping quarantined component beta" in r.message for r in caplog.records)
+    assert state["history"] == ["alpha", "gamma"]
+    assert any(
+        "Skipping quarantined component beta" in r.message for r in caplog.records
+    )

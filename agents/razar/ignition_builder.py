@@ -98,9 +98,9 @@ def build_ignition(system_blueprint: Path, output: Path) -> None:
         for comp in sorted(groups[priority], key=lambda c: c["order"]):
             health_check = comp["health_check"] or "-"
             lines.append(
-                f"| {comp['order']} | {comp['name']} | {health_check} | {DEFAULT_STATUS} |"
+                f"| {comp['order']} | {comp['name']} | {health_check} | "
+                f"{DEFAULT_STATUS} |",
             )
-        lines.append("")
 
     lines.extend(
         [
