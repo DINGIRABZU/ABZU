@@ -16,10 +16,13 @@ from __future__ import annotations
 import importlib.util
 import json
 import logging
-from pathlib import Path
+import os
 import shutil
+import subprocess
+import tempfile
+from pathlib import Path
 from types import ModuleType
-from typing import Any, Dict, Tuple, Protocol
+from typing import Any, Dict, Tuple, Protocol, Sequence
 
 from datetime import datetime
 
@@ -36,6 +39,8 @@ logger = logging.getLogger(__name__)
 CACHE_DIR = Path(__file__).resolve().parent / "_remote_cache"
 # Path to interaction log
 LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_remote_agents.json"
+# Project root for running tests and applying patches
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 class RemoteAgent(Protocol):  # pragma: no cover - typing helper
@@ -254,3 +259,69 @@ def load_remote_gpt_agent(
     _persist_log(name, config=config if config else None, suggestion=suggestion)
 
     return config, suggestion
+
+
+def _run_tests(test_paths: Sequence[Path], env: dict[str, str] | None = None) -> tuple[bool, str]:
+    """Run ``pytest`` for ``test_paths`` and return success flag and output."""
+
+    cmd = ["pytest", *map(str, test_paths)]
+    result = subprocess.run(
+        cmd,
+        cwd=str(PROJECT_ROOT),
+        text=True,
+        capture_output=True,
+        env=env,
+    )
+    output = result.stdout + result.stderr
+    return result.returncode == 0, output
+
+
+def _apply_patch(module_path: Path, patch_text: str, tests: Sequence[Path]) -> bool:
+    """Apply ``patch_text`` to ``module_path`` in a sandbox and run ``tests``."""
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        sandbox_root = Path(tmpdir)
+        rel = module_path.relative_to(PROJECT_ROOT)
+        target = sandbox_root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(patch_text, encoding="utf-8")
+
+        env = os.environ.copy()
+        env["PYTHONPATH"] = (
+            str(sandbox_root) + os.pathsep + env.get("PYTHONPATH", "")
+        )
+
+        ok, _ = _run_tests(tests, env)
+        if not ok:
+            return False
+
+        shutil.copy2(target, module_path)
+
+    ok, _ = _run_tests(tests)
+    return ok
+
+
+def patch_on_test_failure(
+    name: str,
+    url: str,
+    module_path: Path,
+    tests: Sequence[Path],
+    *,
+    refresh: bool = False,
+) -> bool:
+    """Run ``tests`` and request a patch from ``url`` when they fail."""
+
+    ok, output = _run_tests(tests)
+    if ok:
+        return True
+
+    _, _, suggestion = load_remote_agent(
+        name,
+        url,
+        refresh=refresh,
+        patch_context={"error": output, "module": str(module_path)},
+    )
+    if not isinstance(suggestion, str):
+        return False
+
+    return _apply_patch(module_path, suggestion, tests)
