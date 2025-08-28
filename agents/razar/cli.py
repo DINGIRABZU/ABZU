@@ -10,7 +10,7 @@ from typing import Iterator
 from memory import narrative_engine
 from agents.nazarick.ethics_manifesto import LAWS
 from agents.nazarick.trust_matrix import TrustMatrix
-from agents.razar import mission_logger
+from agents.razar import mission_logger, retro_bootstrap
 
 ROOT = Path(__file__).resolve().parents[2]
 LOG_PATH = ROOT / "logs" / "nazarick_story.log"
@@ -71,6 +71,14 @@ def _cmd_timeline(_: argparse.Namespace) -> None:
             f"{entry['timestamp']} {entry['event']} {entry['component']}: {entry['status']}{details}"
         )
 
+
+def _cmd_bootstrap(args: argparse.Namespace) -> None:
+    """Rebuild modules based on documentation references."""
+
+    if args.from_docs:
+        for path in retro_bootstrap.bootstrap_from_docs():
+            print(path)
+
 def build_parser() -> argparse.ArgumentParser:
     """Create the top level argument parser."""
 
@@ -89,6 +97,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     timeline_p = sub.add_parser("timeline", help="Show boot history")
     timeline_p.set_defaults(func=_cmd_timeline)
+
+    bootstrap_p = sub.add_parser("bootstrap", help="Rebuild modules")
+    bootstrap_p.add_argument(
+        "--from-docs",
+        action="store_true",
+        help="Reconstruct modules referenced in docs",
+    )
+    bootstrap_p.set_defaults(func=_cmd_bootstrap)
 
     return parser
 

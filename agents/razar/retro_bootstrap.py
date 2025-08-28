@@ -24,6 +24,18 @@ from . import planning_engine, module_builder
 _LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+\.py)\)")
 
 
+def _ensure_packages(base: Path, module_path: Path) -> None:
+    """Create ``__init__`` files for ``module_path`` relative to ``base``."""
+
+    current = module_path.parent
+    while True:
+        init_file = current / "__init__.py"
+        init_file.touch(exist_ok=True)
+        if current == base:
+            break
+        current = current.parent
+
+
 def _extract_module_names(text: str) -> List[str]:
     """Return module names referenced by markdown links in ``text``."""
 
@@ -98,6 +110,7 @@ def bootstrap_from_docs(
         rel = Path(str(spec.get("component", "")))
         target = workspace / rel
         target.parent.mkdir(parents=True, exist_ok=True)
+        _ensure_packages(workspace, target)
         shutil.move(str(built), target)
         generated.append(target)
     return generated
