@@ -77,6 +77,21 @@ the manager. Removing `logs/razar_state.json` forces a full restart sequence.
   ```
   Append notes to `docs/quarantine_log.md` for auditability.
 
+## Downtime and patching
+
+When CROWN flags a component for maintenance it sends a downtime request during
+the mission brief handshake. RAZAR coordinates the following sequence
+automatically via `razar.recovery_manager`:
+
+1. **Shutdown** – `request_shutdown(name)` writes an audit entry under
+   `recovery_state/` and instructs the component to stop.
+2. **Patch** – `apply_patch(name, info)` saves patch metadata so operators can
+   review what was applied.
+3. **Resume** – `resume(name)` records that the component has been restarted.
+
+Operators can inspect the JSON files in `recovery_state/` to confirm that the
+cycle completed and to gather details about the applied patch.
+
 ## Dependency audits
 
 Use `tools/dependency_audit.py` to ensure installed packages match the pinned
