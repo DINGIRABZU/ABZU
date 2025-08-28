@@ -2,10 +2,11 @@ from __future__ import annotations
 
 """Utilities for quarantining failing components.
 
-Components that fail during runtime are moved to the repository-level
-``quarantine`` directory and recorded in ``docs/quarantine_log.md``. Remote code
-agents may also submit diagnostic information which is appended to the log. A
-component remains quarantined until it is explicitly resolved or reactivated.
+Components that fail during runtime are moved to the repository‑level
+``quarantine`` directory and a human‑readable entry is appended to
+``docs/quarantine_log.md``.  Remote code agents may also submit diagnostic
+information which is recorded in the same Markdown log.  A component remains
+quarantined until it is explicitly resolved or reactivated.
 """
 
 from datetime import datetime
