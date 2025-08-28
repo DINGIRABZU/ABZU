@@ -10,6 +10,7 @@ from typing import Iterator
 from memory import narrative_engine
 from agents.nazarick.ethics_manifesto import LAWS
 from agents.nazarick.trust_matrix import TrustMatrix
+from agents.razar import mission_logger
 
 ROOT = Path(__file__).resolve().parents[2]
 LOG_PATH = ROOT / "logs" / "nazarick_story.log"
@@ -60,6 +61,16 @@ def _cmd_trust(args: argparse.Namespace) -> None:
     print(f"Trust: {info['trust']}")
     print(f"Protocol: {info['protocol']}")
 
+
+def _cmd_timeline(_: argparse.Namespace) -> None:
+    """Print the boot timeline from the mission log."""
+
+    for entry in mission_logger.timeline():
+        details = f" - {entry['details']}" if entry.get("details") else ""
+        print(
+            f"{entry['timestamp']} {entry['event']} {entry['component']}: {entry['status']}{details}"
+        )
+
 def build_parser() -> argparse.ArgumentParser:
     """Create the top level argument parser."""
 
@@ -75,6 +86,9 @@ def build_parser() -> argparse.ArgumentParser:
     trust_p = sub.add_parser("trust", help="Evaluate entity trust")
     trust_p.add_argument("entity", help="Entity name")
     trust_p.set_defaults(func=_cmd_trust)
+
+    timeline_p = sub.add_parser("timeline", help="Show boot history")
+    timeline_p.set_defaults(func=_cmd_timeline)
 
     return parser
 
