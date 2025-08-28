@@ -1,6 +1,6 @@
 # Nazarick Agents
 
-This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md), whose pre-creation mandate provisions a clean environment, launches components in priority order, and quarantines failures before handing control to these servants. Its handshake with the CROWN LLM and the servant models is detailed in the [RAZAR Agent](RAZAR_AGENT.md) guide. The layered vision behind these servants is detailed in the [Great Tomb of Nazarick](great_tomb_of_nazarick.md), which outlines objectives, channel hierarchy, tech stack, and chakra alignment. For narrative orchestration see the [Nazarick Narrative System](nazarick_narrative_system.md).
+This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md), whose pre-creation mandate provisions a clean environment, launches components in priority order, and quarantines failures before handing control to these servants. Its handshake with the CROWN LLM and the servant models is detailed in the [RAZAR Agent](RAZAR_AGENT.md) guide. The layered vision behind these servants is detailed in the [Great Tomb of Nazarick](great_tomb_of_nazarick.md), which outlines objectives, channel hierarchy, tech stack, and chakra alignment. The ethical covenant that binds them is captured in the [Nazarick Manifesto](nazarick_manifesto.md). For narrative orchestration see the [Nazarick Narrative System](nazarick_narrative_system.md).
 
 [Chat2DB](chat2db.md) bridges the SQLite log and vector store so agents can persist transcripts and retrieve relevant context.
 
@@ -111,4 +111,15 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
   node, data = gk.nearest_ritual_site(lon=0.2, lat=0.1)
   print(node, data)
   ```
+
+## Retro & Projection
+### Retro
+- Early servants lacked a shared handshake protocol, leading to fragmented
+  startup sequences.
+- Chakra assignments were once implied rather than explicitly mapped, causing
+  misaligned responsibilities.
+
+### Projection
+- Draft additional specs for emerging guardians and cross-link them here.
+- Automate agent registration to reflect real-time channel and chakra shifts.
 

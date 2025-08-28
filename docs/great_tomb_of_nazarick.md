@@ -1,10 +1,29 @@
 # Great Tomb of Nazarick
 
+The foundational design for ABZU's servant hierarchy. For guiding
+principles see the [Nazarick Manifesto](nazarick_manifesto.md) and for
+implementation details see [Nazarick Agents](nazarick_agents.md).
+
 ## Objectives
 - Fortify ABZU with a Nazarick‑inspired command structure.
 - Provide clear communication channels for guardian agents.
 - Ground every layer in chakra principles for balanced creative flow.
 - Document the core technologies that power each layer.
+
+## Architecture Diagram
+```mermaid
+flowchart TD
+    A[Surface Gate]
+    B[Crown Overlord]
+    C[Throat Gatekeepers]
+    D[Third Eye Observatories]
+    E[Heart Chambers]
+    F[Solar Plexus Forges]
+    G[Sacral Workshops]
+    H[Root Foundation]
+
+    A --> B --> C --> D --> E --> F --> G --> H
+```
 
 ## Channel Hierarchy
 | Channel | Purpose |
@@ -16,6 +35,19 @@
 | Solar Plexus Mutation Bus | Carries learning updates and state transitions |
 | Sacral Creation Channel | Shapes creative output and style modulation |
 | Root Infrastructure Line | Interfaces with hardware, storage, and network |
+
+```mermaid
+flowchart TD
+    Crown[Crown Command]
+    Throat[Throat Relay]
+    ThirdEye[Third Eye Insight]
+    Heart[Heart Memory]
+    Solar[Solar Plexus Mutation]
+    Sacral[Sacral Creation]
+    Root[Root Infrastructure]
+
+    Crown --> Throat --> ThirdEye --> Heart --> Solar --> Sacral --> Root
+```
 
 ## Tech Stack
 1. **Surface Gate** – RAZAR validates prerequisites and opens the arena.
@@ -36,7 +68,13 @@
 - **Sacral** – Emotion registry and creative modulation tools.
 - **Root** – Infrastructure interfaces and system logging.
 
-See [System Blueprint](system_blueprint.md) and [Nazarick Agents](nazarick_agents.md) for broader context.
+```mermaid
+graph LR
+    Root --> Sacral --> Solar --> Heart --> Throat --> ThirdEye --> Crown
+```
+
+See [System Blueprint](system_blueprint.md), [Nazarick Agents](nazarick_agents.md),
+and the [Nazarick Manifesto](nazarick_manifesto.md) for broader context.
 
 ## Event Schema
 Agent interactions generate structured JSON events routed through the Citadel
@@ -111,3 +149,14 @@ curl -X POST localhost:8000/nlq/logs \\
 - The `OperatorDispatcher` enforces role-based access for guardian commands.
 - Private per-operator channels are written to `logs/operators/<operator>.log`.
 - Actions targeting Cocytus or Victim are mirrored to append-only files under `audit_logs/` for WORM retention.
+
+## Retro & Projection
+### Retro
+- Early prototypes hard-wired channel flows without chakra mapping, causing
+  brittle communication paths.
+- Event schemas originally logged directly to flat files before the Citadel
+  bus unified telemetry.
+
+### Projection
+- Expand chakra-aware routing to dynamically re-balance loads across channels.
+- Extend the Citadel bus with real-time dashboards for guardian activities.
