@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Generate an index of Markdown documentation files."""
+
+from __future__ import annotations
 
 import os
 import re
@@ -10,6 +10,7 @@ from typing import List, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX_FILE = ROOT / "docs" / "INDEX.md"
+EXCLUDED_PARTS = {"node_modules", "dist", "build"}
 
 HEADING_RE = re.compile(r"^#\s+(.*)")
 MODULE_RE = re.compile(r"\[.*?\]\(([^)]+\.py)\)")
@@ -32,7 +33,7 @@ def collect_markdown_paths() -> List[Path]:
         path = (ROOT / Path(line)).resolve()
         if path == INDEX_FILE.resolve():
             continue
-        if "node_modules" in path.parts:
+        if any(part in EXCLUDED_PARTS for part in path.parts):
             continue
         paths.append(path)
     return sorted(paths)
