@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Iterator
 
 from memory import narrative_engine
+from agents.nazarick.ethics_manifesto import LAWS
+from agents.nazarick.trust_matrix import TrustMatrix
 
 ROOT = Path(__file__).resolve().parents[2]
 LOG_PATH = ROOT / "logs" / "nazarick_story.log"
@@ -40,6 +42,24 @@ def _cmd_narrative(_: argparse.Namespace) -> None:
         pass
 
 
+def _cmd_ethics(_: argparse.Namespace) -> None:
+    """Print the Nazarick manifesto laws."""
+
+    for idx, law in enumerate(LAWS, 1):
+        print(f"{idx}. {law.name}: {law.description}")
+
+
+def _cmd_trust(args: argparse.Namespace) -> None:
+    """Display trust score and protocol for ``args.entity``."""
+
+    matrix = TrustMatrix()
+    try:
+        info = matrix.evaluate_entity(args.entity)
+    finally:
+        matrix.close()
+    print(f"Trust: {info['trust']}")
+    print(f"Protocol: {info['protocol']}")
+
 def build_parser() -> argparse.ArgumentParser:
     """Create the top level argument parser."""
 
@@ -48,6 +68,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     narr_p = sub.add_parser("narrative", help="Stream narrative stories")
     narr_p.set_defaults(func=_cmd_narrative)
+
+    ethics_p = sub.add_parser("ethics", help="Show manifesto laws")
+    ethics_p.set_defaults(func=_cmd_ethics)
+
+    trust_p = sub.add_parser("trust", help="Evaluate entity trust")
+    trust_p.add_argument("entity", help="Entity name")
+    trust_p.set_defaults(func=_cmd_trust)
 
     return parser
 
