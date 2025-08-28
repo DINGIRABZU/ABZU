@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  qa:
+    name: Lint and Test
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: src
@@ -22,7 +23,7 @@ jobs:
           pip install -e .
       - name: Run pre-commit
         run: pre-commit run --all-files
-      - name: Run tests
+      - name: Run pytest
         run: pytest --junitxml=pytest.xml
       - name: Upload test artifacts
         if: always()

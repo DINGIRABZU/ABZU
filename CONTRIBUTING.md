@@ -50,14 +50,20 @@ the result:
 uv pip compile --no-deps pyproject.toml -o requirements.lock
 ```
 
-After upgrading dependencies, refresh pre-commit hooks and commit the updated
-`.pre-commit-config.yaml`:
+### Pre-commit Hooks
+
+Linting tools are pinned in `.pre-commit-config.yaml` for reproducibility. When
+dependencies change or on a regular cadence, refresh the hooks and commit the
+result:
 
 ```bash
 pre-commit autoupdate
 pre-commit run --files .pre-commit-config.yaml
 git add .pre-commit-config.yaml
 ```
+
+Create a separate commit (e.g. `chore: update pre-commit hooks`) so the update
+is easy to track.
 
 ## Coding Style
 
