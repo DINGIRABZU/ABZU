@@ -39,8 +39,13 @@ def run_tests(
     map_path: Path,
     log_path: Path,
     state_path: Path,
+    repo_root: Path,
 ) -> int:
-    """Run pytest on tests grouped by ``priorities``."""
+    """Run pytest on tests grouped by ``priorities``.
+
+    ``repo_root`` ensures ``pytest`` discovers the repository configuration and
+    allows resolving test paths regardless of the current working directory.
+    """
 
     priority_map = load_priority_map(map_path)
     selected = [p for p in PRIORITY_LEVELS if priorities is None or p in priorities]
@@ -63,9 +68,10 @@ def run_tests(
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
     for test in tests[start_index:]:
+        test_path = repo_root / test
         stream = StringIO()
         with contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
-            exit_code = pytest.main([test])
+            exit_code = pytest.main([str(test_path), f"--rootdir={repo_root}"])
         with log_path.open("a", encoding="utf-8") as fh:
             fh.write(f"=== {test} ===\n{stream.getvalue()}\n")
         if exit_code != 0:
@@ -96,7 +102,9 @@ def main(argv: Iterable[str] | None = None) -> int:
     map_path = repo_root / "tests" / "priority_map.yaml"
     log_path = repo_root / "logs" / "pytest_priority.log"
     state_path = repo_root / "logs" / "pytest_state.json"
-    return run_tests(args.priority, args.resume, map_path, log_path, state_path)
+    return run_tests(
+        args.priority, args.resume, map_path, log_path, state_path, repo_root
+    )
 
 
 if __name__ == "__main__":
