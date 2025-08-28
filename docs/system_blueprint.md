@@ -21,6 +21,7 @@ exhaustive module inventory.
   - [Project Overview](project_overview.md) – explains Spiral OS goals and scope
   - [Architecture Overview](architecture_overview.md) – shows how major components fit together
   - [Component Index](component_index.md) – inventory of modules and services
+  - [Module Execution Flow](module_execution_flow.md) – inputs, processing steps, outputs, and error paths for key modules
   - [Great Tomb of Nazarick](great_tomb_of_nazarick.md) – objectives, channel hierarchy, tech stack, and chakra alignment
 - **Chakra references**
   - [Chakra Overview](chakra_overview.md) – summarizes each layer’s role
