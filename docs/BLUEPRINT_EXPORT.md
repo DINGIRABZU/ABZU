@@ -27,7 +27,6 @@ Replace `<commit>` in each permalink with the desired commit hash to reference a
 
 ABZU’s dependencies and their relationships are documented separately:
 
-- [Dependencies](dependencies.md) — list of core packages and external services.
 - [Dependency Graph](dependency-graph.md) — visual map of module interactions.
 - [Dependency Risks](dependency_risks.md) — areas requiring extra review.
 
