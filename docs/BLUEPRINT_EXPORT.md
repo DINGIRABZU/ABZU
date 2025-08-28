@@ -35,7 +35,7 @@ These references help track how components rely on one another and make it easy 
 
 ## Feature Specs
 
-Design documents for individual capabilities:
+Design documents for individual capabilities. Each spec in `docs/features` must be referenced here with a permalink:
 
 - Example Feature — https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/features/example_feature.md
 
