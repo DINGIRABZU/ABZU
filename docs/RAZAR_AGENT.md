@@ -1,8 +1,12 @@
 # RAZAR Agent
 
-The RAZAR agent bootstraps local services in a controlled environment.  It
-creates a Python virtual environment, installs any component dependencies and
-then launches each component in priority order.
+## Vision
+
+The RAZAR agent bootstraps local services in a controlled environment. It
+creates a Python virtual environment, installs component dependencies, and
+launches each service in priority order. By aligning this startup flow with the
+architecture outlined in the [System Blueprint](system_blueprint.md), RAZAR acts
+as the bootstrap agent that grounds ABZU in a coherent foundation.
 
 ## Prioritized pytest runner
 
