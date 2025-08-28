@@ -4,7 +4,8 @@
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Index
-- [Documentation Index](docs/index.md)
+- [Documentation Index](docs/index.md) – curated starting points
+- [Full Documentation Inventory](docs/INDEX.md)
 - [Developer Onboarding](docs/developer_onboarding.md)
 - [Nazarick Agents](docs/nazarick_agents.md)
 - [Chakra Koan System](docs/chakra_koan_system.md)
@@ -14,7 +15,7 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - Review the [Blueprint Export](docs/BLUEPRINT_EXPORT.md) snapshot for versioned links to core documentation.
 - Walk through the [Onboarding Guide](docs/onboarding_guide.md) to rebuild or extend the system using those docs alone.
 
-For deeper background, consult the [CRYSTAL CODEX](CRYSTAL_CODEX.md) and the full [documentation index](docs/index.md).
+For deeper background, consult the [CRYSTAL CODEX](CRYSTAL_CODEX.md) and the [documentation inventory](docs/INDEX.md).
 
 ## JSON Schema Validation
 

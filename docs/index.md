@@ -1,6 +1,6 @@
 # Documentation Index
 
-Central resources for understanding and operating the project.
+Curated starting points for understanding and operating the project. For an exhaustive, auto-generated inventory of all documentation, see [INDEX.md](INDEX.md).
 
 ## Architecture
 - [Architecture Overview](architecture_overview.md)
