@@ -1,23 +1,15 @@
-# Map test modules to priority tiers for the RAZAR pytest runner.
-# Paths are relative to the repository root. Higher tiers run first to catch
-# critical failures quickly.
 P1:
   - tests/test_smoke_imports.py
   - tests/test_core_scipy_smoke.py
 P2:
   - tests/test_server.py
   - tests/test_api_endpoints.py
-  - tests/test_server_endpoints.py
 P3:
-  - tests/test_memory_store.py
-  - tests/memory/test_vector_memory.py
-  - tests/test_memory_persistence.py
+  - tests/test_learning.py
+  - tests/test_voice_config.py
 P4:
   - tests/test_music_generation.py
-  - tests/test_voice_avatar_pipeline.py
-  - tests/test_music_generation_emotion.py
+  - tests/test_dashboard_app.py
 P5:
-  - tests/test_video_stream.py
-  - tests/test_voice_cloner_cli.py
-  - tests/test_voice_conversion.py
-
+  - tests/test_orchestrator.py
+  - tests/test_rag_engine.py

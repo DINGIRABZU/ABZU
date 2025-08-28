@@ -45,7 +45,7 @@ files to tiers lives in `tests/priority_map.yaml`. Tiers run sequentially so
 critical smoke tests fail fast. Progress is persisted to `logs/pytest_state.json`
 so subsequent runs with `--resume` continue from the last failing test. Output
 from every run appends to `logs/pytest_priority.log`.  A minimal mapping looks
-like:
+like and can be expanded to include tiers `P3`–`P5`:
 
 ```yaml
 P1:
@@ -54,6 +54,15 @@ P1:
 P2:
   - tests/test_server.py
   - tests/test_api_endpoints.py
+P3:
+  - tests/test_learning.py
+  - tests/test_voice_config.py
+P4:
+  - tests/test_music_generation.py
+  - tests/test_dashboard_app.py
+P5:
+  - tests/test_orchestrator.py
+  - tests/test_rag_engine.py
 ```
 
 Run all tiers:
