@@ -1,47 +1,33 @@
-# RAZAR Runtime Manager
+# RAZAR Agent
 
-The **RAZAR** runtime manager prepares a lightweight environment for service
-components and launches them in a defined priority order. It ensures that each
-component's dependencies are installed in an isolated virtual environment and
-records progress so failed launches can resume from the last healthy component.
+The **RAZAR Agent** ignites ABZU before any servant awakens. It establishes a
+clean launch arena, manages isolated dependencies, and coordinates recovery when
+components falter. RAZAR’s mission spans three roles:
 
-## Environment Setup
-
-Dependencies for each component layer are listed in `razar_env.yaml`. When
-RAZAR runs it will:
-
-1. Create a virtual environment under `.razar_venv` if one does not already
-   exist.
-2. Install packages required by the targeted components.
-3. Update `PATH` and `VIRTUAL_ENV` so launched subprocesses inherit the
-   environment.
-
-The last successfully started component is written to
-`logs/razar_state.json`. This allows subsequent runs to resume from the point of
-failure rather than starting from scratch.
-
-## Quarantine Handling
-
-If a component fails to start or does not pass its health check, RAZAR invokes
-`agents.razar.quarantine_manager` to quarantine the component and its module
-path. Quarantined components are skipped on future runs.
+- **Pre‑creation igniter** – validates prerequisites, compiles the ignition
+  plan and lights the first spark for downstream agents.
+- **Virtual‑environment manager** – builds the per‑component environment defined
+  in `razar_env.yaml`, updates `PATH`/`VIRTUAL_ENV`, and records progress in
+  `logs/razar_state.json` so restarts resume from the last healthy step.
+- **Recovery coordinator** – performs health checks, quarantines failed modules
+  via `agents.razar.quarantine_manager`, and restarts services after repairs.
 
 ## Usage
 
-The runtime manager can be invoked directly:
+Invoke RAZAR directly to bootstrap components:
 
 ```bash
 python -m agents.razar.runtime_manager config/razar_config.yaml
 ```
 
 `start_dev_agents.py` and `launch_servants.sh` call RAZAR before performing
-other work. You can override the configuration file by setting
-`RAZAR_CONFIG` in the environment.
+other work. Override the configuration file by setting `RAZAR_CONFIG` in the
+environment.
 
 ## Remote Agent Pipeline
 
 RAZAR can extend its capabilities at runtime by pulling helper agents from
-remote locations.  The :mod:`agents.razar.remote_loader` utility supports three
+remote locations. The :mod:`agents.razar.remote_loader` utility supports three
 strategies:
 
 1. **HTTP modules** – download a single Python file from an HTTP(S) endpoint,
@@ -53,6 +39,6 @@ strategies:
    ``/patch`` routes using :mod:`requests`.
 
 Each agent's configuration and any patch suggestions are recorded in
-``logs/razar_remote_agents.json``.  The ``patch_on_test_failure`` helper will
+``logs/razar_remote_agents.json``. The ``patch_on_test_failure`` helper will
 request a patch from a remote agent when tests fail, apply the returned diff in
 a sandbox and re-run the test suite before committing the change.

@@ -21,7 +21,7 @@ interlock.
   - [Chakra Architecture](chakra_architecture.md) – maps responsibilities and heat zones
   - [Per‑chakra guides](root_chakra_overview.md) – deep dives into individual layers
 - **Agent ecosystem**
-  - [RAZAR Agent](RAZAR_AGENT.md) – pre-creation mandate, priority boot order with health checks and quarantine, and a handshake with the CROWN LLM and servant models
+- [RAZAR Agent](RAZAR_AGENT.md) – pre‑creation igniter, virtual‑environment manager, and recovery coordinator
   - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
   - [ALBEDO Layer](ALBEDO_LAYER.md) – persona modules and archetypal behavior hooks
   - [Persona API Guide](persona_api_guide.md) – conventions for persona profiles and hooks
@@ -133,9 +133,10 @@ the [Error Registry](error_registry.md) and the
 ### RAZAR: Pre‑Creation Agent
 
 RAZAR awakens before any chakra layer, preparing the arena for creation. As
-the pre‑creation agent it verifies prerequisites, builds the isolated
-environment, and compiles the ignition plan that guides the rest of the
-stack.
+the system’s pre‑creation igniter it verifies prerequisites and compiles the
+ignition plan that guides the rest of the stack. Acting simultaneously as the
+virtual‑environment manager and recovery coordinator, RAZAR builds the isolated
+environment and orchestrates restart or quarantine when components fail.
 
 ### RAZAR Module Suite
 
