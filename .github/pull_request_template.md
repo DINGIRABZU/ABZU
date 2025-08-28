@@ -10,6 +10,9 @@ below.
 ## Linked issue/feature spec
 <!-- Required: link to the relevant issue, documentation, or feature spec. -->
 
+## Action summary
+<!-- Required: I did X on Y to obtain Z, expecting behavior B. -->
+
 ## Checklist
 - [ ] Tests run <!-- Required: list tests run, e.g., `pytest` -->
 - [ ] Docs updated <!-- Required: describe updates or state 'N/A' -->
