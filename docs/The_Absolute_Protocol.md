@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.2
-**Last updated:** 2025-08-28
+**Version:** v1.0.3
+**Last updated:** 2025-08-29
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -48,6 +48,13 @@ Updates to this protocol follow a lightweight governance model:
 2. **Implementation** – Submit a pull request referencing the issue and label it `Protocol Update` to surface review.
 3. **Review** – Core maintainers discuss the proposal, request revisions, and approve when consensus is reached.
 4. **Versioning** – Upon merge, update the version and last‑updated date at the top of this file and document the change in the repository changelog.
+
+### Change Justification
+Every proposal must include a statement formatted as:
+
+"I did X on Y to obtain Z, expecting behavior B."
+
+This justification clarifies the action taken, the context, the observed result, and the intended outcome.
 
 This process ensures the protocol evolves transparently and stays in sync with repository practices.
 
