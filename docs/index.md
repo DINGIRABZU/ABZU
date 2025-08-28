@@ -5,6 +5,10 @@ Central resources for understanding and operating the project.
 ## Architecture
 - [Architecture Overview](architecture_overview.md)
 - [Detailed Architecture](architecture.md)
+## Nazarick
+- [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
+- [Nazarick Manifesto](nazarick_manifesto.md)
+- [Nazarick Agents](nazarick_agents.md)
 ## Setup
 - [Setup Guide](setup.md)
 ## Usage
