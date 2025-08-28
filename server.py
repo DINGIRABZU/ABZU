@@ -57,6 +57,7 @@ from crown_config import settings
 from glm_shell import send_command
 from communication.floor_channel_socket import socket_app
 from nlq_api import router as nlq_router
+from operator_api import router as operator_router
 
 logger = logging.getLogger(__name__)
 
@@ -176,6 +177,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
 app.include_router(nlq_router)
+app.include_router(operator_router)
 
 Instrumentator().instrument(app).expose(app)
 app.mount("/ws", socket_app)

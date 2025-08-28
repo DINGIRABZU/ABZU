@@ -85,4 +85,19 @@ def query_db(prompt: str) -> List[Dict[str, Any]]:
     return rows
 
 
-__all__ = ["query_db"]
+def query_logs(prompt: str, db_path: str | Path | None = None) -> List[Dict[str, Any]]:
+    """Query a log database using a natural language ``prompt``.
+
+    The function connects Vanna to the SQLite database at ``db_path`` (defaults
+    to ``logs/events.db``) before delegating to :func:`query_db`.
+    """
+
+    if getattr(vanna, "__stub__", False):  # pragma: no cover - optional dep
+        raise RuntimeError("vanna library is not installed")
+
+    db = Path(db_path) if db_path is not None else Path("logs/events.db")
+    vanna.connect_to_sqlite(str(db))  # type: ignore[attr-defined]
+    return query_db(prompt)
+
+
+__all__ = ["query_db", "query_logs"]
