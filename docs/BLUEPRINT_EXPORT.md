@@ -31,3 +31,10 @@ ABZU’s dependencies and their relationships are documented separately:
 - [Dependency Risks](dependency_risks.md) — areas requiring extra review.
 
 These references help track how components rely on one another and make it easy to audit changes across the system.
+
+## Feature Specs
+
+Design documents for individual capabilities:
+
+- Example Feature — https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/features/example_feature.md
+

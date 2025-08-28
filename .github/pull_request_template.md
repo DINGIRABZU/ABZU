@@ -13,3 +13,4 @@ below.
 ## Checklist
 - [ ] Tests run <!-- Required: list tests run, e.g., `pytest` -->
 - [ ] Docs updated <!-- Required: describe updates or state 'N/A' -->
+- [ ] Feature spec reviewed and referenced
