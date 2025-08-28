@@ -6,11 +6,42 @@ and restart behaviour without touching real project paths.
 
 from __future__ import annotations
 
-import yaml
+import sys
+import types
+
 import pytest
+import yaml
+
+# ``agents.guardian`` and ``agents.cocytus`` perform heavy imports and create a
+# circular dependency with ``agents.razar``. Provide minimal stubs so the runtime
+# manager can be imported in isolation during tests.
+guardian = types.ModuleType("agents.guardian")
+
+
+def run_validated_task(*args, **kwargs):  # pragma: no cover - test stub
+    task = kwargs.get("task")
+    return task(*args, **kwargs) if callable(task) else None
+
+
+guardian.run_validated_task = run_validated_task
+sys.modules.setdefault("agents.guardian", guardian)
+
+cocytus_pkg = types.ModuleType("agents.cocytus")
+cocytus_pkg.__path__ = []
+sys.modules.setdefault("agents.cocytus", cocytus_pkg)
+
+prompt = types.ModuleType("agents.cocytus.prompt_arbiter")
+
+
+def arbitrate(*_args, **_kwargs):  # pragma: no cover - test stub
+    return None
+
+
+prompt.arbitrate = arbitrate
+sys.modules.setdefault("agents.cocytus.prompt_arbiter", prompt)
 
 from agents.razar.runtime_manager import RuntimeManager
-from agents.razar import quarantine_manager as qm
+import agents.razar.quarantine_manager as qm
 
 
 def _touch_cmd(path: str) -> str:

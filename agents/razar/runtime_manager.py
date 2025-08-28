@@ -3,15 +3,14 @@
 This module ensures a Python virtual environment exists and uses it to
 sequentially start system components based on their priority. Component
 dependencies are resolved from ``razar_env.yaml`` and installed into the
-managed environment.  Progress is logged and the last successfully started
-component is cached in ``logs/razar_state.json`` so the manager can resume from
-that point after a failure.  Components that fail their startup command or a
-subsequent health check are quarantined via ``quarantine_manager``.
+managed environment.  Every successful component launch is recorded in
+``logs/razar_state.json`` so the manager can resume from the most recent
+healthy component after a failure.  Components that fail their startup command
+or a subsequent health check are quarantined via ``quarantine_manager``.
 """
 
 from __future__ import annotations
 
-import json
 import logging
 import os
 import subprocess
@@ -47,7 +46,9 @@ class RuntimeManager:
         # ``razar_env.yaml`` lives at the repository root and lists dependencies
         # for each component layer.  Allow ``env_path`` to be overridden for
         # tests but default to the project-level file.
-        self.env_path = env_path or Path(__file__).resolve().parents[2] / "razar_env.yaml"
+        self.env_path = (
+            env_path or Path(__file__).resolve().parents[2] / "razar_env.yaml"
+        )
 
     # ------------------------------------------------------------------
     # Virtual environment handling
@@ -132,7 +133,9 @@ class RuntimeManager:
         components = config.get("components", [])
         return sorted(components, key=lambda c: int(c.get("priority", 0)))
 
-    def _starting_index(self, components: Iterable[Dict[str, object]], last: str) -> int:
+    def _starting_index(
+        self, components: Iterable[Dict[str, object]], last: str
+    ) -> int:
         if not last:
             return 0
         for idx, comp in enumerate(components):
