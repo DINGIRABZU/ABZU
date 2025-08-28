@@ -97,3 +97,13 @@ python agents/razar/pytest_runner.py --resume
 - Missing pytest plugins such as `pytest-cov` will cause command-line options errors. Install required dev dependencies.
 - Duplicate or conflicting test module names can trigger collection errors like "import file mismatch". Remove `__pycache__` files or rename tests to be unique.
 - ImportError during test collection often indicates missing runtime dependencies or incorrect module paths. Verify imports such as `core.load_config` exist or adjust `PYTHONPATH`.
+- Repeated failures tied to a specific service cause RAZAR to quarantine the component and skip dependent tests. Review `logs/razar.log` and [`quarantine_log.md`](quarantine_log.md) for details and run the scripts in [diagnostics.md](diagnostics.md) before retrying.
+
+### Quarantine and Diagnostics
+Use RAZAR's quarantine manager to isolate components that consistently fail:
+
+```bash
+python -m razar.quarantine_manager quarantine <component>
+```
+
+The component's metadata moves to `quarantine/` and an entry records the action in [`quarantine_log.md`](quarantine_log.md). Employ the utilities listed in [diagnostics.md](diagnostics.md) to analyze missing dependencies or corrupted state. Once resolved, follow the [Recovery Playbook](recovery_playbook.md) to restore service and consult [developer_onboarding.md](developer_onboarding.md) for environment rebuild tips.
