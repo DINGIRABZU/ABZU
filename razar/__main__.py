@@ -31,7 +31,7 @@ def _cmd_stop(args: argparse.Namespace) -> None:
 
 
 def _cmd_build_ignition(args: argparse.Namespace) -> None:
-    build_ignition(Path(args.blueprint), Path(args.output))
+    build_ignition(Path(args.registry), Path(args.output), state=Path(args.state))
 
 
 def _cmd_timeline(_: argparse.Namespace) -> None:
@@ -96,12 +96,18 @@ def main() -> None:  # pragma: no cover - CLI entry point
     p_stop.set_defaults(func=_cmd_stop)
 
     p_ignition = sub.add_parser(
-        "build-ignition", help="Regenerate docs/Ignition.md from the blueprint"
+        "build-ignition",
+        help="Regenerate docs/Ignition.md from the component registry",
     )
     p_ignition.add_argument(
-        "--blueprint",
-        default=Path(__file__).resolve().parents[1] / "docs" / "system_blueprint.md",
-        help="Path to system_blueprint.md",
+        "--registry",
+        default=Path(__file__).resolve().parents[1] / "docs" / "component_priorities.yaml",
+        help="Path to component priority registry",
+    )
+    p_ignition.add_argument(
+        "--state",
+        default=Path(__file__).resolve().parents[1] / "logs" / "razar_state.json",
+        help="Path to boot state file",
     )
     p_ignition.add_argument(
         "--output",

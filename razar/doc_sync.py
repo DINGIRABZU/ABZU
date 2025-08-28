@@ -144,7 +144,7 @@ def update_component_docs() -> None:
 def sync_docs() -> None:
     """Regenerate ignition docs, blueprint and component inventory."""
 
-    build_ignition(BLUEPRINT_PATH, IGNITION_PATH)
+    build_ignition(PRIORITY_PATH, IGNITION_PATH, state=ROOT / "logs" / "razar_state.json")
     try:
         bus = LifecycleBus()
         statuses = bus.get_statuses()
