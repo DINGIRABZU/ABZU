@@ -114,6 +114,11 @@ PY
           pip install -e .
           pip install mypy
 
+      - name: Verify docs index
+        run: |
+          python tools/doc_indexer.py
+          git diff --exit-code docs/INDEX.md
+
       - name: Mypy
         run: mypy
 
