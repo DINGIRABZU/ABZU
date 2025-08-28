@@ -26,6 +26,24 @@ patch through `agents.razar.mission_logger`. Entries are written as JSON lines
 to `logs/razar.log`. Operators can run `razar timeline` to reconstruct the boot
 history or `python -m razar.mission_logger summary` to list pending steps.
 
+## Pytest Priority Runner
+
+RAZAR includes a lightweight test harness that executes repository tests in
+priority order.  Test modules are grouped into tiers `P1` through `P5` in
+`tests/priority_map.yaml` with `P1` running first.  Invoke the runner with:
+
+```bash
+python agents/razar/pytest_runner.py
+```
+
+Output from each module is appended to `logs/pytest_priority.log`. When a test
+fails its path is stored in `logs/pytest_state.json` so rerunning with
+`--resume` continues from that point:
+
+```bash
+python agents/razar/pytest_runner.py --resume
+```
+
 ## Crown Handshake
 
 Before the boot cycle, RAZAR sends a `mission_brief` to the CROWN LLM via `agents/razar/crown_handshake.py`. CROWN replies with available capabilities and readiness confirmation. During startup and after a failure, RAZAR contacts the relevant servant models and the CROWN LLM through `agents/razar/crown_link.py` to request patches or acknowledge health.
