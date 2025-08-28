@@ -40,6 +40,8 @@ pyopenssl==25.1.0
     # via spiral-os (pyproject.toml)
 pytest==8.4.1
     # via spiral-os (pyproject.toml)
+pytest-cov==5.0.0
+    # via spiral-os (pyproject.toml)
 python-json-logger==3.3.0
     # via spiral-os (pyproject.toml)
 pyyaml==6.0.2
