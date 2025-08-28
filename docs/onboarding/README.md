@@ -1,9 +1,9 @@
 # Onboarding Checklist
 
-Follow this reading order before contributing:
+Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onboarding_confirm.yml` at the repository root.
 
-1. [Project Brief](../PROJECT_BRIEF.md)
-2. [Architecture Overview](../ARCHITECTURE_OVERVIEW.md)
+1. [Project Overview](../project_overview.md)
+2. [Architecture Overview](../architecture_overview.md)
 3. [The Absolute Protocol](../The_Absolute_Protocol.md)
 4. Module-specific guides relevant to your work:
    - [Vector Memory](../vector_memory.md)
@@ -19,3 +19,4 @@ When submitting a pull request, ensure you can check:
 
 - [ ] [AGENTS.md](../AGENTS.md) instructions followed
 - [ ] [The Absolute Protocol](../The_Absolute_Protocol.md) consulted
+- [ ] `onboarding_confirm.yml` updated
