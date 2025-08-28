@@ -182,16 +182,38 @@ class RuntimeManager:
                     result.returncode,
                     result.stdout,
                 )
+                reason = f"exit code {result.returncode}"
                 quarantine_manager.quarantine_component(
                     comp,
-                    f"exit code {result.returncode}",
+                    reason,
                     diagnostics={"output": result.stdout},
                 )
+                module_path = (
+                    comp.get("module_path")
+                    or comp.get("path")
+                    or comp.get("module")
+                )
+                if module_path:
+                    try:
+                        quarantine_manager.quarantine_module(module_path, reason)
+                    except Exception as exc:  # pragma: no cover - defensive
+                        logger.error("Module quarantine failed for %s: %s", module_path, exc)
                 return False
 
             if not health_checks.run(str(name)):
                 logger.error("Health check failed for %s", name)
-                quarantine_manager.quarantine_component(comp, "health check failed")
+                reason = "health check failed"
+                quarantine_manager.quarantine_component(comp, reason)
+                module_path = (
+                    comp.get("module_path")
+                    or comp.get("path")
+                    or comp.get("module")
+                )
+                if module_path:
+                    try:
+                        quarantine_manager.quarantine_module(module_path, reason)
+                    except Exception as exc:  # pragma: no cover - defensive
+                        logger.error("Module quarantine failed for %s: %s", module_path, exc)
                 return False
 
             logger.info("Component %s started successfully", name)

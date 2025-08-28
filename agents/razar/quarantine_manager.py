@@ -113,7 +113,14 @@ def quarantine_module(path: str | Path, reason: str) -> Path:
         raise FileNotFoundError(src)
     target = QUARANTINE_DIR / src.name
     shutil.move(str(src), target)
-    _append_log(src.name, "quarantined", reason)
+    metadata = {
+        "name": src.name,
+        "original_path": str(src),
+        "reason": reason,
+        "quarantined_at": datetime.utcnow().isoformat(),
+    }
+    _write_metadata(src.name, metadata)
+    _append_log(src.name, "quarantined", f"{reason}; moved from {src}")
     emit_event(
         "razar",
         "module_quarantined",
