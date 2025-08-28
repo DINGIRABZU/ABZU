@@ -1,7 +1,10 @@
 import json
 import logging
 
-from agents.razar import quarantine_manager as qm
+import yaml
+
+from agents.razar import health_checks, quarantine_manager as qm
+from agents.razar.runtime_manager import RuntimeManager
 
 
 def test_runtime_manager_resume(failing_runtime, caplog):
@@ -52,3 +55,44 @@ def test_runtime_manager_skips_quarantined(failing_runtime, caplog):
     assert any(
         "Skipping quarantined component beta" in r.message for r in caplog.records
     )
+
+
+def _touch_cmd(path: str) -> str:
+    return f"python -c \"import pathlib; pathlib.Path('{path}').touch()\""
+
+
+def test_runtime_manager_health_check_quarantine(tmp_path, monkeypatch):
+    quarantine_dir = tmp_path / "quarantine"
+    log_file = tmp_path / "log.md"
+    monkeypatch.setattr(qm, "QUARANTINE_DIR", quarantine_dir)
+    monkeypatch.setattr(qm, "LOG_FILE", log_file)
+
+    module_path = tmp_path / "delta.py"
+    module_path.write_text("print('x')", encoding="utf-8")
+
+    config = {
+        "components": [
+            {
+                "name": "delta",
+                "priority": 1,
+                "command": _touch_cmd(tmp_path / "delta.txt"),
+                "module_path": str(module_path),
+            }
+        ]
+    }
+    cfg = tmp_path / "cfg.yaml"
+    cfg.write_text(yaml.safe_dump(config), encoding="utf-8")
+
+    manager = RuntimeManager(cfg, state_path=tmp_path / "state.json", venv_path=tmp_path / "venv")
+    # Avoid slow environment creation
+    monkeypatch.setattr(RuntimeManager, "ensure_venv", lambda self, deps=None: None)
+
+    monkeypatch.setattr(health_checks, "run", lambda name: False)
+    success = manager.run()
+    assert not success
+    # component metadata
+    assert (quarantine_dir / "delta.json").exists()
+    # module moved
+    assert (quarantine_dir / "delta.py").exists()
+    meta = json.loads((quarantine_dir / "delta.py.json").read_text(encoding="utf-8"))
+    assert meta["reason"] == "health check failed"

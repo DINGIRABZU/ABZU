@@ -56,6 +56,15 @@ reconstruct the boot history and identify failures chronologically, run:
 python -m razar timeline
 ```
 
+## Quarantine log
+
+Components that repeatedly fail their health checks are quarantined by the
+runtime manager. The affected module is moved under the repository-level
+`quarantine/` directory and an entry is appended to
+`docs/quarantine_log.md` with the failure reason and timestamp. Remove the
+corresponding JSON file and add a `resolved` line to the log once the component
+has been fixed.
+
 ## Status dashboard
 
 Use the status dashboard for a quick snapshot of the current boot attempt and

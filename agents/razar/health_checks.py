@@ -115,17 +115,36 @@ def check_crown_ready() -> bool:
     return ready_signal(f"http://localhost:{port}/ready")
 
 
+def check_memory_store_ready() -> bool:
+    """Ping the memory store service."""
+
+    port = os.getenv("MEMORY_STORE_PORT", "8900")
+    return ping_endpoint(f"http://localhost:{port}/health")
+
+
+def check_chat_gateway_ready() -> bool:
+    """Confirm chat gateway reports readiness."""
+
+    port = os.getenv("CHAT_GATEWAY_PORT", "8800")
+    return ready_signal(f"http://localhost:{port}/ready")
+
+
 CHECKS: Dict[str, Callable[[], bool]] = {
     "basic_service": check_basic_service,
     "complex_service": check_complex_service,
     "inanna_ai": check_inanna_ready,
     "crown_llm": check_crown_ready,
+    "memory_store": check_memory_store_ready,
+    "chat_gateway": check_chat_gateway_ready,
 }
 
 
 RESTART_COMMANDS: Dict[str, List[str]] = {
     "inanna_ai": ["bash", "run_inanna.sh"],
     "crown_llm": ["bash", "crown_model_launcher.sh"],
+    # Additional restart helpers for common services
+    "memory_store": ["bash", "start_memory_store.sh"],
+    "chat_gateway": ["bash", "start_chat_gateway.sh"],
 }
 
 
@@ -135,6 +154,8 @@ THRESHOLDS: Dict[str, float] = {
     "complex_service": 0.5,
     "inanna_ai": 1.0,
     "crown_llm": 1.0,
+    "memory_store": 0.5,
+    "chat_gateway": 0.5,
 }
 
 
