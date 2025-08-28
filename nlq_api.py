@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from fastapi import APIRouter
 
-from agents.vanna_data import query_db
+from agents.vanna_data import query_db, query_logs
 from core.utils.optional_deps import lazy_import
 
 router = APIRouter()
@@ -32,6 +32,15 @@ async def nlq_query(data: dict[str, str]) -> dict[str, object]:
     """Execute a natural language query against the database."""
     prompt = data.get("query", "")
     rows = query_db(prompt) if prompt else []
+    return {"rows": rows}
+
+
+@router.post("/nlq/logs")
+async def nlq_logs(data: dict[str, str]) -> dict[str, object]:
+    """Execute a natural language query against the log database."""
+    prompt = data.get("query", "")
+    db_path = data.get("db")
+    rows = query_logs(prompt, db_path=db_path) if prompt else []
     return {"rows": rows}
 
 

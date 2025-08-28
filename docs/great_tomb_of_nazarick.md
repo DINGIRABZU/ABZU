@@ -94,3 +94,20 @@ MATCH (a1:Agent)-[:EMITTED]->(e:Event)<-[:EMITTED]-(a2:Agent)
 RETURN a1.agent_id AS source, a2.agent_id AS collaborator, COUNT(e) AS interactions
 ORDER BY interactions DESC;
 ```
+
+## API Endpoints
+- `POST /nlq` – query databases using Vanna AI.
+- `POST /nlq/logs` – natural language queries against log data via the self-hosted Vanna service.
+- `POST /operator/command` – dispatch operator commands with access controls and logging.
+
+## NLQ Examples
+```bash
+curl -X POST localhost:8000/nlq/logs \\
+     -H 'Content-Type: application/json' \\
+     -d '{"query":"list all failed logins today"}'
+```
+
+## Security Model
+- The `OperatorDispatcher` enforces role-based access for guardian commands.
+- Private per-operator channels are written to `logs/operators/<operator>.log`.
+- Actions targeting Cocytus or Victim are mirrored to append-only files under `audit_logs/` for WORM retention.
