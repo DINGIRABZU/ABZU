@@ -11,10 +11,12 @@ These documents define repository-wide conventions and rules. Repository policy 
 
 ## Onboarding Confirmation
 
-After completing the [onboarding checklist](onboarding/README.md), create a `.reading_complete` file in the repository root:
+After completing the [onboarding checklist](onboarding/README.md), create an `onboarding_confirm.yml` file in the repository root that records the hash of each required document:
 
-```bash
-touch .reading_complete
+```yaml
+documents:
+  docs/architecture_overview.md: <sha256>
+  docs/The_Absolute_Protocol.md: <sha256>
 ```
 
-A pre-commit hook blocks commits until this marker exists.
+The `confirm-reading` pre-commit hook verifies this file and blocks commits if any listed document changes.
