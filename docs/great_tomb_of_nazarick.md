@@ -37,3 +37,24 @@
 - **Root** – Infrastructure interfaces and system logging.
 
 See [System Blueprint](system_blueprint.md) and [Nazarick Agents](nazarick_agents.md) for broader context.
+
+## Event Schema
+Agent interactions generate structured JSON events routed through the Citadel
+bus. Each event contains the following fields:
+
+| Field | Description |
+| --- | --- |
+| `agent_id` | Identifier of the emitting agent |
+| `event_type` | Action being recorded |
+| `payload` | Arbitrary metadata for the event |
+| `timestamp` | UTC time the event was created |
+
+## Event Pipeline
+1. Agents call `emit_event` which publishes the JSON payload to Redis or
+   Kafka depending on deployment settings.
+2. The FastAPI processor (`citadel.event_processor`) consumes these streams and
+   persists them to two backends:
+   - **TimescaleDB** for temporal queries over the `agent_events` table.
+   - **Neo4j** for relational exploration of agent interactions.
+3. Downstream services can query either store to reconstruct the activity
+   history of the Great Tomb.

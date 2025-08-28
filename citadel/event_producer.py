@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, Optional
 
 
 @dataclass
@@ -14,7 +14,7 @@ class Event:
 
     agent_id: str
     event_type: str
-    payload: dict
+    payload: Dict[str, Any]
     timestamp: datetime = field(default_factory=datetime.utcnow)
 
     def to_json(self) -> str:
