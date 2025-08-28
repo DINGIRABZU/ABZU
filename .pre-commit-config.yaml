@@ -18,3 +18,10 @@ repos:
     rev: 6.3.0
     hooks:
       - id: pydocstyle
+  - repo: local
+    hooks:
+      - id: check-key-documents
+        name: Check key documents exist
+        entry: python scripts/check_key_documents.py
+        language: system
+        pass_filenames: false

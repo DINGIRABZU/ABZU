@@ -1,0 +1,5 @@
+# List of key files that must always exist
+files:
+  - AGENTS.md
+  - docs/The_Absolute_Protocol.md
+  - docs/KEY_DOCUMENTS.md
