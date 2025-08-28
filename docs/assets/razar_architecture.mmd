@@ -1,0 +1,12 @@
+graph TD
+    BO[Boot Orchestrator] --> EB[Environment Builder]
+    BO --> RM[Runtime Manager]
+    RM --> HC[Health Checks]
+    RM --> QM[Quarantine Manager]
+    BO --> DS[Documentation Sync]
+    BO --> CP[Checkpoint Manager]
+    BO --> CL[Crown Link]
+    BO --> AO[Adaptive Orchestrator]
+    AO --> CP
+    BO --> PCP[Co-creation Planner]
+    PCP --> RM
