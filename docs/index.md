@@ -22,3 +22,4 @@ Curated starting points for understanding and operating the project. For an exha
 - [Documentation Protocol](documentation_protocol.md)
 - [Onboarding Guide](onboarding_guide.md) (v1.0.0, updated 2025-08-28)
 - [Feature Specifications](features/README.md)
+- [Example Feature](features/example_feature.md)
