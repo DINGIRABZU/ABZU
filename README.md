@@ -11,8 +11,8 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Chakra Version Manifest](docs/chakra_versions.json)
 
 ## Start Here
-- Review the [Blueprint Export](docs/BLUEPRINT_EXPORT.md) for versioned links to core documentation.
-- Walk through the [Developer Onboarding Guide](docs/onboarding_guide.md) to rebuild or extend the system using those docs alone.
+- Review the [Blueprint Export](docs/BLUEPRINT_EXPORT.md) snapshot for versioned links to core documentation.
+- Walk through the [Onboarding Guide](docs/onboarding_guide.md) to rebuild or extend the system using those docs alone.
 
 For deeper background, consult the [CRYSTAL CODEX](CRYSTAL_CODEX.md) and the full [documentation index](docs/index.md).
 
