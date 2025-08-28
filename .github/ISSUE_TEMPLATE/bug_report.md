@@ -26,6 +26,10 @@ A clear and concise description of what you expected to happen.
 
 What actually happened when running the steps above. Include any error messages or unexpected results.
 
+## Debug logs/Stack trace
+
+Attach or link to any relevant log output or stack traces. Use gists, Pastebin, or file attachments for lengthy logs.
+
 ## Screenshots
 
 If applicable, add screenshots to help explain your problem.
@@ -39,9 +43,9 @@ Provide detailed information to help reproduce the issue:
 - Python version: [e.g. 3.11]
 - Environment details (virtualenv, Docker, hardware, relevant packages): [...]
 
-## Related context
+## Related specs or modules
 
-Mention related modules, past tickets, or external links that provide additional background.
+Reference any related specifications, modules, or feature documentation. Provide links or file paths so others can easily find them.
 
 ## Additional context
 
