@@ -63,7 +63,7 @@ def _cmd_trust(args: argparse.Namespace) -> None:
 
 
 def _cmd_timeline(_: argparse.Namespace) -> None:
-    """Print the boot timeline from the mission log."""
+    """Print the event timeline from the mission log."""
 
     for entry in mission_logger.timeline():
         details = f" - {entry['details']}" if entry.get("details") else ""
@@ -95,7 +95,7 @@ def build_parser() -> argparse.ArgumentParser:
     trust_p.add_argument("entity", help="Entity name")
     trust_p.set_defaults(func=_cmd_trust)
 
-    timeline_p = sub.add_parser("timeline", help="Show boot history")
+    timeline_p = sub.add_parser("timeline", help="Reconstruct mission events")
     timeline_p.set_defaults(func=_cmd_timeline)
 
     bootstrap_p = sub.add_parser("bootstrap", help="Rebuild modules")

@@ -15,7 +15,8 @@ Utility helpers are provided for common events including component starts,
 errors and recovery attempts. Additional helpers retain backward compatible
 names for health checks, quarantines and patches. The log can be summarised to
 find the last successful component or rendered as a chronological timeline for
-debugging.
+debugging.  The ``razar timeline`` CLI subcommand uses this module to
+reconstruct mission events.
 """
 
 from dataclasses import dataclass

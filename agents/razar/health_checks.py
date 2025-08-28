@@ -2,11 +2,12 @@ from __future__ import annotations
 
 """Health check routines for RAZAR runtime components.
 
-This module defines probe functions for runtime services and a ``run`` helper
-that executes checks for named services.  Each check returns ``True`` on
-success.  If a check fails and a restart command is configured the component is
-restarted once before reporting failure.  Health status and latency metrics are
-exported via Prometheus when the ``prometheus_client`` package is available.
+The module exposes a collection of service‑specific probe functions used to
+verify the health of core RAZAR services such as Inanna AI, the CROWN LLM,
+memory stores and chat gateways.  A small ``run`` helper dispatches to these
+probes and optionally restarts failing services once before reporting failure.
+When the ``prometheus_client`` package is available, health status and latency
+metrics are exported for external monitoring.
 """
 
 import json
