@@ -19,7 +19,7 @@ import logging
 from pathlib import Path
 import shutil
 from types import ModuleType
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Protocol
 
 from datetime import datetime
 
@@ -36,6 +36,19 @@ logger = logging.getLogger(__name__)
 CACHE_DIR = Path(__file__).resolve().parent / "_remote_cache"
 # Path to interaction log
 LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_remote_agents.json"
+
+
+class RemoteAgent(Protocol):  # pragma: no cover - typing helper
+    """Interface all remote agents must implement.
+
+    ``configure`` should return a mapping of runtime options while ``patch``
+    receives an optional context object and may return any value, typically a
+    diff string or suggestion structure.
+    """
+
+    def configure(self) -> Dict[str, Any]: ...
+
+    def patch(self, context: Any | None = None) -> Any: ...
 
 
 def _download(url: str, dest: Path) -> None:
@@ -56,7 +69,9 @@ def _clone_repo(repo_url: str, dest: Path, branch: str = "main") -> None:
     Repo.clone_from(repo_url, dest, branch=branch)
 
 
-def _persist_log(name: str, *, config: Dict[str, Any] | None = None, suggestion: Any | None = None) -> None:
+def _persist_log(
+    name: str, *, config: Dict[str, Any] | None = None, suggestion: Any | None = None
+) -> None:
     """Store ``config`` and ``suggestion`` for ``name`` in the audit log."""
 
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -78,7 +93,9 @@ def _persist_log(name: str, *, config: Dict[str, Any] | None = None, suggestion:
     LOG_PATH.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
 
 
-def _load_and_log(path: Path, name: str, patch_context: Any | None) -> Tuple[ModuleType, Dict[str, Any], Any]:
+def _load_and_log(
+    path: Path, name: str, patch_context: Any | None
+) -> Tuple[ModuleType, Dict[str, Any], Any]:
     """Import module from ``path`` and execute ``configure()``/``patch()`` hooks."""
 
     spec = importlib.util.spec_from_file_location(name, path)
@@ -179,7 +196,9 @@ def load_remote_agent_from_git(
 
     path = repo_dir / module_path
     if not path.exists():  # pragma: no cover - user error
-        raise FileNotFoundError(f"Agent module {module_path} not found in repo {repo_url}")
+        raise FileNotFoundError(
+            f"Agent module {module_path} not found in repo {repo_url}"
+        )
 
     return _load_and_log(path, name, patch_context)
 

@@ -56,7 +56,9 @@ implemented in `razar/crown_link.py`. Two JSON message types are exchanged:
 - **Repair requests** – `{"type": "repair", "stack_trace": "...", "config_summary": "..."}`
 
 The Crown side replies with patch instructions which RAZAR uses to heal faulty
-modules before reintroducing them into the boot cycle.
+modules before reintroducing them into the boot cycle. See the
+[RAZAR Agent](RAZAR_AGENT.md#crown-link-protocol) document for detailed schema
+descriptions.
 
 ## Mission Brief Handshake
 
