@@ -71,3 +71,47 @@ PY
 
 The quarantine utilities also track diagnostic data and patches applied to a
 component, making it easier to audit recovery steps.
+
+## Boot orchestrator
+
+[`agents/razar/boot_orchestrator.py`](../agents/razar/boot_orchestrator.py)
+derives the component startup order from `docs/system_blueprint.md`,
+regenerates `docs/Ignition.md` with status markers, launches each service in
+sequence, and records progress in `logs/razar_state.json`.
+
+## Environment builder
+
+[`razar/environment_builder.py`](../razar/environment_builder.py) ensures the
+required Python version is available, creates an isolated virtual environment,
+and installs dependency layers defined in `razar_env.yaml`.
+
+## Documentation sync
+
+[`agents/razar/doc_sync.py`](../agents/razar/doc_sync.py) refreshes core
+references after component changes by regenerating Ignition, updating the
+system blueprint, and rebuilding component indexes.
+
+## Checkpoint manager
+
+[`agents/razar/checkpoint_manager.py`](../agents/razar/checkpoint_manager.py)
+persists boot progress in `logs/razar_state.json` so runs can resume from the
+last successful component or clear the history to restart.
+
+## Crown link
+
+[`agents/razar/crown_link.py`](../agents/razar/crown_link.py) provides a minimal
+WebSocket client for exchanging failure reports and status updates with the
+CROWN stack, logging every dialogue in
+`logs/razar_crown_dialogues.json`.
+
+## Adaptive orchestrator
+
+[`razar/adaptive_orchestrator.py`](../razar/adaptive_orchestrator.py) explores
+different boot sequences, measuring time-to-ready and failures, and stores
+results in `logs/razar_boot_history.json` to refine startup order.
+
+## Co-creation planner
+
+[`razar/cocreation_planner.py`](../razar/cocreation_planner.py) consolidates
+component priorities, boot failures, and Crown suggestions into a dependency
+ordered build plan saved to `logs/razar_cocreation_plans.json`.
