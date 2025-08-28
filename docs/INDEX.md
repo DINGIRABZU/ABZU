@@ -185,12 +185,13 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | The RAZAR agent bootstraps local services in a controlled environment.  It creates a Python virtual environment, inst... | - |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.1 **Last updated:** 2025-08-28 | - |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.2 **Last updated:** 2025-08-28 | - |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
 | [adr/0001-use-faiss-for-vector-search.md](adr/0001-use-faiss-for-vector-search.md) | ADR 0001: Use FAISS for Vector Search | Date: 2024-11-25 | - |
 | [adr/0002-prefer-asyncio-over-threads.md](adr/0002-prefer-asyncio-over-threads.md) | ADR 0002: Prefer asyncio over Threads | Date: 2024-11-25 | - |
+| [ai_ethics_framework.md](ai_ethics_framework.md) | AI Ethics Framework | Principles guiding the development and operation of INANNA_AI. | - |
 | [api_reference.md](api_reference.md) | API Reference | This document describes the FastAPI endpoints provided by `api.server`. | `../tests/test_server_endpoints.py` |
 | [archetype_logic.md](archetype_logic.md) | Archetype Logic | This document outlines how Spiral OS interprets alchemical states to shape its responses. The progression through **N... | - |
 | [architecture.md](architecture.md) | Architecture | This guide maps the core packages that shape the ABZU system and how they cooperate. The diagram below highlights the... | `../INANNA_AI/ethical_validator.py`, `../INANNA_AI_AGENT/inanna_ai.py`, `../core/emotion_analyzer.py`, `../core/memory_logger.py`, `../core/model_selector.py`, `../dashboard/app.py` |
@@ -206,6 +207,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [chat2db.md](chat2db.md) | Chat2DB Interface | Chat2DB connects conversational agents to persistent storage. It logs transcripts, feedback and model metrics in a li... | `../INANNA_AI/db_storage.py`, `../spiral_vector_db/__init__.py` |
 | [client_environment_variables.md](client_environment_variables.md) | Client environment variables | Clients interacting with the FastAPI server need several environment variables to authenticate requests. | - |
 | [cloud_deployment.md](cloud_deployment.md) | Cloud Deployment | This guide shows how to build the GPU enabled container and deploy Spiral OS on a Kubernetes cluster. | - |
+| [co_creation_framework.md](co_creation_framework.md) | Co-creation Framework | This document outlines the feedback loop between developers and INANNA_AI to refine features collaboratively. | - |
 | [coding_style.md](coding_style.md) | Coding Style | This document outlines the project's coding conventions. | - |
 | [communication_interfaces.md](communication_interfaces.md) | Communication Interfaces | This document outlines how external clients interact with the avatar through various communication channels. The curr... | - |
 | [community.md](community.md) | Community | - | - |

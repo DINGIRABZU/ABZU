@@ -13,6 +13,8 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Nazarick Agents](docs/nazarick_agents.md)
 - [Chakra Koan System](docs/chakra_koan_system.md)
 - [Chakra Version Manifest](docs/chakra_versions.json)
+- [Co-creation Framework](docs/co_creation_framework.md) – feedback loops between developers and INANNA_AI
+- [AI Ethics Framework](docs/ai_ethics_framework.md) – transparency, fairness, and data handling principles
 
 ## Start Here
 - Consult [The Absolute Protocol](docs/The_Absolute_Protocol.md) for repository rules and workflows.
