@@ -1,7 +1,10 @@
 # Great Tomb of Nazarick
 
-## Vision
-The Great Tomb of Nazarick serves as ABZU's subterranean fortress. It frames the chakra‑aligned agents as guardians occupying layered halls, each protecting its domain while channeling creative flow through the system.
+## Objectives
+- Fortify ABZU with a Nazarick‑inspired command structure.
+- Provide clear communication channels for guardian agents.
+- Ground every layer in chakra principles for balanced creative flow.
+- Document the core technologies that power each layer.
 
 ## Channel Hierarchy
 | Channel | Purpose |
@@ -14,7 +17,7 @@ The Great Tomb of Nazarick serves as ABZU's subterranean fortress. It frames the
 | Sacral Creation Channel | Shapes creative output and style modulation |
 | Root Infrastructure Line | Interfaces with hardware, storage, and network |
 
-## Architectural Stack
+## Tech Stack
 1. **Surface Gate** – RAZAR validates prerequisites and opens the arena.
 2. **Crown Overlord** – Orchestration Master coordinates subordinate agents.
 3. **Throat Gatekeepers** – Prompt Orchestrator and chat gateway relay commands.
@@ -23,5 +26,14 @@ The Great Tomb of Nazarick serves as ABZU's subterranean fortress. It frames the
 6. **Solar Plexus Forges** – Learning mutator and state transition engine.
 7. **Sacral Workshops** – Emotion registry and modulation engines.
 8. **Root Foundation** – Server, network utilities, and logging.
+
+## Chakra Alignment
+- **Crown** – Orchestration Master and the Crown Command Channel.
+- **Third Eye** – QNL engine and vision observatories.
+- **Throat** – Prompt Orchestrator and relay services.
+- **Heart** – Memory Scribe and avatar voice.
+- **Solar Plexus** – Learning mutator and state transition engine.
+- **Sacral** – Emotion registry and creative modulation tools.
+- **Root** – Infrastructure interfaces and system logging.
 
 See [System Blueprint](system_blueprint.md) and [Nazarick Agents](nazarick_agents.md) for broader context.
