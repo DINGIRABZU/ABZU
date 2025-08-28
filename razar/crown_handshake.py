@@ -14,6 +14,8 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List
 
+from . import recovery_manager
+
 try:  # pragma: no cover - optional dependency
     import websockets
 except Exception:  # pragma: no cover - handled at runtime
@@ -37,6 +39,7 @@ class CrownResponse:
 
     acknowledgement: str
     capabilities: List[str]
+    downtime: Dict[str, Any]
 
 
 DEFAULT_TRANSCRIPT_PATH = Path("logs/razar_crown_dialogues.json")
@@ -87,9 +90,17 @@ class CrownHandshake:
             reply = {"raw": reply_raw}
         self._append_transcript("crown", reply)
 
+        downtime = reply.get("downtime", {})
+        for component, patch in downtime.items():
+            recovery_manager.request_shutdown(component)
+            if patch:
+                recovery_manager.apply_patch(component, patch)
+            recovery_manager.resume(component)
+
         return CrownResponse(
             acknowledgement=reply.get("ack", ""),
             capabilities=reply.get("capabilities", []),
+            downtime=downtime,
         )
 
 
