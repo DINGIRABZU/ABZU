@@ -556,6 +556,14 @@ Each step should report readiness before continuing. After the final service
 comes online, run the smoke tests in [testing.md](testing.md) to confirm the
 system responds as expected.
 
+## How to Edit This Blueprint
+
+Follow the [Documentation Protocol](documentation_protocol.md) when updating this guide.
+
+- [ ] Locate relevant `AGENTS.md` files for directory-specific instructions.
+- [ ] Update any linked documents referenced above.
+- [ ] Run `pre-commit run --files docs/system_blueprint.md` to validate changes.
+
 ## Health Checks
 Robust health checks keep the system stable and observable.
 
