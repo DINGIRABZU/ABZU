@@ -5,6 +5,7 @@ Central resources for understanding and operating the project.
 ## Architecture
 - [Architecture Overview](architecture_overview.md)
 - [Detailed Architecture](architecture.md)
+- [Blueprint Export](BLUEPRINT_EXPORT.md)
 ## Nazarick
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
 - [Nazarick Manifesto](nazarick_manifesto.md)
@@ -16,6 +17,7 @@ Central resources for understanding and operating the project.
 
 ## Development
 - [Developer Onboarding](developer_onboarding.md)
+- [Onboarding Guide](onboarding_guide.md)
 - [Documentation Protocol](documentation_protocol.md)
 - [Development Checklist](development_checklist.md)
 - [Developer Etiquette](developer_etiquette.md)
