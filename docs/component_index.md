@@ -1,6 +1,6 @@
 # Component Index
 
-Generated automatically. Lists each Python file with its description and external dependencies.
+Generated automatically. Lists each Python file with its description and external dependencies. See the [Great Tomb of Nazarick](great_tomb_of_nazarick.md) for objectives, channel hierarchy, tech stack, and chakra alignment.
 
 | File | Description | Dependencies |
 | --- | --- | --- |

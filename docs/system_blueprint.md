@@ -10,6 +10,7 @@ The system blueprint maps ABZU’s chakra layers, core services, and agents.
   - [Documentation Index](index.md) – gateway to every guide
   - [Project Overview](project_overview.md) – explains Spiral OS goals and scope
   - [Architecture Overview](architecture_overview.md) – shows how major components fit together
+  - [Great Tomb of Nazarick](great_tomb_of_nazarick.md) – objectives, channel hierarchy, tech stack, and chakra alignment
 - **Chakra references**
   - [Chakra Overview](chakra_overview.md) – summarizes each layer’s role
   - [Chakra Architecture](chakra_architecture.md) – maps responsibilities and heat zones
