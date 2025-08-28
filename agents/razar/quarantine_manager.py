@@ -22,6 +22,17 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 QUARANTINE_DIR = PROJECT_ROOT / "quarantine"
 LOG_FILE = PROJECT_ROOT / "docs" / "quarantine_log.md"
 
+# Public symbols re-exported for convenience
+__all__ = [
+    "quarantine_component",
+    "quarantine_module",
+    "resolve_component",
+    "record_diagnostics",
+    "record_patch",
+    "reactivate_component",
+    "is_quarantined",
+]
+
 
 def _init_paths() -> None:
     """Ensure quarantine directory and log file exist."""
