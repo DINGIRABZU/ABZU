@@ -5,9 +5,10 @@
 The system blueprint maps ABZU’s chakra layers, core services, and agents. It
 acts as a starting compass for new contributors—consult the
 [Documentation Index](index.md) for a full table of contents, read the
-[Project Overview](project_overview.md) to understand goals, and examine the
+[Project Overview](project_overview.md) to understand goals, review the
 [Architecture Overview](architecture_overview.md) to see how components
-interlock.
+interlock, and browse the [Component Index](component_index.md) for an
+exhaustive module inventory.
 
 ### Document Map
 
@@ -15,13 +16,14 @@ interlock.
   - [Documentation Index](index.md) – gateway to every guide
   - [Project Overview](project_overview.md) – explains Spiral OS goals and scope
   - [Architecture Overview](architecture_overview.md) – shows how major components fit together
+  - [Component Index](component_index.md) – inventory of modules and services
   - [Great Tomb of Nazarick](great_tomb_of_nazarick.md) – objectives, channel hierarchy, tech stack, and chakra alignment
 - **Chakra references**
   - [Chakra Overview](chakra_overview.md) – summarizes each layer’s role
   - [Chakra Architecture](chakra_architecture.md) – maps responsibilities and heat zones
   - [Per‑chakra guides](root_chakra_overview.md) – deep dives into individual layers
 - **Agent ecosystem**
-- [RAZAR Agent](RAZAR_AGENT.md) – pre‑creation igniter, virtual‑environment manager, and recovery coordinator
+  - [RAZAR Agent](RAZAR_AGENT.md) – pre‑creation igniter, virtual‑environment manager, and recovery coordinator
   - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
   - [ALBEDO Layer](ALBEDO_LAYER.md) – persona modules and archetypal behavior hooks
   - [Persona API Guide](persona_api_guide.md) – conventions for persona profiles and hooks
@@ -107,17 +109,25 @@ composed and exposed across the stack.
 
 ### Chakra Layer Relationships
 
-The stack ascends through seven chakra layers:
+Heat tiers flag operational intensity: **Hot** layers are mission‑critical,
+**Warm** layers are stable cores, and **Cool** layers host experimental
+modules.
 
-1. **Root** – networking and I/O foundation (Floors 1–3)
-2. **Sacral** – emotion engine (Floor 2)
-3. **Solar Plexus** – learning and state transitions (Floor 3)
-4. **Heart** – memory and voice (Floor 4)
-5. **Throat** – prompt orchestration and agent interface (Floor 5)
-6. **Third Eye** – insight and QNL processing (Floor 6)
-7. **Crown** – high‑level orchestration (Floors 7–10)
+| Chakra | Purpose | Heat Tier |
+| --- | --- | --- |
+| Root | Networking and I/O foundation | Hot |
+| Sacral | Emotion engine | Warm |
+| Solar Plexus | Learning and state transitions | Warm |
+| Heart | Memory and voice | Warm |
+| Throat | Prompt orchestration and agent interface | Warm |
+| Third Eye | Insight and QNL processing | Hot |
+| Crown | High‑level orchestration | Hot |
 
-See [Chakra Architecture](chakra_architecture.md) for component mappings.
+See [Chakra Architecture](chakra_architecture.md) and
+[Chakra Overview](chakra_overview.md) for component mappings and status
+details. Layer‑specific guides, such as
+[root_chakra_overview.md](root_chakra_overview.md), dive deeper into
+individual tiers.
 
 RAZAR operates as service 0, validating the environment and enforcing the
 startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
