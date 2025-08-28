@@ -2,7 +2,7 @@
 
 **Version:** v1.0.0
 **Last updated:** 2025-08-28
-Screencast: [Onboarding Walkthrough](media/onboarding_walkthrough_v1.0.0.mp4)
+Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visual setup path
 
 This guide walks through setting up the project and shows how a new contributor can rebuild or extend the system using only the documentation. A step-by-step [Onboarding Walkthrough](onboarding_walkthrough.md) replaces the previous video tour. For day-to-day development practices, see the [Contributor Handbook](CONTRIBUTOR_HANDBOOK.md).
 
