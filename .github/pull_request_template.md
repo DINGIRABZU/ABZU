@@ -1,10 +1,9 @@
-## Summary
-- 
+## Summary of change
+<!-- Required: provide a concise summary of the change. -->
 
-## Issue
-- Closes #
+## Linked issue/feature spec reference
+<!-- Required: link to the relevant issue or feature spec. -->
 
-## Testing
-- [ ] `pytest`
-- [ ] `dvc repro`
-- [ ] `docker compose up --build`
+## Checklist
+- [ ] Tests run <!-- Required: list tests run, e.g., `pytest` -->
+- [ ] Docs updated <!-- Required: describe updates or state 'N/A' -->
