@@ -11,23 +11,10 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Chakra Version Manifest](docs/chakra_versions.json)
 
 ## Start Here
-Begin with the [CRYSTAL CODEX](CRYSTAL_CODEX.md) for mission, LWM architecture diagrams,
-chakra-to-module mappings, step-by-step setup guides, tutorials, dependency matrix,
-testing and style guidance. Then follow the [setup guide](docs/setup.md) to configure the
-environment. The [documentation index](docs/index.md) lists additional guides.
-See [docs/insight_system.md](docs/insight_system.md) for insight manifest usage and
-schema validation steps.
-Vital workflows and recovery procedures live in [docs/essential_services.md](docs/essential_services.md).
-New contributors should review the [developer onboarding guide](docs/developer_onboarding.md)
-for a structured walkthrough of the codebase. A minimal emotion→music→insight example
-is available in [examples/ritual_demo.py](examples/ritual_demo.py). Current ratings,
-past scores and milestone validation results are tracked in
-[docs/QUALITY_EVALUATION.md](docs/QUALITY_EVALUATION.md).
-For the project's guiding vision and mission, see
-[docs/VISION.md](docs/VISION.md) and [docs/MISSION.md](docs/MISSION.md).
+- Review the [Blueprint Export](docs/BLUEPRINT_EXPORT.md) for versioned links to core documentation.
+- Walk through the [Developer Onboarding Guide](docs/onboarding_guide.md) to rebuild or extend the system using those docs alone.
 
-For an end-to-end request pipeline and chakra status summary, see [docs/data_flow.md](docs/data_flow.md) and [docs/chakra_overview.md](docs/chakra_overview.md).
-Meditative verses and the corresponding version manifest live in [docs/chakra_koan_system.md](docs/chakra_koan_system.md) and [docs/chakra_versions.json](docs/chakra_versions.json).
+For deeper background, consult the [CRYSTAL CODEX](CRYSTAL_CODEX.md) and the full [documentation index](docs/index.md).
 
 ## JSON Schema Validation
 
