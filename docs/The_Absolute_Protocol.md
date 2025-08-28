@@ -35,3 +35,13 @@ Whenever this file changes:
 1. Regenerate documentation indices: `python tools/doc_indexer.py`.
 2. Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/INDEX.md`.
 
+## Protocol Change Process
+Updates to this protocol follow a lightweight governance model:
+
+1. **Proposal** – Open an issue describing the rationale and desired changes.
+2. **Implementation** – Submit a pull request referencing the issue and label it `Protocol Update` to surface review.
+3. **Review** – Core maintainers discuss the proposal, request revisions, and approve when consensus is reached.
+4. **Versioning** – Upon merge, update the version and last‑updated date at the top of this file and document the change in the repository changelog.
+
+This process ensures the protocol evolves transparently and stays in sync with repository practices.
+
