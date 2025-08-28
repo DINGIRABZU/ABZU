@@ -50,6 +50,15 @@ the result:
 uv pip compile --no-deps pyproject.toml -o requirements.lock
 ```
 
+After upgrading dependencies, refresh pre-commit hooks and commit the updated
+`.pre-commit-config.yaml`:
+
+```bash
+pre-commit autoupdate
+pre-commit run --files .pre-commit-config.yaml
+git add .pre-commit-config.yaml
+```
+
 ## Coding Style
 
 Follow the conventions in [CODE_STYLE.md](CODE_STYLE.md). Highlights include:
@@ -90,6 +99,7 @@ coverage report
 
 - Keep changes focused; submit separate PRs for unrelated fixes.
 - Ensure documentation is updated and tests pass.
+- Pull requests that fail `pre-commit run --all-files` will not be merged.
 - Register new modules in [docs/component_priorities.yaml](docs/component_priorities.yaml) with a priority (P1–P5), criticality tag, and issue categories so RAZAR can orchestrate startup.
 - Record project-wide documentation or architectural changes in
   [docs/system_blueprint.md](docs/system_blueprint.md) by adding a new
