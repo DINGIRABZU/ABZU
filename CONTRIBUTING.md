@@ -97,6 +97,7 @@ coverage report
 
 ## Pull Requests
 
+- Prefix pull request titles with a category such as `Feature:`, `Fix:`, or `Chore:` (e.g., `Feature: Voice Cloning V2`).
 - Keep changes focused; submit separate PRs for unrelated fixes.
 - Ensure documentation is updated and tests pass.
 - Pull requests that fail `pre-commit run --all-files` will not be merged.
