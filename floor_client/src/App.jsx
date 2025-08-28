@@ -24,13 +24,14 @@ export default function App() {
   return (
     <div className="p-4 space-y-4">
       {Object.entries(floors).map(([floor, channels]) => (
-        <Floor key={floor} name={floor} channels={channels} socket={socket} />
+        <Floor
+          key={floor}
+          name={floor}
+          channels={channels}
+          socket={socket}
+          messages={messages}
+        />
       ))}
-      <div className="mt-4">
-        {messages.map((m, idx) => (
-          <div key={idx}>{`${m.floor}/${m.channel}: ${m.message}`}</div>
-        ))}
-      </div>
     </div>
   );
 }
