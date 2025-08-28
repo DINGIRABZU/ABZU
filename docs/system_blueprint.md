@@ -28,6 +28,28 @@ The system blueprint maps ABZU’s chakra layers, core services, and agents.
   - [sacred_inputs/](../sacred_inputs/) – canonical verses guiding system ethos
   - [INANNA_AI/](../INANNA_AI/) – activation chants and ethical corpus for the INANNA agent
 
+### Agent & Nazarick Hierarchy
+
+Agents follow a Nazarick-inspired command chain. The roster and roles live in
+[nazarick_agents.md](nazarick_agents.md). Persona behaviors originate from
+[persona_api_guide.md](persona_api_guide.md) and are implemented in component
+modules cataloged in [component_index.md](component_index.md).
+
+### Chat2DB Interface and Dependency Flow
+
+[Chat2DB](chat2db.md) bridges the chat gateway, relational log and vector
+search store. It depends on `INANNA_AI/db_storage.py` for SQLite tables and
+`spiral_vector_db` for embedding queries, allowing agents to persist and fetch
+conversation context.
+
+### Personality Layers
+
+Persona construction layers archetypal behavior from the
+[ALBEDO Layer](ALBEDO_LAYER.md), API conventions in
+[persona_api_guide.md](persona_api_guide.md) and avatar rendering outlined in
+[avatar_pipeline.md](avatar_pipeline.md). These guides define how identities are
+composed and exposed across the stack.
+
 ### Chakra Layer Relationships
 
 The stack ascends through seven chakra layers:

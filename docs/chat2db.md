@@ -1,12 +1,16 @@
 # Chat2DB Interface
 
-## Purpose
-Chat2DB connects conversational agents to persistent storage. It logs transcripts,
-feedback and model metrics in a lightweight SQLite database while maintaining a
-vector index for semantic search. The bridge lets the system recall prior
-interactions and fetch relevant context during dialogue.
+Chat2DB connects conversational agents to persistent storage. It logs
+transcripts, feedback and model metrics in a lightweight SQLite database while
+maintaining a vector index for semantic search. The bridge lets the system
+recall prior interactions and fetch relevant context during dialogue.
 
 ## Architecture
+
+```
+Agents → Chat Gateway → Chat2DB → {SQLite, Vector Store}
+```
+
 - **Relational Layer:** [INANNA_AI/db_storage.py](../INANNA_AI/db_storage.py)
   initializes tables for interactions, feedback and benchmarks and exposes
   helpers such as `save_interaction` and `fetch_feedback`.
