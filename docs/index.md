@@ -20,5 +20,5 @@ Curated starting points for understanding and operating the project. For an exha
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Checklist](development_checklist.md)
 - [Documentation Protocol](documentation_protocol.md)
-- [Onboarding Guide](onboarding_guide.md)
+- [Onboarding Guide](onboarding_guide.md) (v1.0.0, updated 2025-08-28)
 - [Feature Specifications](features/README.md)
