@@ -23,6 +23,7 @@ Replace `<commit>` in each permalink with the desired commit hash to reference a
 | Mission | Project mission statement | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/MISSION.md |
 | Vision | Long-term vision for the project | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/VISION.md |
 | Release Notes | Historical release information | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/release_notes.md |
+| Absolute Milestones | Summary of past and upcoming release milestones | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/ABSOLUTE_MILESTONES.md |
 
 ## Dependency Overview
 

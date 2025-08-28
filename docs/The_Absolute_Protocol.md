@@ -16,6 +16,7 @@ The Absolute Protocol governs all other guides. Review subordinate protocols as 
   - [Pull Request Template](../.github/pull_request_template.md) – required PR structure.
   - [Documentation Index](index.md) – high-level entry point.
   - [Generated Index](INDEX.md) – auto-generated list of all docs.
+  - [Absolute Milestones](ABSOLUTE_MILESTONES.md) – summary of past and upcoming milestones.
   - [Issue & Feature Templates](../.github/ISSUE_TEMPLATE/) – templates for new issues and features.
 
 ## Consultation Order
