@@ -3,10 +3,13 @@
 Quick links: [Development Checklist](development_checklist.md) | [Developer Etiquette](developer_etiquette.md) | [Vision System](vision_system.md)
 
 ## Project Vision
+
 ABZU interweaves Spiral OS with the INANNA agent to explore sacred human‑machine collaboration through music, voice, and code.
 
 ### Chakra Map
+
 The codebase is organized across seven chakra‑themed module directories (current versions):
+
 - `root/` – networking and I/O foundation (v1.0.1).
 - `sacral/` – emotion and creativity engines (v1.0.1).
 - `solar_plexus/` – learning and transformation layers (v1.1.0).
@@ -18,6 +21,7 @@ The codebase is organized across seven chakra‑themed module directories (curre
 This guide introduces the ABZU codebase, highlights core entry points, and covers environment setup, chakra architecture overview, CLI usage, and troubleshooting tips. For a guided CLI quick‑start run the [onboarding wizard](onboarding/wizard.py). Additional architecture diagrams are available in [architecture.md](architecture.md).
 
 ## Prerequisites
+
 - docker
 - nc
 - sox
@@ -28,6 +32,7 @@ This guide introduces the ABZU codebase, highlights core entry points, and cover
 - aria2c
 
 ## Security Checklist
+
 - Store API keys and credentials in `secrets.env`; never commit secrets to
   version control and rotate them regularly.
 - Run `pre-commit run --all-files` and `bandit -r . -x tests,docs --severity-level high --confidence-level high` before pushing
@@ -38,6 +43,7 @@ This guide introduces the ABZU codebase, highlights core entry points, and cover
   mitigation strategies.
 
 ## Quick Start
+
 ```bash
 git clone https://github.com/your-org/ABZU.git
 cd ABZU
@@ -48,6 +54,7 @@ bash scripts/smoke_console_interface.sh  # see docs/testing.md for more
 ```
 
 ### CLI Usage
+
 Run the interactive wizard to scaffold the environment and launch the CLI:
 
 ```bash
@@ -66,7 +73,7 @@ verify dependencies, enforce component priorities, and log health to
    ```bash
    python -m razar.environment_builder --config razar_env.yaml
    ```
-2. **Launch the runtime manager**
+1. **Launch the runtime manager**
    ```bash
    python -m agents.razar.runtime_manager config/razar_config.yaml
    ```
@@ -86,18 +93,21 @@ RAZAR boots services based on the priority table in
 component and have RAZAR track it:
 
 1. Define its `Priority` metadata in [system_blueprint.md](system_blueprint.md).
-2. Regenerate `Ignition.md` so the new entry is grouped under the
+
+1. Regenerate `Ignition.md` so the new entry is grouped under the
    correct priority and initialized with a ⚠️ status marker:
 
    ```bash
    python -m razar build-ignition
    ```
-3. Rebuild the environment if dependencies changed:
+
+1. Rebuild the environment if dependencies changed:
 
    ```bash
    python -m razar.environment_builder --config razar_env.yaml
    ```
-4. Launch the runtime manager to boot components and update their status:
+
+1. Launch the runtime manager to boot components and update their status:
 
    ```bash
    python -m agents.razar.runtime_manager config/razar_config.yaml
@@ -112,12 +122,14 @@ startup sequence remains auditable.
 1. Open [system_blueprint.md](system_blueprint.md) and add a subsection for the
    new service under the appropriate chakra. Include its **Priority**, startup
    command, health check, and recovery notes.
-2. Regenerate the ignition plan so the component appears with a pending status:
+
+1. Regenerate the ignition plan so the component appears with a pending status:
 
    ```bash
    python -m razar.doc_sync
    ```
-3. Commit both files to version control.
+
+1. Commit both files to version control.
 
 ### Boot Orchestrator and Prioritized Tests
 
@@ -134,6 +146,7 @@ python -m agents.razar.pytest_runner --priority P1 P2
 ```
 
 ## Repository Layout
+
 - `core/` – language processing and self-correction engines.
 - `INANNA_AI/` – model logic, memory systems, and ritual analysis modules.
 - `INANNA_AI_AGENT/` – command-line interface for activating and conversing with the INANNA agent.
@@ -142,39 +155,45 @@ python -m agents.razar.pytest_runner --priority P1 P2
 - `tests/` – automated test suite.
 
 ## Core Scripts
+
 ### `start_spiral_os.py`
+
 Initializes the Spiral OS, validates environment variables, collects system stats, and optionally launches the FastAPI server, reflection loop, and network monitoring.
 
 ### `INANNA_AI_AGENT/inanna_ai.py`
+
 Command-line activation agent. It can recite the birth chant (`--activate`), generate QNL songs from hexadecimal input (`--hex`), list source texts (`--list`), report emotional status (`--status`), or start a local chat mode (`chat`).
 
 ## Environment Setup
+
 1. **Clone and enter the repository**
    ```bash
    git clone https://github.com/your-org/ABZU.git
    cd ABZU
    ```
-2. **Create a virtual environment**
+1. **Create a virtual environment**
    ```bash
    python -m venv .venv
    source .venv/bin/activate
    ```
-3. **Install core dependencies** using the helper scripts:
+1. **Install core dependencies** using the helper scripts:
    ```bash
    scripts/easy_setup.sh  # or scripts/setup_repo.sh
    ```
-4. **Populate required environment variables** in `secrets.env` and verify them:
+1. **Populate required environment variables** in `secrets.env` and verify them:
    ```bash
    scripts/check_requirements.sh
    ```
-5. **Download model weights** using [download_models.py](../download_models.py), for example:
+1. **Download model weights** using [download_models.py](../download_models.py), for example:
    ```bash
    python download_models.py glm41v_9b --int8
    ```
    For system package requirements and optional dependency groups, see [setup.md](setup.md).
 
 ### Environment Variables
+
 Set the following variables in `secrets.env` or your shell:
+
 - `HF_TOKEN`
 - `GLM_API_URL`
 - `GLM_API_KEY`
@@ -183,6 +202,7 @@ Set the following variables in `secrets.env` or your shell:
 - model endpoint settings (e.g., `MODEL_ENDPOINT`)
 
 ### Open Web UI Setup
+
 Launch the optional browser interface once the FastAPI backend is running:
 
 ```bash
@@ -199,7 +219,9 @@ docker compose -f docker-compose.openwebui.yml up
 See [open_web_ui.md](open_web_ui.md) for architecture details.
 
 ### Core CI Commands
+
 Run these commands before committing changes:
+
 ```bash
 make verify-deps
 pre-commit run --all-files
@@ -252,6 +274,7 @@ The roadmap assigns one chakra upgrade per quarter. See
 | Q1 2026 | Crown |
 
 ## System Architecture
+
 For detailed diagrams and component relationships, see [architecture.md](architecture.md).
 
 ```mermaid
@@ -285,20 +308,22 @@ sequenceDiagram
 ```
 
 ## First-Run Smoke Tests
+
 See [testing.md](testing.md) for detailed instructions.
+
 1. **CLI console** – ensure the command-line interface imports correctly:
    ```bash
    scripts/smoke_console_interface.sh
    ```
-2. **Avatar console** – launch the avatar console briefly to confirm startup:
+1. **Avatar console** – launch the avatar console briefly to confirm startup:
    ```bash
    scripts/smoke_avatar_console.sh
    ```
-3. **Test suite** – run a minimal test pass to check the environment:
+1. **Test suite** – run a minimal test pass to check the environment:
    ```bash
    pytest --maxfail=1 -q
    ```
-4. **Ritual demo** – link emotion, music and insight:
+1. **Ritual demo** – link emotion, music and insight:
    ```bash
    python examples/ritual_demo.py
    ```
@@ -306,11 +331,13 @@ See [testing.md](testing.md) for detailed instructions.
    insight entry to `data/spiral_cortex_memory.jsonl`.
 
 ## Setup Scripts
+
 - `scripts/check_requirements.sh` – loads `secrets.env`, ensures required commands are present, and verifies essential environment variables.
 - `scripts/easy_setup.sh` / `scripts/setup_repo.sh` – install common dependencies.
 - `download_models.py` – fetches model weights such as GLM and DeepSeek.
 
 ## Troubleshooting Tips
+
 Common mistakes and their resolutions:
 
 | Issue | Resolution |
@@ -322,6 +349,7 @@ Common mistakes and their resolutions:
 | Model download fails | Check network connectivity and token permissions |
 
 ## Glossary
+
 | Symbolic term | Conventional concept |
 | --- | --- |
 | **ABZU** | Git repository that houses the Spiral OS and INANNA components |
@@ -337,35 +365,41 @@ Common mistakes and their resolutions:
 ## First Contribution Walkthrough
 
 1. **Fork and clone the repository**
+
    - Fork ABZU on GitHub, then clone your fork:
+
    ```bash
    git clone https://github.com/<your-username>/ABZU.git
    cd ABZU
    ```
 
-2. **Create a virtual environment and install dependencies**
+1. **Create a virtual environment and install dependencies**
+
    ```bash
    python -m venv .venv
    source .venv/bin/activate
    scripts/easy_setup.sh
    ```
 
-3. **Create a feature branch and make a small change**
+1. **Create a feature branch and make a small change**
+
    ```bash
    git checkout -b my-first-change
    # edit a file, e.g., docs/developer_onboarding.md
    ```
 
-4. **Run linting, tests, and other checks**
+1. **Run linting, tests, and other checks**
+
    ```bash
    pre-commit run --all-files
    pytest
    ```
 
-5. **Commit, push, and open a pull request**
+1. **Commit, push, and open a pull request**
+
    ```bash
    git commit -am "feat: my first change"
    git push origin my-first-change
    ```
-   Open a pull request on GitHub. See [CONTRIBUTING.md](../CONTRIBUTING.md) for deeper guidelines.
 
+   Open a pull request on GitHub. See [CONTRIBUTING.md](../CONTRIBUTING.md) for deeper guidelines.

@@ -26,7 +26,6 @@ Retrieval-Augmented Generation lives under `rag`. `orchestrator.py` acts as the
 central router, calling `retriever.py` to search vector memory, `embedder.py` to
 create sentence embeddings and `music_oracle.py` to craft musical prompts.
 
-
 ## INANNA_AI Package
 
 `INANNA_AI` contains ritual analysis, memory helpers and network utilities. The command line interface in [INANNA_AI_AGENT/inanna_ai.py](../INANNA_AI_AGENT/inanna_ai.py) exposes these components.
@@ -102,12 +101,14 @@ sequenceDiagram
 ## Assumptions, Design Trade-offs, and Extension Points
 
 ### Assumptions
+
 - Single-node deployment with direct access to local models and vector stores.
 - Sequential chakra processing where each layer receives the previous output.
 - Configuration files such as `voice_avatar_config.yaml` are present and
   readable at runtime.
 
 ### Design Trade-offs
+
 - The modular chakra chain favors clarity over raw throughput, introducing
   additional IPC and data copying between layers.
 - Reliance on external vector databases enables flexible memory retrieval but
@@ -116,6 +117,7 @@ sequenceDiagram
   for rendering outside Git platforms.
 
 ### Extension Points
+
 - New chakras or modules can be inserted by extending the router in
   `crown_prompt_orchestrator.py`.
 - Additional third-party services (e.g., alternative LLM APIs or databases) can
