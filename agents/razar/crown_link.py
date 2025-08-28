@@ -23,7 +23,8 @@ except Exception:  # pragma: no cover - handled at runtime
     websockets = None  # type: ignore
 
 LOGGER = logging.getLogger(__name__)
-LOG_PATH = Path("logs/razar_crown_dialogues.json")
+# Persist dialogue history under the repository's ``logs`` directory
+LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_crown_dialogues.json"
 
 
 # ---------------------------------------------------------------------------
@@ -35,6 +36,15 @@ class BlueprintReport:
 
     blueprint_excerpt: str
     failure_log: str
+
+
+@dataclass
+class StatusUpdate:
+    """Runtime health update sent to CROWN or servant models."""
+
+    component: str
+    result: str
+    log_snippet: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -82,11 +92,20 @@ class CrownLink:
         self._log_dialogue(payload, data)
         return data
 
-    async def exchange(self, report: BlueprintReport) -> Dict[str, Any]:
+    async def send_report(self, report: BlueprintReport) -> Dict[str, Any]:
         """Send ``report`` to CROWN and return the decoded response."""
 
         payload = {"type": "report", **asdict(report)}
         return await self._send(payload)
+
+    async def send_status(self, update: StatusUpdate) -> Dict[str, Any]:
+        """Send a status update to CROWN or a servant model."""
+
+        payload = {"type": "status", **asdict(update)}
+        return await self._send(payload)
+
+    # ``exchange`` is kept for backward compatibility
+    exchange = send_report
 
     # ------------------------------------------------------------------
     # Logging
@@ -104,4 +123,4 @@ class CrownLink:
             fh.write(json.dumps(entry) + "\n")
 
 
-__all__ = ["CrownLink", "BlueprintReport", "LOG_PATH"]
+__all__ = ["CrownLink", "BlueprintReport", "StatusUpdate", "LOG_PATH"]

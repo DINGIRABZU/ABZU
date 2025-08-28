@@ -23,6 +23,31 @@ Successful components are marked ✅ and persisted to `logs/razar_state.json` so
 
 Before the boot cycle, RAZAR sends a `mission_brief` to the CROWN LLM via `agents/razar/crown_handshake.py`. CROWN replies with available capabilities and readiness confirmation. During startup and after a failure, RAZAR contacts the relevant servant models and the CROWN LLM through `agents/razar/crown_link.py` to request patches or acknowledge health.
 
+## Remote Agent Loader
+
+External helpers can be fetched at runtime through
+`agents/razar/remote_loader.py`.  A remote agent must provide two functions:
+
+- `configure() -> dict` returns runtime options or parameters.
+- `patch(context=None)` optionally accepts a context string and returns repair
+  suggestions or diff content.
+
+Agents served over HTTP expose matching `/configure` and `/patch` endpoints.
+All interactions are written to `logs/razar_remote_agents.json`.
+
+## Crown Link Protocol
+
+Status and repair messages flow between RAZAR and CROWN over a small WebSocket
+client implemented in `agents/razar/crown_link.py`.
+
+- **Status update**
+  `{"type": "status", "component": "state_engine", "result": "ok", "log_snippet": "..."}`
+- **Failure report**
+  `{"type": "report", "blueprint_excerpt": "...", "failure_log": "..."}`
+
+Every request/response pair is appended to
+`logs/razar_crown_dialogues.json` for later inspection.
+
 ## Further Reading
 
 - [Nazarick Agents](nazarick_agents.md)
