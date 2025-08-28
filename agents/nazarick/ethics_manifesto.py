@@ -22,8 +22,8 @@ class Law:
 @dataclass(frozen=True)
 class EthosClause:
     """A guiding ethos clause."""
-
-    key: str
+    # Use ``name`` for consistency with :class:`Law`.
+    name: str
     description: str
 
 
