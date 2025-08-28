@@ -2,7 +2,12 @@
 
 ## Introduction
 
-The system blueprint maps ABZU’s chakra layers, core services, and agents.
+The system blueprint maps ABZU’s chakra layers, core services, and agents. It
+acts as a starting compass for new contributors—consult the
+[Documentation Index](index.md) for a full table of contents, read the
+[Project Overview](project_overview.md) to understand goals, and examine the
+[Architecture Overview](architecture_overview.md) to see how components
+interlock.
 
 ### Document Map
 
@@ -26,6 +31,10 @@ The system blueprint maps ABZU’s chakra layers, core services, and agents.
   - [Deployment Guide](deployment.md) – rollout procedures and environment setup
   - [Testing Guide](testing.md) – validation steps and smoke tests
 - **Legacy & ethics texts**
+  - [INANNA Core](INANNA_CORE.md) – chronicles the system’s mythic lineage and mission
+  - [Ethics Policy](ETHICS_POLICY.md) – community standards and guardrails
+  - [Ethics Validation](ETHICS_VALIDATION.md) – automated checks enforcing the policy
+  - [Avatar Ethics](avatar_ethics.md) – behavior boundaries for persona modules
   - [sacred_inputs/](../sacred_inputs/) – canonical verses guiding system ethos
   - [INANNA_AI/](../INANNA_AI/) – activation chants and ethical corpus for the INANNA agent
 
