@@ -25,10 +25,10 @@ python -m razar.mission_logger log gateway success --event start
 python -m razar.mission_logger summary
 ```
 
-Entries are stored in ``logs/razar.log``. The ``summary`` command prints the
-last successful component and lists pending tasks based on the most recent
-status for each component. For a full chronological view, run ``razar
-timeline`` to reconstruct the mission sequence.
+Entries are stored as JSON lines in ``logs/razar.log``. The ``summary``
+command prints the last successful component and lists pending tasks based on
+the most recent status for each component. The ``razar timeline`` CLI parses
+these entries to reconstruct the mission sequence.
 
 For a real-time snapshot of boot progress and component priorities, launch the
 status dashboard:

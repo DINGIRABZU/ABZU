@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from agents.nazarick.ethics_manifesto import LAWS
+from razar import mission_logger
 
 spec = importlib.util.spec_from_file_location(
     "razar_cli", Path(__file__).resolve().parents[2] / "agents" / "razar" / "cli.py"
@@ -28,3 +29,13 @@ def test_trust_outputs_score_and_protocol(monkeypatch, tmp_path, capsys):
     out_lines = capsys.readouterr().out.strip().splitlines()
     assert "Trust: 5" in out_lines[0]
     assert out_lines[1].startswith("Protocol: nazarick_rank1_")
+
+
+def test_timeline_displays_boot_history(tmp_path, capsys):
+    mission_logger.LOG_PATH = tmp_path / "logs" / "razar.log"
+    mission_logger.log_start("alpha", "success")
+
+    cli.main(["timeline"])
+    out = capsys.readouterr().out.strip()
+    assert "alpha" in out
+    assert "start" in out
