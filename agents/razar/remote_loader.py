@@ -43,6 +43,15 @@ LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_remote_agents.j
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
+# Public functions exposed by this module
+__all__ = [
+    "load_remote_agent",
+    "load_remote_agent_from_git",
+    "load_remote_gpt_agent",
+    "patch_on_test_failure",
+]
+
+
 class RemoteAgent(Protocol):  # pragma: no cover - typing helper
     """Interface all remote agents must implement.
 
