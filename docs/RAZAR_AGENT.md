@@ -1,42 +1,14 @@
-# RAZAR Remote Agent Loader
+# RAZAR Agent
 
-The RAZAR environment can pull helper agents from HTTP endpoints or Git
-repositories at runtime.  These agents extend the system without requiring a
-local installation.
+## Pre-Creation Mandate
+RAZAR provisions a clean environment before any servant boots. It resets temporary directories, verifies configuration files, and ensures secrets and caches are sanitized.
 
-Remote modules must define two functions:
+## Priority Boot Order
+RAZAR starts services according to an ordered priority list. Each component exposes health and readiness probes; RAZAR waits for green checks before advancing. Components that fail checks are isolated and quarantined to `quarantine/` with logs for review.
 
-``configure()``
-: returns a mapping of runtime options.
+## CROWN Handshake
+Once core services are healthy, RAZAR initiates a handshake with the CROWN LLM. The agent exchanges identity tokens, registers servant models, and confirms message routes so downstream agents can communicate through CROWN.
 
-``patch(context)``
-: returns a patch suggestion or replacement source code.  Interactions are
-logged to `logs/razar_remote_agents.json` for later audit.
+---
 
-## Loading an agent
-
-```python
-from agents.razar import remote_loader
-
-module, config, suggestion = remote_loader.load_remote_agent(
-    "example_agent", "https://example.com/agent.py"
-)
-```
-
-## Automatic patching
-
-When tests fail, `patch_on_test_failure` can request a patch from the remote
-agent, apply it inside a temporary sandbox and rerun the affected tests.  The
-change is copied back into the repository only if the tests succeed.
-
-```python
-from pathlib import Path
-
-remote_loader.patch_on_test_failure(
-    "example_agent",
-    "https://example.com/agent.py",
-    Path("pkg/module.py"),
-    [Path("tests/test_module.py")],
-)
-```
-
+Backlinks: [Nazarick Agents](nazarick_agents.md) | [System Blueprint](system_blueprint.md)

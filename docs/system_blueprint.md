@@ -21,7 +21,7 @@ interlock.
   - [Chakra Architecture](chakra_architecture.md) – maps responsibilities and heat zones
   - [Per‑chakra guides](root_chakra_overview.md) – deep dives into individual layers
 - **Agent ecosystem**
-  - [RAZAR Agent](RAZAR_AGENT.md) – startup orchestrator and CROWN handshake
+  - [RAZAR Agent](RAZAR_AGENT.md) – pre-creation mandate, priority boot order with health checks and quarantine, and a handshake with the CROWN LLM and servant models
   - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
   - [ALBEDO Layer](ALBEDO_LAYER.md) – persona modules and archetypal behavior hooks
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
