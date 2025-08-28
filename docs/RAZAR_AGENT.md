@@ -4,6 +4,25 @@ The RAZAR agent bootstraps local services in a controlled environment.  It
 creates a Python virtual environment, installs any component dependencies and
 then launches each component in priority order.
 
+## Prioritized pytest runner
+
+`agents/razar/pytest_runner.py` executes repository tests grouped by priority
+tiers defined in `tests/priority_map.yaml`. Tiers `P1` through `P5` run
+sequentially and results append to `logs/pytest_priority.log`. The runner stores
+the last failing test in `logs/pytest_state.json` so reruns with `--resume`
+continue from that point.
+
+```bash
+# Run all tiers in order
+python agents/razar/pytest_runner.py
+
+# Run only tier P1
+python agents/razar/pytest_runner.py --priority P1
+
+# Resume after fixing failures
+python agents/razar/pytest_runner.py --resume
+```
+
 ## Runtime manager
 
 `agents/razar/runtime_manager.py` reads a configuration file that lists the
