@@ -1,6 +1,6 @@
 # Blueprint Export
 
-This snapshot lists major documentation assets with links that can be pinned to a specific commit.
+This snapshot lists major documentation assets with links that can be pinned to a specific commit. For general contribution guidelines, refer to the [Contributor Handbook](CONTRIBUTOR_HANDBOOK.md).
 Replace `<commit>` in each permalink with the desired commit hash to reference an exact version of the file.
 
 | Document | Description | Permalink Template |
