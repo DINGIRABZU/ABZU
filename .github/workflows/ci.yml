@@ -55,18 +55,17 @@ jobs:
             ~/.cache/huggingface
             INANNA_AI/models
           key: ${{ runner.os }}-models-${{ hashFiles('download_models.py') }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt -r dev-requirements.txt
-          pip install -e .
-          pip install pytest pytest-cov
-      - name: Verify required pytest plugins
-        run: python - <<'PY'
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt -r dev-requirements.txt
+            pip install -e .
+        - name: Verify required pytest plugins
+          run: python - <<'PY'
 import importlib, sys
 sys.exit(0 if importlib.util.find_spec('pytest_cov') else 1)
 PY
-      - name: Run tests
+        - name: Run tests
         run: pytest --cov
 
   ci:

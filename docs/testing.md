@@ -6,6 +6,14 @@ flowchart LR
     T --> R[Report]
 ```
 
+## Required pytest plugins
+
+The test suite expects certain plugins to be available:
+
+- `pytest-cov` for coverage reporting via the `--cov` options in `pytest.ini`.
+
+Install them with `pip install -r dev-requirements.txt`.
+
 ## Manual smoke tests
 
 ### Prioritized test tiers
