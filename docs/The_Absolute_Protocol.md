@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.1
+**Version:** v1.0.2
 **Last updated:** 2025-08-28
 
 ## How to Use This Protocol
@@ -14,6 +14,8 @@ The Absolute Protocol governs all other guides. Review subordinate protocols as 
   - [Documentation Protocol](documentation_protocol.md) – workflow for updating docs.
   - [Code Style Guide](../CODE_STYLE.md) – code formatting standards.
   - [Pull Request Template](../.github/pull_request_template.md) – required PR structure.
+  - [Co-creation Framework](co_creation_framework.md) – feedback loops between developers and INANNA_AI.
+  - [AI Ethics Framework](ai_ethics_framework.md) – transparency, fairness, and data-handling principles.
   - [Documentation Index](index.md) – high-level entry point.
   - [Generated Index](INDEX.md) – auto-generated list of all docs.
   - [Absolute Milestones](ABSOLUTE_MILESTONES.md) – summary of past and upcoming milestones.
