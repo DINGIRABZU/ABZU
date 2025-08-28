@@ -11,6 +11,9 @@ Install the required tools before working on the project:
 - **pre-commit** – run linters and formatters via `pre-commit install`.
 - **Docker** *(optional)* – build and run containerized services.
 
+Follow the [Code Style Guide](../CODE_STYLE.md) for formatting,
+naming, and docstring conventions.
+
 Key commands:
 
 ```bash

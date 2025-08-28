@@ -7,6 +7,7 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Documentation Index](docs/index.md) – curated starting points
 - [Full Documentation Inventory](docs/INDEX.md)
 - [Developer Onboarding](docs/developer_onboarding.md)
+- [Code Style Guide](CODE_STYLE.md)
 - [Nazarick Agents](docs/nazarick_agents.md)
 - [Chakra Koan System](docs/chakra_koan_system.md)
 - [Chakra Version Manifest](docs/chakra_versions.json)
