@@ -29,6 +29,15 @@ LOGGER = logging.getLogger("agents.razar.health_checks")
 HEALTH_GAUGE: Gauge | None = None
 LATENCY_GAUGE: Gauge | None = None
 
+# Exported helpers for external modules
+__all__ = [
+    "init_metrics",
+    "ready_signal",
+    "ping_endpoint",
+    "verify_log",
+    "run",
+]
+
 
 def init_metrics(port: int = 9350) -> None:
     """Start a Prometheus server if the client library is installed."""

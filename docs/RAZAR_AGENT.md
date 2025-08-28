@@ -1,44 +1,50 @@
 # RAZAR Agent
 
-The **RAZAR Agent** ignites ABZU before any servant awakens. It establishes a
-clean launch arena, manages isolated dependencies, and coordinates recovery when
-components falter. RAZAR’s mission spans three roles:
+The RAZAR agent bootstraps local services in a controlled environment.  It
+creates a Python virtual environment, installs any component dependencies and
+then launches each component in priority order.
 
-- **Pre‑creation igniter** – validates prerequisites, compiles the ignition
-  plan and lights the first spark for downstream agents.
-- **Virtual‑environment manager** – builds the per‑component environment defined
-  in `razar_env.yaml`, updates `PATH`/`VIRTUAL_ENV`, and records progress in
-  `logs/razar_state.json` so restarts resume from the last healthy step.
-- **Recovery coordinator** – performs health checks, quarantines failed modules
-  via `agents.razar.quarantine_manager`, and restarts services after repairs.
+## Runtime manager
 
-## Usage
-
-Invoke RAZAR directly to bootstrap components:
+`agents/razar/runtime_manager.py` reads a configuration file that lists the
+components to start and the shell command for each.  Successful launches are
+recorded in `logs/razar_state.json` so subsequent runs resume from the last
+healthy component.
 
 ```bash
-python -m agents.razar.runtime_manager config/razar_config.yaml
+python -m agents.razar.runtime_manager path/to/razar_config.yaml
 ```
 
-`start_dev_agents.py` and `launch_servants.sh` call RAZAR before performing
-other work. Override the configuration file by setting `RAZAR_CONFIG` in the
-environment.
+Dependencies for a component can be declared in `razar_env.yaml` under a layer
+with the same name.  They are installed into a private virtual environment under
+`.razar_venv/`.
 
-## Remote Agent Pipeline
+## Health checks
 
-RAZAR can extend its capabilities at runtime by pulling helper agents from
-remote locations. The :mod:`agents.razar.remote_loader` utility supports three
-strategies:
+`agents/razar/health_checks.py` provides small probes that verify core
+services.  The runtime manager invokes the check for a component after it starts
+and may retry once if a restart command is defined.  When the optional
+`prometheus_client` package is installed, a metrics endpoint is also exposed.
 
-1. **HTTP modules** – download a single Python file from an HTTP(S) endpoint,
-   load it with ``importlib`` and execute its ``configure()`` and ``patch()``
-   hooks.
-2. **Git repositories** – clone a repository via **GitPython** and load a
-   specified module path.
-3. **HTTP GPT services** – interact with a JSON API exposing ``/configure`` and
-   ``/patch`` routes using :mod:`requests`.
+Individual checks can also be executed from the command line:
 
-Each agent's configuration and any patch suggestions are recorded in
-``logs/razar_remote_agents.json``. The ``patch_on_test_failure`` helper will
-request a patch from a remote agent when tests fail, apply the returned diff in
-a sandbox and re-run the test suite before committing the change.
+```bash
+python -m agents.razar.health_checks
+```
+
+## Quarantine manager
+
+Failed components are isolated by `agents/razar/quarantine_manager.py`.  A JSON
+file describing the failure is written under `quarantine/` and a human readable
+entry is appended to `docs/quarantine_log.md`.  Removing the JSON file and
+adding a `resolved` entry to the log restores a component.
+
+```bash
+python - <<'PY'
+from agents.razar import quarantine_manager as qm
+qm.quarantine_component({'name': 'demo'}, 'startup failure')
+PY
+```
+
+The quarantine utilities also track diagnostic data and patches applied to a
+component, making it easier to audit recovery steps.

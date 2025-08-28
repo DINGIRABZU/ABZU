@@ -20,6 +20,9 @@ from typing import Dict, Iterable, List, Sequence
 import venv
 from . import checkpoint_manager, health_checks, quarantine_manager
 
+# Re-export primary entry points for simpler imports
+__all__ = ["RuntimeManager", "main"]
+
 try:
     import yaml
 except ImportError as exc:  # pragma: no cover - dependencies handled by tests
