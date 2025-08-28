@@ -32,6 +32,8 @@ def collect_markdown_paths() -> List[Path]:
         path = (ROOT / Path(line)).resolve()
         if path == INDEX_FILE.resolve():
             continue
+        if "node_modules" in path.parts:
+            continue
         paths.append(path)
     return sorted(paths)
 
@@ -74,9 +76,12 @@ def write_index(entries: List[Tuple[str, str, str, List[str]]]) -> None:
     ]
     for rel_path, title, summary, modules in entries:
         modules_text = ", ".join(f"`{m}`" for m in modules) if modules else "-"
+        safe_title = title.replace("|", "\\|")
+        safe_summary = (summary or "-").replace("|", "\\|")
+        safe_modules = modules_text.replace("|", "\\|")
         line = (
-            f"| [{rel_path}]({rel_path}) | {title.replace('|', '\\|')} | "
-            f"{(summary or '-').replace('|', '\\|')} | {modules_text.replace('|', '\\|')} |"
+            f"| [{rel_path}]({rel_path}) | {safe_title} | "
+            f"{safe_summary} | {safe_modules} |"
         )
         lines.append(line)
     lines.append("")
