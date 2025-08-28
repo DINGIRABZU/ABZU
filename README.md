@@ -16,8 +16,8 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Start Here
 - Consult [The Absolute Protocol](docs/The_Absolute_Protocol.md) for repository rules and workflows.
-- Review the [Blueprint Export](docs/BLUEPRINT_EXPORT.md) snapshot for versioned links to core documentation.
-- Walk through the [Onboarding Guide](docs/onboarding_guide.md) (v1.0.0, updated 2025-08-28) to rebuild or extend the system using those docs alone.
+- Review the [Blueprint Export](docs/BLUEPRINT_EXPORT.md) snapshot for versioned links to core documentation and consult the [Documentation Index](docs/index.md).
+- Walk through the [Onboarding Guide](docs/onboarding_guide.md) (v1.0.0, updated 2025-08-28) to rebuild or extend the system using those docs alone, or browse the [Documentation Index](docs/index.md) for related guides.
 
 For deeper background, consult the [CRYSTAL CODEX](CRYSTAL_CODEX.md) and the [documentation inventory](docs/INDEX.md).
 
