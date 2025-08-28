@@ -14,6 +14,8 @@ exhaustive module inventory.
 
 - **High‑level docs**
   - [Documentation Index](index.md) – gateway to every guide
+  - [Blueprint Export](BLUEPRINT_EXPORT.md) – versioned snapshot of key documents and dependencies
+  - [Onboarding Guide](onboarding_guide.md) – step‑by‑step setup and rebuild walkthrough
   - [Project Overview](project_overview.md) – explains Spiral OS goals and scope
   - [Architecture Overview](architecture_overview.md) – shows how major components fit together
   - [Component Index](component_index.md) – inventory of modules and services

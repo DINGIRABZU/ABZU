@@ -1,6 +1,6 @@
 # Blueprint Export
 
-This export lists major documentation assets with links that can be pinned to a specific commit.
+This snapshot lists major documentation assets with links that can be pinned to a specific commit.
 Replace `<commit>` in each permalink with the desired commit hash to reference an exact version of the file.
 
 | Document | Description | Permalink Template |
@@ -23,3 +23,12 @@ Replace `<commit>` in each permalink with the desired commit hash to reference a
 | Vision | Long-term vision for the project | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/VISION.md |
 | Release Notes | Historical release information | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/release_notes.md |
 
+## Dependency Overview
+
+ABZU’s dependencies and their relationships are documented separately:
+
+- [Dependencies](dependencies.md) — list of core packages and external services.
+- [Dependency Graph](dependency-graph.md) — visual map of module interactions.
+- [Dependency Risks](dependency_risks.md) — areas requiring extra review.
+
+These references help track how components rely on one another and make it easy to audit changes across the system.

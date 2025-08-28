@@ -1,15 +1,15 @@
-# Developer Onboarding Guide
+# Onboarding Guide
 
-This guide outlines how a new contributor can recreate and extend the system relying solely on the documentation.
+This guide walks through setting up the project and shows how a new contributor can rebuild or extend the system using only the documentation.
 
 ## 1. Survey the Blueprint
 Begin with the [Blueprint Export](BLUEPRINT_EXPORT.md) to locate foundational documents. Each entry provides a permalink template for a specific version of the file.
 
 ## 2. Prepare the Environment
 Follow the setup documents:
-- [Setup Guide](setup.md) for standard installation
-- [Minimal Setup](setup_minimal.md) or [Full Setup](setup_full.md) depending on resource availability
-- [Environment Setup](environment_setup.md) for dependency details
+1. Clone the repository and install prerequisites from the [Setup Guide](setup.md).
+2. Choose either the [Minimal Setup](setup_minimal.md) or [Full Setup](setup_full.md) based on resources.
+3. Consult [Environment Setup](environment_setup.md) for system packages and dependency details.
 
 ## 3. Understand the Architecture
 Study the system design materials to grasp component responsibilities and data flow:
@@ -29,9 +29,16 @@ Ensure changes are safe and reproducible by consulting:
 - [Testing Music Pipeline](testing_music_pipeline.md)
 - [Troubleshooting](troubleshooting.md)
 
-## 6. Extend the System
+## 6. Rebuild from Documentation
+Using only the documents above you can reconstruct the project:
+1. Bootstrap the environment using the setup guides.
+2. Wire components according to the [System Blueprint](system_blueprint.md) and related architecture docs.
+3. Follow the development workflow to implement a small change.
+4. Validate with the testing guides to confirm the stack is operational.
+
+## 7. Extend the System
 With the architecture, workflow, and validation steps in hand, you can implement new features or adjust existing modules. Reference domain-specific guides in the `docs/` directory and follow the security practices outlined in [Security Model](security_model.md).
 
-## 7. Share Knowledge
+## 8. Share Knowledge
 Update documentation when adding features so others can replicate your work. The [Developer Manual](developer_manual.md) and [Contribution Guide](contribution_guide.md) describe expectations for pull requests and reviews.
 
