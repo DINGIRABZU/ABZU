@@ -83,6 +83,7 @@ def synthesize(output: Path | None = None) -> nx.DiGraph:
     docs = [
         root / "docs" / "system_blueprint.md",
         root / "docs" / "component_index.md",
+        root / "docs" / "nazarick_manifesto.md",
     ]
     graph = build_graph(docs)
     if output is None:
