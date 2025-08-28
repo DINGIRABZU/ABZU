@@ -1,9 +1,11 @@
-"""Synchronize Ignition and system blueprint docs.
+"""Synchronize Ignition, blueprint and component docs.
 
 This utility rebuilds ``docs/Ignition.md`` and refreshes sections in
 ``docs/system_blueprint.md`` with the latest component status and best boot
-sequence.  The sequence is pulled from ``logs/razar_boot_history.json`` and the
-status mapping comes from the :class:`agents.razar.lifecycle_bus.LifecycleBus`.
+sequence.  It also regenerates the component inventory under ``docs`` to keep
+per‑module tables in sync with the source tree.  The boot sequence is pulled
+from ``logs/razar_boot_history.json`` and the status mapping comes from the
+:class:`agents.razar.lifecycle_bus.LifecycleBus`.
 
 Run manually with ``python -m razar.doc_sync``.
 """
@@ -12,6 +14,8 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -126,8 +130,19 @@ def update_system_blueprint(
     path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
 
 
+def update_component_docs() -> None:
+    """Regenerate component inventory tables."""
+
+    script = ROOT / "scripts" / "component_inventory.py"
+    if script.exists():
+        try:
+            subprocess.run([sys.executable, str(script)], check=True)
+        except Exception:
+            pass  # pragma: no cover - best effort
+
+
 def sync_docs() -> None:
-    """Regenerate ignition docs and refresh the system blueprint."""
+    """Regenerate ignition docs, blueprint and component inventory."""
 
     build_ignition(BLUEPRINT_PATH, IGNITION_PATH)
     try:
@@ -138,6 +153,7 @@ def sync_docs() -> None:
     priorities = load_priorities()
     sequence = load_best_sequence()
     update_system_blueprint(BLUEPRINT_PATH, statuses, sequence, priorities)
+    update_component_docs()
 
 
 def main() -> None:  # pragma: no cover - CLI entry point

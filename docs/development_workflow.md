@@ -35,6 +35,20 @@ python -m razar.module_sandbox path/to/module --patch change.diff
 
 The helper clones selected components into a temp directory, applies patches or scaffolds, runs `pytest` on the touched modules and copies the results back only when tests pass.
 
+## Documentation Regeneration
+
+Regenerate docs after a successful patch to keep status tables current:
+
+```bash
+python -m razar.doc_sync
+```
+
+This command rebuilds `Ignition.md`, refreshes `system_blueprint.md` and rewrites the component inventory under `docs`.
+For a standalone inventory update, run:
+
+```bash
+python scripts/component_inventory.py
+```
 
 ## Testing
 
