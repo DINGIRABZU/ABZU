@@ -12,7 +12,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | - |
-| [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Follow... | - |
+| [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
 | [../CHANGELOG_rag_orchestrator.md](../CHANGELOG_rag_orchestrator.md) | Changelog for `rag.orchestrator` | All notable changes to this component will be documented in this file. | - |
@@ -261,6 +261,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its m... | `../SPIRAL_OS/qnl_engine.py`, `../agents/asian_gen/creative_engine.py`, `../agents/bana/bio_adaptive_narrator.py`, `../agents/cocytus/prompt_arbiter.py`, `../agents/demiurge/strategic_simulator.py`, `../agents/ecosystem/aura_capture.py`, `../agents/ecosystem/mare_gardener.py`, `../agents/land_graph/geo_knowledge.py`, `../agents/pandora/persona_emulator.py`, `../agents/pleiades/signal_router.py`, `../agents/pleiades/star_map.py`, `../agents/sebas/compassion_module.py`, `../agents/shalltear/fast_inference_agent.py`, `../agents/victim/security_canary.py`, `../crown_prompt_orchestrator.py`, `../memory_scribe.py`, `../orchestration_master.py` |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | - | - |
+| [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | Follow this reading order before contributing: | - |
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fresh clone. | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
