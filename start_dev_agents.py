@@ -51,9 +51,11 @@ def load_env(path: Path) -> None:
 def start_razar(config: str = "config/razar_config.yaml") -> None:
     """Invoke the RAZAR runtime manager to launch prerequisites in priority order."""
 
+    logger = logging.getLogger(__name__)
     manager = RuntimeManager(Path(config))
+    logger.info("Launching RAZAR with config %s", config)
     if not manager.run():
-        raise RuntimeError("RAZAR failed to start components")
+        raise RuntimeError(f"RAZAR failed to start components from {config}")
 
 
 def main() -> int:
@@ -155,8 +157,9 @@ def main() -> int:
 
     # Ensure infrastructure components are up before proceeding with the
     # development cycle.
-    razar_config = os.environ.get("RAZAR_CONFIG", "config/razar_config.yaml")
-    start_razar(razar_config)
+    razar_config = Path(os.environ.get("RAZAR_CONFIG", "config/razar_config.yaml"))
+    logger.info("Starting RAZAR runtime manager using %s", razar_config)
+    start_razar(str(razar_config))
 
     spiral_cortex.log_insight("start_dev_agents", [vars(args)], sentiment=0.0)
 
