@@ -7,9 +7,9 @@ persisted in ``logs/pytest_state.json`` so subsequent invocations with the
 ``--resume`` flag continue from the failing tier using pytest's ``--last-failed``
 support.  When a tier fails the failure context is relayed to
 ``planning_engine`` and broadcast to the CROWN stack for repair suggestions.
-Suggested patches are recorded and the local repair helper may apply them before
-continuing.  Output from each tier is appended to ``logs/pytest_priority.log``
-for downstream analysis.
+Suggested patches are applied inside a temporary sandbox and the affected tests
+are rerun before the repository is updated. Output from each tier is appended to
+``logs/pytest_priority.log`` for downstream analysis.
 """
 
 from __future__ import annotations
