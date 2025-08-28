@@ -544,6 +544,23 @@ Robust health checks keep the system stable and observable.
 - During deployment, configure these checks so orchestration platforms only
   advance when readiness reports success.
 
+## Components in Development
+RAZAR tracks modules flagged as experimental in
+[component_status.md](component_status.md) and `component_status.json`.
+These components are not required for baseline operation and may change
+rapidly. During boot RAZAR:
+
+- Marks in‑development components with a warning and delays their startup
+  until explicitly enabled.
+- Falls back to mock implementations if dependencies are missing.
+- Records their status in `logs/razar.log` so contributors can review their
+  readiness.
+
+Consult the [Developer Onboarding](developer_onboarding.md) guide for
+bringing these components online and the
+[Recovery Playbook](recovery_playbook.md) for restoration procedures when
+they fail health checks.
+
 ## Failure Scenarios and Recovery Steps
 - **Memory store unavailable** – Chat gateway returns 503 or CROWN LLM waits
   indefinitely. Restore from snapshots as outlined in
@@ -561,6 +578,16 @@ Robust health checks keep the system stable and observable.
 General guidance: stop the failed service, confirm dependencies, and restart
 following the startup order. For persistent issues, consult the
 [Recovery Playbook](recovery_playbook.md) to restore from snapshots.
+
+## Quarantine and Diagnostics
+Persistent failures trigger RAZAR's quarantine routine. The affected
+component's metadata moves to `quarantine/` and an entry is added to
+[quarantine_log.md](quarantine_log.md). Use the tools in
+[diagnostics.md](diagnostics.md) to repair corrupted state or missing
+dependencies before attempting recovery via the
+[Recovery Playbook](recovery_playbook.md). New contributors should see
+[developer_onboarding.md](developer_onboarding.md) for environment rebuild
+tips.
 
 ## Operations & Monitoring
 
