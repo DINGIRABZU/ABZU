@@ -66,7 +66,7 @@ Each agent document must cover:
 - Functional Workflows
 - Architecture diagram
 - Requirements
-- Deployment workflow
+- Deployment workflow with environment setup, launch sequence, rollback strategy, and cross-links to subsystem-specific deployment sections (e.g., RAZAR Agent, Albedo Layer, Nazarick agents)
 - Configuration schemas
 - Version history
 - Cross-links
