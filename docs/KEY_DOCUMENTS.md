@@ -6,8 +6,11 @@ The files listed here are foundational and must never be deleted or renamed.
 
 - [AGENTS.md](../AGENTS.md)
 - [The Absolute Protocol](The_Absolute_Protocol.md)
+- [System Blueprint](system_blueprint.md)
+- [Component Index](component_index.md)
+- [Component Status](component_status.md)
 
-These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming.
+These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
 
 Contributors must also record a brief summary of each protected document in `onboarding_confirm.yml`. Each summary should describe the document's **purpose**, **scope**, and **key rules**.
 
