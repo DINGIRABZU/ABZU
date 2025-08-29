@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.26
-**Last updated:** 2025-08-30
+**Version:** v1.0.27
+**Last updated:** 2025-08-29
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -142,13 +142,13 @@ preserve handshake history for auditing.
 
 ### Technology Registry Protocol
 
-- Record approved runtimes, frameworks, and library versions.
-- Update the registry when dependencies are added, upgraded, or deprecated.
+- Maintain the [Dependency Registry](dependency_registry.md) of approved runtimes, frameworks, and library minimum versions.
+- Update the registry when dependencies are added, upgraded, or deprecated, and validate changes with `pre-commit run --files docs/dependency_registry.md docs/INDEX.md`.
 
 ## Maintenance
 Whenever this file changes:
 1. Regenerate `docs/INDEX.md` with `python tools/doc_indexer.py`.
-2. Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/INDEX.md`.
+2. Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
 
 ## Protocol Change Process
 Updates to this protocol follow a lightweight governance model:
