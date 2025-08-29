@@ -1,10 +1,18 @@
 # Connector Overview
 
-Connectors bridge Spiral OS to external communication services. Each connector follows these patterns:
+Connectors bridge Spiral OS to external communication services. Each connector follows these patterns and maintenance rules:
+
+**Common Patterns**
 
 - Exposes a `__version__` field for traceability.
-- Provides a callable endpoint or interface such as `start_call` and `close_peers`.
-- Documents authentication requirements for its target service.
-- Registers its service details in [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md).
+- Provides one or more callable endpoints or interfaces.
+- Documents authentication and network protocols used.
 
-These conventions keep integration layers consistent and discoverable.
+**Maintenance Rules**
+
+- Update the entry in [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md) whenever versions, endpoints, or protocols change.
+- Increment `__version__` for any backward-incompatible changes.
+- Keep modules lightweight with clear dependencies and minimal side effects.
+- Supply or update tests and docs alongside connector changes.
+
+These conventions keep integration layers consistent, discoverable, and easy to maintain.
