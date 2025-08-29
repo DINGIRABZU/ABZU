@@ -17,4 +17,5 @@ A separate **connector** object handles call routing. `language_engine` stores a
 reference via `register_connector()` and invokes `start_call()` on the connector
 whenever speech is synthesised while `context_tracker.state.in_call` is `True`.
 This indirection allows different communication back ends—such as WebRTC or a
-phone gateway—to integrate without altering the synthesis logic.
+phone gateway—to integrate without altering the synthesis logic. See the
+[Connector Index](connectors/CONNECTOR_INDEX.md) for available implementations.

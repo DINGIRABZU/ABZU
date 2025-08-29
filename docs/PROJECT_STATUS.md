@@ -12,7 +12,7 @@ This document summarizes the current state of the ABZU codebase. It serves as a 
 - **INANNA_AI_AGENT/** – Command line interface that activates the system and interacts with models.
 - **audio/** – Audio processing utilities and backends for handling waveforms and feature extraction.
 - **crown_config/** – Pydantic settings models and environment variable parsing.
-- **connectors/** – Integrations with external services and APIs.
+- **connectors/** – Integrations with external services and APIs (see [Connector Index](connectors/CONNECTOR_INDEX.md)).
 - **tests/** – Unit tests for learning modules, connectors, and audio helpers.
 - **docs/** – Architecture overviews, deployment guides, and design notes.
 

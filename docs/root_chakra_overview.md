@@ -26,7 +26,7 @@ Several variables influence the Root layer:
 
 - `GLM_COMMAND_TOKEN` – authorises `/glm-command` requests.
 - `OPENWEBUI_USERNAME` and `OPENWEBUI_PASSWORD` – credentials for the `/token` login endpoint used by OpenWebUI clients.
-- `WEB_CONSOLE_API_URL` – enables WebRTC connectors when present.
+- `WEB_CONSOLE_API_URL` – enables WebRTC connectors when present (see [Connector Index](connectors/CONNECTOR_INDEX.md)).
 - `GLM_API_URL` and `GLM_API_KEY` – endpoint and key for the GLM service.
 - `HF_TOKEN` – Hugging Face token for model downloads.
 - `ARCHETYPE_STATE` – initial personality layer loaded by `start_spiral_os.py`.
