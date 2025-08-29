@@ -93,6 +93,46 @@ plan = {"demo": {"component": "agents/demo.py", "snippet": snippet, "tests": tes
 module_builder.build("demo", plan=plan)
 ```
 
+## Core Modules
+
+### `boot_orchestrator.py`
+
+[razar/boot_orchestrator.py](../razar/boot_orchestrator.py) sequences
+components from `boot_config.json`, performs a CROWN handshake, and logs run
+metrics.
+
+### `environment_builder.py`
+
+[razar/environment_builder.py](../razar/environment_builder.py) ensures the
+requested Python version, creates a virtual environment, and installs dependency
+layers from `razar_env.yaml`.
+
+### `doc_sync.py`
+
+[razar/doc_sync.py](../razar/doc_sync.py) regenerates system documentation using
+boot history and lifecycle status updates.
+
+### `checkpoint_manager.py`
+
+[razar/checkpoint_manager.py](../razar/checkpoint_manager.py) persists boot
+progress so interrupted runs can resume from the last successful component.
+
+### `crown_link.py`
+
+[razar/crown_link.py](../razar/crown_link.py) offers a minimal WebSocket client
+for sending status updates and repair requests to the CROWN stack.
+
+### `adaptive_orchestrator.py`
+
+[razar/adaptive_orchestrator.py](../razar/adaptive_orchestrator.py) experiments
+with alternate boot sequences and records the best-performing order in
+`logs/razar_boot_history.json`.
+
+### `cocreation_planner.py`
+
+[razar/cocreation_planner.py](../razar/cocreation_planner.py) builds collaborative
+plans by combining component priorities, failure counts, and CROWN suggestions.
+
 ## Components & Links
 
 | Source Module | Related Docs |
@@ -289,6 +329,8 @@ components:
 
 ### `boot_config.json`
 
+The default configuration lives at [razar/boot_config.json](../razar/boot_config.json).
+
 **Schema**
 
 ```json
@@ -319,6 +361,8 @@ components:
 
 ### `razar_env.yaml`
 
+The default environment file lives at [razar_env.yaml](../razar_env.yaml).
+
 **Structure**
 
 ```yaml
@@ -336,6 +380,8 @@ layers:
 ```
 
 ### `logs/razar_state.json` and quarantine entries
+
+State snapshots are written to [logs/razar_state.json](../logs/razar_state.json).
 
 **State file format**
 
