@@ -10,8 +10,10 @@ the last successful component.
 from __future__ import annotations
 
 import argparse
+import asyncio
 import json
 import logging
+import os
 import shlex
 import subprocess
 import time
@@ -26,6 +28,7 @@ except Exception as exc:  # pragma: no cover
 
 from . import ai_invoker, code_repair, health_checks, quarantine_manager
 from .ignition_builder import DEFAULT_STATUS, parse_system_blueprint
+from razar.crown_handshake import CrownHandshake, CrownResponse
 
 LOGGER = logging.getLogger(__name__)
 
@@ -60,6 +63,48 @@ class BootOrchestrator:
         )
 
     # ------------------------------------------------------------------
+    # Crown handshake
+    # ------------------------------------------------------------------
+    def _persist_handshake(self, response: CrownResponse | None) -> None:
+        """Store handshake ``response`` details in the state file."""
+        data: Dict[str, object] = {}
+        if self.state_path.exists():
+            try:
+                data = json.loads(self.state_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                data = {}
+        if response is not None:
+            data["capabilities"] = response.capabilities
+            data["downtime"] = response.downtime
+        else:
+            data.setdefault("capabilities", [])
+            data.setdefault("downtime", {})
+        self.state_path.parent.mkdir(parents=True, exist_ok=True)
+        self.state_path.write_text(json.dumps(data), encoding="utf-8")
+
+    def _perform_handshake(self) -> None:
+        """Generate mission brief and invoke the CROWN handshake."""
+        brief = {
+            "priority_map": {
+                str(c["name"]): int(c["priority"]) for c in self.components
+            },
+            "current_status": self.statuses,
+            "open_issues": [],
+        }
+        brief_path = self.state_path.parent / "mission_brief.json"
+        brief_path.parent.mkdir(parents=True, exist_ok=True)
+        brief_path.write_text(json.dumps(brief), encoding="utf-8")
+
+        response: CrownResponse | None = None
+        try:
+            url = os.getenv("CROWN_WS_URL", "ws://localhost:8765")
+            handshake = CrownHandshake(url)
+            response = asyncio.run(handshake.perform(str(brief_path)))
+        except Exception:  # pragma: no cover - handshake is best effort
+            LOGGER.exception("CROWN handshake failed")
+        self._persist_handshake(response)
+
+    # ------------------------------------------------------------------
     # State helpers
     # ------------------------------------------------------------------
     def load_state(self) -> str:
@@ -75,9 +120,14 @@ class BootOrchestrator:
     def save_state(self, name: str) -> None:
         """Persist ``name`` as the last successful component."""
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
-        self.state_path.write_text(
-            json.dumps({"last_component": name}), encoding="utf-8"
-        )
+        data: Dict[str, object] = {}
+        if self.state_path.exists():
+            try:
+                data = json.loads(self.state_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                data = {}
+        data["last_component"] = name
+        self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
     # ------------------------------------------------------------------
     # Ignition file handling
@@ -222,6 +272,7 @@ class BootOrchestrator:
     def run(self) -> bool:
         """Execute the staged startup sequence."""
         self.write_ignition()
+        self._perform_handshake()
         commands = self._load_commands()
         last = self.load_state()
 

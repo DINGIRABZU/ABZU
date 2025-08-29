@@ -62,14 +62,22 @@ The Mermaid source lives at [assets/razar_architecture.mmd](assets/razar_archite
 2. **Configuration** – adjust settings in `boot_config.json` to define
    service priorities and flags.
 
-3. **Launch** – start the boot orchestrator to bring components online:
+3. **Handshake** – exchange a mission brief with the CROWN stack to learn
+   which capabilities are online and whether any components require
+   downtime.  The boot orchestrator invokes
+   `crown_handshake.perform()` and records the reply in
+   `logs/razar_state.json`.
+
+4. **Launch** – start the boot orchestrator to bring components online:
 
    ```bash
    python -m razar.boot_orchestrator
    ```
 
 If a component fails to start, inspect the logs and consult the
-[Recovery Playbook](recovery_playbook.md) for troubleshooting tips.
+[Recovery Playbook](recovery_playbook.md) for troubleshooting tips. The
+handshake data persists in `logs/razar_state.json` so operators can
+cross‑check advertised capabilities against runtime behaviour.
 
 ## Prioritized pytest runner
 
@@ -271,14 +279,20 @@ layers:
 
 ```json
 {
-  "last_component": "string"
+  "last_component": "string",
+  "capabilities": ["string"],
+  "downtime": {"component": {"patch": "info"}}
 }
 ```
 
 **Example**
 
 ```json
-{"last_component": "demo"}
+{
+  "last_component": "demo",
+  "capabilities": ["chat", "vision"],
+  "downtime": {"gateway": {"patch": "1.2.3"}}
+}
 ```
 
 **Quarantine entry format**
