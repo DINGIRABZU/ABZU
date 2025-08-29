@@ -1,13 +1,15 @@
-from __future__ import annotations
-
 """Automated module repair using LLM patch suggestions.
 
 This helper collects context around failing modules, requests patch suggestions
 from the CROWN LLM (or alternate models) and evaluates the patches inside a
-sandbox.  When the patched module passes its tests the change is reintroduced
-and the component is reactivated.
+sandbox. When the patched module passes its tests the change is reintroduced and
+the component is reactivated.
 """
 
+from __future__ import annotations
+
+import difflib
+import json
 import logging
 import os
 import shutil
@@ -24,6 +26,24 @@ logger = logging.getLogger(__name__)
 
 # Determine repository root relative to this file
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PATCH_LOG_PATH = PROJECT_ROOT / "logs" / "razar_ai_patches.json"
+
+
+def _record_patch(component: str, diff: str, tests: str) -> None:
+    """Append a patch record to ``PATCH_LOG_PATH``."""
+    PATCH_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    record = {"component": component, "diff": diff, "tests": tests}
+    if PATCH_LOG_PATH.exists():
+        try:
+            data = json.loads(PATCH_LOG_PATH.read_text(encoding="utf-8"))
+            if not isinstance(data, list):
+                data = []
+        except json.JSONDecodeError:
+            data = []
+    else:
+        data = []
+    data.append(record)
+    PATCH_LOG_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
 def _gather_context(module_path: Path, error: str) -> str:
@@ -55,6 +75,16 @@ def _apply_patch(
     module_path: Path, patch_text: str, test_paths: Sequence[Path]
 ) -> bool:
     """Apply ``patch_text`` in a sandbox and run tests."""
+    original = module_path.read_text(encoding="utf-8")
+    diff = "".join(
+        difflib.unified_diff(
+            original.splitlines(),
+            patch_text.splitlines(),
+            fromfile=str(module_path),
+            tofile=str(module_path),
+            lineterm="",
+        )
+    )
     with tempfile.TemporaryDirectory() as tmpdir:
         sandbox_root = Path(tmpdir)
         rel = module_path.relative_to(PROJECT_ROOT)
@@ -72,6 +102,7 @@ def _apply_patch(
     quarantine_manager.reactivate_component(
         module_path.stem, verified=True, automated=True
     )
+    _record_patch(module_path.stem, diff, "passed")
     doc_sync.sync_docs()
     return True
 
@@ -94,10 +125,9 @@ def repair_module(
     error:
         Error message from the failing test run.
     models:
-        Optional ordered list of models to query for patch suggestions.  When
+        Optional ordered list of models to query for patch suggestions. When
         omitted, a single default :class:`GLMIntegration` is used.
     """
-
     if models is None:
         models = [GLMIntegration()]
 
@@ -109,4 +139,4 @@ def repair_module(
     return _apply_patch(module_path, patch, tests)
 
 
-__all__ = ["repair_module"]
+__all__ = ["repair_module", "PATCH_LOG_PATH"]
