@@ -55,3 +55,9 @@ repos:
     name: Check for TODO/FIXME markers
     entry: python scripts/check_no_placeholders.py
     language: system
+  - id: check-connector-index
+    name: Check connector index entries
+    entry: python scripts/check_connector_index.py
+    language: python
+    pass_filenames: false
+    files: ^(connectors/|docs/connectors/CONNECTOR_INDEX.md)

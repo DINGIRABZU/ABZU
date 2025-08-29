@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.33
-**Last updated:** 2025-09-11
+**Version:** v1.0.34
+**Last updated:** 2025-09-12
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -18,6 +18,7 @@ Before opening a pull request, confirm each item:
 - [ ] Connector registry updated:
   - implementations expose `__version__`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
+- [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with version, purpose, service, status, and links
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Pull request includes change justification in the required format
 - [ ] `onboarding_confirm.yml` logs purpose, scope, key rules, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
