@@ -64,6 +64,46 @@ descriptions.
 
 Before diagnostics begin, RAZAR shares a short mission brief with the Crown stack. The brief summarises the priority map, current status and any open issues and is sent via the WebSocket helper `razar/crown_handshake.py`. Crown replies with an acknowledgment and a capability list so RAZAR knows which tools are available for the session. Each exchange is recorded to `logs/razar_crown_dialogues.json` for later review.
 
+### Mission Brief Example
+
+```json
+// sent
+{
+  "type": "brief",
+  "priority_map": {"memory": "ok"},
+  "open_issues": ["missing_audio_stream"]
+}
+
+// received
+{
+  "type": "ack",
+  "capabilities": ["glm", "avatar"],
+  "session": "2025-10-01T12:00:00Z"
+}
+```
+
+Sample WebSocket log:
+
+```
+[WS] -> {"type":"brief","priority_map":{"memory":"ok"}}
+[WS] <- {"type":"ack","capabilities":["glm","avatar"]}
+```
+
+## Operator Session
+
+After the handshake, an operator can issue runtime directives through Crown. The `/operator/command` endpoint relays these requests to RAZAR over the Crown link.
+
+```json
+// operator console
+POST /operator/command {"command": "status"}
+
+// WebSocket relay
+[WS] -> {"type": "operator", "command": "status"}
+[WS] <- {"type": "result", "output": "all green"}
+```
+
+RAZAR evaluates the command and returns the result, allowing operators to inspect or adjust the session without direct access to the underlying services.
+
 ## Deployment
 
 1. Configure the environment with [`init_crown_agent.py`](../init_crown_agent.py). This script prepares memory directories, registers servant models, and validates the GLM endpoint.
