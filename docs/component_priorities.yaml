@@ -1,29 +1,73 @@
 # Component priority registry for RAZAR ignition
-memory_store:
+RAZAR Startup Orchestrator:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Environment Builder:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Runtime Manager:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Health Checks:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Quarantine Manager:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Documentation Sync:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Checkpoint Manager:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Crown Link:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Adaptive Orchestrator:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Co-creation Planner:
+  priority: P0
+  criticality: core
+  issue_type: runtime
+Memory Store:
   priority: P1
   criticality: core
   issue_type: runtime
-chat_gateway:
+Chat Gateway:
   priority: P2
   criticality: core
   issue_type: runtime
-crown_llm:
+CROWN LLM:
   priority: P2
   criticality: core
   issue_type: config
-vision_adapter:
+Vision Adapter:
   priority: P2
   criticality: optional
   issue_type: integration
-audio_device:
+Inanna AI:
+  priority: P2
+  criticality: core
+  issue_type: runtime
+Audio Device:
   priority: P3
   criticality: optional
   issue_type: runtime
-avatar:
+Avatar:
   priority: P4
   criticality: optional
   issue_type: integration
-video:
+Video:
   priority: P5
   criticality: optional
   issue_type: integration
