@@ -84,6 +84,13 @@ similar to the RAZAR component links to summarize relationships:
 
 All diagrams must include a brief textual description and an accompanying Mermaid code block. Binary image formats (PNG, JPG, etc.) must not be committed.
 
+#### Mermaid Diagram Workflow
+
+- Write narrative explanation first.
+- Represent visuals with Mermaid code blocks.
+- Run `pre-commit run --files <changed_docs>` to trigger the `block-binaries` hook.
+- Convert existing binary diagrams to Mermaid before committing.
+
 ### Configuration File Documentation
 
 Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson), [razar_env.yaml](RAZAR_AGENT.md#razar_envyaml), and the log formats in the [logging guidelines](logging_guidelines.md).
