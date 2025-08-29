@@ -368,6 +368,14 @@ Each quarantined component is recorded as `quarantine/<name>.json`:
 }
 ```
 
+### Mission Brief Archive
+
+Each CROWN handshake serializes a mission brief to
+`logs/mission_briefs/<timestamp>.json`. These JSON files capture the
+priority map and status snapshot for every boot attempt, providing an audit
+trail for troubleshooting. Periodically prune old entries to manage disk
+usage.
+
 ## AI Handover
 
 RAZAR can delegate recovery to an external AI agent when repeated failures block the boot sequence. The goal is to restore service while following repository safety rules.

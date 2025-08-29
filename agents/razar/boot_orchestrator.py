@@ -91,8 +91,10 @@ class BootOrchestrator:
             "current_status": self.statuses,
             "open_issues": [],
         }
-        brief_path = self.state_path.parent / "mission_brief.json"
-        brief_path.parent.mkdir(parents=True, exist_ok=True)
+        archive_dir = self.state_path.parent / "mission_briefs"
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+        brief_path = archive_dir / f"{timestamp}.json"
         brief_path.write_text(json.dumps(brief), encoding="utf-8")
 
         response: CrownResponse | None = None
