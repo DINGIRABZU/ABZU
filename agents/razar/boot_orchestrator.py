@@ -104,6 +104,26 @@ class BootOrchestrator:
             LOGGER.exception("CROWN handshake failed")
         self._persist_handshake(response)
 
+    def _ensure_glm4v(self) -> None:
+        """Launch the GLM4V model if the capability is missing."""
+        data: Dict[str, object] = {}
+        if self.state_path.exists():
+            try:
+                data = json.loads(self.state_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                data = {}
+        capabilities = data.get("capabilities", [])
+        if "GLM4V" in capabilities:
+            return
+        script = self.state_path.parents[1] / "crown_model_launcher.sh"
+        LOGGER.info("Launching GLM4V via %s", script)
+        subprocess.run(["bash", str(script)], check=False)
+        launches = data.get("launched_models", [])
+        if "GLM4V" not in launches:
+            launches.append("GLM4V")
+        data["launched_models"] = launches
+        self.state_path.write_text(json.dumps(data), encoding="utf-8")
+
     # ------------------------------------------------------------------
     # State helpers
     # ------------------------------------------------------------------
@@ -273,6 +293,7 @@ class BootOrchestrator:
         """Execute the staged startup sequence."""
         self.write_ignition()
         self._perform_handshake()
+        self._ensure_glm4v()
         commands = self._load_commands()
         last = self.load_state()
 

@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.16
+**Version:** v1.0.17
 **Last updated:** 2025-08-29
 
 ## How to Use This Protocol
@@ -19,6 +19,7 @@ Before opening a pull request, confirm each item:
 - [ ] If a connector is added or modified, update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with version and service details
 - [ ] `docs/INDEX.md` regenerated if docs changed
 - [ ] Confirm no binary files are introduced
+- [ ] Handshake-triggered model launches documented in agent guides and state logs
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:

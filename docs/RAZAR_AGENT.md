@@ -110,8 +110,10 @@ module_builder.build("demo", plan=plan)
    which capabilities are online and whether any components require
    downtime. The boot orchestrator invokes
    `crown_handshake.perform()`, records the reply in
-   `logs/razar_state.json`, and starts `crown_model_launcher.sh` if the
-   `GLM4V` capability is missing.
+   [logs/razar_state.json](../logs/razar_state.json), and if the
+   `GLM4V` capability is missing runs
+   [`crown_model_launcher.sh`](../crown_model_launcher.sh), logging the
+   launch under `launched_models`.
 
 4. **Launch** – start the boot orchestrator to bring components online:
 
@@ -326,7 +328,8 @@ layers:
 {
   "last_component": "string",
   "capabilities": ["string"],
-  "downtime": {"component": {"patch": "info"}}
+  "downtime": {"component": {"patch": "info"}},
+  "launched_models": ["string"]
 }
 ```
 
@@ -336,7 +339,8 @@ layers:
 {
   "last_component": "demo",
   "capabilities": ["chat", "vision"],
-  "downtime": {"gateway": {"patch": "1.2.3"}}
+  "downtime": {"gateway": {"patch": "1.2.3"}},
+  "launched_models": ["GLM4V"]
 }
 ```
 
