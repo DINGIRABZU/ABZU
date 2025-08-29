@@ -1,5 +1,7 @@
 # RAZAR Agent
 
+Bootstrapper for local services and mission brief exchange with the CROWN stack.
+
 ## Vision
 
 The RAZAR agent bootstraps local services in a controlled environment. It
@@ -149,7 +151,7 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
 | [razar/adaptive_orchestrator.py](../razar/adaptive_orchestrator.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 | [razar/cocreation_planner.py](../razar/cocreation_planner.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 
-## Deployment
+## Deployment Workflow
 
 1. **Environment setup** – build isolated dependencies with
    `razar.environment_builder`:
@@ -163,7 +165,13 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
 
 3. **Handshake** – exchange a mission brief with the CROWN stack to learn
    which capabilities are online and whether any components require
-   downtime. The boot orchestrator invokes
+   downtime. The handshake can be invoked directly:
+
+   ```bash
+   python -m razar.crown_handshake path/to/mission_brief.json
+   ```
+
+   During a full boot the orchestrator calls
    `crown_handshake.perform()`, records the reply in
    [logs/razar_state.json](../logs/razar_state.json), and if the
    `GLM4V` capability is missing runs
@@ -439,15 +447,30 @@ usage.
 
 ## Example Runs
 
-Below is an example boot sequence demonstrating how RAZAR initializes services:
+### Startup and Handshake
 
 ```bash
+$ python -m razar.crown_handshake logs/mission_briefs/demo.json
+[HANDSHAKE] posting mission brief
+[HANDSHAKE] Crown capabilities: chat, vision
 $ python -m razar.boot_orchestrator
 [BOOT] creating virtual environment
 [BOOT] launching environment_builder
 [BOOT] launching runtime_manager
 [BOOT] writing mission brief to logs/mission_briefs/2025-05-16T12-00-00.json
 [BOOT] wrote state snapshot to logs/razar_state.json
+```
+
+### Simulated Failure Recovery
+
+```bash
+$ python -m razar.boot_orchestrator --demo-fail runtime_manager
+[BOOT] creating virtual environment
+[BOOT] launching environment_builder
+[FAIL] runtime_manager crashed
+[HANDOVER] invoking ai_invoker
+[HANDOVER] patch applied, restarting runtime_manager
+[BOOT] runtime_manager recovered
 ```
 
 Logs are stored in `logs/razar_state.json` and `logs/mission_briefs/`.
