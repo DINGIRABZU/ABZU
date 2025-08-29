@@ -2,6 +2,7 @@
 
 This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its memory scope, and relies on key external libraries. Startup is coordinated by the external [RAZAR Agent](RAZAR_AGENT.md)—ABZU's pre‑creation igniter, virtual‑environment manager, and recovery coordinator—which prepares a clean environment, launches components according to priority, performs health checks with quarantine for failures, and then hands control to these servants after completing a handshake with the CROWN LLM and servant models. The layered vision behind these servants is detailed in the [Great Tomb of Nazarick](great_tomb_of_nazarick.md), which outlines objectives, channel hierarchy, tech stack, and chakra alignment. The ethical covenant that binds them is captured in the [Nazarick Manifesto](nazarick_manifesto.md). For narrative orchestration see the [Nazarick Narrative System](nazarick_narrative_system.md).
 
+For a browser-based interface to these servants, see the [Nazarick Web Console](nazarick_web_console.md).
 [Chat2DB](chat2db.md) bridges the SQLite log and vector store so agents can persist transcripts and retrieve relevant context.
 
 ## Floor–Channel Map
