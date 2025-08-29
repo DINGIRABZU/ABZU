@@ -11,7 +11,9 @@ below.
 <!-- Required: link to the relevant issue, documentation, or feature spec. -->
 
 ## Change justification
-<!-- Required: I did X on Y to obtain Z, expecting behavior B. If a connector was added or modified, note the [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) update with version and service details. -->
+<!-- Required -->
+I did X on Y to obtain Z, expecting behavior B.
+<!-- If a connector was added or modified, note the [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) update with version and service details. -->
 
 ## Checklist
 - [ ] Tests run <!-- Required: list tests run, e.g., `pytest` -->

@@ -142,7 +142,7 @@ Every pull request must include a statement in the **Change justification** sect
 
 "I did X on Y to obtain Z, expecting behavior B."
 
-This justification clarifies the action taken, the context, the observed result, and the intended outcome. The dedicated field in the pull request template makes this requirement explicit so reviewers can verify the rationale.
+This justification clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this via a mandatory field in [`.github/pull_request_template.md`](../.github/pull_request_template.md) so reviewers can verify the rationale.
 
 This process ensures the protocol evolves transparently and stays in sync with repository practices.
 
