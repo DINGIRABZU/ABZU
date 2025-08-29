@@ -305,6 +305,42 @@ Each quarantined component is recorded as `quarantine/<name>.json`:
 }
 ```
 
+## AI Handover
+
+RAZAR can delegate recovery to an external AI agent when repeated failures block the boot sequence. The goal is to restore service while following repository safety rules.
+
+**Purpose**
+
+- Apply minimal patches or configuration tweaks under supervision.
+- Resume normal operation without manual intervention.
+
+**Invocation sequence**
+
+1. Boot failures trigger the handover flag.
+2. RAZAR sends failure context to the AI agent.
+3. The agent proposes a patch and justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
+4. RAZAR applies the patch and runs component tests.
+5. On success, services restart.
+
+The handover flow:
+
+```mermaid
+flowchart LR
+    boot([Boot]) --> ai[AI invocation] --> patch[Patch] --> test[Test] --> restart[Restart]
+```
+
+The Mermaid source lives at [assets/ai_handover_flow.mmd](assets/ai_handover_flow.mmd).
+
+**Safety checks**
+
+- Patches execute in a sandboxed environment.
+- Required tests must pass before restart.
+- Justification is logged and reviewed.
+
+**Rollback**
+
+If tests fail or regressions appear, RAZAR reverts to the previous state and records the failure for manual review.
+
 ## Version History
 
 | Version | Date | Summary |
