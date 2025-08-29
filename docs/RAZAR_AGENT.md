@@ -35,6 +35,27 @@ Documentation Sync, Checkpoint Manager, Crown Link, Adaptive Orchestrator, and
 Co-creation Planner provide additional coordination around the core boot flow.
 The Mermaid source lives at [assets/razar_architecture.mmd](assets/razar_architecture.mmd).
 
+## Deployment
+
+1. **Environment setup** – build isolated dependencies with
+   `razar.environment_builder`:
+
+   ```bash
+   python -m razar.environment_builder
+   ```
+
+2. **Configuration** – adjust settings in `boot_config.json` to define
+   service priorities and flags.
+
+3. **Launch** – start the boot orchestrator to bring components online:
+
+   ```bash
+   python -m razar.boot_orchestrator
+   ```
+
+If a component fails to start, inspect the logs and consult the
+[Recovery Playbook](recovery_playbook.md) for troubleshooting tips.
+
 ## Prioritized pytest runner
 
 `agents/razar/pytest_runner.py` executes repository tests grouped by priority
