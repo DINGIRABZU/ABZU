@@ -180,6 +180,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_citadel_event_producer.py"),
     str(ROOT / "tests" / "test_citadel_event_processor.py"),
     str(ROOT / "tests" / "agents" / "test_event_bus.py"),
+    str(ROOT / "tests" / "narrative_engine" / "test_biosignal_pipeline.py"),
 }
 
 

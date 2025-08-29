@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.25
-**Last updated:** 2025-08-29
+**Version:** v1.0.26
+**Last updated:** 2025-08-30
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -56,6 +56,11 @@ When contributing, consult resources in this order:
 | Contributor Handbook | Documentation Team | Quarterly |
 | AGENTS.md | Repository Maintainers | As needed |
 | Feature/Issue Specs | Feature Owners | Per release |
+
+## Testing Requirements
+
+- Run `pytest tests/narrative_engine/test_biosignal_pipeline.py` to validate
+  biosignal ingestion and transformation.
 
 ## Documentation Standards
 

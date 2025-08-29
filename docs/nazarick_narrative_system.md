@@ -17,6 +17,19 @@ flowchart LR
 4. **Event Generator** – extracted features translate into narrative events consumed by the scribe.
 5. **Narrative Engine** – generates context-aware story elements.
 
+## Sample Dataset
+
+A minimal CSV at `data/biosignals/sample_biosignals.csv` demonstrates the
+expected structure:
+
+| timestamp (ISO 8601) | heart_rate (BPM) | skin_temp (°C) | eda (µS) |
+| --- | --- | --- | --- |
+| 2024-01-01T00:00:00Z | 72 | 36.5 | 0.02 |
+| … | … | … | … |
+
+Unit tests in `tests/narrative_engine/test_biosignal_pipeline.py` illustrate
+ingestion and transformation of this data.
+
 ## Dependencies
 
 Core dependencies:
