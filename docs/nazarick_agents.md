@@ -77,6 +77,9 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
 | [Bana Bio-Adaptive Narrator](#bana-bio-adaptive-narrator) | Biosignal-driven narrative generation | [4 / Biosphere Lab](system_blueprint.md#floor-4-biosphere-lab) | [agents/bana/bio_adaptive_narrator.py](../agents/bana/bio_adaptive_narrator.py) |
 | [AsianGen Creative Engine](#asian-gen-creative-engine) | Multilingual generation with locale codes, runtime SentencePiece fallback | [5 / Scriptorium](system_blueprint.md#floor-5-scriptorium) | [agents/asian_gen/creative_engine.py](../agents/asian_gen/creative_engine.py) |
 | [LandGraph Geo Knowledge](#land-graph-geo-knowledge) | Landscape graph, ritual site queries | [1 / Cartography Room](system_blueprint.md#floor-1-cartography-room) | [agents/land_graph/geo_knowledge.py](../agents/land_graph/geo_knowledge.py) |
+| [Ethics Manifesto](#ethics-manifesto) | Seven Laws and ethos validation | – | [agents/nazarick/ethics_manifesto.py](../agents/nazarick/ethics_manifesto.py) |
+| [Narrative Scribe](#narrative-scribe) | Convert event bus traffic into prose | – | [agents/nazarick/narrative_scribe.py](../agents/nazarick/narrative_scribe.py) |
+| [Trust Matrix](#trust-matrix) | Trust scoring and protocol lookup | – | [agents/nazarick/trust_matrix.py](../agents/nazarick/trust_matrix.py) |
 
 ## Bana Bio-Adaptive Narrator {#bana-bio-adaptive-narrator}
 
@@ -139,6 +142,59 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
   node, data = gk.nearest_ritual_site(lon=0.2, lat=0.1)
   print(node, data)
   ```
+
+## Ethics Manifesto {#ethics-manifesto}
+
+- **Deployment:** Library module; import `Manifesto` in agents requiring ethics checks.
+- **Required services:** None – operates on in-memory law and ethos lists.
+- **Extensibility:** Pass custom `Law` or `EthosClause` lists to `Manifesto` to add rules.
+
+  ```python
+  from agents.nazarick.ethics_manifesto import Manifesto
+
+  manifesto = Manifesto()
+  result = manifesto.validate_action("albedo", "attack intruders")
+  print(result)
+  ```
+
+## Narrative Scribe {#narrative-scribe}
+
+- **Deployment:**
+
+  ```bash
+  python - <<'PY'
+  import asyncio
+  from agents.nazarick.narrative_scribe import NarrativeScribe
+
+  asyncio.run(
+      NarrativeScribe().run(redis_channel="citadel", redis_url="redis://localhost")
+  )
+  PY
+  ```
+- **Required services:** Redis or Kafka for event consumption; writes narratives to `logs/nazarick_story.log` and `memory` store.
+- **Extensibility:** Override `compose` or add new listener methods for additional transports.
+
+## Trust Matrix {#trust-matrix}
+
+- **Deployment:**
+
+  ```python
+  from agents.nazarick.trust_matrix import TrustMatrix
+
+  tm = TrustMatrix()
+  print(tm.evaluate_entity("shalltear"))
+  tm.close()
+  ```
+- **Required services:** SQLite database file (default `memory/trust.db`).
+- **Extensibility:** Extend rank dictionaries or subclass `TrustMatrix` to alter scoring and protocols.
+
+## Extensibility
+
+To add a new Nazarick agent:
+
+1. Place the module in `agents/nazarick/` and expose it via `__all__`.
+2. Document deployment commands, services, and hooks in this file.
+3. Run `pre-commit run --files docs/nazarick_agents.md docs/INDEX.md` to update the index.
 
 ## Retro & Projection
 ### Retro
