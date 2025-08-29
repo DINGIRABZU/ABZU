@@ -152,3 +152,57 @@ curl http://localhost:9100/metrics
 - Check that the monitored process names match running services.
 - If metrics are missing, confirm the watchdog is running and that port `9100`
   is reachable.
+
+## Example Runs
+
+### Full startup sequence
+
+Start the runtime manager to boot all components:
+
+```bash
+python -m agents.razar.runtime_manager config/razar_config.yaml
+```
+
+Typical log excerpts in `logs/razar.log`:
+
+```
+[INFO] gateway       boot sequence initiated
+[INFO] gateway       health check passed
+[INFO] memory_store  health check passed
+[INFO] all components ready
+```
+
+Interpretation:
+
+- Each `[INFO] <component> health check passed` line confirms a service is
+  online.
+- The run completes when the log reports `all components ready` and
+  `logs/razar_state.json` records the last successful component.
+
+### Health‑check failure and recovery
+
+An unhealthy service logs a warning and is quarantined:
+
+```
+[WARN] memory_store health check failed: connection refused
+[INFO] memory_store quarantined
+```
+
+After fixing the issue, restart the manager or component to see recovery:
+
+```
+[INFO] memory_store retrying startup
+[INFO] memory_store health check passed
+```
+
+Interpretation:
+
+- Failed components move to `quarantine/` and an entry is added to
+  `docs/quarantine_log.md`.
+- Recovery is confirmed when the service logs `health check passed` and exits
+  quarantine.
+- Review `logs/razar.log` and the summary from `razar.mission_logger` to track
+  remaining tasks.
+
+Logs are stored under `logs/`; health state persists in
+`logs/razar_state.json` for the next startup.
