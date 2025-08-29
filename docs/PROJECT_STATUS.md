@@ -2,6 +2,8 @@
 
 ![Coverage](../coverage.svg)
 
+See [component_maturity.md](component_maturity.md) for per-component maturity metrics.
+
 This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets.
 
 ## Repository Structure
