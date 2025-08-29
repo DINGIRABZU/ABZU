@@ -42,3 +42,9 @@ Optional tools:
 
 - `mermaid` – render text-based diagrams
 
+
+## Version History
+
+| Version | Date | Summary |
+|---------|------|---------|
+| [Unreleased](../CHANGELOG.md#narrative-engine) | - | Added sample biosignal dataset and tests documenting ingestion and transformation. |
