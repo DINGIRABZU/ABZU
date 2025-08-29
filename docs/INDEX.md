@@ -12,7 +12,6 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | - |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -190,7 +189,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | Bootstrapper for local services and mission brief exchange with the CROWN stack. | `../agents/razar/ai_invoker.py`, `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/code_repair.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../agents/razar/health_checks.py`, `../agents/razar/module_builder.py`, `../agents/razar/quarantine_manager.py`, `../agents/razar/runtime_manager.py`, `../razar/adaptive_orchestrator.py`, `../razar/boot_orchestrator.py`, `../razar/checkpoint_manager.py`, `../razar/cocreation_planner.py`, `../razar/crown_link.py`, `../razar/doc_sync.py`, `../razar/environment_builder.py` |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.28 **Last updated:** 2025-08-30 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.29 **Last updated:** 2025-08-31 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
