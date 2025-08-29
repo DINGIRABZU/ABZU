@@ -38,58 +38,58 @@ ORDER BY e.timestamp DESC LIMIT 10;
 | File | Description | Dependencies |
 | --- | --- | --- |
 | `INANNA_AI/__init__.py` | Core package for the INANNA AI helpers. | None |
-| `INANNA_AI/adaptive_learning.py` | No description | core |
-| `INANNA_AI/audio_emotion_listener.py` | No description | librosa, numpy, sounddevice |
-| `INANNA_AI/context.py` | No description | None |
-| `INANNA_AI/corpus_memory.py` | No description | chromadb, crown_config, numpy, sentence_transformers |
+| `INANNA_AI/adaptive_learning.py` | Adaptive learning agents for threshold and wording tuning. | core, gymnasium, numpy, stable_baselines3 |
+| `INANNA_AI/audio_emotion_listener.py` | Capture microphone audio and estimate speaker's emotion. | librosa, numpy, sounddevice |
+| `INANNA_AI/context.py` | Lightweight context memory for recent user prompts. | None |
+| `INANNA_AI/corpus_memory.py` | Simple embedding search across corpus memory directories. | chromadb, crown_config, numpy, sentence_transformers |
 | `INANNA_AI/db_storage.py` | SQLite helpers to store voice interactions. | None |
-| `INANNA_AI/defensive_network_utils.py` | Defensive network helpers for monitoring and secure POST requests. | requests, scapy |
-| `INANNA_AI/emotion_analysis.py` | No description | librosa, numpy, opensmile, torch, transformers |
-| `INANNA_AI/emotional_memory.py` | No description | None |
-| `INANNA_AI/emotional_synaptic_engine.py` | No description | None |
+| `INANNA_AI/defensive_network_utils.py` | Defensive network helpers for monitoring and secure HTTPS communication. | requests, scapy |
+| `INANNA_AI/emotion_analysis.py` | Lightweight emotion analysis tools using Librosa. | librosa, numpy, opensmile, torch, transformers |
+| `INANNA_AI/emotional_memory.py` | Log emotional interactions for language models in JSONL format. | None |
+| `INANNA_AI/emotional_synaptic_engine.py` | Map emotions to filter parameters with optional memory adjustments. | None |
 | `INANNA_AI/ethical_validator.py` | Validate user prompts before hitting the language model. | numpy, sentence_transformers |
-| `INANNA_AI/existential_reflector.py` | Generate a short self-description using a placeholder GLM endpoint. | requests |
+| `INANNA_AI/existential_reflector.py` | Query GLM API for system identity (GLM_API_URL, default https://glm.example.com/glm). | requests |
 | `INANNA_AI/gate_orchestrator.py` | Simple gate orchestrator translating text to/from complex vectors. | core, numpy, torch |
 | `INANNA_AI/gates.py` | Signature helpers for the RFA core. | cryptography |
-| `INANNA_AI/glm_analyze.py` | Analyze Python modules using a placeholder GLM endpoint. | INANNA_AI, requests |
-| `INANNA_AI/glm_init.py` | Summarize project purpose using a placeholder GLM endpoint. | INANNA_AI, requests |
-| `INANNA_AI/glm_integration.py` | No description | requests |
-| `INANNA_AI/learning/__init__.py` | Utilities for fetching external learning data. | None |
-| `INANNA_AI/learning/github_metadata.py` | No description | crown_config, requests |
-| `INANNA_AI/learning/github_scraper.py` | No description | crown_config, requests, sentence_transformers |
-| `INANNA_AI/learning/project_gutenberg.py` | No description | bs4, crown_config, requests, sentence_transformers |
-| `INANNA_AI/learning/training_guide.py` | No description | None |
-| `INANNA_AI/listening_engine.py` | No description | core, numpy |
-| `INANNA_AI/love_matrix.py` | No description | None |
-| `INANNA_AI/main.py` | No description | learning, numpy, personality_layers, rag |
+| `INANNA_AI/glm_analyze.py` | Send code base to GLM API for module analysis. | INANNA_AI, requests |
+| `INANNA_AI/glm_init.py` | Summarize project texts via GLM API. | INANNA_AI, requests |
+| `INANNA_AI/glm_integration.py` | Wrapper for GLM-4.1V-9B API (default https://glm.example.com/glm41v_9b). | requests |
+| `INANNA_AI/learning/__init__.py` | Exports helpers for external learning data sources. | None |
+| `INANNA_AI/learning/github_metadata.py` | Fetch repository metadata via GitHub API (https://api.github.com/repos/). | crown_config, requests |
+| `INANNA_AI/learning/github_scraper.py` | Download README and commits via GitHub API (https://api.github.com/repos/). | crown_config, requests, sentence_transformers |
+| `INANNA_AI/learning/project_gutenberg.py` | Retrieve and embed texts from Project Gutenberg (https://www.gutenberg.org/). | bs4, crown_config, requests, sentence_transformers |
+| `INANNA_AI/learning/training_guide.py` | Parse categorized INANNA training guide for repository links. | None |
+| `INANNA_AI/listening_engine.py` | Real-time microphone listening with feature extraction. | librosa, numpy, opensmile, sounddevice, websockets |
+| `INANNA_AI/love_matrix.py` | Constants for Great Mother archetype names. | None |
+| `INANNA_AI/main.py` | CLI for voice loop and data ingestion. | learning, numpy, personality_layers, rag |
 | `INANNA_AI/network_utils/__init__.py` | Network monitoring utilities. | None |
 | `INANNA_AI/network_utils/__main__.py` | Command line entry for network utilities. | None |
 | `INANNA_AI/network_utils/analysis.py` | Basic traffic analysis for PCAP files. | scapy |
 | `INANNA_AI/network_utils/capture.py` | Packet capture helpers using scapy or pyshark. | scapy |
-| `INANNA_AI/personality_layers/__init__.py` | Personality layers for INANNA AI. | albedo |
-| `INANNA_AI/personality_layers/albedo/__init__.py` | No description | SPIRAL_OS |
-| `INANNA_AI/personality_layers/albedo/alchemical_persona.py` | No description | MUSIC_FOUNDATION, numpy |
-| `INANNA_AI/personality_layers/albedo/glm_integration.py` | No description | None |
-| `INANNA_AI/personality_layers/albedo/state_contexts.py` | No description | None |
-| `INANNA_AI/personality_layers/citrinitas_layer.py` | No description | None |
-| `INANNA_AI/personality_layers/nigredo_layer.py` | No description | None |
-| `INANNA_AI/personality_layers/rubedo_layer.py` | No description | None |
-| `INANNA_AI/response_manager.py` | No description | None |
-| `INANNA_AI/retrain_and_deploy.py` | No description | crown_config, mlflow |
+| `INANNA_AI/personality_layers/__init__.py` | Registry for personality layers. | albedo |
+| `INANNA_AI/personality_layers/albedo/__init__.py` | Albedo personality layer integrating GLM with state contexts. | SPIRAL_OS |
+| `INANNA_AI/personality_layers/albedo/alchemical_persona.py` | State machine tracking alchemical progress and metrics. | MUSIC_FOUNDATION, numpy |
+| `INANNA_AI/personality_layers/albedo/glm_integration.py` | Compatibility wrapper exposing GLMIntegration to personality layer. | None |
+| `INANNA_AI/personality_layers/albedo/state_contexts.py` | Prompt templates for each alchemical state. | None |
+| `INANNA_AI/personality_layers/citrinitas_layer.py` | Illumination phase personality layer. | None |
+| `INANNA_AI/personality_layers/nigredo_layer.py` | Shadow phase personality layer. | None |
+| `INANNA_AI/personality_layers/rubedo_layer.py` | Completion phase personality layer. | None |
+| `INANNA_AI/response_manager.py` | Select replies based on emotional and environmental cues. | None |
+| `INANNA_AI/retrain_and_deploy.py` | Automate fine-tuning and deployment of INANNA models. | crown_config, mlflow |
 | `INANNA_AI/rfa_7d.py` | Random Field Array 7D with quantum-like execution and DNA serialization. | numpy, qutip |
 | `INANNA_AI/silence_reflection.py` | Detect sustained silence and suggest a short meaning. | numpy |
-| `INANNA_AI/sonic_emotion_mapper.py` | No description | yaml |
+| `INANNA_AI/sonic_emotion_mapper.py` | Map emotional context to audio synthesis parameters using YAML palettes. | yaml |
 | `INANNA_AI/speaking_engine.py` | Generate speech using gTTS with emotion-based style adjustments. | core, crown_config, numpy, tools |
-| `INANNA_AI/speech_loopback_reflector.py` | No description | None |
+| `INANNA_AI/speech_loopback_reflector.py` | Analyze synthesized speech and update voice parameters. | None |
 | `INANNA_AI/stt_whisper.py` | Speech-to-text helpers using the Whisper library. | crown_config, whisper |
-| `INANNA_AI/train_soul.py` | No description | core, numpy |
-| `INANNA_AI/tts_bark.py` | No description | bark, numpy |
+| `INANNA_AI/train_soul.py` | Utilities for fine-tuning the RFA7D core. | core, numpy |
+| `INANNA_AI/tts_bark.py` | Text-to-speech wrapper for Suno's Bark. | bark, numpy |
 | `INANNA_AI/tts_coqui.py` | Text-to-speech helpers using the Coqui TTS library. | TTS, numpy |
-| `INANNA_AI/tts_tortoise.py` | No description | numpy, tortoise |
-| `INANNA_AI/tts_xtts.py` | No description | TTS, numpy |
+| `INANNA_AI/tts_tortoise.py` | Text-to-speech wrapper for the Tortoise library. | numpy, tortoise |
+| `INANNA_AI/tts_xtts.py` | Text-to-speech wrapper for the XTTS model from Coqui TTS. | TTS, numpy |
 | `INANNA_AI/utils.py` | Utility helpers for audio processing and logging. | core, numpy |
 | `INANNA_AI/voice_evolution.py` | Helpers to evolve INANNA's vocal style. | crown_config, numpy, yaml |
-| `INANNA_AI/voice_layer_albedo.py` | No description | None |
+| `INANNA_AI/voice_layer_albedo.py` | Voice modulation layer with alchemical tone presets. | None |
 | `INANNA_AI_AGENT/__init__.py` | Convenience imports and CLI exposure for the INANNA AI agent. | None |
 | `INANNA_AI_AGENT/benchmark_preprocess.py` | Benchmark preprocessing of INANNA AI source texts. | None |
 | `INANNA_AI_AGENT/inanna_ai.py` | Command line interface for the INANNA AI system. | INANNA_AI, SPIRAL_OS, yaml |
