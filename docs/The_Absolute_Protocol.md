@@ -13,6 +13,7 @@ Before opening a pull request, confirm each item:
   - [AGENTS.md](../AGENTS.md)
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
+- [ ] `onboarding_confirm.yml` includes purpose, scope, key rules, and one actionable insight for each [key document](KEY_DOCUMENTS.md)
 - [ ] Module `__version__` fields bumped for user-facing changes
 - [ ] Connectors implement `start_call`, `close_peers`, and expose `__version__`
 - [ ] If a connector is added or modified, update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with version and service details
