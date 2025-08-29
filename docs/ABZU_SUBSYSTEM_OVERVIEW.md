@@ -26,7 +26,7 @@ graph TD
 : The RAG layer queries Vector Memory for stored embeddings relevant to the request.
 
 **RAG Orchestrator → External Data Sources**
-: If additional information is needed, the RAG layer reaches out to external connectors.
+: If additional information is needed, the RAG layer reaches out to external connectors (see [Connector Index](connectors/CONNECTOR_INDEX.md)).
 
 **Crown Router → Insight Engine**
 : For higher-order reasoning over the collected context, the Crown Router engages the Insight Engine.

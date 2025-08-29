@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.30
-**Last updated:** 2025-09-02
+**Version:** v1.0.31
+**Last updated:** 2025-09-03
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -164,10 +164,11 @@ implement the required change instead of leaving placeholders.
 - Maintain the [Dependency Registry](dependency_registry.md) of approved runtimes, frameworks, and library minimum versions.
 - Update the registry when dependencies are added, upgraded, or deprecated, and validate changes with `pre-commit run --files docs/dependency_registry.md docs/INDEX.md`.
 
-## Maintenance
-Whenever this file changes:
-1. Regenerate `docs/INDEX.md` with `python tools/doc_indexer.py`.
-2. Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
+## Maintenance Checklist
+- [ ] Regenerate `docs/INDEX.md` with `python tools/doc_indexer.py`.
+- [ ] Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
+- [ ] Run `scripts/verify_doc_summaries.py` to confirm `onboarding_confirm.yml` hashes.
+- [ ] Ensure connectors appear in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
 
 ## Protocol Change Process
 Updates to this protocol follow a lightweight governance model:
