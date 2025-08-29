@@ -16,6 +16,7 @@ storage.
 from __future__ import annotations
 
 import base64
+import json
 import logging
 import time
 from contextlib import asynccontextmanager
@@ -37,9 +38,9 @@ from PIL import Image
 from prometheus_fastapi_instrumentator import Instrumentator
 
 try:  # pragma: no cover - optional dependency
-    from prometheus_client import Histogram
+    from prometheus_client import Histogram, Gauge
 except ImportError:  # pragma: no cover - optional dependency
-    Histogram = None  # type: ignore[assignment]
+    Histogram = Gauge = None  # type: ignore[assignment]
 from pydantic import BaseModel, Field
 
 from agents.razar.lifecycle_bus import LifecycleBus
@@ -70,6 +71,40 @@ REQUEST_LATENCY = (
     if Histogram is not None
     else None
 )
+
+INDEX_ENTRY_GAUGE = (
+    Gauge(
+        "component_index_entries",
+        "Number of components listed in component_index.json",
+    )
+    if Gauge is not None
+    else None
+)
+
+AVERAGE_COVERAGE_GAUGE = (
+    Gauge(
+        "component_index_average_coverage",
+        "Average coverage percentage across components",
+    )
+    if Gauge is not None
+    else None
+)
+
+
+def _refresh_component_index_metrics() -> None:
+    """Load component index metrics into Prometheus gauges."""
+    if INDEX_ENTRY_GAUGE is None or AVERAGE_COVERAGE_GAUGE is None:
+        return
+    try:
+        data = json.loads(Path("component_index.json").read_text(encoding="utf-8"))
+        components = data.get("components", [])
+        INDEX_ENTRY_GAUGE.set(len(components))  # type: ignore[call-arg]
+        coverages = [c.get("metrics", {}).get("coverage", 0.0) for c in components]
+        if coverages:
+            AVERAGE_COVERAGE_GAUGE.set(sum(coverages) / len(coverages))  # type: ignore[call-arg]
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.exception("Failed to refresh component index metrics: %s", exc)
+
 
 _glm = GLMIntegration()
 
@@ -106,6 +141,8 @@ oauth2_scheme = OAuth2PasswordBearer(
 # identity provider. The configured ``GLM_COMMAND_TOKEN`` is reused to create a
 # single privileged token.
 class TokenInfo(TypedDict):
+    """OAuth token details used for authorization."""
+
     sub: str
     scopes: set[str]
 
@@ -141,7 +178,6 @@ def get_current_user(
     error is raised when the token is missing or unknown and a ``403`` error is
     raised when it lacks one of the requested scopes.
     """
-
     token_info = _TOKENS.get(token)
     if not token_info:
         logger.warning("Unauthorized token for scopes %s", security_scopes.scope_str)
@@ -180,6 +216,7 @@ app.include_router(nlq_router)
 app.include_router(operator_router)
 
 Instrumentator().instrument(app).expose(app)
+_refresh_component_index_metrics()
 app.mount("/ws", socket_app)
 
 
@@ -195,6 +232,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()) -> dict[str, str]:
 
 @app.middleware("http")
 async def log_request_time(request: Request, call_next):
+    """Record request latency and export it to Prometheus."""
     start = time.perf_counter()
     response = await call_next(request)
     duration = time.perf_counter() - start
@@ -237,11 +275,15 @@ def readiness_check() -> dict[str, str]:
 
 
 class ChatMessage(BaseModel):
+    """Chat message exchanged with the OpenWebUI interface."""
+
     role: str
     content: str
 
 
 class ChatCompletionRequest(BaseModel):
+    """Payload for chat completion requests."""
+
     model: str | None = None
     messages: list[ChatMessage]
 
