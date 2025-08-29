@@ -5,6 +5,9 @@ various communication channels. The current implementation exposes WebRTC and
 Telegram interfaces, with additional channels pluggable through the gateway
 layer.
 
+Each connector includes a ``__version__`` field for traceability and is tracked
+in the [Connector Index](connectors/CONNECTOR_INDEX.md).
+
 ## Signaling Flow
 
 1. **Client connects** – A client creates a WebRTC offer and sends it to the
@@ -36,6 +39,8 @@ Gateway integrations should verify credentials before forwarding messages.
    or API keys.
 4. Register the adapter in the deployment configuration so that it starts with
    the avatar.
+5. Expose a ``__version__`` field and update the connector registry with the
+   new version number.
 
 Following this pattern keeps message handling consistent while allowing the
 system to expand with minimal changes.

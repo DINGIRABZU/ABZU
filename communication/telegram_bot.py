@@ -1,6 +1,8 @@
+"""Telegram bot forwarding messages to the avatar."""
+
 from __future__ import annotations
 
-"""Telegram bot forwarding messages to the avatar."""
+__version__ = "0.1.0"
 
 import logging
 
@@ -16,6 +18,7 @@ class TelegramBot:
     """Telegram bot that routes messages through ``Gateway``."""
 
     def __init__(self, token: str, gateway: Gateway) -> None:
+        """Initialise bot with Telegram token and gateway."""
         self._gateway = gateway
         self._application = Application.builder().token(token).build()
         self._application.add_handler(

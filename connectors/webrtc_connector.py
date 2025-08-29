@@ -1,6 +1,8 @@
+"""WebRTC connector for streaming audio files to the browser."""
+
 from __future__ import annotations
 
-"""WebRTC connector for streaming audio files to the browser."""
+__version__ = "0.1.0"
 
 import asyncio
 import logging
