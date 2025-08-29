@@ -181,6 +181,42 @@ ordered build plan saved to `logs/razar_cocreation_plans.json`.
 
 ## Code Considerations
 
+### `razar_config.yaml`
+
+**Schema**
+
+```yaml
+dependencies: []
+enable_ai_handover: false
+ai_agent:
+  name: string
+  endpoint: string
+  auth_token: string
+  models: [string, ...]  # optional fallback models
+components:
+  - name: string
+    priority: int
+    command: string
+```
+
+**Example**
+
+```yaml
+dependencies: []
+enable_ai_handover: false
+ai_agent:
+  name: demo
+  endpoint: http://localhost:3000
+  auth_token: token
+  models:
+    - gpt-4
+    - gpt-3.5
+components:
+  - name: memory_store
+    priority: 1
+    command: "echo 'starting memory_store'"
+```
+
 ### `boot_config.json`
 
 **Schema**

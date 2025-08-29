@@ -1,5 +1,10 @@
 dependencies: []
 enable_ai_handover: false
+ai_agent:
+  name: ""
+  endpoint: ""
+  auth_token: ""
+  models: []
 components:
   - name: memory_store
     priority: 1
