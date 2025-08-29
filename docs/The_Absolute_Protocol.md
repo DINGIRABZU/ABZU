@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.27
-**Last updated:** 2025-08-29
+**Version:** v1.0.28
+**Last updated:** 2025-08-30
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -61,6 +61,19 @@ When contributing, consult resources in this order:
 
 - Run `pytest tests/narrative_engine/test_biosignal_pipeline.py` to validate
   biosignal ingestion and transformation.
+
+## Test Coverage Protocol
+
+Code coverage must remain **at or above 85%**. Generate and report coverage using:
+
+```bash
+pytest --cov
+coverage report
+coverage-badge -o coverage.svg
+```
+
+The `coverage.svg` badge reflects current totals and should be referenced in
+status documents.
 
 ## Documentation Standards
 
