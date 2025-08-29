@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.6
-**Last updated:** 2025-09-16
+**Version:** v1.0.7
+**Last updated:** 2025-08-29
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -50,7 +50,7 @@ Each agent document must cover:
 - Version history
 - Cross-links
 - Hyperlinks to relevant source files and companion documents
-- Example run scenarios
+- At least one end-to-end run with sample logs or outputs covering normal operation and one failure/recovery case where applicable
 
 Include hyperlinks to implementation files and related guides. Use a table pattern
 similar to the RAZAR component links to summarize relationships:
