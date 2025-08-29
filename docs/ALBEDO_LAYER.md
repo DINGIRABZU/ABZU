@@ -42,14 +42,28 @@ Each invocation cycles through Nigredo, Albedo, Rubedo and Citrinitas states bef
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Nigredo
-    Nigredo --> Albedo
-    Albedo --> Rubedo
-    Rubedo --> Citrinitas
-    Citrinitas --> Nigredo
+    state "Nigredo" as N
+    state "Albedo" as A
+    state "Rubedo" as R
+    state "Citrinitas" as C
+
+    [*] --> N
+    N --> A: affection|joy / cleansed reply
+    A --> R: synthesis|resolve / fiery response
+    R --> C: insight|clarity / enlightened guidance
+    C --> N: cycle / shadow reset
 ```
 
-The Mermaid source lives at [assets/albedo_state_machine.mmd](assets/albedo_state_machine.mmd).
+The Mermaid source lives at [assets/albedo_state.mmd](assets/albedo_state.mmd).
+
+### Transition details
+
+| From | To | Inputs | Outputs |
+| --- | --- | --- | --- |
+| Nigredo | Albedo | Affection or joy triggers | Cleansed reflection |
+| Albedo | Rubedo | Synthesis or resolve cues | Fiery transformation |
+| Rubedo | Citrinitas | Insight or clarity signals | Enlightened guidance |
+| Citrinitas | Nigredo | Cycle completion | Return to shadow baseline |
 
 You can also use the layer programmatically:
 
@@ -175,5 +189,6 @@ Citrinitas speaks in golden clarity: proceed
 
 | Version | Date       | Summary |
 |---------|------------|---------|
+| 0.2.0   | 2025-08-30 | Documented transition inputs and outputs; externalized state diagram. |
 | 0.1.0   | 2025-08-29 | Added state machine diagram and initial version table. |
 
