@@ -2,6 +2,17 @@
 
 Generated automatically. Lists each Python file with its description and external dependencies.
 
+## Retrieval
+
+Archived snapshots of `component_index.json` are stored in [`data/archives/`](../data/archives/)
+with filenames `component_index_<timestamp>.json`. The latest index remains at
+the repository root.
+
+## Dashboard
+
+Prometheus metrics expose the current index size and average coverage at
+`/metrics`. See [DASHBOARD.md](DASHBOARD.md) for dashboard setup and links.
+
 | File | Description | Dependencies |
 | --- | --- | --- |
 | `INANNA_AI/__init__.py` | Core package for the INANNA AI helpers. | None |

@@ -300,7 +300,7 @@ and leave the seven-dimensional structure.
 
 Spiral OS aligns its modules with seven energetic layers, detailed in [spiritual_architecture.md](spiritual_architecture.md). Each chakra maps to representative components:
 
-- **Root – Muladhara:** grounding for hardware and network access via [`server.py`](../server.py) and [`INANNA_AI/network_utils`](../INANNA_AI/network_utils).
+- **Root – Muladhara:** grounding for hardware and network access via [`server.py`](../server.py) and [`INANNA_AI/network_utils`](../INANNA_AI/network_utils). The server exports Prometheus gauges for component index size and coverage to feed repository dashboards.
 - **Sacral – Svadhisthana:** creativity and emotion tracking through [`emotional_state.py`](../emotional_state.py) and [`emotion_registry.py`](../emotion_registry.py).
 - **Solar Plexus – Manipura:** transformational drive handled by [`learning_mutator.py`](../learning_mutator.py) and [`state_transition_engine.py`](../state_transition_engine.py).
 - **Heart – Anahata:** empathy and memory with [`voice_avatar_config.yaml`](../voice_avatar_config.yaml) and [`vector_memory.py`](../vector_memory.py).
