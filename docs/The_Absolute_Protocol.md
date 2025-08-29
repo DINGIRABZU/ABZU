@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.28
-**Last updated:** 2025-08-30
+**Version:** v1.0.29
+**Last updated:** 2025-08-31
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -146,6 +146,11 @@ preserve handshake history for auditing.
 - Use consistent naming conventions across files, classes, and functions.
 - Maintain clear module boundaries to prevent tight coupling.
 - Every module must declare a `__version__` field for traceability.
+
+#### No placeholder comments
+
+`TODO` and `FIXME` markers are prohibited in committed code. Open an issue or
+implement the required change instead of leaving placeholders.
 
 ### API Contract Protocol
 

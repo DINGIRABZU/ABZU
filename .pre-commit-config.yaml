@@ -51,3 +51,7 @@ repos:
     entry: python scripts/check_no_binaries.py
     language: system
     pass_filenames: false
+  - id: check-no-placeholders
+    name: Check for TODO/FIXME markers
+    entry: python scripts/check_no_placeholders.py
+    language: system

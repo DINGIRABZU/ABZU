@@ -71,10 +71,11 @@ The Mermaid source lives at [assets/razar_remote_flow.mmd](assets/razar_remote_f
 ## Module builder
 
 `agents/razar/module_builder.py` scaffolds new components from a planning
-specification.  Instead of inserting ``# TODO`` markers, the builder requires
-either a path to a template file or an inline implementation snippet.  Patch
-suggestions from remote agents are applied inside an isolated sandbox and the
-included tests are executed.  The module is promoted into the repository only
+specification. Instead of inserting ``# TODO`` or ``# FIXME`` markers, the builder
+requires either a path to a template file or an inline implementation snippet in
+accordance with the [no placeholder comments rule](The_Absolute_Protocol.md#no-placeholder-comments).
+Patch suggestions from remote agents are applied inside an isolated sandbox and the
+included tests are executed. The module is promoted into the repository only
 after the tests pass.
 
 ### Example
