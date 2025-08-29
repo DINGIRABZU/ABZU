@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added checklist reminder to update `CONNECTOR_INDEX.md` whenever connectors change.
 - Required configuration files to include schema outlines and minimal examples, referencing `boot_config.json`, `razar_env.yaml`, and log formats.
 - Mandated end-to-end run examples with logs covering normal operation and failure recovery in agent docs.
+- Required a "Change justification" field in the pull request template and documented the statement format in The Absolute Protocol.
 
 ### Quality
 
