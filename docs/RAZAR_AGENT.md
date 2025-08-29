@@ -51,12 +51,40 @@ flowchart LR
 
 The Mermaid source lives at [assets/razar_remote_flow.mmd](assets/razar_remote_flow.mmd).
 
+## Module builder
+
+`agents/razar/module_builder.py` scaffolds new components from a planning
+specification.  Instead of inserting ``# TODO`` markers, the builder requires
+either a path to a template file or an inline implementation snippet.  Patch
+suggestions from remote agents are applied inside an isolated sandbox and the
+included tests are executed.  The module is promoted into the repository only
+after the tests pass.
+
+### Example
+
+```python
+from agents.razar import module_builder
+
+snippet = "def run() -> str:\n    return 'demo'\n"
+tests = {
+    "tests/test_demo.py": (
+        "from agents import demo\n\n"
+        "def test_run():\n"
+        "    assert demo.run() == 'demo'\n"
+    )
+}
+plan = {"demo": {"component": "agents/demo.py", "snippet": snippet, "tests": tests}}
+
+module_builder.build("demo", plan=plan)
+```
+
 ## Components & Links
 
 | Source Module | Related Docs |
 | --- | --- |
 | [razar/environment_builder.py](../razar/environment_builder.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 | [razar/boot_orchestrator.py](../razar/boot_orchestrator.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
+| [agents/razar/module_builder.py](../agents/razar/module_builder.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 | [agents/razar/runtime_manager.py](../agents/razar/runtime_manager.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 | [agents/razar/health_checks.py](../agents/razar/health_checks.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 | [agents/razar/quarantine_manager.py](../agents/razar/quarantine_manager.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |

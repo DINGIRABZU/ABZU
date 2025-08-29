@@ -1,17 +1,17 @@
-from __future__ import annotations
-
 """Utilities for constructing new RAZAR modules.
 
 This helper consumes component specifications produced by
 :mod:`agents.razar.planning_engine` and prepares a fresh module in an isolated
-sandbox directory.  The module receives minimal boilerplate with ``TODO``
-markers so human developers can fill in the implementation later.
+sandbox directory.  A template or implementation snippet must seed the
+module—``TODO`` placeholders are no longer written by default.
 
 Remote RAZAR agents may provide patch suggestions which are applied inside the
 sandbox before running the unit tests included in the specification.  Only when
 these tests succeed is the generated module promoted into the repository's main
 source tree.
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 import shutil
@@ -23,15 +23,29 @@ import os
 from . import doc_sync, planning_engine, remote_loader
 
 
-def _write_boilerplate(path: Path) -> None:
-    """Create a new module at ``path`` with placeholder content."""
+def _write_boilerplate(
+    path: Path,
+    *,
+    template: str | Path | None = None,
+    snippet: str | None = None,
+) -> None:
+    """Create a new module at ``path`` using ``template`` or ``snippet``.
 
+    Exactly one of ``template`` or ``snippet`` must be provided. ``template``
+    is interpreted as a filesystem path whose content seeds the new module;
+    ``snippet`` writes inline code directly.  A ``ValueError`` is raised when
+    neither or both options are supplied.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    header = (
-        '"""Auto-generated RAZAR component."""\n\n'
-        "# TODO: Implement component logic\n"
-    )
-    path.write_text(header, encoding="utf-8")
+    if template and snippet:
+        raise ValueError("Provide either template or snippet, not both")
+    if template:
+        content = Path(template).read_text(encoding="utf-8")
+    elif snippet:
+        content = snippet
+    else:  # pragma: no cover - defensive
+        raise ValueError("Implementation snippet or template required")
+    path.write_text(content, encoding="utf-8")
 
 
 def _apply_patch(path: Path, suggestion: Mapping[str, str]) -> None:
@@ -43,7 +57,6 @@ def _apply_patch(path: Path, suggestion: Mapping[str, str]) -> None:
     sandbox root and defaults to ``path`` when omitted.  ``content`` is appended
     to the target file.
     """
-
     target = suggestion.get("file")
     content = suggestion.get("content")
     if not content:
@@ -69,7 +82,9 @@ def build(
         generate.
     plan:
         Mapping produced by :func:`planning_engine.plan`.  When ``None``, a fresh
-        plan is computed.  Only the entry for ``component_name`` is used.
+        plan is computed.  Only the entry for ``component_name`` is used.  The
+        component specification must include either ``template`` (path to a
+        file) or ``snippet`` (inline source) to seed the module.
     remote_agents:
         Optional iterable of ``(name, url)`` tuples designating remote agents
         that may return patch suggestions.
@@ -79,7 +94,6 @@ def build(
     pathlib.Path
         Final location of the promoted module in the repository tree.
     """
-
     repo_root = Path(__file__).resolve().parents[2]
     plan = plan or planning_engine.plan()
     spec = plan.get(component_name)
@@ -89,10 +103,14 @@ def build(
     component_rel = Path(str(spec.get("component", "")))
     sandbox = Path(tempfile.mkdtemp(prefix="razar_module_"))
     module_path = sandbox / component_rel
-    _write_boilerplate(module_path)
+    template: str | Path | None = spec.get("template")  # type: ignore[assignment]
+    snippet: str | None = spec.get("snippet")  # type: ignore[assignment]
+    _write_boilerplate(module_path, template=template, snippet=snippet)
 
     for name, url in list(remote_agents or []):
-        _module, _config, suggestion = remote_loader.load_remote_agent(name, url, patch_context=str(module_path))
+        _module, _config, suggestion = remote_loader.load_remote_agent(
+            name, url, patch_context=str(module_path)
+        )
         if isinstance(suggestion, Mapping):
             _apply_patch(module_path, suggestion)
 
@@ -105,13 +123,19 @@ def build(
     env = os.environ.copy()
     env["PYTHONPATH"] = str(sandbox)
     try:
-        subprocess.run([
-            "pytest",
-            "-q",
-        ], cwd=sandbox, check=True, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        subprocess.run(
+            [
+                "pytest",
+                "-q",
+            ],
+            cwd=sandbox,
+            check=True,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
     except subprocess.CalledProcessError as exc:  # pragma: no cover - defensive
-        raise RuntimeError(
-            f"Unit tests failed for component {component_name}") from exc
+        raise RuntimeError(f"Unit tests failed for component {component_name}") from exc
 
     final_path = repo_root / component_rel
     final_path.parent.mkdir(parents=True, exist_ok=True)
