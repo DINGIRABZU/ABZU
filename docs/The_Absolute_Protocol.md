@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.15
-**Last updated:** 2025-08-30
+**Version:** v1.0.16
+**Last updated:** 2025-08-29
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -93,6 +93,10 @@ Connectors bridge the language engine to external communication layers. Follow t
 ### Connector Registry
 
 Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, endpoint, authentication method, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns. Update this registry whenever a connector is added, removed, or its interface changes.
+
+## Subsystem Protocols
+
+- [Operator Protocol](operator_protocol.md) – outlines `/operator/command`, role checks, and Crown's relay to RAZAR.
 
 ### Code Harmony Protocol
 

@@ -187,7 +187,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | - | `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../agents/razar/health_checks.py`, `../agents/razar/module_builder.py`, `../agents/razar/quarantine_manager.py`, `../agents/razar/runtime_manager.py`, `../razar/adaptive_orchestrator.py`, `../razar/boot_orchestrator.py`, `../razar/cocreation_planner.py`, `../razar/environment_builder.py` |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.15 **Last updated:** 2025-08-30 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.16 **Last updated:** 2025-08-29 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -270,6 +270,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fresh clone. | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [operations.md](operations.md) | Operations | - | - |
+| [operator_protocol.md](operator_protocol.md) | Operator Protocol | Defines how operator commands are issued and validated across the system. | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | The OS Guardian coordinates system automation under strict policy control. It consists of four building blocks: | - |
 | [os_guardian_container.md](os_guardian_container.md) | OS Guardian Container | This guide covers running the `os_guardian` tools inside Docker. | - |
 | [os_guardian_permissions.md](os_guardian_permissions.md) | OS Guardian Permission Policies | The `safety` module guards high-risk actions executed by the OS Guardian utilities. Permissions are configured with e... | - |
