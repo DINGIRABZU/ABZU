@@ -391,6 +391,39 @@ priority map and status snapshot for every boot attempt, providing an audit
 trail for troubleshooting. Periodically prune old entries to manage disk
 usage.
 
+## Example Runs
+
+Below is an example boot sequence demonstrating how RAZAR initializes services:
+
+```bash
+$ python -m razar.boot_orchestrator
+[BOOT] creating virtual environment
+[BOOT] launching environment_builder
+[BOOT] launching runtime_manager
+[BOOT] writing mission brief to logs/mission_briefs/2025-05-16T12-00-00.json
+[BOOT] wrote state snapshot to logs/razar_state.json
+```
+
+Logs are stored in `logs/razar_state.json` and `logs/mission_briefs/`.
+
+Sample `logs/razar_state.json` entry:
+
+```json
+{
+  "last_component": "runtime_manager",
+  "launched_models": ["GLM4V"]
+}
+```
+
+Sample mission brief:
+
+```json
+{
+  "priority_map": ["environment_builder", "runtime_manager"],
+  "status": "success"
+}
+```
+
 ## AI Handover
 
 RAZAR can delegate recovery to an external AI agent when repeated failures block the boot sequence. The goal is to restore service while following repository safety rules.
