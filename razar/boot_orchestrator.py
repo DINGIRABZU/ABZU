@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Simple boot orchestrator reading a JSON component configuration.
 
 The orchestrator launches components from basic to complex as defined in the
@@ -8,26 +6,31 @@ halts the boot sequence. Failed components are quarantined and skipped on
 subsequent runs.
 """
 
+from __future__ import annotations
+
 import argparse
+import asyncio
 import json
 import logging
+import os
 import subprocess
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from . import doc_sync, health_checks
+from .crown_handshake import CrownHandshake, CrownResponse
 from .quarantine_manager import is_quarantined, quarantine_component
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
 
 LOGS_DIR = Path(__file__).resolve().parents[1] / "logs"
 HISTORY_FILE = LOGS_DIR / "razar_boot_history.json"
+STATE_FILE = LOGS_DIR / "razar_state.json"
 
 
 def load_history() -> Dict[str, Any]:
     """Return persisted boot history data."""
-
     if HISTORY_FILE.exists():
         try:
             return json.loads(HISTORY_FILE.read_text())
@@ -38,7 +41,6 @@ def load_history() -> Dict[str, Any]:
 
 def save_history(data: Dict[str, Any]) -> None:
     """Persist ``data`` to the history file."""
-
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     HISTORY_FILE.write_text(json.dumps(data, indent=2))
 
@@ -50,7 +52,6 @@ def finalize_metrics(
     start_time: float,
 ) -> None:
     """Compute run statistics and update ``history``."""
-
     total = len(run_metrics["components"])
     successes = sum(1 for c in run_metrics["components"] if c["success"])
     run_metrics["success_rate"] = successes / total if total else 0.0
@@ -80,19 +81,69 @@ def finalize_metrics(
     save_history(history)
 
 
+def _persist_handshake(response: Optional[CrownResponse]) -> None:
+    """Write handshake ``response`` details to ``STATE_FILE``."""
+    data: Dict[str, Any] = {}
+    if STATE_FILE.exists():
+        try:
+            data = json.loads(STATE_FILE.read_text())
+        except json.JSONDecodeError:
+            data = {}
+    if response is not None:
+        data["capabilities"] = response.capabilities
+        data["downtime"] = response.downtime
+    else:
+        data.setdefault("capabilities", [])
+        data.setdefault("downtime", {})
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(json.dumps(data, indent=2))
+
+
+def _perform_handshake(components: List[Dict[str, Any]]) -> Optional[CrownResponse]:
+    """Exchange mission brief with CROWN and return the response."""
+    brief = {
+        "priority_map": {
+            str(c.get("name", "")): idx for idx, c in enumerate(components)
+        },
+        "current_status": {},
+        "open_issues": [],
+    }
+    brief_path = LOGS_DIR / "mission_brief.json"
+    brief_path.parent.mkdir(parents=True, exist_ok=True)
+    brief_path.write_text(json.dumps(brief, indent=2))
+
+    response: Optional[CrownResponse]
+    try:
+        url = os.getenv("CROWN_WS_URL", "ws://localhost:8765")
+        handshake = CrownHandshake(url)
+        response = asyncio.run(handshake.perform(str(brief_path)))
+    except Exception:  # pragma: no cover - handshake best effort
+        LOGGER.exception("CROWN handshake failed")
+        response = None
+
+    _persist_handshake(response)
+
+    if response and "GLM4V" not in response.capabilities:
+        launcher = Path(__file__).resolve().parents[1] / "crown_model_launcher.sh"
+        try:
+            subprocess.Popen(["bash", str(launcher)])
+        except Exception:  # pragma: no cover - log and continue
+            LOGGER.exception("Failed to launch crown model")
+
+    return response
+
+
 def load_config(path: Path) -> List[Dict[str, Any]]:
     """Return ordered component definitions from ``path``.
 
     ``path`` points to a JSON file with a ``components`` list.
     """
-
     data = json.loads(path.read_text())
     return data.get("components", [])
 
 
 def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
     """Launch ``component`` and run its health check."""
-
     name = component.get("name")
     LOGGER.info("Launching %s", name)
     proc = subprocess.Popen(component["command"])
@@ -107,7 +158,6 @@ def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
 
 def main() -> None:
     """CLI entry point for manual runs."""
-
     parser = argparse.ArgumentParser(description="Launch components from configuration")
     default_cfg = Path(__file__).with_name("boot_config.json")
     parser.add_argument(
@@ -132,6 +182,7 @@ def main() -> None:
     )
 
     components = load_config(args.config)
+    _perform_handshake(components)
     processes: List[subprocess.Popen] = []
 
     history = load_history()
@@ -146,7 +197,9 @@ def main() -> None:
                 LOGGER.info("Skipping quarantined component %s", name)
                 continue
             if failure_counts.get(name, 0) >= args.failure_limit:
-                LOGGER.warning("Component %s exceeded failure limit; quarantining", name)
+                LOGGER.warning(
+                    "Component %s exceeded failure limit; quarantining", name
+                )
                 quarantine_component(comp, "Exceeded failure limit")
                 continue
 
