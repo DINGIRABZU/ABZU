@@ -17,15 +17,26 @@ flowchart LR
 4. **Event Generator** – extracted features translate into narrative events consumed by the scribe.
 5. **Narrative Engine** – generates context-aware story elements.
 
-## Sample Dataset
+## Data Schema
 
-A minimal CSV at `data/biosignals/sample_biosignals.csv` demonstrates the
-expected structure:
+Biosignal CSV files include the following columns:
 
-| timestamp (ISO 8601) | heart_rate (BPM) | skin_temp (°C) | eda (µS) |
+| Column | Type | Units | Description |
 | --- | --- | --- | --- |
-| 2024-01-01T00:00:00Z | 72 | 36.5 | 0.02 |
-| … | … | … | … |
+| `timestamp` | string | ISO 8601 UTC | Sample timestamp |
+| `heart_rate` | float | BPM | Beats per minute |
+| `skin_temp` | float | °C | Skin temperature |
+| `eda` | float | µS | Electrodermal activity |
+
+## Sample Datasets
+
+Anonymized CSVs in `data/biosignals/` demonstrate the expected structure:
+
+- `sample_biosignals.csv`
+- `sample_biosignals_alpha.csv`
+- `sample_biosignals_beta.csv`
+
+Use `scripts/ingest_biosignals.py` to load these files into the narrative engine.
 
 Unit tests in `tests/narrative_engine/test_biosignal_pipeline.py` illustrate
 ingestion and transformation of this data.
@@ -47,4 +58,4 @@ Optional tools:
 
 | Version | Date | Summary |
 |---------|------|---------|
-| [Unreleased](../CHANGELOG.md#narrative-engine) | - | Added sample biosignal dataset and tests documenting ingestion and transformation. |
+| [Unreleased](../CHANGELOG.md#narrative-engine) | - | Expanded anonymized biosignal samples, acquisition guidelines, and ingestion references with broader test coverage. |
