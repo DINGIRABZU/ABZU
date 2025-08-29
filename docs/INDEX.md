@@ -269,7 +269,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | - | - |
 | [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onbo... | - |
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |
-| [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fresh clone. | - |
+| [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [operations.md](operations.md) | Operations | - | - |
 | [operator_protocol.md](operator_protocol.md) | Operator Protocol | Defines how operator commands and uploads are issued and validated across the system. | - |
