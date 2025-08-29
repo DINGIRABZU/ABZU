@@ -797,14 +797,14 @@
       "last_update": "2025-08-22"
     },
     "communication/telegram_bot.py": {
-      "version": "0.0.0",
-      "score": 1,
-      "last_update": "2025-08-22"
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-08-29"
     },
     "communication/webrtc_server.py": {
       "version": "0.0.0",
-      "score": 1,
-      "last_update": "2025-08-22"
+      "score": 2,
+      "last_update": "2025-08-29"
     },
     "connectors/__init__.py": {
       "version": "0.0.0",
@@ -812,9 +812,9 @@
       "last_update": "2025-08-22"
     },
     "connectors/webrtc_connector.py": {
-      "version": "0.0.0",
-      "score": 2,
-      "last_update": "2025-08-21"
+      "version": "0.2.0",
+      "score": 3,
+      "last_update": "2025-08-29"
     },
     "corpus_memory_logging.py": {
       "version": "0.0.0",
@@ -1072,9 +1072,9 @@
       "last_update": "2025-08-28"
     },
     "operator_api.py": {
-      "version": "0.0.0",
-      "score": 1,
-      "last_update": "2025-08-28"
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-08-29"
     },
     "orchestration_master.py": {
       "version": "0.0.0",
@@ -1370,6 +1370,11 @@
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-07-18"
+    },
+    "scripts/verify_doc_summaries.py": {
+      "version": "0.0.0",
+      "score": 2,
+      "last_update": "2025-08-29"
     },
     "servant_model_manager.py": {
       "version": "0.0.0",
@@ -2000,6 +2005,11 @@
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-24"
+    },
+    "tests/narrative_engine/test_biosignal_pipeline.py": {
+      "version": "0.0.0",
+      "score": 2,
+      "last_update": "2025-08-29"
     },
     "tests/performance/test_task_parser_performance.py": {
       "version": "0.0.0",

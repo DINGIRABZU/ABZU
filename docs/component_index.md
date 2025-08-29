@@ -163,10 +163,10 @@ Generated automatically. Lists each Python file with its description and externa
 | `communication/__init__.py` | Package initialization. | None |
 | `communication/floor_channel_socket.py` | No description | socketio |
 | `communication/gateway.py` | No description | api |
-| `communication/telegram_bot.py` | No description | telegram |
-| `communication/webrtc_server.py` | No description | mediasoup |
+| `communication/telegram_bot.py` | Telegram bot forwarding messages to the avatar. | telegram |
+| `communication/webrtc_server.py` | WebRTC signaling helpers and media tracks. | aiortc, core, mediasoup, numpy, soundfile |
 | `connectors/__init__.py` | No description | None |
-| `connectors/webrtc_connector.py` | No description | aiortc, fastapi |
+| `connectors/webrtc_connector.py` | WebRTC connector for streaming data, audio, and video. | aiortc, communication, fastapi |
 | `corpus_memory_logging.py` | Append and read JSONL interaction records for corpus memory usage. | None |
 | `crown_config/__init__.py` | Load application configuration from environment variables. | pydantic, pydantic_settings |
 | `crown_config/settings/__init__.py` | Utilities for reading optional layer configuration. | yaml |
@@ -218,7 +218,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `music_generation.py` | Generate music from a text prompt using various models. | src, transformers |
 | `music_llm_interface.py` | No description | INANNA_AI, numpy, rag, src |
 | `nlq_api.py` | No description | agents, core, fastapi |
-| `operator_api.py` | No description | agents, fastapi |
+| `operator_api.py` | Operator command API exposing the :class:`OperatorDispatcher`. | agents, fastapi |
 | `orchestration_master.py` | High-level orchestrator selecting agents and wiring memory stores. | memory, tools, yaml |
 | `os_guardian/__init__.py` | Utilities for operating system automation. | None |
 | `os_guardian/action_engine.py` | No description | pyautogui, selenium |
@@ -278,6 +278,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/validate_configs.py` | Validate YAML templates and JSON schema files. | jsonschema, yaml |
 | `scripts/validate_schemas.py` | Validate JSON files against their JSON Schemas. | jsonschema |
 | `scripts/vast_check.py` | No description | aiortc, httpx |
+| `scripts/verify_doc_summaries.py` | Check onboarding doc summaries stay in sync with file hashes. | yaml |
 | `servant_model_manager.py` | Registry and launcher for auxiliary language models. | tools |
 | `server.py` | Minimal FastAPI server exposing health and utility endpoints. | INANNA_AI, PIL, agents, communication, connectors, core, crown_config, fastapi, memory, numpy, prometheus_client, prometheus_fastapi_instrumentator, pydantic, yaml |
 | `seven_dimensional_music.py` | Utility for simple seven-dimensional music features. | MUSIC_FOUNDATION, numpy, src |
@@ -404,6 +405,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/memory/test_sharded_memory_store.py` | No description | numpy |
 | `tests/memory/test_vector_memory.py` | Verify snapshot persistence and clustering for vector memory. | numpy, pytest |
 | `tests/memory/test_vector_persistence.py` | Exercise FAISS/SQLite backed vector persistence. | numpy, pytest |
+| `tests/narrative_engine/test_biosignal_pipeline.py` | Tests for biosignal ingestion and transformation. | memory |
 | `tests/performance/test_task_parser_performance.py` | Tests for task parser performance. | None |
 | `tests/performance/test_vector_memory_performance.py` | Tests for vector memory performance. | None |
 | `tests/test_adaptive_learning.py` | Tests for adaptive learning. | INANNA_AI, pytest |
