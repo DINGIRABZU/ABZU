@@ -19,7 +19,9 @@ persistence strategies for each store:
 
 ### Cortex store
 
-`memory/cortex.py` persists application state as JSON lines while maintaining an
+Implementation: [memory/cortex.py](../memory/cortex.py)
+
+The cortex layer persists application state as JSON lines while maintaining an
 inverted index for semantic tags and a full‑text index for tag tokens. Reader
 and writer locks guard the log and index so multiple threads can record and
 query safely. Helper utilities allow concurrent queries and pruning of old
@@ -48,19 +50,25 @@ from spiral_vector_db import init_db as cortex_db
 cortex_collection = cortex_db()
 ```
 
-**Example query**
+**CLI insertion and retrieval**
 
-```python
+```bash
+python - <<'PY'
+from memory.cortex import record_spiral, query_spirals
+
 class Node:
     children = []
 
 record_spiral(Node(), {"result": "demo", "tags": ["example"]})
-query_spirals(tags=["example"])
+print(query_spirals(tags=["example"]))
+PY
 ```
 
 ### Emotional store
 
-`memory/emotional.py` captures emotional reactions and valence values. Entries
+Implementation: [memory/emotional.py](../memory/emotional.py)
+
+The emotional layer captures affective reactions and valence values. Entries
 can be queried to modulate tone or influence downstream reasoning.
 
 **Storage options**
@@ -86,16 +94,23 @@ from spiral_vector_db import init_db as emotion_db
 emotion_collection = emotion_db()
 ```
 
-**Example query**
+**CLI insertion and retrieval**
 
-```python
+```bash
+python - <<'PY'
+from memory.emotional import get_connection, log_emotion, fetch_emotion_history
+
+conn = get_connection()
 log_emotion([0.1, 0.2], conn=conn)
-fetch_emotion_history(window=60, conn=conn)
+print(fetch_emotion_history(window=60, conn=conn))
+PY
 ```
 
 ### Mental store
 
-`memory/mental.py` keeps temporary working memory for in‑progress reasoning and
+Implementation: [memory/mental.py](../memory/mental.py)
+
+The mental layer keeps temporary working memory for in‑progress reasoning and
 planning. Items decay quickly to keep the space focused on current tasks.
 
 **Storage options**
@@ -118,16 +133,23 @@ from memory.mental import init_rl_model, record_task_flow, query_related_tasks
 init_rl_model()  # uses NEO4J_* variables
 ```
 
-**Example query**
+**CLI insertion and retrieval**
 
-```python
+```bash
+python - <<'PY'
+from memory.mental import init_rl_model, record_task_flow, query_related_tasks
+
+init_rl_model()
 record_task_flow("taskA", {"step": 1})
-query_related_tasks("taskA")
+print(query_related_tasks("taskA"))
+PY
 ```
 
 ### Spiritual store
 
-`memory/spiritual.py` maintains ritual insights and symbolic states that extend
+Implementation: [memory/spiritual.py](../memory/spiritual.py)
+
+The spiritual layer maintains ritual insights and symbolic states that extend
 beyond immediate computation. These records provide long‑range guidance during
 ceremonial flows.
 
@@ -153,18 +175,25 @@ from spiral_vector_db import init_db as spirit_db
 spirit_collection = spirit_db()
 ```
 
-**Example query**
+**CLI insertion and retrieval**
 
-```python
+```bash
+python - <<'PY'
+from memory.spiritual import get_connection, map_to_symbol, lookup_symbol_history
+
+conn = get_connection()
 map_to_symbol(("eclipse", "☾"), conn=conn)
-lookup_symbol_history("☾", conn=conn)
+print(lookup_symbol_history("☾", conn=conn))
+PY
 ```
 
 ### Narrative store
 
-`memory/narrative_engine.py` outlines interfaces for recording story events.
-Each event binds an actor, an action and optional symbolism so later modules can
-weave a coherent narrative thread across memories.
+Implementation: [memory/narrative_engine.py](../memory/narrative_engine.py)
+
+The narrative layer outlines interfaces for recording story events. Each event
+binds an actor, an action and optional symbolism so later modules can weave a
+coherent narrative thread across memories.
 
 **Storage options**
 
@@ -187,9 +216,13 @@ from spiral_vector_db import init_db as narrative_db
 narrative_collection = narrative_db()
 ```
 
-**Example query**
+**CLI insertion and retrieval**
 
-```python
+```bash
+python - <<'PY'
+from memory.narrative_engine import log_story, stream_stories
+
 log_story("hero meets guide")
-list(stream_stories())
+print(list(stream_stories()))
+PY
 ```
