@@ -3,6 +3,7 @@ documents:
   docs/ABZU_SUBSYSTEM_OVERVIEW.md: e0bed0b9450322638c9fd24d6573202d8f2ad98d3d7eb7b047e38d914c645252
   docs/architecture_overview.md: 3e08f2cf4a214c19aead33191c08b32f8f4e8ddd57333b29fbe5e2596e9cdad2
   docs/project_overview.md: 4f4b07972085bc9341a56b1fb85f37da8354e726a73e10f03613fcc5f83b76b1
+  docs/onboarding_walkthrough.md: b7d57d6fe6ee327301e134e36a959474431e7a0c511dd999a168ddad1485cdeb
   docs/vector_memory.md: 8aff26e4a32740fc3599e3cae555f8b7700a61c6734adb87fbcaaaba69349a34
   docs/rag_pipeline.md: 24d2154f4a2db1aceba6aaf05c03bc6c34119ba58b82159345f5d2c0eb36e0dc
   docs/rag_music_oracle.md: b506c9213c26af25dc0e295b11215dd19d6a1100cfb7902e64be47120784c7d6

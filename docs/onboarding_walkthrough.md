@@ -1,6 +1,6 @@
 # Onboarding Walkthrough
 
-This walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fresh clone.
+This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fresh clone. The optional Mermaid diagram below summarizes the flow.
 
 ## 1. Clone the repository
 
