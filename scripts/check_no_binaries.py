@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+from pathlib import Path
 
 
 def staged_binary_files() -> list[str]:
@@ -18,6 +19,8 @@ def staged_binary_files() -> list[str]:
             continue
         added, removed, path = parts
         if added == "-" or removed == "-":
+            if not Path(path).exists():
+                continue
             binaries.append(path)
     return binaries
 
