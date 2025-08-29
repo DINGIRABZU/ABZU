@@ -8,6 +8,19 @@ layer.
 Each connector includes a ``__version__`` field for traceability and is tracked
 in the [Connector Index](connectors/CONNECTOR_INDEX.md).
 
+## Media Features and Fallbacks
+
+The WebRTC connector can stream three modalities to clients:
+
+1. **Video** – avatar frames generated from ``video_engine.start_stream``
+2. **Audio** – WAV chunks produced by ``AvatarAudioTrack``
+3. **Data** – arbitrary binary payloads over a data channel
+
+During negotiation the server inspects the client's offer and only attaches
+tracks that were requested. When bandwidth or configuration prohibits video or
+audio streaming the connector falls back to data-channel messages, ensuring that
+text or other payloads can still reach the client.
+
 ## Signaling Flow
 
 1. **Client connects** – A client creates a WebRTC offer and sends it to the

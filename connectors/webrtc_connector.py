@@ -1,8 +1,8 @@
-"""WebRTC connector for streaming audio files to the browser."""
+"""WebRTC connector for streaming data, audio, and video."""
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import asyncio
 import logging
@@ -12,11 +12,26 @@ from typing import Set
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from fastapi import APIRouter, Request
 
+from communication.webrtc_server import AvatarAudioTrack, AvatarVideoTrack
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 _pcs: Set[RTCPeerConnection] = set()
 _channels: Set[any] = set()
+
+# Configuration flags -----------------------------------------------------
+ENABLE_DATA = True
+ENABLE_AUDIO = True
+ENABLE_VIDEO = True
+
+
+def configure(*, data: bool = True, audio: bool = True, video: bool = True) -> None:
+    """Configure which streams are offered to peers."""
+    global ENABLE_DATA, ENABLE_AUDIO, ENABLE_VIDEO
+    ENABLE_DATA = data
+    ENABLE_AUDIO = audio
+    ENABLE_VIDEO = video
 
 
 @router.post("/call")
@@ -28,9 +43,18 @@ async def offer(request: Request) -> dict[str, str]:
     pc = RTCPeerConnection()
     _pcs.add(pc)
 
-    @pc.on("datachannel")
-    def on_datachannel(channel: any) -> None:
-        _channels.add(channel)
+    if ENABLE_DATA:
+
+        @pc.on("datachannel")
+        def on_datachannel(channel: any) -> None:
+            _channels.add(channel)
+
+    has_audio = "m=audio" in offer.sdp
+    has_video = "m=video" in offer.sdp
+    if ENABLE_VIDEO and has_video:
+        pc.addTrack(AvatarVideoTrack())
+    if ENABLE_AUDIO and has_audio:
+        pc.addTrack(AvatarAudioTrack())
 
     await pc.setRemoteDescription(offer)
     answer = await pc.createAnswer()
@@ -49,7 +73,7 @@ async def close_peers() -> None:
 
 
 async def _send_audio(path: Path) -> None:
-    if not _channels:
+    if not (ENABLE_DATA and _channels):
         return
     try:
         data = path.read_bytes()
@@ -64,14 +88,21 @@ async def _send_audio(path: Path) -> None:
             _channels.discard(ch)
 
 
-def start_call(path: str) -> None:
-    """Schedule sending ``path`` to connected peers."""
+def start_stream(path: str) -> None:
+    """Schedule sending ``path`` to connected peers over the data channel."""
+    if not ENABLE_DATA:
+        logger.debug("data channel disabled; start_stream ignored")
+        return
     try:
         loop = asyncio.get_running_loop()
     except RuntimeError:
-        logger.warning("start_call called without event loop")
+        logger.warning("start_stream called without event loop")
         return
     loop.create_task(_send_audio(Path(path)))
 
 
-__all__ = ["router", "close_peers", "start_call"]
+# Backwards compatible alias ------------------------------------------------
+start_call = start_stream
+
+
+__all__ = ["router", "close_peers", "start_stream", "start_call", "configure"]
