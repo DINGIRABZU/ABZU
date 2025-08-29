@@ -163,3 +163,93 @@ results in `logs/razar_boot_history.json` to refine startup order.
 [`razar/cocreation_planner.py`](../razar/cocreation_planner.py) consolidates
 component priorities, boot failures, and Crown suggestions into a dependency
 ordered build plan saved to `logs/razar_cocreation_plans.json`.
+
+## Code Considerations
+
+### `boot_config.json`
+
+**Schema**
+
+```json
+{
+  "components": [
+    {
+      "name": "string",
+      "command": ["string", "..."],
+      "health_check": ["string", "..."]
+    }
+  ]
+}
+```
+
+**Example**
+
+```json
+{
+  "components": [
+    {
+      "name": "demo",
+      "command": ["python", "demo.py"],
+      "health_check": ["python", "-m", "demo_health"]
+    }
+  ]
+}
+```
+
+### `razar_env.yaml`
+
+**Structure**
+
+```yaml
+layers:
+  <layer_name>:
+    - <dependency>
+```
+
+**Example**
+
+```yaml
+layers:
+  demo:
+    - requests
+```
+
+### `logs/razar_state.json` and quarantine entries
+
+**State file format**
+
+```json
+{
+  "last_component": "string"
+}
+```
+
+**Example**
+
+```json
+{"last_component": "demo"}
+```
+
+**Quarantine entry format**
+
+Each quarantined component is recorded as `quarantine/<name>.json`:
+
+```json
+{
+  "name": "string",
+  "reason": "string",
+  "attempts": 1,
+  "patches_applied": ["string"]
+}
+```
+
+**Example**
+
+```json
+{
+  "name": "demo",
+  "reason": "startup failure",
+  "attempts": 1,
+  "patches_applied": []
+}
+```
