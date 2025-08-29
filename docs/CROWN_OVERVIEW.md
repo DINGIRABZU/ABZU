@@ -63,3 +63,16 @@ descriptions.
 ## Mission Brief Handshake
 
 Before diagnostics begin, RAZAR shares a short mission brief with the Crown stack. The brief summarises the priority map, current status and any open issues and is sent via the WebSocket helper `razar/crown_handshake.py`. Crown replies with an acknowledgment and a capability list so RAZAR knows which tools are available for the session. Each exchange is recorded to `logs/razar_crown_dialogues.json` for later review.
+
+## Deployment
+
+1. Configure the environment with [`init_crown_agent.py`](../init_crown_agent.py). This script prepares memory directories, registers servant models, and validates the GLM endpoint.
+2. Exchange a mission brief using [`razar/crown_handshake.py`](../razar/crown_handshake.py) so RAZAR and the Crown stack agree on available capabilities before entering the boot cycle.
+3. Launch the console to begin a session after the handshake completes.
+
+## Version History
+
+| Version | Date       | Summary |
+|---------|------------|---------|
+| 0.2.0   | 2025-09-30 | Added deployment guidance and initial version table. |
+| 0.1.0   | 2025-08-28 | Initial document outlining Crown agent architecture. |
