@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.8
-**Last updated:** 2025-09-01
+**Version:** v1.0.9
+**Last updated:** 2025-09-02
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -66,6 +66,15 @@ Any new configuration file must be accompanied by documentation that outlines it
 ### Module Versioning
 
 Every source module must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/component_inventory.py` to confirm module versions remain synchronized.
+
+### Connector Guidelines
+
+Connectors bridge the language engine to external communication layers. Follow the architecture in [Video Engine and Connector Design](design.md) when implementing new back ends. Each connector must:
+
+- implement `start_call(path: str) -> None` to initiate a stream
+- provide `close_peers() -> Awaitable[None]` to release resources
+- expose a `__version__` field and bump it on interface changes
+- cross-link implementation modules such as [`connectors/webrtc_connector.py`](../connectors/webrtc_connector.py) and the package [`connectors`](../connectors/__init__.py)
 
 ## Maintenance
 Whenever this file changes:
