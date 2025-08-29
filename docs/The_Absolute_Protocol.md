@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.18
-**Last updated:** 2025-08-29
+**Version:** v1.0.19
+**Last updated:** 2025-08-30
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -18,6 +18,7 @@ Before opening a pull request, confirm each item:
 - [ ] Connectors implement `start_call`, `close_peers`, and expose `__version__`
 - [ ] If a connector is added or modified, update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with version and service details
 - [ ] `docs/INDEX.md` regenerated if docs changed
+- [ ] New operator channels documented in [Operator Protocol](operator_protocol.md)
 - [ ] Confirm no binary files are introduced
 - [ ] Handshake-triggered model launches documented in agent guides and state logs
 

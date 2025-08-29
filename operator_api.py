@@ -1,13 +1,19 @@
-from __future__ import annotations
-
 """Operator command API exposing the :class:`OperatorDispatcher`."""
 
-from fastapi import APIRouter, HTTPException
+from __future__ import annotations
+
+import json
+import shutil
+from pathlib import Path
+
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from agents.operator_dispatcher import OperatorDispatcher
 
 router = APIRouter()
-_dispatcher = OperatorDispatcher({"overlord": ["cocytus", "victim"], "auditor": ["victim"]})
+_dispatcher = OperatorDispatcher(
+    {"overlord": ["cocytus", "victim", "crown"], "auditor": ["victim"]}
+)
 
 
 @router.post("/operator/command")
@@ -17,7 +23,9 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     agent = data.get("agent", "")
     command_name = data.get("command", "")
     if not operator or not agent or not command_name:
-        raise HTTPException(status_code=400, detail="operator, agent and command required")
+        raise HTTPException(
+            status_code=400, detail="operator, agent and command required"
+        )
 
     def _noop() -> dict[str, str]:
         return {"ack": command_name}
@@ -27,6 +35,40 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
     return {"result": result}
+
+
+@router.post("/operator/upload")
+async def upload_file(
+    operator: str = Form(...),
+    metadata: str = Form("{}"),
+    files: list[UploadFile] = File(...),
+) -> dict[str, object]:
+    """Store uploaded files and forward metadata to RAZAR."""
+    try:
+        meta = json.loads(metadata)
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=400, detail="invalid metadata") from exc
+
+    upload_dir = Path("uploads")
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    stored: list[str] = []
+    for item in files:
+        dest = upload_dir / item.filename
+        with dest.open("wb") as fh:
+            shutil.copyfileobj(item.file, fh)
+        stored.append(dest.name)
+
+    def _forward(meta: dict[str, object]) -> dict[str, object]:
+        """Relay metadata to RAZAR via Crown."""
+        return {"received": meta}
+
+    try:
+        _dispatcher.dispatch(operator, "crown", _forward, meta)
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+
+    return {"stored": stored, "metadata": meta}
 
 
 __all__ = ["router"]

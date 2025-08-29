@@ -136,10 +136,12 @@ individual tiers.
 
 RAZAR operates as service 0, validating the environment and enforcing the
 startup order. It rewrites [Ignition.md](Ignition.md) with status markers so
-operators can track health at a glance. The [RAZAR Agent](RAZAR_AGENT.md) explains
-how priorities are derived and progress is persisted. The broader
-[RAZAR Agent](RAZAR_AGENT.md) guide covers its perpetual ignition loop,
-CROWN LLM diagnostics, and shutdown–repair–restart handshake, and see
+operators can track health at a glance. The [Operator API](../operator_api.py)
+supports `/operator/command` and `/operator/upload` channels detailed in
+[operator_protocol.md](operator_protocol.md). The broader
+[RAZAR Agent](RAZAR_AGENT.md) guide explains how priorities are derived and
+progress is persisted. CROWN LLM diagnostics and shutdown–repair–restart
+handshakes appear in [RAZAR Agent](RAZAR_AGENT.md), and see
 [nazarick_agents.md](nazarick_agents.md) for the in‑world servant lineup.
 When issues surface, consult the [Recovery Playbook](recovery_playbook.md),
 the [Error Registry](error_registry.md) and the
