@@ -253,3 +253,10 @@ Each quarantined component is recorded as `quarantine/<name>.json`:
   "patches_applied": []
 }
 ```
+
+## Version History
+
+| Version | Date | Summary |
+|---------|------|---------|
+| [0.1.0](../CHANGELOG_razar.md#010---2025-08-30) | 2025-08-30 | Initial release of RAZAR runtime orchestrator and environment builder. |
+
