@@ -166,6 +166,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../README_QNL_OS.md](../README_QNL_OS.md) | QNL Integration Overview | The Quantum Narrative Language (QNL) bridges textual symbols with music in Spiral OS. This document explains where th... | - |
 | [../SEVEN_DIMENSIONAL_MUSIC.md](../SEVEN_DIMENSIONAL_MUSIC.md) | 7‑Dimensional Music System | This system layers sound so different beings perceive a single track in unique ways. A core melody becomes the human... | - |
 | [../benchmarks/README.md](../benchmarks/README.md) | Benchmarks | Run `make bench` to execute all benchmarks. Results are written to `data/benchmarks`. | - |
+| [../data/biosignals/README.md](../data/biosignals/README.md) | Biosignal Acquisition Guidelines | This directory hosts anonymized biosignal samples used by the Nazarick Narrative System. | - |
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |

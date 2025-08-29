@@ -40,8 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Narrative Engine
 
-- Added sample biosignal dataset and tests documenting ingestion and
-  transformation, referenced from The Absolute Protocol.
+- Expanded anonymized biosignal datasets with acquisition guidelines and
+  ingestion script references.
+- Extended tests to cover multiple samples and transformations.
 - Stubbed `memory/narrative_engine.py` defining story event interfaces.
 
 ### Chakra Versions
