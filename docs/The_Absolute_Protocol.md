@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.7
-**Last updated:** 2025-08-29
+**Version:** v1.0.8
+**Last updated:** 2025-09-01
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -62,6 +62,10 @@ similar to the RAZAR component links to summarize relationships:
 ### Configuration File Documentation
 
 Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson), [razar_env.yaml](RAZAR_AGENT.md#razar_envyaml), and the log formats in the [logging guidelines](logging_guidelines.md).
+
+### Module Versioning
+
+Every source module must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/component_inventory.py` to confirm module versions remain synchronized.
 
 ## Maintenance
 Whenever this file changes:
