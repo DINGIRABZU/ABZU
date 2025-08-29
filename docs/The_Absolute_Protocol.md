@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.17
+**Version:** v1.0.18
 **Last updated:** 2025-08-29
 
 ## How to Use This Protocol
@@ -94,6 +94,12 @@ Connectors bridge the language engine to external communication layers. Follow t
 ### Connector Registry
 
 Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, endpoint, authentication method, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns. Update this registry whenever a connector is added, removed, or its interface changes.
+
+#### Crown Handshake
+
+Mission briefs exchanged during the Crown Handshake are archived at
+`logs/mission_briefs/<timestamp>.json`. Keep this directory maintained to
+preserve handshake history for auditing.
 
 ## Subsystem Protocols
 
