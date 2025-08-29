@@ -75,6 +75,22 @@
       }
     },
     {
+      "id": "inanna_ai_agent",
+      "chakra": "heart",
+      "type": "agent",
+      "version": "0.1.0",
+      "path": "INANNA_AI_AGENT",
+      "purpose": "CLI for INANNA rituals",
+      "dependencies": [
+        "transformers"
+      ],
+      "tests": [],
+      "status": "alpha",
+      "metrics": {
+        "coverage": 0.0
+      }
+    },
+    {
       "id": "albedo",
       "chakra": "crown",
       "type": "agent",

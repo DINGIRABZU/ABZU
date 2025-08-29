@@ -2,6 +2,17 @@
 
 Bootstrapper for local services and mission brief exchange with the CROWN stack.
 
+## Component Index Entry
+
+- **ID:** `razar`
+- **Path:** `agents/razar`
+
+To update the index when RAZAR modules evolve:
+
+1. Edit `component_index.json` with new paths or identifiers.
+2. Run `python scripts/component_inventory.py` to rebuild component tables.
+3. Regenerate the docs index with `pre-commit run doc-indexer --files docs/RAZAR_AGENT.md docs/INDEX.md`.
+
 ## Vision
 
 The RAZAR agent bootstraps local services in a controlled environment. It

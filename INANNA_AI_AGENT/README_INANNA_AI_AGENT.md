@@ -2,6 +2,17 @@
 
 This directory contains a small command line tool for activating the INANNA chant and for generating a QNL song from a hex string.
 
+## Component Index Entry
+
+- **ID:** `inanna_ai_agent`
+- **Path:** `INANNA_AI_AGENT`
+
+To update the index when modules evolve:
+
+1. Adjust `component_index.json` with new paths or identifiers.
+2. Run `python scripts/component_inventory.py` to rebuild component tables.
+3. Refresh the docs index via `pre-commit run doc-indexer --files INANNA_AI_AGENT/README_INANNA_AI_AGENT.md docs/INDEX.md`.
+
 ## Installation
 
 Use `pip` to install the required dependencies:
