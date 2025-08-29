@@ -40,3 +40,35 @@ servant_models:
 
 Environment variables with the same names as listed above override the
 corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
+
+## Setup Steps
+
+1. **Create memory directories**
+
+   ```bash
+   mkdir -p data/vector_memory/{vector_memory,chroma}
+   ```
+
+   This prepares the persistent stores used by `vector_memory.py` and
+   `corpus_memory.py`.
+
+2. **Launch servant model endpoints**
+
+   Define the endpoints via `SERVANT_MODELS` and run the launcher:
+
+   ```bash
+   export SERVANT_MODELS="deepseek=http://localhost:8002,mistral=http://localhost:8003"
+   ./launch_servants.sh
+   ```
+
+   Each endpoint must expose a `/health` route and accept a JSON body
+   `{"prompt": "..."}`.
+
+3. **Start INANNA core**
+
+   The minimal startup script combines the above steps and verifies the
+   configuration:
+
+   ```bash
+   scripts/start_inanna_core.sh
+   ```
