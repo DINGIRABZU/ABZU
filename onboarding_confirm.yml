@@ -1,5 +1,6 @@
 documents:
   AGENTS.md: 08aab5d3dabd13cc0937d5e6574bbed143346c5340c13578224336c1ecdc2671
+  docs/ABZU_SUBSYSTEM_OVERVIEW.md: e0bed0b9450322638c9fd24d6573202d8f2ad98d3d7eb7b047e38d914c645252
   docs/architecture_overview.md: 3e08f2cf4a214c19aead33191c08b32f8f4e8ddd57333b29fbe5e2596e9cdad2
   docs/project_overview.md: 4f4b07972085bc9341a56b1fb85f37da8354e726a73e10f03613fcc5f83b76b1
   docs/vector_memory.md: 8aff26e4a32740fc3599e3cae555f8b7700a61c6734adb87fbcaaaba69349a34
