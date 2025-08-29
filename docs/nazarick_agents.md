@@ -26,6 +26,30 @@ This guide summarizes core agents within ABZU's Nazarick system. Each agent alig
 | <a id="asian-gen-creative-engine"></a>AsianGen Creative Engine | 5 | [Scriptorium](system_blueprint.md#floor-5-scriptorium) | Throat |
 | <a id="land-graph-geo-knowledge"></a>LandGraph Geo Knowledge | 1 | [Cartography Room](system_blueprint.md#floor-1-cartography-room) | Root |
 
+## Chat Rooms and Channels
+
+Agents communicate through named chat rooms that mirror their channels in the system blueprint. These rooms are available via the [Open Web UI Integration Guide](open_web_ui.md) and the [Operator Protocol](operator_protocol.md).
+
+| Agent | Chat Room |
+| --- | --- |
+| Orchestration Master | `#throne-room` |
+| Prompt Orchestrator | `#signal-hall` |
+| QNL Engine | `#insight-observatory` |
+| Memory Scribe | `#memory-vault` |
+| Demiurge Strategic Simulator | `#lava-pits` |
+| Shalltear Fast Inference Agent | `#catacombs` |
+| Cocytus Prompt Arbiter | `#glacier-prison` |
+| Ecosystem Aura Capture | `#jungle-aerie` |
+| Ecosystem Mare Gardener | `#jungle-grove` |
+| Sebas Compassion Module | `#royal-suite` |
+| Victim Security Canary | `#sacrificial-chamber` |
+| Pandora Persona Emulator | `#treasure-vault` |
+| Pleiades Star Map Utility | `#maid-quarters` |
+| Pleiades Signal Router Utility | `#relay-wing` |
+| Bana Bio-Adaptive Narrator | `#biosphere-lab` |
+| AsianGen Creative Engine | `#scriptorium` |
+| LandGraph Geo Knowledge | `#cartography-room` |
+
 | Agent | Role | Chakra | Memory Scope | External Libraries | Channel | Stub |
 | --- | --- | --- | --- | --- | --- | --- |
 | [Orchestration Master](#orchestration-master) | High-level orchestration and launch control | Crown | `pipeline` YAML, `ritual_profile.json` | Model runtime, container services | [7 / Throne Room](system_blueprint.md#floor-7-throne-room) | [orchestration_master.py](../orchestration_master.py) |
