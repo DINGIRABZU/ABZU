@@ -15,6 +15,9 @@ Curated starting points for understanding and operating the project. For an exha
 ## Usage
 - [How to Use](how_to_use.md)
 
+## Data
+- [Data Manifest](data_manifest.md)
+
 ## Development
 - [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.9, updated 2025-09-02)
 - [Developer Etiquette](developer_etiquette.md)
