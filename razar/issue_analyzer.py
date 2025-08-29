@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Simple heuristics for classifying failure logs.
 
 The :mod:`issue_analyzer` inspects failure logs and attempts to label the

@@ -9,6 +9,9 @@ metrics are exported for external monitoring.
 """
 
 from __future__ import annotations
+
+__version__ = "0.1.0"
+
 import json
 import logging
 import os

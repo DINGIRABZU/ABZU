@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Communication link between the RAZAR agent and CROWN.
 
 This module implements a tiny WebSocket client used by the development

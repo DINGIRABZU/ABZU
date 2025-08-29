@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Simple checkpoint manager for RAZAR components.
 
 The manager persists boot progress in ``logs/razar_state.json`` so the runtime

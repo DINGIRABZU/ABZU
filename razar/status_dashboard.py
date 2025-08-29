@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Simple CLI dashboard reporting boot status and quarantine information.
 
 The dashboard reads component priority definitions from
@@ -106,7 +108,9 @@ def render_dashboard() -> str:
         line = f"{item['name']:<20} {item['priority']:<8} {item['criticality']:<12} {item['status']:<12}"
         lines.append(line)
     lines.append("")
-    lines.append(f"Quarantine log: {quarantine_manager.LOG_FILE.relative_to(PROJECT_ROOT)}")
+    lines.append(
+        f"Quarantine log: {quarantine_manager.LOG_FILE.relative_to(PROJECT_ROOT)}"
+    )
     lines.append(f"Boot history: {BOOT_LOG.relative_to(PROJECT_ROOT)}")
     return "\n".join(lines)
 

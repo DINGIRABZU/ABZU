@@ -8,6 +8,8 @@ the component is reactivated.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import difflib
 import json
 import logging

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Temporary sandbox for module patches from CROWN.
 
 This helper clones selected components into a temporary directory, applies

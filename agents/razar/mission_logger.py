@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Structured mission logger for RAZAR components.
 
 This module records lifecycle events for RAZAR components in a JSON lines log
@@ -61,6 +63,7 @@ class LogEntry:
 # Logging helpers
 # ---------------------------------------------------------------------------
 
+
 def log_event(
     event: str,
     component: str,
@@ -88,9 +91,7 @@ def log_start(component: str, status: str, details: str | None = None) -> None:
     log_event("start", component, status, details)
 
 
-def log_health(
-    component: str, status: str, details: str | None = None
-) -> None:
+def log_health(component: str, status: str, details: str | None = None) -> None:
     """Record a health result for a component."""
 
     log_event("health", component, status, details)
@@ -133,6 +134,7 @@ log_health_check = log_health
 # ---------------------------------------------------------------------------
 # Reading utilities
 # ---------------------------------------------------------------------------
+
 
 def load_events() -> List[LogEntry]:
     """Return all log entries in chronological order."""
@@ -190,6 +192,7 @@ def timeline() -> List[Dict[str, str]]:
 # CLI helpers
 # ---------------------------------------------------------------------------
 
+
 def _cmd_log(args: argparse.Namespace) -> None:
     log_event(args.event, args.component, args.status, args.details)
 
@@ -244,4 +247,3 @@ def main() -> None:  # pragma: no cover - CLI helper
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry point
     main()
-

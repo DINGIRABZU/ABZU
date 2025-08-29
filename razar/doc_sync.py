@@ -12,6 +12,8 @@ Run manually with ``python -m razar.doc_sync``.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import json
 import re
 import subprocess
@@ -144,7 +146,9 @@ def update_component_docs() -> None:
 def sync_docs() -> None:
     """Regenerate ignition docs, blueprint and component inventory."""
 
-    build_ignition(PRIORITY_PATH, IGNITION_PATH, state=ROOT / "logs" / "razar_state.json")
+    build_ignition(
+        PRIORITY_PATH, IGNITION_PATH, state=ROOT / "logs" / "razar_state.json"
+    )
     try:
         bus = LifecycleBus()
         statuses = bus.get_statuses()

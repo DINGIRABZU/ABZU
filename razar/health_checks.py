@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import json
 import logging
 import subprocess
@@ -13,7 +15,9 @@ from typing import Callable, Dict, List
 LOGGER = logging.getLogger("razar.health_checks")
 
 
-def ready_signal(url: str, timeout: int = 5, retries: int = 3, interval: float = 1.0) -> bool:
+def ready_signal(
+    url: str, timeout: int = 5, retries: int = 3, interval: float = 1.0
+) -> bool:
     """Return ``True`` if ``url`` reports a ready status."""
     for attempt in range(retries):
         try:
@@ -26,12 +30,20 @@ def ready_signal(url: str, timeout: int = 5, retries: int = 3, interval: float =
             payload = json.loads(data)
             return payload.get("status") == "ready"
         except Exception as exc:  # pragma: no cover - network dependent
-            LOGGER.error("Ready check failed for %s (attempt %s/%s): %s", url, attempt + 1, retries, exc)
+            LOGGER.error(
+                "Ready check failed for %s (attempt %s/%s): %s",
+                url,
+                attempt + 1,
+                retries,
+                exc,
+            )
             time.sleep(interval)
     return False
 
 
-def ping_endpoint(url: str, timeout: int = 5, retries: int = 3, interval: float = 1.0) -> bool:
+def ping_endpoint(
+    url: str, timeout: int = 5, retries: int = 3, interval: float = 1.0
+) -> bool:
     """Return ``True`` if ``url`` responds within ``timeout`` seconds."""
     for attempt in range(retries):
         try:

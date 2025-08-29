@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Stream YOLOE detections into RAZAR's planning engine.
 
 The adapter connects the vision system provided by
@@ -41,8 +43,8 @@ class VisionAdapter:
         planner: Callable[[], Dict[str, Mapping[str, object]]] | None = None,
     ) -> None:
         self.yolo = YOLOEAdapter()
-        self.module_map = dict(module_map) if module_map is not None else dict(
-            DEFAULT_MODULE_MAP
+        self.module_map = (
+            dict(module_map) if module_map is not None else dict(DEFAULT_MODULE_MAP)
         )
         self.planner = planner or planning_engine.plan
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Adaptive orchestrator that searches for efficient boot sequences.
 
 The orchestrator reads component priorities from ``component_priorities.yaml`` and
@@ -134,13 +136,13 @@ def main() -> None:
 
     checkpoint = checkpoint_manager.load_checkpoint()
     if checkpoint:
-        seq = checkpoint.get('sequence', [])
-        start = int(checkpoint.get('last_success', 0))
+        seq = checkpoint.get("sequence", [])
+        start = int(checkpoint.get("last_success", 0))
         if seq:
             record = run_sequence(seq, start)
-            history['history'].append(record)
-            if is_better(record, history.get('best')):
-                history['best'] = record
+            history["history"].append(record)
+            if is_better(record, history.get("best")):
+                history["best"] = record
             save_history(history)
             return
 

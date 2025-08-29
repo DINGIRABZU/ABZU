@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Utilities for quarantining failing components.
 
 Components that fail during boot are moved to the top-level ``quarantine``

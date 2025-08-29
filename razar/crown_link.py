@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """WebSocket link between RAZAR and the CROWN agent.
 
 This module implements a tiny WebSocket client used by the external RAZAR
@@ -110,14 +112,17 @@ class CrownLink:
 # ---------------------------------------------------------------------------
 # Prompt template for GLM‑4.1V‑9B
 # ---------------------------------------------------------------------------
-PATCH_PROMPT_TEMPLATE = """You are GLM-4.1V-9B tasked with repairing a failing component.\n\n""" \
-    "Component: {component}\n" \
-    "Stack trace:\n{stack_trace}\n" \
-    "Configuration summary:\n{config_summary}\n\n" \
-    "Reply with JSON containing:\n" \
-    "- patch: unified diff applying the fix\n" \
-    "- tests: list of commands to verify the patch\n" \
-    "- notes: brief rationale for the change"""
+PATCH_PROMPT_TEMPLATE = (
+    """You are GLM-4.1V-9B tasked with repairing a failing component.\n\n"""
+    "Component: {component}\n"
+    "Stack trace:\n{stack_trace}\n"
+    "Configuration summary:\n{config_summary}\n\n"
+    "Reply with JSON containing:\n"
+    "- patch: unified diff applying the fix\n"
+    "- tests: list of commands to verify the patch\n"
+    "- notes: brief rationale for the change"
+    ""
+)
 
 
 def build_patch_prompt(component: str, stack_trace: str, config_summary: str) -> str:
