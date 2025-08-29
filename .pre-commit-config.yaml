@@ -41,3 +41,8 @@ repos:
     name: Ensure blueprint updated with core changes
     entry: python scripts/ensure_blueprint_sync.py
     language: system
+  - id: block-binaries
+    name: Block binary files
+    entry: python scripts/check_no_binaries.py
+    language: system
+    pass_filenames: false

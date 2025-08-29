@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.10
-**Last updated:** 2025-09-03
+**Version:** v1.0.11
+**Last updated:** 2025-08-29
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -16,6 +16,7 @@ Before opening a pull request, confirm each item:
 - [ ] Module `__version__` fields bumped for user-facing changes
 - [ ] Connectors implement `start_call`, `close_peers`, and expose `__version__`
 - [ ] `docs/INDEX.md` regenerated if docs changed
+- [ ] Confirm no binary files are introduced
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:
