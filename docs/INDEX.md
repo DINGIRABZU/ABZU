@@ -232,7 +232,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [developer_onboarding.md](developer_onboarding.md) | Developer Onboarding | Quick links: [Development Checklist](development_checklist.md) \| [Developer Etiquette](developer_etiquette.md) \| [Doc... | `../download_models.py`, `onboarding/wizard.py` |
 | [development_checklist.md](development_checklist.md) | Development Checklists | Quick links: [Developer Onboarding](developer_onboarding.md) \| [Developer Etiquette](developer_etiquette.md) | - |
 | [development_workflow.md](development_workflow.md) | Development Workflow | This page outlines the recommended steps for contributing to ABZU. | - |
-| [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | - | - |
+| [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | This guide outlines the diagnostic scripts and the self-healing mechanisms used to keep Spiral OS operational. | - |
 | [docker_build_audio_tools.md](docker_build_audio_tools.md) | Docker Image with Audio Tools | This project provides a Docker image that bundles the audio utilities **FFmpeg** and **SoX**. The `Dockerfile` instal... | - |
 | [documentation_protocol.md](documentation_protocol.md) | Documentation Protocol | Standard workflow for updating documentation and guides. | - |
 | [emotional_memory_matrix.md](emotional_memory_matrix.md) | Emotional Memory Matrix | The emotional memory matrix interconnects the various JSON files that store conversation history and affect metrics.... | - |
