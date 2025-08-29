@@ -15,6 +15,7 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Chakra Version Manifest](docs/chakra_versions.json)
 - [Co-creation Framework](docs/co_creation_framework.md) – feedback loops between developers and INANNA_AI
 - [AI Ethics Framework](docs/ai_ethics_framework.md) – transparency, fairness, and data handling principles
+- [RAZAR Environment Layers](razar_env.yaml) – layer-based dependency groups
 
 ## Start Here
 - Consult [The Absolute Protocol](docs/The_Absolute_Protocol.md) for repository rules and workflows.
@@ -22,6 +23,15 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - Walk through the [Onboarding Guide](docs/onboarding_guide.md) (v1.0.0, updated 2025-08-28) to rebuild or extend the system using those docs alone, or browse the [Documentation Index](docs/index.md) for related guides.
 
 For deeper background, consult the [CRYSTAL CODEX](CRYSTAL_CODEX.md) and the [documentation inventory](docs/INDEX.md).
+
+## Requirements
+- Python 3.11 or newer. Use [`pyenv`](https://github.com/pyenv/pyenv) if available to manage multiple versions.
+- Core dependencies are pinned in `requirements.txt` and `dev-requirements.txt`.
+- Layer-specific packages are listed in [`razar_env.yaml`](razar_env.yaml):
+  - `razar`: `pyyaml`
+  - `inanna`: `requests`
+  - `crown`: `numpy`
+- Optional tools such as `open-webui` or `chainlit` provide alternate interfaces.
 
 ## JSON Schema Validation
 
