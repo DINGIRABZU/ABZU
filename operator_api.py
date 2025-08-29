@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import json
 import shutil
 from pathlib import Path
