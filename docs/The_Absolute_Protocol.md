@@ -180,11 +180,11 @@ Updates to this protocol follow a lightweight governance model:
 4. **Versioning** – Upon merge, update the version and last‑updated date at the top of this file and document the change in the repository changelog.
 
 ### Change Justification
-Every pull request must include a statement in the **Change justification** section formatted as:
+Every pull request must include a statement in the **Action summary** section formatted as:
 
 "I did X on Y to obtain Z, expecting behavior B."
 
-This justification clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this via a mandatory field in [`.github/pull_request_template.md`](../.github/pull_request_template.md) so reviewers can verify the rationale.
+This justification clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this via a mandatory **Action summary** field in [`.github/pull_request_template.md`](../.github/pull_request_template.md) so reviewers can verify the rationale.
 
 This process ensures the protocol evolves transparently and stays in sync with repository practices.
 

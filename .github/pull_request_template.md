@@ -10,8 +10,8 @@ below.
 ## Linked issue/feature spec
 <!-- Required: link to the relevant issue, documentation, or feature spec. -->
 
-## Change justification
-<!-- Required -->
+## Action summary
+<!-- Required: follow the format "I did X on Y to obtain Z, expecting behavior B." -->
 I did X on Y to obtain Z, expecting behavior B.
 <!-- If a connector was added or modified, note the [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) update with version and service details. -->
 
