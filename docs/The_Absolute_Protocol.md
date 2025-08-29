@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.14
-**Last updated:** 2025-08-29
+**Version:** v1.0.15
+**Last updated:** 2025-08-30
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -93,6 +93,23 @@ Connectors bridge the language engine to external communication layers. Follow t
 ### Connector Registry
 
 Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, target service, protocol, status, and links to relevant documentation and source code. Update this registry whenever a connector is added, removed, or its interface changes.
+
+### Code Harmony Protocol
+
+- Use consistent naming conventions across files, classes, and functions.
+- Maintain clear module boundaries to prevent tight coupling.
+- Every module must declare a `__version__` field for traceability.
+
+### API Contract Protocol
+
+- Document request and response schemas for all public interfaces.
+- Version API contracts and avoid breaking changes without incrementing.
+- Maintain a changelog entry for each contract update.
+
+### Technology Registry Protocol
+
+- Record approved runtimes, frameworks, and library versions.
+- Update the registry when dependencies are added, upgraded, or deprecated.
 
 ## Maintenance
 Whenever this file changes:

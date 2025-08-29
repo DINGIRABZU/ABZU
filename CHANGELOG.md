@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mapped cortex, emotional, mental, spiritual and narrative memory stores in
   `docs/memory_architecture.md`.
 - Introduced co-creation and AI ethics frameworks with cross-links from README and The Absolute Protocol.
+- Added Code Harmony, API Contract, and Technology Registry protocols to The Absolute Protocol.
 - Created connector index and documented registry rules in The Absolute Protocol.
 - Added hyperlink requirement and illustrative component table to The Absolute Protocol.
 - Added checklist reminder to update `CONNECTOR_INDEX.md` whenever connectors change.
