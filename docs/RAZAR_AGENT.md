@@ -387,11 +387,12 @@ RAZAR can delegate recovery to an external AI agent when repeated failures block
 
 **Invocation sequence**
 
-1. Boot failures trigger the handover flag.
-2. RAZAR sends failure context to the AI agent.
-3. The agent proposes a patch and justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
-4. RAZAR applies the patch and runs component tests.
-5. On success, services restart.
+1. Repeated boot failures trigger the handover flag.
+2. RAZAR packages logs and invokes the recovery helper via [ai_invoker.py](../agents/razar/ai_invoker.py).
+3. The agent analyzes the context and drafts a fix using [code_repair.py](../agents/razar/code_repair.py) with justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
+4. RAZAR applies the proposed patch in a sandbox and runs component tests.
+5. If tests pass, services restart and the handover concludes.
+6. If tests fail, RAZAR rolls back the patch and requests another fix, repeating steps 3–5 until the retry limit is reached.
 
 The handover flow:
 
