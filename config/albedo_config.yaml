@@ -1,0 +1,8 @@
+glm:
+  endpoint: https://glm.example.com/glm41v_9b
+  api_key: ${GLM_API_KEY}
+quantum:
+  context: entangled
+logging:
+  conversation: logs/albedo_layer.log
+  metrics: logs/albedo_metrics.jsonl
