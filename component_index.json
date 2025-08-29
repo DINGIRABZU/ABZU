@@ -14,7 +14,10 @@
       "tests": [
         "tests/test_server.py"
       ],
-      "status": "stable"
+      "status": "stable",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "razar",
@@ -30,7 +33,10 @@
       "tests": [
         "tests/test_razar_health_checks.py"
       ],
-      "status": "alpha"
+      "status": "alpha",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "crown",
@@ -45,7 +51,10 @@
       "tests": [
         "tests/test_crown_initialization.py"
       ],
-      "status": "alpha"
+      "status": "alpha",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "inanna",
@@ -60,7 +69,10 @@
       "tests": [
         "tests/test_inanna_ai.py"
       ],
-      "status": "alpha"
+      "status": "alpha",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "albedo",
@@ -75,7 +87,10 @@
       "tests": [
         "tests/test_albedo_personality.py"
       ],
-      "status": "alpha"
+      "status": "alpha",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "nazarick",
@@ -90,7 +105,10 @@
       "tests": [
         "tests/test_nazarick_messaging.py"
       ],
-      "status": "alpha"
+      "status": "alpha",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "memory_layers",
@@ -105,7 +123,10 @@
       "tests": [
         "tests/test_spiral_memory.py"
       ],
-      "status": "alpha"
+      "status": "alpha",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "narrative_engine",
@@ -118,7 +139,10 @@
       "tests": [
         "tests/narrative_engine/test_biosignal_pipeline.py"
       ],
-      "status": "experimental"
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      }
     },
     {
       "id": "operator_interface",
@@ -131,7 +155,10 @@
         "fastapi"
       ],
       "tests": [],
-      "status": "draft"
+      "status": "draft",
+      "metrics": {
+        "coverage": 0.0
+      }
     }
   ]
 }
