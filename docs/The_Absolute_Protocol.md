@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.3
-**Last updated:** 2025-08-29
+**Version:** v1.0.4
+**Last updated:** 2025-09-01
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -35,6 +35,21 @@ When contributing, consult resources in this order:
 | Contributor Handbook | Documentation Team | Quarterly |
 | AGENTS.md | Repository Maintainers | As needed |
 | Feature/Issue Specs | Feature Owners | Per release |
+
+## Documentation Standards
+
+### Agent Documentation Checklist
+Each agent document must cover:
+- Vision
+- Module Overview
+- Functional Workflows
+- Architecture diagram
+- Requirements
+- Deployment workflow
+- Configuration schemas
+- Version history
+- Cross-links
+- Example run scenarios
 
 ## Maintenance
 Whenever this file changes:
