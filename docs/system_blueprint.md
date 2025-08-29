@@ -484,6 +484,7 @@ Provides the user messaging interface and routes requests to internal agents. Se
 - **Startup:** Launch after the memory store is available.
 - **Health Check:** Probe `/chat/health` and watch latency.
 - **Recovery:** Restart the gateway or verify network configuration.
+- **WebRTC Connector:** Streams avatar video, audio, and data channels when offered, falling back to data-only mode if media negotiation fails.
 
 ### Memory Systems
 Persist conversations and embeddings for retrieval across sessions. See [Memory Architecture](memory_architecture.md), [Vector Memory](vector_memory.md) and [Chakra Architecture](chakra_architecture.md#heart).
