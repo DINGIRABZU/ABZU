@@ -189,7 +189,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | Bootstrapper for local services and mission brief exchange with the CROWN stack. | `../agents/razar/ai_invoker.py`, `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/code_repair.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../agents/razar/health_checks.py`, `../agents/razar/module_builder.py`, `../agents/razar/quarantine_manager.py`, `../agents/razar/runtime_manager.py`, `../razar/adaptive_orchestrator.py`, `../razar/boot_orchestrator.py`, `../razar/checkpoint_manager.py`, `../razar/cocreation_planner.py`, `../razar/crown_link.py`, `../razar/doc_sync.py`, `../razar/environment_builder.py` |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.26 **Last updated:** 2025-08-30 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.27 **Last updated:** 2025-08-29 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -227,6 +227,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [data_security.md](data_security.md) | Data Security and Compliance | This document outlines how training data should be handled with respect to GDPR and HIPAA regulations. | - |
 | [dependencies.md](dependencies.md) | Dependency Tree | Generated via `pipdeptree`. | - |
 | [dependency-graph.md](dependency-graph.md) | Dependency Graph | Generated with `pipdeptree --packages spiral-os`. | - |
+| [dependency_registry.md](dependency_registry.md) | Dependency Registry | Approved runtimes and libraries with minimum versions. Update this registry when dependencies change and validate upd... | - |
 | [dependency_risks.md](dependency_risks.md) | Dependency Risks | This document outlines the impact of missing optional dependencies and ways to mitigate them. | - |
 | [deployment.md](deployment.md) | Deployment | This guide covers building versioned images and deploying them using Kubernetes or a serverless platform. For vision... | - |
 | [deployment_overview.md](deployment_overview.md) | Deployment Overview | This guide summarises how to launch Spiral OS on a Vast.ai server and how to run the stack locally with Docker Compose. | - |
