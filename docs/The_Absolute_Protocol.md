@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.13
+**Version:** v1.0.14
 **Last updated:** 2025-08-29
 
 ## How to Use This Protocol
@@ -108,11 +108,11 @@ Updates to this protocol follow a lightweight governance model:
 4. **Versioning** – Upon merge, update the version and last‑updated date at the top of this file and document the change in the repository changelog.
 
 ### Change Justification
-Every proposal must include a statement formatted as:
+Every pull request must include a statement in the **Change justification** section formatted as:
 
 "I did X on Y to obtain Z, expecting behavior B."
 
-This justification clarifies the action taken, the context, the observed result, and the intended outcome.
+This justification clarifies the action taken, the context, the observed result, and the intended outcome. The dedicated field in the pull request template makes this requirement explicit so reviewers can verify the rationale.
 
 This process ensures the protocol evolves transparently and stays in sync with repository practices.
 
