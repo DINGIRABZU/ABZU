@@ -35,6 +35,22 @@ Documentation Sync, Checkpoint Manager, Crown Link, Adaptive Orchestrator, and
 Co-creation Planner provide additional coordination around the core boot flow.
 The Mermaid source lives at [assets/razar_architecture.mmd](assets/razar_architecture.mmd).
 
+## Remote agent flow
+
+RAZAR can fetch and integrate remote agents at runtime. The flow below shows how the remote loader downloads a module, runs configuration and patch hooks, and records the interaction:
+
+```mermaid
+flowchart LR
+    start([Remote Loader]) --> fetch{Fetch Agent}
+    fetch -->|HTTP/Git| agent[Remote Agent]
+    agent --> config[configure()]
+    agent --> patch[patch()]
+    config --> log[(Audit Log)]
+    patch --> log
+```
+
+The Mermaid source lives at [assets/razar_remote_flow.mmd](assets/razar_remote_flow.mmd).
+
 ## Components & Links
 
 | Source Module | Related Docs |

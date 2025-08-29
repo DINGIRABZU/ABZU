@@ -1,0 +1,7 @@
+flowchart LR
+    start([Remote Loader]) --> fetch{Fetch Agent}
+    fetch -->|HTTP/Git| agent[Remote Agent]
+    agent --> config[configure()]
+    agent --> patch[patch()]
+    config --> log[(Audit Log)]
+    patch --> log
