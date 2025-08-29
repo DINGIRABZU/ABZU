@@ -35,6 +35,12 @@ Documentation Sync, Checkpoint Manager, Crown Link, Adaptive Orchestrator, and
 Co-creation Planner provide additional coordination around the core boot flow.
 The Mermaid source lives at [assets/razar_architecture.mmd](assets/razar_architecture.mmd).
 
+## Components & Links
+
+| Source Module | Related Docs |
+| --- | --- |
+| [agents/razar/runtime_manager.py](../agents/razar/runtime_manager.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
+
 ## Deployment
 
 1. **Environment setup** – build isolated dependencies with

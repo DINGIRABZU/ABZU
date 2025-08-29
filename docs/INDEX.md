@@ -184,7 +184,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [MISSION.md](MISSION.md) | Mission | - | - |
 | [PROJECT_STATUS.md](PROJECT_STATUS.md) | Project Status | This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository la... | - |
 | [QUALITY_EVALUATION.md](QUALITY_EVALUATION.md) | Quality Evaluation | - | - |
-| [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | - | `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../razar/adaptive_orchestrator.py`, `../razar/cocreation_planner.py`, `../razar/environment_builder.py` |
+| [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | - | `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../agents/razar/runtime_manager.py`, `../razar/adaptive_orchestrator.py`, `../razar/cocreation_planner.py`, `../razar/environment_builder.py` |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.3 **Last updated:** 2025-08-29 | - |
