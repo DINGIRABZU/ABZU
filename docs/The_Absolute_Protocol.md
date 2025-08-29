@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.12
+**Version:** v1.0.13
 **Last updated:** 2025-08-29
 
 ## How to Use This Protocol
@@ -15,6 +15,7 @@ Before opening a pull request, confirm each item:
   - [System Blueprint](system_blueprint.md)
 - [ ] Module `__version__` fields bumped for user-facing changes
 - [ ] Connectors implement `start_call`, `close_peers`, and expose `__version__`
+- [ ] If a connector is added or modified, update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with version and service details
 - [ ] `docs/INDEX.md` regenerated if docs changed
 - [ ] Confirm no binary files are introduced
 
