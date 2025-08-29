@@ -131,6 +131,43 @@ The first call uses the ``nigredo`` template and yields a prompt like:
 [Nigredo] (person) I love Alice affection
 ```
 
+## Deployment & Configuration
+
+A small YAML file can centralize the remote GLM settings, the optional
+quantum context and log locations.  Place `albedo_config.yaml` under the
+`config/` directory:
+
+```yaml
+glm:
+  endpoint: https://glm.example.com/glm41v_9b
+  api_key: ${GLM_API_KEY}  # falls back to environment variable
+quantum:
+  context: entangled
+logging:
+  conversation: logs/albedo_layer.log
+  metrics: logs/albedo_metrics.jsonl
+```
+
+Load the configuration before creating the personality:
+
+```python
+from pathlib import Path
+import yaml
+from INANNA_AI.glm_integration import GLMIntegration
+from INANNA_AI.personality_layers import AlbedoPersonality
+
+cfg = yaml.safe_load(Path("config/albedo_config.yaml").read_text())
+glm = GLMIntegration(
+    endpoint=cfg["glm"]["endpoint"],
+    api_key=cfg["glm"]["api_key"],
+)
+layer = AlbedoPersonality(integration=glm)
+reply = layer.generate_response("hello", quantum_context=cfg["quantum"]["context"])
+```
+
+The `conversation` and `metrics` paths separate human transcripts from state
+statistics and can be tailored for production deployments.
+
 ## Additional Personality Layers
 
 The project also provides three lightweight layers that can be invoked through the orchestrator or the
