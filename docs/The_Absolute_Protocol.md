@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.24
-**Last updated:** 2025-09-01
+**Version:** v1.0.25
+**Last updated:** 2025-08-29
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -24,7 +24,7 @@ Before opening a pull request, confirm each item:
 - [ ] `docs/INDEX.md` regenerated if docs changed
 - [ ] New operator channels documented in [Operator Protocol](operator_protocol.md)
 - [ ] Confirm no binary files are introduced
-- [ ] Diagrams include explanatory text and a Mermaid code block; binary images are forbidden
+- [ ] All diagrams are authored in Mermaid; binary image files (PNG, JPG, etc.) are forbidden
 - [ ] Handshake-triggered model launches documented in agent guides and state logs
 
 ## Protocol Hierarchy
@@ -82,7 +82,7 @@ similar to the RAZAR component links to summarize relationships:
 
 ### Diagram Requirements
 
-All diagrams must include a brief textual description and an accompanying Mermaid code block. Binary image formats (PNG, JPG, etc.) must not be committed.
+All diagrams must include a brief textual description and be expressed as Mermaid code blocks. Binary image formats (PNG, JPG, etc.) are prohibited.
 
 #### Mermaid Diagram Workflow
 
