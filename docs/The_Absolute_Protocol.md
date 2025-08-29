@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.19
-**Last updated:** 2025-08-30
+**Version:** v1.0.20
+**Last updated:** 2025-08-29
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -14,6 +14,7 @@ Before opening a pull request, confirm each item:
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
 - [ ] `onboarding_confirm.yml` includes purpose, scope, key rules, and one actionable insight for each [key document](KEY_DOCUMENTS.md)
+- [ ] `scripts/verify_doc_summaries.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] Module `__version__` fields bumped for user-facing changes
 - [ ] Connectors implement `start_call`, `close_peers`, and expose `__version__`
 - [ ] If a connector is added or modified, update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with version and service details

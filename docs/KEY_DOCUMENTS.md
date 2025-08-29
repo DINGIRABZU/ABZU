@@ -32,3 +32,6 @@ documents:
 ```
 
 The `confirm-reading` pre-commit hook verifies this file and blocks commits if any listed document changes.
+The companion `verify-doc-summaries` hook recomputes hashes for all entries and
+fails if `onboarding_confirm.yml` is out of date, ensuring stored summaries stay
+aligned with their documents.
