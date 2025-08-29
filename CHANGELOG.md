@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Required a "Change justification" field in the pull request template and documented the statement format in The Absolute Protocol.
 - Documented mission brief archive requirements and maintenance in The Absolute Protocol.
 - Added Operator API and Open Web UI entries to `CONNECTOR_INDEX.md` and expanded protocol checklist for connector registry.
+- Required onboarding summaries for all files listed in `onboarding_confirm.yml` and referenced the rule in The Absolute Protocol.
 
 ### Quality
 
