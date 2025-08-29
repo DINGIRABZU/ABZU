@@ -1,5 +1,7 @@
 # Project Status
 
+![Coverage](../coverage.svg)
+
 This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets.
 
 ## Repository Structure
@@ -12,18 +14,20 @@ This document summarizes the current state of the ABZU codebase. It serves as a 
 - **tests/** – Unit tests for learning modules, connectors, and audio helpers.
 - **docs/** – Architecture overviews, deployment guides, and design notes.
 
-## Test Run (pytest --maxfail=1 -q)
+## Test Run (pytest --maxfail=1 --cov -q)
 
 ```
-pytest --maxfail=1 -q
+pytest --maxfail=1 --cov -q
 ```
 
-The suite currently reports numerous skips but completes without failures:
+The suite currently reports numerous skips but completes without failures while generating coverage data:
 
 - `9 passed, 447 skipped, 3 warnings`.
 - Warnings include:
   - `pydub` could not find `ffmpeg` or `avconv` binaries.
   - PyTorch warning about nested tensor configuration.
+
+Coverage is **1%**; the badge above reflects the latest report.
 
 These results indicate optional dependencies and system binaries are still missing but do not block the minimal test run.
 
