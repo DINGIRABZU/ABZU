@@ -319,9 +319,3 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../src/dashboard/OVERVIEW.md](../src/dashboard/OVERVIEW.md) | Dashboard Overview | Streamlit dashboard for monitoring and interacting with Spiral OS components. | - |
 | [../src/dashboard/README.md](../src/dashboard/README.md) | Dashboard | This package bundles Streamlit applications for monitoring and interacting with the system. | - |
 | [../tests/README.md](../tests/README.md) | Test suite notes | - | - |
-
-### Protocol References
-
-- [Code Harmony Protocol](The_Absolute_Protocol.md#code-harmony-protocol)
-- [API Contract Protocol](The_Absolute_Protocol.md#api-contract-protocol)
-- [Technology Registry Protocol](The_Absolute_Protocol.md#technology-registry-protocol)

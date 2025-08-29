@@ -108,9 +108,10 @@ module_builder.build("demo", plan=plan)
 
 3. **Handshake** – exchange a mission brief with the CROWN stack to learn
    which capabilities are online and whether any components require
-   downtime.  The boot orchestrator invokes
-   `crown_handshake.perform()` and records the reply in
-   `logs/razar_state.json`.
+   downtime. The boot orchestrator invokes
+   `crown_handshake.perform()`, records the reply in
+   `logs/razar_state.json`, and starts `crown_model_launcher.sh` if the
+   `GLM4V` capability is missing.
 
 4. **Launch** – start the boot orchestrator to bring components online:
 
