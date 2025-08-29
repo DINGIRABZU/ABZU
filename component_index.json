@@ -7,7 +7,131 @@
       "type": "service",
       "version": "0.1.0",
       "path": "server.py",
-      "description": "HTTP entry point for Spiral OS"
+      "purpose": "HTTP entry point for Spiral OS",
+      "dependencies": [
+        "fastapi"
+      ],
+      "tests": [
+        "tests/test_server.py"
+      ],
+      "status": "stable"
+    },
+    {
+      "id": "razar",
+      "chakra": "root",
+      "type": "agent",
+      "version": "0.1.0",
+      "path": "agents/razar",
+      "purpose": "Bootstraps services and coordinates recovery",
+      "dependencies": [
+        "pyyaml",
+        "prometheus_client"
+      ],
+      "tests": [
+        "tests/test_razar_health_checks.py"
+      ],
+      "status": "alpha"
+    },
+    {
+      "id": "crown",
+      "chakra": "crown",
+      "type": "module",
+      "version": "0.1.0",
+      "path": "crown_router.py",
+      "purpose": "Routes prompts among crown services",
+      "dependencies": [
+        "crown_config"
+      ],
+      "tests": [
+        "tests/test_crown_initialization.py"
+      ],
+      "status": "alpha"
+    },
+    {
+      "id": "inanna",
+      "chakra": "heart",
+      "type": "package",
+      "version": "0.1.0",
+      "path": "INANNA_AI",
+      "purpose": "Empathic AI core for audio and memory",
+      "dependencies": [
+        "numpy"
+      ],
+      "tests": [
+        "tests/test_inanna_ai.py"
+      ],
+      "status": "alpha"
+    },
+    {
+      "id": "albedo",
+      "chakra": "crown",
+      "type": "agent",
+      "version": "0.1.0",
+      "path": "agents/albedo",
+      "purpose": "Personality layer and trust modules",
+      "dependencies": [
+        "agents"
+      ],
+      "tests": [
+        "tests/test_albedo_personality.py"
+      ],
+      "status": "alpha"
+    },
+    {
+      "id": "nazarick",
+      "chakra": "crown",
+      "type": "agent",
+      "version": "0.1.0",
+      "path": "agents/nazarick",
+      "purpose": "Guardian hierarchy and narrative scribe",
+      "dependencies": [
+        "memory"
+      ],
+      "tests": [
+        "tests/test_nazarick_messaging.py"
+      ],
+      "status": "alpha"
+    },
+    {
+      "id": "memory_layers",
+      "chakra": "root",
+      "type": "subsystem",
+      "version": "0.1.0",
+      "path": "memory",
+      "purpose": "Layered memory stores for system state",
+      "dependencies": [
+        "sqlite3"
+      ],
+      "tests": [
+        "tests/test_spiral_memory.py"
+      ],
+      "status": "alpha"
+    },
+    {
+      "id": "narrative_engine",
+      "chakra": "root",
+      "type": "module",
+      "version": "0.1.0",
+      "path": "memory/narrative_engine.py",
+      "purpose": "Records and streams story events",
+      "dependencies": [],
+      "tests": [
+        "tests/narrative_engine/test_biosignal_pipeline.py"
+      ],
+      "status": "experimental"
+    },
+    {
+      "id": "operator_interface",
+      "chakra": "crown",
+      "type": "service",
+      "version": "0.1.0",
+      "path": "operator_api.py",
+      "purpose": "FastAPI routes for operator commands and uploads",
+      "dependencies": [
+        "fastapi"
+      ],
+      "tests": [],
+      "status": "draft"
     }
   ]
 }
