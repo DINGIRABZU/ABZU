@@ -170,7 +170,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [BLUEPRINT_EXPORT.md](BLUEPRINT_EXPORT.md) | Blueprint Export | This snapshot lists major documentation assets with links that can be pinned to a specific commit. For general contri... | - |
 | [CONTRIBUTOR_HANDBOOK.md](CONTRIBUTOR_HANDBOOK.md) | Contributor Handbook | This handbook helps new contributors get set up, understand the repository layout, and work through common developmen... | - |
 | [CORPUS_MEMORY.md](CORPUS_MEMORY.md) | Corpus Memory | This repository preserves several collections of source texts used by the music and language tools. Each directory se... | - |
-| [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md) | Crown Agent Overview | The diagram below shows how the main components interact when using the console. | - |
+| [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md) | Crown Agent Overview | The diagram below shows how the main components interact when using the console. | `../init_crown_agent.py`, `../razar/crown_handshake.py` |
 | [CRYSTAL_CODEX.md](CRYSTAL_CODEX.md) | CRYSTAL CODEX | The codex gathers the mission, architecture diagrams, module index, dependency matrix, testing strategy and style pol... | `../archetype_feedback_loop.py`, `../auto_retrain.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../music_generation.py`, `../server.py`, `../spiral_memory.py`, `../tools/preflight.py`, `../vector_memory.py`, `../video_stream.py` |
 | [DASHBOARD.md](DASHBOARD.md) | Metrics Dashboard | This dashboard visualises recent model performance and the predicted best LLM. | - |
 | [ETHICS_POLICY.md](ETHICS_POLICY.md) | Ethics Policy | This document outlines the minimum rules for handling data while working with Spiral OS. | - |
