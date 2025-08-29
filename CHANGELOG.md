@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `docs/memory_architecture.md`.
 - Introduced co-creation and AI ethics frameworks with cross-links from README and The Absolute Protocol.
 - Added hyperlink requirement and illustrative component table to The Absolute Protocol.
+- Required configuration files to include schema outlines and minimal examples, referencing `boot_config.json`, `razar_env.yaml`, and log formats.
 
 ### Quality
 
