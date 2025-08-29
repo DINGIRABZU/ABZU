@@ -172,9 +172,10 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
    ```
 
    During a full boot the orchestrator calls
-   `crown_handshake.perform()`, records the reply in
+   `crown_handshake.perform()`, logs the returned capabilities to
+   `logs/razar.log`, records them in
    [logs/razar_state.json](../logs/razar_state.json), and if the
-   `GLM4V` capability is missing runs
+   `GLM-4.1V` capability is missing runs
    [`crown_model_launcher.sh`](../crown_model_launcher.sh), logging the
    launch under `launched_models`.
 

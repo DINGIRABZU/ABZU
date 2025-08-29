@@ -84,8 +84,8 @@ class BootOrchestrator:
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
-    def _perform_handshake(self) -> None:
-        """Generate mission brief and invoke the CROWN handshake."""
+    def _perform_handshake(self) -> List[str]:
+        """Send mission brief to CROWN and return advertised capabilities."""
         brief = {
             "priority_map": {
                 str(c["name"]): int(c["priority"]) for c in self.components
@@ -107,25 +107,26 @@ class BootOrchestrator:
         except Exception:  # pragma: no cover - handshake is best effort
             LOGGER.exception("CROWN handshake failed")
         self._persist_handshake(response)
+        return response.capabilities if response else []
 
-    def _ensure_glm4v(self) -> None:
-        """Launch the GLM4V model if the capability is missing."""
+    def _ensure_glm4v(self, capabilities: List[str]) -> None:
+        """Launch the GLM‑4.1V model if the capability is missing."""
+        if "GLM-4.1V" in capabilities:
+            return
         data: Dict[str, object] = {}
         if self.state_path.exists():
             try:
                 data = json.loads(self.state_path.read_text(encoding="utf-8"))
             except json.JSONDecodeError:
                 data = {}
-        capabilities = data.get("capabilities", [])
-        if "GLM4V" in capabilities:
-            return
         script = self.state_path.parents[1] / "crown_model_launcher.sh"
-        LOGGER.info("Launching GLM4V via %s", script)
+        LOGGER.info("Launching GLM-4.1V via %s", script)
         subprocess.run(["bash", str(script)], check=False)
         launches = data.get("launched_models", [])
-        if "GLM4V" not in launches:
-            launches.append("GLM4V")
+        if "GLM-4.1V" not in launches:
+            launches.append("GLM-4.1V")
         data["launched_models"] = launches
+        self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
     # ------------------------------------------------------------------
@@ -296,8 +297,9 @@ class BootOrchestrator:
     def run(self) -> bool:
         """Execute the staged startup sequence."""
         self.write_ignition()
-        self._perform_handshake()
-        self._ensure_glm4v()
+        capabilities = self._perform_handshake()
+        LOGGER.info("CROWN capabilities: %s", capabilities)
+        self._ensure_glm4v(capabilities)
         commands = self._load_commands()
         last = self.load_state()
 
