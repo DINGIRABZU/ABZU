@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.4
-**Last updated:** 2025-09-01
+**Version:** v1.0.5
+**Last updated:** 2025-09-15
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
@@ -49,7 +49,15 @@ Each agent document must cover:
 - Configuration schemas
 - Version history
 - Cross-links
+- Hyperlinks to relevant source files and companion documents
 - Example run scenarios
+
+Include hyperlinks to implementation files and related guides. Use a table pattern
+similar to the RAZAR component links to summarize relationships:
+
+| Source Module | Companion Docs |
+| --- | --- |
+| [agents/example_agent.py](../agents/example_agent.py) | [example_agent.md](example_agent.md), [system_blueprint.md](system_blueprint.md) |
 
 ## Maintenance
 Whenever this file changes:
