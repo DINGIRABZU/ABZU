@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Basic recovery manager coordinating shutdown, patching and resumption.
 
 The real system uses a message bus and remote code repair agents.  For the

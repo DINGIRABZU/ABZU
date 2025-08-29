@@ -11,6 +11,8 @@ or a subsequent health check are quarantined via ``quarantine_manager``.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import logging
 import os
 import subprocess
@@ -192,15 +194,15 @@ class RuntimeManager:
                     diagnostics={"output": result.stdout},
                 )
                 module_path = (
-                    comp.get("module_path")
-                    or comp.get("path")
-                    or comp.get("module")
+                    comp.get("module_path") or comp.get("path") or comp.get("module")
                 )
                 if module_path:
                     try:
                         quarantine_manager.quarantine_module(module_path, reason)
                     except Exception as exc:  # pragma: no cover - defensive
-                        logger.error("Module quarantine failed for %s: %s", module_path, exc)
+                        logger.error(
+                            "Module quarantine failed for %s: %s", module_path, exc
+                        )
                 return False
 
             if not health_checks.run(str(name)):
@@ -208,15 +210,15 @@ class RuntimeManager:
                 reason = "health check failed"
                 quarantine_manager.quarantine_component(comp, reason)
                 module_path = (
-                    comp.get("module_path")
-                    or comp.get("path")
-                    or comp.get("module")
+                    comp.get("module_path") or comp.get("path") or comp.get("module")
                 )
                 if module_path:
                     try:
                         quarantine_manager.quarantine_module(module_path, reason)
                     except Exception as exc:  # pragma: no cover - defensive
-                        logger.error("Module quarantine failed for %s: %s", module_path, exc)
+                        logger.error(
+                            "Module quarantine failed for %s: %s", module_path, exc
+                        )
                 return False
 
             logger.info("Component %s started successfully", name)

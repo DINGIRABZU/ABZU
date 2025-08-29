@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """WebSocket handshake between RAZAR and the CROWN stack.
 
 This module sends a mission brief to the CROWN agent and awaits an

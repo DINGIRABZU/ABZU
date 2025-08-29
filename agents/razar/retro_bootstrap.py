@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Rebuild RAZAR modules from documentation references.
 
 This utility scans project documentation and the system blueprint for links to

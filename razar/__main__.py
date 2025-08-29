@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Command line utilities for operating the RAZAR lifecycle bus."""
 
 import argparse
@@ -101,7 +103,9 @@ def main() -> None:  # pragma: no cover - CLI entry point
     )
     p_ignition.add_argument(
         "--registry",
-        default=Path(__file__).resolve().parents[1] / "docs" / "component_priorities.yaml",
+        default=Path(__file__).resolve().parents[1]
+        / "docs"
+        / "component_priorities.yaml",
         help="Path to component priority registry",
     )
     p_ignition.add_argument(
@@ -123,7 +127,11 @@ def main() -> None:  # pragma: no cover - CLI entry point
     p_map.set_defaults(func=_cmd_map)
 
     p_bootstrap = sub.add_parser("bootstrap", help="Rebuild modules")
-    p_bootstrap.add_argument("--from-docs", action="store_true", help="Reconstruct modules referenced in docs")
+    p_bootstrap.add_argument(
+        "--from-docs",
+        action="store_true",
+        help="Reconstruct modules referenced in docs",
+    )
     p_bootstrap.set_defaults(func=_cmd_bootstrap)
 
     p_cocreate = sub.add_parser("cocreate", help="Generate co-creation plan")

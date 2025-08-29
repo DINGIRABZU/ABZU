@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Build a component dependency graph from Markdown blueprints.
 
 The synthesizer walks ``docs/system_blueprint.md`` and

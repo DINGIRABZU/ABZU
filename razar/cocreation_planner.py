@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Planner that consolidates blueprints, failures, and Crown suggestions.
 
 The planner reads component priorities from ``docs/component_priorities.yaml``,
@@ -41,7 +43,10 @@ def load_components(path: Path = PRIORITY_PATH) -> Dict[str, int]:
     """Load component priorities from ``path``."""
 
     data: Dict[str, Dict[str, Any]] = yaml.safe_load(path.read_text())
-    return {name: _parse_priority(info.get("priority", "P999")) for name, info in data.items()}
+    return {
+        name: _parse_priority(info.get("priority", "P999"))
+        for name, info in data.items()
+    }
 
 
 def load_failures(path: Path = FAILURE_PATH) -> Dict[str, Any]:
@@ -105,10 +110,12 @@ def save_plan(plan: List[Dict[str, Any]], path: Path = PLAN_PATH) -> None:
             history = json.loads(path.read_text())
         except json.JSONDecodeError:  # pragma: no cover - defensive
             LOGGER.warning("Invalid JSON in %%s; overwriting", path)
-    history.setdefault("plans", []).append({
-        "timestamp": datetime.utcnow().isoformat() + "Z",
-        "steps": plan,
-    })
+    history.setdefault("plans", []).append(
+        {
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "steps": plan,
+        }
+    )
     path.write_text(json.dumps(history, indent=2))
 
 

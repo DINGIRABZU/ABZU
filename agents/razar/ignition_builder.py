@@ -12,6 +12,8 @@ orchestrator.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import json
 import re
 from collections import defaultdict
@@ -66,7 +68,9 @@ def parse_system_blueprint(path: Path) -> List[Dict[str, object]]:
         priority = int(match.group(3))
         health_check = ""
         for meta_name, data in meta.items():
-            if name.lower().startswith(meta_name.lower()) or meta_name.lower().startswith(name.lower()):
+            if name.lower().startswith(
+                meta_name.lower()
+            ) or meta_name.lower().startswith(name.lower()):
                 health_check = data["health_check"]
                 break
         components.append(
@@ -179,9 +183,7 @@ def build_ignition(registry: Path, output: Path, *, state: Path | None = None) -
         lines.append("| --- | --- | --- | --- |")
         for comp in groups[priority]:
             overrides = {"crown_llm": "CROWN LLM"}
-            name = overrides.get(
-                comp["name"], comp["name"].replace("_", " ").title()
-            )
+            name = overrides.get(comp["name"], comp["name"].replace("_", " ").title())
             status = statuses.get(comp["name"], DEFAULT_STATUS)
             lines.append(f"| {comp['order']} | {name} | - | {status} |")
         lines.append("")
@@ -218,4 +220,3 @@ def main() -> None:  # pragma: no cover - CLI helper
 
 if __name__ == "__main__":  # pragma: no cover - module CLI
     main()
-

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Recovery manager using ZeroMQ for error handling.
 
 The recovery protocol is initiated when a running component reports an

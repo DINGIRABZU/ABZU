@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Environment builder for RAZAR.
 
 This module verifies that a suitable Python interpreter is available,
@@ -123,4 +125,3 @@ def main() -> None:  # pragma: no cover - CLI helper
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry point
     main()
-

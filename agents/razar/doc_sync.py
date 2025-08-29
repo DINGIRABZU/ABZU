@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Synchronize key documentation after component changes.
 
 This helper refreshes the primary RAZAR documentation artefacts:

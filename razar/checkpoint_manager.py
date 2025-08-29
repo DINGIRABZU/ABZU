@@ -5,6 +5,8 @@ index of the next component to start. It allows the orchestrator to resume a
 partially completed run after a crash or manual interruption.
 """
 
+__version__ = "0.1.0"
+
 from pathlib import Path
 import json
 from typing import Any, Dict, List
@@ -29,7 +31,9 @@ def load_checkpoint(path: Path = CHECKPOINT_PATH) -> Dict[str, Any] | None:
         return None
 
 
-def save_checkpoint(sequence: List[str], last_success: int, path: Path = CHECKPOINT_PATH) -> None:
+def save_checkpoint(
+    sequence: List[str], last_success: int, path: Path = CHECKPOINT_PATH
+) -> None:
     """Persist ``sequence`` and ``last_success`` to ``path``.
 
     ``last_success`` denotes the index of the next component to start. All

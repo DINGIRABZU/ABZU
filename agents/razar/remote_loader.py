@@ -13,6 +13,8 @@ responses are logged to ``logs/razar_remote_agents.json`` for later audit.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import importlib.util
 import json
 import logging
@@ -270,7 +272,9 @@ def load_remote_gpt_agent(
     return config, suggestion
 
 
-def _run_tests(test_paths: Sequence[Path], env: dict[str, str] | None = None) -> tuple[bool, str]:
+def _run_tests(
+    test_paths: Sequence[Path], env: dict[str, str] | None = None
+) -> tuple[bool, str]:
     """Run ``pytest`` for ``test_paths`` and return success flag and output."""
 
     cmd = ["pytest", *map(str, test_paths)]
@@ -296,9 +300,7 @@ def _apply_patch(module_path: Path, patch_text: str, tests: Sequence[Path]) -> b
         target.write_text(patch_text, encoding="utf-8")
 
         env = os.environ.copy()
-        env["PYTHONPATH"] = (
-            str(sandbox_root) + os.pathsep + env.get("PYTHONPATH", "")
-        )
+        env["PYTHONPATH"] = str(sandbox_root) + os.pathsep + env.get("PYTHONPATH", "")
 
         ok, _ = _run_tests(tests, env)
         if not ok:

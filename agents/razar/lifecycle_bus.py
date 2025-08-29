@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 """Lifecycle message bus for RAZAR components.
 
 This module uses Redis pub/sub channels to broadcast component status updates
