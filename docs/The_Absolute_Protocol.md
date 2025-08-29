@@ -1,10 +1,10 @@
 # The Absolute Protocol
 
-**Version:** v1.0.23
-**Last updated:** 2025-08-30
+**Version:** v1.0.24
+**Last updated:** 2025-09-01
 
 ## How to Use This Protocol
-This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
+This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -13,12 +13,14 @@ Before opening a pull request, confirm each item:
   - [AGENTS.md](../AGENTS.md)
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
+- [ ] All modules expose `__version__`; bump fields for user-facing changes
+- [ ] Connector updates applied:
+  - implementations expose `__version__`, implement `start_call`, and `close_peers`
+  - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
+- [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
+- [ ] Pull request includes change justification in the required format
 - [ ] `onboarding_confirm.yml` includes purpose, scope, key rules, and one actionable insight for each [key document](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_summaries.py` confirms `onboarding_confirm.yml` hashes match current files
-- [ ] Module `__version__` fields bumped for user-facing changes
-- [ ] API changes documented in [api_reference.md](api_reference.md) and [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md)
-- [ ] Connectors implement `start_call`, `close_peers`, and expose `__version__`
-- [ ] Connector registry updated: [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) lists Operator API, Open Web UI, and future connectors with version, endpoints, auth, status, and links
 - [ ] `docs/INDEX.md` regenerated if docs changed
 - [ ] New operator channels documented in [Operator Protocol](operator_protocol.md)
 - [ ] Confirm no binary files are introduced
