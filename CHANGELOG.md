@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced co-creation and AI ethics frameworks with cross-links from README and The Absolute Protocol.
 - Created connector index and documented registry rules in The Absolute Protocol.
 - Added hyperlink requirement and illustrative component table to The Absolute Protocol.
+- Added checklist reminder to update `CONNECTOR_INDEX.md` whenever connectors change.
 - Required configuration files to include schema outlines and minimal examples, referencing `boot_config.json`, `razar_env.yaml`, and log formats.
 - Mandated end-to-end run examples with logs covering normal operation and failure recovery in agent docs.
 
