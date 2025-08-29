@@ -8,6 +8,21 @@ launches each service in priority order. By aligning this startup flow with the
 architecture outlined in the [System Blueprint](system_blueprint.md), RAZAR acts
 as the bootstrap agent that grounds ABZU in a coherent foundation.
 
+## Requirements
+
+Core dependencies:
+
+- `pyyaml`
+- `prometheus_client`
+
+Optional tools:
+
+- `pyenv` — for managing Python versions
+
+Layer-specific packages are defined in
+[razar_env.yaml](../razar_env.yaml) and documented in
+[dependencies.md](dependencies.md).
+
 ## Architecture
 
 The RAZAR agent coordinates multiple modules during startup. The diagram below
