@@ -24,3 +24,4 @@ Curated starting points for understanding and operating the project. For an exha
 - [Onboarding Guide](onboarding_guide.md) – step-by-step rebuild using docs alone (v1.0.0, updated 2025-08-28)
 - [Feature Specifications](features/README.md)
 - [Example Feature](features/example_feature.md)
+- [RAZAR Agent](RAZAR_AGENT.md)
