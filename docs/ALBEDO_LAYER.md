@@ -38,7 +38,20 @@ export GLM_API_URL=https://glm.example.com/glm41v_9b
 python -m INANNA_AI.main --duration 3 --personality albedo
 ```
 
-Each invocation cycles through Nigredo, Albedo, Rubedo and Citrinitas states before returning to Nigredo for a continuous loop. You can also use the layer programmatically:
+Each invocation cycles through Nigredo, Albedo, Rubedo and Citrinitas states before returning to Nigredo for a continuous loop.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Nigredo
+    Nigredo --> Albedo
+    Albedo --> Rubedo
+    Rubedo --> Citrinitas
+    Citrinitas --> Nigredo
+```
+
+The Mermaid source lives at [assets/albedo_state_machine.mmd](assets/albedo_state_machine.mmd).
+
+You can also use the layer programmatically:
 
 ```python
 from orchestrator import MoGEOrchestrator
@@ -157,4 +170,10 @@ Typical output is:
 ```
 Citrinitas speaks in golden clarity: proceed
 ```
+
+## Version History
+
+| Version | Date       | Summary |
+|---------|------------|---------|
+| 0.1.0   | 2025-08-29 | Added state machine diagram and initial version table. |
 
