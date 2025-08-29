@@ -9,6 +9,7 @@ The files listed here are foundational and must never be deleted or renamed.
 - [System Blueprint](system_blueprint.md)
 - [Component Index](component_index.md)
 - [Component Status](component_status.md)
+- [Connector Index](connectors/CONNECTOR_INDEX.md)
 
 These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
 

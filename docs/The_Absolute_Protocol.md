@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.11
+**Version:** v1.0.12
 **Last updated:** 2025-08-29
 
 ## How to Use This Protocol
@@ -87,6 +87,10 @@ Connectors bridge the language engine to external communication layers. Follow t
 - provide `close_peers() -> Awaitable[None]` to release resources
 - expose a `__version__` field and bump it on interface changes
 - cross-link implementation modules such as [`connectors/webrtc_connector.py`](../connectors/webrtc_connector.py) and the package [`connectors`](../connectors/__init__.py)
+
+### Connector Registry
+
+Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, target service, protocol, status, and links to relevant documentation and source code. Update this registry whenever a connector is added, removed, or its interface changes.
 
 ## Maintenance
 Whenever this file changes:
