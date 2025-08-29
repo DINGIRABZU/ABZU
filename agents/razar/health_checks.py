@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Health check routines for RAZAR runtime components.
 
 The module exposes a collection of service‑specific probe functions used to
@@ -10,6 +8,7 @@ When the ``prometheus_client`` package is available, health status and latency
 metrics are exported for external monitoring.
 """
 
+from __future__ import annotations
 import json
 import logging
 import os
@@ -41,7 +40,6 @@ __all__ = [
 
 def init_metrics(port: int = 9350) -> None:
     """Start a Prometheus server if the client library is installed."""
-
     global HEALTH_GAUGE, LATENCY_GAUGE
     if Gauge is None or start_http_server is None or HEALTH_GAUGE is not None:
         return
@@ -95,12 +93,12 @@ def verify_log(path: Path, phrase: str) -> bool:
 
 
 def check_basic_service() -> bool:
-    """Example check for a basic HTTP service."""
+    """Ping a basic HTTP service."""
     return ping_endpoint("http://localhost:8000/healthz")
 
 
 def check_complex_service() -> bool:
-    """Example check for a service that writes a start-up log entry."""
+    """Verify a service writes a start-up log entry."""
     return verify_log(Path("/var/log/complex_service.log"), "started")
 
 
@@ -110,7 +108,6 @@ def check_inanna_ready() -> bool:
     The service port can be overridden with the ``INANNA_PORT`` environment
     variable to support custom deployments.
     """
-
     port = os.getenv("INANNA_PORT", "8000")
     return ready_signal(f"http://localhost:{port}/ready")
 
@@ -120,23 +117,65 @@ def check_crown_ready() -> bool:
 
     ``CROWN_PORT`` may override the default port of ``8001``.
     """
-
     port = os.getenv("CROWN_PORT", "8001")
     return ready_signal(f"http://localhost:{port}/ready")
 
 
 def check_memory_store_ready() -> bool:
     """Ping the memory store service."""
-
     port = os.getenv("MEMORY_STORE_PORT", "8900")
     return ping_endpoint(f"http://localhost:{port}/health")
 
 
 def check_chat_gateway_ready() -> bool:
     """Confirm chat gateway reports readiness."""
-
     port = os.getenv("CHAT_GATEWAY_PORT", "8800")
     return ready_signal(f"http://localhost:{port}/ready")
+
+
+def check_env_builder_ready() -> bool:
+    """Ensure the virtual environment exists."""
+    return Path(".razar_venv").exists()
+
+
+def check_runtime_manager_ready() -> bool:
+    """Confirm runtime state file records last component."""
+    return verify_log(Path("logs/razar_state.json"), "last_component")
+
+
+def check_health_service_ready() -> bool:
+    """Ping the Prometheus metrics endpoint."""
+    return ping_endpoint("http://localhost:9350")
+
+
+def check_quarantine_manager_ready() -> bool:
+    """Ensure quarantine directory and log exist."""
+    return Path("quarantine").exists() and Path("docs/quarantine_log.md").exists()
+
+
+def check_doc_sync_ready() -> bool:
+    """Verify documentation index is present."""
+    return Path("docs/INDEX.md").exists()
+
+
+def check_checkpoint_ready() -> bool:
+    """Confirm checkpoint file contains last component."""
+    return verify_log(Path("logs/razar_state.json"), "last_component")
+
+
+def check_crown_link_ready() -> bool:
+    """Check that Crown link log exists."""
+    return Path("logs/razar_crown_dialogues.json").exists()
+
+
+def check_adaptive_orchestrator_ready() -> bool:
+    """Ensure adaptive orchestrator produced boot history."""
+    return Path("logs/razar_boot_history.json").exists()
+
+
+def check_cocreation_planner_ready() -> bool:
+    """Verify co-creation planner saved a plan."""
+    return Path("logs/razar_cocreation_plans.json").exists()
 
 
 CHECKS: Dict[str, Callable[[], bool]] = {
@@ -146,6 +185,15 @@ CHECKS: Dict[str, Callable[[], bool]] = {
     "crown_llm": check_crown_ready,
     "memory_store": check_memory_store_ready,
     "chat_gateway": check_chat_gateway_ready,
+    "env_builder": check_env_builder_ready,
+    "runtime_manager": check_runtime_manager_ready,
+    "health_checks": check_health_service_ready,
+    "quarantine_manager": check_quarantine_manager_ready,
+    "doc_sync": check_doc_sync_ready,
+    "checkpoint_manager": check_checkpoint_ready,
+    "crown_link": check_crown_link_ready,
+    "adaptive_orchestrator": check_adaptive_orchestrator_ready,
+    "cocreation_planner": check_cocreation_planner_ready,
 }
 
 
@@ -166,12 +214,20 @@ THRESHOLDS: Dict[str, float] = {
     "crown_llm": 1.0,
     "memory_store": 0.5,
     "chat_gateway": 0.5,
+    "env_builder": 0.5,
+    "runtime_manager": 0.5,
+    "health_checks": 0.5,
+    "quarantine_manager": 0.5,
+    "doc_sync": 0.5,
+    "checkpoint_manager": 0.5,
+    "crown_link": 0.5,
+    "adaptive_orchestrator": 0.5,
+    "cocreation_planner": 0.5,
 }
 
 
 def _execute(func: Callable[[], bool], name: str) -> bool:
     """Execute ``func`` and record Prometheus metrics."""
-
     init_metrics()
     start = time.perf_counter()
     result = func()
@@ -194,11 +250,10 @@ def _execute(func: Callable[[], bool], name: str) -> bool:
 def run(name: str) -> bool:
     """Run the health check registered for ``name``.
 
-    ``True`` is returned when the component is healthy.  If the check fails and a
+    ``True`` is returned when the component is healthy. If the check fails and a
     restart command is available the command is executed once and the check is
     repeated.
     """
-
     func = CHECKS.get(name)
     if not func:
         LOGGER.info("No health check defined for %s", name)
