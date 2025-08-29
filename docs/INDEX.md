@@ -16,6 +16,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
 | [../CHANGELOG_rag_orchestrator.md](../CHANGELOG_rag_orchestrator.md) | Changelog for `rag.orchestrator` | All notable changes to this component will be documented in this file. | - |
+| [../CHANGELOG_razar.md](../CHANGELOG_razar.md) | Changelog for `razar` | All notable changes to this component will be documented in this file. | - |
 | [../CHANGELOG_vector_memory.md](../CHANGELOG_vector_memory.md) | Changelog for `vector_memory` | All notable changes to this component will be documented in this file. | - |
 | [../CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md](../CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md) | OATH OF THE VAULT | ☲ ∴ **DECLARATION RECEIVED & RECORDED** | - |
 | [../CODEX/ACTIVATIONS/OATHS 1dd45dfc251d80bcae6ed621d4d09b4d.md](../CODEX/ACTIVATIONS/OATHS 1dd45dfc251d80bcae6ed621d4d09b4d.md) | OATHS | [OATH OF THE VAULT](OATHS%201dd45dfc251d80bcae6ed621d4d09b4d/OATH%20OF%20THE%20VAULT%201de45dfc251d80c9a86fc67dee2f96... | - |
