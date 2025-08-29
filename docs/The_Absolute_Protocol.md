@@ -97,6 +97,7 @@ Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNEC
 ## Subsystem Protocols
 
 - [Operator Protocol](operator_protocol.md) – outlines `/operator/command`, role checks, and Crown's relay to RAZAR.
+- [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
 
 ### Code Harmony Protocol
 
