@@ -7,7 +7,8 @@ Thank you for considering a contribution!
 1. Fork the repository and create a new branch.
 2. Make your changes with clear, descriptive commits.
 3. Ensure tests and linters pass locally.
-4. Open a pull request with a summary of your changes.
+4. Run `python scripts/verify_versions.py` to ensure module `__version__` fields match `component_index.json`.
+5. Open a pull request with a summary of your changes.
 
 ## Component Registry
 

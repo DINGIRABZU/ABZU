@@ -11,7 +11,7 @@ The files listed here are foundational and must never be deleted or renamed.
 - [Component Status](component_status.md)
 - [Connector Index](connectors/CONNECTOR_INDEX.md) – registry of connector IDs, versions, endpoints, auth methods, and status (see [Connector Overview](connectors/README.md) for patterns and maintenance rules)
 
-These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
+These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized. Verify module versions against `component_index.json` with `python scripts/verify_versions.py` and resolve any mismatches before committing.
 
 Contributors must also record a brief summary for every file listed in `onboarding_confirm.yml`. Each summary must state the document's **purpose**, **scope**, **key rules**, and include one **actionable insight**.
 

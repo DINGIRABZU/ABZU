@@ -1,10 +1,10 @@
 # The Absolute Protocol
 
-**Version:** v1.0.33
-**Last updated:** 2025-09-11
+**Version:** v1.0.34
+**Last updated:** 2025-09-12
 
 ## How to Use This Protocol
-This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
+This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute and keep it synchronized with [`component_index.json`](../component_index.json).
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -13,7 +13,7 @@ Before opening a pull request, confirm each item:
   - [AGENTS.md](../AGENTS.md)
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
-- [ ] All modules expose `__version__`; bump fields for user-facing changes
+- [ ] All modules expose `__version__`; bump fields for user-facing changes and sync with `component_index.json`
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] Connector registry updated:
   - implementations expose `__version__`, implement `start_call`, and `close_peers`
@@ -22,6 +22,7 @@ Before opening a pull request, confirm each item:
 - [ ] Pull request includes change justification in the required format
 - [ ] `onboarding_confirm.yml` logs purpose, scope, key rules, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_summaries.py` confirms `onboarding_confirm.yml` hashes match current files
+- [ ] `scripts/verify_versions.py` confirms module versions match `component_index.json`
 - [ ] `docs/INDEX.md` regenerated if docs changed
 - [ ] `component_maturity.md` scoreboard updated
 - [ ] New operator channels documented in [Operator Protocol](operator_protocol.md)
@@ -117,7 +118,7 @@ Any new configuration file must be accompanied by documentation that outlines it
 
 ### Module Versioning
 
-Every source module must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/component_inventory.py` to confirm module versions remain synchronized.
+Every source module must expose a `__version__` field (or equivalent), increment it for any user‑facing change, and ensure the value matches the corresponding entry in `component_index.json`. Run `scripts/verify_versions.py` to confirm module versions remain synchronized.
 
 ### Connector Guidelines
 
