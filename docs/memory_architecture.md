@@ -226,3 +226,9 @@ log_story("hero meets guide")
 print(list(stream_stories()))
 PY
 ```
+
+## Version History
+
+| Version | Date | Summary |
+|---------|------|---------|
+| [Unreleased](../CHANGELOG.md#documentation-audit) | - | Mapped cortex, emotional, mental, spiritual and narrative memory stores. |
