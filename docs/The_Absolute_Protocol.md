@@ -1,10 +1,21 @@
 # The Absolute Protocol
 
-**Version:** v1.0.9
-**Last updated:** 2025-09-02
+**Version:** v1.0.10
+**Last updated:** 2025-09-03
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards.
+
+## Contributor Awareness Checklist
+Before opening a pull request, confirm each item:
+
+- [ ] Key documents reviewed:
+  - [AGENTS.md](../AGENTS.md)
+  - [Documentation Protocol](documentation_protocol.md)
+  - [System Blueprint](system_blueprint.md)
+- [ ] Module `__version__` fields bumped for user-facing changes
+- [ ] Connectors implement `start_call`, `close_peers`, and expose `__version__`
+- [ ] `docs/INDEX.md` regenerated if docs changed
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:
