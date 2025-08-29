@@ -209,6 +209,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [chat2db.md](chat2db.md) | Chat2DB Interface | Chat2DB connects conversational agents to persistent storage. It logs transcripts, feedback and model metrics in a li... | `../INANNA_AI/db_storage.py`, `../spiral_vector_db/__init__.py` |
 | [client_environment_variables.md](client_environment_variables.md) | Client environment variables | Clients interacting with the FastAPI server need several environment variables to authenticate requests. | - |
 | [cloud_deployment.md](cloud_deployment.md) | Cloud Deployment | This guide shows how to build the GPU enabled container and deploy Spiral OS on a Kubernetes cluster. | - |
+| [co_creation_escalation.md](co_creation_escalation.md) | Co-creation Escalation | Outlines how RAZAR, Crown, and the human operator respond when automated coordination stalls. | - |
 | [co_creation_framework.md](co_creation_framework.md) | Co-creation Framework | This document outlines the feedback loop between developers and INANNA_AI to refine features collaboratively. | - |
 | [coding_style.md](coding_style.md) | Coding Style | This document outlines the project's coding conventions. | - |
 | [communication_interfaces.md](communication_interfaces.md) | Communication Interfaces | This document outlines how external clients interact with the avatar through various communication channels. The curr... | - |

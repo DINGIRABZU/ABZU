@@ -14,3 +14,6 @@ Crown authorizes requests against `permissions.yml`. Only identities with the `o
 
 After validation Crown forwards the command to RAZAR's control loop. RAZAR executes the action and returns the result, which Crown relays back to the caller.
 
+## Escalation Path
+
+RAZAR and Crown follow the [Co-creation Escalation](co_creation_escalation.md) guide when automated recovery fails. It defines when RAZAR requests Crown assistance, when Crown alerts the operator, and how each step is logged.
