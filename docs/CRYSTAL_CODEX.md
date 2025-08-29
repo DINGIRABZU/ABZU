@@ -103,6 +103,21 @@ For per‑module descriptions and external dependencies see the generated
 [server.py](../server.py), [vector_memory.py](../vector_memory.py) and
 [learning_mutator.py](../learning_mutator.py).
 
+## Component Index Protocol
+`component_index.json` provides a machine‑readable inventory of every module.
+Each component entry must include:
+
+- `id` – unique identifier
+- `chakra` – associated chakra layer
+- `type` – module or service classification
+- `version` – component version string
+
+The file must conform to
+[`component_index.schema.json`](../schemas/component_index.schema.json).
+Update [`component_index.json`](../component_index.json) whenever a component
+is added, removed or modified and regenerate
+[`component_index.md`](component_index.md).
+
 ## Agent Instructions
 
 ### INANNA_AI

@@ -1,0 +1,13 @@
+{
+  "$schema": "./schemas/component_index.schema.json",
+  "components": [
+    {
+      "id": "server",
+      "chakra": "crown",
+      "type": "service",
+      "version": "0.1.0",
+      "path": "server.py",
+      "description": "HTTP entry point for Spiral OS"
+    }
+  ]
+}
