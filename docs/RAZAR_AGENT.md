@@ -722,12 +722,11 @@ Authorized handover agents and their authentication tokens live in [config/razar
 
 **Invocation sequence**
 
-1. Repeated boot failures trigger the handover flag.
-2. RAZAR packages logs and invokes the recovery helper via [ai_invoker.py](../agents/razar/ai_invoker.py).
-3. The agent analyzes the context and drafts a fix using [code_repair.py](../agents/razar/code_repair.py) with justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
-4. RAZAR applies the proposed patch in a sandbox and runs component tests.
-5. If tests pass, services restart and the handover concludes.
-6. If tests fail, RAZAR rolls back the patch and requests another fix, repeating steps 3–5 until the retry limit is reached.
+1. After a component exceeds its retry limit, `boot_orchestrator.py` calls [`ai_invoker.handover()`](../agents/razar/ai_invoker.py), logging the attempt to [`../logs/razar_ai_invocations.json`](../logs/razar_ai_invocations.json).
+2. The remote agent analyzes the context and drafts a fix using [`code_repair.py`](../agents/razar/code_repair.py) with justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
+3. RAZAR applies the proposed patch in a sandbox, runs component tests and health checks.
+4. If tests pass, services restart and the handover concludes.
+5. If tests fail, RAZAR rolls back the patch and requests another fix, repeating steps 2–4 until the retry limit is reached.
 
 The handover flow:
 
