@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mapped cortex, emotional, mental, spiritual and narrative memory stores in
   `docs/memory_architecture.md`.
 
+
+### Documentation
+
+- Added "The Absolute pytest" guide for chakra-aligned tests and commit workflow.
+
 ### Added
 
 - Introduced protocol compliance dashboard and required dashboard updates each release cycle in The Absolute Protocol.
