@@ -13,6 +13,8 @@ The implementation optionally leverages the
 unavailable, the orchestrator still functions with minimal dependencies.
 """
 
+__version__ = "0.1.0"
+
 import logging
 import os
 import shutil

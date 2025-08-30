@@ -11,6 +11,8 @@ following keys:
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import json
 from datetime import datetime
 from pathlib import Path

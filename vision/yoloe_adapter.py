@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """YOLOE wrapper emitting detections to the LargeWorldModel."""
 
+__version__ = "0.1.0"
+
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -65,9 +67,7 @@ class YOLOEAdapter:
                     conf = float(b.conf)
                     x1, y1, x2, y2 = b.xyxy[0].tolist()
                     boxes.append(
-                        Detection(
-                            cls_name, conf, (int(x1), int(y1), int(x2), int(y2))
-                        )
+                        Detection(cls_name, conf, (int(x1), int(y1), int(x2), int(y2)))
                     )
         elif np is not None:
             ys, xs = np.where(frame.sum(axis=-1) > 0)
@@ -79,7 +79,9 @@ class YOLOEAdapter:
             self.lwm.ingest_detections(frame_id, [d.box for d in boxes])
         return boxes
 
-    def process_stream(self, frames: Iterable["np.ndarray"]) -> Iterable[List[Detection]]:
+    def process_stream(
+        self, frames: Iterable["np.ndarray"]
+    ) -> Iterable[List[Detection]]:
         """Yield detections for each frame in ``frames``."""
 
         for idx, frame in enumerate(frames):

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """HTTP client for the Kimi-K2 servant model."""
 
+__version__ = "0.1.0"
+
 import logging
 import os
 

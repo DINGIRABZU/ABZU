@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """Run basic environment validation in a single command."""
 
+__version__ = "0.1.0"
+
 import argparse
 import importlib
 import json
