@@ -124,6 +124,16 @@ python agents/razar/pytest_runner.py --resume
 1. Wait for WebRTC initialization messages in the logs and verify that a video feed is displayed.
 1. Use `Ctrl+C` to terminate the services.
 
+## Test Failure Audit
+
+Before merging fixes, audit any failing tests to ensure problems are fully understood:
+
+1. Run `pytest -vv` and capture all failures.
+2. Log each failing test in `docs/testing/failure_inventory.md` with the current date.
+3. Categorize entries as environment/resource gaps, data or library mismatches, code defects, or unimplemented features.
+4. Note remediation steps for every item and rerun affected tests until they pass.
+5. Update the inventory to reflect resolved issues before merging.
+
 ## Notes
 
 - During this test run, the CLI setup encountered dependency initialization issues, preventing the prompt from appearing.
