@@ -19,4 +19,5 @@ When submitting a pull request, ensure you can check:
 
 - [ ] [AGENTS.md](../AGENTS.md) instructions followed
 - [ ] [The Absolute Protocol](../The_Absolute_Protocol.md) consulted
+- [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
 - [ ] `onboarding_confirm.yml` updated
