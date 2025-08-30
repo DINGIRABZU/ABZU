@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added recovery playbook documenting snapshot restoration steps.
 - Mapped cortex, emotional, mental, spiritual and narrative memory stores in
   `docs/memory_architecture.md`.
+- Added INANNA core deployment notes and memory component entries in
+  `component_index.json`.
 - Documented RAZAR environment configuration schema in `docs/RAZAR_AGENT.md`.
 - Added `__version__` fields across modules and added version checks in `scripts/component_inventory.py`.
 - Documented Nazarick agent triggers for Albedo state transitions and added

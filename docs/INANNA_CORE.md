@@ -130,6 +130,17 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    scripts/start_inanna_core.sh
    ```
 
+## Deployment
+
+After the core passes initialization, deploy the interactive agent with:
+
+```bash
+./run_inanna.sh
+```
+
+The script loads environment variables from `secrets.env`, launches the FastAPI
+server, verifies required model files, and opens the INANNA chat interface.
+
 ## Memory Layers
 
 ### Cortex – [memory/cortex.py](../memory/cortex.py)
@@ -263,3 +274,9 @@ PY
   - [tests/test_vector_memory.py](../tests/test_vector_memory.py)
   - [tests/test_corpus_memory.py](../tests/test_corpus_memory.py)
   - [tests/test_launch_servants_script.py](../tests/test_launch_servants_script.py)
+
+## Version History
+
+| Version | Date | Summary |
+|---------|------|---------|
+| [Unreleased](../CHANGELOG.md#documentation-audit) | - | Added deployment instructions and version history. |
