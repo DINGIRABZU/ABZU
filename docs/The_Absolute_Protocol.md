@@ -156,6 +156,12 @@ preserve handshake history for auditing.
 - Consult the [Monitoring Guide](monitoring.md) for telemetry collection and Prometheus scraping.
 - Module documentation must describe emitted log formats, enumerated log levels, and any Prometheus metrics exposed.
 
+### Security Protocol
+
+- Handle credentials according to the [Security & Secrets Protocol](#security--secrets-protocol); store sensitive values only in `secrets.env`.
+- Run automated scanners such as `pip-audit`, `bandit`, and container image checks in CI to detect vulnerabilities and leaked secrets.
+- Rotate all service credentials at least quarterly and immediately after a suspected exposure; document rotations in change logs.
+
 ### Security & Secrets Protocol
 
 - Keep secrets in `secrets.env` (based on `secrets.env.template`) and never commit confidential keys.
