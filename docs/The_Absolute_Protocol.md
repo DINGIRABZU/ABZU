@@ -31,6 +31,7 @@ Before opening a pull request, confirm each item:
 - [ ] Confirm no binary files are introduced
 - [ ] All diagrams are authored in Mermaid; binary image files (PNG, JPG, etc.) are forbidden
 - [ ] Handshake-triggered model launches documented in agent guides and state logs
+- [ ] `crown_handshake` results logged in state files and mission briefs
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:

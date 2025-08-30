@@ -28,7 +28,13 @@ try:  # pragma: no cover - dependency is handled in tests
 except Exception as exc:  # pragma: no cover
     raise RuntimeError("pyyaml is required for the boot orchestrator") from exc
 
-from . import ai_invoker, code_repair, health_checks, quarantine_manager
+from . import (
+    ai_invoker,
+    code_repair,
+    health_checks,
+    mission_logger,
+    quarantine_manager,
+)
 from .ignition_builder import DEFAULT_STATUS, parse_system_blueprint
 from razar.crown_handshake import CrownHandshake, CrownResponse
 
@@ -100,18 +106,35 @@ class BootOrchestrator:
         brief_path.write_text(json.dumps(brief), encoding="utf-8")
 
         response: CrownResponse | None = None
+        status = "failure"
+        details: str | None = None
         try:
             url = os.getenv("CROWN_WS_URL", "ws://localhost:8765")
             handshake = CrownHandshake(url)
             response = asyncio.run(handshake.perform(str(brief_path)))
-        except Exception:  # pragma: no cover - handshake is best effort
+            status = "success"
+            details = json.dumps(
+                {"capabilities": response.capabilities, "downtime": response.downtime}
+            )
+        except Exception as exc:  # pragma: no cover - handshake is best effort
             LOGGER.exception("CROWN handshake failed")
+            details = str(exc)
+        mission_logger.log_event("handshake", "crown", status, details)
+        if response:
+            LOGGER.info(
+                "Handshake result: capabilities=%s downtime=%s",
+                response.capabilities,
+                response.downtime,
+            )
+        else:
+            LOGGER.warning("Handshake produced no response")
         self._persist_handshake(response)
         return response.capabilities if response else []
 
     def _ensure_glm4v(self, capabilities: List[str]) -> None:
         """Launch the GLM‑4.1V model if the capability is missing."""
-        if "GLM-4.1V" in capabilities:
+        normalized = {c.replace("-", "").upper() for c in capabilities}
+        if any(c.startswith("GLM4V") for c in normalized):
             return
         data: Dict[str, object] = {}
         if self.state_path.exists():
@@ -122,6 +145,7 @@ class BootOrchestrator:
         script = self.state_path.parents[1] / "crown_model_launcher.sh"
         LOGGER.info("Launching GLM-4.1V via %s", script)
         subprocess.run(["bash", str(script)], check=False)
+        mission_logger.log_event("model_launch", "GLM-4.1V", "triggered")
         launches = data.get("launched_models", [])
         if "GLM-4.1V" not in launches:
             launches.append("GLM-4.1V")
