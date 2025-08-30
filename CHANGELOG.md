@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation Audit
 
+- Mandated quarterly review of entries in `docs/KEY_DOCUMENTS.md` and added audit cadence table with `scripts/schedule_doc_audit.py`.
 - Ensure components have descriptions and data-flow references.
 - Linked chakra koan and version files from README and CONTRIBUTING.
 - Added chakra status table in `docs/chakra_status.md` outlining capabilities,
