@@ -91,6 +91,19 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    This builds the Chroma index under `data/vector_memory/chroma` and
    confirms the vector store path.
 
+   Verify the collection and optionally expose it for inspection:
+
+   ```bash
+   python - <<'PY'
+   from spiral_vector_db import init_db
+   col = init_db()
+   print("records:", col.count())
+   PY
+
+   # optional: run a standalone Chroma API server
+   python -m chromadb --path data/vector_memory/chroma --port 8030 &
+   ```
+
 3. **Launch servant model endpoints**
 
    Define the endpoints via `SERVANT_MODELS` and run the launcher:
@@ -101,7 +114,12 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    ```
 
    Each endpoint must expose a `/health` route and accept a JSON body
-   `{"prompt": "..."}`.
+   `{"prompt": "..."}`. Confirm they are reachable:
+
+   ```bash
+   curl -f http://localhost:8002/health
+   curl -f http://localhost:8003/health
+   ```
 
 4. **Start INANNA core**
 
