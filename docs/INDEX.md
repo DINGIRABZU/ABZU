@@ -181,7 +181,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [INANNA_CORE.md](INANNA_CORE.md) | INANNA Core Configuration | `crown_config/INANNA_CORE.yaml` defines the default settings used by the Crown agent. Each option can be overridden b... | `../memory/cortex.py`, `../memory/emotional.py`, `../memory/mental.py`, `../memory/narrative_engine.py`, `../memory/spiritual.py`, `../tests/test_corpus_memory.py`, `../tests/test_launch_servants_script.py`, `../tests/test_vector_memory.py` |
 | [Ignition.md](Ignition.md) | Ignition | RAZAR coordinates system boot and records runtime health. Components are grouped by priority so operators can track s... | - |
 | [JSON_STRUCTURES.md](JSON_STRUCTURES.md) | JSON Structures and Invocations | This page describes the small JSON files used by Spiral OS and how to trigger registered invocations. | - |
-| [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md) | Key Documents | The files listed here are foundational and must never be deleted or renamed. For each document below, contributors mu... | - |
+| [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md) | Key Documents | The files listed here are foundational and must never be deleted or renamed. For each document below, contributors mu... | `../scripts/check_env.py` |
 | [LLM_FRAMEWORKS.md](LLM_FRAMEWORKS.md) | LLM Framework Comparison | Several open-source frameworks aim to simplify working with large language models. Below is a short overview of popul... | - |
 | [LLM_MODELS.md](LLM_MODELS.md) | LLM Models | This document describes the language models used in SPIRAL_OS and how to download them. | - |
 | [MISSION.md](MISSION.md) | Mission | - | - |

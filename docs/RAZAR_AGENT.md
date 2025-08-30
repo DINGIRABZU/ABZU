@@ -30,15 +30,15 @@ verified during continuous integration.
 
 ## Requirements
 
-Core dependencies:
+Install these packages and tools before launching the agent:
 
 - `pyyaml`
 - `prometheus_client`
 - `websockets`
+- `pyenv` — Python version management
+- `pre-commit` — repository hooks
 
-Optional tools:
-
-- `pyenv` — for managing Python versions
+Run `python scripts/check_env.py` to verify the environment.
 
 Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in

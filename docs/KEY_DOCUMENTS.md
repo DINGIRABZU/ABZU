@@ -24,6 +24,7 @@ detailing its purpose, scope, key rules, and one actionable insight in
 | [Operator Protocol](operator_protocol.md) | Operator interaction rules | Quarterly |
 | [Test Planning Guide](onboarding/test_planning.md) | Filing "Test Plan" issues defining scope, chakra, and coverage goals | Quarterly |
 | [RAZAR AI agents config](../config/razar_ai_agents.json) | Roster of handover agents and authentication settings | Quarterly |
+| [Environment check script](../scripts/check_env.py) | Verifies required packages and tools are installed | Each commit |
 
 These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
 

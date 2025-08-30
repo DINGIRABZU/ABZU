@@ -90,3 +90,8 @@ repos:
     entry: python scripts/verify_dependencies.py
     language: system
     pass_filenames: false
+  - id: check-env
+    name: Verify environment prerequisites
+    entry: python scripts/check_env.py
+    language: system
+    pass_filenames: false
