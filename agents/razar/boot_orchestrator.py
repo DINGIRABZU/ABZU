@@ -308,7 +308,7 @@ class BootOrchestrator:
         """Invoke the remote agent for repair suggestions and apply patches."""
         try:
             suggestion = ai_invoker.handover(
-                patch_context={"component": name, "error": error}
+                context={"component": name, "error": error}
             )
         except Exception:  # pragma: no cover - defensive
             LOGGER.exception("AI handover invocation failed for %s", name)
