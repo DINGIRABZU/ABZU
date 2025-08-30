@@ -21,7 +21,7 @@ documents:
     sha256: b7d57d6fe6ee327301e134e36a959474431e7a0c511dd999a168ddad1485cdeb
     summary: Step-by-step onboarding walkthrough.
   docs/vector_memory.md:
-    sha256: 8aff26e4a32740fc3599e3cae555f8b7700a61c6734adb87fbcaaaba69349a34
+    sha256: e4cd2186d833fd47c7a23034281e9f4e8ba5bc2e8265e4f4f9029b15d6967e28
     summary: Guide to vector memory subsystem.
   docs/rag_pipeline.md:
     sha256: 24d2154f4a2db1aceba6aaf05c03bc6c34119ba58b82159345f5d2c0eb36e0dc
@@ -30,7 +30,7 @@ documents:
     sha256: b506c9213c26af25dc0e295b11215dd19d6a1100cfb7902e64be47120784c7d6
     summary: Music oracle RAG details.
   docs/vision_system.md:
-    sha256: 52d91902d457f14cf4dc46b088a8e2177cd10e3eaa0398ee071d4f1532e74547
+    sha256: 8952a8e014ee24a9ee772f2598abdfccb7bf5abfd907973de5f7f8ee9474bfad
     summary: Vision system documentation.
   docs/persona_api_guide.md:
     sha256: 767d276cddcb865a844c3e730aa2affc9d57ab6ebb52f3c4c05040288c94121f
@@ -44,6 +44,9 @@ documents:
   docs/connectors/CONNECTOR_INDEX.md:
     sha256: b1a944e21d2cb521673d7f1384599d48e4f9fbe3fa9122438de1f532e28564cd
     summary: Registry of connector details.
+  docs/connectors/README.md:
+    sha256: 2c9c22760dee1badb726b068860e2e85f41108cc622f3a6a4872e0f95087f93d
+    summary: Connector subsystem guidelines.
   docs/system_blueprint.md:
     sha256: 34a07cfbed34be43a6653fa8615bfa8eb7aaf28d87aa72ce4da076969ac0ed80
     summary: Architectural blueprint overview.
@@ -68,6 +71,9 @@ documents:
   docs/operator_protocol.md:
     sha256: e150a741e3c81bdd7bb550ef12e3f9696d8572f508342e99a25b8aed2e06597a
     summary: Operator interaction rules.
+  docs/os_guardian.md:
+    sha256: 1b32ad1d78f3b19332b6dfc1c06c4ad8ea9578d0d850947712c33ec04e184eab
+    summary: OS Guardian subsystem overview.
   docs/RAZAR_AGENT.md:
     sha256: 1358ce15a3413196fb080a8362ac4ef55b6868b031c3a66a0857967cd68f0159
     summary: RAZAR agent bootstrap and logging guidance.
