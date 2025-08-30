@@ -2,6 +2,16 @@
 
 This document enumerates datasets and external resources used by the project.
 
+## Dataset Governance Protocol
+
+When introducing a new dataset:
+
+- Append an entry to `docs/data_manifest.md`.
+- Provide or update schema documentation explaining structure and fields.
+- Add privacy notes clarifying handling of sensitive data and consent.
+- Audit against [Data Security and Compliance](data_security.md) and the
+  [Dependency Registry](dependency_registry.md).
+
 ## Internal datasets
 
 ### `data/emotion_registry.json`
