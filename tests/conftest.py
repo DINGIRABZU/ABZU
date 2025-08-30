@@ -140,7 +140,7 @@ def pytest_sessionstart(session):  # pragma: no cover - timing varies
 ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_adaptive_learning_stub.py"),
     str(ROOT / "tests" / "test_env_validation.py"),
-    str(ROOT / "tests" / "test_crown_config.py"),
+    str(ROOT / "tests" / "crown" / "test_config.py"),
     str(ROOT / "tests" / "test_download_deepseek.py"),
     str(ROOT / "tests" / "test_dashboard_app.py"),
     str(ROOT / "tests" / "test_dashboard_usage.py"),
@@ -231,7 +231,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_citadel_event_processor.py"),
     str(ROOT / "tests" / "agents" / "test_event_bus.py"),
     str(ROOT / "tests" / "narrative_engine" / "test_biosignal_pipeline.py"),
-    str(ROOT / "tests" / "crown" / "test_crown_prompt_orchestrator.py"),
+    str(ROOT / "tests" / "crown" / "test_prompt_orchestrator.py"),
 }
 
 

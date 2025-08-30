@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import sys
 import types
 from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 # Stub optional dependencies

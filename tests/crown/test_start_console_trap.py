@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import os
 import shutil
 import subprocess
@@ -9,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 pytestmark = pytest.mark.skipif(
     shutil.which("bash") is None,
