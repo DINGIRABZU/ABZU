@@ -21,6 +21,7 @@ summary in `onboarding_confirm.yml` to prove the current version was reviewed.
 | [Logging Guidelines](logging_guidelines.md) | Structured logging requirements | Quarterly |
 | [API Reference](api_reference.md) | API endpoints and schemas | Quarterly |
 | [Operator Protocol](operator_protocol.md) | Operator interaction rules | Quarterly |
+| [Test Planning Guide](onboarding/test_planning.md) | Filing "Test Plan" issues defining scope, chakra, and coverage goals | Quarterly |
 | [RAZAR AI agents config](../config/razar_ai_agents.json) | Roster of handover agents and authentication settings | Quarterly |
 
 These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
