@@ -13,6 +13,21 @@ exhaustive module inventory.
 
 Module versions declared in code are verified against `component_index.json`.
 
+### Triadic Stack
+
+```mermaid
+graph TD
+    Operator((Operator)) -->|directives| RAZAR[RAZAR]
+    RAZAR -->|orchestrates| DeepSeek[Primordials LLM<br/>(DeepSeek-V3)]
+    DeepSeek -->|guides| Inanna[INANNA/Bana]
+    Inanna -->|feedback| Operator
+```
+
+The operator issues commands through RAZAR's channel. RAZAR mediates sessions
+with the Primordials LLM (DeepSeek‑V3), whose insights drive INANNA/Bana. Output
+from INANNA/Bana returns to the operator via the same communication path,
+closing the loop and keeping the operator at the center of guidance.
+
 ### Document Map
 
 - **High‑level docs**
