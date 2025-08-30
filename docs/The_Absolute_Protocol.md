@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.38
-**Last updated:** 2025-09-07
+**Version:** v1.0.39
+**Last updated:** 2025-09-08
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -147,6 +147,12 @@ preserve handshake history for auditing.
 
 - [Operator Protocol](operator_protocol.md) – outlines `/operator/command`, role checks, and Crown's relay to RAZAR.
 - [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
+
+### Security & Secrets Protocol
+
+- Keep secrets in `secrets.env` (based on `secrets.env.template`) and never commit confidential keys.
+- Enforce least-privilege access controls and audit sensitive operations.
+- Consult [Security Model](security_model.md) and [Data Security and Compliance](data_security.md) for threat modeling and compliance guidance.
 
 ### Code Harmony Protocol
 
