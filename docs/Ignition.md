@@ -1,6 +1,6 @@
 # Ignition
 
-RAZAR coordinates system boot and records runtime health. Components are grouped by priority so operators can track startup order and service status.
+RAZAR coordinates system boot and records runtime health. Components are grouped by priority so operators can track startup order and service status. See [The Absolute Protocol](The_Absolute_Protocol.md) for ignition stage requirements and [Ignition Map](ignition_map.md) for component stages.
 
 ## Priority 0
 | Order | Component | Health Check | Status |
