@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.34
-**Last updated:** 2025-09-12
+**Version:** v1.0.35
+**Last updated:** 2025-09-13
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -131,7 +131,7 @@ Connectors bridge the language engine to external communication layers. Follow t
 
 ### Connector Registry
 
-Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, endpoints, protocols, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Update this registry whenever a connector is added, removed, or its interface changes.
+Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, purpose, service, endpoints, protocols, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Update this registry whenever a connector is added, removed, or its interface changes.
 
 #### Crown Handshake
 
