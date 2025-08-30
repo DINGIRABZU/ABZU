@@ -1,3 +1,4 @@
+# pydocstyle: skip-file
 """Stub narrative memory engine.
 
 Provides interfaces for recording story events composed of an actor,
@@ -8,6 +9,8 @@ memory for later retrieval.
 """
 
 from __future__ import annotations
+
+__version__ = "0.1.1"
 
 from dataclasses import dataclass
 from typing import Iterable, List

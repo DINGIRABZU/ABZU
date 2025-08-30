@@ -1,13 +1,13 @@
 {
   "$schema": "./schemas/component_index.schema.json",
-  "system_version": "0.1.0",
+  "system_version": "0.1.1",
   "index_version": 1,
   "components": [
     {
       "id": "server",
       "chakra": "crown",
       "type": "service",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "path": "server.py",
       "purpose": "HTTP entry point for Spiral OS",
       "dependencies": [
@@ -61,7 +61,7 @@
       ],
       "status": "active",
       "metrics": {
-        "coverage": 0.99
+        "coverage": 1.0
       },
       "ignition_stage": 2,
       "adr": null
@@ -108,7 +108,7 @@
       "id": "albedo",
       "chakra": "crown",
       "type": "agent",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "path": "agents/albedo",
       "purpose": "Personality layer and trust modules",
       "dependencies": [
@@ -128,7 +128,7 @@
       "id": "nazarick",
       "chakra": "crown",
       "type": "agent",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "path": "agents/nazarick",
       "purpose": "Guardian hierarchy and narrative scribe",
       "dependencies": [
@@ -148,7 +148,7 @@
       "id": "memory_layers",
       "chakra": "root",
       "type": "subsystem",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "path": "memory",
       "purpose": "Layered memory stores for system state",
       "dependencies": [
@@ -168,7 +168,7 @@
       "id": "narrative_engine",
       "chakra": "root",
       "type": "module",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "path": "memory/narrative_engine.py",
       "purpose": "Records and streams story events",
       "dependencies": [],

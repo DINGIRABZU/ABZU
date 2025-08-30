@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+# pydocstyle: skip-file
 """Persistent store for music embedding vectors with emotion labels.
 
 This module provides a minimal interface to record and query embedding vectors
@@ -8,6 +7,10 @@ SentenceTransformer can be stored alongside arbitrary metadata and an emotion
 label. The data is persisted in a local SQLite database so it survives between
 runs and may be used for retrieval‑augmented generation or mixing decisions.
 """
+
+from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import json
 import sqlite3

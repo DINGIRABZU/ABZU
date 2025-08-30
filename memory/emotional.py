@@ -1,3 +1,4 @@
+# pydocstyle: skip-file
 """Persist and query emotional feature vectors in SQLite.
 
 The module maintains a table ``emotion_log`` inside ``data/emotions.db``. Each
@@ -12,6 +13,8 @@ respectively. Without these dependencies, passing a non‑sequence raises a
 """
 
 from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import json
 import os

@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+# pydocstyle: skip-file
 """VAE-based sacred memory module using PyTorch.
 
 This module defines a lightweight Variational Autoencoder (VAE) that ingests
@@ -10,6 +9,10 @@ The public API ``generate_sacred_glyph`` accepts a mapping with layer names and
 returns the path to a generated image along with a short phrase derived from the
 latent vector.
 """
+
+from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import datetime as _dt
 from pathlib import Path

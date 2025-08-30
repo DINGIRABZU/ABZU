@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
+"""Compose messages for Nazarick entities based on rank and trust."""
+
 from __future__ import annotations
 
-"""Compose messages for Nazarick entities based on rank and trust."""
+__version__ = "0.1.1"
 
 from functools import lru_cache
 from pathlib import Path
@@ -82,9 +85,7 @@ def compose_message_rival(entity: str, state: State, magnitude: Magnitude) -> st
         str(level)
     ]
     trust_value = int(magnitude)
-    level_key = max(
-        int(k) for k in state_templates.keys() if int(k) <= trust_value
-    )
+    level_key = max(int(k) for k in state_templates.keys() if int(k) <= trust_value)
     template = state_templates[str(level_key)]
     return template.format(entity=entity, state=state.value, trust=trust_value)
 

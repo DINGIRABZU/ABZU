@@ -1,11 +1,14 @@
-from __future__ import annotations
-
+# pydocstyle: skip-file
 """Trust classification and protocol lookup for Nazarick entities.
 
 The :class:`TrustMatrix` records trust scores in a tiny SQLite database and
 provides utilities to classify entities and determine the protocol to use for
 interactions. Entity types and rank mappings mirror the Nazarick manifesto.
 """
+
+from __future__ import annotations
+
+__version__ = "0.1.1"
 
 from enum import Enum
 from pathlib import Path

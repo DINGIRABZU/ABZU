@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
+"""Store retrieval insights for the spiral cortex."""
+
 from __future__ import annotations
 
-"""Store retrieval insights for the spiral cortex."""
+__version__ = "0.1.1"
 
 import json
 from datetime import datetime

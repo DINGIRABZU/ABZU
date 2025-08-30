@@ -15,6 +15,8 @@ storage.
 
 from __future__ import annotations
 
+__version__ = "0.1.1"
+
 import base64
 import json
 import logging

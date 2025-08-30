@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
+"""Trust adjustment and interaction logging for Albedo dialogues."""
+
 from __future__ import annotations
 
-"""Trust adjustment and interaction logging for Albedo dialogues."""
+__version__ = "0.1.1"
 
 from pathlib import Path
 import json

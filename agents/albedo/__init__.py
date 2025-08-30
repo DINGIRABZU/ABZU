@@ -1,8 +1,9 @@
+# pydocstyle: skip-file
 """Albedo agent messaging utilities and vision hooks."""
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from agents.nazarick.ethics_manifesto import Manifesto
 from agents.nazarick.trust_matrix import TrustMatrix

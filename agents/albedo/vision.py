@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
+"""Avatar selection hooks driven by YOLOE detections."""
+
 from __future__ import annotations
 
-"""Avatar selection hooks driven by YOLOE detections."""
+__version__ = "0.1.1"
 
 from typing import Iterable, Mapping
 

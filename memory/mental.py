@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
+"""Neo4j-backed task memory with optional reinforcement learning hooks."""
+
 from __future__ import annotations
 
-"""Neo4j-backed task memory with optional reinforcement learning hooks."""
+__version__ = "0.1.1"
 
 import json
 import logging

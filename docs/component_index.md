@@ -5,60 +5,60 @@ Generated automatically. Lists each Python file with its description and externa
 | File | Description | Dependencies |
 | --- | --- | --- |
 | `INANNA_AI/__init__.py` | Core package for the INANNA AI helpers. | None |
-| `INANNA_AI/adaptive_learning.py` | Adaptive agents tuning validation thresholds and wording with PPO. | core |
-| `INANNA_AI/audio_emotion_listener.py` | Capture microphone audio and infer speaker emotion. | librosa, numpy, sounddevice |
-| `INANNA_AI/context.py` | Store recent user prompts in a small context memory. | None |
-| `INANNA_AI/corpus_memory.py` | Manage Chroma-based embeddings of project text files. | chromadb, crown_config, numpy, sentence_transformers |
+| `INANNA_AI/adaptive_learning.py` | No description | core |
+| `INANNA_AI/audio_emotion_listener.py` | No description | librosa, numpy, sounddevice |
+| `INANNA_AI/context.py` | No description | None |
+| `INANNA_AI/corpus_memory.py` | No description | chromadb, crown_config, numpy, sentence_transformers |
 | `INANNA_AI/db_storage.py` | SQLite helpers to store voice interactions. | None |
 | `INANNA_AI/defensive_network_utils.py` | Defensive network helpers for monitoring and secure POST requests. | requests, scapy |
-| `INANNA_AI/emotion_analysis.py` | Lightweight emotion analysis utilities using audio features. | librosa, numpy, opensmile, torch, transformers |
-| `INANNA_AI/emotional_memory.py` | Log model interactions with detected emotions in JSONL. | None |
-| `INANNA_AI/emotional_synaptic_engine.py` | Map emotions to voice filter parameters using memory. | None |
+| `INANNA_AI/emotion_analysis.py` | No description | librosa, numpy, opensmile, torch, transformers |
+| `INANNA_AI/emotional_memory.py` | No description | None |
+| `INANNA_AI/emotional_synaptic_engine.py` | No description | None |
 | `INANNA_AI/ethical_validator.py` | Validate user prompts before hitting the language model. | numpy, sentence_transformers |
 | `INANNA_AI/existential_reflector.py` | Generate a short self-description using a placeholder GLM endpoint. | requests |
 | `INANNA_AI/gate_orchestrator.py` | Simple gate orchestrator translating text to/from complex vectors. | core, numpy, torch |
 | `INANNA_AI/gates.py` | Signature helpers for the RFA core. | cryptography |
 | `INANNA_AI/glm_analyze.py` | Analyze Python modules using a placeholder GLM endpoint. | INANNA_AI, requests |
 | `INANNA_AI/glm_init.py` | Summarize project purpose using a placeholder GLM endpoint. | INANNA_AI, requests |
-| `INANNA_AI/glm_integration.py` | Wrapper for a placeholder GLM endpoint with error handling. | requests |
+| `INANNA_AI/glm_integration.py` | No description | requests |
 | `INANNA_AI/learning/__init__.py` | Utilities for fetching external learning data. | None |
-| `INANNA_AI/learning/github_metadata.py` | Fetch star counts and update dates for GitHub repos. | crown_config, requests |
-| `INANNA_AI/learning/github_scraper.py` | Download repository READMEs, commits and embed them. | crown_config, requests, sentence_transformers |
-| `INANNA_AI/learning/project_gutenberg.py` | Retrieve, clean and embed texts from Project Gutenberg. | bs4, crown_config, requests, sentence_transformers |
-| `INANNA_AI/learning/training_guide.py` | Parse training guide categories and extract GitHub repo URLs. | None |
-| `INANNA_AI/listening_engine.py` | Real-time microphone listener extracting audio features. | core, numpy |
-| `INANNA_AI/love_matrix.py` | Define Great Mother archetype name constants. | None |
-| `INANNA_AI/main.py` | CLI for voice loop and data ingestion commands. | learning, numpy, personality_layers, rag |
+| `INANNA_AI/learning/github_metadata.py` | No description | crown_config, requests |
+| `INANNA_AI/learning/github_scraper.py` | No description | crown_config, requests, sentence_transformers |
+| `INANNA_AI/learning/project_gutenberg.py` | No description | bs4, crown_config, requests, sentence_transformers |
+| `INANNA_AI/learning/training_guide.py` | No description | None |
+| `INANNA_AI/listening_engine.py` | No description | core, numpy |
+| `INANNA_AI/love_matrix.py` | No description | None |
+| `INANNA_AI/main.py` | No description | learning, numpy, personality_layers, rag |
 | `INANNA_AI/network_utils/__init__.py` | Network monitoring utilities. | None |
 | `INANNA_AI/network_utils/__main__.py` | Command line entry for network utilities. | None |
 | `INANNA_AI/network_utils/analysis.py` | Basic traffic analysis for PCAP files. | scapy |
 | `INANNA_AI/network_utils/capture.py` | Packet capture helpers using scapy or pyshark. | scapy |
 | `INANNA_AI/network_utils/config.py` | Configuration helpers for network utilities. | None |
 | `INANNA_AI/personality_layers/__init__.py` | Personality layers for INANNA AI. | albedo |
-| `INANNA_AI/personality_layers/albedo/__init__.py` | Albedo persona generating responses via GLM and states. | SPIRAL_OS |
-| `INANNA_AI/personality_layers/albedo/alchemical_persona.py` | Track alchemical state transitions and metrics. | MUSIC_FOUNDATION, numpy |
-| `INANNA_AI/personality_layers/albedo/enlightened_prompt.py` | Compose prompts tailored to state and entity type. | None |
-| `INANNA_AI/personality_layers/albedo/glm_integration.py` | Expose GLMIntegration with quantum context support. | None |
-| `INANNA_AI/personality_layers/albedo/state_contexts.py` | Templates for prompts in each alchemical state. | None |
-| `INANNA_AI/personality_layers/citrinitas_layer.py` | Citrinitas personality offering enlightened guidance. | None |
-| `INANNA_AI/personality_layers/nigredo_layer.py` | Nigredo personality emphasizing shadow transformation. | None |
-| `INANNA_AI/personality_layers/rubedo_layer.py` | Rubedo personality expressing fiery completion. | None |
-| `INANNA_AI/response_manager.py` | Dialogue manager blending audio cues with text replies. | None |
-| `INANNA_AI/retrain_and_deploy.py` | Fine-tune and deploy models when new embeddings appear. | crown_config, mlflow |
+| `INANNA_AI/personality_layers/albedo/__init__.py` | No description | SPIRAL_OS |
+| `INANNA_AI/personality_layers/albedo/alchemical_persona.py` | No description | MUSIC_FOUNDATION, numpy |
+| `INANNA_AI/personality_layers/albedo/enlightened_prompt.py` | No description | None |
+| `INANNA_AI/personality_layers/albedo/glm_integration.py` | No description | None |
+| `INANNA_AI/personality_layers/albedo/state_contexts.py` | No description | None |
+| `INANNA_AI/personality_layers/citrinitas_layer.py` | No description | None |
+| `INANNA_AI/personality_layers/nigredo_layer.py` | No description | None |
+| `INANNA_AI/personality_layers/rubedo_layer.py` | No description | None |
+| `INANNA_AI/response_manager.py` | No description | None |
+| `INANNA_AI/retrain_and_deploy.py` | No description | crown_config, mlflow |
 | `INANNA_AI/rfa_7d.py` | Random Field Array 7D with quantum-like execution and DNA serialization. | numpy, qutip |
 | `INANNA_AI/silence_reflection.py` | Detect sustained silence and suggest a short meaning. | numpy |
-| `INANNA_AI/sonic_emotion_mapper.py` | Map emotion and archetype to music and QNL parameters. | yaml |
+| `INANNA_AI/sonic_emotion_mapper.py` | No description | yaml |
 | `INANNA_AI/speaking_engine.py` | Generate speech using gTTS with emotion-based style adjustments. | core, crown_config, numpy, tools |
-| `INANNA_AI/speech_loopback_reflector.py` | Analyze synthesized speech to update voice styles. | None |
+| `INANNA_AI/speech_loopback_reflector.py` | No description | None |
 | `INANNA_AI/stt_whisper.py` | Speech-to-text helpers using the Whisper library. | crown_config, whisper |
-| `INANNA_AI/train_soul.py` | Fine-tune the RFA7D core and encode the soul grid. | core, numpy |
-| `INANNA_AI/tts_bark.py` | Bark text-to-speech wrapper with sine-wave fallback. | bark, numpy |
+| `INANNA_AI/train_soul.py` | No description | core, numpy |
+| `INANNA_AI/tts_bark.py` | No description | bark, numpy |
 | `INANNA_AI/tts_coqui.py` | Text-to-speech helpers using the Coqui TTS library. | TTS, numpy |
-| `INANNA_AI/tts_tortoise.py` | Tortoise TTS wrapper with fallback sine generation. | numpy, tortoise |
-| `INANNA_AI/tts_xtts.py` | XTTS model wrapper producing speech or sine fallback. | TTS, numpy |
+| `INANNA_AI/tts_tortoise.py` | No description | numpy, tortoise |
+| `INANNA_AI/tts_xtts.py` | No description | TTS, numpy |
 | `INANNA_AI/utils.py` | Utility helpers for audio processing and logging. | core, numpy |
 | `INANNA_AI/voice_evolution.py` | Helpers to evolve INANNA's vocal style. | crown_config, numpy, yaml |
-| `INANNA_AI/voice_layer_albedo.py` | Voice modulation layer applying tone presets. | None |
+| `INANNA_AI/voice_layer_albedo.py` | No description | None |
 | `INANNA_AI_AGENT/__init__.py` | Convenience imports and CLI exposure for the INANNA AI agent. | None |
 | `INANNA_AI_AGENT/benchmark_preprocess.py` | Benchmark preprocessing of INANNA AI source texts. | None |
 | `INANNA_AI_AGENT/inanna_ai.py` | Command line interface for the INANNA AI system. | INANNA_AI, SPIRAL_OS, yaml |
@@ -79,9 +79,9 @@ Generated automatically. Lists each Python file with its description and externa
 | `SPIRAL_OS/symbolic_parser.py` | Intent parser that maps symbolic input to Spiral OS actions. | INANNA_AI |
 | `agents/__init__.py` | Core agent packages for ABZU. | None |
 | `agents/albedo/__init__.py` | Albedo agent messaging utilities and vision hooks. | agents |
-| `agents/albedo/messaging.py` | No description | albedo, yaml |
-| `agents/albedo/trust.py` | No description | agents, albedo, memory |
-| `agents/albedo/vision.py` | No description | agents |
+| `agents/albedo/messaging.py` | Compose messages for Nazarick entities based on rank and trust. | albedo, yaml |
+| `agents/albedo/trust.py` | Trust adjustment and interaction logging for Albedo dialogues. | agents, albedo, memory |
+| `agents/albedo/vision.py` | Avatar selection hooks driven by YOLOE detections. | agents |
 | `agents/asian_gen/__init__.py` | Asian language creative agents. | agents |
 | `agents/asian_gen/creative_engine.py` | Creative engine for Asian language text generation. | sentencepiece, transformers |
 | `agents/bana/__init__.py` | Bana bio-adaptive narrator agent. | agents |
@@ -97,10 +97,10 @@ Generated automatically. Lists each Python file with its description and externa
 | `agents/guardian.py` | Shared utilities for guardian agents. | cocytus |
 | `agents/land_graph/__init__.py` | Land graph utilities. | None |
 | `agents/land_graph/geo_knowledge.py` | Geo-referenced land graph utilities. | geopandas, networkx, shapely |
-| `agents/nazarick/__init__.py` | No description | None |
-| `agents/nazarick/ethics_manifesto.py` | No description | None |
-| `agents/nazarick/narrative_scribe.py` | No description | aiokafka, citadel, memory, redis, yaml |
-| `agents/nazarick/trust_matrix.py` | No description | None |
+| `agents/nazarick/__init__.py` | Nazarick agent package. | None |
+| `agents/nazarick/ethics_manifesto.py` | Ethics Manifesto for Nazarick agents. | None |
+| `agents/nazarick/narrative_scribe.py` | Narrative Scribe agent. | aiokafka, citadel, memory, redis, yaml |
+| `agents/nazarick/trust_matrix.py` | Trust classification and protocol lookup for Nazarick entities. | None |
 | `agents/operator_dispatcher.py` | No description | None |
 | `agents/pandora/__init__.py` | Pandora persona agents. | agents |
 | `agents/pandora/persona_emulator.py` | Responsibilities: | None |
@@ -165,9 +165,9 @@ Generated automatically. Lists each Python file with its description and externa
 | `communication/gateway.py` | No description | api |
 | `communication/telegram_bot.py` | Telegram bot forwarding messages to the avatar. | telegram |
 | `communication/webrtc_server.py` | WebRTC signaling helpers and media tracks. | aiortc, core, mediasoup, numpy, soundfile |
-| `connectors/__init__.py` | No description | None |
+| `connectors/__init__.py` | Communication connectors for Spiral OS. | None |
 | `connectors/webrtc_connector.py` | WebRTC connector for streaming data, audio, and video. | aiortc, communication, fastapi |
-| `corpus_memory_logging.py` | Append and read JSONL interaction records for corpus memory usage and test failures. | None |
+| `corpus_memory_logging.py` | Append and read JSONL interaction records for corpus memory usage. | None |
 | `crown_config/__init__.py` | Load application configuration from environment variables. | pydantic, pydantic_settings |
 | `crown_config/settings/__init__.py` | Utilities for reading optional layer configuration. | yaml |
 | `crown_decider.py` | Heuristics for selecting a language model in the Crown agent. | INANNA_AI, audio, crown_config |
@@ -195,17 +195,17 @@ Generated automatically. Lists each Python file with its description and externa
 | `learning_mutator.py` | Suggest mutations to the intent matrix based on insight metrics. | None |
 | `logging_filters.py` | Enrich log records with emotional context. | None |
 | `memory/__init__.py` | Memory subsystem package. | None |
-| `memory/cortex.py` | No description | None |
+| `memory/cortex.py` | Lightweight spiral memory stored as JSON lines. | None |
 | `memory/cortex_cli.py` | Command line utilities for managing spiral memory. | None |
 | `memory/emotional.py` | Persist and query emotional feature vectors in SQLite. | dlib, transformers |
-| `memory/mental.py` | No description | core, crown_config |
-| `memory/music_memory.py` | No description | numpy |
+| `memory/mental.py` | Neo4j-backed task memory with optional reinforcement learning hooks. | core, crown_config |
+| `memory/music_memory.py` | Persistent store for music embedding vectors with emotion labels. | numpy |
 | `memory/narrative_engine.py` | Stub narrative memory engine. | None |
-| `memory/sacred.py` | No description | PIL, torch |
+| `memory/sacred.py` | VAE-based sacred memory module using PyTorch. | PIL, torch |
 | `memory/search.py` | Unified memory search across multiple subsystems. | memory |
-| `memory/spiral_cortex.py` | No description | None |
+| `memory/spiral_cortex.py` | Store retrieval insights for the spiral cortex. | None |
 | `memory/spiritual.py` | SQLite-backed event ↔ symbol memory. | None |
-| `memory/trust_registry.py` | No description | None |
+| `memory/trust_registry.py` | Entity classification with trust scoring and persistence. | None |
 | `memory_scribe.py` | Stub for the Memory Scribe agent. | None |
 | `memory_store.py` | FAISS-backed in-memory vector store with SQLite persistence. | faiss, numpy |
 | `ml/__init__.py` | No description | None |
@@ -263,12 +263,12 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/check_key_documents.py` | Verify that key documents exist. | yaml |
 | `scripts/check_no_binaries.py` | Fail if any staged files are detected as binary. | None |
 | `scripts/check_placeholders.py` | Fail if files contain TODO or FIXME placeholders. | None |
-| `scripts/component_inventory.py` | No description | None |
+| `scripts/component_inventory.py` | Collect metadata for each Python component in the repository. | None |
 | `scripts/confirm_reading.py` | Ensure required onboarding documents have been read. | yaml |
 | `scripts/data_validate.py` | Validate training data schema using TensorFlow Data Validation. | tensorflow_data_validation |
 | `scripts/dependency_check.py` | Verify package imports and optional dependencies. | None |
 | `scripts/ensure_blueprint_sync.py` | Verify blueprint doc updates accompany core code changes. | None |
-| `scripts/export_coverage.py` | Export coverage metrics to component_index.json and enforce thresholds. | None |
+| `scripts/export_coverage.py` | Export coverage metrics to component_index.json, generate HTML reports, and enforce thresholds. | None |
 | `scripts/generate_sbom.py` | Generate a CycloneDX software bill of materials. | None |
 | `scripts/ingest_biosignals.py` | Ingest biosignal CSV files into the narrative engine. | memory |
 | `scripts/ingest_music_books.py` | No description | pdfplumber, unstructured |
@@ -277,12 +277,20 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/quality_score.py` | Compute quality scores for repository components. | None |
 | `scripts/record_feedback.py` | Log user feedback to the local database. | INANNA_AI |
 | `scripts/replay_state.py` | Restore backups and rebuild vector memory from log files. | None |
+| `scripts/require_onboarding_update.py` | Fail if key documents change without updating onboarding confirmation. | None |
+| `scripts/schedule_doc_audit.py` | Audit key documents and log overdue reviews. | None |
 | `scripts/show_emotion_glyph.py` | Display the last recorded emotion with its spiral glyph. | None |
 | `scripts/train_distributed.py` | Distributed training example using PyTorch FSDP. | mlflow, omegaconf, optuna, torch |
+| `scripts/validate_api_schemas.py` | Validate API schemas against the FastAPI application. | jsonschema, openapi_spec_validator, src |
+| `scripts/validate_component_index.py` | Ensure docs/component_index.md has no empty descriptions. | None |
+| `scripts/validate_component_index_json.py` | Validate status and ADR fields in component_index.json. | None |
 | `scripts/validate_configs.py` | Validate YAML templates and JSON schema files. | jsonschema, yaml |
 | `scripts/validate_schemas.py` | Validate JSON files against their JSON Schemas. | jsonschema |
 | `scripts/vast_check.py` | No description | aiortc, httpx |
+| `scripts/verify_dependencies.py` | Validate dependencies against docs/dependency_registry.md. | None |
+| `scripts/verify_doc_hashes.py` | Ensure protected documents have up-to-date hashes and summaries. | yaml |
 | `scripts/verify_doc_summaries.py` | Check onboarding doc summaries stay in sync with file hashes. | yaml |
+| `scripts/verify_versions.py` | Fail if a Python file lacks a __version__ attribute. | None |
 | `servant_model_manager.py` | Registry and launcher for auxiliary language models. | tools |
 | `server.py` | Minimal FastAPI server exposing health and utility endpoints. | INANNA_AI, PIL, agents, communication, connectors, core, crown_config, fastapi, memory, numpy, prometheus_client, prometheus_fastapi_instrumentator, pydantic, yaml |
 | `seven_dimensional_music.py` | Utility for simple seven-dimensional music features. | MUSIC_FOUNDATION, numpy, src |
@@ -380,10 +388,13 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/agents/nazarick/test_trust_matrix.py` | No description | agents |
 | `tests/agents/razar/conftest.py` | Fixtures for RAZAR runtime tests. | agents, pytest, yaml |
 | `tests/agents/razar/test_ai_invoker.py` | No description | agents |
+| `tests/agents/razar/test_boot_orchestrator.py` | No description | pytest, razar |
 | `tests/agents/razar/test_boot_sequence.py` | No description | pytest, razar |
 | `tests/agents/razar/test_checkpoint_manager.py` | No description | agents |
+| `tests/agents/razar/test_crown_handshake.py` | No description | pytest, razar |
 | `tests/agents/razar/test_crown_link.py` | No description | agents, websockets |
 | `tests/agents/razar/test_ignition_builder.py` | No description | agents |
+| `tests/agents/razar/test_ignition_sequence.py` | No description | agents, razar |
 | `tests/agents/razar/test_module_builder.py` | No description | agents |
 | `tests/agents/razar/test_planning_engine.py` | No description | agents, yaml |
 | `tests/agents/razar/test_pytest_runner.py` | No description | agents, pytest |
@@ -398,7 +409,20 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/agents/test_narrative_scribe.py` | No description | agents, citadel, memory |
 | `tests/agents/test_razar_blueprint_synthesizer.py` | No description | None |
 | `tests/agents/test_razar_cli.py` | No description | agents, pytest |
-| `tests/conftest.py` | Pytest configuration and shared fixtures. | pytest, scipy, spiral_os |
+| `tests/conftest.py` | Pytest configuration and shared fixtures. | coverage, prometheus_client, pytest, scipy, spiral_os |
+| `tests/crown/test_config.py` | Tests for crown config. | crown_config |
+| `tests/crown/test_console_startup.py` | Tests for crown console startup. | pytest |
+| `tests/crown/test_decider.py` | Tests for crown decider. | None |
+| `tests/crown/test_decider_history.py` | Tests for crown decider history. | None |
+| `tests/crown/test_decider_rotation.py` | Tests for crown decider rotation. | None |
+| `tests/crown/test_initialization.py` | Tests for crown initialization. | INANNA_AI, pytest |
+| `tests/crown/test_orchestrator_music.py` | Tests for orchestrator crown music. | numpy, rag |
+| `tests/crown/test_prompt_orchestrator.py` | Tests for crown prompt orchestrator. | None |
+| `tests/crown/test_query_router.py` | Tests for crown query router. | rag |
+| `tests/crown/test_router_memory.py` | Tests for crown router memory. | pytest |
+| `tests/crown/test_servant_registration.py` | Tests for crown servant registration. | INANNA_AI, pytest, yaml |
+| `tests/crown/test_start_console_py.py` | Tests for start crown console py. | None |
+| `tests/crown/test_start_console_trap.py` | Tests for start crown console trap. | pytest |
 | `tests/data/short_wav_base64.py` | No description | None |
 | `tests/data/test1_wav_base64.py` | Tests for test1 wav base64. | None |
 | `tests/helpers/config_stub.py` | Provide a minimal configuration object for tests. | None |
@@ -410,8 +434,11 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/memory/test_vector_memory.py` | Verify snapshot persistence and clustering for vector memory. | numpy, pytest |
 | `tests/memory/test_vector_persistence.py` | Exercise FAISS/SQLite backed vector persistence. | numpy, pytest |
 | `tests/narrative_engine/test_biosignal_pipeline.py` | Tests for biosignal ingestion and transformation. | memory, pytest, src |
+| `tests/narrative_engine/test_biosignal_transformation.py` | Validate biosignal action transformation during ingestion. | memory, pytest, scripts |
 | `tests/performance/test_task_parser_performance.py` | Tests for task parser performance. | None |
 | `tests/performance/test_vector_memory_performance.py` | Tests for vector memory performance. | None |
+| `tests/root/test_chakra_integration.py` | Tests for root chakra integration. | INANNA_AI, INANNA_AI_AGENT, dashboard |
+| `tests/root/test_metrics_logging.py` | Tests for root metrics logging. | None |
 | `tests/test_adaptive_learning.py` | Tests for adaptive learning. | INANNA_AI, pytest |
 | `tests/test_adaptive_learning_stub.py` | Tests for adaptive learning stub. | None |
 | `tests/test_albedo_layer.py` | Tests for albedo layer. | INANNA_AI |
@@ -457,16 +484,6 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_corpus_memory_logging.py` | No description | None |
 | `tests/test_cortex_memory.py` | Tests for cortex memory. | memory |
 | `tests/test_cortex_sigil_logic.py` | Tests for cortex sigil logic. | labs |
-| `tests/crown/test_crown_config.py` | Tests for crown config. | crown_config |
-| `tests/crown/test_crown_console_startup.py` | Tests for crown console startup. | pytest |
-| `tests/crown/test_crown_decider.py` | Tests for crown decider. | None |
-| `tests/crown/test_crown_decider_history.py` | Tests for crown decider history. | None |
-| `tests/crown/test_crown_decider_rotation.py` | Tests for crown decider rotation. | None |
-| `tests/crown/test_crown_initialization.py` | Tests for crown initialization. | INANNA_AI, pytest |
-| `tests/crown/test_crown_prompt_orchestrator.py` | Tests for crown prompt orchestrator. | None |
-| `tests/crown/test_crown_query_router.py` | Tests for crown query router. | rag |
-| `tests/crown/test_crown_router_memory.py` | Tests for crown router memory. | pytest |
-| `tests/crown/test_crown_servant_registration.py` | Tests for crown servant registration. | INANNA_AI, pytest, yaml |
 | `tests/test_dashboard_app.py` | Tests for dashboard app. | streamlit |
 | `tests/test_dashboard_qnl_mixer.py` | Tests for dashboard qnl mixer. | numpy, streamlit |
 | `tests/test_dashboard_usage.py` | Tests for dashboard usage. | None |
@@ -556,10 +573,10 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_network_utils.py` | Tests for network utils. | INANNA_AI |
 | `tests/test_nigredo_layer.py` | Tests for nigredo layer. | INANNA_AI |
 | `tests/test_openwebui_state_updates.py` | No description | httpx, tests |
+| `tests/test_operator_api.py` | No description | fastapi, pytest |
 | `tests/test_optional_imports.py` | Tests for optional imports. | None |
 | `tests/test_orchestration_master.py` | Tests for orchestration master optional agents. | src |
 | `tests/test_orchestrator.py` | Tests for orchestrator. | core, rag, tests |
-| `tests/test_orchestrator_crown_music.py` | Tests for orchestrator crown music. | numpy, rag |
 | `tests/test_orchestrator_handle.py` | Tests for orchestrator handle. | pytest, rag |
 | `tests/test_orchestrator_integration.py` | Tests for orchestrator integration. | core, rag, tests |
 | `tests/test_orchestrator_memory.py` | Tests for orchestrator memory. | rag |
@@ -601,8 +618,6 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_ritual_cli.py` | Tests for ritual cli. | None |
 | `tests/test_rival_messaging.py` | No description | agents, albedo, src |
 | `tests/test_rl_metrics.py` | Tests for rl metrics. | INANNA_AI |
-| `tests/root/test_root_chakra_integration.py` | Tests for root chakra integration. | INANNA_AI, INANNA_AI_AGENT, dashboard |
-| `tests/root/test_root_metrics_logging.py` | Tests for root metrics logging. | None |
 | `tests/test_rubedo_layer.py` | Tests for rubedo layer. | INANNA_AI |
 | `tests/test_run_inanna_sh.py` | Tests for run inanna sh. | pytest |
 | `tests/test_run_song_demo.py` | Tests for run song demo. | tests |
@@ -634,8 +649,6 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_spiral_rag.py` | Tests for spiral rag. | rag |
 | `tests/test_spiral_vector_db.py` | Tests for spiral vector db. | numpy |
 | `tests/test_start_avatar_console.py` | Tests for start avatar console. | pytest |
-| `tests/test_start_crown_console_py.py` | Tests for start crown console py. | None |
-| `tests/test_start_crown_console_trap.py` | Tests for start crown console trap. | pytest |
 | `tests/test_start_dev_agents_triage.py` | Tests for start dev agents triage. | None |
 | `tests/test_start_spiral_os.py` | Tests for start spiral os. | pytest, tests |
 | `tests/test_state_transition_engine.py` | Tests for state transition engine. | None |
@@ -666,7 +679,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_video.py` | Tests for video. | core, numpy, pytest |
 | `tests/test_video_stream.py` | Tests for the WebRTC video and audio streaming endpoints. | aiortc, crown_config, fastapi, httpx, numpy, pytest |
 | `tests/test_video_stream_audio.py` | Tests for video stream audio. | aiortc, crown_config, fastapi, httpx, numpy, pytest, soundfile |
-| `tests/test_video_stream_helpers.py` | Tests for video stream helper utilities. | numpy |
+| `tests/test_video_stream_helpers.py` | Tests for video stream helper utilities. | numpy, pytest |
 | `tests/test_virtual_env_manager.py` | Tests for tools.virtual_env_manager. | tools |
 | `tests/test_vocal_isolation.py` | Tests for vocal isolation. | None |
 | `tests/test_voice_aura.py` | Tests for voice aura. | audio, numpy, pytest |

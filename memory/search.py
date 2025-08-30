@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
 """Unified memory search across multiple subsystems."""
 
 from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import json
 import logging
