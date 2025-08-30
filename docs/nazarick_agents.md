@@ -5,6 +5,16 @@ This guide summarizes core agents within ABZU's Nazarick system. Each agent alig
 For a browser-based interface to these servants, see the [Nazarick Web Console](nazarick_web_console.md).
 [Chat2DB](chat2db.md) bridges the SQLite log and vector store so agents can persist transcripts and retrieve relevant context.
 
+## Deployment
+
+Start the servant suite in development mode:
+
+```bash
+python start_dev_agents.py --all
+```
+
+This boots the core agents and registers their channels. Individual servant models can be launched with [`launch_servants.sh`](../launch_servants.sh). Operator tooling is documented in the [Nazarick Web Console](nazarick_web_console.md) and the [Operator Protocol](operator_protocol.md).
+
 ## Floor–Channel Map
 
 | Agent | Floor | Channel | Chakra |
@@ -50,6 +60,17 @@ Agents communicate through named chat rooms that mirror their channels in the sy
 | Bana Bio-Adaptive Narrator | `#biosphere-lab` |
 | AsianGen Creative Engine | `#scriptorium` |
 | LandGraph Geo Knowledge | `#cartography-room` |
+
+## Channel Mappings
+
+External services reach these rooms through connectors listed in the [Connector Index](connectors/CONNECTOR_INDEX.md).
+
+| Channel | Connector |
+| --- | --- |
+| `#throne-room` | [operator_api](connectors/CONNECTOR_INDEX.md#operator_api) |
+| `#insight-observatory` | [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui) |
+| `#catacombs` | [telegram_bot](connectors/CONNECTOR_INDEX.md#telegram_bot) |
+| Avatar stream | [webrtc](connectors/CONNECTOR_INDEX.md#webrtc) |
 
 | Agent | Role | Chakra | Memory Scope | External Libraries | Channel | Stub |
 | --- | --- | --- | --- | --- | --- | --- |
