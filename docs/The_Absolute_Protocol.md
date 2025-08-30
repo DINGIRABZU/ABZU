@@ -161,18 +161,22 @@ Connectors bridge the language engine to external communication layers. Follow t
 
 Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, purpose, service, endpoints, protocols, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Update this registry whenever a connector is added, removed, or its interface changes.
 
-#### Crown Handshake
-
-Mission briefs exchanged during the Crown Handshake are archived at
-`logs/mission_briefs/<timestamp>.json`. Keep this directory maintained to
-preserve handshake history for auditing.
-
 ## Subsystem Protocols
 
 - [Operator Protocol](operator_protocol.md) – outlines `/operator/command`, role checks, and Crown's relay to RAZAR.
 - [Ignition Sequence Protocol](ignition_sequence_protocol.md) – mandates logging points and escalation during boot.
 - [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
 - [Logging & Observability Protocol](#logging--observability-protocol) – structured logging and metrics requirements.
+- [Crown Handshake Protocol](#crown-handshake-protocol) – archives mission briefs and persists handshake responses.
+
+### Crown Handshake Protocol
+
+Mission briefs are archived to `logs/mission_briefs/<timestamp>.json`. The
+boot orchestrator must invoke `crown_handshake.perform()` before launching
+components and persist the returned acknowledgement, capabilities, and downtime
+under the `handshake` key in `logs/razar_state.json`. Maintain these archives
+so operators can audit the exchange and reconcile advertised capabilities with
+runtime behaviour.
 
 ### RAZAR ↔ Crown ↔ Operator Interaction Logging
 

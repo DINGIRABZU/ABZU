@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import argparse
 import asyncio
@@ -85,9 +85,14 @@ class BootOrchestrator:
         if response is not None:
             data["capabilities"] = response.capabilities
             data["downtime"] = response.downtime
+            data["handshake"] = asdict(response)
         else:
             data.setdefault("capabilities", [])
             data.setdefault("downtime", {})
+            data.setdefault(
+                "handshake",
+                {"acknowledgement": "", "capabilities": [], "downtime": {}},
+            )
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
