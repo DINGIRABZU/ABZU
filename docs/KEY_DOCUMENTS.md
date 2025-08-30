@@ -14,6 +14,8 @@ The files listed here are foundational and must never be deleted or renamed.
 
 These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
 
+All Python modules must declare a `__version__` attribute. The `verify-versions` pre-commit hook scans staged Python files and blocks commits when the attribute is missing.
+
 Contributors must also record a brief summary for every file listed in `onboarding_confirm.yml`. Each summary must state the document's **purpose**, **scope**, **key rules**, and include one **actionable insight**.
 
 ## Onboarding Confirmation

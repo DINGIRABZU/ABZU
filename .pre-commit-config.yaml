@@ -55,6 +55,11 @@ repos:
     name: Check for TODO/FIXME markers
     entry: python scripts/check_no_placeholders.py
     language: system
+  - id: verify-versions
+    name: Ensure modules declare __version__
+    entry: python scripts/verify_versions.py
+    language: system
+    types: [python]
   - id: check-connector-index
     name: Check connector index entries
     entry: python scripts/check_connector_index.py
