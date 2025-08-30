@@ -72,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expanded anonymized biosignal datasets with acquisition guidelines and
   ingestion script references.
 - Extended tests to cover multiple samples and transformations.
+- Introduced `sample_biosignals_gamma.csv` and documented ingestion schema with
+  dedicated transformation tests.
 - Stubbed `memory/narrative_engine.py` defining story event interfaces.
 
 ### Chakra Versions

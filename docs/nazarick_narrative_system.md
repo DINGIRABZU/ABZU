@@ -37,10 +37,21 @@ Anonymized CSVs in `data/biosignals/` demonstrate the expected structure:
 - `sample_biosignals.csv`
 - `sample_biosignals_alpha.csv`
 - `sample_biosignals_beta.csv`
+- `sample_biosignals_gamma.csv`
 
-Use `scripts/ingest_biosignals.py` to load these files into the narrative engine.
+## Ingestion
 
-Unit tests in `tests/narrative_engine/test_biosignal_pipeline.py` illustrate
+Use `scripts/ingest_biosignals.py` to load any CSV in `data/biosignals/`:
+
+```bash
+python scripts/ingest_biosignals.py
+```
+
+The script labels rows with a heart rate above **74 BPM** as `"elevated heart rate"`
+and all others as `"calm"`, emitting `StoryEvent` instances for the narrative engine.
+
+Unit tests in `tests/narrative_engine/test_biosignal_pipeline.py` and
+`tests/narrative_engine/test_biosignal_transformation.py` illustrate
 ingestion and transformation of this data.
 
 ## Dependencies

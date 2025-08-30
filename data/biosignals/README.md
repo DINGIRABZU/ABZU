@@ -20,4 +20,5 @@ This directory hosts anonymized biosignal samples used by the Nazarick Narrative
 - `sample_biosignals.csv`
 - `sample_biosignals_alpha.csv`
 - `sample_biosignals_beta.csv`
+- `sample_biosignals_gamma.csv`
 

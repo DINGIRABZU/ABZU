@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.51
-**Last updated:** 2025-09-02
+**Version:** v1.0.52
+**Last updated:** 2025-09-15
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -38,6 +38,8 @@ Before opening a pull request, confirm each item:
 - [ ] All diagrams are authored in Mermaid; binary image files (PNG, JPG, etc.) are forbidden
 - [ ] Handshake-triggered model launches documented in agent guides and state logs
 - [ ] `crown_handshake` results logged in state files and mission briefs
+- [ ] Biosignal sample CSVs in `data/biosignals/` remain anonymized and align with
+      the documented ingestion schema
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:
@@ -81,8 +83,9 @@ When contributing, consult resources in this order:
 
 ## Testing Requirements
 
-- Run `pytest tests/narrative_engine/test_biosignal_pipeline.py` to validate
-  biosignal ingestion and transformation.
+- Run `pytest tests/narrative_engine/test_biosignal_pipeline.py tests/narrative_engine/test_biosignal_transformation.py`
+  to validate biosignal ingestion and transformation using datasets in
+  `data/biosignals/`.
 - Execute `pytest` (or an equivalent test suite) for all modules you modify and
   report the resulting coverage.
 
