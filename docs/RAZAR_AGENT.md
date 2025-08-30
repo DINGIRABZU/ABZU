@@ -46,6 +46,20 @@ Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in
 [dependencies.md](dependencies.md).
 
+## Configuration Schemas
+
+The environment builder validates its settings against
+[`schemas/razar_env.schema.yaml`](schemas/razar_env.schema.yaml), which
+declares the Python version and package layers used during boot.
+
+```yaml
+python_version: "3.11"
+layers:
+  razar:
+    - pyyaml
+    - prometheus_client
+```
+
 ## Deployment
 
 The orchestrator prepares core services before handing control to CROWN:

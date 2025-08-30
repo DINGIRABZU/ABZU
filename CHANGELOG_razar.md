@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Rotated mission brief archives and required Crown availability via `CROWN_WS_URL` before boot.
 - Delegated failure recovery to remote agents via `ai_invoker.handover` and
   logged invocations and patch results.
+- Linked environment schema and example fields in the RAZAR agent guide.
 - Recorded applied patch diffs in `logs/razar_ai_patches.json`.
 
 ### Changed
