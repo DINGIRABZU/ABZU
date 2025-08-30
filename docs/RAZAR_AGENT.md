@@ -60,7 +60,7 @@ layers:
     - prometheus_client
 ```
 
-## Deployment
+## Deployment Overview
 
 The orchestrator prepares core services before handing control to CROWN:
 
@@ -98,6 +98,33 @@ ready state. [Source](../razar/adaptive_orchestrator.py)
 ### `cocreation_planner.py`
 Builds dependency‑ordered plans by combining component priorities, failure
 counts, and Crown suggestions. [Source](../razar/cocreation_planner.py)
+
+### `runtime_manager.py`
+Manages component processes, restarts services on failure, and tracks boot state. [Source](../razar/runtime_manager.py)
+
+### `health_checks.py`
+Runs service probes and exposes optional Prometheus metrics. [Source](../razar/health_checks.py)
+
+### `quarantine_manager.py`
+Isolates failing components and maintains the quarantine ledger. [Source](../razar/quarantine_manager.py)
+
+### `recovery_manager.py`
+Coordinates repair attempts and reintegrates restored components. [Source](../razar/recovery_manager.py)
+
+### `status_dashboard.py`
+Streams boot and runtime metrics to a lightweight dashboard. [Source](../razar/status_dashboard.py)
+
+### `issue_analyzer.py`
+Classifies failure logs to suggest remediation paths. [Source](../razar/issue_analyzer.py)
+
+### `mission_logger.py`
+Aggregates boot events into persistent mission logs. [Source](../razar/mission_logger.py)
+
+### `module_sandbox.py`
+Executes high-risk modules in a restricted environment. [Source](../razar/module_sandbox.py)
+
+### `crown_handshake.py`
+Performs the initial capability exchange with the Crown stack. [Source](../razar/crown_handshake.py)
 
 ## Interaction Logging
 
@@ -589,7 +616,7 @@ usage.
 3. After repeated failures, the affected component is quarantined and AI
    handover or manual intervention is required before reboot.
 
-## Deployment Workflow
+## Deployment Examples
 
 Typical deployment builds the environment, launches components, and records state
 for auditing. The snippets below show a clean startup and a simulated recovery.
@@ -802,6 +829,7 @@ If tests fail or regressions appear, RAZAR reverts to the previous state and rec
 - [Deployment Guide](deployment.md) – environment setup and rollout
 - [Monitoring Guide](monitoring.md) – telemetry collection and alerts
 - [Operator Protocol](operator_protocol.md) – interaction rules for operators
+- [Operations](operations.md) – runbooks for day-to-day management
 - [Recovery Playbook](recovery_playbook.md) – restoration procedures
 
 ## Example Runs
