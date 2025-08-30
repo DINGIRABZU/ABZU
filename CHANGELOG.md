@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added recovery playbook documenting snapshot restoration steps.
 - Mapped cortex, emotional, mental, spiritual and narrative memory stores in
   `docs/memory_architecture.md`.
+- Documented Nazarick agent triggers for Albedo state transitions and added
+  state-to-channel table; refreshed `docs/INDEX.md`.
 
 
 ### Documentation
