@@ -17,6 +17,7 @@ import logging
 import os
 import subprocess
 import time
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -29,6 +30,8 @@ LOGGER = logging.getLogger("razar.boot_orchestrator")
 LOGS_DIR = Path(__file__).resolve().parents[1] / "logs"
 HISTORY_FILE = LOGS_DIR / "razar_boot_history.json"
 STATE_FILE = LOGS_DIR / "razar_state.json"
+# keep a limited number of mission brief archives for auditability
+MAX_MISSION_BRIEFS = 20
 
 
 def load_history() -> Dict[str, Any]:
@@ -101,7 +104,22 @@ def _persist_handshake(response: Optional[CrownResponse]) -> None:
     STATE_FILE.write_text(json.dumps(data, indent=2))
 
 
-def _perform_handshake(components: List[Dict[str, Any]]) -> Optional[CrownResponse]:
+def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -> None:
+    """Remove oldest mission briefs beyond ``limit`` pairs."""
+    briefs = sorted(
+        [p for p in archive_dir.glob("*.json") if "_response" not in p.name],
+        key=lambda p: p.stat().st_mtime,
+    )
+    excess = len(briefs) - limit
+    for old in briefs[:excess]:
+        response_file = old.with_name(f"{old.stem}_response.json")
+        if old.exists():
+            old.unlink()
+        if response_file.exists():
+            response_file.unlink()
+
+
+def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
     """Exchange mission brief with CROWN and return the response."""
     brief = {
         "priority_map": {
@@ -114,24 +132,27 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> Optional[CrownRespon
     brief_path.parent.mkdir(parents=True, exist_ok=True)
     brief_path.write_text(json.dumps(brief, indent=2))
 
-    # Archive a timestamped copy of the mission brief for auditing
     archive_dir = LOGS_DIR / "mission_briefs"
     archive_dir.mkdir(parents=True, exist_ok=True)
-    archive_path = archive_dir / f"mission_brief_{int(time.time())}.json"
-    archive_path.write_text(json.dumps(brief, indent=2))
+    timestamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+    brief_archive = archive_dir / f"{timestamp}.json"
+    brief_archive.write_text(json.dumps(brief, indent=2))
+    response_path = archive_dir / f"{timestamp}_response.json"
 
-    response: Optional[CrownResponse]
     try:
-        url = os.getenv("CROWN_WS_URL", "ws://localhost:8765")
+        url = os.environ["CROWN_WS_URL"]
         handshake = CrownHandshake(url)
         response = asyncio.run(handshake.perform(str(brief_path)))
-    except Exception:  # pragma: no cover - handshake best effort
+    except Exception as exc:  # pragma: no cover - handshake must succeed
         LOGGER.exception("CROWN handshake failed")
-        response = None
+        _persist_handshake(None)
+        raise RuntimeError("CROWN handshake failed") from exc
 
     _persist_handshake(response)
+    response_path.write_text(json.dumps(asdict(response), indent=2))
+    _rotate_mission_briefs(archive_dir)
 
-    if response and "GLM4V" not in response.capabilities:
+    if "GLM4V" not in response.capabilities:
         launcher = Path(__file__).resolve().parents[1] / "crown_model_launcher.sh"
         try:
             subprocess.Popen(["bash", str(launcher)])

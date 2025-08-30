@@ -37,6 +37,8 @@ Install these packages and tools before launching the agent:
 - `websockets`
 - `pyenv` — Python version management
 - `pre-commit` — repository hooks
+- `CROWN_WS_URL` environment variable pointing to a running Crown WebSocket
+  endpoint. RAZAR aborts boot if the Crown server is unreachable.
 
 Run `python scripts/check_env.py` to verify the environment.
 
@@ -266,6 +268,10 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
    capabilities omit `GLM4V`, the orchestrator runs
    [`crown_model_launcher.sh`](../crown_model_launcher.sh) and records the
    launch under `launched_models` in the state file.
+
+   RAZAR maintains at most 20 mission brief archives, rotating older pairs
+   from `logs/mission_briefs/` to preserve space while keeping recent
+   exchanges for audit.
 
 4. **Launch** – with capabilities recorded, start the boot orchestrator
    to bring components online:

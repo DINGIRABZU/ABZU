@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expanded Crown agent overview with model loading sequence diagram and configuration table.
 - Documented change justification rule and mandated four-part onboarding summaries; updated pull request template with connector/index checklist.
 - Documented module coverage and example runs in RAZAR agent guide.
+- RAZAR agent guide now requires `CROWN_WS_URL`, a running Crown server, and
+  documents mission brief archive rotation.
 
 ### Added
 
@@ -55,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Release Protocol to The Absolute Protocol covering changelog updates, git tagging, and release note cross-references.
 - Clarified Release Management Protocol with semantic versioning rules and checklist references.
 - Required logging of RAZAR ↔ Crown ↔ Operator exchanges in `logs/interaction_log.jsonl` and referenced rules in RAZAR and operator docs.
+- Enforced Crown availability during boot and rotated mission brief archives under `logs/mission_briefs/`.
 - Crown prompt orchestrator reviews test metrics and logs remediation suggestions to corpus memory.
 - Pytest runs export coverage, session duration, and failure metrics via `prometheus_client` to `monitoring/pytest_metrics.prom`, and CI uploads the metrics artifact.
 

@@ -19,6 +19,7 @@ def test_full_ignition_sequence(tmp_path: Path, monkeypatch):
     # isolate logs and state
     monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
     monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "state.json")
+    monkeypatch.setenv("CROWN_WS_URL", "ws://example")
 
     # handshake stub triggers GLM4V launch
     class DummyHandshake:
@@ -42,7 +43,7 @@ def test_full_ignition_sequence(tmp_path: Path, monkeypatch):
     brief_file = tmp_path / "mission_brief.json"
     assert brief_file.exists()
     archive_dir = tmp_path / "mission_briefs"
-    archived = list(archive_dir.glob("mission_brief_*.json"))
+    archived = [p for p in archive_dir.glob("*.json") if "_response" not in p.name]
     assert archived, "Archived mission brief not found"
 
     state = json.loads((tmp_path / "state.json").read_text())
