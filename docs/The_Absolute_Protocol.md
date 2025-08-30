@@ -1,10 +1,10 @@
 # The Absolute Protocol
 
-**Version:** v1.0.58
-**Last updated:** 2025-09-30
+**Version:** v1.0.59
+**Last updated:** 2025-08-30
 
 ## How to Use This Protocol
-This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
+This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module and connector must declare a `__version__` attribute.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -17,14 +17,14 @@ Before opening a pull request, confirm each item:
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
-- [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
+- [ ] All modules and connectors expose `__version__`; the `verify-versions` pre-commit hook compares source values to `component_index.json`, and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
 - [ ] Tests follow the Pytest Codex; coverage updated in component index
 - [ ] "Test Plan" issue filed per [Test Planning Guide](onboarding/test_planning.md) outlining scope, chakra, and coverage goals
 - [ ] Connector registry updated:
-  - implementations expose `__version__`, implement `start_call`, and `close_peers`
+  - implementations expose `__version__` matching `component_index.json`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
   - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and links
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
@@ -157,8 +157,8 @@ Any new configuration file must be accompanied by documentation that outlines it
 
 ### Module Versioning
 
-Every source module must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/component_inventory.py` to confirm module versions remain synchronized.
-The `verify-versions` pre-commit hook scans staged Python files and fails if this attribute is missing.
+Every source module and connector must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/verify_versions.py` to confirm component versions match `component_index.json`.
+The `verify-versions` pre-commit hook scans staged Python files and fails if this attribute is missing or out of sync with the index.
 
 ### Connector Guidelines
 
@@ -166,7 +166,7 @@ Connectors bridge the language engine to external communication layers. Follow t
 
 - implement `start_call(path: str) -> None` to initiate a stream
 - provide `close_peers() -> Awaitable[None]` to release resources
-- expose a `__version__` field and bump it on interface changes
+- expose a `__version__` field that matches `component_index.json` and bump it on interface changes
 - document all externally exposed endpoints and authentication methods
 - update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) whenever the connector changes
   (the `check-connector-index` pre-commit hook fails if a touched connector lacks an entry)
@@ -235,8 +235,8 @@ All exchanges between RAZAR, Crown, and Operator must append JSON lines to
 
 - Use consistent naming conventions across files, classes, and functions.
 - Maintain clear module boundaries to prevent tight coupling.
-- Every module must declare a `__version__` field for traceability.
-- `scripts/component_inventory.py` verifies module versions match `component_index.json`.
+- Every module and connector must declare a `__version__` field for traceability.
+- `scripts/verify_versions.py` verifies source versions match `component_index.json`.
 
 #### No placeholder comments
 
