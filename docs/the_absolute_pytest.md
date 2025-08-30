@@ -39,3 +39,24 @@ Run tests as usual and inspect the metrics file or have Prometheus scrape the pa
 
   The archive can be shared with AI reviewers alongside entries recorded via
   `corpus_memory_logging.log_test_failure`.
+
+## Lessons from Failure Inventory
+
+The [Failure Inventory](testing/failure_inventory.md) catalogs common issues discovered in the test suite. Apply the following guidelines to avoid repeating them.
+
+### Missing dependency checklist
+
+- Use `importlib.util.find_spec` or `pytest.importorskip` to handle optional libraries.
+- Record new packages in `requirements.txt` and `dependency_registry.md`.
+- Document installation steps in related module guides.
+
+### Fixture-writing guidelines
+
+- Give fixtures unique module names to avoid import mismatches.
+- Isolate side effects with `tmp_path`, `monkeypatch`, or other pytest fixtures.
+- Guard external resources with `@pytest.mark.skipif` when prerequisites are absent.
+
+### Library compatibility checks
+
+- Pin library versions when upstream changes break APIs.
+- Validate input shapes and dtypes to catch mismatches early.
