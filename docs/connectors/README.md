@@ -25,6 +25,21 @@ Connector entries share common fields:
 - **auth** – credentials or handshake requirements.
 - **status** – lifecycle indicator (`experimental`, `active`, `deprecated`).
 
+### Connector Entry Template
+
+```json
+{
+  "id": "example_connector",
+  "purpose": "short description",
+  "version": "1.0.0",
+  "endpoints": ["POST /example"],
+  "auth": "Bearer (token)",
+  "status": "experimental",
+  "docs": "../path_to_doc.md",
+  "code": "../../path_to_code.py"
+}
+```
+
 ### Operator API Examples
 
 #### `/operator/command`
@@ -49,5 +64,6 @@ These conventions keep integration layers consistent, discoverable, and easy to 
 
 ## Version History
 
+- v0.3.0 – added connector entry template and clarified maintenance rules
 - v0.2.0 – condensed overview of maintenance rules and schemas
 - v0.1.0 – initial connector guidelines
