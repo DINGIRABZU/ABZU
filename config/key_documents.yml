@@ -3,3 +3,4 @@ files:
   - AGENTS.md
   - docs/The_Absolute_Protocol.md
   - docs/KEY_DOCUMENTS.md
+  - scripts/check_env.py

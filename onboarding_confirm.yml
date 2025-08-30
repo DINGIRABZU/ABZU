@@ -188,3 +188,10 @@ documents:
       scope: Test planning.
       key_rules: Defines scope, chakra, and coverage goals.
       insight: Open a test plan issue before major changes.
+  scripts/check_env.py:
+    sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
+    summary:
+      purpose: Pre-flight environment check for core tools.
+      scope: All contributors.
+      key_rules: Ensure required packages and tools are installed.
+      insight: Run before committing to catch missing dependencies.
