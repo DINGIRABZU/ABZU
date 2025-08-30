@@ -1,0 +1,13 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: RAZAR Environment Layers
+type: object
+required:
+  - layers
+properties:
+  layers:
+    type: object
+    additionalProperties:
+      type: array
+      items:
+        type: string
+additionalProperties: false

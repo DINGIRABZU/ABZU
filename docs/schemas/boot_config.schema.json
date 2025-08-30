@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RAZAR Boot Configuration",
+  "type": "object",
+  "required": ["components"],
+  "properties": {
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "command", "health_check"],
+        "properties": {
+          "name": {"type": "string"},
+          "command": {
+            "type": "array",
+            "items": {"type": "string"},
+            "minItems": 1
+          },
+          "health_check": {
+            "type": "array",
+            "items": {"type": "string"},
+            "minItems": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
