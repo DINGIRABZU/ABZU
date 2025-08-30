@@ -48,7 +48,7 @@ documents:
     sha256: 2c9c22760dee1badb726b068860e2e85f41108cc622f3a6a4872e0f95087f93d
     summary: Connector subsystem guidelines.
   docs/system_blueprint.md:
-    sha256: 34a07cfbed34be43a6653fa8615bfa8eb7aaf28d87aa72ce4da076969ac0ed80
+    sha256: 38a378de3383a13a8da60090031721d84a49b6d6f98a9d0ce2f2f488810ed7b6
     summary: Architectural blueprint overview.
   docs/KEY_DOCUMENTS.md:
     sha256: 1e408bd48d05ff47923d4109e2034e0b48b1fd9ad57aafe5ac44a89b7c208091
@@ -57,7 +57,7 @@ documents:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary: Threat model and protections.
   docs/The_Absolute_Protocol.md:
-    sha256: b58625b0684d56985594fa528fbf0e7b0a23be9e46a27440e92051c79ddc277e
+    sha256: dfe78691f0b4257420e60cccaa01c19eaee7f7f3dbc4f5822f8e1c4af8213f27
     summary: Core contribution rules.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a

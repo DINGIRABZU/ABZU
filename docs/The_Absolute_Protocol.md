@@ -213,6 +213,7 @@ All exchanges between RAZAR, Crown, and Operator must append JSON lines to
 - Use consistent naming conventions across files, classes, and functions.
 - Maintain clear module boundaries to prevent tight coupling.
 - Every module must declare a `__version__` field for traceability.
+- `scripts/component_inventory.py` verifies module versions match `component_index.json`.
 
 #### No placeholder comments
 
