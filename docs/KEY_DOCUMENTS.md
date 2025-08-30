@@ -1,8 +1,9 @@
 # Key Documents
 
 The files listed here are foundational and must never be deleted or renamed.
-For each document below, contributors must store its SHA256 hash and a short
-summary in `onboarding_confirm.yml` to prove the current version was reviewed.
+For each document below, contributors must store its SHA256 hash and a summary
+detailing its purpose, scope, key rules, and one actionable insight in
+`onboarding_confirm.yml` to prove the current version was reviewed.
 
 ## Protected Files
 
@@ -31,23 +32,31 @@ pre-commit hook scans staged Python files and blocks commits when the attribute
 is missing.
 
 Contributors must also record a short summary for every protected file in
-`onboarding_confirm.yml`. Each summary should note the document's purpose,
-scope, and key rules.
+`onboarding_confirm.yml`. Each summary must note the document's purpose, scope,
+key rules, and one actionable insight.
 
 ## Onboarding Confirmation
 
 After completing the [onboarding checklist](onboarding/README.md), create an
 `onboarding_confirm.yml` file in the repository root that records, for each
-required document, its hash and short summary:
+required document, its hash and four-part summary:
 
 ```yaml
 documents:
   AGENTS.md:
     sha256: <sha256>
-    summary: "Guidelines for repository operations and agent conduct."
+    summary:
+      purpose: "Guidelines for repository operations and agent conduct."
+      scope: "Entire repository"
+      key_rules: "Follow AGENTS.md before editing files."
+      insight: "Check AGENTS.md before committing changes."
   docs/The_Absolute_Protocol.md:
     sha256: <sha256>
-    summary: "Core contribution rules and governance."
+    summary:
+      purpose: "Core contribution rules and governance."
+      scope: "All contributors"
+      key_rules: "Requires change justifications and protocol adherence."
+      insight: "Include an action summary in every pull request."
 ```
 
 The `confirm-reading` pre-commit hook verifies this file and blocks commits if
