@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.39
-**Last updated:** 2025-09-08
+**Version:** v1.0.40
+**Last updated:** 2025-09-09
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -147,6 +147,14 @@ preserve handshake history for auditing.
 
 - [Operator Protocol](operator_protocol.md) – outlines `/operator/command`, role checks, and Crown's relay to RAZAR.
 - [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
+- [Logging & Observability Protocol](#logging--observability-protocol) – structured logging and metrics requirements.
+
+
+### Logging & Observability Protocol
+
+- Follow the [logging guidelines](logging_guidelines.md) for JSON log formats and approved log levels.
+- Consult the [Monitoring Guide](monitoring.md) for telemetry collection and Prometheus scraping.
+- Module documentation must describe emitted log formats, enumerated log levels, and any Prometheus metrics exposed.
 
 ### Security & Secrets Protocol
 
