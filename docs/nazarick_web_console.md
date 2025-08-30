@@ -61,3 +61,10 @@ sequenceDiagram
 4. Open `index.html` in a browser and grant microphone and camera access.
 5. Enter commands or music prompts. Logs and streams display in real time.
 
+## Extensibility Hooks
+
+- Extend `web_console/main.js` to add custom controls or visualizations.
+- Expose new operations through `web_console/operator.js` so other dashboards can reuse them.
+- Register event listeners in `main.js` to intercept `sendCommand` responses or WebRTC status updates.
+- Implement additional transport modules by following the patterns in [`webrtc_connector.py`](../connectors/webrtc_connector.py).
+

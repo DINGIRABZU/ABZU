@@ -51,29 +51,29 @@ Operator tooling is documented in the [Nazarick Web Console](nazarick_web_consol
 | <a id="asian-gen-creative-engine"></a>AsianGen Creative Engine | 5 | [Scriptorium](system_blueprint.md#floor-5-scriptorium) | Throat |
 | <a id="land-graph-geo-knowledge"></a>LandGraph Geo Knowledge | 1 | [Cartography Room](system_blueprint.md#floor-1-cartography-room) | Root |
 
-## Chat Rooms and Channels
+## Deployment and Responsibilities
 
-Agents communicate through named chat rooms that mirror their channels in the system blueprint. These rooms are available via the [Open Web UI Integration Guide](open_web_ui.md) and the [Operator Protocol](operator_protocol.md).
+Agents communicate through named chat rooms that mirror their channels in the system blueprint. Each servant can be launched individually with `./launch_servants.sh <agent>` and is available via the [Open Web UI Integration Guide](open_web_ui.md) and the [Operator Protocol](operator_protocol.md).
 
-| Agent | Chat Room |
-| --- | --- |
-| Orchestration Master | `#throne-room` |
-| Prompt Orchestrator | `#signal-hall` |
-| QNL Engine | `#insight-observatory` |
-| Memory Scribe | `#memory-vault` |
-| Demiurge Strategic Simulator | `#lava-pits` |
-| Shalltear Fast Inference Agent | `#catacombs` |
-| Cocytus Prompt Arbiter | `#glacier-prison` |
-| Ecosystem Aura Capture | `#jungle-aerie` |
-| Ecosystem Mare Gardener | `#jungle-grove` |
-| Sebas Compassion Module | `#royal-suite` |
-| Victim Security Canary | `#sacrificial-chamber` |
-| Pandora Persona Emulator | `#treasure-vault` |
-| Pleiades Star Map Utility | `#maid-quarters` |
-| Pleiades Signal Router Utility | `#relay-wing` |
-| Bana Bio-Adaptive Narrator | `#biosphere-lab` |
-| AsianGen Creative Engine | `#scriptorium` |
-| LandGraph Geo Knowledge | `#cartography-room` |
+| Agent | Deployment | Responsibilities | Chat Room |
+| --- | --- | --- | --- |
+| Orchestration Master | `./launch_servants.sh orchestration_master` | Boot order and pipeline supervision | `#throne-room` |
+| Prompt Orchestrator | `./launch_servants.sh crown_prompt_orchestrator` | Route prompts and recall context | `#signal-hall` |
+| QNL Engine | `./launch_servants.sh qnl_engine` | Process QNL sequences and insights | `#insight-observatory` |
+| Memory Scribe | `./launch_servants.sh memory_scribe` | Persist transcripts and embeddings | `#memory-vault` |
+| Demiurge Strategic Simulator | `./launch_servants.sh demiurge_strategic_simulator` | Scenario planning and failure forecasts | `#lava-pits` |
+| Shalltear Fast Inference Agent | `./launch_servants.sh shalltear_fast_inference_agent` | Low-latency inference for rapid replies | `#catacombs` |
+| Cocytus Prompt Arbiter | `./launch_servants.sh cocytus_prompt_arbiter` | Filter and validate prompts | `#glacier-prison` |
+| Ecosystem Aura Capture | `./launch_servants.sh ecosystem_aura_capture` | Capture environmental telemetry | `#jungle-aerie` |
+| Ecosystem Mare Gardener | `./launch_servants.sh ecosystem_mare_gardener` | Maintain ecosystem metrics | `#jungle-grove` |
+| Sebas Compassion Module | `./launch_servants.sh sebas_compassion_module` | Apply empathy and moderation checks | `#royal-suite` |
+| Victim Security Canary | `./launch_servants.sh victim_security_canary` | Monitor for security anomalies | `#sacrificial-chamber` |
+| Pandora Persona Emulator | `./launch_servants.sh pandora_persona_emulator` | Emulate stored personas | `#treasure-vault` |
+| Pleiades Star Map Utility | `./launch_servants.sh pleiades_star_map_utility` | Compute celestial alignments | `#maid-quarters` |
+| Pleiades Signal Router Utility | `./launch_servants.sh pleiades_signal_router_utility` | Route signals among servants | `#relay-wing` |
+| Bana Bio-Adaptive Narrator | `./launch_servants.sh bana_bio_adaptive_narrator` | Generate narratives from bio data | `#biosphere-lab` |
+| AsianGen Creative Engine | `./launch_servants.sh asian_gen_creative_engine` | Produce multilingual creative text | `#scriptorium` |
+| LandGraph Geo Knowledge | `./launch_servants.sh land_graph_geo_knowledge` | Provide geospatial queries | `#cartography-room` |
 
 ## Channel Mappings
 

@@ -1,6 +1,6 @@
 # Operator Protocol
 
-Defines HTTP endpoints and WebRTC channels for operator interactions with Crown and RAZAR.
+Defines HTTP endpoints and WebRTC channels for operator interactions with Crown and RAZAR. For agent chat rooms and responsibilities see [Nazarick Agents](nazarick_agents.md).
 
 ## Authentication
 
@@ -47,7 +47,7 @@ curl -X POST \
 
 ## WebRTC Channels
 
-The Nazarick Web Console establishes a WebRTC connection to stream avatar output. Clients may request:
+The [Nazarick Web Console](nazarick_web_console.md) establishes a WebRTC connection to stream avatar output. Clients may request:
 
 - **Video** – avatar frames
 - **Audio** – PCM/WAV audio

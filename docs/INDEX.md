@@ -281,7 +281,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [operations.md](operations.md) | Operations | - | - |
-| [operator_protocol.md](operator_protocol.md) | Operator Protocol | Defines HTTP endpoints and WebRTC channels for operator interactions with Crown and RAZAR. | - |
+| [operator_protocol.md](operator_protocol.md) | Operator Protocol | Defines HTTP endpoints and WebRTC channels for operator interactions with Crown and RAZAR. For agent chat rooms and r... | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | Sources: [`../os_guardian/perception.py`](../os_guardian/perception.py), [`../os_guardian/planning.py`](../os_guardia... | `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py` |
 | [os_guardian_container.md](os_guardian_container.md) | OS Guardian Container | This guide covers running the `os_guardian` tools inside Docker. | - |
 | [os_guardian_permissions.md](os_guardian_permissions.md) | OS Guardian Permission Policies | The `safety` module guards high-risk actions executed by the OS Guardian utilities. Permissions are configured with e... | - |
