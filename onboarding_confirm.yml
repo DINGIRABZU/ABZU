@@ -75,7 +75,7 @@ documents:
     sha256: 1b32ad1d78f3b19332b6dfc1c06c4ad8ea9578d0d850947712c33ec04e184eab
     summary: OS Guardian subsystem overview.
   docs/RAZAR_AGENT.md:
-    sha256: 1358ce15a3413196fb080a8362ac4ef55b6868b031c3a66a0857967cd68f0159
+    sha256: 19c991dac9fbd0456a493965ae63d8e97d1575a799a62a83ad1d8ea99c4ce8ee
     summary: RAZAR agent bootstrap and logging guidance.
   docs/onboarding/test_planning.md:
     sha256: dbacb76c8b866af82bf7531b5facf9ffb9de708c9a55cec042fba1c19e9dc7a0
