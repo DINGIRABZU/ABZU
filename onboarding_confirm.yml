@@ -112,7 +112,7 @@ documents:
       key_rules: Maintain interface compatibility.
       insight: Maintain compatibility with listed interfaces.
   docs/component_index.md:
-    sha256: bc397e1a93e3747114255037efb6ce499df47fc67117a70c389609e226bfff2e
+    sha256: 5fba59a0267eb9edec5e42a6434213967cd013d040affebc6cef5c55f78d0662
     summary:
       purpose: Inventory of modules and services.
       scope: All components.
@@ -189,7 +189,7 @@ documents:
       key_rules: Keep implementations aligned with documented API.
       insight: Keep implementations aligned with documented API.
   docs/operator_protocol.md:
-    sha256: f2cb6aeedb7570bc52c76b0b96263981802e7cca55105e4e6720d9561ca248b1
+    sha256: 75abe046a185322b79c3ce12ff2ec1d5584f5c6350dfc9b43e8616de5bb9533c
     summary:
       purpose: Operator interaction rules.
       scope: Operator channels.
@@ -203,14 +203,14 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 3b9bb8a2a1bc47e456e84e5f79508d78bd592cfef4725e62540b055f96d83bf1
+    sha256: fadb8eb0cb157df6d97c90bffe4b3c098d1d8f8e8b81ead63a554308d40ca32e
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
       key_rules: Regenerate index after documentation updates.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
-    sha256: 136ca9ff51c397f5ef7f523591486ea0344fecbf16de12940e53caac72a6fc20
+    sha256: 2acebbe3802143e395727844880430a286ae76dce858936ecaf23c46366937c3
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
