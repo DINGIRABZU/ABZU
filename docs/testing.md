@@ -6,6 +6,34 @@ flowchart LR
     T --> R[Report]
 ```
 
+## Testing Workflow
+
+1. Run formatting and static checks for the files you touched:
+
+   ```bash
+   pre-commit run --files <changed_files>
+   ```
+
+2. Execute the full test suite with coverage enabled:
+
+   ```bash
+   pytest --cov
+   coverage report
+   coverage-badge -o coverage.svg
+   ```
+
+3. Maintain a **minimum 85% repository coverage** and aim for **≥90%** on
+   modified modules. Update `component_index.json` when coverage metrics change.
+
+4. On failures or drops below thresholds:
+
+   - Inspect `logs/pytest_priority.log` and `logs/razar.log` for details.
+   - Rerun the failing tier with `--maxfail=1` for rapid feedback.
+   - Isolate recurring failures using `python -m razar.quarantine_manager
+     quarantine <component>` and consult [diagnostics.md](diagnostics.md).
+   - Escalate unresolved issues following
+     [co_creation_escalation.md](co_creation_escalation.md).
+
 ## Required pytest plugins
 
 The test suite expects certain plugins to be available:
