@@ -1,5 +1,3 @@
-"""Tests for biosignal ingestion and transformation."""
-
 from __future__ import annotations
 
 import csv
@@ -12,6 +10,8 @@ from memory.narrative_engine import StoryEvent
 from src.core import config as core_config
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "biosignals"
+
+__version__ = "0.1.0"
 
 
 def load_dataset(path: Path) -> list[dict[str, str]]:
@@ -28,6 +28,15 @@ def test_ingest_biosignal_dataset(csv_path: Path) -> None:
     rows = load_dataset(csv_path)
     assert len(rows) == 3
     assert set(rows[0].keys()) == {"timestamp", "heart_rate", "skin_temp", "eda"}
+
+
+@pytest.mark.parametrize("csv_path", dataset_paths())
+def test_dataset_values_are_numeric(csv_path: Path) -> None:
+    rows = load_dataset(csv_path)
+    for row in rows:
+        assert float(row["heart_rate"]) >= 0
+        assert float(row["skin_temp"]) >= 0
+        assert float(row["eda"]) >= 0
 
 
 @pytest.mark.parametrize("csv_path", dataset_paths())

@@ -1,74 +1,22 @@
 # Nazarick Narrative System
 
-The Nazarick Narrative System turns raw biosensor readings into adaptive story cues for the tomb.
+This guide outlines how biosignals become narrative events within the Nazarick domain.
 
 ## Architecture
-Sensors feed a biosignal processing layer that emits structured events for the narrative engine. The engine records these events through the scribe and updates personas in the registry for downstream agents.
-
 ```mermaid
 flowchart LR
-    Sensors --> Normalization --> "Feature Extraction" --> "Event Generator" --> "Narrative Engine" --> Outputs
+    Sensors --> CSV[Anonymized CSV]
+    CSV --> Ingest[scripts/ingest_biosignals.py]
+    Ingest --> Transform[StoryEvent]
+    Transform --> Log[log_story]
 ```
-The Mermaid source lives at [assets/narrative_flow.mmd](assets/narrative_flow.mmd).
-
-
-## Biosignal Pipeline
-1. **Sensors** – EEG, heart-rate, and motion devices stream data.
-2. **Normalization** – signals are cleaned and aligned on a shared clock.
-3. **Feature Extraction** – metrics such as pulse variability or gaze direction are derived.
-4. **Event Generator** – extracted features translate into narrative events consumed by the scribe.
-5. **Narrative Engine** – generates context-aware story elements.
-
-## Data Schema
-
-Biosignal CSV files include the following columns:
-
-| Column | Type | Units | Description |
-| --- | --- | --- | --- |
-| `timestamp` | string | ISO 8601 UTC | Sample timestamp |
-| `heart_rate` | float | BPM | Beats per minute |
-| `skin_temp` | float | °C | Skin temperature |
-| `eda` | float | µS | Electrodermal activity |
-
-## Sample Datasets
-
-Anonymized CSVs in `data/biosignals/` demonstrate the expected structure:
-
-- `sample_biosignals.csv`
-- `sample_biosignals_alpha.csv`
-- `sample_biosignals_beta.csv`
-- `sample_biosignals_gamma.csv`
-
-## Ingestion
-
-Use `scripts/ingest_biosignals.py` to load any CSV in `data/biosignals/`:
-
-```bash
-python scripts/ingest_biosignals.py
-```
-
-The script labels rows with a heart rate above **74 BPM** as `"elevated heart rate"`
-and all others as `"calm"`, emitting `StoryEvent` instances for the narrative engine.
-
-Unit tests in `tests/narrative_engine/test_biosignal_pipeline.py` and
-`tests/narrative_engine/test_biosignal_transformation.py` illustrate
-ingestion and transformation of this data.
 
 ## Dependencies
+- `data/biosignals/` – sample datasets for testing and development.
+- `scripts/ingest_biosignals.py` – converts biosignal rows into narrative actions.
+- `memory/narrative_engine.py` – defines `StoryEvent` and `log_story` storage.
 
-Core dependencies:
-
-- `pydantic`
-- `sqlite3`
-- `numpy` – vector operations for signal processing
-
-Optional tools:
-
-- `mermaid` – render text-based diagrams
-
-
-## Version History
-
-| Version | Date | Summary |
-|---------|------|---------|
-| [Unreleased](../CHANGELOG.md#narrative-engine) | - | Expanded anonymized biosignal samples, acquisition guidelines, and ingestion references with broader test coverage. |
+## Sample Event Flow
+1. Sensors emit heart rate, skin temperature, and electrodermal activity readings.
+2. `ingest_biosignals.py` reads each CSV row and labels the action as **elevated heart rate** when BPM exceeds 74, otherwise **calm**.
+3. A `StoryEvent` is created for each row and recorded via `log_story` for later retrieval.
