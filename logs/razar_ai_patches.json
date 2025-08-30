@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "component": "docs",
+    "diff": "Added Remote Assistance section and diagram",
+    "tests": "pre-commit run --files docs/RAZAR_AGENT.md docs/INDEX.md"
+  },
+  {
+    "component": "docs",
+    "diff": "Replaced binary remote flow diagram with Mermaid code",
+    "tests": "pre-commit run --files docs/RAZAR_AGENT.md docs/INDEX.md"
+  }
+]
