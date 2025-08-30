@@ -30,7 +30,23 @@ sequenceDiagram
     B->>W: negotiate stream
     W-->>B: media track
     B-->>U: render output
+    ```
+
+## Layout Diagram
+
+```mermaid
+%% The Mermaid source lives at assets/nazarick_web_console.mmd
+flowchart TB
+    subgraph Nazarick Web Console
+        C[Command Input]
+        L[Log Panel]
+        S[Stream View]
+    end
+    C --> L
+    C --> S
 ```
+
+The Mermaid source lives at [assets/nazarick_web_console.mmd](assets/nazarick_web_console.mmd).
 
 ## UI Components
 
@@ -60,6 +76,12 @@ sequenceDiagram
    ```
 4. Open `index.html` in a browser and grant microphone and camera access.
 5. Enter commands or music prompts. Logs and streams display in real time.
+
+## Connectors
+
+- [WebRTC Connector](../connectors/webrtc_connector.py)
+- [Operator API](../operator_api.py)
+- Full registry: [Connector Index](connectors/CONNECTOR_INDEX.md)
 
 ## Extensibility Hooks
 

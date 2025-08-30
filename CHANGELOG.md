@@ -28,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Added Albedo layer state-machine diagram and deployment guide with sample configuration.
+- Expanded Nazarick agent guide with deployment commands, channel mappings, and extensibility hooks.
+- Documented Nazarick Web Console with mermaid layout diagram, dependencies, and connector links.
 - Added "The Absolute pytest" guide for chakra-aligned tests and commit workflow.
 - Introduced Pytest Protocol with >90% coverage, chakra-aligned directories, and component index documentation requirements.
 - Expanded Crown agent overview with model loading sequence diagram and configuration table.
