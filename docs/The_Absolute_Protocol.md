@@ -145,7 +145,7 @@ All diagrams must include a brief textual description and be expressed as Mermai
 
 ### Configuration File Documentation
 
-Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson), [razar_env.yaml](RAZAR_AGENT.md#razar_envyaml), and the log formats in the [logging guidelines](logging_guidelines.md).
+Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson) ([schema](schemas/boot_config.schema.json)), [razar_env.yaml](RAZAR_AGENT.md#razar_envyaml) ([schema](schemas/razar_env.schema.yaml)), and the log formats in the [logging guidelines](logging_guidelines.md) alongside [razar_state.json](RAZAR_AGENT.md#logsrazar_statejson) ([schema](schemas/razar_state.schema.json)).
 
 ### Module Versioning
 

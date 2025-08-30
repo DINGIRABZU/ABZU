@@ -623,6 +623,24 @@ Sample mission brief:
 
 Defines component launch commands and health checks.
 
+**Schema snippet** ([full schema](schemas/boot_config.schema.json))
+
+```json
+{
+  "type": "object",
+  "required": ["components"],
+  "properties": {
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "command", "health_check"]
+      }
+    }
+  }
+}
+```
+
 ### `razar_env.yaml`
 
 ```yaml
@@ -636,6 +654,21 @@ layers:
 ```
 
 Lists per-layer dependencies for the environment builder.
+
+**Schema snippet** ([full schema](schemas/razar_env.schema.yaml))
+
+```yaml
+type: object
+required:
+  - layers
+properties:
+  layers:
+    type: object
+    additionalProperties:
+      type: array
+      items:
+        type: string
+```
 
 ### `logs/razar_state.json`
 
@@ -654,6 +687,21 @@ Lists per-layer dependencies for the environment builder.
 ```
 
 Captures runtime state and handshake capabilities.
+
+**Schema snippet** ([full schema](schemas/razar_state.schema.json))
+
+```json
+{
+  "type": "object",
+  "required": [
+    "last_component",
+    "capabilities",
+    "downtime",
+    "launched_models",
+    "handshake"
+  ]
+}
+```
 
 ## AI Handover
 

@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RAZAR State",
+  "type": "object",
+  "required": [
+    "last_component",
+    "capabilities",
+    "downtime",
+    "launched_models",
+    "handshake"
+  ],
+  "properties": {
+    "last_component": {"type": "string"},
+    "capabilities": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "downtime": {"type": "object"},
+    "launched_models": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "handshake": {
+      "type": "object",
+      "required": ["acknowledgement", "capabilities", "downtime"],
+      "properties": {
+        "acknowledgement": {"type": "string"},
+        "capabilities": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "downtime": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
