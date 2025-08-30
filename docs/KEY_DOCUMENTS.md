@@ -1,6 +1,8 @@
 # Key Documents
 
 The files listed here are foundational and must never be deleted or renamed.
+For each document below, contributors must store its SHA256 hash and a short
+summary in `onboarding_confirm.yml` to prove the current version was reviewed.
 
 ## Protected Files
 
@@ -23,27 +25,31 @@ The files listed here are foundational and must never be deleted or renamed.
 
 These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
 
-All Python modules must declare a `__version__` attribute. The `verify-versions` pre-commit hook scans staged Python files and blocks commits when the attribute is missing.
+All Python modules must declare a `__version__` attribute. The `verify-versions`
+pre-commit hook scans staged Python files and blocks commits when the attribute
+is missing.
 
-Contributors must also record a brief summary for every file listed in `onboarding_confirm.yml`. Each summary must state the document's **purpose**, **scope**, **key rules**, and include one **actionable insight**.
+Contributors must also record a short summary for every protected file in
+`onboarding_confirm.yml`. Each summary should note the document's purpose,
+scope, and key rules.
 
 ## Onboarding Confirmation
 
-After completing the [onboarding checklist](onboarding/README.md), create an `onboarding_confirm.yml` file in the repository root that records, for each required document, its hash, summary, and insight. Each entry must capture the document's purpose, scope, key rules, and one actionable insight:
+After completing the [onboarding checklist](onboarding/README.md), create an
+`onboarding_confirm.yml` file in the repository root that records, for each
+required document, its hash and short summary:
 
 ```yaml
 documents:
   AGENTS.md:
     sha256: <sha256>
     summary: "Guidelines for repository operations and agent conduct."
-    insight: "Always run pre-commit on changed files."
   docs/The_Absolute_Protocol.md:
     sha256: <sha256>
     summary: "Core contribution rules and governance."
-    insight: "Review checklist before opening a pull request."
 ```
 
-The `confirm-reading` pre-commit hook verifies this file and blocks commits if any listed document changes.
-The companion `verify-doc-summaries` hook recomputes hashes for all entries and
-fails if `onboarding_confirm.yml` is out of date, ensuring stored summaries stay
-aligned with their documents.
+The `confirm-reading` pre-commit hook verifies this file and blocks commits if
+any listed document changes. The companion `verify-doc-hashes` hook recomputes
+hashes for protected files and fails if `onboarding_confirm.yml` is out of date,
+ensuring stored summaries stay aligned with their documents.

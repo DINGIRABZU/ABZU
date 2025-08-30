@@ -31,9 +31,9 @@ repos:
     entry: python scripts/check_key_documents.py
     language: system
     pass_filenames: false
-  - id: verify-doc-summaries
-    name: Verify onboarding doc hashes current
-    entry: python scripts/verify_doc_summaries.py
+  - id: verify-doc-hashes
+    name: Verify protected doc hashes current
+    entry: python scripts/verify_doc_hashes.py
     language: system
     pass_filenames: false
   - id: doc-indexer
