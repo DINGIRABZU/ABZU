@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT))
 
 import crown_decider
 import servant_model_manager as smm
-from crown_prompt_orchestrator import crown_prompt_orchestrator
+import crown_prompt_orchestrator as cpo
 
 
 class DummyGLM:
@@ -36,10 +36,11 @@ class DummyGLM:
 def test_basic_flow(monkeypatch):
     glm = DummyGLM()
     monkeypatch.setattr(
-        "crown_prompt_orchestrator.load_interactions",
+        cpo,
+        "load_interactions",
         lambda limit=3: [{"input": "hi"}],
     )
-    result = crown_prompt_orchestrator("hello", glm)
+    result = cpo.crown_prompt_orchestrator("hello", glm)
     assert result["text"].startswith("glm:")
     assert result["model"] == "glm"
     assert "hi" in glm.seen
@@ -50,7 +51,7 @@ def test_servant_invocation(monkeypatch):
     glm = DummyGLM()
     smm.register_model("deepseek", lambda p: f"ds:{p}")
     monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
-    result = crown_prompt_orchestrator("how do things work?", glm)
+    result = cpo.crown_prompt_orchestrator("how do things work?", glm)
     assert result["text"] == "ds:how do things work?"
     assert result["model"] == "deepseek"
 
@@ -58,20 +59,22 @@ def test_servant_invocation(monkeypatch):
 def test_state_engine_integration(monkeypatch):
     glm = DummyGLM()
     monkeypatch.setattr(
-        "crown_prompt_orchestrator.load_interactions",
+        cpo,
+        "load_interactions",
         lambda limit=3: [],
     )
-    result = crown_prompt_orchestrator("begin the ritual", glm)
+    result = cpo.crown_prompt_orchestrator("begin the ritual", glm)
     assert result["state"] == "ritual"
 
 
 def test_empty_interactions_response(monkeypatch):
     glm = DummyGLM()
     monkeypatch.setattr(
-        "crown_prompt_orchestrator.load_interactions",
+        cpo,
+        "load_interactions",
         lambda limit=3: [],
     )
-    result = crown_prompt_orchestrator("hello", glm)
+    result = cpo.crown_prompt_orchestrator("hello", glm)
     assert result["text"].startswith("glm:")
     assert "<no interactions>" in glm.seen
 
@@ -81,10 +84,31 @@ def test_technical_prefers_kimi(monkeypatch):
     smm._REGISTRY.clear()
     smm.register_model("kimi_k2", lambda p: f"k2:{p}")
     monkeypatch.setattr(
-        "crown_prompt_orchestrator.load_interactions",
+        cpo,
+        "load_interactions",
         lambda limit=3: [],
     )
     monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "kimi_k2")
-    result = crown_prompt_orchestrator("import os", glm)
+    result = cpo.crown_prompt_orchestrator("import os", glm)
     assert result["text"] == "k2:import os"
     assert result["model"] == "kimi_k2"
+
+
+def test_reviews_test_metrics(monkeypatch, tmp_path):
+    glm = DummyGLM()
+    metrics = tmp_path / "pytest_metrics.prom"
+    metrics.write_text("pytest_test_failures_total 2\n", encoding="utf-8")
+    monkeypatch.setattr(cpo, "TEST_METRICS_FILE", metrics)
+
+    logged: list[tuple[str, dict | None]] = []
+
+    def fake_log_suggestion(text, context=None):
+        logged.append((text, context))
+
+    monkeypatch.setattr(cpo, "log_suggestion", fake_log_suggestion)
+    monkeypatch.setattr(cpo, "load_interactions", lambda limit=3: [])
+    monkeypatch.setattr(cpo, "spiral_recall", lambda msg: "")
+
+    result = cpo.crown_prompt_orchestrator("hello", glm)
+    assert logged and "2" in logged[0][0]
+    assert result["suggestions"] == [logged[0][0]]

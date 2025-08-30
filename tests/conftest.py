@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import importlib.util
 import os
 import shutil
@@ -11,6 +13,29 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
+
+# Prometheus metrics for test observability
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import (
+        CollectorRegistry,
+        Counter,
+        Histogram,
+        write_to_textfile,
+    )
+
+    _PROM_REGISTRY = CollectorRegistry()
+    _FAILURES = Counter(
+        "pytest_test_failures_total",
+        "Total test failures",
+        registry=_PROM_REGISTRY,
+    )
+    _DURATION = Histogram(
+        "pytest_test_duration_seconds",
+        "Test duration in seconds",
+        registry=_PROM_REGISTRY,
+    )
+except Exception:  # pragma: no cover - metrics optional
+    _PROM_REGISTRY = None
 
 # Ensure the real SciPy package is loaded before tests potentially stub it.
 try:  # pragma: no cover - optional dependency
@@ -181,6 +206,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_citadel_event_processor.py"),
     str(ROOT / "tests" / "agents" / "test_event_bus.py"),
     str(ROOT / "tests" / "narrative_engine" / "test_biosignal_pipeline.py"),
+    str(ROOT / "tests" / "crown" / "test_crown_prompt_orchestrator.py"),
 }
 
 
@@ -190,3 +216,18 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if str(item.fspath) not in ALLOWED_TESTS:
             item.add_marker(skip_marker)
+
+
+if _PROM_REGISTRY is not None:
+
+    def pytest_runtest_logreport(report):  # pragma: no cover - timing varies
+        if report.when != "call":
+            return
+        _DURATION.observe(report.duration)
+        if report.failed:
+            _FAILURES.inc()
+
+    def pytest_sessionfinish(session, exitstatus):  # pragma: no cover - timing varies
+        metrics_path = ROOT / "monitoring" / "pytest_metrics.prom"
+        metrics_path.parent.mkdir(parents=True, exist_ok=True)
+        write_to_textfile(str(metrics_path), _PROM_REGISTRY)
