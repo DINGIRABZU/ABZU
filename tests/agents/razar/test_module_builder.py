@@ -1,8 +1,9 @@
-from __future__ import annotations
-
+from pathlib import Path
 from types import SimpleNamespace
 
 import agents.razar.module_builder as module_builder
+
+__version__ = "0.0.0"
 
 
 def _fake_remote(name: str, url: str, patch_context: str | None = None):
@@ -16,8 +17,10 @@ def _fake_remote(name: str, url: str, patch_context: str | None = None):
 def test_module_builder_creates_module(monkeypatch):
     monkeypatch.setattr(module_builder.remote_loader, "load_remote_agent", _fake_remote)
 
+    template = Path(__file__).resolve().parents[2] / "fixtures" / "razar_base_module.py"
     spec = {
         "component": "agents/razar/generated_component.py",
+        "template": str(template),
         "tests": {
             "tests/test_generated_component.py": (
                 "from agents.razar import generated_component\n"
@@ -35,7 +38,7 @@ def test_module_builder_creates_module(monkeypatch):
     try:
         assert path.exists()
         text = path.read_text(encoding="utf-8")
-        assert "TODO" in text
+        assert "original" in text
         assert "patched" in text
     finally:
         path.unlink(missing_ok=True)
