@@ -16,6 +16,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
   `handshake` in `logs/razar_state.json`.
 - Added module coverage and example run sections to the RAZAR agent guide.
 - Rotated mission brief archives and required Crown availability via `CROWN_WS_URL` before boot.
+- Delegated failure recovery to remote agents via `ai_invoker.handover` and
+  logged invocations and patch results.
+- Recorded applied patch diffs in `logs/razar_ai_patches.json`.
 
 ### Changed
 - Boot orchestrator now persists the handshake response before starting

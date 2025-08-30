@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import json
 from types import SimpleNamespace
@@ -13,7 +13,7 @@ def test_handover_returns_suggestion_and_logs(monkeypatch, tmp_path: Path) -> No
     def fake_loader(name: str, url: str, patch_context=None):
         assert name == "test"
         assert url == "http://example.com/agent.py"
-        assert patch_context == "ctx"
+        assert patch_context == {"failure": "ctx"}
         return SimpleNamespace(__name__=name), {"config": True}, {"patch": "data"}
 
     monkeypatch.setattr(ai_invoker.remote_loader, "load_remote_agent", fake_loader)
@@ -27,7 +27,7 @@ def test_handover_returns_suggestion_and_logs(monkeypatch, tmp_path: Path) -> No
     config_path = tmp_path / "config.json"
     config_path.write_text(json.dumps(config), encoding="utf-8")
 
-    suggestion = ai_invoker.handover(config_path=config_path, patch_context="ctx")
+    suggestion = ai_invoker.handover(config_path=config_path, failure="ctx")
     assert suggestion == {"patch": "data"}
 
     records = json.loads(log_path.read_text(encoding="utf-8"))
