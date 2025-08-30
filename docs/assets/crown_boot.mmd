@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant C as Crown Agent
+    participant F as Config
+    participant I as INANNA
+    participant S as Servant Models
+    C->>F: read glm_api_url & memory_dir
+    C->>I: load_primary()
+    I-->>C: model ready
+    C->>S: load_servants()
+    S-->>C: servants ready

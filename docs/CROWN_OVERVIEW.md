@@ -47,6 +47,32 @@ flowchart LR
 
 The Mermaid source lives at [assets/crown_flow.mmd](assets/crown_flow.mmd).
 
+## Boot Sequence
+
+```mermaid
+%%{init: {'theme': 'neutral'}}%%
+sequenceDiagram
+    participant C as Crown Agent
+    participant F as Config
+    participant I as INANNA
+    participant S as Servant Models
+    C->>F: read glm_api_url & memory_dir
+    C->>I: load_primary()
+    I-->>C: model ready
+    C->>S: load_servants()
+    S-->>C: servants ready
+```
+
+The Mermaid source lives at [assets/crown_boot.mmd](assets/crown_boot.mmd).
+
+## Configuration
+
+| Model | Endpoint key | Memory path |
+|-------|--------------|-------------|
+| INANNA Core | `glm_api_url` | `data/vector_memory` |
+| DeepSeek servant | `servant_models.deepseek` | `data/vector_memory` |
+| Mistral servant | `servant_models.mistral` | `data/vector_memory` |
+| Kimi K2 servant | `servant_models.kimi_k2` | `data/vector_memory` |
 
 ## Memory‑Aided Routing
 
@@ -129,5 +155,6 @@ RAZAR evaluates the command and returns the result, allowing operators to inspec
 
 | Version | Date       | Summary |
 |---------|------------|---------|
+| 0.3.0   | 2025-10-15 | Added boot sequence diagram and configuration table. |
 | 0.2.0   | 2025-09-30 | Added deployment guidance and initial version table. |
 | 0.1.0   | 2025-08-28 | Initial document outlining Crown agent architecture. |
