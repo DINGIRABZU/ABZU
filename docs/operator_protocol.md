@@ -1,24 +1,26 @@
 # Operator Protocol
 
-Defines how operator commands and uploads are issued and validated across the system.
+Defines HTTP endpoints and WebRTC channels for operator interactions with Crown and RAZAR.
 
 ## Endpoint `/operator/command`
 
-Sends a JSON payload describing the action to execute. Requests must use `POST` and include authentication headers.
+`POST` a JSON payload describing the action to execute. The body must include `operator`, `agent`, and `command` fields. Requests
+must include authentication headers.
 
 ## Endpoint `/operator/upload`
 
-Uploads one or more files using `multipart/form-data`. Each request must include a `files` field and may include an optional `metadata` field containing JSON. Crown saves files under `uploads/` and forwards the metadata to RAZAR.
+Uploads one or more files using `multipart/form-data`. Each request must include a `files` field and may include optional
+`metadata` JSON. Crown stores files under `uploads/` and forwards metadata to RAZAR.
 
 ## WebRTC Channels
 
 The Nazarick Web Console establishes a WebRTC connection to stream avatar output. Clients may request:
 
-- **Video** – avatar frames.
-- **Audio** – PCM/WAV audio.
-- **Data** – arbitrary binary payloads.
+- **Video** – avatar frames
+- **Audio** – PCM/WAV audio
+- **Data** – arbitrary binary payloads
 
-Only the requested tracks are attached during negotiation. When media negotiation fails the session falls back to data-channel messages so command traffic continues.
+Only the requested tracks are attached during negotiation. If media negotiation fails the session falls back to the data channel so command traffic continues.
 
 ## Roles and Permission Checks
 
