@@ -470,6 +470,25 @@ priority map and status snapshot for every boot attempt, providing an audit
 trail for troubleshooting. Periodically prune old entries to manage disk
 usage.
 
+### Handshake Sequence
+
+1. The boot orchestrator builds a mission brief from component priorities and
+   current statuses.
+2. The brief is archived in `logs/mission_briefs/<timestamp>.json`.
+3. A `crown_handshake` is performed over the configured WebSocket.
+4. Handshake results — capabilities and downtime — are logged to
+   `logs/razar.log` and persisted in `logs/razar_state.json`.
+5. If the returned capability list lacks `GLM4V`, the orchestrator triggers
+   `crown_model_launcher.sh` to start the model.
+
+### Rollback Steps
+
+1. On handshake failure or a model launch error, the failure is recorded in
+   `logs/razar.log` and the previous state snapshot is preserved.
+2. The orchestrator regenerates the mission brief and retries the handshake.
+3. After repeated failures, the affected component is quarantined and AI
+   handover or manual intervention is required before reboot.
+
 ## Example Runs
 
 ### Startup and Handshake
