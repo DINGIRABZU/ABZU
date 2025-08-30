@@ -82,7 +82,16 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    This prepares the persistent stores used by `vector_memory.py` and
    `corpus_memory.py`.
 
-2. **Launch servant model endpoints**
+2. **Initialize vector and Chroma stores**
+
+   ```bash
+   python -m INANNA_AI.corpus_memory --reindex
+   ```
+
+   This builds the Chroma index under `data/vector_memory/chroma` and
+   confirms the vector store path.
+
+3. **Launch servant model endpoints**
 
    Define the endpoints via `SERVANT_MODELS` and run the launcher:
 
@@ -94,7 +103,7 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    Each endpoint must expose a `/health` route and accept a JSON body
    `{"prompt": "..."}`.
 
-3. **Start INANNA core**
+4. **Start INANNA core**
 
    The minimal startup script combines the above steps and verifies the
    configuration:
@@ -102,3 +111,11 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    ```bash
    scripts/start_inanna_core.sh
    ```
+
+## Resources
+
+- [Default configuration `crown_config/INANNA_CORE.yaml`](../crown_config/INANNA_CORE.yaml)
+- Test scripts validating the setup:
+  - [tests/test_vector_memory.py](../tests/test_vector_memory.py)
+  - [tests/test_corpus_memory.py](../tests/test_corpus_memory.py)
+  - [tests/test_launch_servants_script.py](../tests/test_launch_servants_script.py)
