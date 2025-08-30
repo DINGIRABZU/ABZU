@@ -19,7 +19,8 @@
       "status": "stable",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 1
     },
     {
       "id": "razar",
@@ -38,7 +39,8 @@
       "status": "alpha",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 0
     },
     {
       "id": "crown",
@@ -56,7 +58,8 @@
       "status": "alpha",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 2
     },
     {
       "id": "inanna",
@@ -74,7 +77,8 @@
       "status": "alpha",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 3
     },
     {
       "id": "inanna_ai_agent",
@@ -90,7 +94,8 @@
       "status": "alpha",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 3
     },
     {
       "id": "albedo",
@@ -108,7 +113,8 @@
       "status": "alpha",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 3
     },
     {
       "id": "nazarick",
@@ -126,7 +132,8 @@
       "status": "alpha",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 3
     },
     {
       "id": "memory_layers",
@@ -144,7 +151,8 @@
       "status": "alpha",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 4
     },
     {
       "id": "narrative_engine",
@@ -160,7 +168,8 @@
       "status": "experimental",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 4
     },
     {
       "id": "operator_interface",
@@ -176,7 +185,8 @@
       "status": "draft",
       "metrics": {
         "coverage": 1.0
-      }
+      },
+      "ignition_stage": 2
     }
   ]
 }

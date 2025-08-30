@@ -9,12 +9,13 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "chakra", "type", "version"],
+        "required": ["id", "chakra", "type", "version", "ignition_stage"],
         "properties": {
           "id": {"type": "string"},
           "chakra": {"type": "string"},
           "type": {"type": "string"},
           "version": {"type": "string"},
+          "ignition_stage": {"type": "integer"},
           "path": {"type": "string"},
           "purpose": {"type": "string"},
           "dependencies": {
