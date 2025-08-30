@@ -11,6 +11,7 @@ logs/*
 !logs/razar_boot_history.json
 !logs/razar_crown_dialogues.json
 !logs/razar_cocreation_plans.json
+!logs/interaction_log.jsonl
 
 # Ignore Blender files
 *.blend
