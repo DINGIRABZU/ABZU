@@ -13,6 +13,10 @@ The files listed here are foundational and must never be deleted or renamed.
 - [Security Model](security_model.md)
 - [Data Security and Compliance](data_security.md)
 - [Data Manifest](data_manifest.md)
+- [Dependency Registry](dependency_registry.md)
+- [Logging Guidelines](logging_guidelines.md)
+- [API Reference](api_reference.md)
+- [Operator Protocol](operator_protocol.md)
 - [RAZAR AI agents config](../config/razar_ai_agents.json) – roster of handover agents and authentication settings
 
 These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
