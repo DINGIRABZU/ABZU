@@ -206,6 +206,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [avatar_animation.md](avatar_animation.md) | Avatar Animation Modules | This document describes the lightweight avatar animation helpers found in `ai_core.avatar`. | - |
 | [avatar_ethics.md](avatar_ethics.md) | Avatar Ethics | The avatar and call features rely on audiovisual data that may reveal personal information. Operators must handle rec... | - |
 | [avatar_pipeline.md](avatar_pipeline.md) | Avatar Pipeline | The avatar pipeline synchronises generated speech with visual animation. It reads configuration from `guides/avatar_c... | - |
+| [bana_engine.md](bana_engine.md) | Bana Engine | This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sourc... | - |
 | [chakra_architecture.md](chakra_architecture.md) | Chakra Architecture | This document summarizes the major modules aligned with each chakra layer, their operational state, current quality l... | - |
 | [chakra_koan_system.md](chakra_koan_system.md) | Chakra System Koan | A meditative sequence exploring the seven energy centers of Spiral OS. It complements the version manifest, grounding... | - |
 | [chakra_overview.md](chakra_overview.md) | Chakra Overview | This table summarizes each chakra layer's role in the system along with its current semantic version, aggregated qual... | - |
