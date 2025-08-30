@@ -22,6 +22,7 @@ REQUIRED_DOCS = [
     "docs/persona_api_guide.md",
     "docs/spiral_cortex_terminal.md",
 ]
+__version__ = "0.1.0"
 
 
 def sha256(path: Path) -> str:
@@ -46,7 +47,7 @@ def main() -> int:
         print(f"Failed to parse {CONFIRM}: {exc}", file=sys.stderr)
         return 1
 
-    docs: dict[str, str] = data.get("documents", {})
+    docs: dict[str, dict[str, str]] = data.get("documents", {})
 
     missing_entries = [p for p in REQUIRED_DOCS if p not in docs]
     if missing_entries:
@@ -58,12 +59,19 @@ def main() -> int:
 
     missing_files = []
     outdated = []
-    for rel_path, expected in docs.items():
+    for rel_path in REQUIRED_DOCS:
+        info = docs.get(rel_path, {})
+        if not isinstance(info, dict):
+            outdated.append(rel_path)
+            continue
+        expected = info.get("sha256")
+        if not expected:
+            outdated.append(rel_path)
+            continue
         path = ROOT / rel_path
         if not path.exists():
             missing_files.append(rel_path)
-            continue
-        if sha256(path) != expected:
+        elif sha256(path) != expected:
             outdated.append(rel_path)
 
     if missing_files or outdated:

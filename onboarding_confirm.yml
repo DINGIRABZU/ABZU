@@ -1,24 +1,70 @@
 documents:
-  AGENTS.md: 08aab5d3dabd13cc0937d5e6574bbed143346c5340c13578224336c1ecdc2671
-  docs/ABZU_SUBSYSTEM_OVERVIEW.md: e575ff650f076601f2dae9c09ccc3b0658999204f71a22508aab24c98f050445
-  docs/architecture_overview.md: 3e08f2cf4a214c19aead33191c08b32f8f4e8ddd57333b29fbe5e2596e9cdad2
-  docs/documentation_protocol.md: ae84f16638303413f944fd3a2b0adf70679c3ee82c06eefa2ab18c1141468239
-  docs/project_overview.md: 4f4b07972085bc9341a56b1fb85f37da8354e726a73e10f03613fcc5f83b76b1
-  docs/onboarding/README.md: 34f9af9b460e4e59da73545465cece4e5994ada1beb00fe7d91b549816872fac
-  docs/onboarding_walkthrough.md: b7d57d6fe6ee327301e134e36a959474431e7a0c511dd999a168ddad1485cdeb
-  docs/vector_memory.md: 8aff26e4a32740fc3599e3cae555f8b7700a61c6734adb87fbcaaaba69349a34
-  docs/rag_pipeline.md: 24d2154f4a2db1aceba6aaf05c03bc6c34119ba58b82159345f5d2c0eb36e0dc
-  docs/rag_music_oracle.md: b506c9213c26af25dc0e295b11215dd19d6a1100cfb7902e64be47120784c7d6
-  docs/vision_system.md: 52d91902d457f14cf4dc46b088a8e2177cd10e3eaa0398ee071d4f1532e74547
-  docs/persona_api_guide.md: 767d276cddcb865a844c3e730aa2affc9d57ab6ebb52f3c4c05040288c94121f
-  docs/spiral_cortex_terminal.md: 863463fb3e7b92021d747b5f4bdc4cb20e608469d64ed69917bf8be7b8177724
-  docs/communication_interfaces.md: c9d210710b6e3f7bbf943c99d6a40443a8fa67f7c96e5fcdcd4881193923a17a
-  docs/connectors/CONNECTOR_INDEX.md: b1a944e21d2cb521673d7f1384599d48e4f9fbe3fa9122438de1f532e28564cd
-  docs/system_blueprint.md: 38222d01f9105c0cd48ce670f51d26ffb17571c1287c2f5f974dee8aa46cb629
-  docs/KEY_DOCUMENTS.md: 2935af62de64fd16a1e55cdc6c82237bcd69560831609d1df6deeb02a441f4e3
-  docs/security_model.md: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
-  docs/The_Absolute_Protocol.md: ccd2be1d91a9dbae628747391e00b7c51322b907e236456bc37dee87cf2325f1
-  docs/dependency_registry.md: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
-  docs/logging_guidelines.md: e090bdc32a69a7f6b144967dd70f163f6fb8322a23671334caa6dbcbc4185cf3
-  docs/api_reference.md: 6273ffa4258f9015f3e1b06d1dadbfd3f03f0585f0fee79bc1ba1c32e2f00721
-  docs/operator_protocol.md: e7996f1e1be5112a402f35b098dd29ee77df04ee528d58e143db4d8ddbf2c1cd
+  AGENTS.md:
+    sha256: 08aab5d3dabd13cc0937d5e6574bbed143346c5340c13578224336c1ecdc2671
+    summary: "Repository-wide agent instructions."
+  docs/ABZU_SUBSYSTEM_OVERVIEW.md:
+    sha256: e575ff650f076601f2dae9c09ccc3b0658999204f71a22508aab24c98f050445
+    summary: "Overview of ABZU subsystems."
+  docs/architecture_overview.md:
+    sha256: 3e08f2cf4a214c19aead33191c08b32f8f4e8ddd57333b29fbe5e2596e9cdad2
+    summary: "High-level system architecture."
+  docs/documentation_protocol.md:
+    sha256: ae84f16638303413f944fd3a2b0adf70679c3ee82c06eefa2ab18c1141468239
+    summary: "Workflow for updating documentation."
+  docs/project_overview.md:
+    sha256: 4f4b07972085bc9341a56b1fb85f37da8354e726a73e10f03613fcc5f83b76b1
+    summary: "Project goals and scope."
+  docs/onboarding/README.md:
+    sha256: 34f9af9b460e4e59da73545465cece4e5994ada1beb00fe7d91b549816872fac
+    summary: "Onboarding checklist."
+  docs/onboarding_walkthrough.md:
+    sha256: b7d57d6fe6ee327301e134e36a959474431e7a0c511dd999a168ddad1485cdeb
+    summary: "Step-by-step onboarding walkthrough."
+  docs/vector_memory.md:
+    sha256: 8aff26e4a32740fc3599e3cae555f8b7700a61c6734adb87fbcaaaba69349a34
+    summary: "Guide to vector memory subsystem."
+  docs/rag_pipeline.md:
+    sha256: 24d2154f4a2db1aceba6aaf05c03bc6c34119ba58b82159345f5d2c0eb36e0dc
+    summary: "Retrieval-augmented generation pipeline."
+  docs/rag_music_oracle.md:
+    sha256: b506c9213c26af25dc0e295b11215dd19d6a1100cfb7902e64be47120784c7d6
+    summary: "Music oracle RAG details."
+  docs/vision_system.md:
+    sha256: 52d91902d457f14cf4dc46b088a8e2177cd10e3eaa0398ee071d4f1532e74547
+    summary: "Vision system documentation."
+  docs/persona_api_guide.md:
+    sha256: 767d276cddcb865a844c3e730aa2affc9d57ab6ebb52f3c4c05040288c94121f
+    summary: "Persona API usage instructions."
+  docs/spiral_cortex_terminal.md:
+    sha256: 863463fb3e7b92021d747b5f4bdc4cb20e608469d64ed69917bf8be7b8177724
+    summary: "Spiral Cortex terminal guide."
+  docs/communication_interfaces.md:
+    sha256: c9d210710b6e3f7bbf943c99d6a40443a8fa67f7c96e5fcdcd4881193923a17a
+    summary: "Communication interfaces overview."
+  docs/connectors/CONNECTOR_INDEX.md:
+    sha256: b1a944e21d2cb521673d7f1384599d48e4f9fbe3fa9122438de1f532e28564cd
+    summary: "Registry of connector details."
+  docs/system_blueprint.md:
+    sha256: 38222d01f9105c0cd48ce670f51d26ffb17571c1287c2f5f974dee8aa46cb629
+    summary: "Architectural blueprint overview."
+  docs/KEY_DOCUMENTS.md:
+    sha256: 8fa7aabfdc334c3ef715553ec57994fd6de1cb0d24833c623d286be94e25838e
+    summary: "List of essential repository documents."
+  docs/security_model.md:
+    sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
+    summary: "Threat model and protections."
+  docs/The_Absolute_Protocol.md:
+    sha256: ccd2be1d91a9dbae628747391e00b7c51322b907e236456bc37dee87cf2325f1
+    summary: "Core contribution rules."
+  docs/dependency_registry.md:
+    sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
+    summary: "Approved dependencies."
+  docs/logging_guidelines.md:
+    sha256: e090bdc32a69a7f6b144967dd70f163f6fb8322a23671334caa6dbcbc4185cf3
+    summary: "Structured logging requirements."
+  docs/api_reference.md:
+    sha256: 6273ffa4258f9015f3e1b06d1dadbfd3f03f0585f0fee79bc1ba1c32e2f00721
+    summary: "API endpoints and schemas."
+  docs/operator_protocol.md:
+    sha256: e7996f1e1be5112a402f35b098dd29ee77df04ee528d58e143db4d8ddbf2c1cd
+    summary: "Operator interaction rules."
