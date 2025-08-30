@@ -155,16 +155,24 @@ class BootOrchestrator:
                 response_file.unlink()
 
     def _ensure_glm4v(self, capabilities: List[str]) -> None:
-        """Launch the GLM‑4.1V model if the capability is missing."""
+        """Ensure the GLM‑4.1V model is available, launching it if required."""
         normalized = {c.replace("-", "").upper() for c in capabilities}
-        if any(c.startswith("GLM4V") for c in normalized):
-            return
+        present = any(c.startswith("GLM4V") for c in normalized)
+
         data: Dict[str, object] = {}
         if self.state_path.exists():
             try:
                 data = json.loads(self.state_path.read_text(encoding="utf-8"))
             except json.JSONDecodeError:
                 data = {}
+
+        data["glm4v_present"] = present
+
+        if present:
+            self.state_path.parent.mkdir(parents=True, exist_ok=True)
+            self.state_path.write_text(json.dumps(data), encoding="utf-8")
+            return
+
         script = self.state_path.parents[1] / "crown_model_launcher.sh"
         LOGGER.info("Launching GLM-4.1V via %s", script)
         subprocess.run(["bash", str(script)], check=False)
