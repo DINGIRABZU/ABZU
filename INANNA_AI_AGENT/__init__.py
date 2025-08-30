@@ -6,6 +6,8 @@ Importing this package registers the command line interface and injects the
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import builtins as _builtins
 
 from . import benchmark_preprocess, model, preprocess, source_loader

@@ -2,16 +2,18 @@
 """Verify blueprint doc updates accompany core code changes."""
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 from pathlib import Path
 import sys
 
 
-BLUEPRINT = Path("docs/system_blueprint.md")
+BLUEPRINT = Path("docs/system_blueprint.md").resolve()
 
 
 def main(paths: list[str]) -> int:
     """Return non-zero if blueprint was not updated alongside core changes."""
-    changed = [Path(p) for p in paths]
+    changed = [Path(p).resolve() for p in paths]
     blueprint_touched = BLUEPRINT in changed
 
     def is_service_file(path: Path) -> bool:

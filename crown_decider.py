@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import time
 from statistics import mean
 from typing import Any, Dict

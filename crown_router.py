@@ -7,6 +7,8 @@ services when available.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 from typing import Any, Dict
 
 import emotional_state

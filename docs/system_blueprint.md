@@ -11,6 +11,8 @@ Read the [Project Overview](project_overview.md) to understand goals, review the
 interlock, and browse the [Component Index](component_index.md) for an
 exhaustive module inventory.
 
+Module versions declared in code are verified against `component_index.json`.
+
 ### Document Map
 
 - **High‑level docs**

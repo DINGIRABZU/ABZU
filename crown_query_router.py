@@ -7,6 +7,8 @@ lookup requests against the configured vector database.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 from typing import Dict, List
 
 from rag import retriever as rag_retriever
