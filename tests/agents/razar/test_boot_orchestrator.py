@@ -35,6 +35,7 @@ def test_perform_handshake_persists_state_and_launches_model(
 
     monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
     monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "razar_state.json")
+    monkeypatch.setenv("CROWN_WS_URL", "ws://example")
 
     response = CrownResponse("ack", [], {})
     mock_handshake(response)

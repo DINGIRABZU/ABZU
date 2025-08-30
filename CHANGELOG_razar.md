@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Stored Crown handshake acknowledgement, capabilities, and downtime under
   `handshake` in `logs/razar_state.json`.
 - Added module coverage and example run sections to the RAZAR agent guide.
+- Rotated mission brief archives and required Crown availability via `CROWN_WS_URL` before boot.
 
 ### Changed
 - Boot orchestrator now persists the handshake response before starting

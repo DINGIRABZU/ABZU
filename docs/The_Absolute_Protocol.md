@@ -15,6 +15,7 @@ Before opening a pull request, confirm each item:
   - [System Blueprint](system_blueprint.md)
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
+- [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
 - [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
@@ -175,12 +176,12 @@ Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNEC
 
 ### Crown Handshake Protocol
 
-Mission briefs are archived to `logs/mission_briefs/<timestamp>.json`. The
-boot orchestrator must invoke `crown_handshake.perform()` before launching
-components and persist the returned acknowledgement, capabilities, and downtime
-under the `handshake` key in `logs/razar_state.json`. Maintain these archives
-so operators can audit the exchange and reconcile advertised capabilities with
-runtime behaviour.
+Mission briefs are archived to `logs/mission_briefs/<timestamp>.json` and rotated
+to keep the most recent 20 exchanges. The boot orchestrator must invoke
+`crown_handshake.perform()` before launching components and persist the returned
+acknowledgement, capabilities, and downtime under the `handshake` key in
+`logs/razar_state.json`. Maintain these archives so operators can audit the
+exchange and reconcile advertised capabilities with runtime behaviour.
 
 ### Handshake Audit Requirement
 

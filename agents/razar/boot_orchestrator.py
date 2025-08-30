@@ -41,6 +41,8 @@ from razar.crown_handshake import CrownHandshake, CrownResponse
 
 LOGGER = logging.getLogger(__name__)
 
+MAX_MISSION_BRIEFS = 20
+
 
 class BootOrchestrator:
     """Coordinate staged startup for core ABZU services."""
@@ -96,7 +98,7 @@ class BootOrchestrator:
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
-    def _perform_handshake(self) -> CrownResponse | None:
+    def _perform_handshake(self) -> CrownResponse:
         """Send mission brief to CROWN and return the raw response."""
         brief = {
             "priority_map": {
@@ -112,32 +114,45 @@ class BootOrchestrator:
         brief_path.write_text(json.dumps(brief), encoding="utf-8")
         response_path = archive_dir / f"{timestamp}_response.json"
 
-        response: CrownResponse | None = None
-        status = "failure"
-        details: str | None = None
         try:
-            url = os.getenv("CROWN_WS_URL", "ws://localhost:8765")
+            url = os.environ["CROWN_WS_URL"]
             handshake = CrownHandshake(url)
             response = asyncio.run(handshake.perform(str(brief_path)))
-            status = "success"
             details = json.dumps(
                 {"capabilities": response.capabilities, "downtime": response.downtime}
             )
-        except Exception as exc:  # pragma: no cover - handshake is best effort
+            status = "success"
+        except Exception as exc:  # pragma: no cover - handshake must succeed
             LOGGER.exception("CROWN handshake failed")
-            details = str(exc)
-        mission_logger.log_event("handshake", "crown", status, details)
-        if response:
-            LOGGER.info(
-                "Handshake result: capabilities=%s downtime=%s",
-                response.capabilities,
-                response.downtime,
-            )
-            response_path.write_text(json.dumps(asdict(response)), encoding="utf-8")
-        else:
-            LOGGER.warning("Handshake produced no response")
+            mission_logger.log_event("handshake", "crown", "failure", str(exc))
             response_path.write_text("{}", encoding="utf-8")
+            raise RuntimeError("CROWN handshake failed") from exc
+
+        mission_logger.log_event("handshake", "crown", status, details)
+        LOGGER.info(
+            "Handshake result: capabilities=%s downtime=%s",
+            response.capabilities,
+            response.downtime,
+        )
+        response_path.write_text(json.dumps(asdict(response)), encoding="utf-8")
+        self._rotate_mission_briefs(archive_dir)
         return response
+
+    def _rotate_mission_briefs(
+        self, archive_dir: Path, limit: int = MAX_MISSION_BRIEFS
+    ) -> None:
+        """Remove oldest mission brief/response pairs beyond ``limit``."""
+        briefs = sorted(
+            [p for p in archive_dir.glob("*.json") if "_response" not in p.name],
+            key=lambda p: p.stat().st_mtime,
+        )
+        excess = len(briefs) - limit
+        for old in briefs[:excess]:
+            response_file = archive_dir / f"{old.stem}_response.json"
+            if old.exists():
+                old.unlink()
+            if response_file.exists():
+                response_file.unlink()
 
     def _ensure_glm4v(self, capabilities: List[str]) -> None:
         """Launch the GLM‑4.1V model if the capability is missing."""
