@@ -21,6 +21,13 @@ launches each service in priority order. By aligning this startup flow with the
 architecture outlined in the [System Blueprint](system_blueprint.md), RAZAR acts
 as the bootstrap agent that grounds ABZU in a coherent foundation.
 
+## Module Coverage
+
+Tests in [`tests/agents/razar/`](../tests/agents/razar/) exercise the boot
+orchestrator and supporting helpers. Coverage results roll into the repository
+report ([coverage.svg](../coverage.svg)), ensuring each module's behaviour is
+verified during continuous integration.
+
 ## Requirements
 
 Core dependencies:
@@ -693,6 +700,16 @@ provided, and the suggestion returned.
 **Rollback**
 
 If tests fail or regressions appear, RAZAR reverts to the previous state and records the failure for manual review.
+
+## Example Runs
+
+```bash
+# Launch the orchestrator with defaults
+python -m razar.boot_orchestrator
+
+# Perform a standalone Crown handshake
+python -m razar.crown_handshake path/to/brief.json
+```
 
 ## Placeholder remediation
 
