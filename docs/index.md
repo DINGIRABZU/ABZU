@@ -12,6 +12,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [Nazarick Agents](nazarick_agents.md)
 - [Nazarick Manifesto](nazarick_manifesto.md)
 - [Nazarick Web Console](nazarick_web_console.md)
+- [Operator Protocol](operator_protocol.md)
 ## Setup
 - [Setup Guide](setup.md)
 ## Usage
