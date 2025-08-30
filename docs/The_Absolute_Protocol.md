@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.60
+**Version:** v1.0.61
 **Last updated:** 2025-08-30
 
 ## How to Use This Protocol
@@ -29,7 +29,7 @@ Before opening a pull request, confirm each item:
   - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and links
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
-- [ ] Pull request includes a **Change Justification** statement: "I did X on Y to obtain Z, expecting behavior B."
+- [ ] Pull request includes an **Action summary** statement: "I did X on Y to obtain Z, expecting behavior B."
 - [ ] `onboarding_confirm.yml` logs purpose, scope, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_summaries.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
@@ -43,12 +43,12 @@ Before opening a pull request, confirm each item:
 - [ ] Biosignal sample CSVs in `data/biosignals/` remain anonymized and align with
       the documented ingestion schema
 
-### Change Justification
+### Action summary
 Every pull request must include a statement formatted as:
 
 "I did X on Y to obtain Z, expecting behavior B."
 
-This clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this requirement via a **Change Justification** field.
+This clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this requirement via an **Action summary** field.
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:

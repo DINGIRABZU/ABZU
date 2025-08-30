@@ -39,7 +39,10 @@ is missing.
 
 Contributors must also record a short summary for every protected file in
 `onboarding_confirm.yml`. Each summary must note the document's purpose, scope,
-and one actionable insight.
+and one actionable insight. At minimum, `onboarding_confirm.yml` must track the
+current versions of `docs/system_blueprint.md`, `docs/connectors/CONNECTOR_INDEX.md`,
+`docs/primordials_service.md`, and `docs/component_index.md` with hashed
+summaries.
 
 ## Onboarding Confirmation
 
@@ -61,6 +64,30 @@ documents:
       purpose: "Core contribution rules and governance."
       scope: "All contributors"
       insight: "Include an action summary in every pull request."
+  docs/system_blueprint.md:
+    sha256: <sha256>
+    summary:
+      purpose: "Architectural blueprint overview."
+      scope: "System-wide architecture"
+      insight: "Align changes with blueprint structure."
+  docs/connectors/CONNECTOR_INDEX.md:
+    sha256: <sha256>
+    summary:
+      purpose: "Registry of connector details."
+      scope: "All connectors"
+      insight: "Update entry whenever a connector changes."
+  docs/primordials_service.md:
+    sha256: <sha256>
+    summary:
+      purpose: "DeepSeek-V3 orchestration service guide."
+      scope: "Primordials service"
+      insight: "Reference when integrating Primordials."
+  docs/component_index.md:
+    sha256: <sha256>
+    summary:
+      purpose: "Inventory of modules and services."
+      scope: "All components"
+      insight: "Add or update entries for component changes."
 ```
 
 The `confirm-reading` pre-commit hook verifies this file and blocks commits if
