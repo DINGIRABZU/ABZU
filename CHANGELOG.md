@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented mission brief archive requirements and maintenance in The Absolute Protocol.
 - Added Operator API and Open Web UI entries to `CONNECTOR_INDEX.md` and expanded protocol checklist for connector registry.
 - Required onboarding summaries for all files listed in `onboarding_confirm.yml` and referenced the rule in The Absolute Protocol.
+- Added Release Protocol to The Absolute Protocol covering changelog updates, git tagging, and release note cross-references.
 
 ### Quality
 

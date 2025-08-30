@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.40
-**Last updated:** 2025-09-09
+**Version:** v1.0.41
+**Last updated:** 2025-09-10
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -183,6 +183,12 @@ implement the required change instead of leaving placeholders.
 
 - Maintain the [Dependency Registry](dependency_registry.md) of approved runtimes, frameworks, and library minimum versions.
 - Update the registry when dependencies are added, upgraded, or deprecated, and validate changes with `pre-commit run --files docs/dependency_registry.md docs/INDEX.md`.
+
+## Release Protocol
+
+- Update [`CHANGELOG.md`](../CHANGELOG.md) or the relevant component changelog whenever a version number changes.
+- Create an annotated git tag for each release (e.g., `git tag -a vX.Y.Z -m "Release vX.Y.Z"` and `git push --tags`).
+- Cross-reference release details in [release_notes.md](release_notes.md) to capture highlights and migration notes.
 
 ## Maintenance Checklist
 - [ ] Regenerate `docs/INDEX.md` with `python tools/doc_indexer.py`.
