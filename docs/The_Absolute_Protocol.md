@@ -207,7 +207,7 @@ Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNEC
 
 ## Subsystem Protocols
 
-- [Operator Protocol](operator_protocol.md) – documents `/operator/command`, `/operator/upload`, and WebRTC channel semantics along with role checks and Crown's relay to RAZAR.
+- [Operator Protocol](operator_protocol.md) – documents `/operator/command`, `/operator/upload`, permission checks, and escalation rules through Crown to RAZAR.
 - [Ignition Sequence Protocol](ignition_sequence_protocol.md) – mandates logging points and escalation during boot.
 - [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
 - [Logging & Observability Protocol](#logging--observability-protocol) – structured logging and metrics requirements.

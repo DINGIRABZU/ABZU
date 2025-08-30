@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-09-02T12:00:00Z",
+  "initiator": "operator",
+  "action": "status_check",
+  "escalated_to": "Crown",
+  "acknowledgement": {
+    "status": "accepted",
+    "relay": "RAZAR"
+  }
+}
