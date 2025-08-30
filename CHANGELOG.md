@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented module coverage and example runs in RAZAR agent guide.
 - RAZAR agent guide now requires `CROWN_WS_URL`, a running Crown server, and
   documents mission brief archive rotation.
+- Added Change Justification subsection and PR template field with CI validation.
 
 ### Added
 

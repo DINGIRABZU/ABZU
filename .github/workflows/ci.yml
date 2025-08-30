@@ -4,6 +4,15 @@ on:
   pull_request:
 
 jobs:
+  change-justification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate change justification
+        run: python scripts/validate_change_justification.py
   pre-commit:
     runs-on: ubuntu-latest
     steps:

@@ -114,11 +114,11 @@ documents:
       scope: Security considerations.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: adf5144af4e16cd5606f5468e3a023ed3ec39ea7cf5e76120ea3d3fdbecc7fb4
+    sha256: 6e28c14d6391f8594a74aa4170cdebcc1f64bd2a8730a68e88ed8e079ec8db0d
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      insight: Include action summary in every pull request.
+      insight: Include Change Justification in every pull request.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
