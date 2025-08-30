@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 import argparse
 import asyncio
@@ -55,7 +55,6 @@ class BootOrchestrator:
         ignition: Path | None = None,
         state: Path | None = None,
         retries: int = 3,
-        enable_ai_handover: bool | None = None,
     ) -> None:
         """Initialize orchestrator paths and configuration."""
         root = Path(__file__).resolve().parents[2]
@@ -69,9 +68,6 @@ class BootOrchestrator:
             str(comp["name"]): DEFAULT_STATUS for comp in self.components
         }
         self.retries = retries
-        self.enable_ai_handover = (
-            bool(enable_ai_handover) if enable_ai_handover is not None else False
-        )
 
     # ------------------------------------------------------------------
     # Crown handshake
@@ -259,40 +255,11 @@ class BootOrchestrator:
     # ------------------------------------------------------------------
     # Component launching
     # ------------------------------------------------------------------
-    def _ai_handover(self, name: str, error: str) -> None:
-        """Invoke the remote agent for repair suggestions and apply patches."""
-        try:
-            suggestion = ai_invoker.handover(
-                patch_context={"component": name, "error": error}
-            )
-        except Exception:  # pragma: no cover - defensive
-            LOGGER.exception("AI handover invocation failed for %s", name)
-            return
-        if not suggestion:
-            return
-        patches = suggestion if isinstance(suggestion, list) else [suggestion]
-        for patch in patches:
-            module = patch.get("module")
-            if not module:
-                continue
-            tests = [Path(t) for t in patch.get("tests", [])]
-            err = patch.get("error", error)
-            try:
-                code_repair.repair_module(Path(module), tests, err)
-            except Exception:  # pragma: no cover - defensive
-                LOGGER.exception("Failed to apply patch for %s", module)
-        # Reload commands in case patches updated configuration
-        self._load_commands()
-
     def _load_commands(self) -> Dict[str, str]:
         """Return mapping of component names to launch commands."""
         if not self.config_path.exists():
-            self.enable_ai_handover = False
             return {}
         data = yaml.safe_load(self.config_path.read_text(encoding="utf-8")) or {}
-        self.enable_ai_handover = bool(
-            data.get("enable_ai_handover", self.enable_ai_handover)
-        )
         comps = data.get("components", [])
         return {str(c.get("name")): str(c.get("command", "")) for c in comps}
 
@@ -322,12 +289,32 @@ class BootOrchestrator:
 
             LOGGER.error("Component %s failed: %s", name, result.stdout)
             if attempt > self.retries:
-                if self.enable_ai_handover and not handover_attempted:
-                    self._ai_handover(name, result.stdout)
-                    # Retry with fresh commands once after handover
-                    new_commands = self._load_commands()
-                    self._launch(comp, new_commands, handover_attempted=True)
-                    return
+                if not handover_attempted:
+                    try:
+                        suggestion = ai_invoker.handover(
+                            patch_context={"component": name, "error": result.stdout}
+                        )
+                    except Exception:  # pragma: no cover - defensive
+                        LOGGER.exception("AI handover invocation failed for %s", name)
+                        suggestion = None
+                    if suggestion:
+                        patches = (
+                            suggestion if isinstance(suggestion, list) else [suggestion]
+                        )
+                        for patch in patches:
+                            module = patch.get("module")
+                            if not module:
+                                continue
+                            tests = [Path(t) for t in patch.get("tests", [])]
+                            err = patch.get("error", result.stdout)
+                            try:
+                                code_repair.repair_module(Path(module), tests, err)
+                            except Exception:  # pragma: no cover - defensive
+                                LOGGER.exception("Failed to apply patch for %s", module)
+                        # Retry with fresh commands once after handover
+                        new_commands = self._load_commands()
+                        self._launch(comp, new_commands, handover_attempted=True)
+                        return
                 quarantine_manager.quarantine_component(
                     comp,
                     "launch failure",
@@ -370,8 +357,27 @@ class BootOrchestrator:
                 continue
             if name not in commands or not commands.get(name):
                 LOGGER.error("Missing command for component %s", name)
-                if self.enable_ai_handover:
-                    self._ai_handover(name, "missing command")
+                try:
+                    suggestion = ai_invoker.handover(
+                        patch_context={"component": name, "error": "missing command"}
+                    )
+                except Exception:  # pragma: no cover - defensive
+                    LOGGER.exception("AI handover invocation failed for %s", name)
+                    suggestion = None
+                if suggestion:
+                    patches = (
+                        suggestion if isinstance(suggestion, list) else [suggestion]
+                    )
+                    for patch in patches:
+                        module = patch.get("module")
+                        if not module:
+                            continue
+                        tests = [Path(t) for t in patch.get("tests", [])]
+                        err = patch.get("error", "missing command")
+                        try:
+                            code_repair.repair_module(Path(module), tests, err)
+                        except Exception:  # pragma: no cover - defensive
+                            LOGGER.exception("Failed to apply patch for %s", module)
                     commands = self._load_commands()
                 if name not in commands or not commands.get(name):
                     self.statuses[name] = "❌"
