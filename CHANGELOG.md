@@ -85,6 +85,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced `sample_biosignals_gamma.csv` and documented ingestion schema with
   dedicated transformation tests.
 - Stubbed `memory/narrative_engine.py` defining story event interfaces.
+- Added `docs/nazarick_narrative_system.md` outlining architecture, dependencies,
+  and biosignal event flow.
+- Added `sample_biosignals_delta.csv` with schema and ingestion notes.
+- Enhanced tests to validate numeric data and multi-file transformations.
 
 ### Chakra Versions
 

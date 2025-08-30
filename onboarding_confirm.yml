@@ -156,7 +156,7 @@ documents:
       scope: OS Guardian component.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 1b17a227cacfa07a1d3b5214c1354b4740882f54b54e5335c3d8d63a8dc637d7
+    sha256: 20d9f59b2a9acf28b6483cab52b607b15004eb20c3e73bf83c48112c21cb8ee0
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
