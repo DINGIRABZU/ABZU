@@ -1,0 +1,6 @@
+flowchart LR
+    input[Prompt] --> detect[detect_state_trigger()]
+    detect --> build[Build Prompt]
+    build --> glm[GLM Endpoint]
+    glm --> reply[Response]
+    reply --> update[Update Shadow Metrics]

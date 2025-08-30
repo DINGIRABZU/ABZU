@@ -1,0 +1,8 @@
+flowchart LR
+    user[User] --> console[Crown Console]
+    console --> agent[Crown Agent]
+    agent --> ste[State Transition Engine]
+    ste --> glm[GLM Service]
+    ste --> servants[Servant Models]
+    glm --> response[Reply]
+    servants --> response

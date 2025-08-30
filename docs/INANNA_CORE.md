@@ -2,6 +2,20 @@
 
 `crown_config/INANNA_CORE.yaml` defines the default settings used by the Crown agent. Each option can be overridden by an environment variable, allowing different deployments without editing the file.
 
+## Flow
+
+```mermaid
+flowchart LR
+    user[User Input] --> crown[Crown Agent]
+    crown --> inanna[INANNA Core]
+    inanna --> glm[GLM Service]
+    inanna --> memory[Vector Memory]
+    memory --> inanna
+    glm --> reply[Response]
+```
+
+The Mermaid source lives at [assets/inanna_flow.mmd](assets/inanna_flow.mmd).
+
 ## Fields
 
 - **`glm_api_url`** – Base URL for the GLM service. Override with `GLM_API_URL`.

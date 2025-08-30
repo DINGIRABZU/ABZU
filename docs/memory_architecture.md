@@ -17,6 +17,20 @@ persistence strategies for each store:
 - **Spiritual** – transcendent insights and ritual state.
 - **Narrative** – story events linking actors, actions and symbolism.
 
+## Flow
+
+```mermaid
+flowchart LR
+    input[Experience] --> bus[Memory Bus]
+    bus --> cortex[Cortex]
+    bus --> emotional[Emotional]
+    bus --> mental[Mental]
+    bus --> spiritual[Spiritual]
+    bus --> narrative[Narrative]
+```
+
+The Mermaid source lives at [assets/memory_flow.mmd](assets/memory_flow.mmd).
+
 ### Cortex store
 
 Implementation: [memory/cortex.py](../memory/cortex.py)
