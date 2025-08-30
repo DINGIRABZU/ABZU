@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 import json
 import shutil
@@ -14,7 +14,11 @@ from agents.operator_dispatcher import OperatorDispatcher
 
 router = APIRouter()
 _dispatcher = OperatorDispatcher(
-    {"overlord": ["cocytus", "victim", "crown"], "auditor": ["victim"]}
+    {
+        "overlord": ["cocytus", "victim", "crown"],
+        "auditor": ["victim"],
+        "crown": ["razar"],
+    }
 )
 
 
@@ -45,7 +49,7 @@ async def upload_file(
     metadata: str = Form("{}"),
     files: list[UploadFile] = File(...),
 ) -> dict[str, object]:
-    """Store uploaded files and forward metadata to Crown."""
+    """Store uploaded files and forward metadata to RAZAR via Crown."""
     try:
         meta = json.loads(metadata)
     except json.JSONDecodeError as exc:
@@ -61,12 +65,16 @@ async def upload_file(
             shutil.copyfileobj(item.file, fh)
         stored.append(dest.name)
 
-    def _forward(meta: dict[str, object]) -> dict[str, object]:
-        """Relay metadata to Crown."""
-        return {"received": meta}
+    def _relay(meta: dict[str, object]) -> dict[str, object]:
+        """Crown forwards metadata to RAZAR."""
+
+        def _send(m: dict[str, object]) -> dict[str, object]:
+            return {"received": m}
+
+        return _dispatcher.dispatch("crown", "razar", _send, meta)
 
     try:
-        _dispatcher.dispatch(operator, "crown", _forward, meta)
+        _dispatcher.dispatch(operator, "crown", _relay, meta)
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
 

@@ -54,9 +54,13 @@ def test_command_requires_fields(client: TestClient) -> None:
 def test_upload_stores_and_forwards(client: TestClient, monkeypatch) -> None:
     captured: dict[str, dict] = {}
 
-    def dispatch(operator, agent, func, meta):
-        captured["meta"] = meta
-        return {"ok": True}
+    def dispatch(operator, agent, func, *args):
+        if operator == "overlord" and agent == "crown":
+            return func(*args)
+        if operator == "crown" and agent == "razar":
+            captured["meta"] = args[0]
+            return {"ok": True}
+        raise AssertionError("unexpected dispatch")
 
     monkeypatch.setattr(operator_api._dispatcher, "dispatch", dispatch)
     resp = client.post(

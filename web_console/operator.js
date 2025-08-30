@@ -50,5 +50,27 @@ function uploadFiles(files, metadata = {}, operator = 'overlord') {
     }).then(resp => resp.json());
 }
 
-export { API_URL, BASE_URL, OFFER_URL, UPLOAD_URL, sendCommand, startStream, uploadFiles };
+function uploadFile(file, metadata = {}, operator = 'overlord') {
+    return uploadFiles([file], metadata, operator);
+}
+
+function uploadMedia(blob, filename, metadata = {}, operator = 'overlord') {
+    const formData = new FormData();
+    formData.append('files', blob, filename);
+    formData.append('operator', operator);
+    formData.append('metadata', JSON.stringify(metadata));
+    return fetch(UPLOAD_URL, { method: 'POST', body: formData }).then(resp => resp.json());
+}
+
+export {
+    API_URL,
+    BASE_URL,
+    OFFER_URL,
+    UPLOAD_URL,
+    sendCommand,
+    startStream,
+    uploadFiles,
+    uploadFile,
+    uploadMedia
+};
 
