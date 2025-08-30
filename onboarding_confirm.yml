@@ -120,7 +120,7 @@ documents:
       scope: Security considerations.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 6e28c14d6391f8594a74aa4170cdebcc1f64bd2a8730a68e88ed8e079ec8db0d
+    sha256: 0446237c88b756eb349449682915dddc42fd89f83bd6c515024a7ac39d9f6b07
     summary:
       purpose: Core contribution rules.
       scope: All contributors.

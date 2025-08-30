@@ -14,7 +14,7 @@ Before opening a pull request, confirm each item:
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
-  - [Connector Index](connectors/CONNECTOR_INDEX.md) – confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
+  - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
 - [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
@@ -280,7 +280,7 @@ All endpoints must publish machine-validated schemas:
 - [ ] Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
 - [ ] Run component tests with `pytest --cov` and attach the coverage badge or report to the PR.
 - [ ] Run `scripts/verify_doc_summaries.py` to confirm `onboarding_confirm.yml` hashes.
-- [ ] Ensure connectors appear in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
+- [ ] Ensure connectors appear in the connector registry [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
 
 ## Protocol Change Process
 Updates to this protocol follow a lightweight governance model:

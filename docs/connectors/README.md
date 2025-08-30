@@ -1,7 +1,8 @@
 # Connector Overview
 
-Source: [`../connectors/webrtc_connector.py`](../connectors/webrtc_connector.py)
-Related Guides: [`CONNECTOR_INDEX.md`](CONNECTOR_INDEX.md)
+Canonical guidelines for modules that bridge Spiral OS to external services.
+The live registry of available connectors lives in
+[`CONNECTOR_INDEX.md`](CONNECTOR_INDEX.md).
 
 ## Vision
 
@@ -15,6 +16,19 @@ flowchart LR
     SpiralOS --> Connector --> Service[External Service]
 ```
 
+## Maintenance Rules
+
+To keep integration layers discoverable and reliable:
+
+- Expose a `__version__` field for traceability.
+- Provide one or more callable endpoints or interfaces.
+- Document authentication and network protocols used.
+- Update the entry in [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md) whenever
+  purpose, versions, endpoints, or protocols change.
+- Increment `__version__` for any backward-incompatible change.
+- Keep modules lightweight with clear dependencies and minimal side effects.
+- Supply or update tests and docs alongside connector changes.
+
 ## Requirements
 
 - Python 3.10+
@@ -22,8 +36,8 @@ flowchart LR
 
 ## Deployment
 
-Install required dependencies and import the connector module in your service or
-agent.
+Install required dependencies and import the connector module in your service
+or agent.
 
 ## Configuration Schemas
 
@@ -33,20 +47,6 @@ Each connector documents its authentication parameters. See
 ## Version History
 
 - v0.1.0 – initial connector guidelines
-
-## Maintenance Rules
-
-Connectors bridge Spiral OS to external communication services. To keep these
-integration layers discoverable and reliable:
-
-- Expose a `__version__` field for traceability.
-- Provide one or more callable endpoints or interfaces.
-- Document authentication and network protocols used.
-- Update the entry in [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md) whenever purpose,
-  versions, endpoints, or protocols change.
-- Increment `__version__` for any backward-incompatible changes.
-- Keep modules lightweight with clear dependencies and minimal side effects.
-- Supply or update tests and docs alongside connector changes.
 
 ## Schemas
 

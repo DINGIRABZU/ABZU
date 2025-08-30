@@ -14,7 +14,7 @@ contributor summary detailing its purpose, scope, and one actionable insight in
 | [System Blueprint](system_blueprint.md) | Architectural overview | Quarterly |
 | [Component Index](component_index.md) | Inventory of modules and services | Quarterly |
 | [Component Status](component_status.md) | Tracks component readiness | Quarterly |
-| [Connector Index](connectors/CONNECTOR_INDEX.md) | Registry of connector IDs, purpose, versions, endpoints, auth methods, status, and links to docs and source code | Quarterly |
+| [Connector Index](connectors/CONNECTOR_INDEX.md) | Canonical registry of connector IDs, purpose, versions, endpoints, auth methods, status, and links to docs and source code | Quarterly |
 | [Security Model](security_model.md) | Threat modeling and protections | Quarterly |
 | [Data Security and Compliance](data_security.md) | Compliance requirements | Quarterly |
 | [Data Manifest](data_manifest.md) | Data sources and types | Quarterly |
