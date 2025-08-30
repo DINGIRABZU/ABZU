@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.35
-**Last updated:** 2025-09-13
+**Version:** v1.0.36
+**Last updated:** 2025-08-30
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -13,7 +13,7 @@ Before opening a pull request, confirm each item:
   - [AGENTS.md](../AGENTS.md)
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
-- [ ] All modules expose `__version__`; bump fields for user-facing changes
+- [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] Connector registry updated:
   - implementations expose `__version__`, implement `start_call`, and `close_peers`
@@ -119,6 +119,7 @@ Any new configuration file must be accompanied by documentation that outlines it
 ### Module Versioning
 
 Every source module must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/component_inventory.py` to confirm module versions remain synchronized.
+The `verify-versions` pre-commit hook scans staged Python files and fails if this attribute is missing.
 
 ### Connector Guidelines
 
