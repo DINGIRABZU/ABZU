@@ -175,7 +175,7 @@ documents:
       key_rules: Notes responsibilities and interfaces.
       insight: Review before modifying system protection code.
   docs/RAZAR_AGENT.md:
-    sha256: 17bf7af1802b185f6b641b91ceb6c7bc061b23044a16e9b9c0c555533567506f
+    sha256: 9bc753d6765809a47ab0c78561f2f535c80d634ce8b7bef30f0f6e07c0382a09
     summary:
       purpose: RAZAR agent bootstrap and logging guidance.
       scope: RAZAR agent operations.
