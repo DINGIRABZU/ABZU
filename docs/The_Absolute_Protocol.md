@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.37
-**Last updated:** 2025-08-30
+**Version:** v1.0.38
+**Last updated:** 2025-09-07
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -65,6 +65,8 @@ When contributing, consult resources in this order:
 
 - Run `pytest tests/narrative_engine/test_biosignal_pipeline.py` to validate
   biosignal ingestion and transformation.
+- Execute `pytest` (or an equivalent test suite) for all modules you modify and
+  report the resulting coverage.
 
 ## Test Coverage Protocol
 
@@ -171,6 +173,7 @@ implement the required change instead of leaving placeholders.
 ## Maintenance Checklist
 - [ ] Regenerate `docs/INDEX.md` with `python tools/doc_indexer.py`.
 - [ ] Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
+- [ ] Run component tests with `pytest --cov` and attach the coverage badge or report to the PR.
 - [ ] Run `scripts/verify_doc_summaries.py` to confirm `onboarding_confirm.yml` hashes.
 - [ ] Ensure connectors appear in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
 
