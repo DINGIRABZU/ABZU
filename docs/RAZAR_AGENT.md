@@ -27,6 +27,7 @@ Core dependencies:
 
 - `pyyaml`
 - `prometheus_client`
+- `websockets`
 
 Optional tools:
 
@@ -35,6 +36,36 @@ Optional tools:
 Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in
 [dependencies.md](dependencies.md).
+
+## Module Overviews
+
+### `boot_orchestrator.py`
+Coordinates startup, loads component configs, performs the Crown handshake, and
+records state snapshots. [Source](../razar/boot_orchestrator.py)
+
+### `environment_builder.py`
+Ensures the correct Python version is present, creates a virtual environment,
+and installs layer‑specific packages. [Source](../razar/environment_builder.py)
+
+### `doc_sync.py`
+Regenerates ignition docs and updates the System Blueprint and component tables
+based on runtime results. [Source](../razar/doc_sync.py)
+
+### `checkpoint_manager.py`
+Persists boot progress so interrupted runs can resume from the last successful
+component. [Source](../razar/checkpoint_manager.py)
+
+### `crown_link.py`
+Provides a minimal WebSocket client for diagnostics and repair exchanges with
+the Crown stack. [Source](../razar/crown_link.py)
+
+### `adaptive_orchestrator.py`
+Explores alternative component launch sequences and records the fastest path to
+ready state. [Source](../razar/adaptive_orchestrator.py)
+
+### `cocreation_planner.py`
+Builds dependency‑ordered plans by combining component priorities, failure
+counts, and Crown suggestions. [Source](../razar/cocreation_planner.py)
 
 ## Interaction Logging
 
@@ -47,7 +78,15 @@ all exchanges between RAZAR, Crown, and the Operator must append records to
 - action or request
 - response summary
 
-## Boot flow
+## Functional Workflows
+
+RAZAR operations revolve around several coordinated flows:
+
+- [Boot Flow](#boot-flow)
+- [Remote Assistance](#remote-assistance)
+- [AI Handover](#ai-handover)
+
+## Boot Flow
 
 ```mermaid
 flowchart LR
@@ -61,8 +100,8 @@ The Mermaid source lives at [assets/razar_flow.mmd](assets/razar_flow.mmd).
 
 ## Architecture
 
-The RAZAR agent coordinates multiple modules during startup. The diagram below
-highlights the primary interactions:
+The RAZAR agent coordinates multiple modules during startup. The Mermaid diagram
+below highlights the primary interactions without relying on binary images:
 
 ```mermaid
 graph TD
@@ -508,7 +547,10 @@ usage.
 3. After repeated failures, the affected component is quarantined and AI
    handover or manual intervention is required before reboot.
 
-## Example Runs
+## Deployment Workflow
+
+Typical deployment builds the environment, launches components, and records state
+for auditing. The snippets below show a clean startup and a simulated recovery.
 
 ### Startup and Handshake
 
@@ -555,6 +597,56 @@ Sample mission brief:
   "status": "success"
 }
 ```
+
+## Configuration
+
+### `boot_config.json`
+
+```json
+{
+  "components": [
+    {
+      "name": "basic_service",
+      "command": ["python", "-c", "print('basic service running')"],
+      "health_check": ["python", "-c", "import sys; sys.exit(0)"]
+    }
+  ]
+}
+```
+
+Defines component launch commands and health checks.
+
+### `razar_env.yaml`
+
+```yaml
+layers:
+  razar:
+    - pyyaml
+  inanna:
+    - requests
+  crown:
+    - numpy
+```
+
+Lists per-layer dependencies for the environment builder.
+
+### `logs/razar_state.json`
+
+```json
+{
+  "last_component": "",
+  "capabilities": [],
+  "downtime": {},
+  "launched_models": [],
+  "handshake": {
+    "acknowledgement": "",
+    "capabilities": [],
+    "downtime": {}
+  }
+}
+```
+
+Captures runtime state and handshake capabilities.
 
 ## AI Handover
 
@@ -610,7 +702,7 @@ the outstanding work, then re-run `pre-commit run --files <paths>`.
 
 ## Version History
 
-| Version | Date | Summary |
-|---------|------|---------|
-| [0.1.0](../CHANGELOG_razar.md#010---2025-08-30) | 2025-08-30 | Initial release of RAZAR runtime orchestrator and environment builder. |
+| Version | Date | Summary | Modules |
+|---------|------|---------|---------|
+| [0.1.0](../CHANGELOG_razar.md#010---2025-08-30) | 2025-08-30 | Initial release of RAZAR runtime orchestrator and environment builder. | [boot_orchestrator.py](../razar/boot_orchestrator.py), [environment_builder.py](../razar/environment_builder.py) |
 
