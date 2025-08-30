@@ -190,12 +190,13 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | Bootstrapper for local services and mission brief exchange with the CROWN stack. | `../agents/razar/ai_invoker.py`, `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/code_repair.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../agents/razar/health_checks.py`, `../agents/razar/module_builder.py`, `../agents/razar/quarantine_manager.py`, `../agents/razar/runtime_manager.py`, `../razar/adaptive_orchestrator.py`, `../razar/boot_orchestrator.py`, `../razar/checkpoint_manager.py`, `../razar/cocreation_planner.py`, `../razar/crown_link.py`, `../razar/doc_sync.py`, `../razar/environment_builder.py` |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.44 **Last updated:** 2025-08-30 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.45 **Last updated:** 2025-08-30 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
 | [adr/0001-use-faiss-for-vector-search.md](adr/0001-use-faiss-for-vector-search.md) | ADR 0001: Use FAISS for Vector Search | Date: 2024-11-25 | - |
 | [adr/0002-prefer-asyncio-over-threads.md](adr/0002-prefer-asyncio-over-threads.md) | ADR 0002: Prefer asyncio over Threads | Date: 2024-11-25 | - |
+| [adr/ADR_TEMPLATE.md](adr/ADR_TEMPLATE.md) | Title | - **Status:** Draft - **Date:** 2025-08-30 | - |
 | [ai_ethics_framework.md](ai_ethics_framework.md) | AI Ethics Framework | Principles guiding the development and operation of INANNA_AI. | - |
 | [api_reference.md](api_reference.md) | API Reference | This document describes the FastAPI endpoints provided by `api.server`. | `../tests/test_server_endpoints.py` |
 | [archetype_logic.md](archetype_logic.md) | Archetype Logic | This document outlines how Spiral OS interprets alchemical states to shape its responses. The progression through **N... | - |

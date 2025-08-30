@@ -16,11 +16,12 @@
       "tests": [
         "tests/test_server.py"
       ],
-      "status": "stable",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 1
+      "ignition_stage": 1,
+      "adr": null
     },
     {
       "id": "razar",
@@ -36,11 +37,12 @@
       "tests": [
         "tests/test_razar_health_checks.py"
       ],
-      "status": "alpha",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 0
+      "ignition_stage": 0,
+      "adr": null
     },
     {
       "id": "crown",
@@ -55,11 +57,12 @@
       "tests": [
         "tests/test_crown_initialization.py"
       ],
-      "status": "alpha",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 2
+      "ignition_stage": 2,
+      "adr": null
     },
     {
       "id": "inanna",
@@ -74,11 +77,12 @@
       "tests": [
         "tests/test_inanna_ai.py"
       ],
-      "status": "alpha",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 3
+      "ignition_stage": 3,
+      "adr": null
     },
     {
       "id": "inanna_ai_agent",
@@ -91,11 +95,12 @@
         "transformers"
       ],
       "tests": [],
-      "status": "alpha",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 3
+      "ignition_stage": 3,
+      "adr": null
     },
     {
       "id": "albedo",
@@ -110,11 +115,12 @@
       "tests": [
         "tests/test_albedo_personality.py"
       ],
-      "status": "alpha",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 3
+      "ignition_stage": 3,
+      "adr": null
     },
     {
       "id": "nazarick",
@@ -129,11 +135,12 @@
       "tests": [
         "tests/test_nazarick_messaging.py"
       ],
-      "status": "alpha",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 3
+      "ignition_stage": 3,
+      "adr": null
     },
     {
       "id": "memory_layers",
@@ -148,11 +155,12 @@
       "tests": [
         "tests/test_spiral_memory.py"
       ],
-      "status": "alpha",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 4
+      "ignition_stage": 4,
+      "adr": null
     },
     {
       "id": "narrative_engine",
@@ -169,7 +177,8 @@
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 4
+      "ignition_stage": 4,
+      "adr": null
     },
     {
       "id": "operator_interface",
@@ -182,11 +191,12 @@
         "fastapi"
       ],
       "tests": [],
-      "status": "draft",
+      "status": "active",
       "metrics": {
         "coverage": 1.0
       },
-      "ignition_stage": 2
+      "ignition_stage": 2,
+      "adr": null
     }
   ]
 }

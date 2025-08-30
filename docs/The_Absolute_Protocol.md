@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.44
+**Version:** v1.0.45
 **Last updated:** 2025-08-30
 
 ## How to Use This Protocol
@@ -17,6 +17,7 @@ Before opening a pull request, confirm each item:
 - [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
+- [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
 - [ ] Connector registry updated:
   - implementations expose `__version__`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated

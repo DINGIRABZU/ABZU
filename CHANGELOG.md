@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added recovery playbook documenting snapshot restoration steps.
 - Mapped cortex, emotional, mental, spiritual and narrative memory stores in
   `docs/memory_architecture.md`.
+
+### Added
+
+- Introduced lifecycle `status` and `adr` link requirements for `component_index.json` and provided `docs/adr/ADR_TEMPLATE.md`.
 - Introduced co-creation and AI ethics frameworks with cross-links from README and The Absolute Protocol.
 - Expanded connector registry schema with purpose and service fields and updated The Absolute Protocol accordingly.
 - Added Code Harmony, API Contract, and Technology Registry protocols to The Absolute Protocol.
