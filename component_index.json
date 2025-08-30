@@ -201,6 +201,27 @@
       },
       "ignition_stage": 2,
       "adr": null
+    },
+    {
+      "id": "webrtc_connector",
+      "chakra": "crown",
+      "type": "service",
+      "version": "0.2.0",
+      "path": "connectors/webrtc_connector.py",
+      "purpose": "WebRTC bridge for real-time avatar streaming",
+      "dependencies": [
+        "fastapi",
+        "aiortc"
+      ],
+      "tests": [
+        "tests/test_webrtc_connector.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 1.0
+      },
+      "ignition_stage": 2,
+      "adr": null
     }
   ]
 }
