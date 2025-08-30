@@ -167,7 +167,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `communication/webrtc_server.py` | WebRTC signaling helpers and media tracks. | aiortc, core, mediasoup, numpy, soundfile |
 | `connectors/__init__.py` | No description | None |
 | `connectors/webrtc_connector.py` | WebRTC connector for streaming data, audio, and video. | aiortc, communication, fastapi |
-| `corpus_memory_logging.py` | Append and read JSONL interaction records for corpus memory usage. | None |
+| `corpus_memory_logging.py` | Append and read JSONL interaction records for corpus memory usage and test failures. | None |
 | `crown_config/__init__.py` | Load application configuration from environment variables. | pydantic, pydantic_settings |
 | `crown_config/settings/__init__.py` | Utilities for reading optional layer configuration. | yaml |
 | `crown_decider.py` | Heuristics for selecting a language model in the Crown agent. | INANNA_AI, audio, crown_config |
