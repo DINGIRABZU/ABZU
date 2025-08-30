@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.55
-**Last updated:** 2025-09-01
+**Version:** v1.0.56
+**Last updated:** 2025-09-02
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -160,6 +160,9 @@ Connectors bridge the language engine to external communication layers. Follow t
 - implement `start_call(path: str) -> None` to initiate a stream
 - provide `close_peers() -> Awaitable[None]` to release resources
 - expose a `__version__` field and bump it on interface changes
+- document all externally exposed endpoints and authentication methods
+- update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) whenever the connector changes
+  (the `check-connector-index` pre-commit hook fails if a touched connector lacks an entry)
 - cross-link implementation modules such as [`connectors/webrtc_connector.py`](../connectors/webrtc_connector.py) and the package [`connectors`](../connectors/__init__.py)
 
 ### Connector Registry

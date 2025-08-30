@@ -25,5 +25,5 @@ I did X on Y to obtain Z, expecting behavior B.
 
 ## Connector and Index Checklist
 - [ ] Component index entry added/updated
-- [ ] Connector registry updated <!-- confirm CONNECTOR_INDEX.md lists purpose, version, endpoints, auth method, status, and links -->
+- [ ] Connector registry updated <!-- confirm CONNECTOR_INDEX.md lists purpose, version, endpoints, auth method, status, and links; pre-commit `check_connector_index.py` fails if touched connectors lack entries -->
 - [ ] Index regenerated <!-- Required: confirm `python tools/doc_indexer.py` -->
