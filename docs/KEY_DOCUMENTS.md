@@ -4,20 +4,22 @@ The files listed here are foundational and must never be deleted or renamed.
 
 ## Protected Files
 
-- [AGENTS.md](../AGENTS.md)
-- [The Absolute Protocol](The_Absolute_Protocol.md)
-- [System Blueprint](system_blueprint.md)
-- [Component Index](component_index.md)
-- [Component Status](component_status.md)
-- [Connector Index](connectors/CONNECTOR_INDEX.md) – registry of connector IDs, versions, endpoints, auth methods, and status (see [Connector Overview](connectors/README.md) for patterns and maintenance rules)
-- [Security Model](security_model.md)
-- [Data Security and Compliance](data_security.md)
-- [Data Manifest](data_manifest.md)
-- [Dependency Registry](dependency_registry.md)
-- [Logging Guidelines](logging_guidelines.md)
-- [API Reference](api_reference.md)
-- [Operator Protocol](operator_protocol.md)
-- [RAZAR AI agents config](../config/razar_ai_agents.json) – roster of handover agents and authentication settings
+| Document | Description | Audit cadence |
+| --- | --- | --- |
+| [AGENTS.md](../AGENTS.md) | Repository-wide agent instructions | Quarterly |
+| [The Absolute Protocol](The_Absolute_Protocol.md) | Core contribution rules | Quarterly |
+| [System Blueprint](system_blueprint.md) | Architectural overview | Quarterly |
+| [Component Index](component_index.md) | Inventory of modules and services | Quarterly |
+| [Component Status](component_status.md) | Tracks component readiness | Quarterly |
+| [Connector Index](connectors/CONNECTOR_INDEX.md) | Registry of connector IDs, versions, endpoints, auth methods, and status | Quarterly |
+| [Security Model](security_model.md) | Threat modeling and protections | Quarterly |
+| [Data Security and Compliance](data_security.md) | Compliance requirements | Quarterly |
+| [Data Manifest](data_manifest.md) | Data sources and types | Quarterly |
+| [Dependency Registry](dependency_registry.md) | Approved runtimes and library versions | Quarterly |
+| [Logging Guidelines](logging_guidelines.md) | Structured logging requirements | Quarterly |
+| [API Reference](api_reference.md) | API endpoints and schemas | Quarterly |
+| [Operator Protocol](operator_protocol.md) | Operator interaction rules | Quarterly |
+| [RAZAR AI agents config](../config/razar_ai_agents.json) | Roster of handover agents and authentication settings | Quarterly |
 
 These documents define repository-wide conventions and rules. Repository policy and pre-commit checks prevent their removal or renaming. When related components change, update the corresponding document in the same commit to keep information synchronized.
 

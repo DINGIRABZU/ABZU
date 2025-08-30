@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.42
-**Last updated:** 2025-09-20
+**Version:** v1.0.43
+**Last updated:** 2025-09-21
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -13,6 +13,7 @@ Before opening a pull request, confirm each item:
   - [AGENTS.md](../AGENTS.md)
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
+  - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
 - [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
@@ -210,6 +211,7 @@ All endpoints must publish machine-validated schemas:
 
 ## Maintenance Checklist
 - [ ] Regenerate `docs/INDEX.md` with `python tools/doc_indexer.py`.
+- [ ] Audit documents in KEY_DOCUMENTS.md quarterly and log overdue items with `scripts/schedule_doc_audit.py`.
 - [ ] Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
 - [ ] Run component tests with `pytest --cov` and attach the coverage badge or report to the PR.
 - [ ] Run `scripts/verify_doc_summaries.py` to confirm `onboarding_confirm.yml` hashes.
