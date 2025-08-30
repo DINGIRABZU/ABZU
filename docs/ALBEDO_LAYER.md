@@ -1,6 +1,6 @@
 # Albedo Personality Layer
 
-The **Albedo** layer introduces a stateful persona that drives responses through a remote GLM (Generative Language Model). All related modules live under `INANNA_AI/personality_layers/albedo`.
+The **Albedo** layer signals Nazarick agents while introducing a stateful persona that drives responses through a remote GLM (Generative Language Model). All related modules live under `INANNA_AI/personality_layers/albedo`.
 
 ## Project structure
 
@@ -77,6 +77,22 @@ The Mermaid source lives at [assets/albedo_state.mmd](assets/albedo_state.mmd).
 | Albedo | Rubedo | Synthesis or resolve cues | Fiery transformation |
 | Rubedo | Citrinitas | Insight or clarity signals | Enlightened guidance |
 | Citrinitas | Nigredo | Cycle completion | Return to shadow baseline |
+
+### Nazarick agent triggers
+
+State shifts can alert specific Nazarick servants to intervene:
+
+- Nigredo → Albedo engages the **Sebas Compassion Module**.
+- Albedo → Rubedo alerts the **Cocytus Prompt Arbiter**.
+- Rubedo → Citrinitas summons the **Demiurge Strategic Simulator**.
+- Citrinitas → Nigredo pings the **Pandora Persona Emulator**.
+
+| State | Agent ID | Channel |
+| --- | --- | --- |
+| Nigredo | Pandora Persona Emulator | `#treasure-vault` |
+| Albedo | Sebas Compassion Module | `#royal-suite` |
+| Rubedo | Cocytus Prompt Arbiter | `#glacier-prison` |
+| Citrinitas | Demiurge Strategic Simulator | `#lava-pits` |
 
 You can also use the layer programmatically:
 
@@ -239,6 +255,7 @@ Citrinitas speaks in golden clarity: proceed
 
 | Version | Date       | Summary |
 |---------|------------|---------|
+| 0.3.0   | 2025-08-31 | Added Nazarick agent triggers and state-channel table. |
 | 0.2.0   | 2025-08-30 | Documented transition inputs and outputs; externalized state diagram. |
 | 0.1.0   | 2025-08-29 | Added state machine diagram and initial version table. |
 
