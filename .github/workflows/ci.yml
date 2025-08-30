@@ -78,8 +78,13 @@ PY
         run: pytest --cov
       - name: Export coverage metrics
         run: python scripts/export_coverage.py
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: htmlcov
+          path: htmlcov
       - name: Validate component index schema
-        run: jsonschema -i component_index.json docs/schemas/component_index.json
+        run: jsonschema -i component_index.json schemas/component_index.schema.json
 
   ci:
     runs-on: ubuntu-latest

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export coverage metrics to component_index.json and enforce thresholds."""
+"""Export coverage metrics to component_index.json, generate HTML reports, and enforce thresholds."""
 
 from __future__ import annotations
 
@@ -11,16 +11,18 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INDEX_PATH = REPO_ROOT / "component_index.json"
 COVERAGE_JSON = REPO_ROOT / "coverage.json"
-ACTIVE_STATUSES = {"stable", "alpha"}
+ACTIVE_STATUSES = {"active"}
 THRESHOLD = 90.0
+__version__ = "0.1.0"
 
 
 def main() -> None:
-    """Generate coverage report, update component metrics and enforce threshold."""
+    """Generate coverage reports, update metrics and enforce thresholds."""
     subprocess.run(
         ["coverage", "json", "-i", "--fail-under=0", "-o", str(COVERAGE_JSON)],
         check=True,
     )
+    subprocess.run(["coverage", "html", "-i"], check=True)
     with COVERAGE_JSON.open("r", encoding="utf-8") as fh:
         coverage_data = json.load(fh)["files"]
     with INDEX_PATH.open("r", encoding="utf-8") as fh:

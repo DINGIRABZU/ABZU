@@ -44,6 +44,14 @@ Follow this sequence when adding or updating tests:
 4. **AI review** – obtain feedback from review agents.
 5. **Archive** – finalize in version control.
 
+## CI checks
+
+The [CI workflow](../.github/workflows/ci.yml) runs `pytest --cov`,
+produces an HTML report in `htmlcov/`, and exports coverage metrics to
+`component_index.json`. Components with `active` status must maintain at
+least 90% coverage. The workflow also validates `component_index.json`
+against the JSON schema.
+
 ## References
 
 - [Testing Guide](testing.md)
