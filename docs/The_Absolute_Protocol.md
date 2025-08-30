@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.47
-**Last updated:** 2025-08-30
+**Version:** v1.0.48
+**Last updated:** 2025-08-31
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -18,6 +18,7 @@ Before opening a pull request, confirm each item:
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
+- [ ] Tests follow the Pytest Codex; coverage updated in component index
 - [ ] Connector registry updated:
   - implementations expose `__version__`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
@@ -95,6 +96,12 @@ coverage-badge -o coverage.svg
 
 The `coverage.svg` badge reflects current totals and should be referenced in
 status documents.
+
+## Pytest Protocol
+
+- Achieve **over 90%** coverage when running `pytest --cov`.
+- Organize tests within chakra-aligned directories and include matching metadata fields.
+- Record updated coverage metrics in `component_index.json` whenever tests change.
 
 ## Documentation Standards
 
