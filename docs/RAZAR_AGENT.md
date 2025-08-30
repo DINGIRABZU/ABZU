@@ -579,6 +579,13 @@ flowchart LR
 
 The Mermaid source lives at [assets/ai_handover_flow.mmd](assets/ai_handover_flow.mmd).
 
+**Logging**
+
+Every invocation and the resulting patch suggestion are appended to
+[`../logs/razar_ai_invocations.json`](../logs/razar_ai_invocations.json) for
+auditing. Each entry records the agent name, timestamp, any configuration
+provided, and the suggestion returned.
+
 **Safety checks**
 
 - Patches execute in a sandboxed environment.
