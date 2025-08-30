@@ -290,7 +290,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/verify_dependencies.py` | Validate dependencies against docs/dependency_registry.md. | None |
 | `scripts/verify_doc_hashes.py` | Ensure protected documents have up-to-date hashes and summaries. | yaml |
 | `scripts/verify_doc_summaries.py` | Check onboarding doc summaries stay in sync with file hashes. | yaml |
-| `scripts/verify_versions.py` | Fail if a Python file lacks a __version__ attribute. | None |
+| `scripts/verify_versions.py` | Compare module `__version__` values with `component_index.json` and fail on mismatches. | None |
 | `servant_model_manager.py` | Registry and launcher for auxiliary language models. | tools |
 | `server.py` | Minimal FastAPI server exposing health and utility endpoints. | INANNA_AI, PIL, agents, communication, connectors, core, crown_config, fastapi, memory, numpy, prometheus_client, prometheus_fastapi_instrumentator, pydantic, yaml |
 | `seven_dimensional_music.py` | Utility for simple seven-dimensional music features. | MUSIC_FOUNDATION, numpy, src |

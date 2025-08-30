@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.61
-**Last updated:** 2025-08-30
+**Version:** v1.0.62
+**Last updated:** 2025-08-31
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute.
@@ -79,6 +79,13 @@ When contributing, consult resources in this order:
 | Contributor Handbook | Documentation Team | Quarterly |
 | AGENTS.md | Repository Maintainers | As needed |
 | Feature/Issue Specs | Feature Owners | Per release |
+
+## Version & Release Protocol
+
+- Every module, connector, and service must define a top-level `__version__` string.
+- Any user-facing change requires a semantic version bump following MAJOR.MINOR.PATCH.
+- Update `component_index.json` with the new version and run `scripts/verify_versions.py` to ensure source values match the index.
+- Record the change in the appropriate changelog.
 
 ## Release Management Protocol
 

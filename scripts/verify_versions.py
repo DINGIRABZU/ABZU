@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ensure source versions match component_index.json."""
+"""Compare module versions against component_index.json."""
 from __future__ import annotations
 
 import json
@@ -7,7 +7,7 @@ import re
 import sys
 from pathlib import Path
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 VERSION_RE = re.compile(r"^__version__\s*=\s*['\"]([^'\"]+)['\"]", re.MULTILINE)
 
@@ -46,13 +46,19 @@ def read_source_version(path: Path) -> str | None:
 def main(argv: list[str] | None = None) -> int:
     repo_root = Path(__file__).resolve().parent.parent
     index_mapping = load_component_versions(repo_root / "component_index.json")
-    paths = [Path(p) for p in (argv or sys.argv[1:])]
+    args = argv or sys.argv[1:]
+    if args:
+        paths = [Path(p) for p in args]
+    else:
+        paths = [repo_root / p for p in index_mapping.keys()]
 
     errors: list[str] = []
     for path in paths:
-        if path.suffix != ".py":
-            continue
         full_path = path if path.is_absolute() else repo_root / path
+        if full_path.is_dir():
+            full_path = full_path / "__init__.py"
+        if full_path.suffix != ".py":
+            continue
         source_version = read_source_version(full_path)
         rel = full_path.relative_to(repo_root)
         if source_version is None:
