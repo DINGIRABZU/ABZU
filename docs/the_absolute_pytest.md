@@ -1,58 +1,17 @@
-# The Absolute pytest
+# The Absolute Pytest
 
-**Version:** 1.0.0
+## AI Feedback Loop
 
-This guide codifies pytest practices for the ABZU project.
+- `crown_prompt_orchestrator` reviews Prometheus test metrics after each run.
+- When failures are detected it logs remediation suggestions with `log_suggestion` in `corpus_memory_logging`.
+- Suggestions are stored alongside other interaction records for later analysis.
 
-## Chakra-aligned test directories
+## Observability
 
-Tests live under chakra-specific directories to mirror system layers:
+- `tests/conftest.py` instruments pytest using `prometheus_client`.
+- Metrics:
+  - `pytest_test_duration_seconds` histogram captures per-test runtimes.
+  - `pytest_test_failures_total` counter increments on failed tests.
+- At session end metrics are written to `monitoring/pytest_metrics.prom` for scraping by Prometheus.
 
-- `tests/root/`
-- `tests/sacral/`
-- `tests/solar_plexus/`
-- `tests/heart/`
-- `tests/throat/`
-- `tests/third_eye/`
-- `tests/crown/`
-
-## Test types
-
-- **Unit** – isolated functions or classes.
-- **Integration** – interactions between modules.
-- **Smoke** – quick checks proving core functionality.
-- **Regression** – ensure past defects stay fixed.
-- **Environment** – validate external dependencies and runtime configuration.
-
-## Metadata expectations
-
-Each test module declares metadata for traceability:
-
-- `test_id` – unique identifier.
-- `component_id` – module or service under test.
-- `coverage` – targeted coverage percentage.
-- `status` – `active`, `deprecated`, or `experimental`.
-- `issues` – linked tracking numbers.
-
-## Commit process
-
-Follow this sequence when adding or updating tests:
-
-1. **Issue** – describe the problem or feature.
-2. **Test** – implement or adjust tests.
-3. **Coverage** – run coverage tools and update reports.
-4. **AI review** – obtain feedback from review agents.
-5. **Archive** – finalize in version control.
-
-## CI checks
-
-The [CI workflow](../.github/workflows/ci.yml) runs `pytest --cov`,
-produces an HTML report in `htmlcov/`, and exports coverage metrics to
-`component_index.json`. Components with `active` status must maintain at
-least 90% coverage. The workflow also validates `component_index.json`
-against the JSON schema.
-
-## References
-
-- [Testing Guide](testing.md)
-- [Documentation Index](INDEX.md)
+Run tests as usual and inspect the metrics file or have Prometheus scrape the path for dashboarding and alerting.

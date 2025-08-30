@@ -36,8 +36,9 @@ exhaustive module inventory.
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
 - **Operational guides**
   - [Operations Guide](operations.md) – runbooks for deployment and maintenance
-  - [Monitoring Guide](monitoring.md) – telemetry collection and alerting
-  - [Deployment Guide](deployment.md) – rollout procedures and environment setup
+- [Monitoring Guide](monitoring.md) – telemetry collection and alerting
+- [Deployment Guide](deployment.md) – rollout procedures and environment setup
+- **Pytest Observability** – `tests/conftest.py` exports Prometheus metrics to `monitoring/pytest_metrics.prom`. `crown_prompt_orchestrator.py` reviews these metrics and logs suggestions via `corpus_memory_logging.py`.
   - [Testing Guide](testing.md) – validation steps and smoke tests
 - **Legacy & ethics texts**
   - [INANNA Core](INANNA_CORE.md) – chronicles the system’s mythic lineage and mission

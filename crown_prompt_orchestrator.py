@@ -7,10 +7,13 @@ and write state to databases and memory logs as part of those duties.
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import asyncio
 import json
 import logging
 import sqlite3
+import re
 from datetime import datetime
 from importlib import import_module
 from pathlib import Path
@@ -20,7 +23,7 @@ import crown_decider
 import emotional_state
 import servant_model_manager as smm
 from core.memory_physical import PhysicalEvent, store_physical_event
-from corpus_memory_logging import load_interactions, log_interaction
+from corpus_memory_logging import load_interactions, log_interaction, log_suggestion
 from INANNA_AI import emotion_analysis, emotional_memory
 from INANNA_AI.glm_integration import GLMIntegration
 from memory.mental import record_task_flow
@@ -45,6 +48,8 @@ _EMOTION_KEYS = list(emotion_analysis.EMOTION_ARCHETYPES.keys())
 
 
 _STATE_ENGINE = StateTransitionEngine()
+
+TEST_METRICS_FILE = Path("monitoring/pytest_metrics.prom")
 
 
 def _detect_emotion(text: str) -> str:
@@ -89,6 +94,29 @@ def _apply_layer(message: str) -> tuple[str | None, str | None]:
     except Exception:
         logging.exception("layer %s failed", layer_name)
     return None, None
+
+
+def review_test_outcomes(metrics_file: Path = TEST_METRICS_FILE) -> list[str]:
+    """Inspect Prometheus metrics and log improvement suggestions.
+
+    Suggestions are logged via :func:`corpus_memory_logging.log_suggestion` and
+    returned for inclusion in the orchestrator result.
+    """
+
+    if not metrics_file.exists():
+        return []
+    suggestions: list[str] = []
+    try:
+        content = metrics_file.read_text(encoding="utf-8")
+        match = re.search(r"pytest_test_failures_total\s+(\d+)", content)
+        if match and int(match.group(1)) > 0:
+            failures = int(match.group(1))
+            suggestion = f"Resolve {failures} failing test(s)"
+            log_suggestion(suggestion, {"failures": failures})
+            suggestions.append(suggestion)
+    except Exception:  # pragma: no cover - metrics parsing is best effort
+        logging.exception("test outcome review failed")
+    return suggestions
 
 
 def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, Any]:
@@ -230,7 +258,7 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
     else:
         text, model = asyncio.run(_process())
 
-    return {
+    result = {
         "text": text,
         "model": model,
         "emotion": emotion,
@@ -243,6 +271,12 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
         "glyph_phrase": glyph_phrase,
         "spiral_recall": recall,
     }
+
+    suggestions = review_test_outcomes()
+    if suggestions:
+        result["suggestions"] = suggestions
+
+    return result
 
 
 __all__ = ["crown_prompt_orchestrator"]

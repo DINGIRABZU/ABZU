@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List
+from typing import Any, Dict, List
 
 INTERACTIONS_FILE = Path("data/interactions.jsonl")
 """Primary JSONL log file for interaction records."""
@@ -23,10 +25,7 @@ logger = logging.getLogger(__name__)
 def _rotate_if_needed() -> None:
     """Rotate the interactions log when it grows beyond ``MAX_LOG_SIZE``."""
 
-    if (
-        INTERACTIONS_FILE.exists()
-        and INTERACTIONS_FILE.stat().st_size >= MAX_LOG_SIZE
-    ):
+    if INTERACTIONS_FILE.exists() and INTERACTIONS_FILE.stat().st_size >= MAX_LOG_SIZE:
         ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         rotated = INTERACTIONS_FILE.with_name(
             f"{INTERACTIONS_FILE.stem}-{ts}{INTERACTIONS_FILE.suffix}"
@@ -58,7 +57,9 @@ def watchdog() -> None:
         with INTERACTIONS_FILE.open("w", encoding="utf-8") as fh:
             fh.writelines(valid)
         logger.error(
-            "quarantined %d malformed entries", len(bad), extra={"event": "corpus_watchdog"}
+            "quarantined %d malformed entries",
+            len(bad),
+            extra={"event": "corpus_watchdog"},
         )
 
 
@@ -110,6 +111,29 @@ def log_interaction(
     logger.info("logged interaction to %s", INTERACTIONS_FILE)
 
 
+def log_suggestion(text: str, context: Dict[str, Any] | None = None) -> None:
+    """Append a plain suggestion entry to :data:`INTERACTIONS_FILE`.
+
+    ``context`` can include auxiliary metadata such as failure counts.  Entries are
+    stored with a ``suggestion`` field to differentiate them from full
+    interactions.
+    """
+
+    entry: Dict[str, Any] = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "suggestion": text,
+    }
+    if context:
+        entry["context"] = context
+
+    INTERACTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _rotate_if_needed()
+    with INTERACTIONS_FILE.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, ensure_ascii=False))
+        fh.write("\n")
+    logger.info("logged suggestion to %s", INTERACTIONS_FILE)
+
+
 def load_interactions(limit: int | None = None) -> List[dict[str, Any]]:
     """Return recorded interactions ordered from oldest to newest."""
 
@@ -143,6 +167,7 @@ def log_ritual_result(name: str, steps: List[str]) -> None:
 
 __all__ = [
     "log_interaction",
+    "log_suggestion",
     "load_interactions",
     "log_ritual_result",
     "watchdog",

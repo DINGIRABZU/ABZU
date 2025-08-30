@@ -24,3 +24,9 @@ python monitoring/watchdog.py
 
 Edit the `SERVICES` dictionary in the script to match local process names and
 restart commands.
+
+## Pytest Metrics
+
+Running the test suite exports `pytest_metrics.prom` in this directory.  The file
+contains `pytest_test_duration_seconds` and `pytest_test_failures_total` metrics
+for Prometheus scraping.
