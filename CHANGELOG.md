@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 
 - Added "The Absolute pytest" guide for chakra-aligned tests and commit workflow.
+- Introduced Pytest Protocol with >90% coverage, chakra-aligned directories, and component index documentation requirements.
 
 ### Added
 
