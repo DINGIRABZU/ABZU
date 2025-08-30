@@ -54,7 +54,7 @@ documents:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary: "Threat model and protections."
   docs/The_Absolute_Protocol.md:
-    sha256: e8bbb952997abfc8f52d005af16d0452b48e7bc74b0b6680355794c040ace4a0
+    sha256: 106b5780b19455b2961ffbb4af3a7ec95256aea7319c2d40d7d87b3971bb2758
     summary: "Core contribution rules."
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
@@ -66,5 +66,8 @@ documents:
     sha256: 6273ffa4258f9015f3e1b06d1dadbfd3f03f0585f0fee79bc1ba1c32e2f00721
     summary: "API endpoints and schemas."
   docs/operator_protocol.md:
-    sha256: e7996f1e1be5112a402f35b098dd29ee77df04ee528d58e143db4d8ddbf2c1cd
+    sha256: e150a741e3c81bdd7bb550ef12e3f9696d8572f508342e99a25b8aed2e06597a
     summary: "Operator interaction rules."
+  docs/RAZAR_AGENT.md:
+    sha256: 1358ce15a3413196fb080a8362ac4ef55b6868b031c3a66a0857967cd68f0159
+    summary: "RAZAR agent bootstrap and logging guidance."

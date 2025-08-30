@@ -36,6 +36,17 @@ Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in
 [dependencies.md](dependencies.md).
 
+## Interaction Logging
+
+Per [The Absolute Protocol](The_Absolute_Protocol.md#razar-crown-operator-interaction-logging),
+all exchanges between RAZAR, Crown, and the Operator must append records to
+[`../logs/interaction_log.jsonl`](../logs/interaction_log.jsonl) with:
+
+- timestamp
+- initiator
+- action or request
+- response summary
+
 ## Boot flow
 
 ```mermaid

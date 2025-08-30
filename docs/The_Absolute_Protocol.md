@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.45
-**Last updated:** 2025-08-30
+**Version:** v1.0.46
+**Last updated:** 2025-09-24
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -163,6 +163,15 @@ preserve handshake history for auditing.
 - [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
 - [Logging & Observability Protocol](#logging--observability-protocol) – structured logging and metrics requirements.
 
+### RAZAR ↔ Crown ↔ Operator Interaction Logging
+
+All exchanges between RAZAR, Crown, and Operator must append JSON lines to
+`logs/interaction_log.jsonl` capturing:
+
+- timestamp
+- initiator
+- action or request
+- response summary
 
 ### Logging & Observability Protocol
 

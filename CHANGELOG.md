@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Required onboarding summaries for all files listed in `onboarding_confirm.yml` and referenced the rule in The Absolute Protocol.
 - Added Release Protocol to The Absolute Protocol covering changelog updates, git tagging, and release note cross-references.
 - Clarified Release Management Protocol with semantic versioning rules and checklist references.
+- Required logging of RAZAR ↔ Crown ↔ Operator exchanges in `logs/interaction_log.jsonl` and referenced rules in RAZAR and operator docs.
 
 ### Quality
 

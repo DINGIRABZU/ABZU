@@ -22,6 +22,17 @@ All operator endpoints require `Authorization` headers. Crown enforces a rate li
 
 After validation Crown forwards the command to RAZAR's control loop. RAZAR executes the action and returns the result, which Crown relays back to the caller.
 
+## Interaction Logging
+
+As defined in [The Absolute Protocol](The_Absolute_Protocol.md#razar-crown-operator-interaction-logging),
+all exchanges between RAZAR, Crown, and the Operator are logged to
+[`../logs/interaction_log.jsonl`](../logs/interaction_log.jsonl) with:
+
+- timestamp
+- initiator
+- action or request
+- response summary
+
 ## Release Cadence
 
 Minor updates to the Operator Protocol are targeted for release each month, with patch revisions issued as needed for urgent fixes or compatibility adjustments.
