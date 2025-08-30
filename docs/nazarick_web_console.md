@@ -2,6 +2,8 @@
 
 The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing music generation. It talks to the same FastAPI services used by agents and is intended for local development.
 
+## Interaction Diagram
+
 ```mermaid
 flowchart LR
     subgraph Browser
@@ -16,6 +18,20 @@ flowchart LR
     WRTC -->|media stream| M
 ```
 
+```mermaid
+sequenceDiagram
+    participant U as Operator
+    participant B as Browser
+    participant A as FastAPI
+    participant W as WebRTC Connector
+    U->>B: type command
+    B->>A: POST /glm-command
+    A-->>B: JSON reply
+    B->>W: negotiate stream
+    W-->>B: media track
+    B-->>U: render output
+```
+
 ## UI Components
 
 - **`web_console/index.html`** – static page that loads the console and basic styles.
@@ -24,14 +40,19 @@ flowchart LR
 
 ## Dependencies
 
+- Python 3 for serving static files with `http.server`.
 - Modern browser with WebRTC, `fetch`, and MediaDevices APIs.
 - Spiral OS backend providing the `/glm-command` and `/offer` endpoints.
 - [WebRTC Connector](../connectors/webrtc_connector.py) and [Operator API](../operator_api.py) for streaming and file uploads. See the [Connector Index](connectors/CONNECTOR_INDEX.md) for a full list of modules.
 
-## Launch Steps
+## UI Setup
 
 1. Start the Spiral OS backend or run `scripts/start_local.sh` to launch containers.
-2. Set `WEB_CONSOLE_API_URL` to point at the FastAPI server if different from the default `http://localhost:8000/glm-command`.
+2. Export the URLs used by the console as needed:
+   ```bash
+   export WEB_CONSOLE_API_URL=http://localhost:8000/glm-command
+   export WEB_CONSOLE_SIGNAL_URL=http://localhost:8000/offer
+   ```
 3. Serve the static files:
    ```bash
    cd web_console

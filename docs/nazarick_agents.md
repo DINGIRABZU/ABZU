@@ -13,7 +13,21 @@ Start the servant suite in development mode:
 python start_dev_agents.py --all
 ```
 
-This boots the core agents and registers their channels. Individual servant models can be launched with [`launch_servants.sh`](../launch_servants.sh). Operator tooling is documented in the [Nazarick Web Console](nazarick_web_console.md) and the [Operator Protocol](operator_protocol.md).
+This boots the core agents and registers their channels.
+
+Launch a single servant by name:
+
+```bash
+./launch_servants.sh orchestration_master
+```
+
+Set `NAZARICK_ENV=dev` to load local configuration and point `NAZARICK_LOG_DIR` at a custom log path. For containerised runs, the same scripts are available via Docker Compose:
+
+```bash
+docker compose up agents
+```
+
+Operator tooling is documented in the [Nazarick Web Console](nazarick_web_console.md) and the [Operator Protocol](operator_protocol.md).
 
 ## Floor–Channel Map
 
@@ -63,7 +77,7 @@ Agents communicate through named chat rooms that mirror their channels in the sy
 
 ## Channel Mappings
 
-External services reach these rooms through connectors listed in the [Connector Index](connectors/CONNECTOR_INDEX.md).
+External services reach these rooms through connectors listed in the [Connector Index](connectors/CONNECTOR_INDEX.md). Add new rooms by registering a channel name and updating the connector configuration.
 
 | Channel | Connector |
 | --- | --- |
@@ -214,8 +228,10 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
 To add a new Nazarick agent:
 
 1. Place the module in `agents/nazarick/` and expose it via `__all__`.
-2. Document deployment commands, services, and hooks in this file.
-3. Run `pre-commit run --files docs/nazarick_agents.md docs/INDEX.md` to update the index.
+2. Register its chat room in the tables above and map connectors as needed.
+3. Implement any lifecycle hooks such as `register(bus)` or `shutdown()` to tie into RAZAR's startup sequence.
+4. Document deployment commands, services, and hooks in this file.
+5. Run `pre-commit run --files docs/nazarick_agents.md docs/INDEX.md` to update the index.
 
 ## Retro & Projection
 ### Retro
