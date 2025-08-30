@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Linked Operator Protocol guide from the RAZAR agent cross-links section.
 - Added configurable agent endpoints and authentication tokens to
   `ai_invoker.handover` and retried components after patches are applied.
+- Operator uploads now store files under operator-specific paths and relay metadata through Crown to RAZAR.
 
 ### Changed
 - Boot orchestrator now persists the handshake response before starting

@@ -9,9 +9,17 @@ Defines the interfaces and logging expectations for direct operator interactions
 
 See the [`operator_api` entry in the Connector Index](connectors/CONNECTOR_INDEX.md#operator_api) for versioning and implementation details.
 
-## Permission Checks
+## Authentication
 
-All requests require an `Authorization` header bearing a token with the `operator` role. RAZAR rejects commands when the role is missing or insufficient.
+All requests require an `Authorization` header with a Bearer token carrying the `operator` role. RAZAR rejects commands when the role is missing or insufficient.
+
+## Rate Limits
+
+`POST /operator/command` is limited to **60 requests per minute** per operator. `POST /operator/upload` allows **20 uploads per minute**. Exceeding either limit results in `429 Too Many Requests`.
+
+## Storage Paths
+
+Uploaded files are stored under `uploads/<operator>/`. The API response returns the relative paths, and Crown forwards both the paths and supplied metadata to RAZAR.
 
 ## Escalation Rules
 

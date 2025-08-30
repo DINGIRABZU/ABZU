@@ -1,8 +1,14 @@
-"""WebRTC connector for streaming data, audio, and video."""
+"""WebRTC connector for streaming data, audio, and video.
+
+Configuration flags (``ENABLE_DATA``, ``ENABLE_AUDIO``, ``ENABLE_VIDEO``)
+toggle corresponding streams. Track helpers from
+``communication.webrtc_server`` gracefully return ``None`` when disabled or
+unavailable, allowing clients to fall back to data-only operation.
+"""
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 import asyncio
 import logging
@@ -12,7 +18,7 @@ from typing import Set
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from fastapi import APIRouter, Request
 
-from communication.webrtc_server import AvatarAudioTrack, AvatarVideoTrack
+from communication.webrtc_server import get_audio_track, get_video_track
 
 logger = logging.getLogger(__name__)
 
@@ -52,9 +58,13 @@ async def offer(request: Request) -> dict[str, str]:
     has_audio = "m=audio" in offer.sdp
     has_video = "m=video" in offer.sdp
     if ENABLE_VIDEO and has_video:
-        pc.addTrack(AvatarVideoTrack())
+        track = get_video_track()
+        if track is not None:
+            pc.addTrack(track)
     if ENABLE_AUDIO and has_audio:
-        pc.addTrack(AvatarAudioTrack())
+        track = get_audio_track()
+        if track is not None:
+            pc.addTrack(track)
 
     await pc.setRemoteDescription(offer)
     answer = await pc.createAnswer()
