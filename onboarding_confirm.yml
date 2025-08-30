@@ -45,7 +45,7 @@ documents:
     sha256: b1a944e21d2cb521673d7f1384599d48e4f9fbe3fa9122438de1f532e28564cd
     summary: Registry of connector details.
   docs/system_blueprint.md:
-    sha256: 38222d01f9105c0cd48ce670f51d26ffb17571c1287c2f5f974dee8aa46cb629
+    sha256: 34a07cfbed34be43a6653fa8615bfa8eb7aaf28d87aa72ce4da076969ac0ed80
     summary: Architectural blueprint overview.
   docs/KEY_DOCUMENTS.md:
     sha256: 8fa7aabfdc334c3ef715553ec57994fd6de1cb0d24833c623d286be94e25838e

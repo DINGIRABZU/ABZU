@@ -8,6 +8,7 @@ import importlib.util
 import os
 import shutil
 import sys
+import time
 from pathlib import Path
 import corpus_memory_logging
 
@@ -21,6 +22,7 @@ try:  # pragma: no cover - optional dependency
     from prometheus_client import (
         CollectorRegistry,
         Counter,
+        Gauge,
         Histogram,
         write_to_textfile,
     )
@@ -36,8 +38,20 @@ try:  # pragma: no cover - optional dependency
         "Test duration in seconds",
         registry=_PROM_REGISTRY,
     )
+    _SESSION_RUNTIME = Gauge(
+        "pytest_session_duration_seconds",
+        "Total pytest session runtime",
+        registry=_PROM_REGISTRY,
+    )
+    _COVERAGE = Gauge(
+        "pytest_coverage_percent",
+        "Overall coverage percentage",
+        registry=_PROM_REGISTRY,
+    )
 except Exception:  # pragma: no cover - metrics optional
     _PROM_REGISTRY = None
+    _SESSION_RUNTIME = None
+    _COVERAGE = None
 
 # Ensure the real SciPy package is loaded before tests potentially stub it.
 try:  # pragma: no cover - optional dependency
@@ -78,6 +92,8 @@ if "AUDIO_BACKEND" not in os.environ:
 import emotion_registry  # noqa: E402
 import emotional_state  # noqa: E402
 
+_SESSION_START: float | None = None
+
 
 @pytest.fixture()
 def mock_emotion_state(tmp_path, monkeypatch):
@@ -111,6 +127,13 @@ def pytest_collectstart(collector):
     sys.modules.pop("SPIRAL_OS", None)
     sys.modules.pop("SPIRAL_OS.qnl_engine", None)
     sys.modules.pop("SPIRAL_OS.symbolic_parser", None)
+
+
+def pytest_sessionstart(session):  # pragma: no cover - timing varies
+    """Record the session start time for runtime metrics."""
+    if _PROM_REGISTRY is not None:
+        global _SESSION_START
+        _SESSION_START = time.perf_counter()
 
 
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
@@ -236,8 +259,22 @@ def pytest_runtest_logreport(report):  # pragma: no cover - timing varies
 
 if _PROM_REGISTRY is not None:
 
-    def pytest_sessionfinish(session, exitstatus):  # pragma: no cover - timing varies
-        """Write Prometheus metrics to disk at session end."""
+    def pytest_terminal_summary(
+        terminalreporter, exitstatus
+    ):  # pragma: no cover - timing varies
+        """Finalize Prometheus metrics and write them to disk."""
+        try:  # pragma: no cover - coverage optional
+            import coverage
+
+            cov = coverage.Coverage(data_file=str(ROOT / ".coverage"))
+            cov.load()
+            with open(os.devnull, "w") as devnull:
+                total = cov.report(file=devnull)
+            _COVERAGE.set(total)
+        except Exception:  # pragma: no cover - coverage optional
+            pass
+        if _SESSION_START is not None:
+            _SESSION_RUNTIME.set(time.perf_counter() - _SESSION_START)
         metrics_path = ROOT / "monitoring" / "pytest_metrics.prom"
         metrics_path.parent.mkdir(parents=True, exist_ok=True)
         write_to_textfile(str(metrics_path), _PROM_REGISTRY)

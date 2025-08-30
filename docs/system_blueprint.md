@@ -38,7 +38,7 @@ exhaustive module inventory.
   - [Operations Guide](operations.md) – runbooks for deployment and maintenance
 - [Monitoring Guide](monitoring.md) – telemetry collection and alerting
 - [Deployment Guide](deployment.md) – rollout procedures and environment setup
-- **Pytest Observability** – `tests/conftest.py` exports Prometheus metrics to `monitoring/pytest_metrics.prom` and records failing tests with `corpus_memory_logging.log_test_failure`. `crown_prompt_orchestrator.py` reviews these metrics and logs suggestions via `corpus_memory_logging.py`.
+- **Pytest Observability** – `tests/conftest.py` exports Prometheus metrics (coverage, session runtime, failure counts) to `monitoring/pytest_metrics.prom` and records failing tests with `corpus_memory_logging.log_test_failure`. `crown_prompt_orchestrator.py` reviews these metrics and logs suggestions via `corpus_memory_logging.py`.
   - [Testing Guide](testing.md) – validation steps and smoke tests
 - **Legacy & ethics texts**
   - [INANNA Core](INANNA_CORE.md) – chronicles the system’s mythic lineage and mission

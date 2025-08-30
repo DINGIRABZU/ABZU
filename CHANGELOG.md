@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clarified Release Management Protocol with semantic versioning rules and checklist references.
 - Required logging of RAZAR ↔ Crown ↔ Operator exchanges in `logs/interaction_log.jsonl` and referenced rules in RAZAR and operator docs.
 - Crown prompt orchestrator reviews test metrics and logs remediation suggestions to corpus memory.
-- Pytest runs export duration and failure metrics via `prometheus_client` to `monitoring/pytest_metrics.prom`.
+- Pytest runs export coverage, session duration, and failure metrics via `prometheus_client` to `monitoring/pytest_metrics.prom`, and CI uploads the metrics artifact.
 
 ### Quality
 
