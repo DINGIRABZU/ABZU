@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 # ruff: noqa: E402
+
+__version__ = "0.1.0"
 import logging
 import shutil
 from datetime import datetime

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """Install Python packages into a given virtual environment."""
 
+__version__ = "0.1.0"
+
 from pathlib import Path
 from typing import Sequence
 

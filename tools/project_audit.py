@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """Simple project audit for Spiral OS."""
 
+__version__ = "0.1.0"
+
 import importlib
 import sys
 from pathlib import Path

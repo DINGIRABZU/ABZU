@@ -6,6 +6,8 @@ and optional audio to connected clients.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import asyncio
 import fractions
 import importlib

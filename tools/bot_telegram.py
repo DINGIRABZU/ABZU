@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """Telegram bot forwarding chat messages to the `/glm-command` endpoint."""
 
+__version__ = "0.1.0"
+
 import logging
 import os
 import time
