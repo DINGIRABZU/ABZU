@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced Pytest Protocol with >90% coverage, chakra-aligned directories, and component index documentation requirements.
 - Expanded Crown agent overview with model loading sequence diagram and configuration table.
 - Documented change justification rule and mandated four-part onboarding summaries; updated pull request template with connector/index checklist.
+- Documented module coverage and example runs in RAZAR agent guide.
 
 ### Added
 
