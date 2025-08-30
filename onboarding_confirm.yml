@@ -77,6 +77,12 @@ documents:
       purpose: Persona API usage instructions.
       scope: Persona endpoints.
       insight: Ensure persona calls match documented schema.
+  docs/primordials_service.md:
+    sha256: f78c0d426c2acafe7a00f2b322250c4d3f1a17646b0df152376fad1d55d545bb
+    summary:
+      purpose: DeepSeek-V3 orchestration service guide.
+      scope: Primordials service.
+      insight: Reference when integrating Primordials.
   docs/spiral_cortex_terminal.md:
     sha256: 863463fb3e7b92021d747b5f4bdc4cb20e608469d64ed69917bf8be7b8177724
     summary:
@@ -89,6 +95,12 @@ documents:
       purpose: Communication interfaces overview.
       scope: Internal and external interfaces.
       insight: Maintain compatibility with listed interfaces.
+  docs/component_index.md:
+    sha256: bc397e1a93e3747114255037efb6ce499df47fc67117a70c389609e226bfff2e
+    summary:
+      purpose: Inventory of modules and services.
+      scope: All components.
+      insight: Add/update entries for component changes.
   docs/CROWN_OVERVIEW.md:
     sha256: 58c88584d45355968b5c9a243392a00f0b0ae515cbd12b8142de841315cda9bd
     summary:
@@ -114,7 +126,7 @@ documents:
       scope: System-wide architecture.
       insight: Align changes with blueprint structure.
   docs/KEY_DOCUMENTS.md:
-    sha256: 388b5f366db1c73a61d6da183c404f0ade2a6f0c519f2709cdeb593cb275c004
+    sha256: 0786922989546f3b7be6744156f34b53c83640982e45f54281f849f26ce42a38
     summary:
       purpose: List of essential repository documents.
       scope: Key repository guides.
@@ -126,11 +138,11 @@ documents:
       scope: Security considerations.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 249374948541c382acce30787e7c7cbefd40ecba3f0efd909e62f8d5073f2406
+    sha256: a4ca8ff29cab277068fe361871c80079f482307ab2d3f91cc825772cc093de33
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      insight: Include Change Justification in every pull request.
+      insight: Include an action summary in every pull request.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
