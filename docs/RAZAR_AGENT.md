@@ -36,6 +36,18 @@ Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in
 [dependencies.md](dependencies.md).
 
+## Boot flow
+
+```mermaid
+flowchart LR
+    Start --> Env[Build Environment]
+    Env --> Launch[Launch Services]
+    Launch --> Handshake[Crown Handshake]
+    Handshake --> Ready[Operational]
+```
+
+The Mermaid source lives at [assets/razar_flow.mmd](assets/razar_flow.mmd).
+
 ## Architecture
 
 The RAZAR agent coordinates multiple modules during startup. The diagram below

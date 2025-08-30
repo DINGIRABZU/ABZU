@@ -11,6 +11,19 @@ The **Albedo** layer introduces a stateful persona that drives responses through
 
 `AlbedoPersonality` calls `detect_state_trigger()` to extract entities and emotional cues, builds a state specific prompt and updates shadow metrics after each response.
 
+## Flow
+
+```mermaid
+flowchart LR
+    input[Prompt] --> detect[detect_state_trigger()]
+    detect --> build[Build Prompt]
+    build --> glm[GLM Endpoint]
+    glm --> reply[Response]
+    reply --> update[Update Shadow Metrics]
+```
+
+The Mermaid source lives at [assets/albedo_flow.mmd](assets/albedo_flow.mmd).
+
 ## Configuring the GLM endpoint
 
 `GLMIntegration` reads the endpoint and API key from environment variables by default.  Override them when instantiating the class or set `GLM_API_URL` and `GLM_API_KEY`:

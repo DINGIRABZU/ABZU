@@ -1,0 +1,7 @@
+flowchart LR
+    user[User Input] --> crown[Crown Agent]
+    crown --> inanna[INANNA Core]
+    inanna --> glm[GLM Service]
+    inanna --> memory[Vector Memory]
+    memory --> inanna
+    glm --> reply[Response]

@@ -9,6 +9,8 @@ Sensors feed a biosignal processing layer that emits structured events for the n
 flowchart LR
     Sensors --> Normalization --> "Feature Extraction" --> "Event Generator" --> "Narrative Engine" --> Outputs
 ```
+The Mermaid source lives at [assets/narrative_flow.mmd](assets/narrative_flow.mmd).
+
 
 ## Biosignal Pipeline
 1. **Sensors** – EEG, heart-rate, and motion devices stream data.

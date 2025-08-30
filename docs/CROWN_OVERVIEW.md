@@ -32,6 +32,21 @@ User commands enter through the **Crown Console**. The **Crown Agent** sends
 requests to the GLM service and keeps recent history in memory. The
 **State Transition Engine** tracks ritual phrases and emotional cues. It may
 delegate a prompt to one of the registered servant models when appropriate.
+## Flow
+
+```mermaid
+flowchart LR
+    user[User] --> console[Crown Console]
+    console --> agent[Crown Agent]
+    agent --> ste[State Transition Engine]
+    ste --> glm[GLM Service]
+    ste --> servants[Servant Models]
+    glm --> response[Reply]
+    servants --> response
+```
+
+The Mermaid source lives at [assets/crown_flow.mmd](assets/crown_flow.mmd).
+
 
 ## Memory‑Aided Routing
 

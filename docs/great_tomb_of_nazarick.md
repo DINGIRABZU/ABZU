@@ -24,6 +24,8 @@ flowchart TD
 
     A --> B --> C --> D --> E --> F --> G --> H
 ```
+The Mermaid source lives at [assets/nazarick_flow.mmd](assets/nazarick_flow.mmd).
+
 
 ## Channel Hierarchy
 | Channel | Purpose |
