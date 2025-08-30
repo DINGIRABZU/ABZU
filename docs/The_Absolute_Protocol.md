@@ -190,7 +190,9 @@ preserve handshake history for auditing.
 #### No placeholder comments
 
 `TODO` and `FIXME` markers are prohibited in committed code. Open an issue or
-implement the required change instead of leaving placeholders.
+implement the required change instead of leaving placeholders. The
+`check-placeholders` pre-commit hook runs `scripts/check_placeholders.py` to
+block commits that include these markers.
 
 ### API Contract Protocol
 

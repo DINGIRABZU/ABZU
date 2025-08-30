@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Quality
 
 - Verified repository passes `ruff` and `black` checks.
+- Enforced "No Placeholder" rule with `check-placeholders` pre-commit hook and
+  documented remediation steps in agent guides.
 
 ### Vector Memory
 
