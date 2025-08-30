@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.57
-**Last updated:** 2025-09-15
+**Version:** v1.0.58
+**Last updated:** 2025-09-30
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -29,7 +29,7 @@ Before opening a pull request, confirm each item:
   - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and links
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
-- [ ] Pull request includes change justification: "I did X on Y to obtain Z, expecting behavior B."
+- [ ] Pull request includes a **Change Justification** statement: "I did X on Y to obtain Z, expecting behavior B."
 - [ ] `onboarding_confirm.yml` logs purpose, scope, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_summaries.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
@@ -42,6 +42,13 @@ Before opening a pull request, confirm each item:
 - [ ] `crown_handshake` results logged in state files and mission briefs
 - [ ] Biosignal sample CSVs in `data/biosignals/` remain anonymized and align with
       the documented ingestion schema
+
+### Change Justification
+Every pull request must include a statement formatted as:
+
+"I did X on Y to obtain Z, expecting behavior B."
+
+This clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this requirement via a **Change Justification** field.
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:
@@ -282,13 +289,6 @@ Updates to this protocol follow a lightweight governance model:
 2. **Implementation** – Submit a pull request referencing the issue and label it `Protocol Update` to surface review.
 3. **Review** – Core maintainers discuss the proposal, request revisions, and approve when consensus is reached.
 4. **Versioning** – Upon merge, update the version and last‑updated date at the top of this file and document the change in the repository changelog.
-
-### Change Justification
-Every pull request must include a statement in the **Action summary** section formatted as:
-
-"I did X on Y to obtain Z, expecting behavior B."
-
-This justification clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this via a mandatory **Action summary** field in [`.github/pull_request_template.md`](../.github/pull_request_template.md) so reviewers can verify the rationale.
 
 This process ensures the protocol evolves transparently and stays in sync with repository practices.
 
