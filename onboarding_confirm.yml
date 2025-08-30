@@ -98,7 +98,7 @@ documents:
       key_rules: Defines supported protocols and channels.
       insight: Maintain compatibility with listed interfaces.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: 1a96fd1ebad83352b94628a73cdbc69e0ae7f81928811764db07900c63ddf3c7
+    sha256: 7d6ac86410e7dd27bc6276987fa5410736b49715f0811aeb942c04c4f2bde8e2
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
@@ -161,7 +161,7 @@ documents:
       key_rules: Specifies request and response schemas.
       insight: Keep implementations aligned with documented API.
   docs/operator_protocol.md:
-    sha256: 910b5a371b1ea6db1137a512137e07adb2722a77aacb89a51304a3b85b4ec46b
+    sha256: f2cb6aeedb7570bc52c76b0b96263981802e7cca55105e4e6720d9561ca248b1
     summary:
       purpose: Operator interaction rules.
       scope: Operator channels.

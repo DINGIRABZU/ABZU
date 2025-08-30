@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import json
 import shutil
@@ -45,7 +45,7 @@ async def upload_file(
     metadata: str = Form("{}"),
     files: list[UploadFile] = File(...),
 ) -> dict[str, object]:
-    """Store uploaded files and forward metadata to RAZAR."""
+    """Store uploaded files and forward metadata to Crown."""
     try:
         meta = json.loads(metadata)
     except json.JSONDecodeError as exc:
@@ -62,7 +62,7 @@ async def upload_file(
         stored.append(dest.name)
 
     def _forward(meta: dict[str, object]) -> dict[str, object]:
-        """Relay metadata to RAZAR via Crown."""
+        """Relay metadata to Crown."""
         return {"received": meta}
 
     try:
