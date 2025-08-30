@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 import json
 import logging
@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 def _rotate_if_needed() -> None:
     """Rotate the interactions log when it grows beyond ``MAX_LOG_SIZE``."""
-
     if INTERACTIONS_FILE.exists() and INTERACTIONS_FILE.stat().st_size >= MAX_LOG_SIZE:
         ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         rotated = INTERACTIONS_FILE.with_name(
@@ -36,7 +35,6 @@ def _rotate_if_needed() -> None:
 
 def watchdog() -> None:
     """Quarantine malformed JSONL entries and keep the log clean."""
-
     if not INTERACTIONS_FILE.exists():
         return
 
@@ -118,7 +116,6 @@ def log_suggestion(text: str, context: Dict[str, Any] | None = None) -> None:
     stored with a ``suggestion`` field to differentiate them from full
     interactions.
     """
-
     entry: Dict[str, Any] = {
         "timestamp": datetime.utcnow().isoformat(),
         "suggestion": text,
@@ -134,9 +131,39 @@ def log_suggestion(text: str, context: Dict[str, Any] | None = None) -> None:
     logger.info("logged suggestion to %s", INTERACTIONS_FILE)
 
 
+def log_test_failure(
+    test: str,
+    log_path: str | Path,
+    artifacts: List[str] | None = None,
+) -> None:
+    """Record a failed test for later AI review.
+
+    Parameters
+    ----------
+    test:
+        Node identifier of the failing test.
+    log_path:
+        Path to the log file containing detailed output.
+    artifacts:
+        Optional list of additional artifact paths such as coverage reports.
+    """
+    entry: Dict[str, Any] = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "test_failure": {"test": test, "log": str(log_path)},
+    }
+    if artifacts:
+        entry["test_failure"]["artifacts"] = [str(a) for a in artifacts]
+
+    INTERACTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _rotate_if_needed()
+    with INTERACTIONS_FILE.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, ensure_ascii=False))
+        fh.write("\n")
+    logger.info("logged test failure to %s", INTERACTIONS_FILE)
+
+
 def load_interactions(limit: int | None = None) -> List[dict[str, Any]]:
     """Return recorded interactions ordered from oldest to newest."""
-
     watchdog()
     if not INTERACTIONS_FILE.exists():
         return []
@@ -168,6 +195,7 @@ def log_ritual_result(name: str, steps: List[str]) -> None:
 __all__ = [
     "log_interaction",
     "log_suggestion",
+    "log_test_failure",
     "load_interactions",
     "log_ritual_result",
     "watchdog",

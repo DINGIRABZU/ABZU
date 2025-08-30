@@ -15,3 +15,16 @@
 - At session end metrics are written to `monitoring/pytest_metrics.prom` for scraping by Prometheus.
 
 Run tests as usual and inspect the metrics file or have Prometheus scrape the path for dashboarding and alerting.
+
+## Failure Analysis
+
+- Pytest writes detailed logs to `logs/pytest.log`.
+- Coverage reports live under `htmlcov/` when the `--cov` option is used.
+- Archive failures and artifacts for later review:
+
+  ```bash
+  tar -czf failure-artifacts.tar.gz logs/ htmlcov/
+  ```
+
+  The archive can be shared with AI reviewers alongside entries recorded via
+  `corpus_memory_logging.log_test_failure`.

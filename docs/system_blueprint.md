@@ -38,7 +38,7 @@ exhaustive module inventory.
   - [Operations Guide](operations.md) – runbooks for deployment and maintenance
 - [Monitoring Guide](monitoring.md) – telemetry collection and alerting
 - [Deployment Guide](deployment.md) – rollout procedures and environment setup
-- **Pytest Observability** – `tests/conftest.py` exports Prometheus metrics to `monitoring/pytest_metrics.prom`. `crown_prompt_orchestrator.py` reviews these metrics and logs suggestions via `corpus_memory_logging.py`.
+- **Pytest Observability** – `tests/conftest.py` exports Prometheus metrics to `monitoring/pytest_metrics.prom` and records failing tests with `corpus_memory_logging.log_test_failure`. `crown_prompt_orchestrator.py` reviews these metrics and logs suggestions via `corpus_memory_logging.py`.
   - [Testing Guide](testing.md) – validation steps and smoke tests
 - **Legacy & ethics texts**
   - [INANNA Core](INANNA_CORE.md) – chronicles the system’s mythic lineage and mission
@@ -695,6 +695,7 @@ deployments with user accounts and persistent chats.
 ## Version History
 
 - 2025-08-28: Added blueprint synchronization check to ensure the blueprint is updated when core services change.
+- 2025-08-30: Documented test failure logging through `corpus_memory_logging.log_test_failure`.
 
 ---
 

@@ -2,17 +2,19 @@
 
 from __future__ import annotations
 
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 import importlib.util
 import os
 import shutil
 import sys
 from pathlib import Path
+import corpus_memory_logging
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
+FAIL_LOG = ROOT / "logs" / "pytest.log"
 
 # Prometheus metrics for test observability
 try:  # pragma: no cover - optional dependency
@@ -218,16 +220,24 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(skip_marker)
 
 
-if _PROM_REGISTRY is not None:
-
-    def pytest_runtest_logreport(report):  # pragma: no cover - timing varies
-        if report.when != "call":
-            return
+def pytest_runtest_logreport(report):  # pragma: no cover - timing varies
+    """Record metrics and log failing tests for AI review."""
+    if report.when != "call":
+        return
+    if _PROM_REGISTRY is not None:
         _DURATION.observe(report.duration)
         if report.failed:
             _FAILURES.inc()
+    if report.failed:
+        cov_dir = ROOT / "htmlcov"
+        artifacts = [str(cov_dir)] if cov_dir.exists() else None
+        corpus_memory_logging.log_test_failure(report.nodeid, FAIL_LOG, artifacts)
+
+
+if _PROM_REGISTRY is not None:
 
     def pytest_sessionfinish(session, exitstatus):  # pragma: no cover - timing varies
+        """Write Prometheus metrics to disk at session end."""
         metrics_path = ROOT / "monitoring" / "pytest_metrics.prom"
         metrics_path.parent.mkdir(parents=True, exist_ok=True)
         write_to_textfile(str(metrics_path), _PROM_REGISTRY)
