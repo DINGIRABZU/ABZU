@@ -791,6 +791,15 @@ python -m razar.boot_orchestrator
 python -m razar.crown_handshake path/to/brief.json
 ```
 
+```console
+$ python -m razar.boot_orchestrator --mission demo
+[2025-09-21 12:00:00] INFO boot_orchestrator: starting mission demo
+[2025-09-21 12:00:05] INFO crown_link: handshake acknowledged
+RAZAR ready.
+$ tail -n 1 logs/razar_mission.log
+2025-09-21T12:00:05Z INFO boot_orchestrator Mission demo boot sequence complete
+```
+
 ## Placeholder remediation
 
 The `check-placeholders` pre-commit hook blocks commits containing `TODO` or
