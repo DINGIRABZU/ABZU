@@ -61,3 +61,9 @@ repos:
     language: python
     pass_filenames: false
     files: ^(connectors/|docs/connectors/CONNECTOR_INDEX.md)
+  - id: validate-component-index
+    name: Validate component index entries
+    entry: python scripts/validate_component_index.py
+    language: system
+    pass_filenames: false
+    files: ^docs/component_index.md
