@@ -131,7 +131,7 @@ documents:
       purpose: Registry of connector details.
       scope: All connectors.
       key_rules: Update registry when connector changes.
-      insight: Update entry whenever a connector changes.
+      insight: Ensure this registry entry is revised whenever a connector changes.
   docs/connectors/README.md:
     sha256: c5aaeeafce2649d5c1bcd6b0501c39aff1c87ea4ee73b1397ba9fa99a786922d
     summary:
