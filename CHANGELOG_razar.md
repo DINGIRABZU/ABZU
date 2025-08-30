@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
   logged invocations and patch results.
 - Linked environment schema and example fields in the RAZAR agent guide.
 - Recorded applied patch diffs in `logs/razar_ai_patches.json`.
+- Linked Operator Protocol guide from the RAZAR agent cross-links section.
 
 ### Changed
 - Boot orchestrator now persists the handshake response before starting

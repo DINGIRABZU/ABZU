@@ -1,6 +1,6 @@
 # RAZAR Agent
 
-Bootstrapper for local services and mission brief exchange with the CROWN stack.
+Bootstrapper for local services, operator protocol alignment, and mission brief exchange with the CROWN stack.
 
 ## Component Index Entry
 
@@ -793,6 +793,7 @@ If tests fail or regressions appear, RAZAR reverts to the previous state and rec
 - [System Blueprint](system_blueprint.md) – high-level architecture map
 - [Deployment Guide](deployment.md) – environment setup and rollout
 - [Monitoring Guide](monitoring.md) – telemetry collection and alerts
+- [Operator Protocol](operator_protocol.md) – interaction rules for operators
 - [Recovery Playbook](recovery_playbook.md) – restoration procedures
 
 ## Example Runs
