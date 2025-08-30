@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 import argparse
 import asyncio
@@ -118,6 +118,12 @@ class BootOrchestrator:
                 "handshake",
                 {"acknowledgement": "", "capabilities": [], "downtime": {}},
             )
+
+        timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        events = data.get("events", [])
+        events.append({"event": "handshake", "timestamp": timestamp})
+        data["events"] = events
+
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
@@ -204,6 +210,14 @@ class BootOrchestrator:
         if "GLM-4.1V" not in launches:
             launches.append("GLM-4.1V")
         data["launched_models"] = launches
+
+        timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        events = data.get("events", [])
+        events.append(
+            {"event": "model_launch", "model": "GLM-4.1V", "timestamp": timestamp}
+        )
+        data["events"] = events
+
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 

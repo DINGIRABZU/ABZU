@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
   triggered `crown_model_launcher.sh` when `GLM4V` capability is absent.
 - Stored Crown handshake acknowledgement, capabilities, and downtime under
   `handshake` in `logs/razar_state.json`.
+- Logged handshake and model-launch events in `logs/razar_state.json` and documented event persistence in the deployment guide.
 - Added module coverage and example run sections to the RAZAR agent guide.
 - Rotated mission brief archives and required Crown availability via `CROWN_WS_URL` before boot.
 - Delegated failure recovery to remote agents via `ai_invoker.handover` and

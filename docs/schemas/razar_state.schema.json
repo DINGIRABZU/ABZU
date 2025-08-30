@@ -7,7 +7,9 @@
     "capabilities",
     "downtime",
     "launched_models",
-    "handshake"
+    "handshake",
+    "glm4v_present",
+    "events"
   ],
   "properties": {
     "last_component": {"type": "string"},
@@ -32,6 +34,20 @@
         "downtime": {"type": "object"}
       },
       "additionalProperties": false
+    },
+    "glm4v_present": {"type": "boolean"},
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event", "timestamp"],
+        "properties": {
+          "event": {"type": "string"},
+          "timestamp": {"type": "string"},
+          "model": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
     }
   },
   "additionalProperties": false
