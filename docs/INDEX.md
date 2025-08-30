@@ -190,7 +190,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | Bootstrapper for local services and mission brief exchange with the CROWN stack. | `../agents/razar/ai_invoker.py`, `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/code_repair.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../agents/razar/health_checks.py`, `../agents/razar/module_builder.py`, `../agents/razar/quarantine_manager.py`, `../agents/razar/runtime_manager.py`, `../razar/adaptive_orchestrator.py`, `../razar/boot_orchestrator.py`, `../razar/checkpoint_manager.py`, `../razar/cocreation_planner.py`, `../razar/crown_link.py`, `../razar/doc_sync.py`, `../razar/environment_builder.py` |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.46 **Last updated:** 2025-09-24 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.47 **Last updated:** 2025-08-30 | `../agents/example_agent.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -288,6 +288,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [persona_api_guide.md](persona_api_guide.md) | Persona API Guide | This guide walks developers through the persona utilities that power Albedo interactions.  It shows how to update tru... | - |
 | [project_overview.md](project_overview.md) | Project Overview | For a consolidated reference covering mission, architecture and workflow, see [CRYSTAL_CODEX.md](../CRYSTAL_CODEX.md)... | - |
 | [project_plan.md](project_plan.md) | Project Plan | This project plan outlines quarter-level goals and owners for components currently scoring below 7. Refer to [roadmap... | - |
+| [protocol_compliance.md](protocol_compliance.md) | Protocol Compliance | This dashboard provides a high-level view of how major components align with repository protocols. | - |
 | [psychic_loop.md](psychic_loop.md) | Psychic Loop | `mirror_thresholds.json` and `insight_matrix.json` feed the self-reflection cycle that keeps the avatar aligned with... | - |
 | [quarantine_log.md](quarantine_log.md) | Quarantine Log | Failed components are moved to the `quarantine/` directory and recorded below. | - |
 | [quick_start_non_technical.md](quick_start_non_technical.md) | Quick Start Guide (Non-Technical) | Follow these steps to get the system running with minimal setup. | - |

@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Introduced protocol compliance dashboard and required dashboard updates each release cycle in The Absolute Protocol.
 - Introduced lifecycle `status` and `adr` link requirements for `component_index.json` and provided `docs/adr/ADR_TEMPLATE.md`.
 - Introduced co-creation and AI ethics frameworks with cross-links from README and The Absolute Protocol.
 - Expanded connector registry schema with purpose and service fields and updated The Absolute Protocol accordingly.

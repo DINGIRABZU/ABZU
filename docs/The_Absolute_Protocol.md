@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.46
-**Last updated:** 2025-09-24
+**Version:** v1.0.47
+**Last updated:** 2025-08-30
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -28,6 +28,7 @@ Before opening a pull request, confirm each item:
 - [ ] `onboarding_confirm.yml` logs purpose, scope, key rules, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_summaries.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
+- [ ] `DASHBOARD.md` metrics updated for each release cycle
 - [ ] `component_maturity.md` scoreboard updated
 - [ ] New operator channels documented in [Operator Protocol](operator_protocol.md)
 - [ ] Confirm no binary files are introduced
