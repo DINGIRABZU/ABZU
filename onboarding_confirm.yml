@@ -57,7 +57,7 @@ documents:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary: Threat model and protections.
   docs/The_Absolute_Protocol.md:
-    sha256: 24627e2c6cee467e69ad042d7fdee4ba66bffd9f2ee6f2d04ec0bc28f5a42a38
+    sha256: e389ed6f67a7e6862c433e0d04aab9d50870367b4b384cdf0682aca618824202
     summary: Core contribution rules.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a

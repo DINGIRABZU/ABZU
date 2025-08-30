@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.50
-**Last updated:** 2025-09-01
+**Version:** v1.0.51
+**Last updated:** 2025-09-02
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.

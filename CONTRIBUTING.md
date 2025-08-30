@@ -101,6 +101,35 @@ coverage run -m pytest
 coverage report
 ```
 
+## Component Version Mandate
+
+Every source module must define a `__version__` attribute. Bump this value for
+any user-facing change and keep entries synchronized in
+`component_index.json`. The `verify-versions` pre-commit hook scans staged
+Python files and fails if the attribute is missing.
+
+## Connector Guidelines
+
+Connector modules bridge ABZU to external services. They must expose
+`__version__` and update the canonical registry at
+[`docs/connectors/CONNECTOR_INDEX.md`](docs/connectors/CONNECTOR_INDEX.md)
+whenever a connector is added, removed, or modified.
+
+## Contributor Awareness Checklist
+
+Before submitting a pull request, confirm:
+
+- **Key documents reviewed**
+  - `AGENTS.md` – repository-wide agent instructions
+  - `docs/documentation_protocol.md` – documentation workflow
+  - `docs/system_blueprint.md` – architecture overview
+  - `docs/KEY_DOCUMENTS.md` – critical files with review cadences
+- **Version bumps**
+  - Increment `__version__` in all affected modules and connectors
+  - Update connector registry entries after interface changes
+- **Change justification**
+  - Summarize the purpose of modifications in commits and the PR description
+
 ## Pull Requests
 
 - Prefix pull request titles with a category such as `Feature:`, `Fix:`, or `Chore:` (e.g., `Feature: Voice Cloning V2`).
