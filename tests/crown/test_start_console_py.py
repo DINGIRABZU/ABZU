@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import importlib.util
 import sys
 import types
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_python_crown_console(monkeypatch):
