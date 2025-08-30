@@ -1,0 +1,20 @@
+{
+  "agents": [
+    {
+      "name": "demo_agent",
+      "endpoint": "https://example.com/api",
+      "auth": {
+        "type": "bearer",
+        "token": "DEMO_TOKEN"
+      }
+    },
+    {
+      "name": "backup_agent",
+      "endpoint": "https://backup.example.com/api",
+      "auth": {
+        "type": "api_key",
+        "key": "BACKUP_KEY"
+      }
+    }
+  ]
+}

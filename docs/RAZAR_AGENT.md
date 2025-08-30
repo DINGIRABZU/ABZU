@@ -510,6 +510,8 @@ Sample mission brief:
 
 RAZAR can delegate recovery to an external AI agent when repeated failures block the boot sequence. The goal is to restore service while following repository safety rules.
 
+Authorized handover agents and their authentication tokens live in [config/razar_ai_agents.json](../config/razar_ai_agents.json).
+
 **Purpose**
 
 - Apply minimal patches or configuration tweaks under supervision.
