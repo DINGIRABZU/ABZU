@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.44
+**Version:** v1.0.45
 **Last updated:** 2025-08-30
 
 ## How to Use This Protocol
@@ -64,15 +64,14 @@ When contributing, consult resources in this order:
 | AGENTS.md | Repository Maintainers | As needed |
 | Feature/Issue Specs | Feature Owners | Per release |
 
-## Release Management Protocol
+## Version & Release
 
-- Add an entry to the root `CHANGELOG.md` for every user-facing change.
-- Mirror those entries in component changelogs such as `CHANGELOG_vector_memory.md` when a specific subsystem is affected.
-- Version numbers follow [Semantic Versioning](https://semver.org/):
-  - **MAJOR** increments introduce incompatible API changes.
-  - **MINOR** increments add functionality in a backward‑compatible manner.
-  - **PATCH** increments deliver backward‑compatible bug fixes.
-- Within a major version, minor and patch releases guarantee backward compatibility.
+- Every module and connector must expose a `__version__` string.
+- Version numbers follow [Semantic Versioning](https://semver.org/) in `MAJOR.MINOR.PATCH` format.
+- Release steps:
+  1. Tag the release (`git tag -a vX.Y.Z -m "Release vX.Y.Z"` and push tags).
+  2. Record the change in `CHANGELOG.md` and any affected component changelog.
+  3. Update `component_index.md` and `component_index.json` with the new version.
 
 ## Testing Requirements
 
