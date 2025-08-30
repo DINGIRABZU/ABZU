@@ -10,5 +10,13 @@
   "intent_matrix.schema.json": {
     "version": "1.0.0",
     "sha256": "0302e49782bc38b436a5eca8de591aac89eb94d1698500c2879d2c163d29a3af"
+  },
+  "openapi.json": {
+    "version": "1.0.0",
+    "sha256": "720b240e795d9e5b8317567c11a28987108380f8134d276ee9d7d3d710dc3c44"
+  },
+  "stream_avatar_message.schema.json": {
+    "version": "1.0.0",
+    "sha256": "f479cc66f8123ab1d0ba98490b7df7118d4f1532382d06b61c0c8d75c5883e78"
   }
 }

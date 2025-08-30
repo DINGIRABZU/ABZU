@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.41
-**Last updated:** 2025-09-10
+**Version:** v1.0.42
+**Last updated:** 2025-09-20
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -178,6 +178,18 @@ implement the required change instead of leaving placeholders.
 - Document request and response schemas for all public interfaces.
 - Version API contracts and avoid breaking changes without incrementing.
 - Maintain a changelog entry for each contract update.
+
+### API Schema Protocol
+
+All endpoints must publish machine-validated schemas:
+
+- **HTTP endpoints** require OpenAPI or JSON Schema definitions. Commit the
+  generated spec to `docs/schemas/` and keep it synchronized with the running
+  application.
+- **WebSocket channels** must document message formats using JSON Schema files
+  stored in `docs/schemas/`.
+- Continuous integration must verify that committed schemas match the server's
+  live specification.
 
 ### Technology Registry Protocol
 
