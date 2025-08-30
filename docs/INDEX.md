@@ -12,7 +12,6 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | - |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -276,6 +275,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | The Nazarick Narrative System turns raw biosensor readings into adaptive story cues for the tomb. | - |
 | [nazarick_web_console.md](nazarick_web_console.md) | Nazarick Web Console | The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing m... | `../connectors/webrtc_connector.py`, `../operator_api.py` |
 | [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onbo... | - |
+| [onboarding/test_planning.md](onboarding/test_planning.md) | Test Planning Guide | Instructions for opening a "Test Plan" issue to coordinate tests across chakras and maintain coverage goals. | - |
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |

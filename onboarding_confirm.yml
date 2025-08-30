@@ -54,7 +54,7 @@ documents:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary: Threat model and protections.
   docs/The_Absolute_Protocol.md:
-    sha256: 17c15e533248964d8cccf2062bfdcb8c5cc75e348c2df0a2c1a5be6a8fca33a3
+    sha256: f961baa356843fee3bf428c2e6f3b0d7ce313d0a7bfc942f11c0d3a720291c68
     summary: Core contribution rules.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
@@ -71,3 +71,6 @@ documents:
   docs/RAZAR_AGENT.md:
     sha256: 1358ce15a3413196fb080a8362ac4ef55b6868b031c3a66a0857967cd68f0159
     summary: RAZAR agent bootstrap and logging guidance.
+  docs/onboarding/test_planning.md:
+    sha256: dbacb76c8b866af82bf7531b5facf9ffb9de708c9a55cec042fba1c19e9dc7a0
+    summary: Guide for filing Test Plan issues.
