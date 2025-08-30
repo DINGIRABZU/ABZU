@@ -6,6 +6,8 @@ import re
 import sys
 from pathlib import Path
 
+__version__ = "0.1.0"
+
 PLACEHOLDER_RE = re.compile(r"(#|//)\s*(TODO|FIXME)\b")
 IGNORED_SUFFIXES = {".md"}
 

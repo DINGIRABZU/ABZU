@@ -262,7 +262,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/check_connector_index.py` | Ensure touched connectors have registry entries. | None |
 | `scripts/check_key_documents.py` | Verify that key documents exist. | yaml |
 | `scripts/check_no_binaries.py` | Fail if any staged files are detected as binary. | None |
-| `scripts/check_no_placeholders.py` | Fail if files contain TODO or FIXME placeholders. | None |
+| `scripts/check_placeholders.py` | Fail if files contain TODO or FIXME placeholders. | None |
 | `scripts/component_inventory.py` | No description | None |
 | `scripts/confirm_reading.py` | Ensure required onboarding documents have been read. | yaml |
 | `scripts/data_validate.py` | Validate training data schema using TensorFlow Data Validation. | tensorflow_data_validation |

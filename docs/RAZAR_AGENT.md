@@ -576,6 +576,12 @@ The Mermaid source lives at [assets/ai_handover_flow.mmd](assets/ai_handover_flo
 
 If tests fail or regressions appear, RAZAR reverts to the previous state and records the failure for manual review.
 
+## Placeholder remediation
+
+The `check-placeholders` pre-commit hook blocks commits containing `TODO` or
+`FIXME`. Replace these markers with complete code or open an issue describing
+the outstanding work, then re-run `pre-commit run --files <paths>`.
+
 ## Version History
 
 | Version | Date | Summary |

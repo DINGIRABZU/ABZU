@@ -66,6 +66,12 @@ python INANNA_AI.py --list
 
 The song is saved as `qnl_hex_song.wav` and the metadata JSON in `qnl_hex_song.json` unless overridden with `--wav` and `--json`.
 
+## Placeholder remediation
+
+The `check-placeholders` pre-commit hook prevents commits that include `TODO`
+or `FIXME`. Remove the marker or open an issue to track the work, then rerun
+`pre-commit run --files <paths>` before committing.
+
 ## Source Texts
 
 The agent loads Markdown writings from the `INANNA_AI` and `GENESIS` folders
