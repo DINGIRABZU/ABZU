@@ -87,6 +87,9 @@ all exchanges between RAZAR, Crown, and the Operator must append records to
 - action or request
 - response summary
 
+See [logging_guidelines.md](logging_guidelines.md) for structured JSON formats
+and approved log levels.
+
 ## Functional Workflows
 
 RAZAR operations revolve around several coordinated flows:
@@ -283,7 +286,9 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
 If a component fails to start, inspect the logs and consult the
 [Recovery Playbook](recovery_playbook.md) for troubleshooting tips. The
 handshake data persists in `logs/razar_state.json` so operators can
-cross‑check advertised capabilities against runtime behaviour.
+cross‑check advertised capabilities against runtime behaviour. For end‑to‑end
+rollout steps see [deployment.md](deployment.md) and operational runbooks in
+[operations.md](operations.md).
 
 ## Prioritized pytest runner
 
@@ -754,6 +759,14 @@ provided, and the suggestion returned.
 **Rollback**
 
 If tests fail or regressions appear, RAZAR reverts to the previous state and records the failure for manual review.
+
+## Cross-Links
+
+- [Ignition](Ignition.md) – boot priorities and escalation rules
+- [System Blueprint](system_blueprint.md) – high-level architecture map
+- [Deployment Guide](deployment.md) – environment setup and rollout
+- [Monitoring Guide](monitoring.md) – telemetry collection and alerts
+- [Recovery Playbook](recovery_playbook.md) – restoration procedures
 
 ## Example Runs
 
