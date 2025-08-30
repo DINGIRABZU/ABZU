@@ -8,7 +8,7 @@ the component is reactivated.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import difflib
 import json
@@ -17,6 +17,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+from datetime import datetime
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -34,7 +35,12 @@ PATCH_LOG_PATH = PROJECT_ROOT / "logs" / "razar_ai_patches.json"
 def _record_patch(component: str, diff: str, tests: str) -> None:
     """Append a patch record to ``PATCH_LOG_PATH``."""
     PATCH_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    record = {"component": component, "diff": diff, "tests": tests}
+    record = {
+        "component": component,
+        "diff": diff,
+        "tests": tests,
+        "timestamp": datetime.utcnow().isoformat(),
+    }
     if PATCH_LOG_PATH.exists():
         try:
             data = json.loads(PATCH_LOG_PATH.read_text(encoding="utf-8"))

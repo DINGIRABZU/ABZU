@@ -1,16 +1,17 @@
-"""High level wrapper for remote RAZAR agents.
+"""RAZAR AI handover invocation helper.
 
-This module selects a remote agent based on a configuration file and delegates
-loading to :func:`agents.razar.remote_loader.load_remote_agent`.  Each
-invocation and its resulting patch suggestion are appended to
-``logs/razar_ai_invocations.json`` for audit purposes.  Consumers should call
-:func:`handover` which returns either the patch suggestion from the remote agent
-or a confirmation that no suggestion was provided.
+This module selects a remote agent based on a configuration file and
+delegates failure contexts to it via
+:func:`agents.razar.remote_loader.load_remote_agent`. Each invocation and
+its resulting patch suggestion are appended to
+``logs/razar_ai_invocations.json`` for audit purposes. Consumers should
+call :func:`handover` which returns either the patch suggestion from the
+remote agent or a confirmation that no suggestion was provided.
 """
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from datetime import datetime
 import json
@@ -89,17 +90,18 @@ def _append_log(entry: Dict[str, Any]) -> None:
 
 
 def handover(
-    *, config_path: Path | str | None = None, patch_context: Any | None = None
+    *, failure: Any | None = None, config_path: Path | str | None = None
 ) -> Any:
-    """Invoke the configured remote agent and return its patch suggestion.
+    """Delegate a failure context to a remote agent and return its suggestion.
 
     Parameters
     ----------
+    failure:
+        Optional object describing the failure that triggered the handover.  It
+        is forwarded to the remote agent as ``{"failure": failure}``.
     config_path:
         Optional override for the agent configuration file.  When omitted,
         :data:`CONFIG_PATH` is used.
-    patch_context:
-        Optional object passed to the agent's ``patch()`` function.
 
     Returns
     -------
@@ -116,11 +118,13 @@ def handover(
             "event": "invocation",
             "name": name,
             "timestamp": datetime.utcnow().isoformat(),
+            "failure": failure,
         }
     )
 
+    context = {"failure": failure} if failure is not None else None
     _module, agent_config, suggestion = remote_loader.load_remote_agent(
-        name, url, patch_context=patch_context
+        name, url, patch_context=context
     )
 
     log_entry: Dict[str, Any] = {
