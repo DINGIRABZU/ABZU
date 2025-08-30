@@ -57,7 +57,7 @@ documents:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary: Threat model and protections.
   docs/The_Absolute_Protocol.md:
-    sha256: 8270203ee33516dd4af15a67be9414672412375346cd77f2c924a4bc8be54a68
+    sha256: 30ab75b379a6042d8d4596afe0a2e9664ffe629d85385d0d27e3184227cb6c22
     summary: Core contribution rules.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
@@ -75,7 +75,7 @@ documents:
     sha256: 1b32ad1d78f3b19332b6dfc1c06c4ad8ea9578d0d850947712c33ec04e184eab
     summary: OS Guardian subsystem overview.
   docs/RAZAR_AGENT.md:
-    sha256: 19c991dac9fbd0456a493965ae63d8e97d1575a799a62a83ad1d8ea99c4ce8ee
+    sha256: 3b3b99875d19fbc360ee4ae412f103b18e4665a45c3513163b0c16df9f80f089
     summary: RAZAR agent bootstrap and logging guidance.
   docs/onboarding/test_planning.md:
     sha256: dbacb76c8b866af82bf7531b5facf9ffb9de708c9a55cec042fba1c19e9dc7a0
