@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Change Justification subsection and PR template field with CI validation.
 - Protocol v1.0.60 now requires `__version__` in every module, connector, and service and mandates documenting configuration schemas (e.g., `boot_config.json`, `primordials_config.yaml`, `operator_api.yaml`) with examples.
 - Linked Operator Protocol from RAZAR agent guide and regenerated docs index.
+- Added Connector Registry Protocol requiring version fields, endpoint schemas, authentication method, and status for each connector; updated pull request template accordingly.
 
 ### Added
 

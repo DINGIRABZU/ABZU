@@ -13,7 +13,7 @@ below.
 ## Action summary
 <!-- Required: follow the format "I did X on Y to obtain Z, expecting behavior B." -->
 I did X on Y to obtain Z, expecting behavior B.
-<!-- If a connector was added or modified, update [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and code/documentation links, as required by [The Absolute Protocol](../docs/The_Absolute_Protocol.md). -->
+<!-- If a connector was added or modified, update [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) with purpose, version, endpoint schemas, auth method, status, and code/documentation links, as required by [The Absolute Protocol](../docs/The_Absolute_Protocol.md). -->
 
 ## Checklist
 - [ ] Tests run <!-- Required: list tests run, e.g., `pytest` -->
@@ -24,5 +24,5 @@ I did X on Y to obtain Z, expecting behavior B.
 - [ ] AI ethics framework adhered <!-- Required: confirm principles in `docs/ai_ethics_framework.md` -->
 
 ## Connector/Index updated?
-- [ ] Connector updated? <!-- Required: confirm CONNECTOR_INDEX.md lists purpose, version, endpoints, auth method, status, and links -->
+- [ ] Connector index entry added/updated <!-- Required: confirm docs/connectors/CONNECTOR_INDEX.md lists purpose, version, endpoint schemas, auth method, status, and links -->
 - [ ] Index updated? <!-- Required: confirm component index and documentation index regenerated -->

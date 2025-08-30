@@ -96,7 +96,7 @@ documents:
       scope: Internal and external interfaces.
       insight: Maintain compatibility with listed interfaces.
   docs/component_index.md:
-    sha256: bc397e1a93e3747114255037efb6ce499df47fc67117a70c389609e226bfff2e
+    sha256: 5fba59a0267eb9edec5e42a6434213967cd013d040affebc6cef5c55f78d0662
     summary:
       purpose: Inventory of modules and services.
       scope: All components.
@@ -108,11 +108,12 @@ documents:
       scope: Crown-to-RAZAR interaction.
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: 62e83640ccd1fad1bd5ebe5b4b9360a523f62e2377429462143ecbbaeae08e5a
+    sha256: fa97eadd7513710cca12f10d6cbce2412b0525bf8df5e399cd9677a20a8e183e
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
-      insight: Update entry whenever a connector changes.
+      insight: Ensure each entry lists version, endpoint schemas, auth method, and
+        status.
   docs/connectors/README.md:
     sha256: c5aaeeafce2649d5c1bcd6b0501c39aff1c87ea4ee73b1397ba9fa99a786922d
     summary:
@@ -138,7 +139,7 @@ documents:
       scope: Security considerations.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: a4ca8ff29cab277068fe361871c80079f482307ab2d3f91cc825772cc093de33
+    sha256: eb3145802a07be7bde6336dedb55c2373b2ba31d5cc7fc8b3847dfd183e467bb
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -162,7 +163,7 @@ documents:
       scope: Public interfaces.
       insight: Keep implementations aligned with documented API.
   docs/operator_protocol.md:
-    sha256: f2cb6aeedb7570bc52c76b0b96263981802e7cca55105e4e6720d9561ca248b1
+    sha256: 75abe046a185322b79c3ce12ff2ec1d5584f5c6350dfc9b43e8616de5bb9533c
     summary:
       purpose: Operator interaction rules.
       scope: Operator channels.
@@ -174,13 +175,13 @@ documents:
       scope: OS Guardian component.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 3b9bb8a2a1bc47e456e84e5f79508d78bd592cfef4725e62540b055f96d83bf1
+    sha256: f790769db13a42d5e88aa4998c6afff82193785f9d74a40147779979c8b0f01c
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
-    sha256: 136ca9ff51c397f5ef7f523591486ea0344fecbf16de12940e53caac72a6fc20
+    sha256: 2acebbe3802143e395727844880430a286ae76dce858936ecaf23c46366937c3
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
@@ -190,7 +191,7 @@ documents:
     summary:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
-      insight: Cross‑link to related guides and keep configuration schemas current.
+      insight: "Cross\u2011link to related guides and keep configuration schemas current."
   docs/onboarding/test_planning.md:
     sha256: dbacb76c8b866af82bf7531b5facf9ffb9de708c9a55cec042fba1c19e9dc7a0
     summary:
