@@ -165,15 +165,93 @@
       "adr": null
     },
     {
+      "id": "memory_cortex",
+      "chakra": "heart",
+      "type": "module",
+      "version": "0.1.1",
+      "path": "memory/cortex.py",
+      "purpose": "Lightweight spiral memory with tag index",
+      "dependencies": [],
+      "tests": [
+        "tests/memory/test_cortex_concurrency.py",
+        "tests/test_cortex_memory.py"
+      ],
+      "status": "active",
+      "metrics": {
+        "coverage": 1.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "memory_emotional",
+      "chakra": "heart",
+      "type": "module",
+      "version": "0.1.1",
+      "path": "memory/emotional.py",
+      "purpose": "Persist and query emotional feature vectors",
+      "dependencies": [
+        "sqlite3"
+      ],
+      "tests": [
+        "tests/test_memory_emotional.py"
+      ],
+      "status": "active",
+      "metrics": {
+        "coverage": 1.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "memory_mental",
+      "chakra": "heart",
+      "type": "module",
+      "version": "0.1.1",
+      "path": "memory/mental.py",
+      "purpose": "Neo4j-backed task memory",
+      "dependencies": [
+        "neo4j"
+      ],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 1.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "memory_spiritual",
+      "chakra": "heart",
+      "type": "module",
+      "version": "0.1.1",
+      "path": "memory/spiritual.py",
+      "purpose": "SQLite-backed event to symbol ontology",
+      "dependencies": [
+        "sqlite3"
+      ],
+      "tests": [
+        "tests/test_memory_spiritual.py"
+      ],
+      "status": "active",
+      "metrics": {
+        "coverage": 1.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
       "id": "narrative_engine",
-      "chakra": "root",
+      "chakra": "heart",
       "type": "module",
       "version": "0.1.1",
       "path": "memory/narrative_engine.py",
       "purpose": "Records and streams story events",
       "dependencies": [],
       "tests": [
-        "tests/narrative_engine/test_biosignal_pipeline.py"
+        "tests/narrative_engine/test_biosignal_pipeline.py",
+        "tests/narrative_engine/test_biosignal_transformation.py"
       ],
       "status": "experimental",
       "metrics": {

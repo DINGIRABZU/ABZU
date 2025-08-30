@@ -264,4 +264,4 @@ PY
 
 | Version | Date | Summary |
 |---------|------|---------|
-| [Unreleased](../CHANGELOG.md#documentation-audit) | - | Mapped cortex, emotional, mental, spiritual and narrative memory stores. |
+| [Unreleased](../CHANGELOG.md#documentation-audit) | - | Added storage back-end options, initialization commands, and query examples for cortex, emotional, mental, spiritual, and narrative stores. |
