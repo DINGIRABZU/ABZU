@@ -14,7 +14,7 @@ Before opening a pull request, confirm each item:
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
-  - [Connector Index](connectors/CONNECTOR_INDEX.md) – confirm versions, endpoints, and links are current
+  - [Connector Index](connectors/CONNECTOR_INDEX.md) – confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
 - [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
@@ -24,7 +24,7 @@ Before opening a pull request, confirm each item:
 - [ ] Connector registry updated:
   - implementations expose `__version__`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
-- [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with version, purpose, service, status, and links
+  - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and links
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
 - [ ] Pull request includes change justification in the required format
