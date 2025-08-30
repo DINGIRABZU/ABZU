@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 
 import argparse
 import asyncio
@@ -19,6 +19,7 @@ import os
 import shlex
 import subprocess
 import time
+import urllib.request
 from collections import defaultdict
 from dataclasses import asdict
 from pathlib import Path
@@ -72,6 +73,28 @@ class BootOrchestrator:
         self.enable_ai_handover = (
             bool(enable_ai_handover) if enable_ai_handover is not None else False
         )
+
+    # ------------------------------------------------------------------
+    # Primordials launch
+    # ------------------------------------------------------------------
+    def _wait_for_primordials(self, url: str, retries: int = 30) -> None:
+        """Poll ``url`` until the Primordials service reports healthy."""
+        health_url = f"{url.rstrip('/')}/health"
+        for _ in range(retries):
+            try:
+                with urllib.request.urlopen(health_url) as resp:  # pragma: no cover
+                    if resp.status == 200:
+                        return
+            except Exception:  # pragma: no cover - network may be unavailable
+                time.sleep(1)
+        raise RuntimeError("Primordials service failed health check")
+
+    def _start_primordials(self) -> None:
+        """Launch the Primordials container and wait for readiness."""
+        url = os.environ.get("PRIMORDIALS_API_URL", "http://localhost:8080")
+        LOGGER.info("Primordials API URL: %s", url)
+        subprocess.run(["docker", "compose", "up", "-d", "primordials"], check=False)
+        self._wait_for_primordials(url)
 
     # ------------------------------------------------------------------
     # Crown handshake
@@ -352,6 +375,7 @@ class BootOrchestrator:
     def run(self) -> bool:
         """Execute the staged startup sequence."""
         self.write_ignition()
+        self._start_primordials()
         response = self._perform_handshake()
         self._persist_handshake(response)
         capabilities = response.capabilities if response else []

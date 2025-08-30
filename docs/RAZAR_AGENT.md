@@ -46,6 +46,15 @@ Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in
 [dependencies.md](dependencies.md).
 
+## Deployment
+
+The orchestrator prepares core services before handing control to CROWN:
+
+1. Launch the Primordials container.
+2. Poll its `/health` endpoint until a `200` response confirms readiness.
+3. Perform the Crown handshake and persist returned capabilities to `logs/razar_state.json`.
+4. If the GLM‑4.1V model is absent, trigger `crown_model_launcher.sh` to load it.
+
 ## Module Overviews
 
 ### `boot_orchestrator.py`
