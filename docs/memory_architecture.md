@@ -9,7 +9,8 @@ of experience. Every layer supports two storage back‑end families:
 
 Environment variables toggle the back‑end and location for each layer. The
 sections below outline initialisation commands, back‑end options and
-persistence strategies for each store:
+persistence strategies for each store. Each section also includes a minimal
+query example:
 
 - **Cortex** – persistent application state with semantic tags.
 - **Emotional** – affective snapshots mirroring the agent's mood.
@@ -67,6 +68,8 @@ cortex_collection = cortex_db()
 
 #### Query example
 
+Store and retrieve a record:
+
 ```bash
 python - <<'PY'
 from memory.cortex import record_spiral, query_spirals
@@ -112,6 +115,8 @@ emotion_collection = emotion_db()
 
 #### Query example
 
+Store and retrieve a record:
+
 ```bash
 python - <<'PY'
 from memory.emotional import get_connection, log_emotion, fetch_emotion_history
@@ -152,6 +157,8 @@ init_rl_model()  # uses NEO4J_* variables
 ```
 
 #### Query example
+
+Store and retrieve a record:
 
 ```bash
 python - <<'PY'
@@ -197,6 +204,8 @@ spirit_collection = spirit_db()
 
 #### Query example
 
+Store and retrieve a record:
+
 ```bash
 python - <<'PY'
 from memory.spiritual import get_connection, map_to_symbol, lookup_symbol_history
@@ -239,6 +248,8 @@ narrative_collection = narrative_db()
 ```
 
 #### Query example
+
+Store and retrieve a record:
 
 ```bash
 python - <<'PY'
