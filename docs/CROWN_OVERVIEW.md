@@ -101,27 +101,31 @@ modules before reintroducing them into the boot cycle. See the
 [RAZAR Agent](RAZAR_AGENT.md#crown-link-protocol) document for detailed schema
 descriptions.
 
-## Deployment & Escalation
+## Deployment & Operator Relay
 
 Deployment begins with a short alignment between Crown and the RAZAR agent.
+RAZAR expects a mission brief and acknowledgement before handling operator
+commands.
 
 ### Startup Steps
 
-1. Run [`init_crown_agent.py`](../init_crown_agent.py) to prepare memory directories, register servant models, and validate the GLM endpoint.
-2. Exchange a mission brief using [`razar/crown_handshake.py`](../razar/crown_handshake.py) so both sides agree on capabilities.
+1. Run [`init_crown_agent.py`](../init_crown_agent.py) to prepare memory
+directories, register servant models, and validate the GLM endpoint.
+2. Exchange a mission brief using [`razar/crown_handshake.py`](../razar/crown_handshake.py)
+so both sides agree on capabilities.
 3. Launch the console after an acknowledgement to begin the session.
 
-### Mission Brief & Log Snippet
+### Mission Brief Example & WebSocket Log
 
 ```json
-// sent
+// sent by RAZAR
 {
   "type": "brief",
   "priority_map": {"memory": "ok"},
   "open_issues": ["missing_audio_stream"]
 }
 
-// received
+// received by Crown
 {
   "type": "ack",
   "capabilities": ["glm", "avatar"],
@@ -130,25 +134,29 @@ Deployment begins with a short alignment between Crown and the RAZAR agent.
 ```
 
 ```
-[WS] -> {"type":"brief","priority_map":{"memory":"ok"}}
-[WS] <- {"type":"ack","capabilities":["glm","avatar"]}
+[RAZAR WS] -> {"type":"brief","priority_map":{"memory":"ok"}}
+[Crown WS] <- {"type":"ack","capabilities":["glm","avatar"]}
 ```
 
-### `/operator/command` Routing
+### Operator Command Relay
 
-Operator directives are issued through `/operator/command` and relayed over the Crown link.
+Operator directives are issued through `/operator/command`. Crown forwards them
+over the WebSocket link to RAZAR and returns the result.
 
 ```json
 POST /operator/command {"command": "status"}
 
-[WS] -> {"type": "operator", "command": "status"}
-[WS] <- {"type": "result", "output": "all green"}
+[Crown WS] -> {"type": "operator", "command": "status"}
+[RAZAR WS] <- {"type": "result", "output": "all green"}
 ```
 
 ### Escalation Thresholds
 
-- **Automated repair** – any component marked `degraded` for three cycles triggers a repair request to RAZAR.
-- **Human override** – a mission brief with `priority_map` entries set to `critical` or repeated operator command failures escalates to a human operator.
+- **Automated repair** – any component marked `degraded` for three cycles
+  triggers a repair request to RAZAR.
+- **Human override** – a mission brief with `priority_map` entries set to
+  `critical` or repeated operator command failures escalates to a human
+  operator.
 
 ## Version History
 

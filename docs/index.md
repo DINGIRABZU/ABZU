@@ -6,6 +6,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [Architecture Overview](architecture_overview.md)
 - [Blueprint Export](BLUEPRINT_EXPORT.md) – versioned snapshot of key documents
 - [Detailed Architecture](architecture.md)
+- [Crown Agent Overview](CROWN_OVERVIEW.md)
 ## Nazarick
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
 - [Nazarick Agents](nazarick_agents.md)
