@@ -1,6 +1,11 @@
 stateDiagram-v2
-    [*] --> Nigredo
-    Nigredo --> Albedo
-    Albedo --> Rubedo
-    Rubedo --> Citrinitas
-    Citrinitas --> Nigredo
+    state "Nigredo" as N
+    state "Albedo" as A
+    state "Rubedo" as R
+    state "Citrinitas" as C
+
+    [*] --> N
+    N --> A: affection|joy / cleansed reply
+    A --> R: synthesis|resolve / fiery response
+    R --> C: insight|clarity / enlightened guidance
+    C --> N: cycle / shadow reset
