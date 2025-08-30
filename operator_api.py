@@ -55,7 +55,7 @@ async def upload_file(
     except json.JSONDecodeError as exc:
         raise HTTPException(status_code=400, detail="invalid metadata") from exc
 
-    upload_dir = Path("uploads")
+    upload_dir = Path("uploads") / operator
     upload_dir.mkdir(parents=True, exist_ok=True)
 
     stored: list[str] = []
@@ -63,22 +63,24 @@ async def upload_file(
         dest = upload_dir / item.filename
         with dest.open("wb") as fh:
             shutil.copyfileobj(item.file, fh)
-        stored.append(dest.name)
+        stored.append(str(dest.relative_to(Path("uploads"))))
 
     def _relay(meta: dict[str, object]) -> dict[str, object]:
-        """Crown forwards metadata to RAZAR."""
+        """Crown forwards metadata and stored paths to RAZAR."""
 
         def _send(m: dict[str, object]) -> dict[str, object]:
-            return {"received": m}
+            return {"received": m, "files": stored}
 
         return _dispatcher.dispatch("crown", "razar", _send, meta)
 
+    meta_with_files = {**meta, "files": stored}
+
     try:
-        _dispatcher.dispatch(operator, "crown", _relay, meta)
+        _dispatcher.dispatch(operator, "crown", _relay, meta_with_files)
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
 
-    return {"stored": stored, "metadata": meta}
+    return {"stored": stored, "metadata": meta_with_files}
 
 
 __all__ = ["router"]

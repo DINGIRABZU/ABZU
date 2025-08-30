@@ -38,12 +38,16 @@ async function startStream(videoElem) {
 }
 
 function uploadFiles(files, metadata = {}, operator = 'overlord') {
+    if (!files || files.length === 0) {
+        return Promise.resolve({ stored: [], metadata });
+    }
     const formData = new FormData();
     for (const file of files) {
         formData.append('files', file);
     }
     formData.append('operator', operator);
     formData.append('metadata', JSON.stringify(metadata));
+    // Crown relays metadata and stored paths to RAZAR on success.
     return fetch(UPLOAD_URL, {
         method: 'POST',
         body: formData

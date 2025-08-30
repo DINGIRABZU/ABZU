@@ -61,7 +61,21 @@ except Exception:  # pragma: no cover - optional dependency
 
 from core import video_engine
 
+__version__ = "0.2.0"
+
 logger = logging.getLogger(__name__)
+
+# Configuration flags -----------------------------------------------------
+ENABLE_AUDIO_TRACK = True
+ENABLE_VIDEO_TRACK = True
+
+
+def configure_tracks(*, audio: bool = True, video: bool = True) -> None:
+    """Enable or disable default audio and video track creation."""
+
+    global ENABLE_AUDIO_TRACK, ENABLE_VIDEO_TRACK
+    ENABLE_AUDIO_TRACK = audio
+    ENABLE_VIDEO_TRACK = video
 
 
 class AvatarAudioTrack(AudioStreamTrack):  # type: ignore[misc]
@@ -137,6 +151,30 @@ class AvatarVideoTrack(VideoStreamTrack):  # type: ignore[misc]
         return video
 
 
+def get_audio_track(audio_path: Optional[Path] = None) -> AvatarAudioTrack | None:
+    """Return an audio track if enabled and available."""
+
+    if not ENABLE_AUDIO_TRACK:
+        return None
+    try:
+        return AvatarAudioTrack(audio_path)
+    except Exception as exc:  # pragma: no cover - optional dependency
+        logger.warning("audio track unavailable: %s", exc)
+        return None
+
+
+def get_video_track() -> AvatarVideoTrack | None:
+    """Return a video track if enabled and available."""
+
+    if not ENABLE_VIDEO_TRACK:
+        return None
+    try:
+        return AvatarVideoTrack()
+    except Exception as exc:  # pragma: no cover - optional dependency
+        logger.warning("video track unavailable: %s", exc)
+        return None
+
+
 class WebRTCServer:
     """Minimal MediaSoup-based SFU server with helper tracks."""
 
@@ -164,4 +202,11 @@ class WebRTCServer:
         logger.info("WebRTC server stopped")
 
 
-__all__ = ["WebRTCServer", "AvatarVideoTrack", "AvatarAudioTrack"]
+__all__ = [
+    "WebRTCServer",
+    "AvatarVideoTrack",
+    "AvatarAudioTrack",
+    "configure_tracks",
+    "get_audio_track",
+    "get_video_track",
+]
