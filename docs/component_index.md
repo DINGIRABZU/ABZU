@@ -457,16 +457,16 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_corpus_memory_logging.py` | No description | None |
 | `tests/test_cortex_memory.py` | Tests for cortex memory. | memory |
 | `tests/test_cortex_sigil_logic.py` | Tests for cortex sigil logic. | labs |
-| `tests/test_crown_config.py` | Tests for crown config. | crown_config |
-| `tests/test_crown_console_startup.py` | Tests for crown console startup. | pytest |
-| `tests/test_crown_decider.py` | Tests for crown decider. | None |
-| `tests/test_crown_decider_history.py` | Tests for crown decider history. | None |
-| `tests/test_crown_decider_rotation.py` | Tests for crown decider rotation. | None |
-| `tests/test_crown_initialization.py` | Tests for crown initialization. | INANNA_AI, pytest |
-| `tests/test_crown_prompt_orchestrator.py` | Tests for crown prompt orchestrator. | None |
-| `tests/test_crown_query_router.py` | Tests for crown query router. | rag |
-| `tests/test_crown_router_memory.py` | Tests for crown router memory. | pytest |
-| `tests/test_crown_servant_registration.py` | Tests for crown servant registration. | INANNA_AI, pytest, yaml |
+| `tests/crown/test_crown_config.py` | Tests for crown config. | crown_config |
+| `tests/crown/test_crown_console_startup.py` | Tests for crown console startup. | pytest |
+| `tests/crown/test_crown_decider.py` | Tests for crown decider. | None |
+| `tests/crown/test_crown_decider_history.py` | Tests for crown decider history. | None |
+| `tests/crown/test_crown_decider_rotation.py` | Tests for crown decider rotation. | None |
+| `tests/crown/test_crown_initialization.py` | Tests for crown initialization. | INANNA_AI, pytest |
+| `tests/crown/test_crown_prompt_orchestrator.py` | Tests for crown prompt orchestrator. | None |
+| `tests/crown/test_crown_query_router.py` | Tests for crown query router. | rag |
+| `tests/crown/test_crown_router_memory.py` | Tests for crown router memory. | pytest |
+| `tests/crown/test_crown_servant_registration.py` | Tests for crown servant registration. | INANNA_AI, pytest, yaml |
 | `tests/test_dashboard_app.py` | Tests for dashboard app. | streamlit |
 | `tests/test_dashboard_qnl_mixer.py` | Tests for dashboard qnl mixer. | numpy, streamlit |
 | `tests/test_dashboard_usage.py` | Tests for dashboard usage. | None |
@@ -601,8 +601,8 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_ritual_cli.py` | Tests for ritual cli. | None |
 | `tests/test_rival_messaging.py` | No description | agents, albedo, src |
 | `tests/test_rl_metrics.py` | Tests for rl metrics. | INANNA_AI |
-| `tests/test_root_chakra_integration.py` | Tests for root chakra integration. | INANNA_AI, INANNA_AI_AGENT, dashboard |
-| `tests/test_root_metrics_logging.py` | Tests for root metrics logging. | None |
+| `tests/root/test_root_chakra_integration.py` | Tests for root chakra integration. | INANNA_AI, INANNA_AI_AGENT, dashboard |
+| `tests/root/test_root_metrics_logging.py` | Tests for root metrics logging. | None |
 | `tests/test_rubedo_layer.py` | Tests for rubedo layer. | INANNA_AI |
 | `tests/test_run_inanna_sh.py` | Tests for run inanna sh. | pytest |
 | `tests/test_run_song_demo.py` | Tests for run song demo. | tests |

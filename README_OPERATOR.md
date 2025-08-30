@@ -333,7 +333,7 @@ pytest tests/test_vast_pipeline.py
 ```
 To execute the Root Chakra integration test:
 ```bash
-pytest tests/test_root_chakra_integration.py
+pytest tests/root/test_root_chakra_integration.py
 ```
 
 ## Spiral RAG Pipeline

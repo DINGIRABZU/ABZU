@@ -2246,52 +2246,52 @@
       "score": 2,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_config.py": {
+    "tests/crown/test_crown_config.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_console_startup.py": {
+    "tests/crown/test_crown_console_startup.py": {
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_decider.py": {
+    "tests/crown/test_crown_decider.py": {
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_decider_history.py": {
+    "tests/crown/test_crown_decider_history.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_decider_rotation.py": {
+    "tests/crown/test_crown_decider_rotation.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_initialization.py": {
+    "tests/crown/test_crown_initialization.py": {
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_prompt_orchestrator.py": {
+    "tests/crown/test_crown_prompt_orchestrator.py": {
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_query_router.py": {
+    "tests/crown/test_crown_query_router.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_router_memory.py": {
+    "tests/crown/test_crown_router_memory.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-23"
     },
-    "tests/test_crown_servant_registration.py": {
+    "tests/crown/test_crown_servant_registration.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-23"
@@ -2966,12 +2966,12 @@
       "score": 1,
       "last_update": "2025-08-23"
     },
-    "tests/test_root_chakra_integration.py": {
+    "tests/root/test_root_chakra_integration.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-24"
     },
-    "tests/test_root_metrics_logging.py": {
+    "tests/root/test_root_metrics_logging.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-23"

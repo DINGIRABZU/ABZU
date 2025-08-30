@@ -55,11 +55,11 @@
         "crown_config"
       ],
       "tests": [
-        "tests/test_crown_initialization.py"
+        "tests/crown/test_crown_initialization.py"
       ],
       "status": "active",
       "metrics": {
-        "coverage": 1.0
+        "coverage": 0.99
       },
       "ignition_stage": 2,
       "adr": null

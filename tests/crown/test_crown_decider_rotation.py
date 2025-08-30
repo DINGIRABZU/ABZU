@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import importlib
 import sys
 import time
@@ -12,7 +14,7 @@ from pathlib import Path
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 

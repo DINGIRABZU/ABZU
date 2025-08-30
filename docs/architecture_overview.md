@@ -22,7 +22,7 @@ flowchart LR
 ```
 
 - [crown_router.py](../crown_router.py)
-- Tests: [tests/test_crown_router_memory.py](../tests/test_crown_router_memory.py)
+- Tests: [tests/crown/test_crown_router_memory.py](../tests/crown/test_crown_router_memory.py)
 
 **Design Evolution:** Score 2; depends on `rag`.
 
