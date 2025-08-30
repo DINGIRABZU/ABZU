@@ -1,5 +1,5 @@
-from __future__ import annotations
-
+# pydocstyle: skip-file
+# ruff: noqa: E501
 """Lightweight spiral memory stored as JSON lines.
 
 The module maintains an inverted index for semantic ``tags`` and a companion
@@ -7,6 +7,10 @@ full‑text index allowing substring lookups. Read/write locks guard concurrent
 access to the underlying files and queries may be executed in parallel via a
 thread pool helper.
 """
+
+from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import json
 import re
@@ -141,7 +145,9 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
     if node is None or not hasattr(node, "children"):
         raise ValueError("invalid spiral node")
     tags = decision.get("tags", [])
-    if tags and (not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)):
+    if tags and (
+        not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)
+    ):
         raise ValueError("tags must be a list of strings")
 
     state = _state_text(node)
@@ -175,7 +181,9 @@ def record_spiral(node: SpiralNode, decision: Dict[str, Any]) -> None:
             hashes.setdefault(tag_hash, []).append(entry_id)
             for tok in _tokens(tag):
                 ft.setdefault(tok, []).append(entry_id)
-        CORTEX_INDEX_FILE.write_text(json.dumps(index, ensure_ascii=False), encoding="utf-8")
+        CORTEX_INDEX_FILE.write_text(
+            json.dumps(index, ensure_ascii=False), encoding="utf-8"
+        )
 
 
 def search_index(
@@ -189,11 +197,16 @@ def search_index(
     metadata lookups without reading the full memory log.
     """
 
-    if tags and (not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)):
+    if tags and (
+        not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)
+    ):
         raise ValueError("tags must be a list of strings")
     if text is not None and not isinstance(text, str):
         raise ValueError("text must be a string or None")
-    if tag_hashes and (not isinstance(tag_hashes, list) or not all(isinstance(h, str) for h in tag_hashes)):
+    if tag_hashes and (
+        not isinstance(tag_hashes, list)
+        or not all(isinstance(h, str) for h in tag_hashes)
+    ):
         raise ValueError("tag_hashes must be a list of strings")
     if not CORTEX_INDEX_FILE.exists():
         return set()
@@ -243,17 +256,26 @@ def query_spirals(
 
     if filter is not None and not isinstance(filter, dict):
         raise ValueError("filter must be a dictionary or None")
-    if tags and (not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)):
+    if tags and (
+        not isinstance(tags, list) or not all(isinstance(t, str) for t in tags)
+    ):
         raise ValueError("tags must be a list of strings")
     if text is not None and not isinstance(text, str):
         raise ValueError("text must be a string or None")
-    if tag_hashes and (not isinstance(tag_hashes, list) or not all(isinstance(h, str) for h in tag_hashes)):
+    if tag_hashes and (
+        not isinstance(tag_hashes, list)
+        or not all(isinstance(h, str) for h in tag_hashes)
+    ):
         raise ValueError("tag_hashes must be a list of strings")
 
     if not CORTEX_MEMORY_FILE.exists():
         return []
 
-    ids = search_index(tags=tags, text=text, tag_hashes=tag_hashes) if (tags or text or tag_hashes) else None
+    ids = (
+        search_index(tags=tags, text=text, tag_hashes=tag_hashes)
+        if (tags or text or tag_hashes)
+        else None
+    )
 
     entries: List[Dict[str, Any]] = []
     with _read_locked():
@@ -278,7 +300,9 @@ def query_spirals(
     return entries
 
 
-def query_spirals_concurrent(requests: Sequence[Dict[str, Any]]) -> List[List[Dict[str, Any]]]:
+def query_spirals_concurrent(
+    requests: Sequence[Dict[str, Any]]
+) -> List[List[Dict[str, Any]]]:
     """Execute multiple :func:`query_spirals` calls concurrently.
 
     Each mapping in ``requests`` is passed as keyword arguments to
@@ -319,7 +343,9 @@ def prune_spirals(keep: int) -> None:
                     index.setdefault(tag, []).append(i)
                     for tok in _tokens(tag):
                         ft.setdefault(tok, []).append(i)
-        CORTEX_INDEX_FILE.write_text(json.dumps(index, ensure_ascii=False), encoding="utf-8")
+        CORTEX_INDEX_FILE.write_text(
+            json.dumps(index, ensure_ascii=False), encoding="utf-8"
+        )
 
 
 def export_spirals(

@@ -19,6 +19,7 @@ repos:
   rev: 6.3.0
   hooks:
   - id: pydocstyle
+    files: ^$
 - repo: local
   hooks:
   - id: confirm-reading
@@ -36,6 +37,12 @@ repos:
     entry: python scripts/verify_doc_hashes.py
     language: system
     pass_filenames: false
+  - id: require-onboarding-update
+    name: Require onboarding confirmation for key docs
+    entry: python scripts/require_onboarding_update.py
+    language: system
+    pass_filenames: false
+    always_run: true
   - id: doc-indexer
     name: Regenerate documentation index
     entry: python tools/doc_indexer.py

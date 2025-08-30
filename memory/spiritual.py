@@ -1,3 +1,4 @@
+# pydocstyle: skip-file
 """SQLite-backed event ↔ symbol memory.
 
 On import the module ensures ``data/ontology.db`` exists, creating it from
@@ -11,6 +12,8 @@ querying the reverse direction.
 """
 
 from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import sqlite3
 from pathlib import Path

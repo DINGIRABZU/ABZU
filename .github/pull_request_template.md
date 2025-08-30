@@ -5,7 +5,7 @@ below.
 -->
 
 ## Summary
-<!-- Required: provide a concise summary of the change. -->
+<!-- Required: provide a concise summary of the change. Format: "I did X on Y to obtain Z, expecting behavior B." -->
 
 ## Linked issue/feature spec
 <!-- Required: link to the relevant issue, documentation, or feature spec. -->

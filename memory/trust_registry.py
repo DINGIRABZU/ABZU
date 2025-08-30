@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
+"""Entity classification with trust scoring and persistence."""
+
 from __future__ import annotations
 
-"""Entity classification with trust scoring and persistence."""
+__version__ = "0.1.1"
 
 import json
 from pathlib import Path

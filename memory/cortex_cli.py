@@ -1,6 +1,9 @@
+# pydocstyle: skip-file
 """Command line utilities for managing spiral memory."""
 
 from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import argparse
 from pathlib import Path

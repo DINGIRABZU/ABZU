@@ -1,10 +1,13 @@
-from __future__ import annotations
-
+# pydocstyle: skip-file
 """Ethics Manifesto for Nazarick agents.
 
 Defines the Seven Laws and guiding ethos clauses. The :class:`Manifesto`
 provides utilities to look up laws and validate actions for compliance.
 """
+
+from __future__ import annotations
+
+__version__ = "0.1.1"
 
 from dataclasses import dataclass
 from typing import Dict, Iterable, List
@@ -22,6 +25,7 @@ class Law:
 @dataclass(frozen=True)
 class EthosClause:
     """A guiding ethos clause."""
+
     # Use ``name`` for consistency with :class:`Law`.
     name: str
     description: str

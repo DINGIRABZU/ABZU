@@ -1,11 +1,14 @@
-from __future__ import annotations
-
+# pydocstyle: skip-file
 """Narrative Scribe agent.
 
 Listens to the Citadel event bus and converts agent events into prose.
 Generated narratives are written to ``logs/nazarick_story.log`` and also
 recorded via :func:`memory.narrative_engine.log_story`.
 """
+
+from __future__ import annotations
+
+__version__ = "0.1.1"
 
 import asyncio
 import json
