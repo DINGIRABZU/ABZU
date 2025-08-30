@@ -156,7 +156,7 @@ documents:
       scope: OS Guardian component.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 27e4223b924361dcc2f04e6701d56ba9b1d855c65ab217b877c39371cf3a2000
+    sha256: 3b9bb8a2a1bc47e456e84e5f79508d78bd592cfef4725e62540b055f96d83bf1
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
@@ -168,7 +168,7 @@ documents:
       scope: Top-level docs index.
       insight: Add Crown overview to architecture section.
   docs/RAZAR_AGENT.md:
-    sha256: c180ea160750f7d5f8087660c367e867dd17080bceae2523110cb4bed8aac440
+    sha256: 9d05223d4f957139da2545e9296ca34f71d1c3c302b988e2ffae5e79476d8f85
     summary:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
