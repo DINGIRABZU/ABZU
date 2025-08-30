@@ -37,11 +37,12 @@ async function startStream(videoElem) {
     return pc;
 }
 
-function uploadFiles(files, metadata = {}) {
+function uploadFiles(files, metadata = {}, operator = 'overlord') {
     const formData = new FormData();
     for (const file of files) {
         formData.append('files', file);
     }
+    formData.append('operator', operator);
     formData.append('metadata', JSON.stringify(metadata));
     return fetch(UPLOAD_URL, {
         method: 'POST',

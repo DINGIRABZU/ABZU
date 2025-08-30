@@ -1072,9 +1072,9 @@
       "last_update": "2025-08-28"
     },
     "operator_api.py": {
-      "version": "0.1.0",
+      "version": "0.2.0",
       "score": 3,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-02"
     },
     "orchestration_master.py": {
       "version": "0.0.0",

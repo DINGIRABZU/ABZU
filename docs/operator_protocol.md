@@ -9,8 +9,15 @@ must include authentication headers.
 
 ## Endpoint `/operator/upload`
 
-Uploads one or more files using `multipart/form-data`. Each request must include a `files` field and may include optional
-`metadata` JSON. Crown stores files under `uploads/` and forwards metadata to RAZAR.
+Uploads one or more files using `multipart/form-data`. Each request must include `operator` and `files` fields and may include optional `metadata` JSON. Crown stores files under `uploads/` and forwards metadata to Crown.
+
+### Authentication
+
+Requires an `Authorization` header containing a valid JWT or API token.
+
+### Rate Limits
+
+Limited to **5** upload requests per minute per operator. Exceeding this limit returns `429 Too Many Requests`.
 
 ## WebRTC Channels
 
