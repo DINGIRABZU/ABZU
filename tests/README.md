@@ -1,5 +1,10 @@
 # Test suite notes
 
+## Chakra test organization
+
+Tests are grouped by chakra to mirror the system architecture. Chakra-specific
+subdirectories such as `tests/root` and `tests/crown` hold integration tests for those layers. Other tests remain at the top level or in feature folders.
+
 ## Hugging Face hub stub
 
 The test configuration injects a lightweight stub of the

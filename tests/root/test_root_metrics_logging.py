@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import importlib.util
 import json
 import sys
@@ -9,7 +11,7 @@ import types
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 # Stub heavy dependencies as in test_start_spiral_os

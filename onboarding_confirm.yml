@@ -6,7 +6,7 @@ documents:
     sha256: e575ff650f076601f2dae9c09ccc3b0658999204f71a22508aab24c98f050445
     summary: Overview of ABZU subsystems.
   docs/architecture_overview.md:
-    sha256: 3e08f2cf4a214c19aead33191c08b32f8f4e8ddd57333b29fbe5e2596e9cdad2
+    sha256: dcd829f05771560880d78a9639d0e90253fe76c57d38a17aae560cdcf95c4640
     summary: High-level system architecture.
   docs/documentation_protocol.md:
     sha256: ae84f16638303413f944fd3a2b0adf70679c3ee82c06eefa2ab18c1141468239

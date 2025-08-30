@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import importlib
 import sys
 import types
@@ -39,7 +41,7 @@ orch_mod.MoGEOrchestrator = DummyOrchestrator
 rag_pkg.orchestrator = orch_mod
 sys.modules.setdefault("rag.orchestrator", orch_mod)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 

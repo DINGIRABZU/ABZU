@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.0"
+
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -10,7 +12,7 @@ import pytest
 
 pytestmark = pytest.mark.skip(reason="requires unavailable resources")
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 import logging
