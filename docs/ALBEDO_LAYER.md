@@ -1,6 +1,6 @@
 # Albedo Personality Layer
 
-The **Albedo** layer signals Nazarick agents while introducing a stateful persona that drives responses through a remote GLM (Generative Language Model). All related modules live under `INANNA_AI/personality_layers/albedo`.
+A four-phase state machine powers the **Albedo** layer, signalling Nazarick agents and driving responses through a remote GLM (Generative Language Model). Configuration lives under `config/albedo_config.yaml`, and all related modules reside in `INANNA_AI/personality_layers/albedo`.
 
 ## Project structure
 
@@ -51,7 +51,7 @@ export GLM_API_URL=https://glm.example.com/glm41v_9b
 python -m INANNA_AI.main --duration 3 --personality albedo
 ```
 
-Each invocation cycles through Nigredo, Albedo, Rubedo and Citrinitas states before returning to Nigredo for a continuous loop.
+Each invocation cycles through Nigredo, Albedo, Rubedo and Citrinitas states before returning to Nigredo for a continuous loop. The diagram below labels each transition with the trigger inputs and resulting outputs.
 
 ```mermaid
 stateDiagram-v2
@@ -67,7 +67,7 @@ stateDiagram-v2
     C --> N: cycle / shadow reset
 ```
 
-The Mermaid source lives at [assets/albedo_state.mmd](assets/albedo_state.mmd).
+The Mermaid source lives at [assets/albedo_state_machine.mmd](assets/albedo_state_machine.mmd).
 
 ### Transition details
 
@@ -176,6 +176,8 @@ logging:
   conversation: logs/albedo_layer.log
   metrics: logs/albedo_metrics.jsonl
 ```
+
+Leaving `api_key` blank relies on the `GLM_API_KEY` environment variable. The `quantum.context` value seeds the optional quantum embedding pipeline; omit it to run without quantum context.
 
 Load the configuration before creating the personality:
 
