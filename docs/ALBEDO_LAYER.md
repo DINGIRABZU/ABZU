@@ -41,9 +41,9 @@ When no arguments are provided the class falls back to the `GLM_API_URL` and
 `GLM_API_KEY` environment variables and attaches the key as an
 `Authorization: Bearer` header when present.
 
-## Conversation loop
+## State Machine Diagram
 
-To engage the Albedo personality, create the layer and pass it to the orchestrator. The `INANNA_AI.main` script records microphone input and routes it through this layer:
+The Albedo layer cycles through four chromatic states.  To engage the layer, create it and pass it to the orchestrator. The `INANNA_AI.main` script records microphone input and routes it through this state machine:
 
 ```bash
 export GLM_API_KEY=<your key>
@@ -160,11 +160,17 @@ The first call uses the ``nigredo`` template and yields a prompt like:
 [Nigredo] (person) I love Alice affection
 ```
 
-## Deployment & Configuration
+## Deployment Guide
 
-A small YAML file can centralize the remote GLM settings, the optional
-quantum context and log locations.  Place `albedo_config.yaml` under the
-`config/` directory:
+1. Copy the sample configuration at `config/albedo_config.yaml` or adapt the
+   snippet below for your environment. This file centralizes the remote GLM
+   settings, optional quantum context, and log locations.
+2. Export `GLM_API_KEY` (and optionally `GLM_API_URL`) or set them inside the
+   YAML file.
+3. Launch the layer with `python -m INANNA_AI.main --personality albedo` or
+   integrate the class directly as shown after the snippet.
+
+Example `albedo_config.yaml`:
 
 ```yaml
 glm:
