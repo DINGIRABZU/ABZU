@@ -207,12 +207,14 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
    ```
 
    During a full boot the orchestrator calls
-   `crown_handshake.perform()`, logs the returned capabilities to
-   `logs/razar.log`, records them in
-   [logs/razar_state.json](../logs/razar_state.json), and if the
-   `GLM-4.1V` capability is missing runs
-   [`crown_model_launcher.sh`](../crown_model_launcher.sh), logging the
-   launch under `launched_models`.
+   `crown_handshake.perform()`, archives the mission brief to
+   `logs/mission_briefs/<timestamp>.json`, saves the handshake
+   response to `logs/mission_briefs/<timestamp>_response.json`, logs
+   capabilities in `logs/razar.log`, persists them in
+   [logs/razar_state.json](../logs/razar_state.json), and launches
+   [`crown_model_launcher.sh`](../crown_model_launcher.sh) when the
+   returned capabilities lack `GLM4V`, recording the launch under
+   `launched_models`.
 
 4. **Launch** – start the boot orchestrator to bring components online:
 

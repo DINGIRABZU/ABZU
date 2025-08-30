@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Required configuration files to include schema outlines and minimal examples, referencing `boot_config.json`, `razar_env.yaml`, and log formats.
 - Added operator protocol for `/operator/command` and linked it under Subsystem Protocols in The Absolute Protocol.
 - Mandated end-to-end run examples with logs covering normal operation and failure recovery in agent docs.
+- Archived Crown handshake responses alongside mission briefs and
+  auto-launched `GLM4V` when missing from advertised capabilities.
 - Required a "Change justification" field in the pull request template and documented the statement format in The Absolute Protocol.
 - Documented mission brief archive requirements and maintenance in The Absolute Protocol.
 - Added Operator API and Open Web UI entries to `CONNECTOR_INDEX.md` and expanded protocol checklist for connector registry.

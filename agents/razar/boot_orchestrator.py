@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import argparse
 import asyncio
@@ -20,6 +20,7 @@ import shlex
 import subprocess
 import time
 from collections import defaultdict
+from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List
 
@@ -104,6 +105,7 @@ class BootOrchestrator:
         timestamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
         brief_path = archive_dir / f"{timestamp}.json"
         brief_path.write_text(json.dumps(brief), encoding="utf-8")
+        response_path = archive_dir / f"{timestamp}_response.json"
 
         response: CrownResponse | None = None
         status = "failure"
@@ -126,8 +128,10 @@ class BootOrchestrator:
                 response.capabilities,
                 response.downtime,
             )
+            response_path.write_text(json.dumps(asdict(response)), encoding="utf-8")
         else:
             LOGGER.warning("Handshake produced no response")
+            response_path.write_text("{}", encoding="utf-8")
         self._persist_handshake(response)
         return response.capabilities if response else []
 
