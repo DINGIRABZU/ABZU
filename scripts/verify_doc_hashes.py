@@ -1,4 +1,4 @@
-"""Ensure protected documents have up-to-date hashes and summaries."""
+"""Ensure protected documents have up-to-date hashes and summary fields."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 KEY_DOCS = ROOT / "docs" / "KEY_DOCUMENTS.md"
 CONFIRM = ROOT / "onboarding_confirm.yml"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 def sha256(path: Path) -> str:
@@ -56,6 +56,7 @@ def main() -> int:
         print(f"Failed to parse {CONFIRM}: {exc}", file=sys.stderr)
         return 1
     docs: dict[str, object] = data.get("documents", {})
+    required_fields = ("purpose", "scope", "key_rules", "insight")
     missing_entries: list[str] = []
     missing_fields: list[str] = []
     mismatched: list[str] = []
@@ -66,7 +67,13 @@ def main() -> int:
             continue
         sha = entry.get("sha256")
         summary = entry.get("summary")
-        if not sha or not summary:
+        if not sha or not isinstance(summary, dict):
+            missing_fields.append(rel)
+            continue
+        if any(
+            not isinstance(summary.get(f), str) or not summary.get(f).strip()
+            for f in required_fields
+        ):
             missing_fields.append(rel)
             continue
         path = ROOT / rel
@@ -76,7 +83,7 @@ def main() -> int:
         for rel in missing_entries:
             print(f"Missing entry for: {rel}", file=sys.stderr)
         for rel in missing_fields:
-            print(f"Missing sha256 or summary for: {rel}", file=sys.stderr)
+            print(f"Missing sha256 or summary fields for: {rel}", file=sys.stderr)
         for rel in mismatched:
             print(f"Hash mismatch for: {rel}", file=sys.stderr)
         print(

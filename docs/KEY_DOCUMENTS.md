@@ -2,8 +2,10 @@
 
 The files listed here are foundational and must never be deleted or renamed.
 For each document below, contributors must store its SHA256 hash and a
-contributor summary detailing its purpose, scope, and one actionable insight in
-`onboarding_confirm.yml` to prove the current version was reviewed.
+contributor summary detailing its purpose, scope, key rules, and one actionable
+insight in `onboarding_confirm.yml` to prove the current version was reviewed.
+This requirement is reinforced by The Absolute Protocol's
+[Contributor Awareness Checklist](The_Absolute_Protocol.md#contributor-awareness-checklist).
 
 ## Protected Files
 
@@ -39,7 +41,7 @@ is missing.
 
 Contributors must also record a short summary for every protected file in
 `onboarding_confirm.yml`. Each summary must note the document's purpose, scope,
-and one actionable insight. At minimum, `onboarding_confirm.yml` must track the
+key rules, and one actionable insight. At minimum, `onboarding_confirm.yml` must track the
 current versions of `docs/system_blueprint.md`, `docs/connectors/CONNECTOR_INDEX.md`,
 `docs/primordials_service.md`, and `docs/component_index.md` with hashed
 summaries.
@@ -48,7 +50,8 @@ summaries.
 
 After completing the [onboarding checklist](onboarding/README.md), create an
 `onboarding_confirm.yml` file in the repository root that records, for each
-required document, its hash and four-part summary:
+required document, its hash and four-part summary (purpose, scope, key rules,
+and insight):
 
 ```yaml
 documents:
@@ -57,36 +60,42 @@ documents:
     summary:
       purpose: "Guidelines for repository operations and agent conduct."
       scope: "Entire repository"
+      key_rules: "Run pre-commit and consult AGENTS.md before committing."
       insight: "Check AGENTS.md before committing changes."
   docs/The_Absolute_Protocol.md:
     sha256: <sha256>
     summary:
       purpose: "Core contribution rules and governance."
       scope: "All contributors"
+      key_rules: "Record purpose, scope, key rules, and insight for key docs."
       insight: "Include an action summary in every pull request."
   docs/system_blueprint.md:
     sha256: <sha256>
     summary:
       purpose: "Architectural blueprint overview."
       scope: "System-wide architecture"
+      key_rules: "Align component changes with blueprint structure."
       insight: "Align changes with blueprint structure."
   docs/connectors/CONNECTOR_INDEX.md:
     sha256: <sha256>
     summary:
       purpose: "Registry of connector details."
       scope: "All connectors"
+      key_rules: "Update entries whenever connector information changes."
       insight: "Update entry whenever a connector changes."
   docs/primordials_service.md:
     sha256: <sha256>
     summary:
       purpose: "DeepSeek-V3 orchestration service guide."
       scope: "Primordials service"
+      key_rules: "Follow documented orchestration endpoints."
       insight: "Reference when integrating Primordials."
   docs/component_index.md:
     sha256: <sha256>
     summary:
       purpose: "Inventory of modules and services."
       scope: "All components"
+      key_rules: "Add or update entries for component changes."
       insight: "Add or update entries for component changes."
 ```
 

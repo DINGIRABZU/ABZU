@@ -32,8 +32,8 @@ repos:
     entry: python scripts/check_key_documents.py
     language: system
     pass_filenames: false
-  - id: verify-doc-hashes
-    name: Verify protected doc hashes current
+  - id: validate-key-docs
+    name: Validate protected doc hashes and summaries
     entry: python scripts/verify_doc_hashes.py
     language: system
     pass_filenames: false

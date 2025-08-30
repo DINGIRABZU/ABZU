@@ -4,202 +4,236 @@ documents:
     summary:
       purpose: Repository-wide agent instructions.
       scope: Entire repository.
+      key_rules: Review AGENTS and run pre-commit before committing.
       insight: Check AGENTS.md before committing changes.
   docs/ABZU_SUBSYSTEM_OVERVIEW.md:
     sha256: e575ff650f076601f2dae9c09ccc3b0658999204f71a22508aab24c98f050445
     summary:
       purpose: Overview of ABZU subsystems.
       scope: System architecture.
+      key_rules: Respect subsystem interaction boundaries.
       insight: Review to understand component interactions.
   docs/architecture_overview.md:
     sha256: dcd829f05771560880d78a9639d0e90253fe76c57d38a17aae560cdcf95c4640
     summary:
       purpose: High-level system architecture.
       scope: Entire platform.
+      key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/bana_engine.md:
     sha256: 33184b164f2ea14748b1ab7a9afdfc837cf30c8836cb1384f255149e1fc5a6c4
     summary:
       purpose: Bana narrative engine guide.
       scope: Training data and workflow.
+      key_rules: Configure narrative pipelines as specified.
       insight: Reference for narrative generation components.
   docs/documentation_protocol.md:
     sha256: ae84f16638303413f944fd3a2b0adf70679c3ee82c06eefa2ab18c1141468239
     summary:
       purpose: Workflow for updating documentation.
       scope: All documentation changes.
+      key_rules: Follow documentation workflow and sync blueprint.
       insight: Run pre-commit with modified docs before committing.
   docs/project_overview.md:
     sha256: 4f4b07972085bc9341a56b1fb85f37da8354e726a73e10f03613fcc5f83b76b1
     summary:
       purpose: Project goals and scope.
       scope: Entire project.
+      key_rules: Keep contributions aligned with project scope.
       insight: Confirm contributions align with project goals.
   docs/onboarding/README.md:
     sha256: 34f9af9b460e4e59da73545465cece4e5994ada1beb00fe7d91b549816872fac
     summary:
       purpose: Onboarding checklist.
       scope: New contributors.
+      key_rules: Complete checklist before coding.
       insight: Use checklist to verify setup.
   docs/onboarding_walkthrough.md:
     sha256: b7d57d6fe6ee327301e134e36a959474431e7a0c511dd999a168ddad1485cdeb
     summary:
       purpose: Step-by-step onboarding walkthrough.
       scope: Initial repository orientation.
+      key_rules: Follow onboarding steps sequentially.
       insight: Follow sequentially to avoid missing steps.
   docs/vector_memory.md:
     sha256: e4cd2186d833fd47c7a23034281e9f4e8ba5bc2e8265e4f4f9029b15d6967e28
     summary:
       purpose: Guide to vector memory subsystem.
       scope: Vector memory component.
+      key_rules: Preserve vector memory API contracts.
       insight: Review before modifying memory features.
   docs/rag_pipeline.md:
     sha256: 24d2154f4a2db1aceba6aaf05c03bc6c34119ba58b82159345f5d2c0eb36e0dc
     summary:
       purpose: Retrieval-augmented generation pipeline.
       scope: RAG processes.
+      key_rules: Preserve RAG pipeline flow.
       insight: Ensure changes preserve pipeline flow.
   docs/rag_music_oracle.md:
     sha256: b506c9213c26af25dc0e295b11215dd19d6a1100cfb7902e64be47120784c7d6
     summary:
       purpose: Music oracle RAG details.
       scope: Music-specific RAG.
+      key_rules: Validate music queries against the oracle spec.
       insight: Validate music queries against this spec.
   docs/vision_system.md:
     sha256: 8952a8e014ee24a9ee772f2598abdfccb7bf5abfd907973de5f7f8ee9474bfad
     summary:
       purpose: Vision system documentation.
       scope: Vision modules.
+      key_rules: Align changes with vision system requirements.
       insight: Check before altering visual models.
   docs/persona_api_guide.md:
     sha256: 767d276cddcb865a844c3e730aa2affc9d57ab6ebb52f3c4c05040288c94121f
     summary:
       purpose: Persona API usage instructions.
       scope: Persona endpoints.
+      key_rules: Ensure persona API matches documented schema.
       insight: Ensure persona calls match documented schema.
   docs/primordials_service.md:
     sha256: f78c0d426c2acafe7a00f2b322250c4d3f1a17646b0df152376fad1d55d545bb
     summary:
       purpose: DeepSeek-V3 orchestration service guide.
       scope: Primordials service.
+      key_rules: Use defined orchestration endpoints.
       insight: Reference when integrating Primordials.
   docs/spiral_cortex_terminal.md:
     sha256: 863463fb3e7b92021d747b5f4bdc4cb20e608469d64ed69917bf8be7b8177724
     summary:
       purpose: Spiral Cortex terminal guide.
       scope: Terminal interface.
+      key_rules: Use terminal commands as documented.
       insight: Reference when troubleshooting terminal actions.
   docs/communication_interfaces.md:
     sha256: c9d210710b6e3f7bbf943c99d6a40443a8fa67f7c96e5fcdcd4881193923a17a
     summary:
       purpose: Communication interfaces overview.
       scope: Internal and external interfaces.
+      key_rules: Maintain interface compatibility.
       insight: Maintain compatibility with listed interfaces.
   docs/component_index.md:
     sha256: bc397e1a93e3747114255037efb6ce499df47fc67117a70c389609e226bfff2e
     summary:
       purpose: Inventory of modules and services.
       scope: All components.
+      key_rules: Update index when components change.
       insight: Add/update entries for component changes.
   docs/CROWN_OVERVIEW.md:
     sha256: 58c88584d45355968b5c9a243392a00f0b0ae515cbd12b8142de841315cda9bd
     summary:
       purpose: Crown agent architecture and routing.
       scope: Crown-to-RAZAR interaction.
+      key_rules: Document operator relay and logging.
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
     sha256: 62e83640ccd1fad1bd5ebe5b4b9360a523f62e2377429462143ecbbaeae08e5a
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
+      key_rules: Update registry when connector changes.
       insight: Update entry whenever a connector changes.
   docs/connectors/README.md:
     sha256: c5aaeeafce2649d5c1bcd6b0501c39aff1c87ea4ee73b1397ba9fa99a786922d
     summary:
       purpose: Connector subsystem guidelines.
       scope: Connector development.
+      key_rules: Follow connector subsystem guidelines.
       insight: Follow guidelines to ensure interoperability.
   docs/system_blueprint.md:
     sha256: 9dbc78e94b65d33a06886a5eafae23d9f9564104061a40e65600c34fb50511c9
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
+      key_rules: Align changes with blueprint structure.
       insight: Align changes with blueprint structure.
   docs/KEY_DOCUMENTS.md:
-    sha256: 0786922989546f3b7be6744156f34b53c83640982e45f54281f849f26ce42a38
+    sha256: e9deca91df4c8f58af0b4216ddd76b7313268bbf053c226c90ae608dc6bfe7fe
     summary:
       purpose: List of essential repository documents.
       scope: Key repository guides.
+      key_rules: Record hashes and summaries for protected files.
       insight: Consult to ensure no protected file is missing.
   docs/security_model.md:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary:
       purpose: Threat model and protections.
       scope: Security considerations.
+      key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: a4ca8ff29cab277068fe361871c80079f482307ab2d3f91cc825772cc093de33
+    sha256: 263f1c9f9a90e71346feca35c8ee303bcdc756a5bb85d61764d4a479ae90f1ec
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
+      key_rules: Include action summary in pull requests.
       insight: Include an action summary in every pull request.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
       purpose: Approved dependencies.
       scope: Project dependencies.
+      key_rules: Use only approved dependencies.
       insight: Verify dependencies against registry before adding.
   docs/logging_guidelines.md:
     sha256: e090bdc32a69a7f6b144967dd70f163f6fb8322a23671334caa6dbcbc4185cf3
     summary:
       purpose: Structured logging requirements.
       scope: Logging across modules.
+      key_rules: Use prescribed JSON logging format.
       insight: Use prescribed JSON format for logs.
   docs/api_reference.md:
     sha256: 6273ffa4258f9015f3e1b06d1dadbfd3f03f0585f0fee79bc1ba1c32e2f00721
     summary:
       purpose: API endpoints and schemas.
       scope: Public interfaces.
+      key_rules: Keep implementations aligned with documented API.
       insight: Keep implementations aligned with documented API.
   docs/operator_protocol.md:
     sha256: f2cb6aeedb7570bc52c76b0b96263981802e7cca55105e4e6720d9561ca248b1
     summary:
       purpose: Operator interaction rules.
       scope: Operator channels.
+      key_rules: Ensure new channels obey operator protocol.
       insight: Verify new channels conform to protocol.
   docs/os_guardian.md:
     sha256: 1b32ad1d78f3b19332b6dfc1c06c4ad8ea9578d0d850947712c33ec04e184eab
     summary:
       purpose: OS Guardian subsystem overview.
       scope: OS Guardian component.
+      key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
     sha256: 3b9bb8a2a1bc47e456e84e5f79508d78bd592cfef4725e62540b055f96d83bf1
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
+      key_rules: Regenerate index after documentation updates.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
     sha256: 136ca9ff51c397f5ef7f523591486ea0344fecbf16de12940e53caac72a6fc20
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
+      key_rules: Maintain curated documentation entry points.
       insight: Add Crown overview to architecture section.
   docs/RAZAR_AGENT.md:
     sha256: 9d05223d4f957139da2545e9296ca34f71d1c3c302b988e2ffae5e79476d8f85
     summary:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
-      insight: Cross‑link to related guides and keep configuration schemas current.
+      key_rules: Keep RAZAR agent configuration synced.
+      insight: "Cross\u2011link to related guides and keep configuration schemas current."
   docs/onboarding/test_planning.md:
     sha256: dbacb76c8b866af82bf7531b5facf9ffb9de708c9a55cec042fba1c19e9dc7a0
     summary:
       purpose: Guide for filing Test Plan issues.
       scope: Test planning.
+      key_rules: Open a test plan issue before major changes.
       insight: Open a test plan issue before major changes.
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
     summary:
       purpose: Pre-flight environment check for core tools.
       scope: All contributors.
+      key_rules: Run to verify dependencies before committing.
       insight: Run before committing to catch missing dependencies.
