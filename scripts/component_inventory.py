@@ -18,6 +18,7 @@ import ast
 import json
 import subprocess
 import sys
+import re
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -27,6 +28,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 STATUS_MD = REPO_ROOT / "docs" / "component_status.md"
 INDEX_MD = REPO_ROOT / "docs" / "component_index.md"
 SNAPSHOT_JSON = REPO_ROOT / "docs" / "component_status.json"
+INDEX_JSON = REPO_ROOT / "component_index.json"
+COVERAGE_SVG = REPO_ROOT / "coverage.svg"
 
 
 @dataclass
@@ -213,6 +216,28 @@ def write_json_snapshot(rows: list[ComponentInfo]) -> None:
     SNAPSHOT_JSON.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
 
 
+def parse_coverage_svg(path: Path) -> float:
+    """Extract coverage percentage from an SVG badge."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return 0.0
+    match = re.search(r">(\d+)%<", text)
+    return float(match.group(1)) if match else 0.0
+
+
+def update_coverage(index_path: Path, coverage: float) -> None:
+    """Update each component's coverage metric in the index."""
+    try:
+        data = json.loads(index_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, FileNotFoundError):
+        return
+    for component in data.get("components", []):
+        metrics = component.setdefault("metrics", {})
+        metrics["coverage"] = coverage
+    index_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     py_files = list(iter_py_files())
     test_dir = REPO_ROOT / "tests"
@@ -224,6 +249,8 @@ def main() -> None:
     write_status_markdown(rows)
     write_index_markdown(rows)
     write_json_snapshot(rows)
+    coverage = parse_coverage_svg(COVERAGE_SVG)
+    update_coverage(INDEX_JSON, coverage)
 
 
 if __name__ == "__main__":

@@ -2,17 +2,6 @@
 
 Generated automatically. Lists each Python file with its description and external dependencies.
 
-## Retrieval
-
-Archived snapshots of `component_index.json` are stored in [`data/archives/`](../data/archives/)
-with filenames `component_index_<timestamp>.json`. The latest index remains at
-the repository root.
-
-## Dashboard
-
-Prometheus metrics expose the current index size and average coverage at
-`/metrics`. See [DASHBOARD.md](DASHBOARD.md) for dashboard setup and links.
-
 | File | Description | Dependencies |
 | --- | --- | --- |
 | `INANNA_AI/__init__.py` | Core package for the INANNA AI helpers. | None |
@@ -270,14 +259,18 @@ Prometheus metrics expose the current index size and average coverage at
 | `run_song_demo.py` | Demo runner for INANNA Music Composer AI. | MUSIC_FOUNDATION, yaml |
 | `scripts/albedo_demo.py` | Command line demo for Albedo persona interactions. | agents |
 | `scripts/bootstrap.py` | Bootstrap the development environment. | torch |
+| `scripts/check_connector_index.py` | Ensure touched connectors have registry entries. | None |
 | `scripts/check_key_documents.py` | Verify that key documents exist. | yaml |
 | `scripts/check_no_binaries.py` | Fail if any staged files are detected as binary. | None |
+| `scripts/check_no_placeholders.py` | Fail if files contain TODO or FIXME placeholders. | None |
 | `scripts/component_inventory.py` | No description | None |
 | `scripts/confirm_reading.py` | Ensure required onboarding documents have been read. | yaml |
 | `scripts/data_validate.py` | Validate training data schema using TensorFlow Data Validation. | tensorflow_data_validation |
 | `scripts/dependency_check.py` | Verify package imports and optional dependencies. | None |
 | `scripts/ensure_blueprint_sync.py` | Verify blueprint doc updates accompany core code changes. | None |
+| `scripts/export_coverage.py` | Export coverage metrics to component_index.json and enforce thresholds. | None |
 | `scripts/generate_sbom.py` | Generate a CycloneDX software bill of materials. | None |
+| `scripts/ingest_biosignals.py` | Ingest biosignal CSV files into the narrative engine. | memory |
 | `scripts/ingest_music_books.py` | No description | pdfplumber, unstructured |
 | `scripts/list_layers.py` | Print configured personality layers and whether they are enabled. | yaml |
 | `scripts/offsite_backup.py` | Manage snapshot and restoration of off-site memory backups. | None |
@@ -416,7 +409,7 @@ Prometheus metrics expose the current index size and average coverage at
 | `tests/memory/test_sharded_memory_store.py` | No description | numpy |
 | `tests/memory/test_vector_memory.py` | Verify snapshot persistence and clustering for vector memory. | numpy, pytest |
 | `tests/memory/test_vector_persistence.py` | Exercise FAISS/SQLite backed vector persistence. | numpy, pytest |
-| `tests/narrative_engine/test_biosignal_pipeline.py` | Tests for biosignal ingestion and transformation. | memory |
+| `tests/narrative_engine/test_biosignal_pipeline.py` | Tests for biosignal ingestion and transformation. | memory, pytest, src |
 | `tests/performance/test_task_parser_performance.py` | Tests for task parser performance. | None |
 | `tests/performance/test_vector_memory_performance.py` | Tests for vector memory performance. | None |
 | `tests/test_adaptive_learning.py` | Tests for adaptive learning. | INANNA_AI, pytest |
