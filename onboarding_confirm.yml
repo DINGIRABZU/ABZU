@@ -168,7 +168,7 @@ documents:
       scope: Top-level docs index.
       insight: Add Crown overview to architecture section.
   docs/RAZAR_AGENT.md:
-    sha256: 53fbbacd3cce661dae9702c86cb1d48ee09ee325bcebd97ac223451bf7a2383b
+    sha256: c180ea160750f7d5f8087660c367e867dd17080bceae2523110cb4bed8aac440
     summary:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
