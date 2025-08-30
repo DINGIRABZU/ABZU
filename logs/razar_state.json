@@ -1,1 +1,11 @@
-{"last_component": "", "capabilities": [], "downtime": {}, "launched_models": []}
+{
+  "last_component": "",
+  "capabilities": [],
+  "downtime": {},
+  "launched_models": [],
+  "handshake": {
+    "acknowledgement": "",
+    "capabilities": [],
+    "downtime": {}
+  }
+}
