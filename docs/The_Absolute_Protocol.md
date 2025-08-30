@@ -30,8 +30,8 @@ Before opening a pull request, confirm each item:
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
 - [ ] Pull request includes an **Action summary** statement: "I did X on Y to obtain Z, expecting behavior B."
-- [ ] `onboarding_confirm.yml` logs purpose, scope, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
-- [ ] `scripts/verify_doc_summaries.py` confirms `onboarding_confirm.yml` hashes match current files
+- [ ] `onboarding_confirm.yml` logs purpose, scope, key rules, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
+- [ ] `scripts/verify_doc_hashes.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
 - [ ] `DASHBOARD.md` metrics updated for each release cycle
 - [ ] `component_maturity.md` scoreboard updated
@@ -307,7 +307,7 @@ All endpoints must publish machine-validated schemas:
 - [ ] Audit documents in KEY_DOCUMENTS.md quarterly and log overdue items with `scripts/schedule_doc_audit.py`.
 - [ ] Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
 - [ ] Run component tests with `pytest --cov` and attach the coverage badge or report to the PR.
-- [ ] Run `scripts/verify_doc_summaries.py` to confirm `onboarding_confirm.yml` hashes.
+- [ ] Run `scripts/verify_doc_hashes.py` to confirm `onboarding_confirm.yml` hashes.
 - [ ] Ensure connectors appear in the connector registry [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
 
 ## Protocol Change Process
