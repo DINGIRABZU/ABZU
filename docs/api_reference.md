@@ -6,6 +6,9 @@ This document describes the FastAPI endpoints provided by `api.server`.
 
 Queues a video generation request.
 
+**Version:** v1  
+**Schema:** [schemas/openapi.json](schemas/openapi.json) (`#/paths/~1generate_video/post`)
+
 **Request Body**
 
 ```json
@@ -29,9 +32,15 @@ WebSocket channel used for real-time avatar updates. Clients send text
 messages representing avatar states. Each message is broadcast to all
 connected clients.
 
+**Version:** v1  
+**Schema:** [schemas/stream_avatar_message.schema.json](schemas/stream_avatar_message.schema.json)
+
 ## `GET /styles`
 
 Returns the list of available style configuration names.
+
+**Version:** v1  
+**Schema:** [schemas/openapi.json](schemas/openapi.json) (`#/paths/~1styles/get`)
 
 **Response**
 
