@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.49
-**Last updated:** 2025-08-30
+**Version:** v1.0.50
+**Last updated:** 2025-09-01
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module must declare a `__version__` attribute.
@@ -14,6 +14,7 @@ Before opening a pull request, confirm each item:
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
+  - [Connector Index](connectors/CONNECTOR_INDEX.md) – confirm versions, endpoints, and links are current
 - [ ] All modules expose `__version__`; the `verify-versions` pre-commit hook enforces this and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities

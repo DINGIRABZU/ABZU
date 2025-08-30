@@ -42,7 +42,7 @@ documents:
     sha256: c9d210710b6e3f7bbf943c99d6a40443a8fa67f7c96e5fcdcd4881193923a17a
     summary: Communication interfaces overview.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: b1a944e21d2cb521673d7f1384599d48e4f9fbe3fa9122438de1f532e28564cd
+    sha256: f81c5bbbe21195daca19f8d2258807a2525540df7515d88062f2535e1668d7b1
     summary: Registry of connector details.
   docs/connectors/README.md:
     sha256: 2c9c22760dee1badb726b068860e2e85f41108cc622f3a6a4872e0f95087f93d
@@ -51,13 +51,13 @@ documents:
     sha256: 34a07cfbed34be43a6653fa8615bfa8eb7aaf28d87aa72ce4da076969ac0ed80
     summary: Architectural blueprint overview.
   docs/KEY_DOCUMENTS.md:
-    sha256: 8fa7aabfdc334c3ef715553ec57994fd6de1cb0d24833c623d286be94e25838e
+    sha256: 1e408bd48d05ff47923d4109e2034e0b48b1fd9ad57aafe5ac44a89b7c208091
     summary: List of essential repository documents.
   docs/security_model.md:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary: Threat model and protections.
   docs/The_Absolute_Protocol.md:
-    sha256: 30ab75b379a6042d8d4596afe0a2e9664ffe629d85385d0d27e3184227cb6c22
+    sha256: 24627e2c6cee467e69ad042d7fdee4ba66bffd9f2ee6f2d04ec0bc28f5a42a38
     summary: Core contribution rules.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
