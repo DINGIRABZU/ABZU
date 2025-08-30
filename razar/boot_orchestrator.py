@@ -114,6 +114,12 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> Optional[CrownRespon
     brief_path.parent.mkdir(parents=True, exist_ok=True)
     brief_path.write_text(json.dumps(brief, indent=2))
 
+    # Archive a timestamped copy of the mission brief for auditing
+    archive_dir = LOGS_DIR / "mission_briefs"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    archive_path = archive_dir / f"mission_brief_{int(time.time())}.json"
+    archive_path.write_text(json.dumps(brief, indent=2))
+
     response: Optional[CrownResponse]
     try:
         url = os.getenv("CROWN_WS_URL", "ws://localhost:8765")
