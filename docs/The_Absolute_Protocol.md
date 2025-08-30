@@ -1,10 +1,10 @@
 # The Absolute Protocol
 
-**Version:** v1.0.59
+**Version:** v1.0.60
 **Last updated:** 2025-08-30
 
 ## How to Use This Protocol
-This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module and connector must declare a `__version__` attribute.
+This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -17,7 +17,7 @@ Before opening a pull request, confirm each item:
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
-- [ ] All modules and connectors expose `__version__`; the `verify-versions` pre-commit hook compares source values to `component_index.json`, and fields must be bumped for user-facing changes
+- [ ] All modules, connectors, and services expose `__version__`; the `verify-versions` pre-commit hook compares source values to `component_index.json`, and fields must be bumped for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
@@ -153,11 +153,32 @@ All diagrams must include a brief textual description and be expressed as Mermai
 
 ### Configuration File Documentation
 
-Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson) ([schema](schemas/boot_config.schema.json)), [razar_env.yaml](RAZAR_AGENT.md#razar_envyaml) ([schema](schemas/razar_env.schema.yaml)), and the log formats in the [logging guidelines](logging_guidelines.md) alongside [razar_state.json](RAZAR_AGENT.md#logsrazar_statejson) ([schema](schemas/razar_state.schema.json)).
+Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson) ([schema](schemas/boot_config.schema.json)), [primordials_config.yaml](primordials_service.md#primordials_configyaml) ([schema](schemas/primordials_config.schema.yaml)), and [operator_api.yaml](operator_protocol.md#operator_apiyaml) ([schema](schemas/operator_api.schema.yaml)). Log formats in the [logging guidelines](logging_guidelines.md) alongside [razar_state.json](RAZAR_AGENT.md#logsrazar_statejson) ([schema](schemas/razar_state.schema.json)) serve as additional references. Include example snippets such as:
+
+```json
+// boot_config.json
+{
+  "crown_ws_url": "wss://crown.example/ws"
+}
+```
+
+```yaml
+# primordials_config.yaml
+primordials:
+  - id: crown
+    path: /opt/crown.bin
+```
+
+```yaml
+# operator_api.yaml
+paths:
+  /operator/command:
+    post: {}
+```
 
 ### Module Versioning
 
-Every source module and connector must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/verify_versions.py` to confirm component versions match `component_index.json`.
+Every source module, connector, and service must expose a `__version__` field (or equivalent) and increment it for any user‑facing change. Run `scripts/verify_versions.py` to confirm component versions match `component_index.json`.
 The `verify-versions` pre-commit hook scans staged Python files and fails if this attribute is missing or out of sync with the index.
 
 ### Connector Guidelines
@@ -235,7 +256,7 @@ All exchanges between RAZAR, Crown, and Operator must append JSON lines to
 
 - Use consistent naming conventions across files, classes, and functions.
 - Maintain clear module boundaries to prevent tight coupling.
-- Every module and connector must declare a `__version__` field for traceability.
+- Every module, connector, and service must declare a `__version__` field for traceability.
 - `scripts/verify_versions.py` verifies source versions match `component_index.json`.
 
 #### No placeholder comments
