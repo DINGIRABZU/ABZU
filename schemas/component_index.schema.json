@@ -9,7 +9,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "chakra", "type", "version", "ignition_stage"],
+        "required": ["id", "chakra", "type", "version", "ignition_stage", "status", "adr"],
         "properties": {
           "id": {"type": "string"},
           "chakra": {"type": "string"},
@@ -26,7 +26,13 @@
             "type": "array",
             "items": {"type": "string"}
           },
-          "status": {"type": "string"}
+          "status": {
+            "type": "string",
+            "enum": ["active", "deprecated", "experimental"]
+          },
+          "adr": {
+            "type": ["string", "null"]
+          }
         },
         "additionalProperties": false
       }

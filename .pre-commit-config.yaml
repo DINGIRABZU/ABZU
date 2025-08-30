@@ -72,6 +72,12 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/component_index.md
+  - id: validate-component-json
+    name: Validate component_index.json fields
+    entry: python scripts/validate_component_index_json.py
+    language: system
+    pass_filenames: false
+    files: ^component_index.json$
   - id: verify-dependencies
     name: Verify dependency versions
     entry: python scripts/verify_dependencies.py
