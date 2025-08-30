@@ -149,12 +149,18 @@ documents:
       purpose: OS Guardian subsystem overview.
       scope: OS Guardian component.
       insight: Review before modifying system protection code.
-  docs/RAZAR_AGENT.md:
-    sha256: a00436cd067ccd7565b467a575eb882f6467f03d19f56e8a249a034e0258ca8d
+  docs/INDEX.md:
+    sha256: 1b17a227cacfa07a1d3b5214c1354b4740882f54b54e5335c3d8d63a8dc637d7
     summary:
-      purpose: RAZAR agent bootstrap and logging guidance.
-      scope: RAZAR agent operations.
-      insight: Ensure handover logs are complete.
+      purpose: Generated documentation index.
+      scope: Repository documentation.
+      insight: Regenerate with tools/doc_indexer.py after updating docs.
+  docs/RAZAR_AGENT.md:
+    sha256: 53fbbacd3cce661dae9702c86cb1d48ee09ee325bcebd97ac223451bf7a2383b
+    summary:
+      purpose: Comprehensive RAZAR agent guide.
+      scope: RAZAR agent workflows and deployment.
+      insight: Cross‑link to related guides and keep configuration schemas current.
   docs/onboarding/test_planning.md:
     sha256: dbacb76c8b866af82bf7531b5facf9ffb9de708c9a55cec042fba1c19e9dc7a0
     summary:
