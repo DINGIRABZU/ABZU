@@ -66,8 +66,8 @@ The orchestrator prepares core services before handing control to CROWN:
 
 1. Launch the Primordials container.
 2. Poll its `/health` endpoint until a `200` response confirms readiness.
-3. Perform the Crown handshake and persist returned capabilities to `logs/razar_state.json`.
-4. If the GLM‑4.1V model is absent, trigger `crown_model_launcher.sh` to load it.
+3. Perform the Crown handshake, persist returned capabilities, and record a `handshake` event in `logs/razar_state.json`.
+4. If the GLM‑4.1V model is absent, trigger `crown_model_launcher.sh` to load it and log a `model_launch` event in `logs/razar_state.json`.
 
 ## Module Overviews
 
@@ -628,7 +628,11 @@ Sample `logs/razar_state.json` entry:
 {
   "last_component": "runtime_manager",
   "launched_models": ["GLM4V"],
-  "glm4v_present": true
+  "glm4v_present": true,
+  "events": [
+    {"event": "handshake", "timestamp": "2025-09-01T00:00:00Z"},
+    {"event": "model_launch", "model": "GLM-4.1V", "timestamp": "2025-09-01T00:00:01Z"}
+  ]
 }
 ```
 
@@ -718,7 +722,9 @@ properties:
     "acknowledgement": "",
     "capabilities": [],
     "downtime": {}
-  }
+  },
+  "glm4v_present": false,
+  "events": []
 }
 ```
 
@@ -734,7 +740,9 @@ Captures runtime state and handshake capabilities.
     "capabilities",
     "downtime",
     "launched_models",
-    "handshake"
+    "handshake",
+    "glm4v_present",
+    "events"
   ]
 }
 ```

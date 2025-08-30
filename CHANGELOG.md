@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   auto-launched `GLM4V` when missing from advertised capabilities.
 - Persisted Crown handshake acknowledgement and downtime under `handshake`
   in `logs/razar_state.json`.
+- Logged handshake and model-launch events in `logs/razar_state.json` and mandated mission-brief logging for all handshakes in The Absolute Protocol.
 - Required a "Change justification" field in the pull request template and documented the statement format in The Absolute Protocol.
 - Documented mission brief archive requirements and maintenance in The Absolute Protocol.
 - Added Operator API and Open Web UI entries to `CONNECTOR_INDEX.md` and expanded protocol checklist for connector registry.

@@ -8,5 +8,6 @@
     "capabilities": [],
     "downtime": {}
   },
-  "glm4v_present": false
+  "glm4v_present": false,
+  "events": []
 }

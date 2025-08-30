@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.62
-**Last updated:** 2025-08-31
+**Version:** v1.0.63
+**Last updated:** 2025-09-01
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute.
@@ -39,7 +39,8 @@ Before opening a pull request, confirm each item:
 - [ ] Confirm no binary files are introduced
 - [ ] All diagrams are authored in Mermaid; binary image files (PNG, JPG, etc.) are forbidden
 - [ ] Handshake-triggered model launches documented in agent guides and state logs
-- [ ] `crown_handshake` results logged in state files and mission briefs
+- [ ] Mission briefs logged for every Crown handshake in `logs/mission_briefs/`
+- [ ] `crown_handshake` results persisted in state files
 - [ ] Biosignal sample CSVs in `data/biosignals/` remain anonymized and align with
       the documented ingestion schema
 
@@ -214,7 +215,7 @@ Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNEC
 
 ### Crown Handshake Protocol
 
-Mission briefs are archived to `logs/mission_briefs/<timestamp>.json` and rotated
+**Mission-brief logging is mandatory for every handshake.** Mission briefs are archived to `logs/mission_briefs/<timestamp>.json` and rotated
 to keep the most recent 20 exchanges. The boot orchestrator must invoke
 `crown_handshake.perform()` before launching components and persist the returned
 acknowledgement, capabilities, and downtime under the `handshake` key in
