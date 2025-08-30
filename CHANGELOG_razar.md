@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Added logging requirement for RAZAR ↔ Crown ↔ Operator exchanges in `logs/interaction_log.jsonl`.
 - Persisted CROWN handshake responses to `logs/mission_briefs/` and
   triggered `crown_model_launcher.sh` when `GLM4V` capability is absent.
+- Stored Crown handshake acknowledgement, capabilities, and downtime under
+  `handshake` in `logs/razar_state.json`.
 
 ## [0.1.0] - 2025-08-30
 
