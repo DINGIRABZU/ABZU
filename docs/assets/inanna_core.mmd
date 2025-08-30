@@ -1,0 +1,9 @@
+flowchart LR
+    inanna[INANNA Core] --> glm[GLM Endpoint]
+    inanna --> memdir[memory_dir/]
+    memdir --> vector[vector_memory/]
+    memdir --> chroma[chroma/]
+    inanna --> router[Servant Model Router]
+    router --> deepseek[deepseek]
+    router --> mistral[mistral]
+    router --> kimi[kimi_k2]

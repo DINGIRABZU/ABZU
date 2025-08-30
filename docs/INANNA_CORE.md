@@ -16,6 +16,22 @@ flowchart LR
 
 The Mermaid source lives at [assets/inanna_flow.mmd](assets/inanna_flow.mmd).
 
+## Core Interfaces
+
+```mermaid
+flowchart LR
+    inanna[INANNA Core] --> glm[GLM Endpoint]
+    inanna --> memdir[memory_dir/]
+    memdir --> vector[vector_memory/]
+    memdir --> chroma[chroma/]
+    inanna --> router[Servant Model Router]
+    router --> deepseek[deepseek]
+    router --> mistral[mistral]
+    router --> kimi[kimi_k2]
+```
+
+*Figure: GLM endpoint, memory directories, and servant model routing.* The Mermaid source lives at [assets/inanna_core.mmd](assets/inanna_core.mmd).
+
 ## Fields
 
 - **`glm_api_url`** – Base URL for the GLM service. Override with `GLM_API_URL`.
