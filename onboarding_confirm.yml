@@ -120,7 +120,7 @@ documents:
       scope: Security considerations.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 0446237c88b756eb349449682915dddc42fd89f83bd6c515024a7ac39d9f6b07
+    sha256: ff60ab3b0cc5b226f9abf100fc9316e66b8b7194b56d981ac085535c1fab2978
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -156,7 +156,7 @@ documents:
       scope: OS Guardian component.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 20d9f59b2a9acf28b6483cab52b607b15004eb20c3e73bf83c48112c21cb8ee0
+    sha256: 451d4261f77cf4c7da960ae80642a0a2a489628d9360b779d1fc59a618e8b9eb
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
