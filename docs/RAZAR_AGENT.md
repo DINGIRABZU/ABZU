@@ -198,9 +198,10 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
 2. **Configuration** – adjust settings in `boot_config.json` to define
    service priorities and flags.
 
-3. **Handshake** – exchange a mission brief with the CROWN stack to learn
-   which capabilities are online and whether any components require
-   downtime. The handshake can be invoked directly:
+3. **Handshake** – before any component starts, exchange a mission brief
+   with the CROWN stack to learn which capabilities are online and
+   whether any components require downtime. The handshake can be invoked
+   directly:
 
    ```bash
    python -m razar.crown_handshake path/to/mission_brief.json
@@ -212,12 +213,13 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
    response to `logs/mission_briefs/<timestamp>_response.json`, logs
    capabilities in `logs/razar.log`, and persists the full response under
    the `handshake` key in
-   [logs/razar_state.json](../logs/razar_state.json). If the returned
-   capabilities lack `GLM4V` it launches
-   [`crown_model_launcher.sh`](../crown_model_launcher.sh), recording the
-   launch under `launched_models`.
+   [logs/razar_state.json](../logs/razar_state.json). If the advertised
+   capabilities omit `GLM4V`, the orchestrator runs
+   [`crown_model_launcher.sh`](../crown_model_launcher.sh) and records the
+   launch under `launched_models` in the state file.
 
-4. **Launch** – start the boot orchestrator to bring components online:
+4. **Launch** – with capabilities recorded, start the boot orchestrator
+   to bring components online:
 
    ```bash
    python -m razar.boot_orchestrator

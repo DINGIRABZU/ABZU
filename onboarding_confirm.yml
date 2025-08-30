@@ -133,7 +133,7 @@ documents:
       key_rules: Details defenses and threat mitigations.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 4ef6ebe3ab2a1bd5f80836c990f3890c2fe82fe6854bb5fbd4533b86cb750e70
+    sha256: 6e0c250604e0cbac7217936bd5c5b0e7c93f8f41351a89f3ab02efe7452eba0e
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -175,7 +175,7 @@ documents:
       key_rules: Notes responsibilities and interfaces.
       insight: Review before modifying system protection code.
   docs/RAZAR_AGENT.md:
-    sha256: fa977879701f829020a23e9b8566485d684a05343a6d5fb5637ced13b14a1c49
+    sha256: 17bf7af1802b185f6b641b91ceb6c7bc061b23044a16e9b9c0c555533567506f
     summary:
       purpose: RAZAR agent bootstrap and logging guidance.
       scope: RAZAR agent operations.

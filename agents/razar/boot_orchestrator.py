@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 import argparse
 import asyncio
@@ -96,8 +96,8 @@ class BootOrchestrator:
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
-    def _perform_handshake(self) -> List[str]:
-        """Send mission brief to CROWN and return advertised capabilities."""
+    def _perform_handshake(self) -> CrownResponse | None:
+        """Send mission brief to CROWN and return the raw response."""
         brief = {
             "priority_map": {
                 str(c["name"]): int(c["priority"]) for c in self.components
@@ -137,8 +137,7 @@ class BootOrchestrator:
         else:
             LOGGER.warning("Handshake produced no response")
             response_path.write_text("{}", encoding="utf-8")
-        self._persist_handshake(response)
-        return response.capabilities if response else []
+        return response
 
     def _ensure_glm4v(self, capabilities: List[str]) -> None:
         """Launch the GLM‑4.1V model if the capability is missing."""
@@ -330,7 +329,9 @@ class BootOrchestrator:
     def run(self) -> bool:
         """Execute the staged startup sequence."""
         self.write_ignition()
-        capabilities = self._perform_handshake()
+        response = self._perform_handshake()
+        self._persist_handshake(response)
+        capabilities = response.capabilities if response else []
         LOGGER.info("CROWN capabilities: %s", capabilities)
         self._ensure_glm4v(capabilities)
         commands = self._load_commands()

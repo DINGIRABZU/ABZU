@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.53
+**Version:** v1.0.54
 **Last updated:** 2025-08-30
 
 ## How to Use This Protocol
@@ -180,6 +180,14 @@ components and persist the returned acknowledgement, capabilities, and downtime
 under the `handshake` key in `logs/razar_state.json`. Maintain these archives
 so operators can audit the exchange and reconcile advertised capabilities with
 runtime behaviour.
+
+### Handshake Audit Requirement
+
+Every Crown handshake must leave an auditable trail. Verify that each mission
+brief and acknowledgement pair exists in `logs/mission_briefs/` and that the
+latest response is stored under `handshake` in `logs/razar_state.json`.
+Pull requests touching the boot process must confirm these artifacts are
+present.
 
 ### RAZAR ↔ Crown ↔ Operator Interaction Logging
 
