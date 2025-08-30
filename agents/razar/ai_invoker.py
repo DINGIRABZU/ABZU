@@ -4,14 +4,16 @@ This module selects a remote agent based on a configuration file and
 delegates failure contexts to it via
 :func:`agents.razar.remote_loader.load_remote_agent`. Each invocation and
 its resulting patch suggestion are appended to
-``logs/razar_ai_invocations.json`` for audit purposes. Consumers should
+``logs/razar_ai_invocations.json`` for audit purposes. Agents may require
+dedicated HTTP endpoints and authentication tokens; both are supplied via
+configuration and forwarded as part of the patch context. Consumers should
 call :func:`handover` which returns either the patch suggestion from the
 remote agent or a confirmation that no suggestion was provided.
 """
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.2.1"
 
 from datetime import datetime
 import json
@@ -38,7 +40,11 @@ def _load_config(path: Path) -> Dict[str, Any]:
         {
             "active": "agent_name",            # optional
             "agents": [
-                {"name": "agent_name", "url": "http://..."},
+                {
+                    "name": "agent_name",
+                    "endpoint": "http://...",
+                    "auth": {"token": "..."}    # optional
+                },
                 ...
             ]
         }
@@ -54,21 +60,29 @@ def _load_config(path: Path) -> Dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
-def _select_agent(config: Dict[str, Any]) -> Tuple[str, str]:
-    """Return ``(name, url)`` for the active agent in ``config``."""
+def _select_agent(config: Dict[str, Any]) -> Tuple[str, str, str | None]:
+    """Return ``(name, endpoint, token)`` for the active agent."""
     agents = config.get("agents")
     if not isinstance(agents, list) or not agents:
         raise RuntimeError("No agents configured")
 
     active = config.get("active")
+    chosen = None
     if isinstance(active, str):
         for entry in agents:
             if entry.get("name") == active:
-                return str(entry.get("name")), str(entry.get("url"))
+                chosen = entry
+                break
+    if chosen is None:
+        chosen = agents[0]
 
-    # Fall back to the first configured agent
-    entry = agents[0]
-    return str(entry.get("name")), str(entry.get("url"))
+    name = str(chosen.get("name"))
+    endpoint = str(chosen.get("endpoint"))
+    auth = chosen.get("auth", {})
+    token = None
+    if isinstance(auth, dict):
+        token = str(auth.get("token") or auth.get("key") or "") or None
+    return name, endpoint, token
 
 
 def _append_log(entry: Dict[str, Any]) -> None:
@@ -90,15 +104,15 @@ def _append_log(entry: Dict[str, Any]) -> None:
 
 
 def handover(
-    *, failure: Any | None = None, config_path: Path | str | None = None
+    *, context: Any | None = None, config_path: Path | str | None = None
 ) -> Any:
-    """Delegate a failure context to a remote agent and return its suggestion.
+    """Delegate ``context`` to a remote agent and return its suggestion.
 
     Parameters
     ----------
-    failure:
-        Optional object describing the failure that triggered the handover.  It
-        is forwarded to the remote agent as ``{"failure": failure}``.
+    context:
+        Optional object describing the failure or state that triggered the
+        handover.
     config_path:
         Optional override for the agent configuration file.  When omitted,
         :data:`CONFIG_PATH` is used.
@@ -111,20 +125,30 @@ def handover(
     """
     path = Path(config_path) if config_path is not None else CONFIG_PATH
     config = _load_config(path)
-    name, url = _select_agent(config)
+    name, endpoint, token = _select_agent(config)
 
     _append_log(
         {
             "event": "invocation",
             "name": name,
+            "endpoint": endpoint,
             "timestamp": datetime.utcnow().isoformat(),
-            "failure": failure,
+            "context": context,
         }
     )
 
-    context = {"failure": failure} if failure is not None else None
+    patch_context: Dict[str, Any] | None = None
+    if context is not None or token is not None:
+        patch_context = {}
+        if isinstance(context, dict):
+            patch_context.update(context)
+        else:
+            patch_context["context"] = context
+        if token:
+            patch_context["auth_token"] = token
+
     _module, agent_config, suggestion = remote_loader.load_remote_agent(
-        name, url, patch_context=context
+        name, endpoint, patch_context=patch_context
     )
 
     log_entry: Dict[str, Any] = {

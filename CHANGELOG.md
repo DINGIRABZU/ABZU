@@ -69,6 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pytest runs export coverage, session duration, and failure metrics via `prometheus_client` to `monitoring/pytest_metrics.prom`, and CI uploads the metrics artifact.
 - Implemented AI handover workflow that delegates failures to remote agents,
   logging invocations and applied patch diffs.
+- AI handover now reads configurable agent endpoints and authentication
+  tokens and retries components after automated patches are applied.
 
 ### Quality
 

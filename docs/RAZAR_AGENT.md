@@ -751,7 +751,7 @@ Captures runtime state and handshake capabilities.
 
 RAZAR can delegate recovery to an external AI agent when repeated failures block the boot sequence. The goal is to restore service while following repository safety rules.
 
-Authorized handover agents and their authentication tokens live in [config/razar_ai_agents.json](../config/razar_ai_agents.json).
+Authorized handover agents, their endpoints, and authentication tokens live in [config/razar_ai_agents.json](../config/razar_ai_agents.json).
 
 **Purpose**
 
@@ -760,11 +760,11 @@ Authorized handover agents and their authentication tokens live in [config/razar
 
 **Invocation sequence**
 
-1. Repeated boot failures trigger the handover flag.
-2. RAZAR packages logs and invokes the recovery helper via [ai_invoker.py](../agents/razar/ai_invoker.py), forwarding the failure context to a remote agent.
-3. The agent analyzes the context and drafts a fix using [code_repair.py](../agents/razar/code_repair.py) with justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
-4. RAZAR applies the proposed patch in a sandbox and runs component tests.
-5. If tests pass, services restart and the handover concludes.
+1. Repeated boot failures or missing components trigger the handover flag.
+2. `boot_orchestrator` calls [ai_invoker.py](../agents/razar/ai_invoker.py), which loads the active agent from `config/razar_ai_agents.json`, attaching any configured endpoint and authentication token to the failure context.
+3. The remote agent analyzes the context and drafts a fix using [code_repair.py](../agents/razar/code_repair.py) with justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
+4. `code_repair` applies the proposed patch in a sandbox, logs the resulting diff to [`../logs/razar_ai_patches.json`](../logs/razar_ai_patches.json), and runs component tests.
+5. If tests pass, `boot_orchestrator` reloads the component, retries the launch, and the handover concludes.
 6. If tests fail, RAZAR rolls back the patch and requests another fix, repeating steps 3–5 until the retry limit is reached.
 
 The handover flow:
