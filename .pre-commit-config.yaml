@@ -72,3 +72,8 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/component_index.md
+  - id: verify-dependencies
+    name: Verify dependency versions
+    entry: python scripts/verify_dependencies.py
+    language: system
+    pass_filenames: false

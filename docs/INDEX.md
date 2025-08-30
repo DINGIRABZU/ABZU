@@ -12,7 +12,6 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | - |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -230,7 +229,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [data_security.md](data_security.md) | Data Security and Compliance | This document outlines how training data should be handled with respect to GDPR and HIPAA regulations. | - |
 | [dependencies.md](dependencies.md) | Dependency Tree | Generated via `pipdeptree`. | - |
 | [dependency-graph.md](dependency-graph.md) | Dependency Graph | Generated with `pipdeptree --packages spiral-os`. | - |
-| [dependency_registry.md](dependency_registry.md) | Dependency Registry | Approved runtimes and libraries with minimum versions. Update this registry when dependencies change and validate upd... | - |
+| [dependency_registry.md](dependency_registry.md) | Dependency Registry | Approved runtimes and libraries with minimum and approved versions. Track CVE monitoring links to ensure timely vulne... | - |
 | [dependency_risks.md](dependency_risks.md) | Dependency Risks | This document outlines the impact of missing optional dependencies and ways to mitigate them. | - |
 | [deployment.md](deployment.md) | Deployment | This guide covers building versioned images and deploying them using Kubernetes or a serverless platform. For vision... | - |
 | [deployment_overview.md](deployment_overview.md) | Deployment Overview | This guide summarises how to launch Spiral OS on a Vast.ai server and how to run the stack locally with Docker Compose. | - |
