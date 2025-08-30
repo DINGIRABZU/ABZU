@@ -1,6 +1,6 @@
 # Crown Agent Overview
 
-The diagram below shows how the main components interact when using the console.
+The diagram below shows how the main components interact when using the console. A later section outlines deployment steps and escalation triggers.
 
 ```
 +--------------------+
@@ -101,11 +101,17 @@ modules before reintroducing them into the boot cycle. See the
 [RAZAR Agent](RAZAR_AGENT.md#crown-link-protocol) document for detailed schema
 descriptions.
 
-## Mission Brief Handshake
+## Deployment & Escalation
 
-Before diagnostics begin, RAZAR shares a short mission brief with the Crown stack. The brief summarises the priority map, current status and any open issues and is sent via the WebSocket helper `razar/crown_handshake.py`. Crown replies with an acknowledgment and a capability list so RAZAR knows which tools are available for the session. Each exchange is recorded to `logs/razar_crown_dialogues.json` for later review.
+Deployment begins with a short alignment between Crown and the RAZAR agent.
 
-### Mission Brief Example
+### Startup Steps
+
+1. Run [`init_crown_agent.py`](../init_crown_agent.py) to prepare memory directories, register servant models, and validate the GLM endpoint.
+2. Exchange a mission brief using [`razar/crown_handshake.py`](../razar/crown_handshake.py) so both sides agree on capabilities.
+3. Launch the console after an acknowledgement to begin the session.
+
+### Mission Brief & Log Snippet
 
 ```json
 // sent
@@ -123,33 +129,26 @@ Before diagnostics begin, RAZAR shares a short mission brief with the Crown stac
 }
 ```
 
-Sample WebSocket log:
-
 ```
 [WS] -> {"type":"brief","priority_map":{"memory":"ok"}}
 [WS] <- {"type":"ack","capabilities":["glm","avatar"]}
 ```
 
-## Operator Session
+### `/operator/command` Routing
 
-After the handshake, an operator can issue runtime directives through Crown. The `/operator/command` endpoint relays these requests to RAZAR over the Crown link.
+Operator directives are issued through `/operator/command` and relayed over the Crown link.
 
 ```json
-// operator console
 POST /operator/command {"command": "status"}
 
-// WebSocket relay
 [WS] -> {"type": "operator", "command": "status"}
 [WS] <- {"type": "result", "output": "all green"}
 ```
 
-RAZAR evaluates the command and returns the result, allowing operators to inspect or adjust the session without direct access to the underlying services.
+### Escalation Thresholds
 
-## Deployment
-
-1. Configure the environment with [`init_crown_agent.py`](../init_crown_agent.py). This script prepares memory directories, registers servant models, and validates the GLM endpoint.
-2. Exchange a mission brief using [`razar/crown_handshake.py`](../razar/crown_handshake.py) so RAZAR and the Crown stack agree on available capabilities before entering the boot cycle.
-3. Launch the console to begin a session after the handshake completes.
+- **Automated repair** – any component marked `degraded` for three cycles triggers a repair request to RAZAR.
+- **Human override** – a mission brief with `priority_map` entries set to `critical` or repeated operator command failures escalates to a human operator.
 
 ## Version History
 
