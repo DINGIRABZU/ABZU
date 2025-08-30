@@ -262,15 +262,16 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
    ```
 
    During a full boot the orchestrator calls
-   `crown_handshake.perform()`, archives the mission brief to
-   `logs/mission_briefs/<timestamp>.json`, saves the handshake
-   response to `logs/mission_briefs/<timestamp>_response.json`, logs
-   capabilities in `logs/razar.log`, and persists the full response under
-   the `handshake` key in
+   `crown_handshake.perform()` before any components launch, archives the
+   mission brief to `logs/mission_briefs/<timestamp>.json`, saves the
+   handshake response to `logs/mission_briefs/<timestamp>_response.json`,
+   logs capabilities in `logs/razar.log`, and persists the full response
+   under the `handshake` key in
    [logs/razar_state.json](../logs/razar_state.json). If the advertised
-   capabilities omit `GLM4V`, the orchestrator runs
+   capabilities omit `GLM4V`, the orchestrator executes
    [`crown_model_launcher.sh`](../crown_model_launcher.sh) and records the
-   launch under `launched_models` in the state file.
+   launch under `launched_models` while also setting `glm4v_present` in the
+   state file.
 
    RAZAR maintains at most 20 mission brief archives, rotating older pairs
    from `logs/mission_briefs/` to preserve space while keeping recent
@@ -603,7 +604,8 @@ Sample `logs/razar_state.json` entry:
 ```json
 {
   "last_component": "runtime_manager",
-  "launched_models": ["GLM4V"]
+  "launched_models": ["GLM4V"],
+  "glm4v_present": true
 }
 ```
 
