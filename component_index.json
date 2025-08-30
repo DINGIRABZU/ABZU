@@ -222,6 +222,22 @@
       },
       "ignition_stage": 2,
       "adr": null
+    },
+    {
+      "id": "primordials_service",
+      "chakra": "crown",
+      "type": "service",
+      "version": "0.0.1",
+      "path": "services/primordials_service",
+      "purpose": "Hosts DeepSeek-V3 invocation endpoints",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 5,
+      "adr": null
     }
   ]
 }
