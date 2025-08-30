@@ -35,7 +35,9 @@
         "prometheus_client"
       ],
       "tests": [
-        "tests/test_razar_health_checks.py"
+        "tests/test_razar_health_checks.py",
+        "tests/agents/razar/test_boot_orchestrator.py",
+        "tests/agents/razar/test_crown_handshake.py"
       ],
       "status": "active",
       "metrics": {
@@ -190,7 +192,9 @@
       "dependencies": [
         "fastapi"
       ],
-      "tests": [],
+      "tests": [
+        "tests/test_operator_api.py"
+      ],
       "status": "active",
       "metrics": {
         "coverage": 1.0

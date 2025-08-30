@@ -232,6 +232,9 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "agents" / "test_event_bus.py"),
     str(ROOT / "tests" / "narrative_engine" / "test_biosignal_pipeline.py"),
     str(ROOT / "tests" / "crown" / "test_prompt_orchestrator.py"),
+    str(ROOT / "tests" / "agents" / "razar" / "test_boot_orchestrator.py"),
+    str(ROOT / "tests" / "agents" / "razar" / "test_crown_handshake.py"),
+    str(ROOT / "tests" / "test_operator_api.py"),
 }
 
 
