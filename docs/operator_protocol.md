@@ -2,22 +2,48 @@
 
 Defines HTTP endpoints and WebRTC channels for operator interactions with Crown and RAZAR.
 
+## Authentication
+
+All requests require an `Authorization` header containing a valid JWT or API token. Missing or invalid credentials return `401`.
+
+## Rate Limits
+
+Crown enforces per-operator limits:
+
+- 60 command requests per minute.
+- 5 upload requests per minute.
+- 1 active WebRTC session.
+
+Exceeding a limit returns `429 Too Many Requests`.
+
 ## Endpoint `/operator/command`
 
-`POST` a JSON payload describing the action to execute. The body must include `operator`, `agent`, and `command` fields. Requests
-must include authentication headers.
+`POST` a JSON payload describing the action to execute. The body must include `operator`, `agent`, and `command` fields.
+
+### Example
+
+```bash
+curl -X POST \
+     -H "Authorization: Bearer <token>" \
+     -H "Content-Type: application/json" \
+     -d '{"operator":"overlord","agent":"crown","command":"noop"}' \
+     http://localhost:8000/operator/command
+```
 
 ## Endpoint `/operator/upload`
 
-Uploads one or more files using `multipart/form-data`. Each request must include `operator` and `files` fields and may include optional `metadata` JSON. Crown stores files under `uploads/` and forwards metadata to Crown.
+Uploads one or more files using `multipart/form-data`. Each request must include `operator` and `files` fields and may include optional `metadata` JSON. Crown stores files under `uploads/` and forwards metadata to RAZAR.
 
-### Authentication
+### Example
 
-Requires an `Authorization` header containing a valid JWT or API token.
-
-### Rate Limits
-
-Limited to **5** upload requests per minute per operator. Exceeding this limit returns `429 Too Many Requests`.
+```bash
+curl -X POST \
+     -H "Authorization: Bearer <token>" \
+     -F "operator=overlord" \
+     -F "files=@example.txt" \
+     -F 'metadata={"note":"test"}' \
+     http://localhost:8000/operator/upload
+```
 
 ## WebRTC Channels
 
@@ -31,21 +57,7 @@ Only the requested tracks are attached during negotiation. If media negotiation 
 
 ## Roles and Permission Checks
 
-Crown authorizes requests against `permissions.yml`. Only identities with the `operator` role may invoke this endpoint. Invalid or missing roles return a `403` response.
-
-## Authentication
-
-All operator endpoints and WebRTC signalling requests require an `Authorization` header containing a JWT or API token. Requests without valid credentials are rejected with `401`.
-
-## Rate Limits
-
-Crown enforces per-operator limits:
-
-- 60 command requests per minute.
-- 5 upload requests per minute.
-- 1 active WebRTC session.
-
-Exceeding a limit returns `429 Too Many Requests`.
+Crown authorizes requests against `permissions.yml`. Only identities with the `operator` role may invoke these endpoints. Invalid or missing roles return a `403` response.
 
 ## Fallback Rules
 
