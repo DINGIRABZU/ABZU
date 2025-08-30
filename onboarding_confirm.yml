@@ -133,7 +133,7 @@ documents:
       key_rules: Details defenses and threat mitigations.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 784984e322b3184961b35e2079a3125cec33106d8df6242a18c4f82d32f39378
+    sha256: 9759437b015784856230ec8862867afccaf2d1381b904907d80190dc337a19e5
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
