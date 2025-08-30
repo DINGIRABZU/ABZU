@@ -51,6 +51,7 @@ closing the loop and keeping the operator at the center of guidance.
   - [Persona API Guide](persona_api_guide.md) – conventions for persona profiles and hooks
   - [Nazarick Manifesto](nazarick_manifesto.md) – narrative charter governing personas
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
+  - [Primordials Service](primordials_service.md) – DeepSeek-V3 orchestration service
 - **Operational guides**
   - [Operations Guide](operations.md) – runbooks for deployment and maintenance
 - [Monitoring Guide](monitoring.md) – telemetry collection and alerting

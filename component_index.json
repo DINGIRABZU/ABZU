@@ -230,6 +230,79 @@
       "version": "0.0.1",
       "path": "services/primordials_service",
       "purpose": "Hosts DeepSeek-V3 invocation endpoints",
+      "dependencies": [
+        "fastapi"
+      ],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 5,
+      "adr": null
+    },
+    {
+      "id": "bana_engine",
+      "chakra": "heart",
+      "type": "agent",
+      "version": "0.0.1",
+      "path": "agents/bana",
+      "purpose": "Biosignal-driven narrative generation",
+      "dependencies": [
+        "biosppy",
+        "numpy",
+        "transformers"
+      ],
+      "tests": [
+        "tests/agents/test_bana.py",
+        "tests/agents/test_bana_narrator.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "bana_events_dataset",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/bana/events.jsonl",
+      "purpose": "Structured event logs for narrative generation",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "bana_narratives_dataset",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/bana/narratives.jsonl",
+      "purpose": "Curated story samples for fine-tuning",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "primordials_config",
+      "chakra": "crown",
+      "type": "config",
+      "version": "0.0.1",
+      "path": "schemas/primordials_config.schema.yaml",
+      "purpose": "Configuration schema for Primordials service",
       "dependencies": [],
       "tests": [],
       "status": "experimental",

@@ -2,6 +2,8 @@
 
 The Primordials service hosts the DeepSeek-V3 language model for internal orchestration tasks. It exposes HTTP endpoints for invoking the model, requesting inspirational prompts, and reporting service health.
 
+See the [component index entry](../component_index.json) for metadata on this service.
+
 ## Deployment
 
 DeepSeek-V3 runs within an isolated container and loads weights on startup. The service requires access to GPU resources and the model checkpoints provided by the deployment pipeline.
