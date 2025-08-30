@@ -123,6 +123,7 @@ These agents draw from the chakra structure outlined in the [Developer Onboardin
 - **Manifesto:** [Nazarick Manifesto](nazarick_manifesto.md)
 - **Channel:** [Biosphere Lab](system_blueprint.md#floor-4-biosphere-lab)
 - **Dependencies:** `biosppy`, `transformers`, `numpy`
+- **Component entry:** [component_index.json](../component_index.json)
 - **Quick start:**
 
   ```python

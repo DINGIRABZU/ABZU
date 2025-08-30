@@ -17,6 +17,12 @@ documents:
       purpose: High-level system architecture.
       scope: Entire platform.
       insight: Align new modules with existing architecture.
+  docs/bana_engine.md:
+    sha256: 33184b164f2ea14748b1ab7a9afdfc837cf30c8836cb1384f255149e1fc5a6c4
+    summary:
+      purpose: Bana narrative engine guide.
+      scope: Training data and workflow.
+      insight: Reference for narrative generation components.
   docs/documentation_protocol.md:
     sha256: ae84f16638303413f944fd3a2b0adf70679c3ee82c06eefa2ab18c1141468239
     summary:
@@ -102,7 +108,7 @@ documents:
       scope: Connector development.
       insight: Follow guidelines to ensure interoperability.
   docs/system_blueprint.md:
-    sha256: 38a378de3383a13a8da60090031721d84a49b6d6f98a9d0ce2f2f488810ed7b6
+    sha256: 9dbc78e94b65d33a06886a5eafae23d9f9564104061a40e65600c34fb50511c9
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.

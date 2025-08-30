@@ -2,6 +2,8 @@
 
 This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sources, event processing, and where generated stories are saved.
 
+See the corresponding entries in [component_index.json](../component_index.json) for metadata on the engine and its datasets.
+
 ## Mistral 7B Fine‑Tuning
 
 - **Base model:** `mistralai/Mistral-7B-v0.3`
