@@ -10,13 +10,38 @@ Sends a JSON payload describing the action to execute. Requests must use `POST` 
 
 Uploads one or more files using `multipart/form-data`. Each request must include a `files` field and may include an optional `metadata` field containing JSON. Crown saves files under `uploads/` and forwards the metadata to RAZAR.
 
+## WebRTC Channels
+
+The Nazarick Web Console establishes a WebRTC connection to stream avatar output. Clients may request:
+
+- **Video** – avatar frames.
+- **Audio** – PCM/WAV audio.
+- **Data** – arbitrary binary payloads.
+
+Only the requested tracks are attached during negotiation. When media negotiation fails the session falls back to data-channel messages so command traffic continues.
+
 ## Roles and Permission Checks
 
 Crown authorizes requests against `permissions.yml`. Only identities with the `operator` role may invoke this endpoint. Invalid or missing roles return a `403` response.
 
-## Authentication and Rate Limits
+## Authentication
 
-All operator endpoints require `Authorization` headers. Crown enforces a rate limit of 60 command requests and 5 upload requests per minute per operator.
+All operator endpoints and WebRTC signalling requests require an `Authorization` header containing a JWT or API token. Requests without valid credentials are rejected with `401`.
+
+## Rate Limits
+
+Crown enforces per-operator limits:
+
+- 60 command requests per minute.
+- 5 upload requests per minute.
+- 1 active WebRTC session.
+
+Exceeding a limit returns `429 Too Many Requests`.
+
+## Fallback Rules
+
+- If audio or video streaming cannot be established, the WebRTC session continues over the data channel.
+- When RAZAR is unavailable or rejects a command, Crown logs the failure and surfaces the error to the operator for escalation.
 
 ## Crown Relay to RAZAR
 

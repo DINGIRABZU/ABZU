@@ -69,7 +69,7 @@ documents:
     sha256: 6273ffa4258f9015f3e1b06d1dadbfd3f03f0585f0fee79bc1ba1c32e2f00721
     summary: API endpoints and schemas.
   docs/operator_protocol.md:
-    sha256: e150a741e3c81bdd7bb550ef12e3f9696d8572f508342e99a25b8aed2e06597a
+    sha256: 721c9a2aa2172ab01f6cc4a664813463289ddcbf39c25ce7da879ccd4d1fc57d
     summary: Operator interaction rules.
   docs/os_guardian.md:
     sha256: 1b32ad1d78f3b19332b6dfc1c06c4ad8ea9578d0d850947712c33ec04e184eab
