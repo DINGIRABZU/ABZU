@@ -8,6 +8,7 @@ INANNA_AI/models/
 logs/*
 !logs/razar_state.json
 !logs/razar_remote_agents.json
+!logs/nazarick_startup.json
 !logs/razar_boot_history.json
 !logs/razar_crown_dialogues.json
 !logs/razar_cocreation_plans.json

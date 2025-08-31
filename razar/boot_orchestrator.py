@@ -24,6 +24,7 @@ from typing import Any, Dict, List, Optional
 from . import doc_sync, health_checks
 from .crown_handshake import CrownHandshake, CrownResponse
 from .quarantine_manager import is_quarantined, quarantine_component
+from agents.nazarick.service_launcher import launch_required_agents
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
 
@@ -212,6 +213,7 @@ def main() -> None:
 
     components = load_config(args.config)
     _perform_handshake(components)
+    launch_required_agents()
     processes: List[subprocess.Popen] = []
 
     history = load_history()
