@@ -4,14 +4,37 @@ This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 
 
 See the corresponding entries in [component_index.json](../component_index.json) for metadata on the engine and its datasets.
 
+## Architecture
+
+```mermaid
+flowchart TD
+    A[INANNA Biosignals] --> B[INANNA Bridge]
+    B --> C[Bio-adaptive Narrator]
+    C --> D[Spiral Memory]
+    C --> E[Narrative Logs]
+```
+
+## Dependencies
+
+- `biosppy`
+- `numpy`
+- `transformers`
+- `spiral_memory`
+- `connectors.primordials_api`
+- `agents.event_bus`
+
 ## Mistral 7B Fine‑Tuning
 
 - **Base model:** `mistralai/Mistral-7B-v0.3`
 - **Training script:** `scripts/train_bana.py`
-- **Datasets:**
-  - `data/bana/events.jsonl` – structured event logs used to drive narrative generation.
-  - `data/bana/narratives.jsonl` – curated story samples for supervised fine‑tuning.
 - **Output checkpoint:** `models/bana_mistral_7b`
+
+## Dataset Locations
+
+| Dataset | Path | Description |
+| --- | --- | --- |
+| Events | `data/bana/events.jsonl` | Structured event logs that drive narrative generation. |
+| Narratives | `data/bana/narratives.jsonl` | Curated story samples for supervised fine‑tuning. |
 
 ## Event Processing Pipeline
 
@@ -60,6 +83,19 @@ sequenceDiagram
     Bana->>Store: Append narrative to logs/bana/
     Store-->>User: Path to saved narrative
 ```
+
+## Failure Scenarios
+
+- Missing optional dependencies such as `biosppy` or `transformers` prevents story generation.
+- Empty or undersized biosignal streams raise validation errors.
+- Downstream logging or memory stores unavailable, causing narratives to be discarded.
+
+## Version History
+
+| Version | Date       | Notes |
+| ------- | ---------- | ----- |
+| 0.0.2   | 2025-08-31 | Added architecture overview, dependency list, dataset table, and failure modes. |
+| 0.0.1   | 2024-01-15 | Initial release. |
 
 ## References
 
