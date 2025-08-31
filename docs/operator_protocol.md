@@ -5,7 +5,7 @@ Defines the interfaces and logging expectations for direct operator interactions
 ## Endpoints
 
 - **`POST /operator/command`** – forwards structured instructions for RAZAR to execute. The payload must include an `action` field and optional `parameters`. Responses echo the action and report success or failure.
-- **`POST /operator/upload`** – accepts auxiliary files referenced in later commands. The body is multipart form data with a `file` part; successful uploads return a storage identifier.
+- **`POST /operator/upload`** – accepts auxiliary files and arbitrary JSON metadata. The body is multipart form data with one or more `files` parts and a `metadata` field; successful uploads return stored paths merged into the metadata payload.
 
 See the [`operator_api` entry in the Connector Index](connectors/CONNECTOR_INDEX.md#operator_api) for versioning and implementation details.
 
@@ -16,6 +16,10 @@ All requests require an `Authorization` header with a Bearer token carrying the 
 ## Rate Limits
 
 `POST /operator/command` is limited to **60 requests per minute** per operator. `POST /operator/upload` allows **20 uploads per minute**. Exceeding either limit results in `429 Too Many Requests`.
+
+## Media Fallback
+
+Real‑time audio and video streams are optional. When disabled via connector configuration or if media tracks fail to initialise, clients fall back to data‑only interaction. Operators should then upload pre‑recorded media using `POST /operator/upload`, which Crown relays to RAZAR alongside the provided metadata.
 
 ## Storage Paths
 
