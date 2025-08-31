@@ -20,23 +20,23 @@ To keep integration layers discoverable and reliable:
 
 Connector entries share common fields:
 
+- **purpose** – short description of the connector's role.
 - **version** – semantic identifier of the connector release.
 - **endpoints** – network paths or methods exposed.
-- **auth** – credentials or handshake requirements.
+- **linked_agents** – agents or services that interact through the connector.
 - **status** – lifecycle indicator (`experimental`, `active`, `deprecated`).
+- For operator interfaces, document supported chat, file, image, audio, and video flows.
 
 ### Connector Entry Template
 
 ```json
 {
-  "id": "example_connector",
-  "purpose": "short description",
-  "version": "1.0.0",
-  "endpoints": ["POST /example"],
-  "auth": "Bearer (token)",
-  "status": "experimental",
-  "docs": "../path_to_doc.md",
-  "code": "../../path_to_code.py"
+"id": "example_connector",
+"purpose": "short description",
+"version": "1.0.0",
+"endpoints": ["POST /example"],
+  "linked_agents": ["example_agent"],
+  "status": "experimental"
 }
 ```
 

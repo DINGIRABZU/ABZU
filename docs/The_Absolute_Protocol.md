@@ -15,7 +15,7 @@ Before opening a pull request, confirm each item:
   - [System Blueprint](system_blueprint.md)
   - [Project Mission & Vision](project_mission_vision.md) – confirm alignment before proposing major changes
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
-  - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
+  - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, linked agents, status, and operator interface flows are current
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
 - [ ] All modules, connectors, and services expose `__version__` that matches `component_index.json`; the `verify-versions` pre-commit hook enforces alignment, so bump both for user-facing changes
@@ -29,7 +29,7 @@ Before opening a pull request, confirm each item:
 - [ ] Connector registry updated:
   - implementations expose `__version__` matching `component_index.json`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
-  - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and links
+    - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, linked agents, operator interface flows, status, and links
 - [ ] Connector health check passes – run `python scripts/health_check_connectors.py` and ensure all connectors report healthy
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
@@ -208,13 +208,14 @@ Connectors bridge the language engine to external communication layers. Follow t
 - provide `close_peers() -> Awaitable[None]` to release resources
 - expose a `__version__` field that matches `component_index.json` and bump it on interface changes
 - document all externally exposed endpoints and authentication methods
+- list linked agents and supported chat, file, image, audio, and video flows
 - update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) whenever the connector changes
   (the `check-connector-index` pre-commit hook fails if a touched connector lacks an entry)
 - cross-link implementation modules such as [`connectors/webrtc_connector.py`](../connectors/webrtc_connector.py) and the package [`connectors`](../connectors/__init__.py)
 
 ### Connector Registry
 
-Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, purpose, service, endpoints, protocols, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Both documents are listed in [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md). Update this registry whenever a connector is added, removed, or its interface changes.
+Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, purpose, endpoints, linked agents, operator interface flows, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Both documents are listed in [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md). Update this registry whenever a connector is added, removed, or its interface changes.
 
 ## Subsystem Protocols
 
