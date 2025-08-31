@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 
 
+ALLOWED_BINARIES: set[str] = set()
+__version__ = "0.1.0"
+
+
 def staged_binary_files() -> list[str]:
     """Return a list of staged files that appear to be binary."""
     cmd = ["git", "diff", "--cached", "--numstat"]
@@ -20,6 +24,8 @@ def staged_binary_files() -> list[str]:
         added, removed, path = parts
         if added == "-" or removed == "-":
             if not Path(path).exists():
+                continue
+            if path in ALLOWED_BINARIES:
                 continue
             binaries.append(path)
     return binaries
