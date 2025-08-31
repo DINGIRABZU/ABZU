@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.70
-**Last updated:** 2025-10-20
+**Version:** v1.0.71
+**Last updated:** 2025-08-31
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B." Agent guides must also define **Persona & Responsibilities** and **Component & Link** sections.
@@ -34,6 +34,11 @@ Before opening a pull request, confirm each item:
     - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, linked agents, operator interface flows, status, and links
 - [ ] Connector health check passes – run `python scripts/health_check_connectors.py` and ensure all connectors report healthy
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
+- [ ] Narrative feature compliance:
+  - [ ] `__version__` declared in all narrative modules
+  - [ ] datasets registered and hashed in [data_manifest.md](data_manifest.md)
+  - [ ] connectors registered in [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md)
+  - [ ] pull requests affecting narrative include a change-justification statement
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
 - [ ] Pull request includes a change-justification: "I did X on Y to obtain Z, expecting behavior B."
 - [ ] `onboarding_confirm.yml` records purpose, scope, key rules, and an actionable insight summary for each key document it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
@@ -329,14 +334,14 @@ Any component launched by Crown or RAZAR must document its activation lifecycle:
 - Log files capturing the wake sequence
 - Rollback steps to revert the activation if needed
 
-### Narrative Component Protocol
+### Narrative Feature Requirements
 
 Narrative modules must maintain traceability by:
 
 - Declaring a `__version__` field in every narrative module.
-- Registering and hashing all datasets they rely on.
-- Updating [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) whenever narrative APIs change.
-- Including a change-justification statement ("I did X on Y to obtain Z, expecting behavior B") in pull requests touching narrative or memory.
+- Registering and hashing all datasets in [data_manifest.md](data_manifest.md).
+- Registering related connectors in [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
+- Including a change-justification statement ("I did X on Y to obtain Z, expecting behavior B") in pull requests touching narrative components.
 
 ## Release Protocol
 
