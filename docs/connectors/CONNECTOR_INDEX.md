@@ -17,4 +17,4 @@ cross‑referenced from [Key Documents](../KEY_DOCUMENTS.md) and
 | `open_web_ui` | browser-based console interface for chat | 0.1.0 | Bearer | `POST /glm-command` | Crown | Experimental |
 | `telegram_bot` | Telegram channel relay for chat | 0.1.0 | Bot token | `POST /telegram/webhook` | Nazarick Agents | Experimental |
 | `primordials_api` | metrics bridge to Primordials service | 0.1.1 | Bearer | `POST /metrics`, `GET /health` | Primordials | Experimental |
-| `narrative_api` | narrative retrieval and stream | 0.1.0 | Bearer | `GET /story/log`, `GET /story/stream` | vector_memory | Experimental |
+| `bana_narrative_api` | Bana narrative retrieval and stream | 0.1.0 | Bearer | `GET /story/log`, `GET /story/stream` | vector_memory | Experimental |

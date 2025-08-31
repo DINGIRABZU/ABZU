@@ -10,7 +10,7 @@ Defines the interfaces and logging expectations for direct operator interactions
 - **`GET /story/log`** – returns stored narratives and memory metadata.
 - **`GET /story/stream`** – streams narratives and memory metadata as JSON lines.
 
-See the [`webrtc`, `operator_upload`, `crown_ws`, and `narrative_api` entries in the Connector Index](connectors/CONNECTOR_INDEX.md) for versioning and implementation details.
+See the [`webrtc`, `operator_upload`, `crown_ws`, and `bana_narrative_api` entries in the Connector Index](connectors/CONNECTOR_INDEX.md) for versioning and implementation details.
 
 ## Authentication
 

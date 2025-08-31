@@ -287,6 +287,24 @@
       "adr": null
     },
     {
+      "id": "bana_narrative_api",
+      "chakra": "heart",
+      "type": "service",
+      "version": "0.1.0",
+      "path": "bana/narrative_api.py",
+      "purpose": "FastAPI routes for Bana narrative retrieval and streaming",
+      "dependencies": [
+        "fastapi"
+      ],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
       "id": "primordials_api",
       "chakra": "crown",
       "type": "service",
