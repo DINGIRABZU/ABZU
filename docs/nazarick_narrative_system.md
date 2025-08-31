@@ -10,17 +10,20 @@ Each event links to a servant agent and is persisted across the
 flowchart LR
     S[Sensors] --> I[scripts/ingest_biosignals.py]
     I --> B[agents/bana]
-    B --> M[memory/narrative_engine.py]
-    M -->|log_story| N[Narrative Memory]
+    B --> E[bana/event_structurizer.py]
+    E --> M[memory/narrative_engine.py]
+    M -->|log_event| N[Narrative Memory]
     M -->|persona update| A[Agent Registry]
 ```
 
 1. **Sensors** capture heart rate, skin temperature, and EDA.
 2. **`scripts/ingest_biosignals.py`** normalizes samples and emits structured
    records.
-3. **`agents/bana/bio_adaptive_narrator.py`** transforms records into
-   `StoryEvent` objects.
-4. **`memory/narrative_engine.py`** logs events to persistent stores and emits
+3. **`agents/bana/bio_adaptive_narrator.py`** reacts to records and produces
+   interaction payloads.
+4. **`bana/event_structurizer.py`** converts payloads or biosignal rows into
+   schema‑validated JSON events.
+5. **`memory/narrative_engine.py`** logs events to persistent stores and emits
    persona summaries.
 
 ## Memory Layer Hooks
@@ -32,7 +35,7 @@ Hooks link each `StoryEvent` to specific layers described in
 |-----------|---------------|--------|
 | cortex    | `record_spiral` | [`memory/cortex.py`](../memory/cortex.py) |
 | emotional | `log_emotion`   | [`memory/emotional.py`](../memory/emotional.py) |
-| narrative | `log_story`     | [`memory/narrative_engine.py`](../memory/narrative_engine.py) |
+| narrative | `log_event`     | [`memory/narrative_engine.py`](../memory/narrative_engine.py) |
 
 ## Modules
 
@@ -40,22 +43,53 @@ Core modules participating in the pipeline:
 
 - [`scripts/ingest_biosignals.py`](../scripts/ingest_biosignals.py)
 - [`agents/bana/bio_adaptive_narrator.py`](../agents/bana/bio_adaptive_narrator.py)
+- [`bana/event_structurizer.py`](../bana/event_structurizer.py)
 - [`memory/cortex.py`](../memory/cortex.py)
 - [`memory/emotional.py`](../memory/emotional.py)
 - [`memory/narrative_engine.py`](../memory/narrative_engine.py)
 
+## Event Schema
+
+Events are stored as JSON objects matching this schema:
+
+```json
+{
+  "time": "2025-10-17T12:00:00Z",
+  "agent_id": "bio_adaptive_narrator",
+  "event_type": "elevated_heart_rate",
+  "payload": {"heart_rate": 90.0, "skin_temp": 33.0}
+}
+```
+
+`time` is an ISO‑8601 timestamp; `agent_id` identifies the originating agent;
+`event_type` classifies the action; `payload` holds arbitrary numeric or text
+fields. Validation is performed using `EVENT_SCHEMA` in
+[`bana/event_structurizer.py`](../bana/event_structurizer.py).
+
 ## Persistent Storage
 
-`memory/narrative_engine.py` persists stories in a SQLite database
-located at `data/narrative_engine.db`.
+`memory/narrative_engine.py` persists data in two layers:
 
-| table   | column | type    | description              |
-|---------|--------|---------|--------------------------|
-| stories | id     | INTEGER | Auto-incrementing key    |
-| stories | text   | TEXT    | Narrative action content |
+- **SQLite** at `data/narrative_engine.db` storing both raw stories and structured
+  events.
+- **ChromaDB** at `data/narrative_events.chroma` enabling vector search over
+  event content.
 
-The schema is created automatically. `log_story` appends rows and
-`stream_stories` yields them in insertion order.
+The SQLite schema comprises:
+
+| table  | column    | type    | description                     |
+|--------|-----------|---------|---------------------------------|
+| stories| id        | INTEGER | Auto-incrementing key           |
+| stories| text      | TEXT    | Narrative action content        |
+| events | id        | TEXT    | UUID for the event              |
+| events | time      | TEXT    | ISO-8601 timestamp              |
+| events | agent_id  | TEXT    | Originating agent identifier    |
+| events | event_type| TEXT    | Classification of the event     |
+| events | payload   | TEXT    | JSON-encoded payload            |
+
+`log_event` appends rows and adds embeddings to the Chroma collection.
+`query_events` yields events filtered by agent or type. `stream_stories`
+remains available for legacy text logs.
 
 ## Event–Agent Map
 
@@ -122,3 +156,4 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py \
 |---------|------|---------|
 | 0.1.0 | 2025-10-17 | Documented biosignal pipeline, memory hooks, and modules. |
 | 0.1.1 | 2025-10-17 | Added SQLite persistence layer and schema details. |
+| 0.2.0 | 2025-10-17 | Introduced event structurizer and Chroma-backed search. |
