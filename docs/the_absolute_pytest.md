@@ -27,6 +27,13 @@ Run tests as usual and inspect the metrics file or have Prometheus scrape the pa
    - `pytest_coverage_percent` to ensure coverage stays above thresholds.
 3. Enable alerts on coverage drops or runtime increases to trigger reviews via `crown_prompt_orchestrator`.
 
+## Ignition Full Stack Test
+
+`tests/ignition/test_full_stack.py` simulates a minimal boot sequence. It stubs
+the Crown handshake, initializes the `MemoryStore`, confirms agent channel
+availability, and routes an operator command. Use it as a template for
+integration-style startup tests when external services are unavailable.
+
 ## Failure Analysis
 
 - Pytest writes detailed logs to `logs/pytest.log`.
