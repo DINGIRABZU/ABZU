@@ -95,6 +95,12 @@ repos:
     entry: python scripts/check_env.py
     language: system
     pass_filenames: false
+  - id: validate-links
+    name: Validate markdown links
+    entry: python scripts/validate_links.py
+    language: system
+    types: [markdown]
+    exclude: ^docs/INDEX\.md$
 
 - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
   rev: v9.19.0
