@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.72
-**Last updated:** 2025-09-01
+**Version:** v1.0.73
+**Last updated:** 2025-08-31
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B." Commit messages must follow this structure as outlined in the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must also define **Persona & Responsibilities** and **Component & Link** sections.
@@ -46,6 +46,9 @@ Before opening a pull request, confirm each item:
 - [ ] `onboarding_confirm.yml` records purpose, scope, key rules, and an actionable insight summary for each key document it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_hashes.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
+- [ ] ADR created for any change to `The_Absolute_Protocol.md` describing motivation and alternatives
+- [ ] ADR referenced in `docs/INDEX.md` and relevant `component_index.json` entries
+- [ ] Commits implementing ADR decisions prefixed with `ADR-XXXX:`
 - [ ] Markdown links validated with `scripts/validate_links.py`
 - [ ] `DASHBOARD.md` metrics updated for each release cycle
 - [ ] `component_maturity.md` scoreboard updated
@@ -365,7 +368,7 @@ Narrative modules must maintain traceability by:
 Updates to this protocol follow a lightweight governance model:
 
 1. **Proposal** – Open an issue describing the rationale and desired changes.
-2. **Implementation** – Submit a pull request referencing the issue and label it `Protocol Update` to surface review.
+2. **Implementation** – Create an ADR in `docs/adr/` outlining motivation and alternatives, reference it in `docs/INDEX.md` and any affected `component_index.json` entries, then submit a pull request labeled `Protocol Update`. Commits must be prefixed with the ADR ID (e.g., `ADR-0003:`).
 3. **Review** – Core maintainers discuss the proposal, request revisions, and approve when consensus is reached.
 4. **Versioning** – Upon merge, update the version and last‑updated date at the top of this file and document the change in the repository changelog.
 
