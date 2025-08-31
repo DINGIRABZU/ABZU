@@ -78,7 +78,7 @@ class Node:
     children = []
 
 record_spiral(Node(), {"result": "demo", "tags": ["example"]})
-print(query_spirals(tags=["example"]))
+print(query_spirals(tags=["example"]))  # prints the stored record
 PY
 ```
 
@@ -123,7 +123,7 @@ from memory.emotional import get_connection, log_emotion, fetch_emotion_history
 
 conn = get_connection()
 log_emotion([0.1, 0.2], conn=conn)
-print(fetch_emotion_history(window=60, conn=conn))
+print(fetch_emotion_history(window=60, conn=conn))  # recent emotion vectors
 PY
 ```
 
@@ -166,7 +166,7 @@ from memory.mental import init_rl_model, record_task_flow, query_related_tasks
 
 init_rl_model()
 record_task_flow("taskA", {"step": 1})
-print(query_related_tasks("taskA"))
+print(query_related_tasks("taskA"))  # tasks related to "taskA"
 PY
 ```
 
@@ -212,7 +212,7 @@ from memory.spiritual import get_connection, map_to_symbol, lookup_symbol_histor
 
 conn = get_connection()
 map_to_symbol(("eclipse", "☾"), conn=conn)
-print(lookup_symbol_history("☾", conn=conn))
+print(lookup_symbol_history("☾", conn=conn))  # symbol mapping history
 PY
 ```
 
@@ -256,7 +256,7 @@ python - <<'PY'
 from memory.narrative_engine import log_story, stream_stories
 
 log_story("hero meets guide")
-print(list(stream_stories()))
+print(list(stream_stories()))  # ['hero meets guide']
 PY
 ```
 
