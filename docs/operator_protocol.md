@@ -6,8 +6,9 @@ Defines the interfaces and logging expectations for direct operator interactions
 
 - **`POST /operator/command`** – forwards structured instructions for RAZAR to execute. The payload must include an `action` field and optional `parameters`. Responses echo the action and report success or failure.
 - **`POST /operator/upload`** – accepts auxiliary files and arbitrary JSON metadata. The body is multipart form data with one or more `files` parts and a `metadata` field; successful uploads return stored paths merged into the metadata payload.
+- **`POST /call`** – negotiates a WebRTC session for real‑time data, audio, and video exchange. Clients send an SDP offer and receive an SDP answer in the response.
 
-See the [`operator_api` entry in the Connector Index](connectors/CONNECTOR_INDEX.md#operator_api) for versioning and implementation details.
+See the [`webrtc`, `operator_upload`, and `crown_ws` entries in the Connector Index](connectors/CONNECTOR_INDEX.md) for versioning and implementation details.
 
 ## Authentication
 
@@ -16,6 +17,16 @@ All requests require an `Authorization` header with a Bearer token carrying the 
 ## Rate Limits
 
 `POST /operator/command` is limited to **60 requests per minute** per operator. `POST /operator/upload` allows **20 uploads per minute**. Exceeding either limit results in `429 Too Many Requests`.
+
+## WebRTC Channels
+
+The WebRTC connector offers up to three channels:
+
+- **Data channel** – streams encoded audio segments or control messages.
+- **Audio track** – forwards live microphone input when enabled.
+- **Video track** – streams avatar video frames.
+
+Clients authenticate with a JWT and should close peers when finished. Disabled tracks are omitted from the session description and may fall back to `POST /operator/upload`.
 
 ## Media Fallback
 
