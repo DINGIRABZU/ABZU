@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Enforced Persona & Responsibilities and Component & Link sections in agent docs and updated contributor checklist.
 - Updated Nazarick narrative system guide with mermaid pipeline diagram and removed obsolete image reference.
 - Added Albedo layer state-machine diagram and deployment guide with sample configuration.
 - Expanded Nazarick agent guide with deployment commands, channel mappings, and extensibility hooks.

@@ -175,11 +175,11 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 5aee0d9e2067a375c9b293528f1e7984f18da82ddc6170425834a46fcf00bff7
+    sha256: b1567b94f1fc604515c44b9e3b72d2187b5cb136e29d14f12a60c351e13de751
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      key_rules: Provide change justification, align __version__ with component_index.json, and maintain key-document summaries.
+      key_rules: Provide change justification, align __version__ with component_index.json, maintain key-document summaries, and ensure agent docs include Persona & Responsibilities and Component & Link sections.
       insight: Align component versions and document summaries; run ignition validation via `validate_ignition.py` and consult `docs/ignition_flow.md` for the sequence.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
@@ -217,7 +217,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 20521d8900fb7b6ef726e25bc48a39416ff476e955c15c096d6288dd3c1f8cbc
+    sha256: d3975e7a9f61d1c2ac27b94a97491495588159e179e8b8ded76b995ad9f2b142
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
