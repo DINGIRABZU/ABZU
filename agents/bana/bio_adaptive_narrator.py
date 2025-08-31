@@ -17,10 +17,13 @@ except Exception:  # pragma: no cover - dependency may be missing
     ecg = None  # type: ignore
 
 from memory import narrative_engine
+from spiral_memory import DEFAULT_MEMORY
+from connectors.primordials_api import send_metrics
 
 try:  # pragma: no cover - optional dependency
     from transformers import pipeline  # type: ignore
 except Exception:  # pragma: no cover - dependency may be missing
+
     def pipeline(*args, **kwargs):  # type: ignore
         raise ImportError("transformers pipeline unavailable") from None
 
@@ -53,7 +56,9 @@ def generate_story(bio_stream: Iterable[float], sampling_rate: float = 1000.0) -
     # dict; both provide a ``heart_rate`` entry.
     result = ecg.ecg(signal=samples, sampling_rate=sampling_rate, show=False)
     heart_rate = (
-        result.get("heart_rate") if isinstance(result, dict) else getattr(result, "heart_rate", [])
+        result.get("heart_rate")
+        if isinstance(result, dict)
+        else getattr(result, "heart_rate", [])
     )
     avg_rate = float(np.mean(heart_rate)) if np.size(heart_rate) else 60.0
 
@@ -71,4 +76,6 @@ def generate_story(bio_stream: Iterable[float], sampling_rate: float = 1000.0) -
         "generated_text"
     ]
     narrative_engine.log_story(text)
+    DEFAULT_MEMORY.register_event(text, layers={"quality": [float(len(text))]})
+    send_metrics({"story_length": len(text)})
     return text

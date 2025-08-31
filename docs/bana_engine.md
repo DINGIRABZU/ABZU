@@ -31,6 +31,15 @@ flowchart LR
 2. **Generation** – the fine‑tuned Mistral 7B model expands events into narrative passages.
 3. **Post‑processing** – generated text is timestamped and stored under `logs/bana/`.
 
+## INANNA Integration
+
+Structured interactions from the INANNA agent flow through
+`agents.bana.inanna_bridge.process_interaction`, which forwards biosignal
+streams to :func:`generate_story`. Resulting narratives are persisted in the
+spiral multi‑layer memory and their quality metrics are relayed to the
+Primordials service via :mod:`connectors.primordials_api`, creating a feedback
+loop for narrative refinement.
+
 ## Output Paths
 
 | Artifact | Path |

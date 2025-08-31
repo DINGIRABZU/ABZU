@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/bana_engine.md:
-    sha256: 33184b164f2ea14748b1ab7a9afdfc837cf30c8836cb1384f255149e1fc5a6c4
+    sha256: 4e88e72c07ba5b7dbe5d4f81cdb05bd817196b5383e4eb1874e2212e322f5eba
     summary:
       purpose: Bana narrative engine guide.
       scope: Training data and workflow.
@@ -112,7 +112,7 @@ documents:
       key_rules: Maintain interface compatibility.
       insight: Maintain compatibility with listed interfaces.
   docs/component_index.md:
-    sha256: 5fba59a0267eb9edec5e42a6434213967cd013d040affebc6cef5c55f78d0662
+    sha256: 9b21067fb3dbb0b0390a68b7df325484db907eda6616f6c2c3068e3907e4f04d
     summary:
       purpose: Inventory of modules and services.
       scope: All components.
@@ -126,7 +126,7 @@ documents:
       key_rules: Document operator relay and logging.
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: c4f0862e712ca2d1402c35585776b86c86b17d246da65b797ae0dcf883d8c266
+    sha256: c3c49443e7d90cf203923835af1e8582e465aeef1caa981ff24a474cb976dac0
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
@@ -140,7 +140,7 @@ documents:
       key_rules: Follow connector subsystem guidelines.
       insight: Follow guidelines to ensure interoperability.
   docs/system_blueprint.md:
-    sha256: 9dbc78e94b65d33a06886a5eafae23d9f9564104061a40e65600c34fb50511c9
+    sha256: 697ddb8bfe8b4ae6ae94e0c889e64756d703e9c48560988f513b7bc6eadeec06
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -203,7 +203,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: dd5c31afabb6ccd853463f3930de2e99f825895feb884c1fc55aa08f5444808f
+    sha256: 8466796cff77a846cc013cabe1612166ebe630e14cc5273b3f5c95625038927b
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
