@@ -166,6 +166,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `communication/telegram_bot.py` | Telegram bot forwarding messages to the avatar. | telegram |
 | `communication/webrtc_server.py` | WebRTC signaling helpers and media tracks. | aiortc, core, mediasoup, numpy, soundfile |
 | `connectors/__init__.py` | Communication connectors for Spiral OS. | None |
+| `connectors/primordials_api.py` | Send narrative metrics to Primordials service. | urllib |
 | `connectors/webrtc_connector.py` | WebRTC connector for streaming data, audio, and video. | aiortc, communication, fastapi |
 | `corpus_memory_logging.py` | Append and read JSONL interaction records for corpus memory usage. | None |
 | `crown_config/__init__.py` | Load application configuration from environment variables. | pydantic, pydantic_settings |

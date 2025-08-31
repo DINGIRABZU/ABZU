@@ -7,6 +7,7 @@ from agents.nazarick.trust_matrix import TrustMatrix
 from ..guardian import run_validated_task
 
 from .bio_adaptive_narrator import generate_story
+from .inanna_bridge import process_interaction
 
 _manifesto = Manifesto()
 _trust_matrix = TrustMatrix()
@@ -21,4 +22,4 @@ def execute_task(action: str, entity: str, task, *args, **kwargs):
     )
 
 
-__all__ = ["generate_story", "execute_task"]
+__all__ = ["generate_story", "execute_task", "process_interaction"]

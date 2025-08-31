@@ -78,6 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   logging invocations and applied patch diffs.
 - AI handover now reads configurable agent endpoints and authentication
   tokens and retries components after automated patches are applied.
+- Routed INANNA interactions through Bana, storing narratives in spiral memory
+  and relaying quality metrics to the Primordials service.
 
 ### Quality
 

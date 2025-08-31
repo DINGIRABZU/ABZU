@@ -11,6 +11,6 @@ connector's interface changes. For shared patterns across connectors see the
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `operator_api` | operator command and upload interface | 0.3.0 | `POST /operator/command`, `POST /operator/upload` | Bearer (`operator` role) | Experimental | [Operator Protocol](../operator_protocol.md) | [operator_api.py](../../operator_api.py) |
 | `webrtc` | real-time avatar streaming bridge | 0.3.0 | `POST /call` | JWT | Experimental | [Nazarick Web Console](../nazarick_web_console.md) | [webrtc_connector.py](../../connectors/webrtc_connector.py) |
-| `primordials_api` | DeepSeek‑V3 orchestration service | 0.1.0 | `POST /invoke`, `POST /inspire`, `GET /health` | Internal bearer | Experimental | [Primordials Service](../primordials_service.md) | — |
+| `primordials_api` | DeepSeek‑V3 orchestration service | 0.1.0 | `POST /invoke`, `POST /inspire`, `GET /health` | Internal bearer | Experimental | [Primordials Service](../primordials_service.md) | [primordials_api.py](../../connectors/primordials_api.py) |
 | `crown` | Crown WebSocket and GLM endpoints | 0.1.0 | `WS /crown_link`, `POST /glm-command` | None (WS), Bearer (`glm_command_token`) | Experimental | [Crown Agent Overview](../CROWN_OVERVIEW.md) | [crown_link.py](../../agents/razar/crown_link.py) |
 | `future_connector` | placeholder for upcoming connectors | 0.0.0 | `TBD` | `TBD` | Planned | — | — |

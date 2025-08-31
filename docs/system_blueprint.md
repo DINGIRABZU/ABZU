@@ -28,6 +28,11 @@ with the Primordials LLM (DeepSeek‑V3), whose insights drive INANNA/Bana. Outp
 from INANNA/Bana returns to the operator via the same communication path,
 closing the loop and keeping the operator at the center of guidance.
 
+Narratives emitted by Bana are stored in the spiral multi‑layer memory and
+summary metrics are reported back to the Primordials service through
+`primordials_api`, ensuring upstream models receive continuous quality
+feedback.
+
 ### Document Map
 
 - **High‑level docs**

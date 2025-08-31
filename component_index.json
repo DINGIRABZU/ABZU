@@ -282,6 +282,20 @@
       "adr": null
     },
     {
+      "id": "primordials_api",
+      "chakra": "crown",
+      "type": "service",
+      "version": "0.1.0",
+      "path": "connectors/primordials_api.py",
+      "purpose": "Relay narrative metrics to the Primordials service",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {},
+      "ignition_stage": 2,
+      "adr": null
+    },
+    {
       "id": "webrtc_connector",
       "chakra": "crown",
       "type": "service",
