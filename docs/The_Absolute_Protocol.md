@@ -46,6 +46,7 @@ Before opening a pull request, confirm each item:
 - [ ] `onboarding_confirm.yml` records purpose, scope, key rules, and an actionable insight summary for each key document it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_hashes.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
+- [ ] Markdown links validated with `scripts/validate_links.py`
 - [ ] `DASHBOARD.md` metrics updated for each release cycle
 - [ ] `component_maturity.md` scoreboard updated
 - [ ] New operator channels documented in [Operator Protocol](operator_protocol.md)
@@ -160,7 +161,7 @@ similar to the RAZAR component links to summarize relationships:
 
 | Source Module | Companion Docs |
 | --- | --- |
-| [agents/example_agent.py](../agents/example_agent.py) | [example_agent.md](example_agent.md), [system_blueprint.md](system_blueprint.md) |
+| [agents/guardian.py](../agents/guardian.py) | [nazarick_agents.md](nazarick_agents.md), [system_blueprint.md](system_blueprint.md) |
 
 ### Nazarick Agent Update Requirements
 For any agent addition or change:
@@ -181,7 +182,7 @@ All diagrams must include a brief textual description and be expressed as Mermai
 
 ### Configuration File Documentation
 
-Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson) ([schema](schemas/boot_config.schema.json)), [primordials_config.yaml](primordials_service.md#primordials_configyaml) ([schema](schemas/primordials_config.schema.yaml)), and [operator_api.yaml](operator_protocol.md#operator_apiyaml) ([schema](schemas/operator_api.schema.yaml)). Log formats in the [logging guidelines](logging_guidelines.md) alongside [razar_state.json](RAZAR_AGENT.md#logsrazar_statejson) ([schema](schemas/razar_state.schema.json)) serve as additional references. Include example snippets such as:
+Any new configuration file must be accompanied by documentation that outlines its schema and includes a minimal working example. Review existing patterns such as [boot_config.json](RAZAR_AGENT.md#boot_configjson), [primordials_config.yaml](primordials_service.md#primordials_configyaml), and [operator_api.yaml](operator_protocol.md#operator_apiyaml). Log formats in the [logging guidelines](logging_guidelines.md) alongside [razar_state.json](RAZAR_AGENT.md#logsrazar_statejson) ([schema](schemas/razar_state.schema.json)) serve as additional references. Include example snippets such as:
 
 ```json
 // boot_config.json
@@ -353,6 +354,7 @@ Narrative modules must maintain traceability by:
 
 ## Maintenance Checklist
 - [ ] Regenerate `docs/INDEX.md` with `python tools/doc_indexer.py`.
+- [ ] Validate Markdown links with `python scripts/validate_links.py $(git ls-files '*.md')`.
 - [ ] Audit documents in KEY_DOCUMENTS.md quarterly and log overdue items with `scripts/schedule_doc_audit.py`.
 - [ ] Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
 - [ ] Run component tests with `pytest --cov` and attach the coverage badge or report to the PR.
