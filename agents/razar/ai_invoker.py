@@ -13,7 +13,7 @@ remote agent or a confirmation that no suggestion was provided.
 
 from __future__ import annotations
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 from datetime import datetime
 import json
@@ -27,7 +27,10 @@ logger = logging.getLogger(__name__)
 
 # Default paths used by this module
 CONFIG_PATH = Path(__file__).resolve().parents[2] / "config" / "razar_ai_agents.json"
-LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_ai_invocations.json"
+INVOCATION_LOG_PATH = (
+    Path(__file__).resolve().parents[2] / "logs" / "razar_ai_invocations.json"
+)
+PATCH_LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_ai_patches.json"
 
 __all__ = ["handover"]
 
@@ -85,22 +88,18 @@ def _select_agent(config: Dict[str, Any]) -> Tuple[str, str, str | None]:
     return name, endpoint, token
 
 
-def _append_log(entry: Dict[str, Any]) -> None:
-    """Append ``entry`` to :data:`LOG_PATH`.
-
-    ``entry`` should include an ``event`` field describing whether it represents
-    an ``invocation`` or a ``patch_result``.
-    """
-    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+def _append_log(path: Path, entry: Dict[str, Any]) -> None:
+    """Append ``entry`` to ``path``."""
+    path.parent.mkdir(parents=True, exist_ok=True)
     records: List[Dict[str, Any]] = []
-    if LOG_PATH.exists():
+    if path.exists():
         try:
-            raw = LOG_PATH.read_text(encoding="utf-8")
+            raw = path.read_text(encoding="utf-8")
             records = json.loads(raw)
         except json.JSONDecodeError:  # pragma: no cover - defensive
-            logger.warning("Could not decode %s; starting fresh", LOG_PATH)
+            logger.warning("Could not decode %s; starting fresh", path)
     records.append(entry)
-    LOG_PATH.write_text(json.dumps(records, indent=2, sort_keys=True), encoding="utf-8")
+    path.write_text(json.dumps(records, indent=2, sort_keys=True), encoding="utf-8")
 
 
 def handover(
@@ -128,13 +127,14 @@ def handover(
     name, endpoint, token = _select_agent(config)
 
     _append_log(
+        INVOCATION_LOG_PATH,
         {
             "event": "invocation",
             "name": name,
             "endpoint": endpoint,
             "timestamp": datetime.utcnow().isoformat(),
             "context": context,
-        }
+        },
     )
 
     patch_context: Dict[str, Any] | None = None
@@ -152,7 +152,7 @@ def handover(
     )
 
     log_entry: Dict[str, Any] = {
-        "event": "patch_result",
+        "event": "suggestion" if suggestion is not None else "no_suggestion",
         "name": name,
         "timestamp": datetime.utcnow().isoformat(),
     }
@@ -160,6 +160,6 @@ def handover(
         log_entry["config"] = agent_config
     if suggestion is not None:
         log_entry["suggestion"] = suggestion
-    _append_log(log_entry)
+    _append_log(PATCH_LOG_PATH, log_entry)
 
     return suggestion if suggestion is not None else {"handover": True}

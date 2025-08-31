@@ -28,6 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Added configurable agent endpoints and authentication tokens to
   `ai_invoker.handover` and retried components after patches are applied.
 - Operator uploads now store files under operator-specific paths and relay metadata through Crown to RAZAR.
+- Expanded remote assistance workflow with sequence diagram and dedicated invocation and patch logs.
+- Added unit tests for `ai_invoker.handover` and `code_repair.repair_module`.
 
 ### Changed
 - Boot orchestrator now persists the handshake response before starting

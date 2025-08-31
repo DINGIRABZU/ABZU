@@ -146,7 +146,6 @@ RAZAR operations revolve around several coordinated flows:
 
 - [Boot Flow](#boot-flow)
 - [Remote Assistance](#remote-assistance)
-- [AI Handover](#ai-handover)
 
 ## Boot Flow
 
@@ -189,22 +188,53 @@ The Mermaid source lives at [assets/razar_architecture.mmd](assets/razar_archite
 
 ## Remote Assistance
 
-RAZAR can delegate repairs to a remote helper when components fail repeatedly. The sequence below shows how the invoker requests help, applies the suggestion, and retries on failure:
+RAZAR can delegate recovery to an external AI agent when repeated failures block the boot sequence. The goal is to restore service while following repository safety rules.
 
-1. `ai_invoker` packages error context and contacts the remote agent.
-2. `code_repair` proposes a patch.
-3. Tests run against the patched component.
-4. If tests fail, the loop retries until success.
+Authorized handover agents, their endpoints, and authentication tokens live in [config/razar_ai_agents.json](../config/razar_ai_agents.json).
+
+### Workflow
+
+1. Repeated boot failures or missing components trigger the handover flag.
+2. `boot_orchestrator` calls [ai_invoker.handover](../agents/razar/ai_invoker.py), which selects the configured agent and logs the invocation to [`../logs/razar_ai_invocations.json`](../logs/razar_ai_invocations.json).
+3. The remote agent analyzes the context and returns a patch suggestion.
+4. The suggestion is logged to [`../logs/razar_ai_patches.json`](../logs/razar_ai_patches.json) and forwarded to [code_repair.repair_module](../agents/razar/code_repair.py).
+5. `code_repair` applies the patch in a sandbox, runs the supplied tests, and on success records the diff in `razar_ai_patches.json`.
+6. `boot_orchestrator` reloads the component and resumes the boot sequence. If tests fail, the patch is rolled back and the cycle repeats until the retry limit is reached.
 
 ```mermaid
-flowchart LR
-    ai_invoker[ai_invoker] --> code_repair[code_repair]
-    code_repair --> test[Test]
-    test --> retry[Retry]
-    retry --> ai_invoker
+sequenceDiagram
+    participant B as boot_orchestrator
+    participant I as ai_invoker
+    participant A as remote_agent
+    participant R as code_repair
+    participant T as tests
+    B->>I: handover(context)
+    I->>A: invoke agent
+    A-->>I: suggestion
+    I->>R: forward suggestion
+    R->>T: run tests
+    T-->>R: results
+    R-->>B: apply & restart
 ```
 
-The Mermaid source lives at [assets/razar_remote_flow.mmd](assets/razar_remote_flow.mmd).
+The Mermaid source lives at [assets/remote_assistance_sequence.mmd](assets/remote_assistance_sequence.mmd).
+
+### Logging
+
+- Invocations append records to [`../logs/razar_ai_invocations.json`](../logs/razar_ai_invocations.json).
+- Suggestions and applied diffs append records to [`../logs/razar_ai_patches.json`](../logs/razar_ai_patches.json).
+
+Each entry includes the agent name, timestamp, and relevant context for auditing.
+
+### Safety checks
+
+- Patches execute in a sandboxed environment.
+- Required tests must pass before restart.
+- Justification is logged and reviewed.
+
+### Rollback
+
+If tests fail or regressions appear, RAZAR reverts to the previous state and requests another fix.
 
 ## Module builder
 
@@ -775,53 +805,6 @@ Captures runtime state and handshake capabilities.
 }
 ```
 
-## AI Handover
-
-RAZAR can delegate recovery to an external AI agent when repeated failures block the boot sequence. The goal is to restore service while following repository safety rules.
-
-Authorized handover agents, their endpoints, and authentication tokens live in [config/razar_ai_agents.json](../config/razar_ai_agents.json).
-
-**Purpose**
-
-- Apply minimal patches or configuration tweaks under supervision.
-- Resume normal operation without manual intervention.
-
-**Invocation sequence**
-
-1. Repeated boot failures or missing components trigger the handover flag.
-2. `boot_orchestrator` calls [ai_invoker.py](../agents/razar/ai_invoker.py), which loads the active agent from `config/razar_ai_agents.json`, attaching any configured endpoint and authentication token to the failure context.
-3. The remote agent analyzes the context and drafts a fix using [code_repair.py](../agents/razar/code_repair.py) with justification per [The Absolute Protocol's change-justification rule](The_Absolute_Protocol.md#change-justification).
-4. `code_repair` applies the proposed patch in a sandbox, logs the resulting diff to [`../logs/razar_ai_patches.json`](../logs/razar_ai_patches.json), and runs component tests.
-5. If tests pass, `boot_orchestrator` reloads the component, retries the launch, and the handover concludes.
-6. If tests fail, RAZAR rolls back the patch and requests another fix, repeating steps 3–5 until the retry limit is reached.
-
-The handover flow:
-
-```mermaid
-flowchart LR
-    boot([Boot]) --> ai[AI invocation] --> patch[Patch] --> test[Test] --> restart[Restart]
-```
-
-The Mermaid source lives at [assets/ai_handover_flow.mmd](assets/ai_handover_flow.mmd).
-
-**Logging**
-
-Every invocation and resulting patch suggestion are appended to
-[`../logs/razar_ai_invocations.json`](../logs/razar_ai_invocations.json) for
-auditing. Each entry records the agent name, timestamp, any failure context
-forwarded, configuration returned by the agent, and the suggestion. When a
-patch is applied, the diff and tests executed are appended to
-[`../logs/razar_ai_patches.json`](../logs/razar_ai_patches.json).
-
-**Safety checks**
-
-- Patches execute in a sandboxed environment.
-- Required tests must pass before restart.
-- Justification is logged and reviewed.
-
-**Rollback**
-
-If tests fail or regressions appear, RAZAR reverts to the previous state and records the failure for manual review.
 
 ## Cross-Links
 
