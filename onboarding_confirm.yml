@@ -133,7 +133,7 @@ documents:
       key_rules: Document operator relay and logging.
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: b04f986afaf3b3c3a0b5e47ff2f5a0aec8a9de9b6b7f9f781d384de1c94292c8
+    sha256: 30412430b2d67aa69c22809e8be6a4fe1c82b61328cc82917b7ea09f818efdc5
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
@@ -151,7 +151,8 @@ documents:
     summary:
       purpose: Ensure connectors respond to health checks before merge.
       scope: All connectors.
-      key_rules: Run `python scripts/health_check_connectors.py` and merge only if it succeeds.
+      key_rules: Run `python scripts/health_check_connectors.py` and merge only if
+        it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
     sha256: 829f695e39205bfc9e698e44fc6b159cb290aef6209df27bf79f63f63e32865b
@@ -166,7 +167,8 @@ documents:
       purpose: List of essential repository documents.
       scope: Key repository guides.
       key_rules: Record hashes and four-part summaries for protected files.
-      insight: Ensure `onboarding_confirm.yml` includes purpose, scope, key rules, and insight for each key document.
+      insight: Ensure `onboarding_confirm.yml` includes purpose, scope, key rules,
+        and insight for each key document.
   docs/security_model.md:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary:
@@ -179,8 +181,11 @@ documents:
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      key_rules: Provide change justification, align __version__ with component_index.json, maintain key-document summaries, and ensure agent docs include Persona & Responsibilities and Component & Link sections.
-      insight: Align component versions and document summaries; run ignition validation via `validate_ignition.py` and consult `docs/ignition_flow.md` for the sequence.
+      key_rules: Provide change justification, align __version__ with component_index.json,
+        maintain key-document summaries, and ensure agent docs include Persona & Responsibilities
+        and Component & Link sections.
+      insight: Align component versions and document summaries; run ignition validation
+        via `validate_ignition.py` and consult `docs/ignition_flow.md` for the sequence.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
@@ -203,7 +208,7 @@ documents:
       key_rules: Keep implementations aligned with documented API.
       insight: Keep implementations aligned with documented API.
   docs/operator_protocol.md:
-    sha256: 7f92a3f3f118e48ac098fe10e01a946cd4e473ff097e4eb150b0a307061f86fa
+    sha256: b0968dbce29fcfa2d073df89e790b2ca2d66099df5b0eaa718db6e1c564fa45e
     summary:
       purpose: Operator interaction rules.
       scope: Operator channels.
@@ -217,7 +222,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: d3975e7a9f61d1c2ac27b94a97491495588159e179e8b8ded76b995ad9f2b142
+    sha256: 424d2744a3516d48eb257920576814bf2095d6d267213bbf03f01f4990378c4f
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
@@ -233,7 +238,8 @@ documents:
   docs/nazarick_narrative_system.md:
     sha256: 378dffc4746cdd3bb287a564a170beaade90513b6f75ca7fb40ccf8de85a2b0e
     summary:
-      purpose: Guide to how biosignals become narrative events within the Nazarick domain.
+      purpose: Guide to how biosignals become narrative events within the Nazarick
+        domain.
       scope: Nazarick narrative system.
       key_rules: Use defined agents and pipelines when transforming biosignals.
       insight: Reference for converting biosignals into multi-modal narrative outputs.
