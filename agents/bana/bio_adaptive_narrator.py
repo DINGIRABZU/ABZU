@@ -9,6 +9,8 @@ state. The main entry point is :func:`generate_story`.
 
 from typing import Iterable
 
+__version__ = "0.0.2"
+
 import numpy as np
 
 try:  # pragma: no cover - optional dependency
@@ -79,3 +81,6 @@ def generate_story(bio_stream: Iterable[float], sampling_rate: float = 1000.0) -
     DEFAULT_MEMORY.register_event(text, layers={"quality": [float(len(text))]})
     send_metrics({"story_length": len(text)})
     return text
+
+
+__all__ = ["generate_story", "__version__"]

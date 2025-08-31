@@ -340,12 +340,15 @@
       "id": "bana_engine",
       "chakra": "heart",
       "type": "agent",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "path": "agents/bana",
       "purpose": "Biosignal-driven narrative generation",
       "dependencies": [
+        "agents.event_bus",
         "biosppy",
+        "connectors.primordials_api",
         "numpy",
+        "spiral_memory",
         "transformers"
       ],
       "tests": [

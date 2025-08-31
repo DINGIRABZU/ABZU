@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/bana_engine.md:
-    sha256: 4e88e72c07ba5b7dbe5d4f81cdb05bd817196b5383e4eb1874e2212e322f5eba
+    sha256: 878ab78976e9d7f39d9d96eabbbc9cb2442e412080fcdb1d62bab9a72a991518
     summary:
       purpose: Bana narrative engine guide.
       scope: Training data and workflow.
