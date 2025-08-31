@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.0.2"
+
 from agents.nazarick.ethics_manifesto import Manifesto
 from agents.nazarick.trust_matrix import TrustMatrix
 from ..guardian import run_validated_task
@@ -22,4 +24,4 @@ def execute_task(action: str, entity: str, task, *args, **kwargs):
     )
 
 
-__all__ = ["generate_story", "execute_task", "process_interaction"]
+__all__ = ["generate_story", "execute_task", "process_interaction", "__version__"]
