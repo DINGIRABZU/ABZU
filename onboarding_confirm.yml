@@ -146,6 +146,13 @@ documents:
       scope: Connector development.
       key_rules: Follow connector subsystem guidelines.
       insight: Follow guidelines to ensure interoperability.
+  docs/connector_health_protocol.md:
+    sha256: 597b0e1eac92b1b6f7a3a1a97e2b403afaa12c3611da2b209357352971cefa60
+    summary:
+      purpose: Ensure connectors respond to health checks before merge.
+      scope: All connectors.
+      key_rules: Run `python scripts/health_check_connectors.py` and merge only if it succeeds.
+      insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
     sha256: 829f695e39205bfc9e698e44fc6b159cb290aef6209df27bf79f63f63e32865b
     summary:
@@ -168,7 +175,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: bd134279933873b22635c2e59397004173c028031dd8424b2bd56929b8dfe76c
+    sha256: fed11bff46b0a0fd5305b44c94e794a3f61ad6436ccead413271ffd49405ee11
     summary:
       purpose: Core contribution rules.
       scope: All contributors.

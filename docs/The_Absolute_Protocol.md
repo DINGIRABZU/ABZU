@@ -29,6 +29,7 @@ Before opening a pull request, confirm each item:
   - implementations expose `__version__` matching `component_index.json`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
   - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and links
+- [ ] Connector health check passes – run `python scripts/health_check_connectors.py` and ensure all connectors report healthy
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
 - [ ] Pull request includes a change-justification: "I did X on Y to obtain Z, expecting behavior B."
@@ -215,6 +216,7 @@ Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNEC
 - [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
 - [Logging & Observability Protocol](#logging--observability-protocol) – structured logging and metrics requirements.
 - [Crown Handshake Protocol](#crown-handshake-protocol) – archives mission briefs and persists handshake responses.
+- [Connector Health Protocol](connector_health_protocol.md) – run `scripts/health_check_connectors.py` and merge only when all connectors are healthy.
 
 ### Crown Handshake Protocol
 
