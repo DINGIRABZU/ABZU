@@ -21,6 +21,26 @@ launches each service in priority order. By aligning this startup flow with the
 architecture outlined in the [System Blueprint](system_blueprint.md), RAZAR acts
 as the bootstrap agent that grounds ABZU in a coherent foundation.
 
+## Submodules
+
+| Submodule | Responsibility | Chakra Alignment | Source Path | Downstream Agents |
+|-----------|----------------|-----------------|-------------|-------------------|
+| `adaptive_orchestrator.py` | Searches for efficient boot sequences using component priorities and history. | Crown | [`razar/adaptive_orchestrator.py`](../razar/adaptive_orchestrator.py) | [`checkpoint_manager.py`](../razar/checkpoint_manager.py) |
+| `boot_orchestrator.py` | Launches components, runs health checks, and negotiates Crown capabilities. | Root | [`razar/boot_orchestrator.py`](../razar/boot_orchestrator.py) | [`crown_handshake.py`](../razar/crown_handshake.py), [`service_launcher`](../agents/nazarick/service_launcher.py) |
+| `checkpoint_manager.py` | Persists boot progress so adaptive runs can resume after failures. | Root | [`razar/checkpoint_manager.py`](../razar/checkpoint_manager.py) | [`adaptive_orchestrator.py`](../razar/adaptive_orchestrator.py) |
+| `cocreation_planner.py` | Merges blueprints, failure counts, and Crown advice into build plans. | Crown | [`razar/cocreation_planner.py`](../razar/cocreation_planner.py) | [`crown_link.py`](../razar/crown_link.py) |
+| `crown_handshake.py` | Performs startup handshake with the CROWN stack and records capabilities. | Crown | [`razar/crown_handshake.py`](../razar/crown_handshake.py) | [CROWN agent](CROWN_OVERVIEW.md) |
+| `crown_link.py` | WebSocket bridge for diagnostics and repair requests. | Crown | [`razar/crown_link.py`](../razar/crown_link.py) | [CROWN agent](CROWN_OVERVIEW.md) |
+| `doc_sync.py` | Regenerates ignition and blueprint docs based on runtime state. | Throat | [`razar/doc_sync.py`](../razar/doc_sync.py) | [`lifecycle_bus`](../agents/razar/lifecycle_bus.py) |
+| `environment_builder.py` | Creates isolated Python environments and installs per-layer dependencies. | Root | [`razar/environment_builder.py`](../razar/environment_builder.py) | [`boot_orchestrator.py`](../razar/boot_orchestrator.py) |
+| `health_checks.py` | Provides ready signals and subprocess health probes for components. | Root | [`razar/health_checks.py`](../razar/health_checks.py) | [`boot_orchestrator.py`](../razar/boot_orchestrator.py) |
+| `issue_analyzer.py` | Classifies failure logs into dependency, logic, or external issues. | Third Eye | [`razar/issue_analyzer.py`](../razar/issue_analyzer.py) | [`recovery_manager.py`](../razar/recovery_manager.py) |
+| `mission_logger.py` | Proxies mission events to the full agents module without heavy imports. | Heart | [`razar/mission_logger.py`](../razar/mission_logger.py) | [`agents/razar/mission_logger.py`](../agents/razar/mission_logger.py) |
+| `module_sandbox.py` | Applies Crown-suggested patches in an isolated workspace before promotion. | Crown | [`razar/module_sandbox.py`](../razar/module_sandbox.py) | [`code_repair.py`](../agents/razar/code_repair.py) |
+| `quarantine_manager.py` | Moves failing components to isolation and logs diagnostic context. | Root | [`razar/quarantine_manager.py`](../razar/quarantine_manager.py) | [`recovery_manager.py`](../razar/recovery_manager.py) |
+| `recovery_manager.py` | Coordinates shutdown, patching, and resumption workflows. | Crown | [`razar/recovery_manager.py`](../razar/recovery_manager.py) | [`code_repair.py`](../agents/razar/code_repair.py) |
+| `status_dashboard.py` | CLI dashboard summarising boot progress and quarantine state. | Throat | [`razar/status_dashboard.py`](../razar/status_dashboard.py) | [`quarantine_manager.py`](../razar/quarantine_manager.py) |
+
 ## Module Coverage
 
 Tests in [`tests/agents/razar/`](../tests/agents/razar/) exercise the boot
