@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linked Operator Protocol from RAZAR agent guide and regenerated docs index.
 - Introduced Connector Health Protocol requiring `scripts/health_check_connectors.py` to pass before merging.
 - Clarified Change Justification rule with mandatory "I did X on Y to obtain Z, expecting behavior B" template.
+- Documented Crown service wake sequence linking servant launch scripts and required `SERVANT_MODELS`/`NAZARICK_ENV` settings; cross-linked ignition flow and regenerated docs index.
 
 ### Added
 

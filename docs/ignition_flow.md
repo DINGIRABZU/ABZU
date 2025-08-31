@@ -29,6 +29,7 @@ graph LR
 
 ### Crown
 - Guide: [Crown Overview](CROWN_OVERVIEW.md)
+- Service wake sequence: [Service Wake Sequence](CROWN_OVERVIEW.md#service-wake-sequence)
 - Source: [`crown_router.py`](../crown_router.py)
 
 ### INANNA
