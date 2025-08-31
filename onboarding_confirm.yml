@@ -133,14 +133,14 @@ documents:
       key_rules: Document operator relay and logging.
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: 046cd47c35ddecc034ed5a6a6bebd85e5763d27f79440e2536988702a87911b2
+    sha256: b04f986afaf3b3c3a0b5e47ff2f5a0aec8a9de9b6b7f9f781d384de1c94292c8
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
       key_rules: Update registry when connector changes.
       insight: Ensure this registry entry is revised whenever a connector changes.
   docs/connectors/README.md:
-    sha256: c5aaeeafce2649d5c1bcd6b0501c39aff1c87ea4ee73b1397ba9fa99a786922d
+    sha256: 4ddf766eb9f046673acbdc4a52f2a99111221f7b8fdeb7837abca93e7762f76b
     summary:
       purpose: Connector subsystem guidelines.
       scope: Connector development.
@@ -161,7 +161,7 @@ documents:
       key_rules: Align changes with blueprint structure.
       insight: Align changes with blueprint structure.
   docs/KEY_DOCUMENTS.md:
-    sha256: b11276c9d9b5ac0bb005f5c51664e85279e0b80095c9b829f43d78fac14e18b8
+    sha256: aa1ff0f09543cb28c5a7c954cbcc737208225da05251b1e1715df56d28c96f94
     summary:
       purpose: List of essential repository documents.
       scope: Key repository guides.
@@ -175,7 +175,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 3a04b20cc7d2254f9ddadf96d8f559598e005e82ceaed51ecf06113cfb5792f9
+    sha256: 5aee0d9e2067a375c9b293528f1e7984f18da82ddc6170425834a46fcf00bff7
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -217,7 +217,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 5728a7a2cdfb53de4acdeeeac8e5f2e1d2b17d5e9d2b6a5476e38220c6d1e0ce
+    sha256: 20521d8900fb7b6ef726e25bc48a39416ff476e955c15c096d6288dd3c1f8cbc
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.

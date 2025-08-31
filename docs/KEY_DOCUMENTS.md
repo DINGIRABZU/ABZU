@@ -28,7 +28,7 @@ Omitting any field fails verification checks enforced by `scripts/verify_doc_has
 | [Project Mission & Vision](project_mission_vision.md) | Unified mission, vision, and purpose | Quarterly |
 | [Component Index](component_index.md) | Inventory of modules and services | Quarterly |
 | [Component Status](component_status.md) | Tracks component readiness | Quarterly |
-| [Connector Index](connectors/CONNECTOR_INDEX.md) | Canonical registry of connector IDs, purpose, versions, endpoints, auth methods, status, and links to docs and source code. Update this index whenever connector details change. | Quarterly |
+| [Connector Index](connectors/CONNECTOR_INDEX.md) | Canonical registry of connector IDs with purpose, version, endpoints, linked agents, status, and operator interface flows (chat, file, image, audio, video). Update this index whenever connector details change. | Quarterly |
 | [Connector Overview](connectors/README.md) | Maintenance rules and schema templates for connector implementations | Quarterly |
 | [Connector Health Protocol](connector_health_protocol.md) | Requires `scripts/health_check_connectors.py` to pass before merging | Quarterly |
 | [Security Model](security_model.md) | Threat modeling and protections | Quarterly |
