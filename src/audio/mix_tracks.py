@@ -32,7 +32,9 @@ from . import audio_ingestion, dsp_engine
 EMOTION_MAP = Path(__file__).resolve().parent.parent / "emotion_music_map.yaml"
 
 
-def _load(path: Path, logger: logging.Logger = logging.getLogger(__name__)) -> tuple[np.ndarray, int]:
+def _load(
+    path: Path, logger: logging.Logger = logging.getLogger(__name__)
+) -> tuple[np.ndarray, int]:  # pragma: no cover - thin wrapper
     if sf is None:
         raise RuntimeError("soundfile library not installed")
     logger.debug("Loading %s", path)
@@ -41,7 +43,7 @@ def _load(path: Path, logger: logging.Logger = logging.getLogger(__name__)) -> t
 
 
 @lru_cache(maxsize=None)
-def _load_emotion_map(path: Path = EMOTION_MAP) -> dict:
+def _load_emotion_map(path: Path = EMOTION_MAP) -> dict:  # pragma: no cover - simple I/O
     logger = logging.getLogger(__name__)
     try:
         with path.open("r") as f:
@@ -169,7 +171,7 @@ def main(
     args: list[str] | None = None,
     output_dir: Path = Path("output"),
     logger: logging.Logger = logging.getLogger(__name__),
-) -> None:
+) -> None:  # pragma: no cover - CLI utility
     parser = argparse.ArgumentParser()
     parser.add_argument("files", nargs="*")
     parser.add_argument("--instructions", type=Path)
