@@ -34,14 +34,14 @@
         "pyyaml",
         "prometheus_client"
       ],
-        "tests": [
-            "tests/test_razar_health_checks.py",
-            "tests/agents/razar/test_boot_orchestrator.py",
-            "tests/agents/razar/test_boot_orchestrator_logging.py",
-            "tests/agents/razar/test_crown_handshake.py",
-            "tests/ignition/test_full_stack.py",
-            "tests/ignition/test_crown_wakes_services.py"
-        ],
+      "tests": [
+        "tests/test_razar_health_checks.py",
+        "tests/agents/razar/test_boot_orchestrator.py",
+        "tests/agents/razar/test_boot_orchestrator_logging.py",
+        "tests/agents/razar/test_crown_handshake.py",
+        "tests/ignition/test_full_stack.py",
+        "tests/ignition/test_crown_wakes_services.py"
+      ],
       "status": "active",
       "metrics": {
         "coverage": 1.0
@@ -429,6 +429,22 @@
         "coverage": 0.0
       },
       "ignition_stage": 5,
+      "adr": null
+    },
+    {
+      "id": "nazarick_agent_registry",
+      "chakra": "crown",
+      "type": "config",
+      "version": "0.1.0",
+      "path": "agents/nazarick/agent_registry.yaml",
+      "purpose": "Registry of Nazarick agents and launch metadata",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 0,
       "adr": null
     }
   ]

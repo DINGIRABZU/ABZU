@@ -1,0 +1,21 @@
+agents:
+  - id: orchestration_master
+    launch: "./launch_servants.sh orchestration_master"
+    chakra: crown
+    channel: "#throne-room"
+    description: Boot order and pipeline supervision.
+  - id: prompt_orchestrator
+    launch: "./launch_servants.sh crown_prompt_orchestrator"
+    chakra: throat
+    channel: "#signal-hall"
+    description: Route prompts and recall context.
+  - id: qnl_engine
+    launch: "./launch_servants.sh qnl_engine"
+    chakra: third_eye
+    channel: "#insight-observatory"
+    description: Process QNL sequences and insights.
+  - id: memory_scribe
+    launch: "./launch_servants.sh memory_scribe"
+    chakra: heart
+    channel: "#memory-vault"
+    description: Persist transcripts and embeddings.

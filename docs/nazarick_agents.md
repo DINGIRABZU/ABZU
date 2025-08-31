@@ -6,6 +6,32 @@ Activation events are logged to `logs/nazarick_startup.json` for auditability.
 For a browser-based interface to these servants, see the [Nazarick Web Console](nazarick_web_console.md).
 [Chat2DB](chat2db.md) bridges the SQLite log and vector store so agents can persist transcripts and retrieve relevant context.
 
+## Agent Registry
+
+Core servant metadata is defined in the
+[`agents/nazarick/agent_registry.yaml`](../agents/nazarick/agent_registry.yaml)
+file. Each entry provides five fields:
+
+- `id` – unique agent identifier
+- `launch` – command used to start the servant
+- `chakra` – associated chakra layer
+- `channel` – communication channel or chat room
+- `description` – short summary of responsibilities
+
+Example:
+
+```yaml
+agents:
+  - id: orchestration_master
+    launch: "./launch_servants.sh orchestration_master"
+    chakra: crown
+    channel: "#throne-room"
+    description: Boot order and pipeline supervision.
+```
+
+The service launcher reads this registry to determine which agents to
+activate.
+
 ## Deployment Commands
 
 Standard scripts cover common scenarios:
