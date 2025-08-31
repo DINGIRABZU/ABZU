@@ -8,15 +8,14 @@ Run [`scripts/validate_ignition.py`](../scripts/validate_ignition.py) to walk th
 graph LR
     RAZAR[RAZAR] --> Crown[Crown]
     Crown --> INANNA[INANNA]
-    INANNA --> Albedo[Albedo]
-    Albedo --> Nazarick[Nazarick]
-    Nazarick --> Bana[Bana]
+    INANNA --> Memory[Memory Layers]
+    Memory --> Bana[Bana]
     Bana --> Operator[Operator Interface]
+    RAZAR -.-> Bana
     click RAZAR "RAZAR_AGENT.md" "RAZAR guide"
     click Crown "CROWN_OVERVIEW.md" "Crown overview"
     click INANNA "INANNA_CORE.md" "INANNA core"
-    click Albedo "ALBEDO_LAYER.md" "Albedo layer"
-    click Nazarick "nazarick_narrative_system.md" "Nazarick narrative system"
+    click Memory "memory_architecture.md" "Memory architecture"
     click Bana "bana_engine.md" "Bana engine"
     click Operator "operator_protocol.md" "Operator protocol"
 ```
@@ -36,16 +35,13 @@ graph LR
 - Guide: [INANNA Core](INANNA_CORE.md)
 - Source: [`INANNA_AI_AGENT/inanna_ai.py`](../INANNA_AI_AGENT/inanna_ai.py)
 
-### Albedo
-- Guide: [Albedo Layer](ALBEDO_LAYER.md)
-- Source: [`albedo/state_machine.py`](../albedo/state_machine.py)
-
-### Nazarick
-- Guide: [Nazarick Narrative System](nazarick_narrative_system.md)
-- Source: [`agents/nazarick/narrative_scribe.py`](../agents/nazarick/narrative_scribe.py)
+### Memory Layers
+- Guide: [Memory Architecture](memory_architecture.md)
+- Source: [`memory`](../memory)
 
 ### Bana
 - Guide: [Bana Engine](bana_engine.md)
+- Trigger: Activated by RAZAR after memory initialization
 - Source: [`agents/bana/bio_adaptive_narrator.py`](../agents/bana/bio_adaptive_narrator.py)
 
 ### Operator Interface
