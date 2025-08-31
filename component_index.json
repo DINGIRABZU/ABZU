@@ -434,7 +434,41 @@
       "path": "bana/event_structurizer.py",
       "purpose": "Translate biosignals into schema-validated events",
       "dependencies": ["jsonschema"],
-      "tests": [],
+      "tests": [
+        "tests/bana/test_event_structurizer.py"
+      ],
+      "status": "experimental",
+      "metrics": {"coverage": 1.0},
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "core_memory_physical",
+      "chakra": "root",
+      "type": "module",
+      "version": "0.1.0",
+      "path": "src/core/memory_physical.py",
+      "purpose": "Persist raw physical inputs and metadata",
+      "dependencies": [],
+      "tests": [
+        "tests/core/test_memory_physical.py"
+      ],
+      "status": "experimental",
+      "metrics": {"coverage": 1.0},
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "audio_mix_tracks",
+      "chakra": "throat",
+      "type": "module",
+      "version": "0.1.0",
+      "path": "src/audio/mix_tracks.py",
+      "purpose": "Combine audio stems into multi-track outputs",
+      "dependencies": [],
+      "tests": [
+        "tests/audio/test_mix_tracks.py"
+      ],
       "status": "experimental",
       "metrics": {"coverage": 1.0},
       "ignition_stage": 4,

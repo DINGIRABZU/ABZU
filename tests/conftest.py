@@ -244,6 +244,10 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_operator_api.py"),
     str(ROOT / "tests" / "ignition" / "test_full_stack.py"),
     str(ROOT / "tests" / "ignition" / "test_validate_ignition_script.py"),
+    str(ROOT / "tests" / "bana" / "test_event_structurizer.py"),
+    str(ROOT / "tests" / "core" / "test_memory_physical.py"),
+    str(ROOT / "tests" / "audio" / "test_mix_tracks.py"),
+    str(ROOT / "tests" / "integration" / "test_mix_and_store.py"),
 }
 
 

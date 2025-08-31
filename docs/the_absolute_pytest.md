@@ -18,6 +18,22 @@
 
 Run tests as usual and inspect the metrics file or have Prometheus scrape the path for dashboarding and alerting.
 
+## Component Tests
+
+Run targeted tests for event structuring, persistence, and multi-track mixing:
+
+```bash
+pytest tests/bana/test_event_structurizer.py \
+       tests/core/test_memory_physical.py \
+       tests/audio/test_mix_tracks.py \
+       tests/integration/test_mix_and_store.py \
+       --cov=bana/event_structurizer.py \
+       --cov=src/core/memory_physical.py \
+       --cov=src/audio/mix_tracks.py
+```
+
+The coverage gauges in `monitoring/pytest_metrics.prom` should report ≥90% for these modules.
+
 ## Dashboard Setup
 
 1. Configure Prometheus to watch `monitoring/pytest_metrics.prom` using a `file_sd_config` target.
