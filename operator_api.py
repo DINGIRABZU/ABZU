@@ -2,15 +2,18 @@
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 import json
+import logging
 import shutil
 from pathlib import Path
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from agents.operator_dispatcher import OperatorDispatcher
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 _dispatcher = OperatorDispatcher(
@@ -40,6 +43,9 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
         result = _dispatcher.dispatch(operator, agent, _noop)
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except Exception as exc:  # pragma: no cover - dispatcher failure
+        logger.error("dispatch failed: %s", exc)
+        raise HTTPException(status_code=500, detail="dispatch failed") from exc
     return {"result": result}
 
 
@@ -61,9 +67,13 @@ async def upload_file(
     stored: list[str] = []
     for item in files:
         dest = upload_dir / item.filename
-        with dest.open("wb") as fh:
-            shutil.copyfileobj(item.file, fh)
-        stored.append(str(dest.relative_to(Path("uploads"))))
+        try:
+            with dest.open("wb") as fh:
+                shutil.copyfileobj(item.file, fh)
+            stored.append(str(dest.relative_to(Path("uploads"))))
+        except Exception as exc:  # pragma: no cover - disk failure
+            logger.error("failed to store %s: %s", item.filename, exc)
+            raise HTTPException(status_code=500, detail="failed to store file") from exc
 
     def _relay(meta: dict[str, object]) -> dict[str, object]:
         """Crown forwards metadata and stored paths to RAZAR."""
@@ -79,6 +89,9 @@ async def upload_file(
         _dispatcher.dispatch(operator, "crown", _relay, meta_with_files)
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except Exception as exc:  # pragma: no cover - dispatcher failure
+        logger.error("metadata relay failed: %s", exc)
+        raise HTTPException(status_code=500, detail="relay failed") from exc
 
     return {"stored": stored, "metadata": meta_with_files}
 

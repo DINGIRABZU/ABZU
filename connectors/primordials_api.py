@@ -7,18 +7,21 @@ lightweight and relies only on the standard library to avoid additional
 runtime dependencies.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import json
+import logging
 import os
 import urllib.request
-from typing import Mapping, Any
+from typing import Any, Mapping
 
+
+logger = logging.getLogger(__name__)
 
 _PRIMORDIALS_URL = os.getenv("PRIMORDIALS_API_URL", "http://localhost:8000")
 
 
-def send_metrics(metrics: Mapping[str, Any]) -> None:
+def send_metrics(metrics: Mapping[str, Any]) -> bool:
     """POST ``metrics`` to the Primordials service.
 
     Parameters
@@ -34,10 +37,24 @@ def send_metrics(metrics: Mapping[str, Any]) -> None:
     )
     try:
         with urllib.request.urlopen(req, timeout=5):  # pragma: no cover - network
-            pass
-    except Exception:
-        # Best-effort; failures are logged silently to avoid raising in calling code.
-        return
+            return True
+    except Exception as exc:  # pragma: no cover - network
+        logger.warning("failed to send metrics: %s", exc)
+        return False
 
 
-__all__ = ["send_metrics"]
+def check_health() -> bool:
+    """Return ``True`` if the Primordials service responds to ``/health``."""
+
+    url = f"{_PRIMORDIALS_URL}/health"
+    try:
+        with urllib.request.urlopen(
+            url, timeout=5
+        ) as resp:  # pragma: no cover - network
+            return resp.status == 200
+    except Exception as exc:  # pragma: no cover - network
+        logger.warning("primordials health check failed: %s", exc)
+        return False
+
+
+__all__ = ["send_metrics", "check_health"]
