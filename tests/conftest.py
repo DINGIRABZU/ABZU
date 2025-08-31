@@ -10,11 +10,13 @@ import shutil
 import sys
 import time
 from pathlib import Path
-import corpus_memory_logging
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
+
+import corpus_memory_logging
+
 FAIL_LOG = ROOT / "logs" / "pytest.log"
 
 # Prometheus metrics for test observability

@@ -1,0 +1,152 @@
+===================================================== test session starts ======================================================
+platform linux -- Python 3.12.10, pytest-8.4.1, pluggy-1.6.0 -- /root/.pyenv/versions/3.12.10/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /workspace/ABZU
+configfile: pytest.ini
+plugins: langsmith-0.4.21, requests-mock-1.12.1, cov-6.2.1, anyio-4.10.0
+collecting ... 
+----------------------------------------------------- live log collection ------------------------------------------------------
+WARNING  env_validation:env_validation.py:40 Optional package scapy not available: No module named 'scapy'
+WARNING  env_validation:env_validation.py:40 Optional package sentence_transformers not available: No module named 'transformers.configuration_utils'
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:40 Optional package scapy not available: No module named 'scapy'
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:40 Optional package scapy not available: No module named 'scapy'
+WARNING  env_validation:env_validation.py:40 Optional package scapy not available: No module named 'scapy'
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+WARNING  env_validation:env_validation.py:74 Missing optional audio binaries: ffmpeg, sox
+collected 791 items / 6 errors / 2 skipped
+
+============================================================ ERRORS ============================================================
+_________________________________________ ERROR collecting tests/test_dashboard_app.py _________________________________________
+tests/test_dashboard_app.py:10: in <module>
+    from streamlit.testing.v1 import AppTest
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/__init__.py:78: in <module>
+    from streamlit.delta_generator import DeltaGenerator as _DeltaGenerator
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/delta_generator.py:75: in <module>
+    from streamlit.elements.plotly_chart import PlotlyMixin
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/elements/plotly_chart.py:59: in <module>
+    configure_streamlit_plotly_theme()
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/elements/lib/streamlit_plotly_theme.py:130: in configure_streamlit_plotly_theme
+    textfont=go.icicle.Textfont(color="white")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/graph_objs/icicle/_textfont.py:568: in __init__
+    self._set_property("color", arg, color)
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/_plotly_utils/basevalidators.py:1343: in validate_coerce
+    v = copy_to_readonly_numpy_array(v)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/_plotly_utils/basevalidators.py:130: in copy_to_readonly_numpy_array
+    elif v.dtype.kind in numeric_kinds:
+         ^^^^^^^
+E   AttributeError: 'str' object has no attribute 'dtype'
+______________________________________ ERROR collecting tests/test_dashboard_qnl_mixer.py ______________________________________
+tests/test_dashboard_qnl_mixer.py:10: in <module>
+    from streamlit.testing.v1 import AppTest
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/__init__.py:78: in <module>
+    from streamlit.delta_generator import DeltaGenerator as _DeltaGenerator
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/delta_generator.py:75: in <module>
+    from streamlit.elements.plotly_chart import PlotlyMixin
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/elements/plotly_chart.py:59: in <module>
+    configure_streamlit_plotly_theme()
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/streamlit/elements/lib/streamlit_plotly_theme.py:130: in configure_streamlit_plotly_theme
+    textfont=go.icicle.Textfont(color="white")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/graph_objs/icicle/_textfont.py:568: in __init__
+    self._set_property("color", arg, color)
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/_plotly_utils/basevalidators.py:1343: in validate_coerce
+    v = copy_to_readonly_numpy_array(v)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/_plotly_utils/basevalidators.py:130: in copy_to_readonly_numpy_array
+    elif v.dtype.kind in numeric_kinds:
+         ^^^^^^^
+E   AttributeError: 'str' object has no attribute 'dtype'
+______________________________________ ERROR collecting tests/test_emotion_classifier.py _______________________________________
+tests/test_emotion_classifier.py:22: in <module>
+    from ml import emotion_classifier as ec
+ml/emotion_classifier.py:11: in <module>
+    from sklearn.ensemble import RandomForestClassifier
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/sklearn/ensemble/__init__.py:16: in <module>
+    from ._hist_gradient_boosting.gradient_boosting import (
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py:54: in <module>
+    from .grower import TreeGrower
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/sklearn/ensemble/_hist_gradient_boosting/grower.py:27: in <module>
+    from .splitting import Splitter
+sklearn/ensemble/_hist_gradient_boosting/splitting.pyx:203: in init sklearn.ensemble._hist_gradient_boosting.splitting
+    ???
+E   AttributeError: 'types.SimpleNamespace' object has no attribute 'RandomState'
+______________________________________ ERROR collecting tests/test_quarantine_manager.py _______________________________________
+import file mismatch:
+imported module 'test_quarantine_manager' has this __file__ attribute:
+  /workspace/ABZU/tests/agents/razar/test_quarantine_manager.py
+which is not the same as the test file we want to collect:
+  /workspace/ABZU/tests/test_quarantine_manager.py
+HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules
+_________________________________________ ERROR collecting tests/test_vector_memory.py _________________________________________
+import file mismatch:
+imported module 'test_vector_memory' has this __file__ attribute:
+  /workspace/ABZU/tests/memory/test_vector_memory.py
+which is not the same as the test file we want to collect:
+  /workspace/ABZU/tests/test_vector_memory.py
+HINT: remove __pycache__ / .pyc files and/or use a unique basename for your test file modules
+_______________________________________ ERROR collecting tests/test_voice_cloner_cli.py ________________________________________
+ImportError while importing test module '/workspace/ABZU/tests/test_voice_cloner_cli.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/_pytest/python.py:498: in importtestmodule
+    mod = import_path(
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/root/.pyenv/versions/3.12.10/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/test_voice_cloner_cli.py:54: in <module>
+    from src.cli.voice_clone import main as cli_main
+src/cli/__init__.py:14: in <module>
+    from .voice import main as voice_main
+src/cli/voice.py:12: in <module>
+    from core import avatar_expression_engine, load_config
+E   ImportError: cannot import name 'load_config' from 'core' (unknown location)
+=================================================== short test summary info ====================================================
+ERROR tests/test_dashboard_app.py - AttributeError: 'str' object has no attribute 'dtype'
+ERROR tests/test_dashboard_qnl_mixer.py - AttributeError: 'str' object has no attribute 'dtype'
+ERROR tests/test_emotion_classifier.py - AttributeError: 'types.SimpleNamespace' object has no attribute 'RandomState'
+ERROR tests/test_quarantine_manager.py
+ERROR tests/test_vector_memory.py
+ERROR tests/test_voice_cloner_cli.py
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 6 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+================================================ 2 skipped, 6 errors in 16.34s =================================================
