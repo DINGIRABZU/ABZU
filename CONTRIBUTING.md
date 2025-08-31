@@ -128,7 +128,9 @@ Before submitting a pull request, confirm:
   - Increment `__version__` in all affected modules and connectors
   - Update connector registry entries after interface changes
 - **Change justification**
-  - Summarize the purpose of modifications in commits and the PR description
+  - Use the template "I did X on Y to obtain Z, expecting behavior B." in commits and the pull request description
+- **Connector health**
+  - `python scripts/health_check_connectors.py` reports all connectors healthy before merging
 
 ## Pull Requests
 

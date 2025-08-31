@@ -19,6 +19,7 @@ This requirement is reinforced by The Absolute Protocol's
 | [Component Status](component_status.md) | Tracks component readiness | Quarterly |
 | [Connector Index](connectors/CONNECTOR_INDEX.md) | Canonical registry of connector IDs, purpose, versions, endpoints, auth methods, status, and links to docs and source code. Update this index whenever connector details change. | Quarterly |
 | [Connector Overview](connectors/README.md) | Maintenance rules and schema templates for connector implementations | Quarterly |
+| [Connector Health Protocol](connector_health_protocol.md) | Requires `scripts/health_check_connectors.py` to pass before merging | Quarterly |
 | [Security Model](security_model.md) | Threat modeling and protections | Quarterly |
 | [Data Security and Compliance](data_security.md) | Compliance requirements | Quarterly |
 | [Data Manifest](data_manifest.md) | Data sources and types | Quarterly |
