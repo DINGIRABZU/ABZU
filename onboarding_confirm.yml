@@ -133,7 +133,7 @@ documents:
       key_rules: Document operator relay and logging.
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: c3c49443e7d90cf203923835af1e8582e465aeef1caa981ff24a474cb976dac0
+    sha256: b196a269c7ab601c600b585911ddbb8dc2fc0e52b0ca081e921d5145a7b4bcec
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
@@ -168,7 +168,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 925d75fb5e4d2231588c7f1189daf3535c82407e8ac05fd18375aea18a7e501e
+    sha256: 1dcc411ed91524d205a012e4d86ed5387e66d00a3a5d5d373d522138cbfdd67e
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -210,7 +210,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 8a09e9a8f957be5ba1f4e92c98aa7ed68f2fd6a532e65e05a99a7197c6f21705
+    sha256: bb8e13decdb82211ed8e0161f3355a82a27b8ca86ae592f1f182762d73c3f9db
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
