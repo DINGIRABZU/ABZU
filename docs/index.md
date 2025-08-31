@@ -10,6 +10,7 @@ Curated starting points for understanding and operating the project. For an exha
 ## Nazarick
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
 - [Nazarick Agents](nazarick_agents.md)
+- [Nazarick Narrative System](nazarick_narrative_system.md) – maps story events to agents and memory layers
 - [Nazarick Manifesto](nazarick_manifesto.md)
 - [Nazarick Web Console](nazarick_web_console.md)
 - [Operator Protocol](operator_protocol.md)
