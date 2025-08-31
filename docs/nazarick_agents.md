@@ -10,13 +10,15 @@ For a browser-based interface to these servants, see the [Nazarick Web Console](
 
 Core servant metadata is defined in the
 [`agents/nazarick/agent_registry.yaml`](../agents/nazarick/agent_registry.yaml)
-file. Each entry provides five fields:
+file. Each entry now provides seven fields:
 
 - `id` – unique agent identifier
 - `launch` – command used to start the servant
 - `chakra` – associated chakra layer
 - `channel` – communication channel or chat room
-- `description` – short summary of responsibilities
+- `persona_traits` – key personality markers
+- `responsibilities` – summary of duties
+- `code_path` – path to the implementing module
 
 Example:
 
@@ -26,7 +28,11 @@ agents:
     launch: "./launch_servants.sh orchestration_master"
     chakra: crown
     channel: "#throne-room"
-    description: Boot order and pipeline supervision.
+    persona_traits:
+      - disciplined
+      - calm
+    responsibilities: Boot order and pipeline supervision.
+    code_path: orchestration_master.py
 ```
 
 The service launcher reads this registry to determine which agents to
@@ -58,14 +64,14 @@ Set `NAZARICK_ENV=dev` to load local configuration and point `NAZARICK_LOG_DIR` 
 
 ## Agent Summary
 
-| Agent ID | Role | Chakra | Channel | Launch Command | Connectors |
+| ID | Chakra | Channel | Persona Traits | Responsibilities | Code Path |
 | --- | --- | --- | --- | --- | --- |
-| [orchestration_master](../orchestration_master.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L2-L6) | Boot order and pipeline supervision | Crown | `#throne-room` | `./launch_servants.sh orchestration_master` | [operator_api](connectors/CONNECTOR_INDEX.md#operator_api) |
-| [prompt_orchestrator](../crown_prompt_orchestrator.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L7-L11) | Route prompts and recall context | Throat | `#signal-hall` | `./launch_servants.sh crown_prompt_orchestrator` | — |
-| [qnl_engine](../SPIRAL_OS/qnl_engine.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L12-L16) | Process QNL sequences and insights | Third Eye | `#insight-observatory` | `./launch_servants.sh qnl_engine` | [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui) |
-| [memory_scribe](../memory_scribe.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L17-L21) | Persist transcripts and embeddings | Heart | `#memory-vault` | `./launch_servants.sh memory_scribe` | — |
+| orchestration_master | Crown | `#throne-room` | Disciplined, calm coordinator | Boot order and pipeline supervision via [operator_api](connectors/CONNECTOR_INDEX.md#operator_api) | [orchestration_master.py](../orchestration_master.py) |
+| prompt_orchestrator | Throat | `#signal-hall` | Focused dispatcher | Route prompts and recall context | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
+| qnl_engine | Third Eye | `#insight-observatory` | Introspective analyst | Process QNL sequences and insights via [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui) | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
+| memory_scribe | Heart | `#memory-vault` | Diligent archivist | Persist transcripts and embeddings | [memory_scribe.py](../memory_scribe.py) |
 
-These agents draw from the chakra structure outlined in the [Developer Onboarding guide](developer_onboarding.md) and [Chakra Architecture](chakra_architecture.md).
+Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_INDEX.md), while browser controls live in the [Nazarick Web Console](nazarick_web_console.md). These agents draw from the chakra structure outlined in the [Developer Onboarding guide](developer_onboarding.md) and [Chakra Architecture](chakra_architecture.md).
 
 ### Core Agent Details
 
