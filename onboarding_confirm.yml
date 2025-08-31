@@ -216,6 +216,13 @@ documents:
       scope: Top-level docs index.
       key_rules: Maintain curated documentation entry points.
       insight: Add Crown overview to architecture section.
+  docs/nazarick_narrative_system.md:
+    sha256: 378dffc4746cdd3bb287a564a170beaade90513b6f75ca7fb40ccf8de85a2b0e
+    summary:
+      purpose: Guide to how biosignals become narrative events within the Nazarick domain.
+      scope: Nazarick narrative system.
+      key_rules: Use defined agents and pipelines when transforming biosignals.
+      insight: Reference for converting biosignals into multi-modal narrative outputs.
   docs/RAZAR_AGENT.md:
     sha256: 4bec6b0739c7e0f5c20197f23a19455fe1948fffcfdc05528d9abf66491d2d0b
     summary:
