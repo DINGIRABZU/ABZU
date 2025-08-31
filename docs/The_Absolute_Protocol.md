@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.64
-**Last updated:** 2025-09-02
+**Version:** v1.0.65
+**Last updated:** 2025-09-03
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute.
@@ -18,9 +18,10 @@ Before opening a pull request, confirm each item:
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
-- [ ] All modules, connectors, and services expose `__version__`; the `verify-versions` pre-commit hook compares source values to `component_index.json`, and fields must be bumped for user-facing changes
+- [ ] All modules, connectors, and services expose `__version__` that matches `component_index.json`; the `verify-versions` pre-commit hook enforces alignment, so bump both for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
+- [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
 - [ ] Tests follow the Pytest Codex; coverage updated in component index
 - [ ] "Test Plan" issue filed per [Test Planning Guide](onboarding/test_planning.md) outlining scope, chakra, and coverage goals
@@ -30,8 +31,8 @@ Before opening a pull request, confirm each item:
   - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and links
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
-- [ ] Pull request includes an **Action summary** statement: "I did X on Y to obtain Z, expecting behavior B."
-- [ ] `onboarding_confirm.yml` logs purpose, scope, key rules, and one actionable insight for every file it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
+- [ ] Pull request includes a change-justification: "I did X on Y to obtain Z, expecting behavior B."
+- [ ] `onboarding_confirm.yml` records purpose, scope, key rules, and an actionable insight summary for each key document it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_hashes.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
 - [ ] `DASHBOARD.md` metrics updated for each release cycle
@@ -45,7 +46,7 @@ Before opening a pull request, confirm each item:
 - [ ] Biosignal sample CSVs in `data/biosignals/` remain anonymized and align with
       the documented ingestion schema
 
-### Action summary
+### Change Justification
 Every pull request must include a statement formatted as:
 
 "I did X on Y to obtain Z, expecting behavior B."
@@ -86,7 +87,7 @@ When contributing, consult resources in this order:
 
 - Every module, connector, and service must define a top-level `__version__` string.
 - Any user-facing change requires a semantic version bump following MAJOR.MINOR.PATCH.
-- Update `component_index.json` with the new version and run `scripts/verify_versions.py` to ensure source values match the index.
+- Update `component_index.json` with the new version and run `scripts/verify_versions.py` to ensure each source `__version__` matches the index.
 - Record the change in the appropriate changelog.
 
 ## Release Management Protocol
@@ -106,6 +107,7 @@ When contributing, consult resources in this order:
   `data/biosignals/`.
 - Execute `pytest` (or an equivalent test suite) for all modules you modify and
   report the resulting coverage.
+- For milestones touching ignition components, run `scripts/validate_ignition.py` and `pytest --cov`.
 
 ## Test Coverage Protocol
 
