@@ -69,6 +69,113 @@ The orchestrator prepares core services before handing control to CROWN:
 3. Perform the Crown handshake, persist returned capabilities, and record a `handshake` event in `logs/razar_state.json`.
 4. If the GLM‑4.1V model is absent, trigger `crown_model_launcher.sh` to load it and log a `model_launch` event in `logs/razar_state.json`.
 
+## AI Handover
+
+```mermaid
+sequenceDiagram
+    participant B as boot_orchestrator
+    participant I as ai_invoker
+    participant A as remote_agent
+    participant R as code_repair
+    participant T as tests
+    B->>I: handover(context)
+    I->>A: invoke agent
+    A-->>I: suggestion
+    I->>R: forward suggestion
+    R->>T: run tests
+    T-->>R: results
+    R-->>B: apply & restart
+```
+
+The Mermaid source lives at [assets/remote_assistance_sequence.mmd](assets/remote_assistance_sequence.mmd).
+
+After boot, RAZAR delegates repairs to autonomous helpers. The
+[ai_invoker.py](../agents/razar/ai_invoker.py) dispatches tasks to remote
+workers while [code_repair.py](../agents/razar/code_repair.py) applies patches
+and reruns failing checks.
+
+### `boot_config.json`
+
+```json
+{
+  "components": [
+    {
+      "name": "basic_service",
+      "command": ["python", "-c", "print('basic service running')"],
+      "health_check": ["python", "-c", "import sys; sys.exit(0)"]
+    }
+  ]
+}
+```
+
+**Schema snippet** ([full schema](schemas/boot_config.schema.json))
+
+```json
+{
+  "type": "object",
+  "required": ["components"],
+  "properties": {
+    "components": {"type": "array"}
+  }
+}
+```
+
+### Example run
+
+```bash
+# Plan a remote patch
+python -m agents.razar.ai_invoker examples/repair_plan.json
+
+# Apply the suggested fix
+python -m agents.razar.code_repair patches/fix.diff
+```
+
+## Crown Handshake
+
+```mermaid
+sequenceDiagram
+    participant B as boot_orchestrator
+    participant C as Crown
+    B->>C: handshake()
+    C-->>B: capabilities
+```
+
+The Mermaid source lives at [assets/crown_handshake_sequence.mmd](assets/crown_handshake_sequence.mmd).
+
+`boot_orchestrator` establishes trust with the Crown stack and builds the
+environment defined in `razar_env.yaml` before launching services. It calls
+[boot_orchestrator.py](../razar/boot_orchestrator.py) to perform the handshake
+and persist capability data.
+
+### `razar_env.yaml`
+
+```yaml
+layers:
+  razar:
+    - pyyaml
+  inanna:
+    - requests
+  crown:
+    - numpy
+```
+
+**Schema snippet** ([full schema](schemas/razar_env.schema.yaml))
+
+```yaml
+type: object
+required:
+  - layers
+properties:
+  layers:
+    type: object
+```
+
+### Example run
+
+```bash
+python -m razar.boot_orchestrator --handshake-only
+```
+
 ## Module Overviews
 
 ### `boot_orchestrator.py`
