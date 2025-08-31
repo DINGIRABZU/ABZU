@@ -5,7 +5,7 @@ index of the next component to start. It allows the orchestrator to resume a
 partially completed run after a crash or manual interruption.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.2"
 
 from pathlib import Path
 import json

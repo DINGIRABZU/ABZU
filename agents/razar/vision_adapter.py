@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.2"
 
 """Stream YOLOE detections into RAZAR's planning engine.
 
@@ -22,6 +22,7 @@ planning.
 """
 
 from typing import Callable, Dict, Iterable, Mapping
+import numpy as np
 
 from vision.yoloe_adapter import Detection, YOLOEAdapter
 from agents.albedo import vision as avatar_vision
@@ -52,7 +53,7 @@ class VisionAdapter:
     # Detection handling
     def _affected_components(self, detections: Iterable[Detection]) -> set[str]:
         labels = {d.label for d in detections}
-        return {self.module_map[l] for l in labels if l in self.module_map}
+        return {self.module_map[label] for label in labels if label in self.module_map}
 
     def process_detections(
         self, detections: Iterable[Detection]
@@ -78,7 +79,7 @@ class VisionAdapter:
 
     # ------------------------------------------------------------------
     def stream(
-        self, frames: Iterable["np.ndarray"]
+        self, frames: Iterable[np.ndarray]
     ) -> Iterable[Dict[str, Mapping[str, object]]]:
         """Process ``frames`` and yield regeneration hints per frame."""
 

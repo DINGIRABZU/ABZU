@@ -23,6 +23,16 @@ as the bootstrap agent that grounds ABZU in a coherent foundation. After INANNA
 initializes its memory layers, RAZAR triggers the [Bana engine](bana_engine.md)
 to narrate system state.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    EB[Environment Builder] --> BO[Boot Orchestrator]
+    BO --> CH[Crown Handshake]
+    CH --> CL[Crown Link]
+    BO --> RM[Recovery Manager]
+```
+
 ## Submodules
 
 | Submodule | Responsibility | Chakra Alignment | Source Path | Downstream Agents |
@@ -82,7 +92,7 @@ layers:
     - prometheus_client
 ```
 
-## Deployment Overview
+## Deployment Workflow
 
 The orchestrator prepares core services before handing control to CROWN:
 
@@ -90,6 +100,7 @@ The orchestrator prepares core services before handing control to CROWN:
 2. Poll its `/health` endpoint until a `200` response confirms readiness.
 3. Perform the Crown handshake, persist returned capabilities, and record a `handshake` event in `logs/razar_state.json`.
 4. If the GLM‑4.1V model is absent, trigger `crown_model_launcher.sh` to load it and log a `model_launch` event in `logs/razar_state.json`.
+5. Hand off control to Crown services and stream status events to `logs/razar_mission.log`.
 
 ## AI Handover
 
@@ -229,7 +240,7 @@ Builds dependency‑ordered plans by combining component priorities, failure
 counts, and Crown suggestions. [Source](../razar/cocreation_planner.py)
 
 ### `runtime_manager.py`
-Manages component processes, restarts services on failure, and tracks boot state. [Source](../razar/runtime_manager.py)
+Manages component processes, restarts services on failure, and tracks boot state. [Source](../agents/razar/runtime_manager.py)
 
 ### `health_checks.py`
 Runs service probes and exposes optional Prometheus metrics. [Source](../razar/health_checks.py)
@@ -449,7 +460,7 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
 | [razar/adaptive_orchestrator.py](../razar/adaptive_orchestrator.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 | [razar/cocreation_planner.py](../razar/cocreation_planner.py) | [Ignition](Ignition.md), [System Blueprint](system_blueprint.md) |
 
-## Deployment Workflow
+## Deployment Workflow Details
 
 1. **Environment setup** – build isolated dependencies with
    `razar.environment_builder`:
@@ -974,5 +985,6 @@ the outstanding work, then re-run `pre-commit run --files <paths>`.
 
 | Version | Date | Summary | Modules |
 |---------|------|---------|---------|
+| [0.2.2](../CHANGELOG_razar.md#unreleased) | 2025-09-21 | Expanded remote assistance workflow and patch logging. | All modules |
 | [0.1.0](../CHANGELOG_razar.md#010---2025-08-30) | 2025-08-30 | Initial release of RAZAR runtime orchestrator and environment builder. | [boot_orchestrator.py](../razar/boot_orchestrator.py), [environment_builder.py](../razar/environment_builder.py) |
 

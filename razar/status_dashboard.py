@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.2"
 
 """Simple CLI dashboard reporting boot status and quarantine information.
 
@@ -105,7 +105,10 @@ def render_dashboard() -> str:
     lines.append(headers)
     lines.append("-" * len(headers))
     for item in _component_statuses():
-        line = f"{item['name']:<20} {item['priority']:<8} {item['criticality']:<12} {item['status']:<12}"
+        line = (
+            f"{item['name']:<20} {item['priority']:<8} "
+            f"{item['criticality']:<12} {item['status']:<12}"
+        )
         lines.append(line)
     lines.append("")
     lines.append(

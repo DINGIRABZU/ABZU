@@ -13,7 +13,7 @@ source tree.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.2"
 
 from pathlib import Path
 import shutil
