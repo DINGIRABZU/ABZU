@@ -1,6 +1,6 @@
 # Onboarding Checklist
 
-Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onboarding_confirm.yml` at the repository root.
+Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onboarding_confirm.yml` at the repository root and answer the questions in `onboarding_quiz.yml`.
 
 1. [Project Overview](../project_overview.md)
 2. [Architecture Overview](../architecture_overview.md)
@@ -21,3 +21,4 @@ When submitting a pull request, ensure you can check:
 - [ ] [The Absolute Protocol](../The_Absolute_Protocol.md) consulted
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
 - [ ] `onboarding_confirm.yml` updated
+- [ ] `onboarding_quiz.yml` answers included in first pull request
