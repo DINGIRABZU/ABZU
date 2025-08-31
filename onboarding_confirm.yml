@@ -217,7 +217,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 9f2e9285d0d160067dd2325206c1468ad87d9c273406a59e810de5ea96aa6602
+    sha256: 5728a7a2cdfb53de4acdeeeac8e5f2e1d2b17d5e9d2b6a5476e38220c6d1e0ce
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.

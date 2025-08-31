@@ -34,12 +34,12 @@ The Mermaid source lives at [assets/memory_flow.mmd](assets/memory_flow.mmd).
 
 ### Cortex store
 
-Implementation: [memory/cortex.py](../memory/cortex.py)
+- **Purpose:** Persist application state with semantic tags.
+- **Implementation:** [memory/cortex.py](../memory/cortex.py)
+- **Component entry:** [component_index.md#L199](component_index.md#L199)
 
-The cortex layer persists application state as JSON lines while maintaining an
-inverted index for semantic tags and a full‑text index for tag tokens. Reader
-and writer locks guard the log and index so multiple threads can record and
-query safely. Helper utilities allow concurrent queries and pruning of old
+Reader and writer locks guard the log and index so multiple threads can record
+and query safely. Helper utilities allow concurrent queries and pruning of old
 entries.
 
 #### Storage back-end options
@@ -84,10 +84,11 @@ PY
 
 ### Emotional store
 
-Implementation: [memory/emotional.py](../memory/emotional.py)
+- **Purpose:** Capture affective reactions and valence values.
+- **Implementation:** [memory/emotional.py](../memory/emotional.py)
+- **Component entry:** [component_index.md#L201](component_index.md#L201)
 
-The emotional layer captures affective reactions and valence values. Entries
-can be queried to modulate tone or influence downstream reasoning.
+Entries can be queried to modulate tone or influence downstream reasoning.
 
 #### Storage back-end options
 
@@ -129,10 +130,11 @@ PY
 
 ### Mental store
 
-Implementation: [memory/mental.py](../memory/mental.py)
+- **Purpose:** Hold temporary working memory for in‑progress reasoning and planning.
+- **Implementation:** [memory/mental.py](../memory/mental.py)
+- **Component entry:** [component_index.md#L202](component_index.md#L202)
 
-The mental layer keeps temporary working memory for in‑progress reasoning and
-planning. Items decay quickly to keep the space focused on current tasks.
+Items decay quickly to keep the space focused on current tasks.
 
 #### Storage back-end options
 
@@ -172,11 +174,11 @@ PY
 
 ### Spiritual store
 
-Implementation: [memory/spiritual.py](../memory/spiritual.py)
+- **Purpose:** Maintain ritual insights and symbolic states for long‑range guidance.
+- **Implementation:** [memory/spiritual.py](../memory/spiritual.py)
+- **Component entry:** [component_index.md#L208](component_index.md#L208)
 
-The spiritual layer maintains ritual insights and symbolic states that extend
-beyond immediate computation. These records provide long‑range guidance during
-ceremonial flows.
+These records provide long‑range guidance during ceremonial flows.
 
 #### Storage back-end options
 
@@ -218,11 +220,12 @@ PY
 
 ### Narrative store
 
-Implementation: [memory/narrative_engine.py](../memory/narrative_engine.py)
+- **Purpose:** Record story events linking actors, actions and symbolism.
+- **Implementation:** [memory/narrative_engine.py](../memory/narrative_engine.py)
+- **Component entry:** [component_index.md#L204](component_index.md#L204)
 
-The narrative layer outlines interfaces for recording story events. Each event
-binds an actor, an action and optional symbolism so later modules can weave a
-coherent narrative thread across memories.
+Each event binds an actor, an action and optional symbolism so later modules can
+weave a coherent narrative thread across memories.
 
 #### Storage back-end options
 
