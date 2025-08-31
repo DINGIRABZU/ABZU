@@ -16,6 +16,8 @@ logs/*
 !logs/mission_briefs/
 !logs/mission_briefs/*.json
 !logs/ignition_validation.json
+!logs/bana/
+!logs/bana/*
 
 # Ignore Blender files
 *.blend
