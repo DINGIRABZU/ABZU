@@ -168,12 +168,12 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 1dcc411ed91524d205a012e4d86ed5387e66d00a3a5d5d373d522138cbfdd67e
+    sha256: bd134279933873b22635c2e59397004173c028031dd8424b2bd56929b8dfe76c
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      key_rules: Include action summary in pull requests.
-      insight: Include an action summary in every pull request.
+      key_rules: Provide change justification, align __version__ with component_index.json, and maintain key-document summaries.
+      insight: Align component versions and document summaries; run ignition validation when relevant.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
@@ -210,7 +210,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: bb8e13decdb82211ed8e0161f3355a82a27b8ca86ae592f1f182762d73c3f9db
+    sha256: 8182c54b766b6499ec78fe572fcb3b95bba8167fd3aab349b43514a31a5443f6
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
