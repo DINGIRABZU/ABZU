@@ -319,9 +319,10 @@ plans by combining component priorities, failure counts, and CROWN suggestions.
    under the `handshake` key in
    [logs/razar_state.json](../logs/razar_state.json). If the advertised
    capabilities omit `GLM4V`, the orchestrator executes
-   [`crown_model_launcher.sh`](../crown_model_launcher.sh) and records the
-   launch under `launched_models` while also setting `glm4v_present` in the
-   state file.
+   [`crown_model_launcher.sh`](../crown_model_launcher.sh), records the
+   launch under `launched_models`, appends a `model_launch` event in the
+   state file, and archives the trigger as
+   `logs/mission_briefs/<timestamp>_glm4v_launch.json`.
 
    RAZAR maintains at most 20 mission brief archives, rotating older pairs
    from `logs/mission_briefs/` to preserve space while keeping recent

@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 import argparse
 import asyncio
@@ -210,6 +210,21 @@ class BootOrchestrator:
         if "GLM-4.1V" not in launches:
             launches.append("GLM-4.1V")
         data["launched_models"] = launches
+
+        archive_dir = self.state_path.parent / "mission_briefs"
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+        brief_path = archive_dir / f"{timestamp}_glm4v_launch.json"
+        response_path = archive_dir / f"{timestamp}_glm4v_launch_response.json"
+        brief_path.write_text(
+            json.dumps({"event": "model_launch", "model": "GLM-4.1V"}),
+            encoding="utf-8",
+        )
+        response_path.write_text(
+            json.dumps({"status": "triggered"}),
+            encoding="utf-8",
+        )
+        self._rotate_mission_briefs(archive_dir)
 
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         events = data.get("events", [])

@@ -27,7 +27,7 @@
       "id": "razar",
       "chakra": "root",
       "type": "agent",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "path": "agents/razar",
       "purpose": "Bootstraps services and coordinates recovery",
       "dependencies": [
@@ -37,6 +37,7 @@
         "tests": [
             "tests/test_razar_health_checks.py",
             "tests/agents/razar/test_boot_orchestrator.py",
+            "tests/agents/razar/test_boot_orchestrator_logging.py",
             "tests/agents/razar/test_crown_handshake.py",
             "tests/ignition/test_full_stack.py"
         ],
