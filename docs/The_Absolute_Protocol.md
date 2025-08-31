@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.69
-**Last updated:** 2025-10-17
+**Version:** v1.0.70
+**Last updated:** 2025-10-20
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B." Agent guides must also define **Persona & Responsibilities** and **Component & Link** sections.
@@ -333,9 +333,10 @@ Any component launched by Crown or RAZAR must document its activation lifecycle:
 
 Narrative modules must maintain traceability by:
 
-- Declaring a `__version__` field
-- Listing all datasets they rely on
-- Referencing links between Crown and INANNA components that provide narrative context
+- Declaring a `__version__` field in every narrative module.
+- Registering and hashing all datasets they rely on.
+- Updating [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) whenever narrative APIs change.
+- Including a change-justification statement ("I did X on Y to obtain Z, expecting behavior B") in pull requests touching narrative or memory.
 
 ## Release Protocol
 
