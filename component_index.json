@@ -348,6 +348,9 @@
         "agents.event_bus",
         "biosppy",
         "connectors.primordials_api",
+        "memory.cortex",
+        "memory.emotional",
+        "memory.narrative_engine",
         "numpy",
         "spiral_memory",
         "transformers"
@@ -356,6 +359,11 @@
         "tests/agents/test_bana.py",
         "tests/agents/test_bana_narrator.py",
         "tests/ignition/test_crown_wakes_services.py"
+      ],
+      "memory_layers": [
+        "cortex",
+        "emotional",
+        "narrative"
       ],
       "status": "experimental",
       "metrics": {
