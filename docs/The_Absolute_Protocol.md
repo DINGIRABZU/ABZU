@@ -231,6 +231,8 @@ latest response is stored under `handshake` in `logs/razar_state.json`.
 Pull requests touching the boot process must confirm these artifacts are
 present.
 
+Run [`scripts/validate_ignition.py`](../scripts/validate_ignition.py) to execute a minimal boot, verify the Crown handshake, check connector availability, and persist results to `logs/ignition_validation.json` for audit.
+
 ### RAZAR ↔ Crown ↔ Operator Interaction Logging
 
 All exchanges between RAZAR, Crown, and Operator must append JSON lines to

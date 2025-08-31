@@ -2,6 +2,8 @@
 
 This guide traces the activation sequence from **RAZAR** through to the final **operator interface**, linking each stage to its subsystem documentation and source code.
 
+Run [`scripts/validate_ignition.py`](../scripts/validate_ignition.py) to execute a minimal boot, confirm the Crown handshake, check connector availability, and record results to `logs/ignition_validation.json`.
+
 ```mermaid
 graph LR
     RAZAR[RAZAR] --> Crown[Crown]
