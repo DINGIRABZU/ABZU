@@ -118,6 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and biosignal event flow.
 - Added `sample_biosignals_delta.csv` with schema and ingestion notes.
 - Enhanced tests to validate numeric data and multi-file transformations.
+- Replaced in-memory story log with SQLite-backed persistence and documented schema.
 
 ### Chakra Versions
 

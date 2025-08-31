@@ -44,6 +44,19 @@ Core modules participating in the pipeline:
 - [`memory/emotional.py`](../memory/emotional.py)
 - [`memory/narrative_engine.py`](../memory/narrative_engine.py)
 
+## Persistent Storage
+
+`memory/narrative_engine.py` persists stories in a SQLite database
+located at `data/narrative_engine.db`.
+
+| table   | column | type    | description              |
+|---------|--------|---------|--------------------------|
+| stories | id     | INTEGER | Auto-incrementing key    |
+| stories | text   | TEXT    | Narrative action content |
+
+The schema is created automatically. `log_story` appends rows and
+`stream_stories` yields them in insertion order.
+
 ## Event–Agent Map
 
 | event action        | servant agent             | memory layer   |
@@ -100,6 +113,7 @@ Validate the ingestion and mapping pipeline:
 ```bash
 pytest tests/narrative_engine/test_biosignal_pipeline.py \
        tests/narrative_engine/test_biosignal_transformation.py
+       tests/narrative_engine/test_ingest_persist_retrieve.py
 ```
 
 ## Version History
@@ -107,3 +121,4 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py \
 | Version | Date | Summary |
 |---------|------|---------|
 | 0.1.0 | 2025-10-17 | Documented biosignal pipeline, memory hooks, and modules. |
+| 0.1.1 | 2025-10-17 | Added SQLite persistence layer and schema details. |

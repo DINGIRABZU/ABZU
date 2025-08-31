@@ -39,9 +39,10 @@ def test_ingestion_to_mistral_output(monkeypatch: pytest.MonkeyPatch) -> None:
     assert output == "mistral:subject:elevated heart rate"
 
 
-def test_stream_stories(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_stream_stories(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """`stream_stories` yields events in insertion order."""
-    monkeypatch.setattr(narrative_engine, "_STORY_LOG", [])
+    db_path = tmp_path / "stories.db"
+    monkeypatch.setattr(narrative_engine, "DB_PATH", db_path)
     narrative_engine.log_story("alpha")
     narrative_engine.log_story("beta")
     assert list(narrative_engine.stream_stories()) == ["alpha", "beta"]

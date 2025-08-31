@@ -236,7 +236,7 @@ documents:
       key_rules: Maintain curated documentation entry points.
       insight: Add Crown overview to architecture section.
   docs/nazarick_narrative_system.md:
-    sha256: 378dffc4746cdd3bb287a564a170beaade90513b6f75ca7fb40ccf8de85a2b0e
+    sha256: c4102b8dff3b8cff8390ebef875583b1e0cc0ea3b04b92be52b4f6903b5b9aca
     summary:
       purpose: Guide to how biosignals become narrative events within the Nazarick
         domain.
