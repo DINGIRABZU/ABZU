@@ -161,12 +161,12 @@ documents:
       key_rules: Align changes with blueprint structure.
       insight: Align changes with blueprint structure.
   docs/KEY_DOCUMENTS.md:
-    sha256: 44eb47bdaf5084adc58ee6333dc421c1deebecaf2ecdc6a30ab34305d126dd4e
+    sha256: b11276c9d9b5ac0bb005f5c51664e85279e0b80095c9b829f43d78fac14e18b8
     summary:
       purpose: List of essential repository documents.
       scope: Key repository guides.
-      key_rules: Record hashes and summaries for protected files.
-      insight: Consult to ensure no protected file is missing.
+      key_rules: Record hashes and four-part summaries for protected files.
+      insight: Ensure `onboarding_confirm.yml` includes purpose, scope, key rules, and insight for each key document.
   docs/security_model.md:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
     summary:
@@ -175,7 +175,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 6ef9ba2b60249065535ca675976f16af0008bcc547cd68659441bb0e0b40d3f2
+    sha256: a5e851a47268f33bd603588dc4ce58e2d83b066a96ef0bb0889c957294534417
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -217,7 +217,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 1ef6d4c524ca9c1451a6c5ec6f0d06bb251bc4812d5964874faa85815e32a051
+    sha256: edb3c62de8e8ffe64f2ae30670c4a6d0e682d7bb6f35a9b3b2efe1e26a7d9b5f
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.

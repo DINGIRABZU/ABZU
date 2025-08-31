@@ -7,6 +7,17 @@ insight in `onboarding_confirm.yml` to prove the current version was reviewed.
 This requirement is reinforced by The Absolute Protocol's
 [Contributor Awareness Checklist](The_Absolute_Protocol.md#contributor-awareness-checklist).
 
+## Contributor Summary Requirements
+Each key document entry in `onboarding_confirm.yml` **must** include four
+fields:
+
+1. `purpose` – why the document exists.
+2. `scope` – what areas or components it covers.
+3. `key_rules` – essential policies or mandates it establishes.
+4. `insight` – one actionable takeaway discovered during review.
+
+Omitting any field fails verification checks enforced by `scripts/verify_doc_hashes.py`.
+
 ## Protected Files
 
 | Document | Description | Audit cadence |
