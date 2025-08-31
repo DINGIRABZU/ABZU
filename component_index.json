@@ -251,7 +251,8 @@
       "dependencies": [],
       "tests": [
         "tests/narrative_engine/test_biosignal_pipeline.py",
-        "tests/narrative_engine/test_biosignal_transformation.py"
+        "tests/narrative_engine/test_biosignal_transformation.py",
+        "tests/narrative_engine/test_ingestion_to_mistral_output.py"
       ],
       "status": "experimental",
       "metrics": {
@@ -365,6 +366,22 @@
       "version": "0.0.1",
       "path": "data/bana/narratives.jsonl",
       "purpose": "Curated story samples for fine-tuning",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "biosignals_samples",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/biosignals",
+      "purpose": "Anonymized biosignal CSVs for ingestion tests",
       "dependencies": [],
       "tests": [],
       "status": "experimental",
