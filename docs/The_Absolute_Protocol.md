@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.67
-**Last updated:** 2025-08-31
+**Version:** v1.0.68
+**Last updated:** 2025-10-16
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B."
@@ -219,6 +219,7 @@ Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNEC
 ## Subsystem Protocols
 
 - [Operator Protocol](operator_protocol.md) – documents `/operator/command`, `/operator/upload`, WebRTC channels, permission checks, and escalation rules through Crown to RAZAR.
+- [Crown Agent Overview](CROWN_OVERVIEW.md#persona--responsibilities) – persona profile and escalation duties.
 - [Ignition Sequence Protocol](ignition_sequence_protocol.md) – mandates logging points and escalation during boot.
 - [Co-creation Escalation](co_creation_escalation.md) – defines when RAZAR seeks Crown or operator help and the logging for each tier.
 - [Logging & Observability Protocol](#logging--observability-protocol) – structured logging and metrics requirements.
