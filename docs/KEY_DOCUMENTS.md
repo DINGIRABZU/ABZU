@@ -14,6 +14,7 @@ This requirement is reinforced by The Absolute Protocol's
 | [AGENTS.md](../AGENTS.md) | Repository-wide agent instructions | Quarterly |
 | [The Absolute Protocol](The_Absolute_Protocol.md) | Core contribution rules | Quarterly |
 | [System Blueprint](system_blueprint.md) | Architectural overview | Quarterly |
+| [Project Mission & Vision](project_mission_vision.md) | Unified mission, vision, and purpose | Quarterly |
 | [Component Index](component_index.md) | Inventory of modules and services | Quarterly |
 | [Component Status](component_status.md) | Tracks component readiness | Quarterly |
 | [Connector Index](connectors/CONNECTOR_INDEX.md) | Canonical registry of connector IDs, purpose, versions, endpoints, auth methods, status, and links to docs and source code. Update this index whenever connector details change. | Quarterly |

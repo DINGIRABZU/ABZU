@@ -4,6 +4,7 @@
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Index
+- [Project Mission & Vision](docs/project_mission_vision.md) – core goals and guiding principles
 - [Documentation Index](docs/index.md) – curated starting points
 - [Full Documentation Inventory](docs/INDEX.md)
 - [Developer Onboarding](docs/developer_onboarding.md)

@@ -13,6 +13,7 @@ Before opening a pull request, confirm each item:
   - [AGENTS.md](../AGENTS.md)
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
+  - [Project Mission & Vision](project_mission_vision.md) – confirm alignment before proposing major changes
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, status, and code/documentation links are current
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
