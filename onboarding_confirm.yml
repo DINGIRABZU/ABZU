@@ -126,7 +126,7 @@ documents:
       key_rules: Update index when components change.
       insight: Add/update entries for component changes.
   docs/CROWN_OVERVIEW.md:
-    sha256: 58c88584d45355968b5c9a243392a00f0b0ae515cbd12b8142de841315cda9bd
+    sha256: 179c5a4f08996de8efe3d623a4ae9f38e302f7bdd73a6eb00770ccfd10b169a3
     summary:
       purpose: Crown agent architecture and routing.
       scope: Crown-to-RAZAR interaction.
@@ -217,7 +217,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: edb3c62de8e8ffe64f2ae30670c4a6d0e682d7bb6f35a9b3b2efe1e26a7d9b5f
+    sha256: 14a4486100ef2f6394f2d28c1260e240c730b4d7ab1d25070e262712125224a6
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.

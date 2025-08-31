@@ -158,6 +158,20 @@ POST /operator/command {"command": "status"}
   `critical` or repeated operator command failures escalates to a human
   operator.
 
+## Service Wake Sequence
+
+After the mission brief handshake, Crown brings its supporting servants
+online. The stack uses [launch_servants.sh](../launch_servants.sh) to read the
+`SERVANT_MODELS` mapping and start the listed Nazarick agents and the Bana
+bio‑adaptive narrator. Each entry maps a servant name to its endpoint; if
+`SERVANT_MODELS` is unset no servants are launched. Set `NAZARICK_ENV` to choose
+the configuration profile (e.g., `dev`, `staging`) so agents load the correct
+settings. For development workflows,
+[start_dev_agents.py](../start_dev_agents.py) bootstraps the same servants after
+RAZAR initializes. With these scripts and environment variables in place, Crown
+signals the agents immediately after the handshake, ensuring they are ready for
+subsequent prompts.
+
 ## Version History
 
 | Version | Date       | Summary |
