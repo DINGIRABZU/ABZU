@@ -177,7 +177,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: b1567b94f1fc604515c44b9e3b72d2187b5cb136e29d14f12a60c351e13de751
+    sha256: a0de2812e9144410e23d972c70e070bd24f2e695849879d562e1c7e4c89471b9
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -264,3 +264,5 @@ documents:
       scope: All contributors.
       key_rules: Run to verify dependencies before committing.
       insight: Run before committing to catch missing dependencies.
+checklist:
+  - "Narrative document entries verified"
