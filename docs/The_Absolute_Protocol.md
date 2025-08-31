@@ -21,7 +21,7 @@ Before opening a pull request, confirm each item:
 - [ ] All modules, connectors, and services expose `__version__` that matches `component_index.json`; the `verify-versions` pre-commit hook enforces alignment, so bump both for user-facing changes
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
-- [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`
+- [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`; see [ignition_flow.md](ignition_flow.md)
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
 - [ ] Tests follow the Pytest Codex; coverage updated in component index
 - [ ] "Test Plan" issue filed per [Test Planning Guide](onboarding/test_planning.md) outlining scope, chakra, and coverage goals
@@ -108,7 +108,7 @@ When contributing, consult resources in this order:
   `data/biosignals/`.
 - Execute `pytest` (or an equivalent test suite) for all modules you modify and
   report the resulting coverage.
-- For milestones touching ignition components, run `scripts/validate_ignition.py` and `pytest --cov`.
+- For milestones touching ignition components, run `scripts/validate_ignition.py` and `pytest --cov`; see [ignition_flow.md](ignition_flow.md).
 
 ## Test Coverage Protocol
 
@@ -235,7 +235,7 @@ latest response is stored under `handshake` in `logs/razar_state.json`.
 Pull requests touching the boot process must confirm these artifacts are
 present.
 
-Run [`scripts/validate_ignition.py`](../scripts/validate_ignition.py) to execute a minimal boot, verify the Crown handshake, check connector availability, and persist results to `logs/ignition_validation.json` for audit.
+Run [`scripts/validate_ignition.py`](../scripts/validate_ignition.py) to traverse the RAZAR → Crown → INANNA → Albedo → Nazarick → operator interface chain and persist readiness results to `logs/ignition_validation.json`. See [ignition_flow.md](ignition_flow.md) for stage documentation.
 
 ### RAZAR ↔ Crown ↔ Operator Interaction Logging
 

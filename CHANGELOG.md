@@ -82,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pytest runs export coverage, session duration, and failure metrics via `prometheus_client` to `monitoring/pytest_metrics.prom`, and CI uploads the metrics artifact.
 - Implemented AI handover workflow that delegates failures to remote agents,
   logging invocations and applied patch diffs.
-- Added `scripts/validate_ignition.py` to run RAZAR boot validation, confirm the Crown handshake, check connector availability, and log results to `logs/ignition_validation.json`.
+- Added `scripts/validate_ignition.py` to validate the RAZAR → Crown → INANNA → Albedo → Nazarick → operator interface chain and log results to `logs/ignition_validation.json`.
 - Added `scripts/health_check_connectors.py` to ping connectors and report readiness.
 - AI handover now reads configurable agent endpoints and authentication
   tokens and retries components after automated patches are applied.
