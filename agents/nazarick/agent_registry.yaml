@@ -3,19 +3,35 @@ agents:
     launch: "./launch_servants.sh orchestration_master"
     chakra: crown
     channel: "#throne-room"
-    description: Boot order and pipeline supervision.
+    persona_traits:
+      - disciplined
+      - calm
+    responsibilities: Boot order and pipeline supervision.
+    code_path: orchestration_master.py
   - id: prompt_orchestrator
     launch: "./launch_servants.sh crown_prompt_orchestrator"
     chakra: throat
     channel: "#signal-hall"
-    description: Route prompts and recall context.
+    persona_traits:
+      - focused
+      - efficient
+    responsibilities: Route prompts and recall context.
+    code_path: crown_prompt_orchestrator.py
   - id: qnl_engine
     launch: "./launch_servants.sh qnl_engine"
     chakra: third_eye
     channel: "#insight-observatory"
-    description: Process QNL sequences and insights.
+    persona_traits:
+      - introspective
+      - analytic
+    responsibilities: Process QNL sequences and insights.
+    code_path: SPIRAL_OS/qnl_engine.py
   - id: memory_scribe
     launch: "./launch_servants.sh memory_scribe"
     chakra: heart
     channel: "#memory-vault"
-    description: Persist transcripts and embeddings.
+    persona_traits:
+      - diligent
+      - archival
+    responsibilities: Persist transcripts and embeddings.
+    code_path: memory_scribe.py
