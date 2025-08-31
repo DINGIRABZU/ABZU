@@ -1,6 +1,6 @@
 """RAZAR agents."""
 
-__version__ = "0.1.0"
+__version__ = "0.2.2"
 
 from agents.nazarick.ethics_manifesto import Manifesto
 from agents.nazarick.trust_matrix import TrustMatrix

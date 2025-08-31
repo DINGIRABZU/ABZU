@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.2"
 
 """Structured mission logger for RAZAR components.
 
@@ -211,9 +211,11 @@ def _cmd_summary(args: argparse.Namespace) -> None:
 def _cmd_timeline(_: argparse.Namespace) -> None:
     for entry in timeline():
         details = f" - {entry['details']}" if entry.get("details") else ""
-        print(
-            f"{entry['timestamp']} {entry['event']} {entry['component']}: {entry['status']}{details}"
+        message = (
+            f"{entry['timestamp']} {entry['event']} {entry['component']}: "
+            f"{entry['status']}{details}"
         )
+        print(message)
 
 
 def main() -> None:  # pragma: no cover - CLI helper

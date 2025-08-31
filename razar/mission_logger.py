@@ -9,7 +9,7 @@ public API stable while avoiding the import side effects.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.2"
 
 import importlib.util
 import sys
