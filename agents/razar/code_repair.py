@@ -8,7 +8,7 @@ the component is reactivated.
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.2.2"
 
 import difflib
 import json
@@ -36,6 +36,7 @@ def _record_patch(component: str, diff: str, tests: str) -> None:
     """Append a patch record to ``PATCH_LOG_PATH``."""
     PATCH_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     record = {
+        "event": "applied",
         "component": component,
         "diff": diff,
         "tests": tests,
@@ -51,7 +52,9 @@ def _record_patch(component: str, diff: str, tests: str) -> None:
     else:
         data = []
     data.append(record)
-    PATCH_LOG_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    PATCH_LOG_PATH.write_text(
+        json.dumps(data, indent=2, sort_keys=True), encoding="utf-8"
+    )
 
 
 def _gather_context(module_path: Path, error: str) -> str:

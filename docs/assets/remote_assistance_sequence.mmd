@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant B as boot_orchestrator
+    participant I as ai_invoker
+    participant A as remote_agent
+    participant R as code_repair
+    participant T as tests
+    B->>I: handover(context)
+    I->>A: invoke agent
+    A-->>I: suggestion
+    I->>R: forward suggestion
+    R->>T: run tests
+    T-->>R: results
+    R-->>B: apply & restart
