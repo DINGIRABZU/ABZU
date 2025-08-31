@@ -1,24 +1,48 @@
 # Nazarick Narrative System
 
-This guide explains how story events are routed through Nazarick, linking each
-event to a servant agent and the memory layer that preserves it. Biosignals and
-other inputs become `StoryEvent` objects that feed agent personas and drive
-future behaviour.
+This guide explains how biosignals become `StoryEvent` objects inside Nazarick.
+Each event links to a servant agent and is persisted across the
+[memory architecture](memory_architecture.md).
 
-## Architecture
+## Biosignal→StoryEvent Pipeline
 
 ```mermaid
 flowchart LR
-    S[Sensors] --> I[ingest_biosignals.py]
-    I --> B[Bana agent]
-    B --> M[Narrative model]
+    S[Sensors] --> I[scripts/ingest_biosignals.py]
+    I --> B[agents/bana]
+    B --> M[memory/narrative_engine.py]
     M -->|log_story| N[Narrative Memory]
     M -->|persona update| A[Agent Registry]
 ```
 
-`log_story` persists each event to the [narrative memory](memory_architecture.md)
-while a light‑weight summary is sent to the agent registry so servants can shift
-their persona traits.
+1. **Sensors** capture heart rate, skin temperature, and EDA.
+2. **`scripts/ingest_biosignals.py`** normalizes samples and emits structured
+   records.
+3. **`agents/bana/bio_adaptive_narrator.py`** transforms records into
+   `StoryEvent` objects.
+4. **`memory/narrative_engine.py`** logs events to persistent stores and emits
+   persona summaries.
+
+## Memory Layer Hooks
+
+Hooks link each `StoryEvent` to specific layers described in
+[Memory Architecture](memory_architecture.md).
+
+| layer     | hook function  | module |
+|-----------|---------------|--------|
+| cortex    | `record_spiral` | [`memory/cortex.py`](../memory/cortex.py) |
+| emotional | `log_emotion`   | [`memory/emotional.py`](../memory/emotional.py) |
+| narrative | `log_story`     | [`memory/narrative_engine.py`](../memory/narrative_engine.py) |
+
+## Modules
+
+Core modules participating in the pipeline:
+
+- [`scripts/ingest_biosignals.py`](../scripts/ingest_biosignals.py)
+- [`agents/bana/bio_adaptive_narrator.py`](../agents/bana/bio_adaptive_narrator.py)
+- [`memory/cortex.py`](../memory/cortex.py)
+- [`memory/emotional.py`](../memory/emotional.py)
+- [`memory/narrative_engine.py`](../memory/narrative_engine.py)
 
 ## Event–Agent Map
 
@@ -77,3 +101,9 @@ Validate the ingestion and mapping pipeline:
 pytest tests/narrative_engine/test_biosignal_pipeline.py \
        tests/narrative_engine/test_biosignal_transformation.py
 ```
+
+## Version History
+
+| Version | Date | Summary |
+|---------|------|---------|
+| 0.1.0 | 2025-10-17 | Documented biosignal pipeline, memory hooks, and modules. |

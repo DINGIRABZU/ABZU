@@ -28,6 +28,10 @@
             "type": "array",
             "items": {"type": "string"}
           },
+          "memory_layers": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
           "status": {
             "type": "string",
             "enum": ["active", "deprecated", "experimental"]
