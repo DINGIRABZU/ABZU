@@ -27,6 +27,7 @@ This requirement is reinforced by The Absolute Protocol's
 | [Operator Protocol](operator_protocol.md) | Operator interaction rules | Quarterly |
 | [Test Planning Guide](onboarding/test_planning.md) | Filing "Test Plan" issues defining scope, chakra, and coverage goals | Quarterly |
 | [Bana Engine](bana_engine.md) | Mistral 7B fine-tuning, event processing, and output paths | Quarterly |
+| [Nazarick Narrative System](nazarick_narrative_system.md) | Biosignals-to-narrative event pipeline | Quarterly |
 | [RAZAR AI agents config](../config/razar_ai_agents.json) | Roster of handover agents and authentication settings | Quarterly |
 | [Environment check script](../scripts/check_env.py) | Verifies required packages and tools are installed | Each commit |
 
