@@ -151,7 +151,7 @@
       "id": "memory_layers",
       "chakra": "root",
       "type": "subsystem",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "path": "memory",
       "purpose": "Layered memory stores for system state",
       "dependencies": [
@@ -248,10 +248,10 @@
       "id": "narrative_engine",
       "chakra": "heart",
       "type": "module",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "path": "memory/narrative_engine.py",
       "purpose": "Records and streams story events",
-      "dependencies": [],
+      "dependencies": ["chromadb"],
       "tests": [
         "tests/narrative_engine/test_biosignal_pipeline.py",
         "tests/narrative_engine/test_biosignal_transformation.py",
@@ -370,6 +370,20 @@
       "metrics": {
         "coverage": 1.0
       },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "bana_event_structurizer",
+      "chakra": "heart",
+      "type": "module",
+      "version": "0.1.0",
+      "path": "bana/event_structurizer.py",
+      "purpose": "Translate biosignals into schema-validated events",
+      "dependencies": ["jsonschema"],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {"coverage": 1.0},
       "ignition_stage": 4,
       "adr": null
     },
