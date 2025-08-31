@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Introduced `training/fine_tune_mistral.py` configuring mythological and project corpora.
+- Recorded mythology and project material datasets in `component_index.json`.
+- Listed dataset licensing, version history, and evaluation metrics in `docs/bana_engine.md`.
+
 ### Documentation Audit
 
 - Mandated quarterly review of entries in `docs/KEY_DOCUMENTS.md` and added audit cadence table with `scripts/schedule_doc_audit.py`.

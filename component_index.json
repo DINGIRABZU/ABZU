@@ -489,6 +489,48 @@
       },
       "ignition_stage": 0,
       "adr": null
+    },
+    {
+      "id": "fine_tune_mistral",
+      "chakra": "crown",
+      "type": "module",
+      "version": "0.1.0",
+      "path": "training/fine_tune_mistral.py",
+      "purpose": "Configure Mistral fine-tuning on mythological and project materials",
+      "dependencies": ["transformers"],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {"coverage": 0.0},
+      "ignition_stage": 5,
+      "adr": null
+    },
+    {
+      "id": "mythology_corpus",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.1.0",
+      "path": "data/mythology_corpus",
+      "purpose": "Compiled myths and legends for narrative enrichment",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {"coverage": 0.0},
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "project_materials",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.1.0",
+      "path": "data/project_materials",
+      "purpose": "Internal narratives and documents for contextual tuning",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {"coverage": 0.0},
+      "ignition_stage": 4,
+      "adr": null
     }
   ]
 }

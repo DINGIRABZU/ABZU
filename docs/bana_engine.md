@@ -26,15 +26,28 @@ flowchart TD
 ## Mistral 7B Fine‑Tuning
 
 - **Base model:** `mistralai/Mistral-7B-v0.3`
-- **Training script:** `scripts/train_bana.py`
+- **Training script:** `training/fine_tune_mistral.py`
 - **Output checkpoint:** `models/bana_mistral_7b`
 
-## Dataset Locations
+## Datasets and Licensing
 
-| Dataset | Path | Description |
-| --- | --- | --- |
-| Events | `data/bana/events.jsonl` | Structured event logs that drive narrative generation. |
-| Narratives | `data/bana/narratives.jsonl` | Curated story samples for supervised fine‑tuning. |
+| Dataset | Path | Description | License | Version |
+| --- | --- | --- | --- | --- |
+| Events | `data/bana/events.jsonl` | Structured event logs that drive narrative generation. | CC BY 4.0 | v0.0.1 |
+| Narratives | `data/bana/narratives.jsonl` | Curated story samples for supervised fine‑tuning. | CC BY 4.0 | v0.0.1 |
+| Mythology Corpus | `data/mythology_corpus` | Myths and legends used for stylistic grounding. | Public Domain | v0.1.0 |
+| Project Materials | `data/project_materials` | Internal documents and narratives. | Proprietary | v0.1.0 |
+
+### Dataset Version History
+
+- v0.1.0 – Added mythological and project-specific corpora.
+- v0.0.1 – Initial events and narratives datasets.
+
+### Expected Evaluation Metrics
+
+- Perplexity ≤ 5.0 on validation set
+- ROUGE-L ≥ 0.30 on narrative summaries
+- Narrative coherence score ≥ 0.8 (subjective rating)
 
 ## Event Processing Pipeline
 
