@@ -267,7 +267,7 @@
       "id": "operator_interface",
       "chakra": "crown",
       "type": "service",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "path": "operator_api.py",
       "purpose": "FastAPI routes for operator commands and uploads",
       "dependencies": [
@@ -301,7 +301,7 @@
       "id": "webrtc_connector",
       "chakra": "crown",
       "type": "connector",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "path": "connectors/webrtc_connector.py",
       "purpose": "WebRTC bridge for real-time avatar streaming",
       "dependencies": [

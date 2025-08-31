@@ -8,7 +8,7 @@ unavailable, allowing clients to fall back to data-only operation.
 
 from __future__ import annotations
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 import asyncio
 import logging
@@ -18,7 +18,11 @@ from typing import Set
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from fastapi import APIRouter, HTTPException, Request
 
-from communication.webrtc_server import get_audio_track, get_video_track
+from communication.webrtc_server import (
+    configure_tracks,
+    get_audio_track,
+    get_video_track,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +42,7 @@ def configure(*, data: bool = True, audio: bool = True, video: bool = True) -> N
     ENABLE_DATA = data
     ENABLE_AUDIO = audio
     ENABLE_VIDEO = video
+    configure_tracks(audio=audio, video=video)
 
 
 @router.post("/call")

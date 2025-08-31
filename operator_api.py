@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 import json
 import logging
@@ -53,9 +53,13 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
 async def upload_file(
     operator: str = Form(...),
     metadata: str = Form("{}"),
-    files: list[UploadFile] = File(...),
+    files: list[UploadFile] | None = File(None),
 ) -> dict[str, object]:
-    """Store uploaded files and forward metadata to RAZAR via Crown."""
+    """Store uploaded ``files`` and forward ``metadata`` to RAZAR via Crown.
+
+    ``files`` may be empty, allowing metadata-only uploads that are still
+    relayed to Crown for context.
+    """
     try:
         meta = json.loads(metadata)
     except json.JSONDecodeError as exc:
@@ -65,7 +69,7 @@ async def upload_file(
     upload_dir.mkdir(parents=True, exist_ok=True)
 
     stored: list[str] = []
-    for item in files:
+    for item in files or []:
         dest = upload_dir / item.filename
         try:
             with dest.open("wb") as fh:

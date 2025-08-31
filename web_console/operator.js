@@ -37,10 +37,7 @@ async function startStream(videoElem) {
     return pc;
 }
 
-function uploadFiles(files, metadata = {}, operator = 'overlord') {
-    if (!files || files.length === 0) {
-        return Promise.resolve({ stored: [], metadata });
-    }
+function uploadFiles(files = [], metadata = {}, operator = 'overlord') {
     const formData = new FormData();
     for (const file of files) {
         formData.append('files', file);

@@ -133,7 +133,7 @@ documents:
       key_rules: Document operator relay and logging.
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
-    sha256: b196a269c7ab601c600b585911ddbb8dc2fc0e52b0ca081e921d5145a7b4bcec
+    sha256: a43afcc778836aa29090824362d58d643ff65f08aa8c5a4864188a7d56c4bd54
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
@@ -196,7 +196,7 @@ documents:
       key_rules: Keep implementations aligned with documented API.
       insight: Keep implementations aligned with documented API.
   docs/operator_protocol.md:
-    sha256: a6fe88ba4bfa4dec6b3bdb5b8111bde3c6846d5b9540e0f87b638db59da5a867
+    sha256: 6e41d358d556bfa229d3a2381aaf208e0a5f0a767f61f446e6ab98d9a5b07741
     summary:
       purpose: Operator interaction rules.
       scope: Operator channels.
