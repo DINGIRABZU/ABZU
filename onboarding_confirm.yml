@@ -231,7 +231,7 @@ documents:
       key_rules: Use defined agents and pipelines when transforming biosignals.
       insight: Reference for converting biosignals into multi-modal narrative outputs.
   docs/RAZAR_AGENT.md:
-    sha256: 4bec6b0739c7e0f5c20197f23a19455fe1948fffcfdc05528d9abf66491d2d0b
+    sha256: d3c0255a6fa585d7ff9ac86cedd854000cf663d7eabe4c46975837f3b9441c1c
     summary:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.

@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Stored Crown handshake acknowledgement, capabilities, and downtime under
   `handshake` in `logs/razar_state.json`.
 - Logged handshake and model-launch events in `logs/razar_state.json` and documented event persistence in the deployment guide.
+- Archived GLM-4.1V launch events to `logs/mission_briefs/` and added tests
+  for mission-brief archiving and GLM capability detection.
 - Added module coverage and example run sections to the RAZAR agent guide.
 - Rotated mission brief archives and required Crown availability via `CROWN_WS_URL` before boot.
 - Delegated failure recovery to remote agents via `ai_invoker.handover` and
