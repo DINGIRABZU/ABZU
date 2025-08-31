@@ -129,6 +129,8 @@ Before submitting a pull request, confirm:
   - Update connector registry entries after interface changes
 - **Change justification**
   - Use the template "I did X on Y to obtain Z, expecting behavior B." in commits and the pull request description
+- **Ignition docs**
+  - Update `docs/bana_engine.md` and Nazarick documentation when ignition steps change
 - **Connector health**
   - `python scripts/health_check_connectors.py` reports all connectors healthy before merging
 

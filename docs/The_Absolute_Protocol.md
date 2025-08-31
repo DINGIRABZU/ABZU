@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.66
-**Last updated:** 2025-09-04
+**Version:** v1.0.67
+**Last updated:** 2025-09-10
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B."
@@ -22,6 +22,7 @@ Before opening a pull request, confirm each item:
 - [ ] Component index entry added/updated in [component_index.md](component_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
 - [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`; see [ignition_flow.md](ignition_flow.md)
+- [ ] Ignition step changes reflected in [bana_engine.md](bana_engine.md) and Nazarick docs such as [nazarick_narrative_system.md](nazarick_narrative_system.md)
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
 - [ ] Tests follow the Pytest Codex; coverage updated in component index
 - [ ] "Test Plan" issue filed per [Test Planning Guide](onboarding/test_planning.md) outlining scope, chakra, and coverage goals
@@ -309,6 +310,22 @@ All endpoints must publish machine-validated schemas:
 - Register each connector in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, authentication method, status, and links to documentation and source code.
 - Update the registry whenever a connector's interface, version, or status changes.
 - Validate updates with `pre-commit run --files docs/connectors/CONNECTOR_INDEX.md docs/INDEX.md`.
+
+### Service Wake Protocol
+
+Any component launched by Crown or RAZAR must document its activation lifecycle:
+
+- Activation command(s) used to start the service
+- Log files capturing the wake sequence
+- Rollback steps to revert the activation if needed
+
+### Narrative Component Protocol
+
+Narrative modules must maintain traceability by:
+
+- Declaring a `__version__` field
+- Listing all datasets they rely on
+- Referencing links between Crown and INANNA components that provide narrative context
 
 ## Release Protocol
 
