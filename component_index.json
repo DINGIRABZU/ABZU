@@ -51,7 +51,7 @@
       "id": "crown",
       "chakra": "crown",
       "type": "module",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "path": "crown_router.py",
       "purpose": "Routes prompts among crown services",
       "dependencies": [
@@ -266,7 +266,7 @@
       "id": "operator_interface",
       "chakra": "crown",
       "type": "service",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "path": "operator_api.py",
       "purpose": "FastAPI routes for operator commands and uploads",
       "dependencies": [
@@ -286,7 +286,7 @@
       "id": "primordials_api",
       "chakra": "crown",
       "type": "service",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "path": "connectors/primordials_api.py",
       "purpose": "Relay narrative metrics to the Primordials service",
       "dependencies": [],
@@ -299,8 +299,8 @@
     {
       "id": "webrtc_connector",
       "chakra": "crown",
-      "type": "service",
-      "version": "0.3.0",
+      "type": "connector",
+      "version": "0.3.1",
       "path": "connectors/webrtc_connector.py",
       "purpose": "WebRTC bridge for real-time avatar streaming",
       "dependencies": [

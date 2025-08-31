@@ -79,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented AI handover workflow that delegates failures to remote agents,
   logging invocations and applied patch diffs.
 - Added `scripts/validate_ignition.py` to run RAZAR boot validation, confirm the Crown handshake, check connector availability, and log results to `logs/ignition_validation.json`.
+- Added `scripts/health_check_connectors.py` to ping connectors and report readiness.
 - AI handover now reads configurable agent endpoints and authentication
   tokens and retries components after automated patches are applied.
 - Routed INANNA interactions through Bana, storing narratives in spiral memory
@@ -89,6 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Verified repository passes `ruff` and `black` checks.
 - Enforced "No Placeholder" rule with `check-placeholders` pre-commit hook and
   documented remediation steps in agent guides.
+- Hardened operator and Primordials connectors with additional error handling and version bumps.
 
 ### Vector Memory
 

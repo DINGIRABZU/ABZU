@@ -8,7 +8,7 @@ unavailable, allowing clients to fall back to data-only operation.
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 import asyncio
 import logging
@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Set
 
 from aiortc import RTCPeerConnection, RTCSessionDescription
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 
 from communication.webrtc_server import get_audio_track, get_video_track
 
@@ -43,8 +43,14 @@ def configure(*, data: bool = True, audio: bool = True, video: bool = True) -> N
 @router.post("/call")
 async def offer(request: Request) -> dict[str, str]:
     """Handle WebRTC call offer and return the answer."""
-    params = await request.json()
-    offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+    try:
+        params = await request.json()
+        sdp = params["sdp"]
+        typ = params["type"]
+    except Exception as exc:  # pragma: no cover - invalid payload
+        logger.error("invalid offer payload: %s", exc)
+        raise HTTPException(status_code=400, detail="invalid offer") from exc
+    offer = RTCSessionDescription(sdp=sdp, type=typ)
 
     pc = RTCPeerConnection()
     _pcs.add(pc)
