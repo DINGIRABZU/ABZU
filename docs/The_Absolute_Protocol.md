@@ -1,10 +1,10 @@
 # The Absolute Protocol
 
-**Version:** v1.0.65
-**Last updated:** 2025-09-03
+**Version:** v1.0.66
+**Last updated:** 2025-09-04
 
 ## How to Use This Protocol
-This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute.
+This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B."
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:

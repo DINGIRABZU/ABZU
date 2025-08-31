@@ -10,7 +10,7 @@ below.
 ## Linked issue/feature spec
 <!-- Required: link to the relevant issue, documentation, or feature spec. -->
 
-## Change Justification
+## Action Summary
 <!-- Required: follow the format "I did X on Y to obtain Z, expecting behavior B." -->
 I did X on Y to obtain Z, expecting behavior B.
 <!-- If a connector was added or modified, update [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and code/documentation links, as required by [The Absolute Protocol](../docs/The_Absolute_Protocol.md). -->
