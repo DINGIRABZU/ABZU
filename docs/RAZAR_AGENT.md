@@ -19,7 +19,9 @@ The RAZAR agent bootstraps local services in a controlled environment. It
 creates a Python virtual environment, installs component dependencies, and
 launches each service in priority order. By aligning this startup flow with the
 architecture outlined in the [System Blueprint](system_blueprint.md), RAZAR acts
-as the bootstrap agent that grounds ABZU in a coherent foundation.
+as the bootstrap agent that grounds ABZU in a coherent foundation. After INANNA
+initializes its memory layers, RAZAR triggers the [Bana engine](bana_engine.md)
+to narrate system state.
 
 ## Submodules
 

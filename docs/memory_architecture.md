@@ -18,6 +18,9 @@ query example:
 - **Spiritual** – transcendent insights and ritual state.
 - **Narrative** – story events linking actors, actions and symbolism.
 
+After these layers ignite, RAZAR activates the [Bana engine](bana_engine.md) to
+narrate the system's evolving state.
+
 ## Flow
 
 ```mermaid

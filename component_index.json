@@ -339,7 +339,7 @@
       "adr": null
     },
     {
-      "id": "bana_engine",
+      "id": "bana",
       "chakra": "heart",
       "type": "agent",
       "version": "0.0.2",
@@ -362,9 +362,9 @@
         "tests/ignition/test_crown_wakes_services.py"
       ],
       "memory_layers": [
-        "cortex",
-        "emotional",
-        "narrative"
+        { "layer": "cortex", "ignition_stage": 4 },
+        { "layer": "emotional", "ignition_stage": 4 },
+        { "layer": "narrative", "ignition_stage": 4 }
       ],
       "status": "experimental",
       "metrics": {
