@@ -222,7 +222,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 424d2744a3516d48eb257920576814bf2095d6d267213bbf03f01f4990378c4f
+    sha256: 78f7683a85786e5ba114f99cc37ff3c7c9321409149b5f7a349ba46f4db2b6f2
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
@@ -236,13 +236,20 @@ documents:
       key_rules: Maintain curated documentation entry points.
       insight: Add Crown overview to architecture section.
   docs/nazarick_narrative_system.md:
-    sha256: c4102b8dff3b8cff8390ebef875583b1e0cc0ea3b04b92be52b4f6903b5b9aca
+    sha256: dfd66c57f6af09f203ea9227608771c6860af7126eec00a2aa70898cb4a6ff90
     summary:
       purpose: Guide to how biosignals become narrative events within the Nazarick
         domain.
       scope: Nazarick narrative system.
       key_rules: Use defined agents and pipelines when transforming biosignals.
       insight: Reference for converting biosignals into multi-modal narrative outputs.
+  docs/assets/narrative_engine_flow.mmd:
+    sha256: 9b418b5de9a790064dca91375f560d6378c8d111a0c563deafb637a8e65284d9
+    summary:
+      purpose: Mermaid flow diagram of event→Mistral→multi-track outputs→memory/operator.
+      scope: Nazarick narrative system pipeline.
+      key_rules: Visual reference for narrative engine routing.
+      insight: Consult to understand event propagation to memory and operator.
   docs/RAZAR_AGENT.md:
     sha256: eb733a36bb7ba9cba6ba07919e5b8754302a191e000b979467d98c234814e532
     summary:

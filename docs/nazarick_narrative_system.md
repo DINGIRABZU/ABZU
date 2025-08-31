@@ -209,3 +209,15 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py \
 | 0.1.1 | 2025-10-17 | Added SQLite persistence layer and schema details. |
 | 0.2.0 | 2025-10-17 | Introduced event structurizer and Chroma-backed search. |
 | 0.3.0 | 2025-10-17 | Added multitrack output schema and sample. |
+| 0.4.0 | 2025-08-31 | Added flow diagram and Components & Links section. |
+
+## Components & Links
+
+| Source Module | Related Docs |
+| --- | --- |
+| [scripts/ingest_biosignals.py](../scripts/ingest_biosignals.py) | [Bana Engine](bana_engine.md) |
+| [agents/bana/bio_adaptive_narrator.py](../agents/bana/bio_adaptive_narrator.py) | [Bana Engine](bana_engine.md) |
+| [bana/event_structurizer.py](../bana/event_structurizer.py) | [Bana Engine](bana_engine.md) |
+| [memory/narrative_engine.py](../memory/narrative_engine.py) | [Memory Architecture](memory_architecture.md) |
+
+See [assets/narrative_engine_flow.mmd](assets/narrative_engine_flow.mmd) for the event → Mistral → multi-track outputs → memory/operator flow.
