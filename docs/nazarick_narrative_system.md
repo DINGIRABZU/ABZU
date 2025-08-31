@@ -1,45 +1,77 @@
 # Nazarick Narrative System
 
-This guide outlines how biosignals become narrative events within the Nazarick domain.
+This guide explains how story events are routed through Nazarick, linking each
+event to a servant agent and the memory layer that preserves it. Biosignals and
+other inputs become `StoryEvent` objects that feed agent personas and drive
+future behaviour.
 
 ## Architecture
+
 ```mermaid
 flowchart LR
     S[Sensors] --> I[ingest_biosignals.py]
     I --> B[Bana agent]
     B --> M[Narrative model]
-    M --> C[Cinematic]
-    M --> A[Audio]
-    M --> V[Visual]
-    M --> U[USD]
+    M -->|log_story| N[Narrative Memory]
+    M -->|persona update| A[Agent Registry]
 ```
 
-## Dependencies
-- `data/biosignals/` – sample datasets for testing and development.
-- `scripts/ingest_biosignals.py` – converts biosignal rows into narrative actions.
-- `memory/narrative_engine.py` – defines `StoryEvent` and `log_story` storage.
+`log_story` persists each event to the [narrative memory](memory_architecture.md)
+while a light‑weight summary is sent to the agent registry so servants can shift
+their persona traits.
 
-## Schema
-| column | type | unit |
-| --- | --- | --- |
-| `timestamp` | ISO 8601 UTC | - |
-| `heart_rate` | float | BPM |
-| `skin_temp` | float | °C |
-| `eda` | float | µS |
+## Event–Agent Map
 
-## Ingestion
-1. Run `python scripts/ingest_biosignals.py` to process CSV files in `data/biosignals/`.
-2. Each row becomes a `StoryEvent` where the action is **elevated heart rate** if `heart_rate` > 74 BPM, otherwise **calm**.
-3. Events are stored via `log_story` for downstream consumption by narrative models.
+| event action        | servant agent             | memory layer   |
+|--------------------|---------------------------|----------------|
+| elevated heart rate | `bio_adaptive_narrator`   | narrative      |
+| calm                | `harmonic_sentinel`       | emotional      |
+| spike in EDA        | `battle_scribe`           | mental         |
 
-## Sample Event Flow
-1. Sensors emit heart rate, skin temperature, and electrodermal activity readings.
-2. `ingest_biosignals.py` reads each CSV row and labels the action as **elevated heart rate** when BPM exceeds 74, otherwise **calm**.
-3. A `StoryEvent` is created for each row and recorded via `log_story` for later retrieval.
+Agents listed above live in [`agents/nazarick`](../agents/nazarick) and declare
+their chakra alignment in [`agent_registry.yaml`](../agents/nazarick/agent_registry.yaml).
+The memory layers are defined in [Memory Architecture](memory_architecture.md).
+
+## Dataset Example
+
+Sample rows illustrating how story events are captured:
+
+```json
+{
+  "timestamp": "2025-09-14T10:15:00Z",
+  "heart_rate": 82.0,
+  "skin_temp": 33.1,
+  "eda": 0.42,
+  "agent": "bio_adaptive_narrator",
+  "memory_layer": "narrative",
+  "action": "elevated heart rate"
+}
+{
+  "timestamp": "2025-09-14T10:16:30Z",
+  "heart_rate": 68.0,
+  "skin_temp": 32.8,
+  "eda": 0.12,
+  "agent": "harmonic_sentinel",
+  "memory_layer": "emotional",
+  "action": "calm"
+}
+```
+
+Dataset entries may be appended to `data/biosignals/events.jsonl` for training
+and replay. The `agent` and `memory_layer` fields direct downstream routing.
+
+## Persona Impact
+
+When events are logged, a compact summary is emitted to the agent registry. The
+registry increments counters for the originating agent and adjusts
+`persona_traits`—for example, repeated **elevated heart rate** events raise the
+"vigilant" trait for `bio_adaptive_narrator`. These traits are referenced during
+dialogue generation, allowing servants to evolve personalities grounded in the
+recorded narrative stream.
 
 ## Tests
 
-Validate the ingestion pipeline:
+Validate the ingestion and mapping pipeline:
 
 ```bash
 pytest tests/narrative_engine/test_biosignal_pipeline.py \
