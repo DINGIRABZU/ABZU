@@ -5,10 +5,13 @@ This guide outlines how biosignals become narrative events within the Nazarick d
 ## Architecture
 ```mermaid
 flowchart LR
-    Sensors --> CSV[Anonymized CSV]
-    CSV --> Ingest[scripts/ingest_biosignals.py]
-    Ingest --> Transform[StoryEvent]
-    Transform --> Log[log_story]
+    S[Sensors] --> I[ingest_biosignals.py]
+    I --> B[Bana agent]
+    B --> M[Narrative model]
+    M --> C[Cinematic]
+    M --> A[Audio]
+    M --> V[Visual]
+    M --> U[USD]
 ```
 
 ## Dependencies
