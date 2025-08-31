@@ -1,0 +1,6 @@
+%% Mermaid diagram of narrative engine flow
+flowchart LR
+    E[Event] --> M[Mistral]
+    M --> T{Multi-track outputs}
+    T --> Mem[Memory]
+    T --> Op[Operator]
