@@ -1,0 +1,25 @@
+questions:
+  - id: 1
+    prompt: "According to The Absolute Protocol's Contributor Awareness Checklist, what must every module, connector, and service declare?"
+    options:
+      a: "__author__"
+      b: "__version__"
+      c: "__description__"
+      d: "__license__"
+    answer: "b"
+  - id: 2
+    prompt: "docs/KEY_DOCUMENTS.md requires each entry in onboarding_confirm.yml to include which four fields?"
+    options:
+      a: "purpose, scope, key rules, insight"
+      b: "author, license, date, reviewer"
+      c: "purpose, scope, revision history, changelog"
+      d: "hash, file size, file type, owner"
+    answer: "a"
+  - id: 3
+    prompt: "Which script validates the system ignition sequence and logs component readiness?"
+    options:
+      a: "scripts/verify_versions.py"
+      b: "scripts/validate_ignition.py"
+      c: "scripts/check_env.py"
+      d: "scripts/health_check_connectors.py"
+    answer: "b"

@@ -119,6 +119,8 @@ whenever a connector is added, removed, or modified.
 
 Before submitting a pull request, confirm:
 
+- **Onboarding quiz**
+  - Include answers from `onboarding_quiz.yml` in your first pull request
 - **Key documents reviewed**
   - `AGENTS.md` – repository-wide agent instructions
   - `docs/documentation_protocol.md` – documentation workflow
