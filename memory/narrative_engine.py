@@ -10,7 +10,7 @@ process restarts and can be queried later.
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,6 +36,32 @@ class StoryEvent:
     actor: str
     action: str
     symbolism: str | None = None
+
+
+def compose_multitrack_story(events: Iterable[StoryEvent]) -> Dict[str, Any]:
+    """Compose cinematic, audio, visual and USD tracks from ``events``.
+
+    Parameters
+    ----------
+    events:
+        Sequence of :class:`StoryEvent` objects forming the narrative.
+
+    Returns
+    -------
+    dict
+        Dictionary with ``prose``, ``audio``, ``visual`` and ``usd`` tracks.
+    """
+
+    prose = [f"{e.actor} {e.action}." for e in events]
+    audio = [{"cue": f"{e.actor}_{e.action}".replace(" ", "_")} for e in events]
+    visual = [{"directive": f"frame {e.actor} {e.action}"} for e in events]
+    usd = [{"op": "AddPrim", "path": f"/{e.actor}", "action": e.action} for e in events]
+    return {
+        "prose": " ".join(prose),
+        "audio": audio,
+        "visual": visual,
+        "usd": usd,
+    }
 
 
 class NarrativeEngine:
@@ -104,7 +130,8 @@ def log_event(event: Dict[str, Any]) -> None:
     event_id = uuid.uuid4().hex
     with _get_conn() as conn:
         conn.execute(
-            "INSERT INTO events (id, time, agent_id, event_type, payload) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO events (id, time, agent_id, event_type, payload) "
+            "VALUES (?, ?, ?, ?, ?)",
             (
                 event_id,
                 event["time"],
@@ -162,7 +189,8 @@ def search_events(query_text: str, n_results: int = 5) -> Iterator[Dict[str, Any
     with _get_conn() as conn:
         for event_id in ids:
             row = conn.execute(
-                "SELECT id, time, agent_id, event_type, payload FROM events WHERE id = ?",
+                "SELECT id, time, agent_id, event_type, payload FROM events "
+                "WHERE id = ?",
                 (event_id,),
             ).fetchone()
             if row:
@@ -182,6 +210,7 @@ __all__ = [
     "log_story",
     "stream_stories",
     "log_event",
+    "compose_multitrack_story",
     "query_events",
     "search_events",
     "DB_PATH",

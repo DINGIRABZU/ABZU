@@ -1,0 +1,6 @@
+{
+  "prose": "Hero draws sword.",
+  "audio": [{"cue": "Hero_draws_sword"}],
+  "visual": [{"directive": "frame Hero draws sword"}],
+  "usd": [{"op": "AddPrim", "path": "/Hero", "action": "draws sword"}]
+}
