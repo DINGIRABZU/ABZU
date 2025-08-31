@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
 **Version:** v1.0.67
-**Last updated:** 2025-09-10
+**Last updated:** 2025-08-31
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B."
@@ -152,6 +152,12 @@ similar to the RAZAR component links to summarize relationships:
 | Source Module | Companion Docs |
 | --- | --- |
 | [agents/example_agent.py](../agents/example_agent.py) | [example_agent.md](example_agent.md), [system_blueprint.md](system_blueprint.md) |
+
+### Nazarick Agent Update Requirements
+For any agent addition or change:
+- Update `agent_registry.yaml` and `docs/nazarick_agents.md`.
+- Log launch outcomes to `logs/nazarick_startup.json`.
+- Confirm operator-facing displays reflect new agents.
 
 ### Diagram Requirements
 

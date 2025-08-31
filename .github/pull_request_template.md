@@ -26,3 +26,4 @@ I did X on Y to obtain Z, expecting behavior B.
 ## Connector/Index updated?
 - [ ] Connector index entry added/updated <!-- Required: confirm CONNECTOR_INDEX.md lists purpose, version, endpoints, auth method, status, and links -->
 - [ ] Index updated? <!-- Required: confirm component index and documentation index regenerated -->
+- [ ] Nazarick agent registry & docs updated
