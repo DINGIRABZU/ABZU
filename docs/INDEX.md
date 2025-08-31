@@ -171,6 +171,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
 | [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Personality Layer | A four-phase state machine powers the **Albedo** layer, signalling Nazarick agents and driving responses through a re... | - |
 | [BLUEPRINT_EXPORT.md](BLUEPRINT_EXPORT.md) | Blueprint Export | This snapshot lists major documentation assets with links that can be pinned to a specific commit. For general contri... | - |
+| [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) | Contributor Guide | - | - |
 | [CONTRIBUTOR_HANDBOOK.md](CONTRIBUTOR_HANDBOOK.md) | Contributor Handbook | This handbook helps new contributors get set up, understand the repository layout, and work through common developmen... | - |
 | [CORPUS_MEMORY.md](CORPUS_MEMORY.md) | Corpus Memory | This repository preserves several collections of source texts used by the music and language tools. Each directory se... | - |
 | [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md) | Crown Agent Overview | The diagram below shows how the main components interact when using the console. A later section outlines deployment... | `../init_crown_agent.py`, `../razar/crown_handshake.py`, `../start_dev_agents.py` |
