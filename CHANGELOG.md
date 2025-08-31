@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added recovery playbook documenting snapshot restoration steps.
 - Mapped cortex, emotional, mental, spiritual and narrative memory stores in
   `docs/memory_architecture.md`.
+- Documented Albedo layer personas and deployment logging.
 - Expanded `docs/bana_engine.md` with architecture diagram, dependencies, dataset paths, failure scenarios, and version history; exposed `__version__` in Bana modules and synced `component_index.json`.
 - Documented ignition flow from RAZAR through Bana to operator interface in
   `docs/ignition_flow.md`.
