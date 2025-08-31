@@ -43,6 +43,7 @@ Omitting any field fails verification checks enforced by `scripts/verify_doc_has
 | [Nazarick Narrative System](nazarick_narrative_system.md) | Biosignal→StoryEvent pipeline and memory hooks | Quarterly |
 | [RAZAR AI agents config](../config/razar_ai_agents.json) | Roster of handover agents and authentication settings | Quarterly |
 | [Environment check script](../scripts/check_env.py) | Verifies required packages and tools are installed | Each commit |
+| [Change Intent Ledger](../logs/change_intent.jsonl) | Records commit intents and observed behavior | Each commit |
 
 These documents define repository-wide conventions and rules. Repository policy
 and pre-commit checks prevent their removal or renaming. When related components

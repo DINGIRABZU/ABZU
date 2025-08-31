@@ -18,6 +18,7 @@ logs/*
 !logs/ignition_validation.json
 !logs/bana/
 !logs/bana/*
+!logs/change_intent.jsonl
 
 # Ignore Blender files
 *.blend

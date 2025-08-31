@@ -15,6 +15,8 @@ from collections.abc import Iterable
 
 import tomllib
 
+__version__ = "0.1.0"
+
 # Mapping of chakra names to associated module paths.
 # Paths ending with a slash are treated as directory prefixes.
 CHAKRA_MODULES: dict[str, list[str]] = {
@@ -30,6 +32,27 @@ CHAKRA_MODULES: dict[str, list[str]] = {
     ],
     "crown": ["init_crown_agent.py", "start_spiral_os.py", "crown_model_launcher.sh"],
 }
+
+
+def _verify_intent_log() -> None:
+    """Ensure the latest commit is recorded in the change intent ledger."""
+    ledger = Path("logs/change_intent.jsonl")
+    if not ledger.exists():
+        raise RuntimeError("logs/change_intent.jsonl is missing")
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    with ledger.open(encoding="utf-8") as fh:
+        for line in fh:
+            if line.strip() and json.loads(line).get("commit_hash") == head:
+                return
+    raise RuntimeError(
+        "Head commit not recorded in logs/change_intent.jsonl; "
+        "run scripts/log_intent.py"
+    )
 
 
 def run(cmd: list[str]) -> None:
@@ -212,6 +235,7 @@ def bump_chakra_versions() -> dict[str, str]:
 
 def main() -> None:
     """Update changelog, tag the release and build a wheel."""
+    _verify_intent_log()
     chakra_updates = bump_chakra_versions()
     version = get_version()
     update_changelog(version, chakra_updates)
