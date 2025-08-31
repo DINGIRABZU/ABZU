@@ -94,6 +94,17 @@ State shifts can alert specific Nazarick servants to intervene:
 | Rubedo | Cocytus Prompt Arbiter | `#glacier-prison` |
 | Citrinitas | Demiurge Strategic Simulator | `#lava-pits` |
 
+### Persona & Responsibilities
+
+Each chromatic state embodies a narrative role with its own emotional tone:
+
+| State | Role | Emotional Context |
+| --- | --- | --- |
+| Nigredo | Breaks down perception and exposes core wounds | Grief, emptiness |
+| Albedo | Washes the shadow with compassionate reflection | Hope, empathy |
+| Rubedo | Forges insight into decisive action | Passion, resolve |
+| Citrinitas | Illuminates the path toward equilibrium | Wisdom, serenity |
+
 You can also use the layer programmatically:
 
 ```python
@@ -257,6 +268,32 @@ Typical output is:
 
 ```
 Citrinitas speaks in golden clarity: proceed
+```
+
+## Deployment & Logging
+
+The layer reads configuration from `config/albedo_config.yaml`:
+
+```yaml
+glm:
+  endpoint: https://glm.example.com/glm41v_9b
+  api_key: ${GLM_API_KEY}
+logging:
+  conversation: logs/albedo_layer.log
+  metrics: logs/albedo_metrics.jsonl
+```
+
+Launch the layer with:
+
+```bash
+python -m INANNA_AI.main --personality albedo --config config/albedo_config.yaml
+```
+
+A successful run writes structured logs such as:
+
+```text
+INFO albedo.layer state=Nigredo msg="I love Alice" emotion=affection
+INFO albedo.layer state=Albedo msg="Response text" emotion=joy
 ```
 
 ## Version History
