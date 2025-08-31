@@ -151,7 +151,7 @@
       "id": "memory_layers",
       "chakra": "root",
       "type": "subsystem",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "path": "memory",
       "purpose": "Layered memory stores for system state",
       "dependencies": [
@@ -248,15 +248,16 @@
       "id": "narrative_engine",
       "chakra": "heart",
       "type": "module",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "path": "memory/narrative_engine.py",
-      "purpose": "Records and streams story events",
+      "purpose": "Records events and composes multitrack narrative output",
       "dependencies": ["chromadb"],
       "tests": [
         "tests/narrative_engine/test_biosignal_pipeline.py",
         "tests/narrative_engine/test_biosignal_transformation.py",
         "tests/narrative_engine/test_ingestion_to_mistral_output.py",
-        "tests/narrative_engine/test_ingest_persist_retrieve.py"
+        "tests/narrative_engine/test_ingest_persist_retrieve.py",
+        "tests/narrative_engine/test_multitrack_output.py"
       ],
       "status": "experimental",
       "metrics": {

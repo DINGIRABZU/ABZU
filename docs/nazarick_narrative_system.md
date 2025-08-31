@@ -91,6 +91,43 @@ The SQLite schema comprises:
 `query_events` yields events filtered by agent or type. `stream_stories`
 remains available for legacy text logs.
 
+## Multitrack Output
+
+`compose_multitrack_story` converts a sequence of `StoryEvent` objects into
+four parallel tracks:
+
+| track  | description                              |
+|--------|------------------------------------------|
+| `prose` | Cinematic narration string               |
+| `audio` | List of audio cue dictionaries           |
+| `visual`| List of visual directive dictionaries    |
+| `usd`   | USD composition instructions             |
+
+### Output Schema
+
+```json
+{
+  "prose": "string",
+  "audio": [{"cue": "string"}],
+  "visual": [{"directive": "string"}],
+  "usd": [{"op": "string", "path": "string", "action": "string"}]
+}
+```
+
+### Sample Output
+
+See [`nazarick_multitrack_sample.json`](nazarick_multitrack_sample.json) for a
+complete example:
+
+```json
+{
+  "prose": "Hero draws sword.",
+  "audio": [{"cue": "Hero_draws_sword"}],
+  "visual": [{"directive": "frame Hero draws sword"}],
+  "usd": [{"op": "AddPrim", "path": "/Hero", "action": "draws sword"}]
+}
+```
+
 ## Event–Agent Map
 
 | event action        | servant agent             | memory layer   |
@@ -157,3 +194,4 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py \
 | 0.1.0 | 2025-10-17 | Documented biosignal pipeline, memory hooks, and modules. |
 | 0.1.1 | 2025-10-17 | Added SQLite persistence layer and schema details. |
 | 0.2.0 | 2025-10-17 | Introduced event structurizer and Chroma-backed search. |
+| 0.3.0 | 2025-10-17 | Added multitrack output schema and sample. |
