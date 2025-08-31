@@ -1,0 +1,10 @@
+{
+  "boot_config_loaded": true,
+  "handshake": {
+    "success": false,
+    "error": "CROWN_WS_URL not set"
+  },
+  "connectors": {
+    "webrtc": false
+  }
+}

@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Rotated mission brief archives and required Crown availability via `CROWN_WS_URL` before boot.
 - Delegated failure recovery to remote agents via `ai_invoker.handover` and
   logged invocations and patch results.
+- Added `scripts/validate_ignition.py` to execute a minimal RAZAR boot, verify the Crown handshake, confirm connector availability, and capture a summary in `logs/ignition_validation.json`.
 - Linked environment schema and example fields in the RAZAR agent guide.
 - Recorded applied patch diffs in `logs/razar_ai_patches.json`.
 - Linked Operator Protocol guide from the RAZAR agent cross-links section.
