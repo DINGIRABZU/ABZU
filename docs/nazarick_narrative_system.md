@@ -36,3 +36,12 @@ flowchart LR
 1. Sensors emit heart rate, skin temperature, and electrodermal activity readings.
 2. `ingest_biosignals.py` reads each CSV row and labels the action as **elevated heart rate** when BPM exceeds 74, otherwise **calm**.
 3. A `StoryEvent` is created for each row and recorded via `log_story` for later retrieval.
+
+## Tests
+
+Validate the ingestion pipeline:
+
+```bash
+pytest tests/narrative_engine/test_biosignal_pipeline.py \
+       tests/narrative_engine/test_biosignal_transformation.py
+```

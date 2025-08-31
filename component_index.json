@@ -399,7 +399,10 @@
       "path": "data/biosignals",
       "purpose": "Anonymized biosignal CSVs for ingestion tests",
       "dependencies": [],
-      "tests": [],
+      "tests": [
+        "tests/narrative_engine/test_biosignal_pipeline.py",
+        "tests/narrative_engine/test_biosignal_transformation.py"
+      ],
       "status": "experimental",
       "metrics": {
         "coverage": 0.0
