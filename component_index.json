@@ -380,15 +380,49 @@
         "tests/agents/test_bana_narrator.py",
         "tests/ignition/test_crown_wakes_services.py"
       ],
-      "memory_layers": [
-        { "layer": "cortex", "ignition_stage": 4 },
-        { "layer": "emotional", "ignition_stage": 4 },
-        { "layer": "narrative", "ignition_stage": 4 }
-      ],
+      "memory_layers": ["cortex", "emotional", "narrative"],
       "status": "experimental",
       "metrics": {
         "coverage": 1.0
       },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "bana_bio_adaptive_narrator",
+      "chakra": "heart",
+      "type": "module",
+      "version": "0.0.2",
+      "path": "agents/bana/bio_adaptive_narrator.py",
+      "purpose": "Generate narrative text from biosignal streams",
+      "dependencies": [
+        "biosppy",
+        "numpy",
+        "transformers",
+        "memory.narrative_engine",
+        "spiral_memory",
+        "connectors.primordials_api"
+      ],
+      "tests": [
+        "tests/agents/test_bana.py",
+        "tests/agents/test_bana_narrator.py"
+      ],
+      "status": "experimental",
+      "metrics": {"coverage": 1.0},
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "bana_inanna_bridge",
+      "chakra": "heart",
+      "type": "module",
+      "version": "0.0.2",
+      "path": "agents/bana/inanna_bridge.py",
+      "purpose": "Bridge structured INANNA interactions into Bana's narrative engine",
+      "dependencies": ["agents.event_bus"],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {"coverage": 1.0},
       "ignition_stage": 4,
       "adr": null
     },

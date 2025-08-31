@@ -48,6 +48,20 @@ Core modules participating in the pipeline:
 - [`memory/emotional.py`](../memory/emotional.py)
 - [`memory/narrative_engine.py`](../memory/narrative_engine.py)
 
+## Component Registry
+
+The modules above are registered in [`component_index.json`](../component_index.json)
+under the following component IDs:
+
+| Component ID | Path |
+|--------------|------|
+| `bana` | `agents/bana` |
+| `bana_bio_adaptive_narrator` | `agents/bana/bio_adaptive_narrator.py` |
+| `bana_inanna_bridge` | `agents/bana/inanna_bridge.py` |
+| `bana_event_structurizer` | `bana/event_structurizer.py` |
+| `bana_narrative_api` | `bana/narrative_api.py` |
+| `narrative_engine` | `memory/narrative_engine.py` |
+
 ## Event Schema
 
 Events are stored as JSON objects matching this schema:
