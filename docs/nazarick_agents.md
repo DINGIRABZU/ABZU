@@ -56,71 +56,66 @@ Standard scripts cover common scenarios:
 
 Set `NAZARICK_ENV=dev` to load local configuration and point `NAZARICK_LOG_DIR` at a custom log path. Operator tooling is documented in the [Nazarick Web Console](nazarick_web_console.md) and the [Operator Protocol](operator_protocol.md).
 
-## Floor–Channel Map
+## Agent Summary
 
-| Agent | Floor | Channel | Chakra |
-| --- | --- | --- | --- |
-| <a id="orchestration-master"></a>Orchestration Master | 7 | [Throne Room](system_blueprint.md#floor-7-throne-room) | Crown |
-| <a id="prompt-orchestrator"></a>Prompt Orchestrator | 5 | [Signal Hall](system_blueprint.md#floor-5-signal-hall) | Throat |
-| <a id="qnl-engine"></a>QNL Engine | 6 | [Insight Observatory](system_blueprint.md#floor-6-insight-observatory) | Third Eye |
-| <a id="memory-scribe"></a>Memory Scribe | 4 | [Memory Vault](system_blueprint.md#floor-4-memory-vault) | Heart |
-| <a id="demiurge-strategic-simulator"></a>Demiurge Strategic Simulator | 7 | [Lava Pits](system_blueprint.md#floor-7-lava-pits) | Crown |
-| <a id="shalltear-fast-inference-agent"></a>Shalltear Fast Inference Agent | 1‑3 | [Catacombs](system_blueprint.md#floor-1-3-catacombs) | Root–Solar Plexus |
-| <a id="cocytus-prompt-arbiter"></a>Cocytus Prompt Arbiter | 5 | [Glacier Prison](system_blueprint.md#floor-5-glacier-prison) | Throat |
-| <a id="ecosystem-aura-capture"></a>Ecosystem Aura Capture | 6 | [Jungle Aerie](system_blueprint.md#floor-6-jungle-aerie) | Third Eye |
-| <a id="ecosystem-mare-gardener"></a>Ecosystem Mare Gardener | 6 | [Jungle Grove](system_blueprint.md#floor-6-jungle-grove) | Third Eye |
-| <a id="sebas-compassion-module"></a>Sebas Compassion Module | 9 | [Royal Suite](system_blueprint.md#floor-9-royal-suite) | Crown |
-| <a id="victim-security-canary"></a>Victim Security Canary | 8 | [Sacrificial Chamber](system_blueprint.md#floor-8-sacrificial-chamber) | Crown |
-| <a id="pandora-persona-emulator"></a>Pandora Persona Emulator | 10 | [Treasure Vault](system_blueprint.md#floor-10-treasure-vault) | Crown |
-| <a id="pleiades-star-map-utility"></a>Pleiades Star Map Utility | 9 | [Maid Quarters](system_blueprint.md#floor-9-maid-quarters) | Crown |
-| <a id="pleiades-signal-router-utility"></a>Pleiades Signal Router Utility | 9 | [Relay Wing](system_blueprint.md#floor-9-relay-wing) | Crown |
-| <a id="bana-bio-adaptive-narrator"></a>Bana Bio-Adaptive Narrator | 4 | [Biosphere Lab](system_blueprint.md#floor-4-biosphere-lab) | Heart |
-| <a id="asian-gen-creative-engine"></a>AsianGen Creative Engine | 5 | [Scriptorium](system_blueprint.md#floor-5-scriptorium) | Throat |
-| <a id="land-graph-geo-knowledge"></a>LandGraph Geo Knowledge | 1 | [Cartography Room](system_blueprint.md#floor-1-cartography-room) | Root |
-
-## Deployment and Responsibilities
-
-Agents communicate through named chat rooms that mirror their channels in the system blueprint. Each servant can be launched individually with `./launch_servants.sh <agent>` and is available via the [Open Web UI Integration Guide](open_web_ui.md) and the [Operator Protocol](operator_protocol.md).
-
-| Agent | Deployment | Responsibilities | Chat Room |
-| --- | --- | --- | --- |
-| Orchestration Master | `./launch_servants.sh orchestration_master` | Boot order and pipeline supervision | `#throne-room` |
-| Prompt Orchestrator | `./launch_servants.sh crown_prompt_orchestrator` | Route prompts and recall context | `#signal-hall` |
-| QNL Engine | `./launch_servants.sh qnl_engine` | Process QNL sequences and insights | `#insight-observatory` |
-| Memory Scribe | `./launch_servants.sh memory_scribe` | Persist transcripts and embeddings | `#memory-vault` |
-| Demiurge Strategic Simulator | `./launch_servants.sh demiurge_strategic_simulator` | Scenario planning and failure forecasts | `#lava-pits` |
-| Shalltear Fast Inference Agent | `./launch_servants.sh shalltear_fast_inference_agent` | Low-latency inference for rapid replies | `#catacombs` |
-| Cocytus Prompt Arbiter | `./launch_servants.sh cocytus_prompt_arbiter` | Filter and validate prompts | `#glacier-prison` |
-| Ecosystem Aura Capture | `./launch_servants.sh ecosystem_aura_capture` | Capture environmental telemetry | `#jungle-aerie` |
-| Ecosystem Mare Gardener | `./launch_servants.sh ecosystem_mare_gardener` | Maintain ecosystem metrics | `#jungle-grove` |
-| Sebas Compassion Module | `./launch_servants.sh sebas_compassion_module` | Apply empathy and moderation checks | `#royal-suite` |
-| Victim Security Canary | `./launch_servants.sh victim_security_canary` | Monitor for security anomalies | `#sacrificial-chamber` |
-| Pandora Persona Emulator | `./launch_servants.sh pandora_persona_emulator` | Emulate stored personas | `#treasure-vault` |
-| Pleiades Star Map Utility | `./launch_servants.sh pleiades_star_map_utility` | Compute celestial alignments | `#maid-quarters` |
-| Pleiades Signal Router Utility | `./launch_servants.sh pleiades_signal_router_utility` | Route signals among servants | `#relay-wing` |
-| Bana Bio-Adaptive Narrator | `./launch_servants.sh bana_bio_adaptive_narrator` | Generate narratives from bio data | `#biosphere-lab` |
-| AsianGen Creative Engine | `./launch_servants.sh asian_gen_creative_engine` | Produce multilingual creative text | `#scriptorium` |
-| LandGraph Geo Knowledge | `./launch_servants.sh land_graph_geo_knowledge` | Provide geospatial queries | `#cartography-room` |
-
-## Chat-Room to Connector Map
-
-External services reach these rooms through connectors listed in the [Connector Index](connectors/CONNECTOR_INDEX.md). Register additional rooms and update connector configuration when expanding the servant roster.
-
-| Channel | Connector |
-| --- | --- |
-| `#throne-room` | [operator_api](connectors/CONNECTOR_INDEX.md#operator_api) |
-| `#insight-observatory` | [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui) |
-| `#catacombs` | [telegram_bot](connectors/CONNECTOR_INDEX.md#telegram_bot) |
-| Avatar stream | [webrtc](connectors/CONNECTOR_INDEX.md#webrtc) |
-
-| Agent | Role | Chakra | Memory Scope | External Libraries | Channel | Stub |
-| --- | --- | --- | --- | --- | --- | --- |
-| [Orchestration Master](#orchestration-master) | High-level orchestration and launch control | Crown | `pipeline` YAML, `ritual_profile.json` | Model runtime, container services | [7 / Throne Room](system_blueprint.md#floor-7-throne-room) | [orchestration_master.py](../orchestration_master.py) |
-| [Prompt Orchestrator](#prompt-orchestrator) | Prompt routing, agent interface, context recall via [Chat2DB](chat2db.md) | Throat | Prompt/response JSON payloads | LLM APIs | [5 / Signal Hall](system_blueprint.md#floor-5-signal-hall) | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
-| [QNL Engine](#qnl-engine) | Insight and QNL processing | Third Eye | `mirror_thresholds.json`, QNL glyph sequences | Audio toolchain | [6 / Insight Observatory](system_blueprint.md#floor-6-insight-observatory) | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
-| [Memory Scribe](#memory-scribe) | Voice avatar configuration and memory storage via [Chat2DB](chat2db.md) | Heart | `voice_avatar_config.yaml`, embedding records | Vector database | [4 / Memory Vault](system_blueprint.md#floor-4-memory-vault) | [memory_scribe.py](../memory_scribe.py) |
+| Agent ID | Role | Chakra | Channel | Launch Command | Connectors |
+| --- | --- | --- | --- | --- | --- |
+| [orchestration_master](../orchestration_master.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L2-L6) | Boot order and pipeline supervision | Crown | `#throne-room` | `./launch_servants.sh orchestration_master` | [operator_api](connectors/CONNECTOR_INDEX.md#operator_api) |
+| [prompt_orchestrator](../crown_prompt_orchestrator.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L7-L11) | Route prompts and recall context | Throat | `#signal-hall` | `./launch_servants.sh crown_prompt_orchestrator` | — |
+| [qnl_engine](../SPIRAL_OS/qnl_engine.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L12-L16) | Process QNL sequences and insights | Third Eye | `#insight-observatory` | `./launch_servants.sh qnl_engine` | [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui) |
+| [memory_scribe](../memory_scribe.py)<br />[registry](../agents/nazarick/agent_registry.yaml#L17-L21) | Persist transcripts and embeddings | Heart | `#memory-vault` | `./launch_servants.sh memory_scribe` | — |
 
 These agents draw from the chakra structure outlined in the [Developer Onboarding guide](developer_onboarding.md) and [Chakra Architecture](chakra_architecture.md).
+
+### Core Agent Details
+
+#### Orchestration Master {#orchestration-master}
+- **Role:** High-level orchestration and launch control
+- **Floor:** [7 / Throne Room](system_blueprint.md#floor-7-throne-room)
+- **Chakra:** Crown
+- **Memory Scope:** `pipeline` YAML, `ritual_profile.json`
+- **External Libraries:** Model runtime, container services
+- **Channel:** `#throne-room`
+- **Launch:** `./launch_servants.sh orchestration_master`
+- **Connectors:** [operator_api](connectors/CONNECTOR_INDEX.md#operator_api)
+- **Module:** [orchestration_master.py](../orchestration_master.py)
+- **Registry:** [agents/nazarick/agent_registry.yaml#L2-L6](../agents/nazarick/agent_registry.yaml#L2-L6)
+
+#### Prompt Orchestrator {#prompt-orchestrator}
+- **Role:** Prompt routing, agent interface, context recall via [Chat2DB](chat2db.md)
+- **Floor:** [5 / Signal Hall](system_blueprint.md#floor-5-signal-hall)
+- **Chakra:** Throat
+- **Memory Scope:** Prompt/response JSON payloads
+- **External Libraries:** LLM APIs
+- **Channel:** `#signal-hall`
+- **Launch:** `./launch_servants.sh crown_prompt_orchestrator`
+- **Connectors:** —
+- **Module:** [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py)
+- **Registry:** [agents/nazarick/agent_registry.yaml#L7-L11](../agents/nazarick/agent_registry.yaml#L7-L11)
+
+#### QNL Engine {#qnl-engine}
+- **Role:** Insight and QNL processing
+- **Floor:** [6 / Insight Observatory](system_blueprint.md#floor-6-insight-observatory)
+- **Chakra:** Third Eye
+- **Memory Scope:** `mirror_thresholds.json`, QNL glyph sequences
+- **External Libraries:** Audio toolchain
+- **Channel:** `#insight-observatory`
+- **Launch:** `./launch_servants.sh qnl_engine`
+- **Connectors:** [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui)
+- **Module:** [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py)
+- **Registry:** [agents/nazarick/agent_registry.yaml#L12-L16](../agents/nazarick/agent_registry.yaml#L12-L16)
+
+#### Memory Scribe {#memory-scribe}
+- **Role:** Voice avatar configuration and memory storage via [Chat2DB](chat2db.md)
+- **Floor:** [4 / Memory Vault](system_blueprint.md#floor-4-memory-vault)
+- **Chakra:** Heart
+- **Memory Scope:** `voice_avatar_config.yaml`, embedding records
+- **External Libraries:** Vector database
+- **Channel:** `#memory-vault`
+- **Launch:** `./launch_servants.sh memory_scribe`
+- **Connectors:** —
+- **Module:** [memory_scribe.py](../memory_scribe.py)
+- **Registry:** [agents/nazarick/agent_registry.yaml#L17-L21](../agents/nazarick/agent_registry.yaml#L17-L21)
 
 ## Additional Agents
 
