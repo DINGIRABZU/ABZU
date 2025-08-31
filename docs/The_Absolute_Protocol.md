@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.63
-**Last updated:** 2025-09-01
+**Version:** v1.0.64
+**Last updated:** 2025-09-02
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute.
@@ -299,6 +299,12 @@ All endpoints must publish machine-validated schemas:
 
 - Maintain the [Dependency Registry](dependency_registry.md) of approved runtimes, frameworks, and library minimum versions.
 - Update the registry when dependencies are added, upgraded, or deprecated, and validate changes with `pre-commit run --files docs/dependency_registry.md docs/INDEX.md`.
+
+### Connector Registry Protocol
+
+- Register each connector in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, authentication method, status, and links to documentation and source code.
+- Update the registry whenever a connector's interface, version, or status changes.
+- Validate updates with `pre-commit run --files docs/connectors/CONNECTOR_INDEX.md docs/INDEX.md`.
 
 ## Release Protocol
 
