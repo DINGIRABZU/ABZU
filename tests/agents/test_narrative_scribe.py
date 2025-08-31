@@ -5,9 +5,12 @@ from memory import narrative_engine
 
 from agents.nazarick import narrative_scribe as ns
 
+__version__ = "0.1.0"
+
 
 def test_process_event_writes_log_and_memory(tmp_path, monkeypatch):
     monkeypatch.setattr(ns, "LOG_FILE", tmp_path / "story.log")
+    monkeypatch.setattr(narrative_engine, "DB_PATH", tmp_path / "stories.db")
 
     def fake_personas():
         return {
@@ -24,6 +27,6 @@ def test_process_event_writes_log_and_memory(tmp_path, monkeypatch):
     scribe.process_event(event)
 
     text = (tmp_path / "story.log").read_text().strip()
-    assert text == "a did {\"x\": 1}"
+    assert text == 'a did {"x": 1}'
     stories = list(narrative_engine.stream_stories())
     assert stories[-1] == text

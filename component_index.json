@@ -151,7 +151,7 @@
       "id": "memory_layers",
       "chakra": "root",
       "type": "subsystem",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "path": "memory",
       "purpose": "Layered memory stores for system state",
       "dependencies": [
@@ -248,14 +248,15 @@
       "id": "narrative_engine",
       "chakra": "heart",
       "type": "module",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "path": "memory/narrative_engine.py",
       "purpose": "Records and streams story events",
       "dependencies": [],
       "tests": [
         "tests/narrative_engine/test_biosignal_pipeline.py",
         "tests/narrative_engine/test_biosignal_transformation.py",
-        "tests/narrative_engine/test_ingestion_to_mistral_output.py"
+        "tests/narrative_engine/test_ingestion_to_mistral_output.py",
+        "tests/narrative_engine/test_ingest_persist_retrieve.py"
       ],
       "status": "experimental",
       "metrics": {
@@ -414,7 +415,26 @@
       "dependencies": [],
       "tests": [
         "tests/narrative_engine/test_biosignal_pipeline.py",
-        "tests/narrative_engine/test_biosignal_transformation.py"
+        "tests/narrative_engine/test_biosignal_transformation.py",
+        "tests/narrative_engine/test_ingest_persist_retrieve.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "narrative_story_db",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/narrative_engine.db",
+      "purpose": "SQLite store of narrative events",
+      "dependencies": [],
+      "tests": [
+        "tests/narrative_engine/test_ingest_persist_retrieve.py"
       ],
       "status": "experimental",
       "metrics": {

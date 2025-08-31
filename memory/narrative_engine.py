@@ -4,16 +4,20 @@
 Provides interfaces for recording story events composed of an actor,
 action and symbolism.
 
-Also includes simple helper functions for logging generated stories in
-memory for later retrieval.
+Story text is persisted in a SQLite backend so narratives survive
+process restarts and can be queried later.
 """
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from dataclasses import dataclass
-from typing import Iterable, List
+from pathlib import Path
+import sqlite3
+from typing import Iterable
+
+DB_PATH = Path(__file__).resolve().parents[1] / "data" / "narrative_engine.db"
 
 
 @dataclass
@@ -37,19 +41,33 @@ class NarrativeEngine:
         raise NotImplementedError
 
 
-_STORY_LOG: List[str] = []
+def _get_conn() -> sqlite3.Connection:
+    """Return connection to the story database, creating schema if needed."""
+
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS stories ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "text TEXT NOT NULL"
+        ")"
+    )
+    return conn
 
 
 def log_story(text: str) -> None:
-    """Append ``text`` to the in-memory story log."""
+    """Persist ``text`` to the story log."""
 
-    _STORY_LOG.append(text)
+    with _get_conn() as conn:
+        conn.execute("INSERT INTO stories (text) VALUES (?)", (text,))
 
 
 def stream_stories() -> Iterable[str]:
     """Yield recorded stories in insertion order."""
 
-    yield from list(_STORY_LOG)
+    with _get_conn() as conn:
+        for (text,) in conn.execute("SELECT text FROM stories ORDER BY id"):
+            yield text
 
 
 __all__ = [
@@ -57,4 +75,5 @@ __all__ = [
     "NarrativeEngine",
     "log_story",
     "stream_stories",
+    "DB_PATH",
 ]
