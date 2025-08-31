@@ -1,10 +1,10 @@
 # The Absolute Protocol
 
-**Version:** v1.0.68
-**Last updated:** 2025-10-16
+**Version:** v1.0.69
+**Last updated:** 2025-10-17
 
 ## How to Use This Protocol
-This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B."
+This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B." Agent guides must also define **Persona & Responsibilities** and **Component & Link** sections.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -16,6 +16,8 @@ Before opening a pull request, confirm each item:
   - [Project Mission & Vision](project_mission_vision.md) – confirm alignment before proposing major changes
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, linked agents, status, and operator interface flows are current
+- [ ] Agent docs include a **Persona & Responsibilities** section
+- [ ] Agent docs include a **Component & Link** section
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
 - [ ] All modules, connectors, and services expose `__version__` that matches `component_index.json`; the `verify-versions` pre-commit hook enforces alignment, so bump both for user-facing changes

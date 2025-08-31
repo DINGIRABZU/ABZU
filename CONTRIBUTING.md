@@ -133,6 +133,8 @@ Before submitting a pull request, confirm:
   - Update `docs/bana_engine.md` and Nazarick documentation when ignition steps change
 - **Connector health**
   - `python scripts/health_check_connectors.py` reports all connectors healthy before merging
+- **Agent docs**
+  - Each agent guide includes "Persona & Responsibilities" and "Component & Link" sections
 
 ## Pull Requests
 
