@@ -32,6 +32,19 @@ User commands enter through the **Crown Console**. The **Crown Agent** sends
 requests to the GLM service and keeps recent history in memory. The
 **State Transition Engine** tracks ritual phrases and emotional cues. It may
 delegate a prompt to one of the registered servant models when appropriate.
+
+## Persona & Responsibilities
+
+The Crown agent presents a steady, protocol‑focused persona. It channels
+operator intent to the correct servant model while maintaining neutral tone
+and precise ritual phrasing.
+
+- **Session steward** – preserves dialogue context and routes prompts through
+  the state engine.
+- **Guardian of escalation** – raises repair requests to RAZAR when automated
+  recovery fails and alerts a human operator if critical directives go
+  unresolved.
+
 ## Flow
 
 ```mermaid
@@ -115,13 +128,15 @@ directories, register servant models, and validate the GLM endpoint.
 so both sides agree on capabilities.
 3. Launch the console after an acknowledgement to begin the session.
 
-### Mission Brief Example & WebSocket Log
+### Mission Brief JSON Example
 
 ```json
 // sent by RAZAR
 {
   "type": "brief",
+  "objective": "sync memory index",
   "priority_map": {"memory": "ok"},
+  "escalation": {"on_failure": "operator"},
   "open_issues": ["missing_audio_stream"]
 }
 
@@ -133,7 +148,7 @@ so both sides agree on capabilities.
 }
 ```
 
-```
+```text
 [RAZAR WS] -> {"type":"brief","priority_map":{"memory":"ok"}}
 [Crown WS] <- {"type":"ack","capabilities":["glm","avatar"]}
 ```
@@ -148,6 +163,15 @@ POST /operator/command {"command": "status"}
 
 [Crown WS] -> {"type": "operator", "command": "status"}
 [RAZAR WS] <- {"type": "result", "output": "all green"}
+```
+
+### Operator Chat Transcript
+
+```text
+Operator: Crown, status report.
+Crown: Systems nominal; memory and avatar channels online.
+Operator: Escalate audio glitch to RAZAR.
+Crown: Acknowledged. Notifying RAZAR for repair.
 ```
 
 ### Escalation Thresholds

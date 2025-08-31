@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added "The Absolute pytest" guide for chakra-aligned tests and commit workflow.
 - Introduced Pytest Protocol with >90% coverage, chakra-aligned directories, and component index documentation requirements.
 - Expanded Crown agent overview with model loading sequence diagram and configuration table.
+- Added Crown persona section with mission brief and chat transcript examples; referenced in The Absolute Protocol.
 - Documented change justification rule and mandated four-part onboarding summaries; updated pull request template with connector/index checklist.
 - Documented module coverage and example runs in RAZAR agent guide.
 - RAZAR agent guide now requires `CROWN_WS_URL`, a running Crown server, and
