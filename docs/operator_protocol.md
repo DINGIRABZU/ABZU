@@ -7,8 +7,10 @@ Defines the interfaces and logging expectations for direct operator interactions
 - **`POST /operator/command`** – forwards structured instructions for RAZAR to execute. The payload must include an `action` field and optional `parameters`. Responses echo the action and report success or failure.
 - **`POST /operator/upload`** – accepts auxiliary files and arbitrary JSON metadata. The body is multipart form data with one or more `files` parts and a `metadata` field; successful uploads return stored paths merged into the metadata payload.
 - **`POST /call`** – negotiates a WebRTC session for real‑time data, audio, and video exchange. Clients send an SDP offer and receive an SDP answer in the response.
+- **`GET /story/log`** – returns stored narratives and memory metadata.
+- **`GET /story/stream`** – streams narratives and memory metadata as JSON lines.
 
-See the [`webrtc`, `operator_upload`, and `crown_ws` entries in the Connector Index](connectors/CONNECTOR_INDEX.md) for versioning and implementation details.
+See the [`webrtc`, `operator_upload`, `crown_ws`, and `narrative_api` entries in the Connector Index](connectors/CONNECTOR_INDEX.md) for versioning and implementation details.
 
 ## Authentication
 
@@ -17,6 +19,10 @@ All requests require an `Authorization` header with a Bearer token carrying the 
 ## Rate Limits
 
 `POST /operator/command` is limited to **60 requests per minute** per operator. `POST /operator/upload` allows **20 uploads per minute**. Exceeding either limit results in `429 Too Many Requests`.
+
+## Narrative Retrieval
+
+Use `GET /story/log` to fetch stored narratives with memory metadata. `GET /story/stream` emits the same data as JSON lines for subscription-style consumption.
 
 ## WebRTC Channels
 
