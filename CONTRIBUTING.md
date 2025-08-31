@@ -133,6 +133,11 @@ Before submitting a pull request, confirm:
   - Update `docs/bana_engine.md` and Nazarick documentation when ignition steps change
 - **Connector health**
   - `python scripts/health_check_connectors.py` reports all connectors healthy before merging
+- **Narrative features**
+  - Declare `__version__` in every narrative module
+  - Register datasets in `docs/data_manifest.md` and hash them
+  - Register connectors in `docs/connectors/CONNECTOR_INDEX.md`
+  - Include a change-justification statement in PRs touching narrative components
 - **Agent docs**
   - Each agent guide includes "Persona & Responsibilities" and "Component & Link" sections
 
