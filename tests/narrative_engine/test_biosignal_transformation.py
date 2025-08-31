@@ -25,6 +25,9 @@ def test_ingest_file_transforms_actions(
 ) -> None:
     logged: list[str] = []
     monkeypatch.setattr(narrative_engine, "log_story", lambda text: logged.append(text))
+    monkeypatch.setattr(
+        "scripts.ingest_biosignals.log_story", lambda text: logged.append(text)
+    )
     ingest_file(csv_path)
     with csv_path.open(newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
@@ -37,5 +40,8 @@ def test_ingest_file_transforms_actions(
 def test_ingest_directory_logs_all(monkeypatch: pytest.MonkeyPatch) -> None:
     logged: list[str] = []
     monkeypatch.setattr(narrative_engine, "log_story", lambda text: logged.append(text))
+    monkeypatch.setattr(
+        "scripts.ingest_biosignals.log_story", lambda text: logged.append(text)
+    )
     ingest_directory(DATA_DIR)
     assert len(logged) == 3 * len(dataset_paths())
