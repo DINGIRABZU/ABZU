@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import importlib
 from functools import lru_cache
 from typing import Any

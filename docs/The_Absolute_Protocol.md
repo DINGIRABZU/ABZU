@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.77
+**Version:** v1.0.78
 **Last updated:** 2025-09-01
 
 ## How to Use This Protocol
@@ -24,7 +24,7 @@ Confirm these items before submitting a pull request:
 - [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
 
 ## Coverage & Placeholder Requirements
-Each milestone must uphold repository coverage thresholds by running `pytest --cov`; components falling below the target cannot merge until addressed. Placeholder markers such as `TODO` or `FIXME` are forbidden—`scripts/check_placeholders.py` enforces removal before commit. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
+Each milestone must uphold repository coverage thresholds of **at least 90%** by running `pytest --cov --cov-fail-under=90`; components falling below the target cannot merge until addressed. Placeholder markers such as `TODO` or `FIXME` are forbidden—`scripts/check_placeholders.py` enforces removal before commit. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -141,10 +141,10 @@ When contributing, consult resources in this order:
 
 ## Test Coverage Protocol
 
-Code coverage must remain **at or above 85%**. Generate and report coverage using:
+Code coverage must remain **at or above 90%**. Generate and report coverage using:
 
 ```bash
-pytest --cov
+pytest --cov --cov-fail-under=90
 coverage report
 coverage-badge -o coverage.svg
 ```
@@ -154,7 +154,7 @@ status documents.
 
 ## Pytest Protocol
 
-- Achieve **over 90%** coverage when running `pytest --cov`.
+- Achieve **over 90%** coverage when running `pytest --cov --cov-fail-under=90`.
 - Organize tests within chakra-aligned directories and include matching metadata fields.
 - Record updated coverage metrics in `component_index.json` whenever tests change.
 
@@ -346,6 +346,8 @@ All endpoints must publish machine-validated schemas:
 - Register each connector in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, authentication method, status, and links to documentation and source code.
 - Update the registry whenever a connector's interface, version, or status changes.
 - Validate updates with `pre-commit run --files docs/connectors/CONNECTOR_INDEX.md docs/INDEX.md`.
+- Ensure connectors expose a top-level `__version__`, implement `start_call` and `close_peers`, and sync versions with `component_index.json`.
+- Run `python scripts/health_check_connectors.py` before merging to confirm connectors respond.
 
 ### Service Wake Protocol
 

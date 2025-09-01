@@ -6,6 +6,8 @@ persisting a memory snapshot and broadcasting an alert message.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import logging
 from pathlib import Path
 from typing import Callable

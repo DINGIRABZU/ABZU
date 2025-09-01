@@ -9,6 +9,8 @@ The `docs/nazarick_agents.md` guide provides broader architectural context.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import json
 from typing import Dict, Tuple
 

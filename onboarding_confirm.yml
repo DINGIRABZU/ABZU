@@ -125,6 +125,13 @@ documents:
       scope: All components.
       key_rules: Update index when components change.
       insight: Add/update entries for component changes.
+  component_index.json:
+    sha256: 82203936da694e37f71c3a3105be0eb4a4a1f32258282476a4d5b3d0df1a2566
+    summary:
+      purpose: Machine-readable registry of components and versions.
+      scope: Entire system component inventory.
+      key_rules: Sync module __version__ values with listed versions.
+      insight: Review after component edits to keep versions aligned.
   docs/CROWN_OVERVIEW.md:
     sha256: 179c5a4f08996de8efe3d623a4ae9f38e302f7bdd73a6eb00770ccfd10b169a3
     summary:
@@ -162,7 +169,7 @@ documents:
       key_rules: Align changes with blueprint structure.
       insight: Align changes with blueprint structure.
   docs/KEY_DOCUMENTS.md:
-    sha256: b4ca6cbf983164612b47a7edbecc62e0e62cf3b6c6d60eb44f19acdb3e6b042c
+    sha256: 740cf6675a3180ebad0b83b3dd5ad63ad782149538ce1667ef5a9a1b9eeb002c
     summary:
       purpose: List of essential repository documents.
       scope: Key repository guides.
@@ -177,7 +184,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 2d28b85d9dcc131441b02222c730e034c6491f92dd2138ce201d8900761ffd8e
+    sha256: 941b067742c76bf8c00c47319628a993c3fe9bfca41e3348042c7231124d875c
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -219,7 +226,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 890389ce309531454c938fb40f6d568e8354d8284e6cfb10d54089ad7c64cc1b
+    sha256: b02d6afab1823afe871fb1957b78d82327bc5723cf71f582574af7043405f5d7
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.

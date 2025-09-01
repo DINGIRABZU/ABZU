@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 VERSION_RE = re.compile(r"^__version__\s*=\s*['\"]([^'\"]+)['\"]", re.MULTILINE)
 
@@ -50,7 +51,11 @@ def main(argv: list[str] | None = None) -> int:
     if args:
         paths = [Path(p) for p in args]
     else:
-        paths = [repo_root / p for p in index_mapping.keys()]
+        env = os.getenv("PRE_COMMIT_FILES")
+        if env:
+            paths = [Path(p) for p in env.splitlines() if p]
+        else:
+            paths = [repo_root / p for p in index_mapping.keys()]
 
     errors: list[str] = []
     for path in paths:
