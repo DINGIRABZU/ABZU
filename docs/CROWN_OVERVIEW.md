@@ -120,13 +120,26 @@ Deployment begins with a short alignment between Crown and the RAZAR agent.
 RAZAR expects a mission brief and acknowledgement before handling operator
 commands.
 
-### Startup Steps
+### Deployment Walkthrough
 
-1. Run [`init_crown_agent.py`](../init_crown_agent.py) to prepare memory
-directories, register servant models, and validate the GLM endpoint.
-2. Exchange a mission brief using [`razar/crown_handshake.py`](../razar/crown_handshake.py)
-so both sides agree on capabilities.
-3. Launch the console after an acknowledgement to begin the session.
+1. **Prepare Crown** – run [`init_crown_agent.py`](../init_crown_agent.py) to
+   build memory directories, register servant models, and validate the GLM
+   endpoint.
+2. **Align with RAZAR** – exchange a mission brief using
+   [`razar/crown_handshake.py`](../razar/crown_handshake.py) so both sides agree
+   on capabilities.
+3. **Start the console** – launch the Crown console once an acknowledgement
+   arrives.
+4. **Relay an operator command** – send a status check to verify the link:
+
+   ```bash
+   curl -X POST localhost:8000/operator/command \
+     -H 'Content-Type: application/json' \
+     -d '{"operator":"crown","agent":"razar","command":"status"}'
+   ```
+
+5. **Inspect logs** – chat transcripts appear under `logs/operator_chat/` and
+   mission briefs under `logs/mission_briefs/`.
 
 ### Mission Brief JSON Examples
 
@@ -235,6 +248,7 @@ subsequent prompts.
 
 | Version | Date       | Summary |
 |---------|------------|---------|
+| 0.5.0   | 2025-10-25 | Added deployment walkthrough and expanded mission brief and chat log examples. |
 | 0.4.0   | 2025-10-20 | Added mission brief log and operator chat log examples. |
 | 0.3.0   | 2025-10-15 | Added boot sequence diagram and configuration table. |
 | 0.2.0   | 2025-09-30 | Added deployment guidance and initial version table. |
