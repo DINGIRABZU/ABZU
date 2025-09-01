@@ -89,6 +89,7 @@ settings.glm_command_token = "token"
 settings.openwebui_username = "user"
 settings.openwebui_password = "pass"
 import server
+
 server.record_task_flow = lambda *a, **k: None
 
 
@@ -269,9 +270,7 @@ def test_openwebui_chat_requires_authorization():
         return resp.status_code
 
     status_missing = asyncio.run(run_request({}))
-    status_bad = asyncio.run(
-        run_request({"Authorization": "Bearer bad-token"})
-    )
+    status_bad = asyncio.run(run_request({"Authorization": "Bearer bad-token"}))
     assert status_missing == 401
     assert status_bad == 401
 

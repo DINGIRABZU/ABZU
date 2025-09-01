@@ -15,6 +15,8 @@ Tracks documentation completeness, test coverage, and open issues for core compo
 - Revise scores after each release.
 - Add new components as they are introduced.
 - Link open issues using GitHub issue numbers.
+- Sync coverage percentages with `component_index.json` via
+  `scripts/export_coverage.py`.
 
 ## Version History
 
