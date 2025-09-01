@@ -75,7 +75,7 @@ under the following component IDs:
 | `bana_bio_adaptive_narrator` | `agents/bana/bio_adaptive_narrator.py` |
 | `bana_inanna_bridge` | `agents/bana/inanna_bridge.py` |
 | `bana_event_structurizer` | `bana/event_structurizer.py` |
-| `bana_narrative_api` | `bana/narrative_api.py` |
+| `narrative_api` | `narrative_api.py` |
 | `narrative_engine` | `memory/narrative_engine.py` |
 
 ## Event Schema
