@@ -177,15 +177,12 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 76cd4f0a3fef575bd783762eb8a6dbd9a99507b92c04cbdae898d5aab0d1bc77
+    sha256: 578057a05c4a9ece05fa421d20a332f16b28d39eb929c20f5a43d17772d05901
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      key_rules: Provide change justification, align __version__ with component_index.json,
-        maintain key-document summaries, and ensure agent docs include Persona & Responsibilities
-        and Component & Link sections.
-      insight: Align component versions and document summaries; run ignition validation
-        via `validate_ignition.py` and consult `docs/ignition_flow.md` for the sequence.
+      key_rules: Declare __version__ synced with component_index.json, include change justification, verify key-document summaries, maintain coverage thresholds, and forbid TODO/FIXME placeholders.
+      insight: Synchronize versions and document summaries; keep coverage high and remove placeholders before commit.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
