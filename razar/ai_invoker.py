@@ -8,16 +8,37 @@ from __future__ import annotations
 
 __all__ = ["handover"]
 
+import json
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 
 from agents.razar import ai_invoker as remote_ai_invoker
 from agents.razar import code_repair
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 LOGGER = logging.getLogger(__name__)
+
+PATCH_LOG_PATH = code_repair.PATCH_LOG_PATH
+
+
+def _append_patch_log(entry: Dict[str, Any]) -> None:
+    """Append ``entry`` to :data:`PATCH_LOG_PATH`."""
+    PATCH_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    records: list[Dict[str, Any]] = []
+    if PATCH_LOG_PATH.exists():
+        try:
+            records = json.loads(PATCH_LOG_PATH.read_text(encoding="utf-8"))
+            if not isinstance(records, list):
+                records = []
+        except json.JSONDecodeError:
+            records = []
+    records.append(entry)
+    PATCH_LOG_PATH.write_text(
+        json.dumps(records, indent=2, sort_keys=True), encoding="utf-8"
+    )
 
 
 def handover(
@@ -64,9 +85,23 @@ def handover(
             continue
         tests = [Path(p) for p in patch.get("tests", [])]
         err = patch.get("error", error)
-        try:
-            if code_repair.repair_module(Path(module), tests, err):
+        for attempt in range(1, 3):
+            try:
+                success = code_repair.repair_module(Path(module), tests, err)
+            except Exception:  # pragma: no cover - defensive
+                LOGGER.exception("Failed to apply patch for %s", module)
+                success = False
+            _append_patch_log(
+                {
+                    "event": "patch_attempt",
+                    "component": component,
+                    "module": module,
+                    "attempt": attempt,
+                    "success": success,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
+            if success:
                 applied = True
-        except Exception:  # pragma: no cover - defensive
-            LOGGER.exception("Failed to apply patch for %s", module)
+                break
     return applied

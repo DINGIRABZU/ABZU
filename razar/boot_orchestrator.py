@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 import argparse
 import asyncio
@@ -20,7 +20,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from . import ai_invoker, crown_handshake, doc_sync, health_checks
+from . import ai_invoker, crown_handshake, doc_sync, health_checks, mission_logger
 from .crown_handshake import CrownResponse
 from .quarantine_manager import is_quarantined, quarantine_component
 from agents.nazarick.service_launcher import launch_required_agents
@@ -119,6 +119,59 @@ def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -
             response_file.unlink()
 
 
+def _ensure_glm4v(capabilities: List[str]) -> None:
+    """Ensure the GLM-4.1V model is available, launching it if required."""
+    normalized = {c.replace("-", "").upper() for c in capabilities}
+    present = any(c.startswith("GLM4V") for c in normalized)
+
+    data: Dict[str, Any] = {}
+    if STATE_FILE.exists():
+        try:
+            data = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            data = {}
+    data["glm4v_present"] = present
+
+    if present:
+        STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STATE_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        return
+
+    launcher = Path(__file__).resolve().parents[1] / "crown_model_launcher.sh"
+    LOGGER.info("Launching GLM-4.1V via %s", launcher)
+    subprocess.run(["bash", str(launcher)], check=False)
+    mission_logger.log_event("model_launch", "GLM-4.1V", "triggered")
+    launches = data.get("launched_models", [])
+    if "GLM-4.1V" not in launches:
+        launches.append("GLM-4.1V")
+    data["launched_models"] = launches
+
+    archive_dir = LOGS_DIR / "mission_briefs"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+    brief_path = archive_dir / f"{timestamp}_glm4v_launch.json"
+    response_path = archive_dir / f"{timestamp}_glm4v_launch_response.json"
+    brief_path.write_text(
+        json.dumps({"event": "model_launch", "model": "GLM-4.1V"}),
+        encoding="utf-8",
+    )
+    response_path.write_text(
+        json.dumps({"status": "triggered"}),
+        encoding="utf-8",
+    )
+    _rotate_mission_briefs(archive_dir)
+
+    timestamp_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    events = data.get("events", [])
+    events.append(
+        {"event": "model_launch", "model": "GLM-4.1V", "timestamp": timestamp_iso}
+    )
+    data["events"] = events
+
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
 def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
     """Exchange mission brief with CROWN and return the response."""
     brief = {
@@ -141,22 +194,20 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
 
     try:
         response = asyncio.run(crown_handshake.perform(str(brief_path)))
+        details = json.dumps(
+            {"capabilities": response.capabilities, "downtime": response.downtime}
+        )
+        status = "success"
     except Exception as exc:  # pragma: no cover - handshake must succeed
         LOGGER.exception("CROWN handshake failed")
+        mission_logger.log_event("handshake", "crown", "failure", str(exc))
         _persist_handshake(None)
         raise RuntimeError("CROWN handshake failed") from exc
 
+    mission_logger.log_event("handshake", "crown", status, details)
     _persist_handshake(response)
     response_path.write_text(json.dumps(asdict(response), indent=2))
     _rotate_mission_briefs(archive_dir)
-
-    normalized = {c.replace("-", "").upper() for c in response.capabilities}
-    if not any(cap.startswith("GLM4V") for cap in normalized):
-        launcher = Path(__file__).resolve().parents[1] / "crown_model_launcher.sh"
-        try:
-            subprocess.Popen(["bash", str(launcher)])
-        except Exception:  # pragma: no cover - log and continue
-            LOGGER.exception("Failed to launch crown model")
 
     return response
 
@@ -210,7 +261,8 @@ def main() -> None:
     )
 
     components = load_config(args.config)
-    _perform_handshake(components)
+    response = _perform_handshake(components)
+    _ensure_glm4v(response.capabilities)
     launch_required_agents()
     processes: List[subprocess.Popen] = []
 
