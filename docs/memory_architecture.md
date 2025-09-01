@@ -21,15 +21,29 @@ query example:
 After these layers ignite, RAZAR activates the [Bana engine](bana_engine.md) to
 narrate the system's evolving state.
 
+Ready-made helpers are available for spinning up the storage back ends:
+
+- [deployment/chromadb/docker-compose.yaml](../deployment/chromadb/docker-compose.yaml)
+  launches a persistent ChromaDB service.
+- [deployment/sqlite/bootstrap_memory_dbs.sh](../deployment/sqlite/bootstrap_memory_dbs.sh)
+  creates SQLite files for file‑based stores.
+
 ## Quick start
 
-1. Initialize all layers with the helper script:
+1. Start the storage back ends if they are not already running:
+
+```bash
+docker compose -f deployment/chromadb/docker-compose.yaml up -d
+bash deployment/sqlite/bootstrap_memory_dbs.sh
+```
+
+2. Initialize all layers with the helper script:
 
 ```bash
 bash scripts/init_memory_layers.sh
 ```
 
-2. Query individual stores to verify the seeded records:
+3. Query individual stores to verify the seeded records:
 
 ```bash
 # Cortex
