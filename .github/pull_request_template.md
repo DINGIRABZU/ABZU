@@ -15,6 +15,11 @@ below.
 I did X on Y to obtain Z, expecting behavior B.
 <!-- If a connector was added or modified, update [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and code/documentation links, as required by [The Absolute Protocol](../docs/The_Absolute_Protocol.md). -->
 
+## Task Registry
+<!-- Required: run [scripts/register_task.py](../scripts/register_task.py); see [Task Registry instructions](../docs/KEY_DOCUMENTS.md#task-registry). -->
+Task ID(s) registered in [logs/task_registry.jsonl](../logs/task_registry.jsonl):
+Does this PR satisfy the six-task cycle rule? <!-- Yes/No -->
+
 ## Checklist
 - [ ] Tests run <!-- Required: list tests run, e.g., `pytest` -->
 - [ ] Docs updated <!-- Required: describe updates or state 'N/A' -->
@@ -27,3 +32,4 @@ I did X on Y to obtain Z, expecting behavior B.
 - [ ] Connector index entry added/updated <!-- Required: confirm CONNECTOR_INDEX.md lists purpose, version, endpoints, auth method, status, and code/doc links -->
 - [ ] Index updated? <!-- Required: confirm component index and documentation index regenerated -->
 - [ ] Nazarick agent registry & docs updated
+
