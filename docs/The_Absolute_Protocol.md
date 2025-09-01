@@ -15,6 +15,14 @@ Pull requests must fill out the **Change justification** field in the template u
 ## Key-Document Summary Verification
 During onboarding, contributors record purpose, scope, key rules, and an actionable insight summary for every entry in `onboarding_confirm.yml`. Run `scripts/verify_doc_hashes.py` to ensure each summary matches the current version of the document.
 
+## Core Pull Request Checklist
+Confirm these items before submitting a pull request:
+
+- [ ] Key-document summaries verified with `scripts/verify_doc_hashes.py`
+- [ ] Version bumps applied and synchronized in `component_index.json`
+- [ ] Connector registry updated for added or modified connectors ([docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md))
+- [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
+
 ## Coverage & Placeholder Requirements
 Each milestone must uphold repository coverage thresholds by running `pytest --cov`; components falling below the target cannot merge until addressed. Placeholder markers such as `TODO` or `FIXME` are forbidden—`scripts/check_placeholders.py` enforces removal before commit. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
 
