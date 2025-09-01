@@ -1,10 +1,11 @@
 # Key Documents
 
 The files listed here are foundational and must never be deleted or renamed.
-For each document below, contributors must store its SHA256 hash and a
-contributor summary detailing its purpose, scope, key rules, and one actionable
-insight in `onboarding_confirm.yml` to prove the current version was reviewed.
-This requirement is reinforced by The Absolute Protocol's
+For every protected file, contributors must record its SHA256 hash and a four-part
+summary in `onboarding_confirm.yml`. Each summary must capture the file's **purpose**,
+**scope**, **key rules**, and one actionable **insight** to prove the current version was
+reviewed. When illustrating how these documents relate, use Mermaid diagrams instead of
+PNG or SVG images. This requirement is reinforced by The Absolute Protocol's
 [Contributor Awareness Checklist](The_Absolute_Protocol.md#contributor-awareness-checklist).
 
 ## Contributor Summary Requirements
@@ -17,6 +18,14 @@ fields:
 4. `insight` – one actionable takeaway discovered during review.
 
 Omitting any field fails verification checks enforced by `scripts/verify_doc_hashes.py`.
+
+### Verification Flow
+
+```mermaid
+graph LR
+    A[Protected Files] -->|hash + summary| B[onboarding_confirm.yml]
+    B -->|checked by| C[verify-doc-hashes hook]
+```
 
 ## Protected Files
 
