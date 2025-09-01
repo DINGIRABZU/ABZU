@@ -15,6 +15,7 @@ To keep integration layers discoverable and reliable:
 - Increment `__version__` for any backward-incompatible change.
 - Keep modules lightweight with clear dependencies and minimal side effects.
 - Supply or update tests and docs alongside connector changes.
+- Publish JSON or YAML schemas for request and response payloads in `schemas/` and link them from [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md).
 
 ## Schema Conventions
 
@@ -26,6 +27,7 @@ Connector entries share common fields:
 - **linked_agents** – agents or services that interact through the connector.
 - **status** – lifecycle indicator (`experimental`, `active`, `deprecated`).
 - For operator interfaces, document supported chat, file, image, audio, and video flows.
+- **schema** – path to a JSON or YAML schema describing request and response bodies.
 
 ### Connector Entry Template
 
@@ -36,7 +38,8 @@ Connector entries share common fields:
 "version": "1.0.0",
 "endpoints": ["POST /example"],
   "linked_agents": ["example_agent"],
-  "status": "experimental"
+  "status": "experimental",
+  "schema": "schemas/example_connector.schema.json"
 }
 ```
 

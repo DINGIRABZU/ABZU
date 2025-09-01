@@ -37,8 +37,11 @@ Confirm these items before submitting a pull request:
 - [ ] Connector registry updated for added or modified connectors ([docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md))
 - [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
 
-## Coverage & Placeholder Requirements
-Each milestone must uphold repository coverage thresholds of **at least 90%** by running `pytest --cov --cov-fail-under=90`; components falling below the target cannot merge until addressed. Placeholder markers such as `TODO` or `FIXME` are forbidden—`scripts/check_placeholders.py` enforces removal before commit. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
+## Coverage & Testing Requirements
+Each milestone must uphold repository coverage thresholds of **at least 90%** by running `pytest --cov --cov-fail-under=90`; components falling below the target cannot merge until addressed. Audit any failing tests and record them in [docs/testing/failure_inventory.md](testing/failure_inventory.md) before merging. Placeholder markers such as `TODO` or `FIXME` are forbidden—the `placeholder-elimination` pre-commit hook (`scripts/check_placeholders.py`) blocks commits containing them. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
+
+### Test Failure Audit
+Log each failing test with date, category, and remediation steps in [docs/testing/failure_inventory.md](testing/failure_inventory.md). Update entries once resolved and rerun affected tests to confirm fixes.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -325,11 +328,11 @@ All exchanges between RAZAR, Crown, and Operator must append JSON lines to
 - Every module, connector, and service must declare a `__version__` field for traceability.
 - `scripts/verify_versions.py` verifies source versions match `component_index.json`.
 
-#### No placeholder comments
+#### Placeholder Elimination
 
 `TODO` and `FIXME` markers are prohibited in committed code. Open an issue or
 implement the required change instead of leaving placeholders. The
-`check-placeholders` pre-commit hook runs `scripts/check_placeholders.py` to
+`placeholder-elimination` pre-commit hook runs `scripts/check_placeholders.py` to
 block commits that include these markers.
 
 ### API Contract Protocol
@@ -362,6 +365,12 @@ All endpoints must publish machine-validated schemas:
 - Validate updates with `pre-commit run --files docs/connectors/CONNECTOR_INDEX.md docs/INDEX.md`.
 - Ensure connectors expose a top-level `__version__`, implement `start_call` and `close_peers`, and sync versions with `component_index.json`.
 - Run `python scripts/health_check_connectors.py` before merging to confirm connectors respond.
+
+### API & Connector Schema Protocol
+
+- Store machine-readable JSON or YAML schemas for each API and connector in `schemas/`.
+- Reference the schema file in the `schema` column of [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
+- Update both the schema and index entry whenever an interface changes.
 
 ### Service Wake Protocol
 
