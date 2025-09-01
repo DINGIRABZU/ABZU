@@ -22,6 +22,14 @@ architecture outlined in the [System Blueprint](system_blueprint.md), RAZAR acts
 as the bootstrap agent that grounds ABZU in a coherent foundation. After INANNA
 initializes its memory layers, RAZAR triggers the [Bana engine](bana_engine.md)
 to narrate system state.
+## Persona & Responsibilities
+
+RAZAR serves as ABZU's pre-creation igniter and recovery coordinator. It:
+
+- prepares isolated Python environments for each chakra layer,
+- launches services in priority order and verifies readiness,
+- negotiates startup handshakes with the Crown stack,
+- records mission state and delegates failures to remote repair agents.
 
 ## Architecture Diagram
 
@@ -78,19 +86,6 @@ Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in
 [dependencies.md](dependencies.md).
 
-## Configuration Schemas
-
-The environment builder validates its settings against
-[`schemas/razar_env.schema.yaml`](schemas/razar_env.schema.yaml), which
-declares the Python version and package layers used during boot.
-
-```yaml
-python_version: "3.11"
-layers:
-  razar:
-    - pyyaml
-    - prometheus_client
-```
 
 ## Deployment Workflow
 
@@ -127,41 +122,6 @@ After boot, RAZAR delegates repairs to autonomous helpers. The
 workers while [code_repair.py](../agents/razar/code_repair.py) applies patches
 and reruns failing checks.
 
-### `boot_config.json`
-
-```json
-{
-  "components": [
-    {
-      "name": "basic_service",
-      "command": ["python", "-c", "print('basic service running')"],
-      "health_check": ["python", "-c", "import sys; sys.exit(0)"]
-    }
-  ]
-}
-```
-
-**Schema snippet** ([full schema](schemas/boot_config.schema.json))
-
-```json
-{
-  "type": "object",
-  "required": ["components"],
-  "properties": {
-    "components": {"type": "array"}
-  }
-}
-```
-
-### Example run
-
-```bash
-# Plan a remote patch
-python -m agents.razar.ai_invoker examples/repair_plan.json
-
-# Apply the suggested fix
-python -m agents.razar.code_repair patches/fix.diff
-```
 
 ## Crown Handshake
 
@@ -180,34 +140,6 @@ environment defined in `razar_env.yaml` before launching services. It calls
 [boot_orchestrator.py](../razar/boot_orchestrator.py) to perform the handshake
 and persist capability data.
 
-### `razar_env.yaml`
-
-```yaml
-layers:
-  razar:
-    - pyyaml
-  inanna:
-    - requests
-  crown:
-    - numpy
-```
-
-**Schema snippet** ([full schema](schemas/razar_env.schema.yaml))
-
-```yaml
-type: object
-required:
-  - layers
-properties:
-  layers:
-    type: object
-```
-
-### Example run
-
-```bash
-python -m razar.boot_orchestrator --handshake-only
-```
 
 ## Module Overviews
 
@@ -845,7 +777,7 @@ Sample mission brief:
 }
 ```
 
-## Configuration
+## Config Schemas
 
 ### `boot_config.json`
 
@@ -884,9 +816,11 @@ Defines component launch commands and health checks.
 ### `razar_env.yaml`
 
 ```yaml
+python_version: "3.11"
 layers:
   razar:
     - pyyaml
+    - prometheus_client
   inanna:
     - requests
   crown:
@@ -952,6 +886,7 @@ Captures runtime state and handshake capabilities.
 
 - [Ignition](Ignition.md) – boot priorities and escalation rules
 - [System Blueprint](system_blueprint.md) – high-level architecture map
+- [Component Index](component_index.md) – inventory of modules and services
 - [Deployment Guide](deployment.md) – environment setup and rollout
 - [Monitoring Guide](monitoring.md) – telemetry collection and alerts
 - [Operator Protocol](operator_protocol.md) – interaction rules for operators
@@ -966,6 +901,12 @@ python -m razar.boot_orchestrator
 
 # Perform a standalone Crown handshake
 python -m razar.crown_handshake path/to/brief.json
+```
+
+```bash
+# Delegate a patch to a remote agent
+python -m agents.razar.ai_invoker examples/repair_plan.json
+python -m agents.razar.code_repair patches/fix.diff
 ```
 
 ```console

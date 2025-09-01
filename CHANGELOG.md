@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `scripts/generate_protocol_task.py` to create protocol refinement tasks after six new entries and wired it into nightly CI.
 
 ### Documentation Audit
+- Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
 
 - Mandated quarterly review of entries in `docs/KEY_DOCUMENTS.md` and added audit cadence table with `scripts/schedule_doc_audit.py`.
 - Ensure components have descriptions and data-flow references.
