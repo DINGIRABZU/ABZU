@@ -11,7 +11,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/good_first_issue.md](../.github/ISSUE_TEMPLATE/good_first_issue.md) | good_first_issue.md | - | - |
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
-| [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | - |
+| [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -305,6 +305,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [rag_music_oracle.md](rag_music_oracle.md) | RAG Music Oracle | `rag_music_oracle.py` answers questions about songs by combining Retrieval Augmented Generation with basic audio emot... | - |
 | [rag_pipeline.md](rag_pipeline.md) | Spiral RAG Pipeline | The Spiral retrieval pipeline turns local documents into embeddings so queries can be answered with context. Files ar... | - |
 | [recovery_playbook.md](recovery_playbook.md) | Recovery Playbook | This playbook outlines how RAZAR restores service after a component failure. Recurring problems and their fixes are c... | - |
+| [registry_audit.md](registry_audit.md) | Registry Audit | This guide describes how to validate `logs/task_registry.jsonl` to keep the task log accurate. | - |
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
