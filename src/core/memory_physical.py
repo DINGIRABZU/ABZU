@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """Storage utilities for raw physical inputs."""
 
+__version__ = "0.1.0"
+
 import json
 import logging
 from dataclasses import dataclass

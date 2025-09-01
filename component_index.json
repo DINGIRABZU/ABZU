@@ -151,8 +151,8 @@
       "id": "memory_layers",
       "chakra": "root",
       "type": "subsystem",
-      "version": "0.3.0",
-      "path": "memory",
+      "version": "0.1.2",
+      "path": "memory/__init__.py",
       "purpose": "Layered memory stores for system state",
       "dependencies": [
         "sqlite3"
@@ -192,6 +192,8 @@
       "path": "memory/cortex.py",
       "purpose": "Lightweight spiral memory with tag index",
       "dependencies": [],
+      "config_path": "data/cortex_memory_index.json",
+      "dataset_ids": ["cortex_memory_log"],
       "tests": [
         "tests/memory/test_cortex_concurrency.py",
         "tests/test_cortex_memory.py"
@@ -213,6 +215,8 @@
       "dependencies": [
         "sqlite3"
       ],
+      "config_path": "EMOTION_DB_PATH",
+      "dataset_ids": ["emotions_db"],
       "tests": [
         "tests/test_memory_emotional.py"
       ],
@@ -233,7 +237,9 @@
       "dependencies": [
         "neo4j"
       ],
-      "tests": [],
+      "config_path": "crown_config/crown.yml",
+      "dataset_ids": ["neo4j_task_graph"],
+      "tests": ["tests/test_server.py"],
       "status": "experimental",
       "metrics": {
         "coverage": 1.0
@@ -251,6 +257,8 @@
       "dependencies": [
         "sqlite3"
       ],
+      "config_path": "data/ontology_schema.sql",
+      "dataset_ids": ["ontology_db"],
       "tests": [
         "tests/test_memory_spiritual.py"
       ],
@@ -269,6 +277,8 @@
       "path": "memory/narrative_engine.py",
       "purpose": "Records events and composes multitrack narrative output",
       "dependencies": ["chromadb"],
+      "config_path": "data/narrative_engine.db",
+      "dataset_ids": ["narrative_story_db"],
       "tests": [
         "tests/narrative_engine/test_biosignal_pipeline.py",
         "tests/narrative_engine/test_biosignal_transformation.py",
@@ -467,6 +477,8 @@
       "path": "src/core/memory_physical.py",
       "purpose": "Persist raw physical inputs and metadata",
       "dependencies": [],
+      "config_path": "data/physical",
+      "dataset_ids": ["physical_events"],
       "tests": [
         "tests/core/test_memory_physical.py"
       ],
@@ -553,6 +565,96 @@
       "dependencies": [],
       "tests": [
         "tests/narrative_engine/test_ingest_persist_retrieve.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "cortex_memory_log",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/cortex_memory_spiral.jsonl",
+      "purpose": "Event log backing cortex memory",
+      "dependencies": [],
+      "tests": [
+        "tests/test_cortex_memory.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "emotions_db",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "memory/data/emotions.db",
+      "purpose": "SQLite store for emotional memory vectors",
+      "dependencies": [],
+      "tests": [
+        "tests/test_memory_emotional.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "ontology_db",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/ontology.db",
+      "purpose": "Ontology database for spiritual memory",
+      "dependencies": [],
+      "tests": [
+        "tests/test_memory_spiritual.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "neo4j_task_graph",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "bolt://localhost:7687",
+      "purpose": "Neo4j graph of task relationships",
+      "dependencies": [],
+      "tests": [
+        "tests/test_server.py"
+      ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "physical_events",
+      "chakra": "root",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/physical",
+      "purpose": "Raw physical input files",
+      "dependencies": [],
+      "tests": [
+        "tests/core/test_memory_physical.py"
       ],
       "status": "experimental",
       "metrics": {
