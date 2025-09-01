@@ -162,7 +162,7 @@ documents:
       key_rules: Align changes with blueprint structure.
       insight: Align changes with blueprint structure.
   docs/KEY_DOCUMENTS.md:
-    sha256: aa1ff0f09543cb28c5a7c954cbcc737208225da05251b1e1715df56d28c96f94
+    sha256: b4ca6cbf983164612b47a7edbecc62e0e62cf3b6c6d60eb44f19acdb3e6b042c
     summary:
       purpose: List of essential repository documents.
       scope: Key repository guides.

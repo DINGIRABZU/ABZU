@@ -44,6 +44,21 @@ Omitting any field fails verification checks enforced by `scripts/verify_doc_has
 | [RAZAR AI agents config](../config/razar_ai_agents.json) | Roster of handover agents and authentication settings | Quarterly |
 | [Environment check script](../scripts/check_env.py) | Verifies required packages and tools are installed | Each commit |
 | [Change Intent Ledger](../logs/change_intent.jsonl) | Records commit intents and observed behavior | Each commit |
+| [Task Registry](../logs/task_registry.jsonl) | Records completed tasks with metadata | Each merge |
+
+## Task Registry
+
+`logs/task_registry.jsonl` stores one JSON object per line with the fields:
+
+- `task_id`
+- `description`
+- `component_id`
+- `contributor`
+- `pr_number`
+- `completed_at` – ISO 8601 UTC timestamp
+
+After a pull request merges, contributors run
+`scripts/register_task.py` to append their task entry.
 
 These documents define repository-wide conventions and rules. Repository policy
 and pre-commit checks prevent their removal or renaming. When related components

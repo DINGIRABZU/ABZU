@@ -19,6 +19,7 @@ logs/*
 !logs/bana/
 !logs/bana/*
 !logs/change_intent.jsonl
+!logs/task_registry.jsonl
 
 # Ignore Blender files
 *.blend
