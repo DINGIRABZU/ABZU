@@ -300,7 +300,8 @@
         "fastapi"
       ],
       "tests": [
-        "tests/test_operator_api.py"
+        "tests/test_operator_api.py",
+        "tests/test_operator_command_route.py"
       ],
       "status": "active",
       "metrics": {

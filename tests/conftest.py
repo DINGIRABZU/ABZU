@@ -260,6 +260,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "agents" / "razar" / "test_crown_handshake.py"),
     str(ROOT / "tests" / "agents" / "razar" / "test_mission_brief_rotation.py"),
     str(ROOT / "tests" / "test_operator_api.py"),
+    str(ROOT / "tests" / "test_operator_command_route.py"),
     str(ROOT / "tests" / "ignition" / "test_full_stack.py"),
     str(ROOT / "tests" / "ignition" / "test_validate_ignition_script.py"),
     str(ROOT / "tests" / "bana" / "test_event_structurizer.py"),
