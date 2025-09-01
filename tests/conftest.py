@@ -236,6 +236,8 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "narrative_engine" / "test_biosignal_pipeline.py"),
     str(ROOT / "tests" / "narrative_engine" / "test_biosignal_transformation.py"),
     str(ROOT / "tests" / "narrative_engine" / "test_ingestion_to_mistral_output.py"),
+    str(ROOT / "tests" / "narrative_engine" / "test_ingest_persist_retrieve.py"),
+    str(ROOT / "tests" / "narrative_engine" / "test_event_storage.py"),
     str(ROOT / "tests" / "crown" / "test_prompt_orchestrator.py"),
     str(ROOT / "tests" / "agents" / "razar" / "test_boot_orchestrator.py"),
     str(ROOT / "tests" / "agents" / "razar" / "test_ignition_sequence.py"),
