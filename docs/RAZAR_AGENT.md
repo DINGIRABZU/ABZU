@@ -120,8 +120,8 @@ The orchestrator prepares core services before handing control to CROWN:
 
 1. Launch the Primordials container.
 2. Poll its `/health` endpoint until a `200` response confirms readiness.
-3. Perform the Crown handshake, persist returned capabilities, and record a `handshake` event in `logs/razar_state.json`.
-4. If the GLM‑4.1V model is absent, trigger `crown_model_launcher.sh` to load it and log a `model_launch` event in `logs/razar_state.json`.
+3. Invoke `crown_handshake.perform()`, persist returned capabilities, and record a `handshake` event in `logs/razar_state.json`.
+4. If the GLM‑4.1V model is absent, run `crown_model_launcher.sh` and persist its exit status and output under `last_model_launch` in `logs/razar_state.json`.
 5. Hand off control to Crown services and stream status events to `logs/razar_mission.log`.
 
 ## AI Handover
