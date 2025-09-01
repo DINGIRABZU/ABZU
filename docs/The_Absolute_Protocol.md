@@ -308,8 +308,8 @@ All exchanges between RAZAR, Crown, and Operator must append JSON lines to
 ### Logging & Observability Protocol
 
 - Follow the [logging guidelines](logging_guidelines.md) for JSON log formats and approved log levels.
-- RAZAR AI handovers must log each invocation and patch result to
-  [`logs/razar_ai_invocations.json`](RAZAR_AGENT.md#ai-handover).
+ - RAZAR AI handovers must log each invocation to
+   [`logs/razar_ai_invocations.json`](RAZAR_AGENT.md#ai-handover) and record patch diffs and test outcomes in [`logs/razar_ai_patches.json`](../logs/razar_ai_patches.json); all AI-generated patches require human review.
 - Consult the [Monitoring Guide](monitoring.md) for telemetry collection and Prometheus scraping.
 - Module documentation must describe emitted log formats, enumerated log levels, and any Prometheus metrics exposed.
 
