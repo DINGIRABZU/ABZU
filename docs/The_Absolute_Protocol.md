@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.75
-**Last updated:** 2025-09-02
+**Version:** v1.0.76
+**Last updated:** 2025-09-01
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must define **Persona & Responsibilities** and **Component & Link** sections.
@@ -58,6 +58,7 @@ Before opening a pull request, confirm each item:
 - [ ] `onboarding_confirm.yml` records purpose, scope, key rules, and an actionable insight summary for each key document it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_hashes.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
+- [ ] Each merged task registered in `logs/task_registry.jsonl`; after six registrations a seventh task auto-creates to refine `The_Absolute_Protocol.md`
 - [ ] ADR created for any change to `The_Absolute_Protocol.md` describing motivation and alternatives
 - [ ] ADR referenced in `docs/INDEX.md` and relevant `component_index.json` entries
 - [ ] Commits implementing ADR decisions prefixed with `ADR-XXXX:`
@@ -373,7 +374,10 @@ Narrative modules must maintain traceability by:
 
 ## Task Cycle Protocol
 
-`scripts/generate_protocol_task.py` monitors `logs/task_registry.jsonl` and opens a "Refine The Absolute Protocol" issue or creates a stub when six new tasks accumulate.
+The lifecycle for repository tasks is managed by `scripts/generate_protocol_task.py`:
+
+- Every merged task must be recorded in `logs/task_registry.jsonl`.
+- When six tasks have been registered, the script automatically opens a seventh task dedicated to refining this protocol.
 
 ## Protocol Change Process
 Updates to this protocol follow a lightweight governance model:
