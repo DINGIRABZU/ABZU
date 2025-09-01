@@ -86,6 +86,33 @@ Layer-specific packages are defined in
 [razar_env.yaml](../razar_env.yaml) and documented in
 [dependencies.md](dependencies.md).
 
+## Configuration Schemas
+
+`boot_config.json` lists components for the boot sequence. Each entry
+specifies a component `name`, startup `command`, and `health_check` command:
+
+```json
+{
+  "components": [
+    {"name": "service", "command": ["python", "service.py"], "health_check": ["curl", "http://localhost:8000/health"]}
+  ]
+}
+```
+
+`razar_env.yaml` maps layers to the Python dependencies installed by the
+environment builder:
+
+```yaml
+layers:
+  razar:
+    - pyyaml
+  inanna:
+    - requests
+```
+
+See [`boot_config.json`](../razar/boot_config.json) and
+[`razar_env.yaml`](../razar_env.yaml) for full examples.
+
 
 ## Deployment Workflow
 
