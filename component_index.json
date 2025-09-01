@@ -310,12 +310,12 @@
       "adr": null
     },
     {
-      "id": "bana_narrative_api",
+      "id": "narrative_api",
       "chakra": "heart",
       "type": "service",
       "version": "0.1.0",
-      "path": "bana/narrative_api.py",
-      "purpose": "FastAPI routes for Bana narrative retrieval and streaming",
+      "path": "narrative_api.py",
+      "purpose": "FastAPI routes for narrative retrieval and streaming",
       "dependencies": [
         "fastapi"
       ],
