@@ -2,7 +2,23 @@
 
 This guide explains how biosignals become `StoryEvent` objects inside Nazarick.
 Each event links to a servant agent and is persisted across the
-[memory architecture](memory_architecture.md).
+[memory architecture](memory_architecture.md) and surfaced through the
+[operator flow](operator_protocol.md).
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+    S[Sensors] --> I[scripts/ingest_biosignals.py]
+    I --> B[agents/bana/bio_adaptive_narrator.py]
+    B --> E[bana/event_structurizer.py]
+    E --> M[memory/narrative_engine.py]
+    M -->|persist| Mem[(Memory Layers)]
+    M -->|notify| O[Operator Flow]
+```
+
+Events persist to the [Memory Architecture](memory_architecture.md) and
+notifications propagate through the [Operator Protocol](operator_protocol.md).
 
 ## Biosignal→StoryEvent Pipeline
 
@@ -80,7 +96,7 @@ Events are stored as JSON objects matching this schema:
 fields. Validation is performed using `EVENT_SCHEMA` in
 [`bana/event_structurizer.py`](../bana/event_structurizer.py).
 
-## Persistent Storage
+## Persistent Storage & Retrieval
 
 `memory/narrative_engine.py` persists data in two layers:
 
@@ -101,9 +117,27 @@ The SQLite schema comprises:
 | events | event_type| TEXT    | Classification of the event     |
 | events | payload   | TEXT    | JSON-encoded payload            |
 
-`log_event` appends rows and adds embeddings to the Chroma collection.
-`query_events` yields events filtered by agent or type. `stream_stories`
+Use `log_event` to append rows and add embeddings to the Chroma collection.
+Retrieve data with `query_events` filtered by agent or type; `stream_stories`
 remains available for legacy text logs.
+
+```python
+from scripts.ingest_biosignals import ingest_directory, __version__ as ingest_version
+from bana.event_structurizer import __version__ as structurizer_version
+from memory.narrative_engine import (
+    StoryEvent,
+    log_event,
+    query_events,
+    __version__ as narrative_engine_version,
+)
+
+event = StoryEvent(actor="subject", action="calm")
+log_event(event)
+events = list(query_events(agent_id="bio_adaptive_narrator"))
+```
+
+The `__version__` fields track compatibility between ingestion,
+structurization, and storage modules.
 
 ## Multitrack Output
 
@@ -154,6 +188,18 @@ Agents listed above live in [`agents/nazarick`](../agents/nazarick) and declare
 their chakra alignment in [`agent_registry.yaml`](../agents/nazarick/agent_registry.yaml).
 The memory layers are defined in [Memory Architecture](memory_architecture.md).
 
+## Dataset Schema
+
+| field        | type              | description                       |
+|--------------|-------------------|-----------------------------------|
+| `timestamp`  | string (ISO-8601) | moment the biosignal was recorded |
+| `heart_rate` | float             | beats per minute                  |
+| `skin_temp`  | float             | skin temperature in °C            |
+| `eda`        | float             | electrodermal activity in µS      |
+| `agent`      | string            | originating agent identifier      |
+| `memory_layer` | string          | target memory layer               |
+| `action`     | string            | narrative label for the event     |
+
 ## Dataset Example
 
 Sample rows illustrating how story events are captured:
@@ -193,13 +239,28 @@ recorded narrative stream.
 
 ## Tests
 
-Validate the ingestion and mapping pipeline:
+Run the following suites to validate ingestion, structuring, and storage:
 
-```bash
-pytest tests/narrative_engine/test_biosignal_pipeline.py \
-       tests/narrative_engine/test_biosignal_transformation.py
-       tests/narrative_engine/test_ingest_persist_retrieve.py
-```
+- **Event Structurizer** – ensures biosignal rows become valid `StoryEvent`
+  objects.
+
+  ```bash
+  pytest tests/narrative_engine/test_biosignal_transformation.py
+  ```
+
+- **Persistence & Retrieval** – verifies events round-trip through SQLite and
+  Chroma.
+
+  ```bash
+  pytest tests/narrative_engine/test_ingest_persist_retrieve.py
+  ```
+
+- **Pipeline Integration** – exercises the full flow from CSV ingestion to
+  memory writes.
+
+  ```bash
+  pytest tests/narrative_engine/test_biosignal_pipeline.py
+  ```
 
 ## Version History
 
@@ -210,6 +271,7 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py \
 | 0.2.0 | 2025-10-17 | Introduced event structurizer and Chroma-backed search. |
 | 0.3.0 | 2025-10-17 | Added multitrack output schema and sample. |
 | 0.4.0 | 2025-08-31 | Added flow diagram and Components & Links section. |
+| 0.5.0 | 2025-09-15 | Added architecture overview, dataset schema, persistence instructions, and operator links. |
 
 ## Components & Links
 
@@ -220,4 +282,4 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py \
 | [bana/event_structurizer.py](../bana/event_structurizer.py) | [Bana Engine](bana_engine.md) |
 | [memory/narrative_engine.py](../memory/narrative_engine.py) | [Memory Architecture](memory_architecture.md) |
 
-See [assets/narrative_engine_flow.mmd](assets/narrative_engine_flow.mmd) for the event → Mistral → multi-track outputs → memory/operator flow.
+See [assets/narrative_engine_flow.mmd](assets/narrative_engine_flow.mmd) for the event → Mistral → multi-track outputs → memory/operator flow. The memory path aligns with the [Memory Architecture](memory_architecture.md); operator notifications follow the [Operator Protocol](operator_protocol.md).

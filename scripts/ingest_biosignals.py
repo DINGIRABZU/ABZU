@@ -7,6 +7,8 @@ from pathlib import Path
 
 from memory.narrative_engine import StoryEvent, log_story
 
+__version__ = "0.1.0"
+
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "biosignals"
 
 
