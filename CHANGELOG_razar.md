@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
   `ai_invoker.handover` and retried components after patches are applied.
 - Operator uploads now store files under operator-specific paths and relay metadata through Crown to RAZAR.
 - Expanded remote assistance workflow with sequence diagram and dedicated invocation and patch logs.
+- Detailed handover and patch application flow with `ai_invoker` → `code_repair` diagram and patch log reference.
 - Added unit tests for `ai_invoker.handover` and `code_repair.repair_module`.
 
 - Expanded guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.

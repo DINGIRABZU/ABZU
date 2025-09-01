@@ -1,2 +1,4 @@
 flowchart LR
-    boot([Boot]) --> ai[AI invocation] --> patch[Patch] --> test[Test] --> restart[Restart]
+    I[ai_invoker] --> R[code_repair]
+    R --> T[tests]
+    T --> L[log result]

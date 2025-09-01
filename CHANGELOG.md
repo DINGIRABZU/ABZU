@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
+- Added step-by-step handover and patch application flow with `ai_invoker` → `code_repair` diagram and logging policy reference.
 
 - Mandated quarterly review of entries in `docs/KEY_DOCUMENTS.md` and added audit cadence table with `scripts/schedule_doc_audit.py`.
 - Ensure components have descriptions and data-flow references.

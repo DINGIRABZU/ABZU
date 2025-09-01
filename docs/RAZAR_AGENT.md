@@ -318,6 +318,26 @@ sequenceDiagram
 
 The Mermaid source lives at [assets/remote_assistance_sequence.mmd](assets/remote_assistance_sequence.mmd).
 
+### Handover and Patch Application Flow
+
+1. `boot_orchestrator` flags repeated failures and calls `ai_invoker.handover`.
+2. `ai_invoker` records the request in `logs/razar_ai_invocations.json` and forwards context to the remote agent.
+3. The agent returns a diff and test commands.
+4. `ai_invoker` appends the proposal to `logs/razar_ai_patches.json` and passes it to `code_repair`.
+5. `code_repair` applies the diff in a sandbox, runs the tests, and updates `razar_ai_patches.json` with pass/fail status.
+6. Success restarts the component; failures trigger another handover.
+
+```mermaid
+flowchart LR
+    I[ai_invoker] --> R[code_repair]
+    R --> T[tests]
+    T --> L[log result]
+```
+
+The Mermaid source lives at [assets/ai_handover_flow.mmd](assets/ai_handover_flow.mmd).
+
+Patch history accumulates in [`../logs/razar_ai_patches.json`](../logs/razar_ai_patches.json) for manual review.
+
 ### Logging
 
 - Invocations append records to [`../logs/razar_ai_invocations.json`](../logs/razar_ai_invocations.json).

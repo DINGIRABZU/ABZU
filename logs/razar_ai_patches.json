@@ -8,5 +8,10 @@
     "component": "docs",
     "diff": "Replaced binary remote flow diagram with Mermaid code",
     "tests": "pre-commit run --files docs/RAZAR_AGENT.md docs/INDEX.md"
+  },
+  {
+    "component": "docs",
+    "diff": "Documented handover and patch application flow with ai_invoker to code_repair diagram",
+    "tests": "pre-commit run --files docs/RAZAR_AGENT.md docs/The_Absolute_Protocol.md docs/assets/ai_handover_flow.mmd logs/razar_ai_patches.json CHANGELOG.md CHANGELOG_razar.md docs/INDEX.md"
   }
 ]
