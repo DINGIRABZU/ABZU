@@ -84,7 +84,7 @@ import importlib, sys
 sys.exit(0 if importlib.util.find_spec('pytest_cov') else 1)
 PY
       - name: Run tests
-        run: pytest --cov
+        run: pytest --cov --cov-fail-under=90
       - name: Export coverage metrics
         run: python scripts/export_coverage.py
       - name: Upload coverage report
