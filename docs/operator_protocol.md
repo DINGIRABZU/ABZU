@@ -14,7 +14,7 @@ See the [`webrtc`, `operator_upload`, `crown_ws`, and `bana_narrative_api` entri
 
 ## Authentication
 
-All requests require an `Authorization` header with a Bearer token carrying the `operator` role. RAZAR rejects commands when the role is missing or insufficient.
+All requests require an `Authorization` header with a Bearer token carrying the `operator` role. Tokens are JWTs issued by the Crown identity service; RAZAR rejects commands when the role is missing or insufficient.
 
 ## Rate Limits
 

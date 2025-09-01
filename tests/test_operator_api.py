@@ -69,9 +69,9 @@ def test_upload_stores_and_forwards(client: TestClient, monkeypatch) -> None:
         files={"files": ("a.txt", b"hi")},
     )
     assert resp.status_code == 200
-    assert resp.json()["stored"] == ["a.txt"]
-    assert captured["meta"] == {"x": 1}
-    assert (Path("uploads") / "a.txt").read_text() == "hi"
+    assert resp.json()["stored"] == ["overlord/a.txt"]
+    assert captured["meta"] == {"x": 1, "files": ["overlord/a.txt"]}
+    assert (Path("uploads") / "overlord" / "a.txt").read_text() == "hi"
 
 
 def test_upload_invalid_metadata(client: TestClient) -> None:
@@ -91,3 +91,33 @@ def test_upload_permission_error(client: TestClient, mock_dispatch) -> None:
         files={"files": ("a.txt", b"hi")},
     )
     assert resp.status_code == 403
+
+
+def test_command_permission_error(client: TestClient, mock_dispatch) -> None:
+    mock_dispatch(error="nope")
+    resp = client.post(
+        "/operator/command",
+        json={"operator": "overlord", "agent": "crown", "command": "noop"},
+    )
+    assert resp.status_code == 403
+
+
+def test_upload_metadata_only(client: TestClient, monkeypatch) -> None:
+    captured: dict[str, dict] = {}
+
+    def dispatch(operator, agent, func, meta):
+        if operator == "overlord" and agent == "crown":
+            return func(meta)
+        if operator == "crown" and agent == "razar":
+            captured["meta"] = meta
+            return {"ok": True}
+        raise AssertionError("unexpected dispatch")
+
+    monkeypatch.setattr(operator_api._dispatcher, "dispatch", dispatch)
+    resp = client.post(
+        "/operator/upload",
+        data={"operator": "overlord", "metadata": json.dumps({"x": 1})},
+    )
+    assert resp.status_code == 200
+    assert resp.json()["stored"] == []
+    assert captured["meta"] == {"x": 1, "files": []}
