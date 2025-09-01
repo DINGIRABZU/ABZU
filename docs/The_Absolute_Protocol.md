@@ -15,7 +15,7 @@ Before opening a pull request, confirm each item:
   - [System Blueprint](system_blueprint.md)
   - [Project Mission & Vision](project_mission_vision.md) – confirm alignment before proposing major changes
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
-  - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, linked agents, status, and operator interface flows are current
+  - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, linked agents, status, operator interface flows, and code/doc links are current
 - [ ] Commit messages follow [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format)
 - [ ] Onboarding quiz answers included in first pull request (`onboarding_quiz.yml`)
 - [ ] Agent docs include a **Persona & Responsibilities** section
@@ -33,7 +33,7 @@ Before opening a pull request, confirm each item:
 - [ ] Connector registry updated:
   - implementations expose `__version__` matching `component_index.json`, implement `start_call`, and `close_peers`
   - [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) entry updated
-    - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, linked agents, operator interface flows, status, and links
+    - [ ] If a connector is added or modified, update [docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, linked agents, operator interface flows, status, and code/doc links
 - [ ] Connector health check passes – run `python scripts/health_check_connectors.py` and ensure all connectors report healthy
 - [ ] API changes documented in [api_reference.md](api_reference.md) and connector docs
 - [ ] Narrative feature compliance:
@@ -228,7 +228,7 @@ Connectors bridge the language engine to external communication layers. Follow t
 
 ### Connector Registry
 
-Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, purpose, endpoints, linked agents, operator interface flows, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Both documents are listed in [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md). Update this registry whenever a connector is added, removed, or its interface changes.
+Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, purpose, endpoints, authentication method, linked agents, operator interface flows, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Both documents are listed in [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md). Update this registry whenever a connector is added, removed, or its interface changes.
 
 ## Subsystem Protocols
 
