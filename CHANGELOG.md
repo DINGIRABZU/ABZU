@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented `bana/narrative_api.py` for narrative retrieval and streaming.
 - Added `scripts/generate_protocol_task.py` to create protocol refinement tasks after six new entries and wired it into nightly CI.
 - Added `scripts/check_memory_layers.py` gating Albedo on successful memory checks and recorded dataset paths in `component_index.json` and `docs/memory_architecture.md`.
+- Added `scripts/init_memory_layers.py` for seeding memory stores and expanded
+  memory architecture documentation with example queries.
 - Added `scripts/require_connector_registry_update.py` and pre-commit hook to enforce connector registry updates; expanded connector index with planned narrative WebSocket entry.
 
 ### Documentation Audit

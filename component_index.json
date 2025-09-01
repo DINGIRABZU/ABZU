@@ -53,7 +53,7 @@
       "id": "crown",
       "chakra": "crown",
       "type": "module",
-      "version": "0.3.1",
+      "version": "0.1.0",
       "path": "crown_router.py",
       "purpose": "Routes prompts among crown services",
       "dependencies": [
@@ -151,26 +151,6 @@
         "coverage": 1.0
       },
       "ignition_stage": 3,
-      "adr": null
-    },
-    {
-      "id": "memory_layers",
-      "chakra": "root",
-      "type": "subsystem",
-      "version": "0.3.0",
-      "path": "memory",
-      "purpose": "Layered memory stores for system state",
-      "dependencies": [
-        "sqlite3"
-      ],
-      "tests": [
-        "tests/test_spiral_memory.py"
-      ],
-      "status": "active",
-      "metrics": {
-        "coverage": 1.0
-      },
-      "ignition_stage": 4,
       "adr": null
     },
     {
@@ -572,7 +552,7 @@
       "chakra": "heart",
       "type": "dataset",
       "version": "0.0.1",
-      "path": "data/cortex.jsonl",
+      "path": "data/cortex_memory_spiral.jsonl",
       "purpose": "JSONL log for cortex memory layer",
       "dependencies": [],
       "tests": [],
@@ -658,6 +638,22 @@
       "tests": [
         "tests/narrative_engine/test_ingest_persist_retrieve.py"
       ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "memory_init_script",
+      "chakra": "heart",
+      "type": "config",
+      "version": "0.1.0",
+      "path": "scripts/init_memory_layers.py",
+      "purpose": "Seeds cortex, emotional, mental, spiritual and narrative stores",
+      "dependencies": [],
+      "tests": [],
       "status": "experimental",
       "metrics": {
         "coverage": 0.0
