@@ -11,18 +11,14 @@ __version__ = "0.1.0"
 
 @pytest.fixture
 def stub_handshake(monkeypatch):
-    """Stub CrownHandshake.perform to return a predefined response."""
+    """Stub crown_handshake.perform to return a predefined response."""
 
     def _stub(response: CrownResponse) -> None:
-        class DummyHandshake:
-            def __init__(self, url: str) -> None:  # pragma: no cover - trivial
-                self.url = url
+        async def dummy(brief_path: str) -> CrownResponse:
+            assert Path(brief_path).exists()
+            return response
 
-            async def perform(self, brief_path: str) -> CrownResponse:
-                assert Path(brief_path).exists()
-                return response
-
-        monkeypatch.setattr(bo, "CrownHandshake", DummyHandshake)
+        monkeypatch.setattr(bo.crown_handshake, "perform", dummy)
 
     return _stub
 
