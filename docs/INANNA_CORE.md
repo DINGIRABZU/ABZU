@@ -71,9 +71,18 @@ servant_models:
 Environment variables with the same names as listed above override the
 corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
 
-## Setup Steps
+## Initialization Procedure
 
-1. **Create memory directories**
+1. **Review configuration**
+
+   Ensure `crown_config/INANNA_CORE.yaml` exists and export any overrides:
+
+   ```bash
+   export GLM_API_URL=https://glm.example.com/glm41v_9b
+   export MEMORY_DIR=data/vector_memory
+   ```
+
+2. **Create memory directories**
 
    ```bash
    mkdir -p data/vector_memory/{vector_memory,chroma}
@@ -82,7 +91,7 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    This prepares the persistent stores used by `vector_memory.py` and
    `corpus_memory.py`.
 
-2. **Initialize vector and Chroma stores**
+3. **Initialize vector and Chroma stores**
 
    ```bash
    python -m INANNA_AI.corpus_memory --reindex
@@ -104,7 +113,7 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    python -m chromadb --path data/vector_memory/chroma --port 8030 &
    ```
 
-3. **Launch servant model endpoints**
+4. **Launch servant model endpoints**
 
    Define the endpoints via `SERVANT_MODELS` and run the launcher:
 
@@ -121,10 +130,15 @@ corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
    curl -f http://localhost:8003/health
    ```
 
-4. **Start INANNA core**
+5. **Start the Crown agent**
 
-   The minimal startup script combines the above steps and verifies the
-   configuration:
+   Load the configuration and bring INANNA Core online:
+
+   ```bash
+   python init_crown_agent.py --config crown_config/INANNA_CORE.yaml
+   ```
+
+   A helper script can orchestrate the sequence and verify the configuration:
 
    ```bash
    scripts/start_inanna_core.sh
@@ -279,4 +293,5 @@ PY
 
 | Version | Date | Summary |
 |---------|------|---------|
-| [Unreleased](../CHANGELOG.md#documentation-audit) | - | Added deployment instructions and version history. |
+| [Unreleased](../CHANGELOG.md#documentation-audit) | - | Added step-by-step initialization procedure and expanded history. |
+| 0.1.0 | 2025-08-30 | Initial configuration guide. |
