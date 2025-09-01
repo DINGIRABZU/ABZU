@@ -12,7 +12,6 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -288,7 +287,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [operations.md](operations.md) | Operations | - | - |
-| [operator_protocol.md](operator_protocol.md) | Operator Protocol | Defines the interfaces and logging expectations for direct operator interactions. | - |
+| [operator_protocol.md](operator_protocol.md) | Operator Protocol | Outlines the operator-facing interfaces used to control the Crown and RAZAR stack. | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | Sources: [`../os_guardian/perception.py`](../os_guardian/perception.py), [`../os_guardian/planning.py`](../os_guardia... | `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py` |
 | [os_guardian_container.md](os_guardian_container.md) | OS Guardian Container | This guide covers running the `os_guardian` tools inside Docker. | - |
 | [os_guardian_permissions.md](os_guardian_permissions.md) | OS Guardian Permission Policies | The `safety` module guards high-risk actions executed by the OS Guardian utilities. Permissions are configured with e... | - |
