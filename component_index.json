@@ -27,7 +27,7 @@
       "id": "razar",
       "chakra": "root",
       "type": "agent",
-      "version": "0.2.3",
+      "version": "0.2.2",
       "path": "agents/razar",
       "purpose": "Bootstraps services and coordinates recovery",
       "dependencies": [

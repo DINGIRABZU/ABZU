@@ -31,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Expanded remote assistance workflow with sequence diagram and dedicated invocation and patch logs.
 - Added unit tests for `ai_invoker.handover` and `code_repair.repair_module`.
 
+- Expanded guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
 ### Changed
 - Boot orchestrator now persists the handshake response before starting
   components and triggers `crown_model_launcher.sh` when `GLM4V` is absent.
