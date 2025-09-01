@@ -21,6 +21,37 @@ query example:
 After these layers ignite, RAZAR activates the [Bana engine](bana_engine.md) to
 narrate the system's evolving state.
 
+## Quick start
+
+1. Initialize all layers with the helper script:
+
+```bash
+bash scripts/init_memory_layers.sh
+```
+
+2. Query individual stores to verify the seeded records:
+
+```bash
+# Cortex
+python -c 'from memory.cortex import query_spirals; print(query_spirals(tags=["example"]))'
+
+# Emotional
+python -c 'from memory.emotional import fetch_emotion_history, get_connection; print(fetch_emotion_history("joy", conn=get_connection()))'
+
+# Mental (requires Neo4j dependencies)
+python -c 'from memory.mental import query_related_tasks; print(query_related_tasks("taskA"))'
+
+# Spiritual
+python -c 'from memory.spiritual import lookup_symbol_history, get_connection; conn=get_connection(); print(lookup_symbol_history("\u263E", conn=conn))'
+
+# Narrative
+python -c 'from memory.narrative_engine import stream_stories; print(list(stream_stories()))'
+```
+
+The script seeds each layer using file-based back-ends and prints the results of
+these queries. The sections below describe manual setup and alternative back-end
+options.
+
 ## Flow
 
 ```mermaid
