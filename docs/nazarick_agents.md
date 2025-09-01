@@ -64,12 +64,12 @@ Set `NAZARICK_ENV=dev` to load local configuration and point `NAZARICK_LOG_DIR` 
 
 ## Agent Summary
 
-| ID | Chakra | Channel | Persona Traits | Responsibilities | Code Path |
-| --- | --- | --- | --- | --- | --- |
-| orchestration_master | Crown | `#throne-room` | Disciplined, calm coordinator | Boot order and pipeline supervision via [operator_api](connectors/CONNECTOR_INDEX.md#operator_api) | [orchestration_master.py](../orchestration_master.py) |
-| prompt_orchestrator | Throat | `#signal-hall` | Focused dispatcher | Route prompts and recall context | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
-| qnl_engine | Third Eye | `#insight-observatory` | Introspective analyst | Process QNL sequences and insights via [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui) | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
-| memory_scribe | Heart | `#memory-vault` | Diligent archivist | Persist transcripts and embeddings | [memory_scribe.py](../memory_scribe.py) |
+| ID | Launch | Responsibilities | Dependencies | Channel | Extensibility | Code Path |
+| --- | --- | --- | --- | --- | --- | --- |
+| orchestration_master | `./launch_servants.sh orchestration_master` | Boot order and pipeline supervision via [operator_api](connectors/CONNECTOR_INDEX.md#operator_api) | Model runtime, container services | `#throne-room` | Extend `launch_agents_from_config` or override `boot_sequence` | [orchestration_master.py](../orchestration_master.py) |
+| prompt_orchestrator | `./launch_servants.sh crown_prompt_orchestrator` | Route prompts and recall context | LLM APIs | `#signal-hall` | Customize dispatch rules in `route_prompt` or add persona layers | [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py) |
+| qnl_engine | `./launch_servants.sh qnl_engine` | Process QNL sequences and insights via [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui) | Audio toolchain | `#insight-observatory` | Add glyph processors or bus listeners via plugin methods | [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py) |
+| memory_scribe | `./launch_servants.sh memory_scribe` | Persist transcripts and embeddings | Vector database | `#memory-vault` | Swap embedding backends or extend storage adapters | [memory_scribe.py](../memory_scribe.py) |
 
 Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_INDEX.md), while browser controls live in the [Nazarick Web Console](nazarick_web_console.md). These agents draw from the chakra structure outlined in the [Developer Onboarding guide](developer_onboarding.md) and [Chakra Architecture](chakra_architecture.md).
 
@@ -83,6 +83,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **External Libraries:** Model runtime, container services
 - **Channel:** `#throne-room`
 - **Launch:** `./launch_servants.sh orchestration_master`
+- **Extensibility:** Override `boot_sequence` or extend `launch_agents_from_config` to integrate new launch steps.
 - **Connectors:** [operator_api](connectors/CONNECTOR_INDEX.md#operator_api)
 - **Module:** [orchestration_master.py](../orchestration_master.py)
 - **Registry:** [agents/nazarick/agent_registry.yaml#L2-L6](../agents/nazarick/agent_registry.yaml#L2-L6)
@@ -95,6 +96,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **External Libraries:** LLM APIs
 - **Channel:** `#signal-hall`
 - **Launch:** `./launch_servants.sh crown_prompt_orchestrator`
+- **Extensibility:** Modify `route_prompt` to add dispatch rules or persona layers.
 - **Connectors:** —
 - **Module:** [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py)
 - **Registry:** [agents/nazarick/agent_registry.yaml#L7-L11](../agents/nazarick/agent_registry.yaml#L7-L11)
@@ -107,6 +109,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **External Libraries:** Audio toolchain
 - **Channel:** `#insight-observatory`
 - **Launch:** `./launch_servants.sh qnl_engine`
+- **Extensibility:** Implement additional glyph analyzers or register new bus listeners.
 - **Connectors:** [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui)
 - **Module:** [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py)
 - **Registry:** [agents/nazarick/agent_registry.yaml#L12-L16](../agents/nazarick/agent_registry.yaml#L12-L16)
@@ -119,6 +122,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **External Libraries:** Vector database
 - **Channel:** `#memory-vault`
 - **Launch:** `./launch_servants.sh memory_scribe`
+- **Extensibility:** Swap vector backends or extend persistence adapters.
 - **Connectors:** —
 - **Module:** [memory_scribe.py](../memory_scribe.py)
 - **Registry:** [agents/nazarick/agent_registry.yaml#L17-L21](../agents/nazarick/agent_registry.yaml#L17-L21)

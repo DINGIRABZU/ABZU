@@ -70,12 +70,12 @@ The Mermaid source lives at [assets/nazarick_web_console.mmd](assets/nazarick_we
    export WEB_CONSOLE_API_URL=http://localhost:8000/glm-command
    export WEB_CONSOLE_SIGNAL_URL=http://localhost:8000/offer
    ```
-3. Serve the static files:
+3. Serve the static files (use a custom port if 8000 is taken):
    ```bash
    cd web_console
-   python -m http.server
+   python -m http.server 8000
    ```
-4. Open `index.html` in a browser and grant microphone and camera access.
+4. Navigate to `http://localhost:8000` (or your chosen port) and open `index.html`, granting microphone and camera access.
 5. Enter commands or music prompts. Logs and streams display in real time.
 
 ## Connectors
