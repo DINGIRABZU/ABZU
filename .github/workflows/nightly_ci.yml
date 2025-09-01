@@ -24,7 +24,7 @@ jobs:
       - name: Run pre-commit
         run: pre-commit run --all-files
       - name: Run pytest
-        run: pytest --junitxml=pytest.xml
+        run: pytest --cov --cov-fail-under=90 --junitxml=pytest.xml
       - name: Generate protocol refinement task
         run: python scripts/generate_protocol_task.py
       - name: Upload test artifacts

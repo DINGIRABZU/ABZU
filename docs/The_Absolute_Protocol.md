@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.80
-**Last updated:** 2025-09-03
+**Version:** v1.0.81
+**Last updated:** 2025-09-04
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -39,7 +39,7 @@ Confirm these items before submitting a pull request:
 - [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
 
 ## Coverage & Testing Requirements
-Each milestone must uphold repository coverage thresholds of **at least 90%** by running `pytest --cov --cov-fail-under=90`; components falling below the target cannot merge until addressed. Audit any failing tests and record them in [docs/testing/failure_inventory.md](testing/failure_inventory.md) before merging. Placeholder markers such as `TODO` or `FIXME` are forbidden—the `placeholder-elimination` pre-commit hook (`scripts/check_placeholders.py`) blocks commits containing them. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
+Each milestone must uphold repository coverage thresholds of **at least 90%** by running `pytest --cov --cov-fail-under=90`; the CI pipeline fails when coverage drops below this target. Audit any failing tests and record them in [docs/testing/failure_inventory.md](testing/failure_inventory.md) before merging. Placeholder markers such as `TODO` or `FIXME` are forbidden—the `scan-todo-fixme` pre-commit hook (`scripts/scan_todo_fixme.py`) blocks commits containing them. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
 
 ### Test Failure Audit
 Log each failing test with date, category, and remediation steps in [docs/testing/failure_inventory.md](testing/failure_inventory.md). Update entries once resolved and rerun affected tests to confirm fixes.
@@ -66,7 +66,8 @@ Before opening a pull request, confirm each item:
 - [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`; see [ignition_flow.md](ignition_flow.md)
 - [ ] Ignition step changes reflected in [bana_engine.md](bana_engine.md) and Nazarick docs such as [nazarick_narrative_system.md](nazarick_narrative_system.md)
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
-- [ ] Tests follow [The Absolute Pytest](the_absolute_pytest.md); coverage updated in component index
+- [ ] Tests follow [The Absolute Pytest](the_absolute_pytest.md); run `pytest --cov --cov-fail-under=90` to ensure ≥90% coverage
+- [ ] No `TODO` or `FIXME` markers in committed code (`pre-commit` `scan-todo-fixme` hook)
 - [ ] "Test Plan" issue filed per [Test Planning Guide](onboarding/test_planning.md) outlining scope, chakra, and coverage goals
 - [ ] Connector registry updated:
   - implementations expose `__version__` matching `component_index.json`, implement `start_call`, and `close_peers`
