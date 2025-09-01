@@ -1,9 +1,12 @@
 # Test suite notes
 
-## Chakra test organization
+## Chakra and component organization
 
-Tests are grouped by chakra to mirror the system architecture. Chakra-specific
-subdirectories such as `tests/root` and `tests/crown` hold integration tests for those layers. Other tests remain at the top level or in feature folders.
+Tests are annotated with `chakra` and `component` markers derived from
+`component_index.json`. Use `pytest -m "chakra('heart')"` to run Heart layer
+tests or filter by component with `pytest -m "component('bana')"`. Directory
+structure remains available for broad organization, but markers provide the
+canonical grouping.
 
 ## Hugging Face hub stub
 

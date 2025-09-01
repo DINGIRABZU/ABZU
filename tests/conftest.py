@@ -5,6 +5,7 @@ from __future__ import annotations
 __version__ = "0.0.1"
 
 import importlib.util
+import json
 import os
 import shutil
 import sys
@@ -68,6 +69,15 @@ import spiral_os._hf_stub as hf_stub  # noqa: E402
 
 sys.modules.setdefault("huggingface_hub", hf_stub)
 sys.modules.setdefault("huggingface_hub.utils", hf_stub)
+
+# Map tests to chakra and component metadata from component_index.json
+with open(ROOT / "component_index.json", encoding="utf-8") as f:
+    _TEST_META: dict[str, tuple[str, str]] = {}
+    for comp in json.load(f).get("components", []):
+        chakra = comp.get("chakra")
+        comp_id = comp.get("id")
+        for test_path in comp.get("tests", []):
+            _TEST_META[test_path] = (chakra, comp_id)
 
 spec = importlib.util.spec_from_file_location(
     "seed", ROOT / "src" / "core" / "utils" / "seed.py"
@@ -254,9 +264,15 @@ ALLOWED_TESTS = {
 
 
 def pytest_collection_modifyitems(config, items):
-    """Skip tests that require heavy resources unless allowed."""
+    """Annotate tests and skip heavy ones when resources are unavailable."""
     skip_marker = pytest.mark.skip(reason="requires unavailable resources")
     for item in items:
+        rel_path = os.path.relpath(str(item.fspath), ROOT).replace(os.sep, "/")
+        meta = _TEST_META.get(rel_path)
+        if meta:
+            chakra, component = meta
+            item.add_marker(pytest.mark.chakra(chakra))
+            item.add_marker(pytest.mark.component(component))
         if str(item.fspath) not in ALLOWED_TESTS:
             item.add_marker(skip_marker)
 
