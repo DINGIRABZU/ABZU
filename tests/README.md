@@ -2,11 +2,11 @@
 
 ## Chakra and component organization
 
-Tests are annotated with `chakra` and `component` markers derived from
-`component_index.json`. Use `pytest -m "chakra('heart')"` to run Heart layer
-tests or filter by component with `pytest -m "component('bana')"`. Directory
-structure remains available for broad organization, but markers provide the
-canonical grouping.
+Tests are organized under `tests/<chakra>/<component>/` and annotated with
+`chakra` and `component` markers derived from `component_index.json`. Use
+`pytest -m "chakra('heart')"` to run Heart layer tests or filter by component
+with `pytest -m "component('bana')"`. The directory layout mirrors the
+component index while markers provide the canonical grouping.
 
 ## Hugging Face hub stub
 

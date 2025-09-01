@@ -2,7 +2,8 @@
 
 ![Coverage](../coverage.svg)
 
-The badge above is generated via `coverage-badge`.
+The badge above is generated via `scripts/export_coverage.py`, which runs
+`coverage-badge` after tests complete.
 
 See [component_maturity.md](component_maturity.md) for per-component maturity metrics.
 
@@ -24,7 +25,7 @@ This document summarizes the current state of the ABZU codebase. It serves as a 
 pytest --maxfail=1 --cov --cov-fail-under=0 -q tests/test_env_validation.py
 ```
 
-A minimal run over the environment validation tests completes without failures and exports Prometheus metrics for session runtime and pass/fail counts to `monitoring/pytest_metrics.prom`:
+A minimal run over the environment validation tests completes without failures and exports Prometheus metrics for session runtime and pass/fail counts to `monitoring/pytest_metrics.prom`. CI enforces a minimum of 90% coverage:
 
 - `8 passed`.
 

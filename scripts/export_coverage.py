@@ -23,6 +23,9 @@ def main() -> None:
         check=True,
     )
     subprocess.run(["coverage", "html", "-i"], check=True)
+    subprocess.run(
+        ["coverage-badge", "-o", str(REPO_ROOT / "coverage.svg")], check=True
+    )
     with COVERAGE_JSON.open("r", encoding="utf-8") as fh:
         coverage_data = json.load(fh)["files"]
     with INDEX_PATH.open("r", encoding="utf-8") as fh:

@@ -14,7 +14,7 @@
         "fastapi"
       ],
       "tests": [
-        "tests/test_server.py"
+        "tests/crown/server/test_server.py"
       ],
       "status": "active",
       "metrics": {
@@ -220,7 +220,7 @@
         "sqlite3"
       ],
       "tests": [
-        "tests/test_memory_emotional.py"
+        "tests/heart/memory_emotional/test_memory_emotional.py"
       ],
       "status": "active",
       "metrics": {
