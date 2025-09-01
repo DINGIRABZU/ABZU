@@ -36,6 +36,11 @@ try:  # pragma: no cover - optional dependency
         "Total test failures",
         registry=_PROM_REGISTRY,
     )
+    _PASSES = Counter(
+        "pytest_test_passes_total",
+        "Total test passes",
+        registry=_PROM_REGISTRY,
+    )
     _DURATION = Histogram(
         "pytest_test_duration_seconds",
         "Test duration in seconds",
@@ -285,6 +290,8 @@ def pytest_runtest_logreport(report):  # pragma: no cover - timing varies
         _DURATION.observe(report.duration)
         if report.failed:
             _FAILURES.inc()
+        elif report.passed:
+            _PASSES.inc()
     if report.failed:
         cov_dir = ROOT / "htmlcov"
         artifacts = [str(cov_dir)] if cov_dir.exists() else None
