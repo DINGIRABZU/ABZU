@@ -1,80 +1,80 @@
 #!/usr/bin/env python3
-"""Compare module versions against component_index.json."""
+"""Verify module and connector versions match ``component_index.json``."""
+
 from __future__ import annotations
 
 import json
 import re
 import sys
 from pathlib import Path
+from typing import Iterable
 
 __version__ = "0.3.0"
 
-VERSION_RE = re.compile(r"^__version__\s*=\s*['\"]([^'\"]+)['\"]", re.MULTILINE)
+ROOT = Path(__file__).resolve().parents[1]
+INDEX_PATH = ROOT / "component_index.json"
 
 
-def load_component_versions(index_path: Path) -> dict[Path, str]:
-    data = json.loads(index_path.read_text(encoding="utf-8"))
-    mapping: dict[Path, str] = {}
+def load_index() -> dict[str, tuple[str, str]]:
+    """Return mapping of paths to ``(version, type)`` for relevant components."""
+    data = json.loads(INDEX_PATH.read_text())
+    mapping: dict[str, tuple[str, str]] = {}
     for comp in data.get("components", []):
-        mapping[Path(comp["path"])] = comp["version"]
+        comp_type = comp.get("type")
+        if comp_type not in {"module", "connector", "service", "script"}:
+            continue
+        mapping[comp["path"]] = (comp.get("version", ""), comp_type)
     return mapping
 
 
-def find_index_version(rel_path: Path, mapping: dict[Path, str]) -> str | None:
-    for comp_path, version in mapping.items():
-        if comp_path == rel_path:
-            return version
-        if comp_path.is_dir():
-            try:
-                rel_path.relative_to(comp_path)
-            except ValueError:
-                continue
-            else:
-                return version
-    return None
-
-
-def read_source_version(path: Path) -> str | None:
-    try:
-        text = path.read_text(encoding="utf-8")
-    except (FileNotFoundError, UnicodeDecodeError):
-        return None
-    match = VERSION_RE.search(text)
+def extract_version(path: Path) -> str | None:
+    """Extract ``__version__`` from ``path`` if present."""
+    text = path.read_text()
+    match = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", text)
     return match.group(1) if match else None
 
 
-def main(argv: list[str] | None = None) -> int:
-    repo_root = Path(__file__).resolve().parent.parent
-    index_mapping = load_component_versions(repo_root / "component_index.json")
-    args = argv or sys.argv[1:]
+def check_file(path: Path, expected: str) -> str | None:
+    """Return error if ``path`` lacks ``__version__`` or mismatches ``expected``."""
+    if path.is_dir():
+        path = path / "__init__.py"
+    if not path.exists():
+        return f"Missing file: {path}"
+    found = extract_version(path)
+    if not found:
+        return f"{path} missing __version__"
+    if found != expected:
+        return f"{path} has __version__ {found!r} but expected {expected!r}"
+    return None
+
+
+def gather_targets(
+    args: Iterable[str], index_map: dict[str, tuple[str, str]]
+) -> dict[Path, str]:
+    """Return mapping of file paths to expected versions based on ``args``."""
     if args:
-        paths = [Path(p) for p in args]
-    else:
-        paths = [repo_root / p for p in index_mapping.keys()]
-
-    errors: list[str] = []
-    for path in paths:
-        full_path = path if path.is_absolute() else repo_root / path
-        if full_path.is_dir():
-            full_path = full_path / "__init__.py"
-        if full_path.suffix != ".py":
-            continue
-        source_version = read_source_version(full_path)
-        rel = full_path.relative_to(repo_root)
-        if source_version is None:
-            errors.append(f"{rel}: missing __version__")
-            continue
-        index_version = find_index_version(rel, index_mapping)
-        if index_version and index_version != source_version:
-            errors.append(
-                f"{rel}: __version__ {source_version} != "
-                f"{index_version} in component_index.json"
-            )
-
-    for msg in errors:
-        print(msg)
-    return 1 if errors else 0
+        targets: dict[Path, str] = {}
+        for arg in args:
+            rel = Path(arg).as_posix()
+            if rel in index_map:
+                targets[ROOT / rel] = index_map[rel][0]
+        return targets
+    return {ROOT / path: ver for path, (ver, _) in index_map.items()}
 
 
-if __name__ == "__main__":  # pragma: no cover
+def main(argv: list[str] | None = None) -> int:
+    """Entrypoint for version verification."""
+    argv = argv or sys.argv[1:]
+    index_map = load_index()
+    targets = gather_targets(argv, index_map)
+    errors = [check_file(path, ver) for path, ver in targets.items()]
+    problems = [e for e in errors if e]
+    if problems:
+        for msg in problems:
+            print(msg, file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
     raise SystemExit(main())

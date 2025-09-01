@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Listed dataset licensing, version history, and evaluation metrics in `docs/bana_engine.md`.
 - Implemented `bana/narrative_api.py` for narrative retrieval and streaming.
 - Added `scripts/generate_protocol_task.py` to create protocol refinement tasks after six new entries and wired it into nightly CI.
+- Added `scripts/verify_versions.py` and enforced `__version__` declarations for modules and connectors in The Absolute Protocol; integrated version checks into CI.
 
 ### Documentation Audit
 
