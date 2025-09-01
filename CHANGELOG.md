@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `scripts/require_connector_registry_update.py` and pre-commit hook to enforce connector registry updates; expanded connector index with planned narrative WebSocket entry.
 - Persisted narrative engine stories and events to SQLite with optional Chroma search and exposed `narrative_api` in connector registry.
 - Recorded sample biosignal datasets and tests covering ingestion, persistence, and retrieval.
+- Enforced ≥90% coverage in CI workflows; pipelines fail when thresholds are not met.
+- Added `scan_todo_fixme` pre-commit hook to block `TODO`/`FIXME` markers and documented rule in The Absolute Protocol.
 
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.

@@ -14,6 +14,6 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
-        run: pip install pytest numpy
+        run: pip install pytest pytest-cov numpy
       - name: Run tests
-        run: pytest tests/agents/razar/test_boot_sequence.py tests/memory
+        run: pytest --cov --cov-fail-under=90 tests/agents/razar/test_boot_sequence.py tests/memory
