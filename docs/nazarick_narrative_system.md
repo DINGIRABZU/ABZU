@@ -5,7 +5,7 @@ Each event links to a servant agent and is persisted across the
 [memory architecture](memory_architecture.md) and surfaced through the
 [operator flow](operator_protocol.md).
 
-## Architecture Overview
+## Architecture Diagram
 
 ```mermaid
 flowchart LR
@@ -20,7 +20,7 @@ flowchart LR
 Events persist to the [Memory Architecture](memory_architecture.md) and
 notifications propagate through the [Operator Protocol](operator_protocol.md).
 
-## Biosignal→StoryEvent Pipeline
+## Event Flow
 
 ```mermaid
 flowchart LR
@@ -272,6 +272,7 @@ Run the following suites to validate ingestion, structuring, and storage:
 | 0.3.0 | 2025-10-17 | Added multitrack output schema and sample. |
 | 0.4.0 | 2025-08-31 | Added flow diagram and Components & Links section. |
 | 0.5.0 | 2025-09-15 | Added architecture overview, dataset schema, persistence instructions, and operator links. |
+| 0.6.0 | 2025-09-16 | Clarified architecture diagram, event flow, and dataset schema sections. |
 
 ## Components & Links
 
