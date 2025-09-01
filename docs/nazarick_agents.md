@@ -9,7 +9,7 @@ For a browser-based interface to these servants, see the [Nazarick Web Console](
 ## Agent Registry
 
 Core servant metadata is defined in the
-[`agents/nazarick/agent_registry.yaml`](../agents/nazarick/agent_registry.yaml)
+[`agents/nazarick/agent_registry.json`](../agents/nazarick/agent_registry.json)
 file. Each entry now provides seven fields:
 
 - `id` – unique agent identifier
@@ -22,17 +22,20 @@ file. Each entry now provides seven fields:
 
 Example:
 
-```yaml
-agents:
-  - id: orchestration_master
-    launch: "./launch_servants.sh orchestration_master"
-    chakra: crown
-    channel: "#throne-room"
-    persona_traits:
-      - disciplined
-      - calm
-    responsibilities: Boot order and pipeline supervision.
-    code_path: orchestration_master.py
+```json
+{
+  "agents": [
+    {
+      "id": "orchestration_master",
+      "launch": "./launch_servants.sh orchestration_master",
+      "chakra": "crown",
+      "channel": "#throne-room",
+      "persona_traits": ["disciplined", "calm"],
+      "responsibilities": "Boot order and pipeline supervision.",
+      "code_path": "orchestration_master.py"
+    }
+  ]
+}
 ```
 
 The service launcher reads this registry to determine which agents to
@@ -86,7 +89,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **Extensibility:** Override `boot_sequence` or extend `launch_agents_from_config` to integrate new launch steps.
 - **Connectors:** [operator_api](connectors/CONNECTOR_INDEX.md#operator_api)
 - **Module:** [orchestration_master.py](../orchestration_master.py)
-- **Registry:** [agents/nazarick/agent_registry.yaml#L2-L6](../agents/nazarick/agent_registry.yaml#L2-L6)
+- **Registry:** [agents/nazarick/agent_registry.json#L3-L11](../agents/nazarick/agent_registry.json#L3-L11)
 
 #### Prompt Orchestrator {#prompt-orchestrator}
 - **Role:** Prompt routing, agent interface, context recall via [Chat2DB](chat2db.md)
@@ -99,7 +102,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **Extensibility:** Modify `route_prompt` to add dispatch rules or persona layers.
 - **Connectors:** —
 - **Module:** [crown_prompt_orchestrator.py](../crown_prompt_orchestrator.py)
-- **Registry:** [agents/nazarick/agent_registry.yaml#L7-L11](../agents/nazarick/agent_registry.yaml#L7-L11)
+- **Registry:** [agents/nazarick/agent_registry.json#L12-L20](../agents/nazarick/agent_registry.json#L12-L20)
 
 #### QNL Engine {#qnl-engine}
 - **Role:** Insight and QNL processing
@@ -112,7 +115,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **Extensibility:** Implement additional glyph analyzers or register new bus listeners.
 - **Connectors:** [open_web_ui](connectors/CONNECTOR_INDEX.md#open_web_ui)
 - **Module:** [SPIRAL_OS/qnl_engine.py](../SPIRAL_OS/qnl_engine.py)
-- **Registry:** [agents/nazarick/agent_registry.yaml#L12-L16](../agents/nazarick/agent_registry.yaml#L12-L16)
+- **Registry:** [agents/nazarick/agent_registry.json#L21-L28](../agents/nazarick/agent_registry.json#L21-L28)
 
 #### Memory Scribe {#memory-scribe}
 - **Role:** Voice avatar configuration and memory storage via [Chat2DB](chat2db.md)
@@ -125,7 +128,7 @@ Connector details are cataloged in the [Connector Index](connectors/CONNECTOR_IN
 - **Extensibility:** Swap vector backends or extend persistence adapters.
 - **Connectors:** —
 - **Module:** [memory_scribe.py](../memory_scribe.py)
-- **Registry:** [agents/nazarick/agent_registry.yaml#L17-L21](../agents/nazarick/agent_registry.yaml#L17-L21)
+- **Registry:** [agents/nazarick/agent_registry.json#L30-L37](../agents/nazarick/agent_registry.json#L30-L37)
 
 ## Additional Agents
 

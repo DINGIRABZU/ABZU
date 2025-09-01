@@ -1,4 +1,5 @@
 import sys
+import json
 import types
 from pathlib import Path
 
@@ -40,14 +41,18 @@ def test_crown_wakes_services(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     monkeypatch.setattr(bo, "CrownHandshake", DummyHandshake)
 
     launches: list[list[str]] = []
-    monkeypatch.setattr(sl, "REQUIRED_AGENTS", {"nazarick": ["echo", "nazarick"]})
     monkeypatch.setattr(sl.subprocess, "Popen", lambda cmd: launches.append(cmd))
 
     resp = bo._perform_handshake([{"name": "nazarick"}])
     assert resp.acknowledgement == "ok"
     assert list((tmp_path / "mission_briefs").glob("*.json")), "mission brief archived"
 
-    events = sl.launch_required_agents()
+    registry = {
+        "agents": [{"id": "nazarick", "launch": "echo nazarick", "channel": "#test"}]
+    }
+    reg_path = tmp_path / "registry.json"
+    reg_path.write_text(json.dumps(registry))
+    events = sl.launch_required_agents(reg_path)
     assert events[0]["status"] == "launched"
     assert launches == [["echo", "nazarick"]]
 

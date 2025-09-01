@@ -186,7 +186,7 @@ complete example:
 | spike in EDA        | `battle_scribe`           | mental         |
 
 Agents listed above live in [`agents/nazarick`](../agents/nazarick) and declare
-their chakra alignment in [`agent_registry.yaml`](../agents/nazarick/agent_registry.yaml).
+their chakra alignment in [`agent_registry.json`](../agents/nazarick/agent_registry.json).
 The memory layers are defined in [Memory Architecture](memory_architecture.md).
 
 ## Dataset Schema

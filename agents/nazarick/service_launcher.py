@@ -9,13 +9,11 @@ import subprocess
 import time
 from pathlib import Path
 
-import yaml
-
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 LOGGER = logging.getLogger(__name__)
 
-REGISTRY_FILE = Path(__file__).with_name("agent_registry.yaml")
+REGISTRY_FILE = Path(__file__).with_name("agent_registry.json")
 LOG_FILE = Path("logs") / "nazarick_startup.json"
 
 
@@ -25,14 +23,14 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
     Parameters
     ----------
     registry_path:
-        Optional override path to the agent registry YAML.
+        Optional override path to the agent registry JSON.
 
     Returns
     -------
     list[dict[str, str]]
         Event dictionaries describing each launch attempt. Each event contains
-        ``agent``, ``command``, ``timestamp`` and ``status`` fields. On failure
-        an additional ``error`` field is included.
+        ``agent``, ``command``, ``timestamp``, ``channel`` and ``status`` fields.
+        On failure an additional ``error`` field is included.
     """
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 
@@ -43,7 +41,7 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
 
     registry_file = Path(registry_path) if registry_path else REGISTRY_FILE
     try:
-        registry = yaml.safe_load(registry_file.read_text()) or {}
+        registry = json.loads(registry_file.read_text()) or {}
         entries = registry.get("agents", [])
     except FileNotFoundError:  # pragma: no cover - missing registry
         LOGGER.error("Agent registry not found: %s", registry_file)
@@ -53,10 +51,12 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
     for entry in entries:
         name = entry.get("id", "")
         cmd_str = entry.get("launch")
+        channel = entry.get("channel", "")
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         event: dict[str, str] = {
             "agent": name,
             "command": cmd_str or "",
+            "channel": channel,
             "timestamp": timestamp,
         }
         if not cmd_str:

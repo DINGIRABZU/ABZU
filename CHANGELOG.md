@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linked chakra koan and version files from README and CONTRIBUTING.
 - Added chakra status table in `docs/chakra_status.md` outlining capabilities,
   limitations and planned evolutions for each layer.
+- Introduced `agents/nazarick/agent_registry.json` and updated service launcher for dynamic agent loading with channel status display.
 - Linked release notes to `docs/chakra_versions.json` and `CHANGELOG.md`.
 - Added recovery playbook documenting snapshot restoration steps.
 - Mapped cortex, emotional, mental, spiritual and narrative memory stores in
