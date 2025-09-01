@@ -20,7 +20,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from . import crown_handshake, doc_sync, health_checks
+from . import ai_invoker, crown_handshake, doc_sync, health_checks
 from .crown_handshake import CrownResponse
 from .quarantine_manager import is_quarantined, quarantine_component
 from agents.nazarick.service_launcher import launch_required_agents
@@ -244,6 +244,22 @@ def main() -> None:
                 except Exception as exc:
                     LOGGER.error("Attempt %s failed for %s: %s", attempt, name, exc)
                     if attempt > args.retries:
+                        # escalate to remote agent for potential repair
+                        patched = ai_invoker.handover(name, str(exc))
+                        if patched:
+                            LOGGER.info("Retrying %s after AI patch", name)
+                            try:
+                                proc = launch_component(comp)
+                                processes.append(proc)
+                                success = True
+                                attempts += 1
+                                break
+                            except Exception as exc2:
+                                LOGGER.error(
+                                    "Retry after AI patch failed for %s: %s",
+                                    name,
+                                    exc2,
+                                )
                         failure_counts[name] = failure_counts.get(name, 0) + 1
                         quarantine_component(comp, str(exc))
                         run_metrics["components"].append(
