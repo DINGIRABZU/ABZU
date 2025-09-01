@@ -128,7 +128,7 @@ directories, register servant models, and validate the GLM endpoint.
 so both sides agree on capabilities.
 3. Launch the console after an acknowledgement to begin the session.
 
-### Mission Brief JSON Example
+### Mission Brief JSON Examples
 
 ```json
 // sent by RAZAR
@@ -148,9 +148,35 @@ so both sides agree on capabilities.
 }
 ```
 
+```json
+// sent by Crown
+{
+  "type": "brief",
+  "objective": "repair audio pipeline",
+  "priority_map": {"audio": "critical"},
+  "escalation": {"on_failure": "operator"},
+  "open_issues": []
+}
+
+// received by RAZAR
+{
+  "type": "ack",
+  "capabilities": ["repair", "diagnostics"],
+  "session": "2025-10-15T12:10:00Z"
+}
+```
+
 ```text
 [RAZAR WS] -> {"type":"brief","priority_map":{"memory":"ok"}}
 [Crown WS] <- {"type":"ack","capabilities":["glm","avatar"]}
+```
+
+### Mission Brief Log Excerpt
+
+Mission briefs are written to `logs/mission_briefs/` for audit trails.
+
+```text
+2025-10-15T12:00:00Z initiator=operator action=status_check escalation=none ack=accepted
 ```
 
 ### Operator Command Relay
@@ -172,6 +198,15 @@ Operator: Crown, status report.
 Crown: Systems nominal; memory and avatar channels online.
 Operator: Escalate audio glitch to RAZAR.
 Crown: Acknowledged. Notifying RAZAR for repair.
+```
+
+### Operator Chat Log Excerpt
+
+Operator chats are stored under `logs/operator_chat/`.
+
+```text
+2025-10-15T12:05:00Z operator>Crown: start diagnostics
+2025-10-15T12:05:01Z Crown>operator: diagnostics started
 ```
 
 ### Escalation Thresholds
@@ -200,6 +235,7 @@ subsequent prompts.
 
 | Version | Date       | Summary |
 |---------|------------|---------|
+| 0.4.0   | 2025-10-20 | Added mission brief log and operator chat log examples. |
 | 0.3.0   | 2025-10-15 | Added boot sequence diagram and configuration table. |
 | 0.2.0   | 2025-09-30 | Added deployment guidance and initial version table. |
 | 0.1.0   | 2025-08-28 | Initial document outlining Crown agent architecture. |

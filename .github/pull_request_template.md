@@ -32,6 +32,17 @@ Does this PR satisfy the six-task cycle rule? <!-- Yes/No -->
 - [ ] Version bumps applied and `component_index.json` updated <!-- Required: confirm version synchronization -->
 - [ ] Connector registry updated if connectors changed <!-- Required: update [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) -->
 
+## Connector Checklist
+<!-- Select all connectors affected by this change -->
+- [ ] operator_api
+- [ ] operator_upload
+- [ ] crown_ws
+- [ ] webrtc
+- [ ] open_web_ui
+- [ ] telegram_bot
+- [ ] primordials_api
+- [ ] narrative_api
+
 ## Connector/Index updated?
 - [ ] Index updated? <!-- Required: confirm component index and documentation index regenerated -->
 - [ ] Nazarick agent registry & docs updated
