@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 """WebSocket handshake between RAZAR and the CROWN stack.
 
@@ -13,6 +13,8 @@ so operators can audit the dialogue later.
 from dataclasses import asdict, dataclass
 import json
 import logging
+import os
+import time
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -74,6 +76,15 @@ class CrownHandshake:
         self.transcript_path.parent.mkdir(parents=True, exist_ok=True)
         self.transcript_path.write_text(json.dumps(transcripts, indent=2))
 
+    def _log_patch_action(
+        self, archive_dir: Path, component: str, patch: Dict[str, Any]
+    ) -> None:
+        """Archive patch details alongside mission briefs."""
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+        path = archive_dir / f"{timestamp}_{component}_patch.json"
+        path.write_text(json.dumps({"component": component, "patch": patch}, indent=2))
+
     async def perform(self, mission_brief_path: str) -> CrownResponse:
         """Send ``mission_brief_path`` and return the CROWN acknowledgment."""
 
@@ -93,10 +104,12 @@ class CrownHandshake:
         self._append_transcript("crown", reply)
 
         downtime = reply.get("downtime", {})
+        archive_dir = Path(mission_brief_path).resolve().parent
         for component, patch in downtime.items():
             recovery_manager.request_shutdown(component)
             if patch:
                 recovery_manager.apply_patch(component, patch)
+                self._log_patch_action(archive_dir, component, patch)
             recovery_manager.resume(component)
 
         return CrownResponse(
@@ -106,4 +119,21 @@ class CrownHandshake:
         )
 
 
-__all__ = ["MissionBrief", "CrownResponse", "CrownHandshake"]
+async def perform(
+    mission_brief_path: str,
+    *,
+    url: str | None = None,
+    transcript_path: str | Path = DEFAULT_TRANSCRIPT_PATH,
+) -> CrownResponse:
+    """Convenience wrapper to execute a handshake and return the response."""
+    url = url or os.environ["CROWN_WS_URL"]
+    handshake = CrownHandshake(url, transcript_path)
+    return await handshake.perform(mission_brief_path)
+
+
+__all__ = [
+    "MissionBrief",
+    "CrownResponse",
+    "CrownHandshake",
+    "perform",
+]

@@ -11,19 +11,14 @@ __version__ = "0.1.0"
 
 @pytest.fixture
 def mock_handshake(monkeypatch):
-    """Stub out CrownHandshake to avoid network calls."""
+    """Stub out ``crown_handshake.perform`` to avoid network calls."""
 
     def _mock(response: CrownResponse):
-        class DummyHandshake:
-            def __init__(self, url: str) -> None:  # pragma: no cover - trivial
-                self.url = url
+        async def dummy(brief_path: str) -> CrownResponse:
+            assert Path(brief_path).exists()
+            return response
 
-            async def perform(self, brief_path: str) -> CrownResponse:
-                # ensure brief file exists to mimic real behaviour
-                assert Path(brief_path).exists()
-                return response
-
-        monkeypatch.setattr(bo, "CrownHandshake", DummyHandshake)
+        monkeypatch.setattr(bo.crown_handshake, "perform", dummy)
 
     return _mock
 
