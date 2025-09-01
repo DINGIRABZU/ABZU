@@ -12,6 +12,20 @@ Every module, connector, and service must expose a top-level `__version__` strin
 ## Change-Justification Field
 Pull requests must fill out the **Change justification** field in the template using the format "I did X on Y to obtain Z, expecting behavior B." This statement appears in the PR description and mirrors the commit message. Reverts should reference the original commit and rationale.
 
+### Change Justification
+Use the following statement for all modifications:
+
+```
+I did X on Y to obtain Z, expecting behavior B.
+```
+
+```mermaid
+graph TD
+    A[Action X] --> B[Target Y]
+    B --> C[Result Z]
+    C --> D[Expected Behavior B]
+```
+
 ## Key-Document Summary Verification
 During onboarding, contributors record purpose, scope, key rules, and an actionable insight summary for every entry in `onboarding_confirm.yml`. Run `scripts/verify_doc_hashes.py` to ensure each summary matches the current version of the document.
 
