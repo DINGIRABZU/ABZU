@@ -171,7 +171,7 @@ The first call uses the ``nigredo`` template and yields a prompt like:
 [Nigredo] (person) I love Alice affection
 ```
 
-## Deployment Guide
+## Deployment
 
 1. Copy the sample configuration at `config/albedo_config.yaml` or adapt the
    snippet below for your environment. This file centralizes the remote GLM
@@ -215,6 +215,26 @@ reply = layer.generate_response("hello", quantum_context=cfg["quantum"]["context
 
 The `conversation` and `metrics` paths separate human transcripts from state
 statistics and can be tailored for production deployments.
+
+## Sample Logs
+
+Successful runs emit structured logs to the paths defined in the `logging` section:
+
+```text
+INFO albedo.layer state=Nigredo msg="I love Alice" emotion=affection
+INFO albedo.layer state=Albedo msg="Response text" emotion=joy
+```
+
+The `conversation` file captures dialogue transcripts, while `metrics` records state statistics and can be tailored for production deployments.
+
+## __version__
+
+Retrieve the package version programmatically:
+
+```python
+from agents.albedo import __version__
+print(__version__)
+```
 
 ## Additional Personality Layers
 
@@ -269,36 +289,6 @@ Typical output is:
 ```
 Citrinitas speaks in golden clarity: proceed
 ```
-
-## Deployment & Config
-
-Use `config/albedo_config.yaml` to centralize the GLM endpoint, optional quantum context, and log locations:
-
-```yaml
-glm:
-  endpoint: https://glm.example.com/glm41v_9b
-  api_key: ${GLM_API_KEY}
-logging:
-  conversation: logs/albedo_layer.log
-  metrics: logs/albedo_metrics.jsonl
-```
-
-Launch the layer with:
-
-```bash
-python -m INANNA_AI.main --personality albedo --config config/albedo_config.yaml
-```
-
-## Logging Expectations
-
-Successful runs emit structured logs to the paths defined in the `logging` section:
-
-```text
-INFO albedo.layer state=Nigredo msg="I love Alice" emotion=affection
-INFO albedo.layer state=Albedo msg="Response text" emotion=joy
-```
-
-The `conversation` file captures dialogue transcripts, while `metrics` records state statistics and can be tailored for production deployments.
 
 ## Version History
 
