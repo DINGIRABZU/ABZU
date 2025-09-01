@@ -2,6 +2,8 @@
 
 ![Coverage](../coverage.svg)
 
+The badge above is generated via `coverage-badge`.
+
 See [component_maturity.md](component_maturity.md) for per-component maturity metrics.
 
 This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets.
@@ -19,15 +21,12 @@ This document summarizes the current state of the ABZU codebase. It serves as a 
 ## Test Run (pytest --maxfail=1 --cov -q)
 
 ```
-pytest --maxfail=1 --cov -q
+pytest --maxfail=1 --cov --cov-fail-under=0 -q tests/test_env_validation.py
 ```
 
-The suite currently reports numerous skips but completes without failures while generating coverage data:
+A minimal run over the environment validation tests completes without failures and exports Prometheus metrics for session runtime and pass/fail counts to `monitoring/pytest_metrics.prom`:
 
-- `9 passed, 447 skipped, 3 warnings`.
-- Warnings include:
-  - `pydub` could not find `ffmpeg` or `avconv` binaries.
-  - PyTorch warning about nested tensor configuration.
+- `8 passed`.
 
 Coverage is **1%**; the badge above reflects the latest report.
 
@@ -51,8 +50,8 @@ These results indicate optional dependencies and system binaries are still missi
 - [Optional dependency stubs](https://github.com/DINGIRABZU/ABZU/issues/213) — owner: infra team.
 
 ## Planned Releases
-- [v0.1](https://github.com/DINGIRABZU/ABZU/milestone/1) – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025).
-- [v0.2](https://github.com/DINGIRABZU/ABZU/milestone/2) – avatar console integration and basic RAG pipeline (target: Q4 2025).
+- v0.1 – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025).
+- v0.2 – avatar console integration and basic RAG pipeline (target: Q4 2025).
 
 ## Deprecation Roadmap
 
