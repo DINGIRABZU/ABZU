@@ -9,7 +9,7 @@ the last successful component.
 
 from __future__ import annotations
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 import argparse
 import asyncio
@@ -38,7 +38,8 @@ from . import (
     quarantine_manager,
 )
 from .ignition_builder import DEFAULT_STATUS, parse_system_blueprint
-from razar.crown_handshake import CrownHandshake, CrownResponse
+from razar import crown_handshake
+from razar.crown_handshake import CrownResponse
 
 LOGGER = logging.getLogger(__name__)
 
@@ -144,9 +145,7 @@ class BootOrchestrator:
         response_path = archive_dir / f"{timestamp}_response.json"
 
         try:
-            url = os.environ["CROWN_WS_URL"]
-            handshake = CrownHandshake(url)
-            response = asyncio.run(handshake.perform(str(brief_path)))
+            response = asyncio.run(crown_handshake.perform(str(brief_path)))
             details = json.dumps(
                 {"capabilities": response.capabilities, "downtime": response.downtime}
             )
