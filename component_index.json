@@ -313,8 +313,8 @@
       "id": "narrative_api",
       "chakra": "heart",
       "type": "service",
-      "version": "0.1.0",
-      "path": "narrative_api.py",
+      "version": "0.1.1",
+      "path": "bana/narrative_api.py",
       "purpose": "FastAPI routes for narrative retrieval and streaming",
       "dependencies": [
         "fastapi"

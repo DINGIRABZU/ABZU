@@ -13,7 +13,7 @@ This directory hosts anonymized biosignal samples used by the Nazarick Narrative
 - Review datasets for accidental metadata before sharing.
 
 ## File Format
-- Provide data as CSV files with the columns: `timestamp`, `heart_rate`, `skin_temp`, `eda`.
+- Provide data as CSV or JSON Lines files with the columns: `timestamp`, `heart_rate`, `skin_temp`, `eda`.
 - Units: beats-per-minute (BPM) for heart rate, degrees Celsius for skin temperature, microSiemens for EDA.
 
 ## Schema
@@ -26,6 +26,7 @@ This directory hosts anonymized biosignal samples used by the Nazarick Narrative
 
 ## Ingestion
 - Run `python scripts/ingest_biosignals.py` to transform rows into `StoryEvent` entries via `log_story`.
+- Run `python scripts/ingest_biosignal_events.py` or `python scripts/ingest_biosignals_jsonl.py` to persist structured events with `log_event`.
 - Tests in `tests/narrative_engine/` verify dataset conformity and transformation logic.
 
 ## Samples
@@ -37,3 +38,4 @@ This directory hosts anonymized biosignal samples used by the Nazarick Narrative
 - `sample_biosignals_epsilon.csv`
 - `sample_biosignals_zeta.csv`
 - `sample_biosignals_theta.csv`
+- `sample_biosignals_anonymized.jsonl`

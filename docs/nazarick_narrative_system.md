@@ -60,6 +60,7 @@ Core modules participating in the pipeline:
 - [`scripts/ingest_biosignals.py`](../scripts/ingest_biosignals.py)
 - [`agents/bana/bio_adaptive_narrator.py`](../agents/bana/bio_adaptive_narrator.py)
 - [`bana/event_structurizer.py`](../bana/event_structurizer.py)
+- [`scripts/ingest_biosignals_jsonl.py`](../scripts/ingest_biosignals_jsonl.py)
 - [`memory/cortex.py`](../memory/cortex.py)
 - [`memory/emotional.py`](../memory/emotional.py)
 - [`memory/narrative_engine.py`](../memory/narrative_engine.py)
@@ -227,6 +228,11 @@ Sample rows illustrating how story events are captured:
 
 Dataset entries may be appended to `data/biosignals/events.jsonl` for training
 and replay. The `agent` and `memory_layer` fields direct downstream routing.
+
+Sample JSON lines are provided in
+[`sample_biosignals_anonymized.jsonl`](../data/biosignals/sample_biosignals_anonymized.jsonl)
+and may be ingested with
+[`scripts/ingest_biosignals_jsonl.py`](../scripts/ingest_biosignals_jsonl.py).
 
 ## Persona Impact
 
