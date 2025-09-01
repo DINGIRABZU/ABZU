@@ -1,22 +1,22 @@
 # The Absolute Protocol
 
-**Version:** v1.0.74
-**Last updated:** 2025-09-01
+**Version:** v1.0.75
+**Last updated:** 2025-09-02
 
 ## How to Use This Protocol
-This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B." Commit messages must follow this structure as outlined in the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must also define **Persona & Responsibilities** and **Component & Link** sections.
+This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must define **Persona & Responsibilities** and **Component & Link** sections.
 
 ## Version Synchronization
-Every module, connector, and service must expose a top-level `__version__` string that matches the entry in `component_index.json`. Update both the source and the index together and run `scripts/verify_versions.py` to confirm alignment; the `verify-versions` pre-commit hook blocks mismatches.
+Every module, connector, and service must expose a top-level `__version__` string that matches the entry in `component_index.json`. Update both the source and the index together and run `scripts/verify_versions.py` to confirm alignment; the `verify-versions` pre-commit hook blocks mismatches. Experimental components still require `__version__` and should be marked `experimental` in `component_index.json`. Documentation-only changes may leave versions untouched but must still run `scripts/verify_versions.py` to validate alignment.
 
 ## Change-Justification Field
-Pull requests must fill out the **Change justification** field in the template using the format "I did X on Y to obtain Z, expecting behavior B." This statement appears in the PR description and mirrors the commit message.
+Pull requests must fill out the **Change justification** field in the template using the format "I did X on Y to obtain Z, expecting behavior B." This statement appears in the PR description and mirrors the commit message. Reverts should reference the original commit and rationale.
 
 ## Key-Document Summary Verification
 During onboarding, contributors record purpose, scope, key rules, and an actionable insight summary for every entry in `onboarding_confirm.yml`. Run `scripts/verify_doc_hashes.py` to ensure each summary matches the current version of the document.
 
 ## Coverage & Placeholder Requirements
-Each milestone must uphold repository coverage thresholds by running `pytest --cov`; components falling below the target cannot merge until addressed. Placeholder markers such as `TODO` or `FIXME` are forbidden—`scripts/check_placeholders.py` enforces removal before commit.
+Each milestone must uphold repository coverage thresholds by running `pytest --cov`; components falling below the target cannot merge until addressed. Placeholder markers such as `TODO` or `FIXME` are forbidden—`scripts/check_placeholders.py` enforces removal before commit. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -28,7 +28,8 @@ Before opening a pull request, confirm each item:
   - [Project Mission & Vision](project_mission_vision.md) – confirm alignment before proposing major changes
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, linked agents, status, operator interface flows, and code/doc links are current
-- [ ] Commit messages follow [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format)
+  - [Protocol Compliance](protocol_compliance.md) – dashboard of component alignment
+- [ ] Commit and PR descriptions follow [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format) and include a change-justification
 - [ ] Onboarding quiz answers included in first pull request (`onboarding_quiz.yml`)
 - [ ] Agent docs include a **Persona & Responsibilities** section
 - [ ] Agent docs include a **Component & Link** section
@@ -40,7 +41,7 @@ Before opening a pull request, confirm each item:
 - [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`; see [ignition_flow.md](ignition_flow.md)
 - [ ] Ignition step changes reflected in [bana_engine.md](bana_engine.md) and Nazarick docs such as [nazarick_narrative_system.md](nazarick_narrative_system.md)
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
-- [ ] Tests follow the Pytest Codex; coverage updated in component index
+- [ ] Tests follow [The Absolute Pytest](the_absolute_pytest.md); coverage updated in component index
 - [ ] "Test Plan" issue filed per [Test Planning Guide](onboarding/test_planning.md) outlining scope, chakra, and coverage goals
 - [ ] Connector registry updated:
   - implementations expose `__version__` matching `component_index.json`, implement `start_call`, and `close_peers`
@@ -54,7 +55,6 @@ Before opening a pull request, confirm each item:
   - [ ] connectors registered in [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md)
   - [ ] pull requests affecting narrative include a change-justification statement
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
-- [ ] Pull request includes a change-justification: "I did X on Y to obtain Z, expecting behavior B."
 - [ ] `onboarding_confirm.yml` records purpose, scope, key rules, and an actionable insight summary for each key document it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_hashes.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
@@ -85,6 +85,8 @@ The Absolute Protocol governs all other guides. Review subordinate protocols as 
   - [AI Ethics Framework](ai_ethics_framework.md) – transparency, fairness, and data-handling principles.
   - [Documentation Index](index.md) – high-level entry point.
   - [Generated Index](INDEX.md) – auto-generated list of all docs.
+  - [Protocol Compliance](protocol_compliance.md) – component alignment dashboard.
+  - [The Absolute Pytest](the_absolute_pytest.md) – test instrumentation and observability guidance.
   - [Absolute Milestones](ABSOLUTE_MILESTONES.md) – summary of past and upcoming milestones.
   - [Issue & Feature Templates](../.github/ISSUE_TEMPLATE/) – templates for new issues and features.
 
