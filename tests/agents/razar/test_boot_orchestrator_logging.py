@@ -65,10 +65,18 @@ def test_glm4v_launch_logging(tmp_path: Path, monkeypatch) -> None:
     orch = _basic_orchestrator(tmp_path, monkeypatch)
     monkeypatch.setattr(bo.mission_logger, "log_event", lambda *a, **k: None)
 
+    class DummyResult:
+        def __init__(self) -> None:
+            self.returncode = 0
+            self.stdout = "ok"
+
     called: list[list[str]] = []
-    monkeypatch.setattr(
-        bo.subprocess, "run", lambda cmd, check=False: called.append(cmd)
-    )
+
+    def fake_run(cmd, capture_output=False, text=False, check=False):
+        called.append(cmd)
+        return DummyResult()
+
+    monkeypatch.setattr(bo.subprocess, "run", fake_run)
 
     orch._ensure_glm4v([])
 
@@ -79,6 +87,7 @@ def test_glm4v_launch_logging(tmp_path: Path, monkeypatch) -> None:
     state = json.loads((tmp_path / "razar_state.json").read_text())
     assert state["glm4v_present"] is False
     assert "GLM-4.1V" in state["launched_models"]
+    assert state["last_model_launch"]["status"] == "success"
 
 
 def test_glm4v_presence_skips_launch(tmp_path: Path, monkeypatch) -> None:
@@ -100,3 +109,4 @@ def test_glm4v_presence_skips_launch(tmp_path: Path, monkeypatch) -> None:
     state = json.loads((tmp_path / "razar_state.json").read_text())
     assert state["glm4v_present"] is True
     assert "launched_models" not in state
+    assert "last_model_launch" not in state

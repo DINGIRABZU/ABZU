@@ -281,6 +281,10 @@ acknowledgement, capabilities, and downtime under the `handshake` key in
 `logs/razar_state.json`. Maintain these archives so operators can audit the
 exchange and reconcile advertised capabilities with runtime behaviour.
 
+If the handshake omits the `GLM4V` capability, run `crown_model_launcher.sh`
+and persist its exit status and output under `last_model_launch` in
+`logs/razar_state.json`.
+
 ### Handshake Audit Requirement
 
 Every Crown handshake must leave an auditable trail. Verify that each mission

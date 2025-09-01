@@ -203,12 +203,29 @@ class BootOrchestrator:
 
         script = self.state_path.parents[1] / "crown_model_launcher.sh"
         LOGGER.info("Launching GLM-4.1V via %s", script)
-        subprocess.run(["bash", str(script)], check=False)
-        mission_logger.log_event("model_launch", "GLM-4.1V", "triggered")
+        result = subprocess.run(
+            ["bash", str(script)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        status = "success" if result.returncode == 0 else "failure"
+        mission_logger.log_event(
+            "model_launch",
+            "GLM-4.1V",
+            status,
+            result.stdout.strip(),
+        )
         launches = data.get("launched_models", [])
         if "GLM-4.1V" not in launches:
             launches.append("GLM-4.1V")
         data["launched_models"] = launches
+        data["last_model_launch"] = {
+            "model": "GLM-4.1V",
+            "status": status,
+            "returncode": result.returncode,
+            "output": result.stdout.strip(),
+        }
 
         archive_dir = self.state_path.parent / "mission_briefs"
         archive_dir.mkdir(parents=True, exist_ok=True)
@@ -220,7 +237,12 @@ class BootOrchestrator:
             encoding="utf-8",
         )
         response_path.write_text(
-            json.dumps({"status": "triggered"}),
+            json.dumps(
+                {
+                    "status": status,
+                    "returncode": result.returncode,
+                }
+            ),
             encoding="utf-8",
         )
         self._rotate_mission_briefs(archive_dir)
