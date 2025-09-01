@@ -1434,7 +1434,7 @@
     "scripts/verify_versions.py": {
       "version": "0.3.0",
       "score": 2,
-      "last_update": "2025-08-31"
+      "last_update": "2025-09-01"
     },
     "servant_model_manager.py": {
       "version": "0.0.0",

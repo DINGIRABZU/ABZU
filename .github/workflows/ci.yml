@@ -142,6 +142,13 @@ PY
           pip install -e .
           pip install mypy
 
+      - name: Verify component versions
+        run: |
+          CHANGED=$(git diff --name-only origin/$GITHUB_BASE_REF...HEAD | grep '\.py$' || true)
+          if [ -n "$CHANGED" ]; then
+            python scripts/verify_versions.py $CHANGED
+          fi
+
       - name: Verify docs index
         run: |
           python tools/doc_indexer.py

@@ -185,6 +185,22 @@
       "adr": null
     },
     {
+      "id": "verify_versions",
+      "chakra": "crown",
+      "type": "script",
+      "version": "0.3.0",
+      "path": "scripts/verify_versions.py",
+      "purpose": "Compare module and connector __version__ fields with component_index.json",
+      "dependencies": [],
+      "tests": [],
+      "status": "active",
+      "metrics": {
+        "coverage": 1.0
+      },
+      "ignition_stage": 0,
+      "adr": null
+    },
+    {
       "id": "memory_cortex",
       "chakra": "heart",
       "type": "module",
