@@ -1,13 +1,6 @@
 # Connector Index
 
-Canonical registry of ABZU's connectors. Each entry lists the purpose, version,
-primary service endpoints, linked agents, authentication method, status, and
-links to source code and documentation. Operator interface entries detail the
-supported chat, file, image, audio, and video flows. Update this index whenever
-a connector's interface changes. For shared patterns across connectors see the
-[Connector Overview](README.md). This index is cross‑referenced from
-[Key Documents](../KEY_DOCUMENTS.md) and
-[The Absolute Protocol](../The_Absolute_Protocol.md).
+Canonical registry of ABZU's connectors. Each entry lists the purpose, version, primary service endpoints, linked agents, authentication method, status, and links to source code and documentation. Operator interface entries detail the supported chat, file, image, audio, and video flows. Update this index whenever a connector's interface changes. For shared patterns across connectors see the [Connector Overview](README.md). This index is cross‑referenced from [Key Documents](../KEY_DOCUMENTS.md) and [The Absolute Protocol](../The_Absolute_Protocol.md).
 
 | id | purpose | version | auth | endpoints | linked agents | status | code | docs |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |

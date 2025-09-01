@@ -222,7 +222,7 @@ The `verify-versions` pre-commit hook scans staged Python files and fails if thi
 
 ### Connector Guidelines
 
-Connectors bridge the language engine to external communication layers. Follow the architecture in [Video Engine and Connector Design](design.md) when implementing new back ends. Each connector must:
+Connectors bridge the language engine to external communication layers. The canonical list of available connectors lives in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md). Follow the architecture in [Video Engine and Connector Design](design.md) when implementing new back ends. Each connector must:
 
 - implement `start_call(path: str) -> None` to initiate a stream
 - provide `close_peers() -> Awaitable[None]` to release resources
