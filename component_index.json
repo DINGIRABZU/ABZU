@@ -191,6 +191,23 @@
       "adr": null
     },
     {
+      "id": "check_memory_layers",
+      "chakra": "root",
+      "type": "script",
+      "version": "0.1.0",
+      "path": "scripts/check_memory_layers.py",
+      "purpose": "Validate memory stores before persona loading",
+      "dependencies": [],
+      "tests": [],
+      "memory_layers": ["cortex", "emotional", "mental", "spiritual", "narrative"],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 0,
+      "adr": null
+    },
+    {
       "id": "memory_cortex",
       "chakra": "heart",
       "type": "module",
@@ -543,6 +560,86 @@
         "tests/narrative_engine/test_biosignal_transformation.py",
         "tests/narrative_engine/test_ingest_persist_retrieve.py"
       ],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "cortex_memory_log",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/cortex.jsonl",
+      "purpose": "JSONL log for cortex memory layer",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "emotional_memory_db",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/emotions.db",
+      "purpose": "SQLite database for emotional memory",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "mental_memory_log",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/tasks.jsonl",
+      "purpose": "Task flow log for mental memory",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "spiritual_ontology_db",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/ontology.db",
+      "purpose": "SQLite ontology for spiritual memory",
+      "dependencies": [],
+      "tests": [],
+      "status": "experimental",
+      "metrics": {
+        "coverage": 0.0
+      },
+      "ignition_stage": 4,
+      "adr": null
+    },
+    {
+      "id": "narrative_story_log",
+      "chakra": "heart",
+      "type": "dataset",
+      "version": "0.0.1",
+      "path": "data/story.log",
+      "purpose": "Narrative event log for file-backed store",
+      "dependencies": [],
+      "tests": [],
       "status": "experimental",
       "metrics": {
         "coverage": 0.0

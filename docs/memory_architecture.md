@@ -28,6 +28,22 @@ Ready-made helpers are available for spinning up the storage back ends:
 - [deployment/sqlite/bootstrap_memory_dbs.sh](../deployment/sqlite/bootstrap_memory_dbs.sh)
   creates SQLite files for file‑based stores.
 
+## Configuration paths and datasets
+
+Each layer uses environment variables to locate its file-based store:
+
+| Layer | Variable | Default path |
+|-------|----------|--------------|
+| Cortex | `CORTEX_PATH` | `data/cortex.jsonl` |
+| Emotional | `EMOTION_DB_PATH` | `data/emotions.db` |
+| Mental | `MENTAL_JSON_PATH` | `data/tasks.jsonl` |
+| Spiritual | `SPIRITUAL_DB_PATH` | `data/ontology.db` |
+| Narrative | `NARRATIVE_LOG_PATH` | `data/story.log` |
+
+These datasets are recorded in `component_index.json` for traceability. Run
+`python scripts/check_memory_layers.py` to validate all layers before persona
+modules such as Albedo load.
+
 ## Quick start
 
 1. Start the storage back ends if they are not already running:
