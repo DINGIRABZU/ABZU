@@ -1,16 +1,17 @@
 # pydocstyle: skip-file
-"""Stub narrative memory engine.
+"""Persistent narrative memory engine.
 
 Provides interfaces for recording story events composed of an actor,
 action and symbolism.
 
-Story text is persisted in a SQLite backend so narratives survive
-process restarts and can be queried later.
+Stories and structured events are stored in a SQLite database with optional
+Chroma vector persistence so narratives survive process restarts and
+support semantic search.
 """
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 from dataclasses import dataclass
 from pathlib import Path

@@ -268,7 +268,7 @@
       "id": "narrative_engine",
       "chakra": "heart",
       "type": "module",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "path": "memory/narrative_engine.py",
       "purpose": "Records events and composes multitrack narrative output",
       "dependencies": ["chromadb"],
@@ -311,13 +311,15 @@
       "id": "narrative_api",
       "chakra": "heart",
       "type": "service",
-      "version": "0.1.1",
-      "path": "bana/narrative_api.py",
-      "purpose": "FastAPI routes for narrative retrieval and streaming",
+      "version": "0.2.0",
+      "path": "narrative_api.py",
+      "purpose": "FastAPI routes for narrative logging and streaming",
       "dependencies": [
         "fastapi"
       ],
-      "tests": [],
+      "tests": [
+        "tests/narrative_engine/test_ingest_persist_retrieve.py"
+      ],
       "status": "experimental",
       "metrics": {
         "coverage": 0.0
