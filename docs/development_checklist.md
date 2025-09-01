@@ -10,6 +10,7 @@ Quick links: [Developer Onboarding](developer_onboarding.md) | [Developer Etique
 - Run tests with `pytest`.
 - After merging, record the completed task with `scripts/register_task.py` to
   append an entry to `logs/task_registry.jsonl`.
+- When the registry reaches six entries, run `scripts/generate_protocol_task.py` to open the refinement task and update `docs/The_Absolute_Protocol.md`, related checklists, and `docs/INDEX.md`.
 
 ## Adding a New Module
 - Create the module with clear names and docstrings.

@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.78
-**Last updated:** 2025-09-01
+**Version:** v1.0.79
+**Last updated:** 2025-09-02
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -82,7 +82,7 @@ Before opening a pull request, confirm each item:
 - [ ] `onboarding_confirm.yml` records purpose, scope, key rules, and an actionable insight summary for each key document it tracks, per [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md)
 - [ ] `scripts/verify_doc_hashes.py` confirms `onboarding_confirm.yml` hashes match current files
 - [ ] `docs/INDEX.md` regenerated if docs changed
-- [ ] Each merged task registered in `logs/task_registry.jsonl`; after six registrations a seventh task auto-creates to refine `The_Absolute_Protocol.md`
+- [ ] Each merged task registered in `logs/task_registry.jsonl`; when the sixth entry lands, run `scripts/generate_protocol_task.py` to open the refinement task and fold its insights into `docs/The_Absolute_Protocol.md` and related checklists, bumping the version and refreshing `docs/INDEX.md`
 - [ ] ADR created for any change to `The_Absolute_Protocol.md` describing motivation and alternatives
 - [ ] ADR referenced in `docs/INDEX.md` and relevant `component_index.json` entries
 - [ ] Commits implementing ADR decisions prefixed with `ADR-XXXX:`
@@ -410,6 +410,7 @@ The lifecycle for repository tasks is managed by `scripts/generate_protocol_task
 
 - Every merged task must be recorded in `logs/task_registry.jsonl`.
 - When six tasks have been registered, the script automatically opens a seventh task dedicated to refining this protocol.
+- The refinement task must fold lessons from the cycle back into this protocol, update contributor checklists, bump the version and last‑updated date, and regenerate `docs/INDEX.md`.
 
 ## Protocol Change Process
 Updates to this protocol follow a lightweight governance model:
