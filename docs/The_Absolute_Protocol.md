@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.79
-**Last updated:** 2025-09-02
+**Version:** v1.0.80
+**Last updated:** 2025-09-03
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -35,6 +35,7 @@ Confirm these items before submitting a pull request:
 - [ ] Key-document summaries verified with `scripts/verify_doc_hashes.py`
 - [ ] Version bumps applied and synchronized in `component_index.json`
 - [ ] Connector registry updated for added or modified connectors ([docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md))
+- [ ] Connector entries verified — each connector lists version, endpoints, auth method, status, and doc links
 - [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
 
 ## Coverage & Testing Requirements

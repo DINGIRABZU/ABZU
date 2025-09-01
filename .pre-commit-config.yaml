@@ -74,6 +74,11 @@ repos:
     language: python
     pass_filenames: false
     files: ^(connectors/|docs/connectors/CONNECTOR_INDEX.md)
+  - id: require-connector-registry-update
+    name: Require connector registry updates
+    entry: python scripts/require_connector_registry_update.py
+    language: system
+    pass_filenames: false
   - id: validate-component-index
     name: Validate component index entries
     entry: python scripts/validate_component_index.py
