@@ -1,6 +1,6 @@
 # Albedo Personality Layer
 
-A four-phase state machine powers the **Albedo** layer, signalling Nazarick agents and driving responses through a remote GLM (Generative Language Model). Configuration lives under `config/albedo_config.yaml`, and all related modules reside in `INANNA_AI/personality_layers/albedo`.
+A four-phase state machine powers the **Albedo** layer, signalling Nazarick agents and driving responses through a remote GLM (Generative Language Model). Configuration lives under `config/albedo_config.yaml`, and all related modules reside in `INANNA_AI/personality_layers/albedo`. Mermaid sources for the flow and state machine diagrams live at `docs/assets/albedo_flow.mmd` and `docs/assets/albedo_state_machine.mmd`.
 
 ## Project structure
 
@@ -270,9 +270,9 @@ Typical output is:
 Citrinitas speaks in golden clarity: proceed
 ```
 
-## Deployment & Logging
+## Deployment & Config
 
-The layer reads configuration from `config/albedo_config.yaml`:
+Use `config/albedo_config.yaml` to centralize the GLM endpoint, optional quantum context, and log locations:
 
 ```yaml
 glm:
@@ -289,17 +289,22 @@ Launch the layer with:
 python -m INANNA_AI.main --personality albedo --config config/albedo_config.yaml
 ```
 
-A successful run writes structured logs such as:
+## Logging Expectations
+
+Successful runs emit structured logs to the paths defined in the `logging` section:
 
 ```text
 INFO albedo.layer state=Nigredo msg="I love Alice" emotion=affection
 INFO albedo.layer state=Albedo msg="Response text" emotion=joy
 ```
 
+The `conversation` file captures dialogue transcripts, while `metrics` records state statistics and can be tailored for production deployments.
+
 ## Version History
 
 | Version | Date       | Summary |
 |---------|------------|---------|
+| 0.4.0   | 2025-09-01 | Clarified deployment config and logging expectations. |
 | 0.3.0   | 2025-08-31 | Added Nazarick agent triggers and state-channel table. |
 | 0.2.0   | 2025-08-30 | Documented transition inputs and outputs; externalized state diagram. |
 | 0.1.0   | 2025-08-29 | Added state machine diagram and initial version table. |
