@@ -371,6 +371,10 @@ Narrative modules must maintain traceability by:
 - [ ] Run `scripts/verify_doc_hashes.py` to confirm `onboarding_confirm.yml` hashes.
 - [ ] Ensure connectors appear in the connector registry [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
 
+## Task Cycle Protocol
+
+`scripts/generate_protocol_task.py` monitors `logs/task_registry.jsonl` and opens a "Refine The Absolute Protocol" issue or creates a stub when six new tasks accumulate.
+
 ## Protocol Change Process
 Updates to this protocol follow a lightweight governance model:
 

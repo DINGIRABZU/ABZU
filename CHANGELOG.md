@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recorded mythology and project material datasets in `component_index.json`.
 - Listed dataset licensing, version history, and evaluation metrics in `docs/bana_engine.md`.
 - Implemented `bana/narrative_api.py` for narrative retrieval and streaming.
+- Added `scripts/generate_protocol_task.py` to create protocol refinement tasks after six new entries and wired it into nightly CI.
 
 ### Documentation Audit
 
@@ -58,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced Connector Health Protocol requiring `scripts/health_check_connectors.py` to pass before merging.
 - Clarified Change Justification rule with mandatory "I did X on Y to obtain Z, expecting behavior B" template.
 - Documented Crown service wake sequence linking servant launch scripts and required `SERVANT_MODELS`/`NAZARICK_ENV` settings; cross-linked ignition flow and regenerated docs index.
+- Referenced the task cycle script in The Absolute Protocol and refreshed the docs index.
 - Extended component index schema to list Bana memory layers with ignition stages and updated ignition flow to show RAZAR triggering Bana after INANNA memory initialization; cross-linked Bana from RAZAR and memory architecture guides.
 
 ### Added
