@@ -8,21 +8,20 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 import argparse
 import asyncio
 import json
 import logging
-import os
 import subprocess
 import time
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from . import doc_sync, health_checks
-from .crown_handshake import CrownHandshake, CrownResponse
+from . import crown_handshake, doc_sync, health_checks
+from .crown_handshake import CrownResponse
 from .quarantine_manager import is_quarantined, quarantine_component
 from agents.nazarick.service_launcher import launch_required_agents
 
@@ -141,9 +140,7 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
     response_path = archive_dir / f"{timestamp}_response.json"
 
     try:
-        url = os.environ["CROWN_WS_URL"]
-        handshake = CrownHandshake(url)
-        response = asyncio.run(handshake.perform(str(brief_path)))
+        response = asyncio.run(crown_handshake.perform(str(brief_path)))
     except Exception as exc:  # pragma: no cover - handshake must succeed
         LOGGER.exception("CROWN handshake failed")
         _persist_handshake(None)
@@ -153,7 +150,8 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
     response_path.write_text(json.dumps(asdict(response), indent=2))
     _rotate_mission_briefs(archive_dir)
 
-    if "GLM4V" not in response.capabilities:
+    normalized = {c.replace("-", "").upper() for c in response.capabilities}
+    if not any(cap.startswith("GLM4V") for cap in normalized):
         launcher = Path(__file__).resolve().parents[1] / "crown_model_launcher.sh"
         try:
             subprocess.Popen(["bash", str(launcher)])

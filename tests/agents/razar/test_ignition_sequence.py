@@ -22,15 +22,11 @@ def test_full_ignition_sequence(tmp_path: Path, monkeypatch):
     monkeypatch.setenv("CROWN_WS_URL", "ws://example")
 
     # handshake stub triggers GLM4V launch
-    class DummyHandshake:
-        def __init__(self, url: str) -> None:  # pragma: no cover - simple
-            self.url = url
+    async def dummy_handshake(brief_path: str) -> CrownResponse:
+        assert Path(brief_path).exists()
+        return CrownResponse("ack", [], {})
 
-        async def perform(self, brief_path: str) -> CrownResponse:
-            assert Path(brief_path).exists()
-            return CrownResponse("ack", [], {})
-
-    monkeypatch.setattr(bo, "CrownHandshake", DummyHandshake)
+    monkeypatch.setattr(bo.crown_handshake, "perform", dummy_handshake)
 
     launched: list[list[str]] = []
     monkeypatch.setattr(bo.subprocess, "Popen", lambda cmd: launched.append(cmd))
