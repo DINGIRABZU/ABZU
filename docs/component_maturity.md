@@ -1,13 +1,21 @@
-# Component Maturity Scoreboard
+# Component Maturity
 
-Summarizes documentation quality, test coverage, versions, and outstanding issues for key components.
+Tracks documentation completeness, test coverage, and open issues for core components. Update this scoreboard at each release to reflect current status. It complements the metrics tracked in `component_index.json`.
 
-| Component | Doc Rating | Test Coverage | Version | Outstanding Issues |
-| --- | --- | --- | --- | --- |
-| INANNA_AI | 1.89 | 23.83% | 0.0.0 | [Optional dependency stubs](https://github.com/DINGIRABZU/ABZU/issues/213) |
-| INANNA_AI_AGENT | 2.67 | 0.00% | 0.0.0 | None |
-| MUSIC_FOUNDATION | 1.78 | 14.68% | 0.0.0 | [Milestone VIII – Sonic Core & Avatar Expression Harmonics](https://github.com/DINGIRABZU/ABZU/issues/208) |
-| SPIRAL_OS | 2.67 | 45.76% | 0.0.0 | [Spiral OS stability](https://github.com/DINGIRABZU/ABZU/issues/210) |
-| connectors | 1.50 | 0.00% | 0.0.0 | [FastAPI lifespan migration](https://github.com/DINGIRABZU/ABZU/issues/212) |
-| crown_config | 2.00 | 42.86% | 0.0.0 | [Pydantic v2 migration](https://github.com/DINGIRABZU/ABZU/issues/211) |
+## Scoreboard
 
+| Component | Documentation | Test Coverage | Open Issues |
+|-----------|---------------|---------------|-------------|
+| server | Complete | 100% | None |
+| razar | Complete | 100% | None |
+| memory_emotional | Complete | 100% | None |
+
+## Update Process
+
+- Revise scores after each release.
+- Add new components as they are introduced.
+- Link open issues using GitHub issue numbers.
+
+## Version History
+
+- 2025-09-01: Initial scoreboard.

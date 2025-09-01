@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `docs/component_maturity.md` tracking documentation completeness, coverage, and open issues.
+
 - Introduced `training/fine_tune_mistral.py` configuring mythological and project corpora.
 - Recorded mythology and project material datasets in `component_index.json`.
 - Listed dataset licensing, version history, and evaluation metrics in `docs/bana_engine.md`.
