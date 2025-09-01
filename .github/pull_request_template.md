@@ -10,9 +10,8 @@ below.
 ## Linked issue/feature spec
 <!-- Required: link to the relevant issue, documentation, or feature spec. -->
 
-## Action Summary
-<!-- Required: follow the format "I did X on Y to obtain Z, expecting behavior B." -->
-I did X on Y to obtain Z, expecting behavior B.
+## Action summary (I did X on Y to obtain Z, expecting behavior B)
+<!-- Required: follow the format above exactly for your change. -->
 <!-- If a connector was added or modified, update [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, auth method, status, and code/documentation links, as required by [The Absolute Protocol](../docs/The_Absolute_Protocol.md). -->
 
 ## Task Registry
@@ -31,6 +30,7 @@ Does this PR satisfy the six-task cycle rule? <!-- Yes/No -->
 - [ ] Key-document summaries verified (`scripts/verify_doc_hashes.py`) <!-- Required: run verification script -->
 - [ ] Version bumps applied and `component_index.json` updated <!-- Required: confirm version synchronization -->
 - [ ] Connector registry updated if connectors changed <!-- Required: update [CONNECTOR_INDEX.md](../docs/connectors/CONNECTOR_INDEX.md) -->
+- [ ] Flow diagrams represented in Mermaid, not PNG/SVG <!-- Required: use Mermaid for any diagrams -->
 
 ## Connector Checklist
 <!-- Select all connectors affected by this change -->
