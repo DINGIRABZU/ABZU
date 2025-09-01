@@ -4,11 +4,19 @@ from __future__ import annotations
 
 import argparse
 
-from agents.albedo.messaging import compose_message_nazarick, compose_message_rival
-from agents.albedo.trust import update_trust
+import subprocess
+import sys
+from pathlib import Path
 
 
 def main() -> None:
+    subprocess.run(
+        [sys.executable, Path(__file__).with_name("check_memory_layers.py")], check=True
+    )
+
+    from agents.albedo.messaging import compose_message_nazarick, compose_message_rival
+    from agents.albedo.trust import update_trust
+
     parser = argparse.ArgumentParser(description="Simulate Albedo dialogue")
     parser.add_argument("entity", help="Entity name to interact with")
     parser.add_argument(

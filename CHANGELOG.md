@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Listed dataset licensing, version history, and evaluation metrics in `docs/bana_engine.md`.
 - Implemented `bana/narrative_api.py` for narrative retrieval and streaming.
 - Added `scripts/generate_protocol_task.py` to create protocol refinement tasks after six new entries and wired it into nightly CI.
+- Added `scripts/check_memory_layers.py` gating Albedo on successful memory checks and recorded dataset paths in `component_index.json` and `docs/memory_architecture.md`.
 
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
