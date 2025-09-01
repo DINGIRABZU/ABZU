@@ -1,10 +1,22 @@
 # The Absolute Protocol
 
-**Version:** v1.0.73
-**Last updated:** 2025-08-31
+**Version:** v1.0.74
+**Last updated:** 2025-09-01
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to ensure you follow required workflows and standards. Every module, connector, and service must declare a `__version__` attribute, and every pull request must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B." Commit messages must follow this structure as outlined in the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must also define **Persona & Responsibilities** and **Component & Link** sections.
+
+## Version Synchronization
+Every module, connector, and service must expose a top-level `__version__` string that matches the entry in `component_index.json`. Update both the source and the index together and run `scripts/verify_versions.py` to confirm alignment; the `verify-versions` pre-commit hook blocks mismatches.
+
+## Change-Justification Field
+Pull requests must fill out the **Change justification** field in the template using the format "I did X on Y to obtain Z, expecting behavior B." This statement appears in the PR description and mirrors the commit message.
+
+## Key-Document Summary Verification
+During onboarding, contributors record purpose, scope, key rules, and an actionable insight summary for every entry in `onboarding_confirm.yml`. Run `scripts/verify_doc_hashes.py` to ensure each summary matches the current version of the document.
+
+## Coverage & Placeholder Requirements
+Each milestone must uphold repository coverage thresholds by running `pytest --cov`; components falling below the target cannot merge until addressed. Placeholder markers such as `TODO` or `FIXME` are forbidden—`scripts/check_placeholders.py` enforces removal before commit.
 
 ## Contributor Awareness Checklist
 Before opening a pull request, confirm each item:
@@ -60,13 +72,6 @@ Before opening a pull request, confirm each item:
 - [ ] `crown_handshake` results persisted in state files
 - [ ] Biosignal sample CSVs in `data/biosignals/` remain anonymized and align with
       the documented ingestion schema
-
-### Change Justification
-Every pull request must include a statement formatted as:
-
-"I did X on Y to obtain Z, expecting behavior B."
-
-This clarifies the action taken, the context, the observed result, and the intended outcome. The pull request template enforces this requirement via an **Action summary** field.
 
 ## Protocol Hierarchy
 The Absolute Protocol governs all other guides. Review subordinate protocols as needed:
