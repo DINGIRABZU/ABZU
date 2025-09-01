@@ -27,6 +27,9 @@ Ready-made helpers are available for spinning up the storage back ends:
   launches a persistent ChromaDB service.
 - [deployment/sqlite/bootstrap_memory_dbs.sh](../deployment/sqlite/bootstrap_memory_dbs.sh)
   creates SQLite files for file‑based stores.
+- [scripts/init_memory_layers.py](../scripts/init_memory_layers.py) and
+  [scripts/init_memory_layers.sh](../scripts/init_memory_layers.sh) seed all
+  layers with example records.
 
 ## Configuration paths and datasets
 
@@ -34,7 +37,7 @@ Each layer uses environment variables to locate its file-based store:
 
 | Layer | Variable | Default path |
 |-------|----------|--------------|
-| Cortex | `CORTEX_PATH` | `data/cortex.jsonl` |
+| Cortex | `CORTEX_PATH` | `data/cortex_memory_spiral.jsonl` |
 | Emotional | `EMOTION_DB_PATH` | `data/emotions.db` |
 | Mental | `MENTAL_JSON_PATH` | `data/tasks.jsonl` |
 | Spiritual | `SPIRITUAL_DB_PATH` | `data/ontology.db` |
@@ -53,10 +56,12 @@ docker compose -f deployment/chromadb/docker-compose.yaml up -d
 bash deployment/sqlite/bootstrap_memory_dbs.sh
 ```
 
-2. Initialize all layers with the helper script:
+2. Initialize all layers with the helper script (shell or Python):
 
 ```bash
 bash scripts/init_memory_layers.sh
+# or
+python scripts/init_memory_layers.py
 ```
 
 3. Query individual stores to verify the seeded records:

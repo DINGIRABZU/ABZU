@@ -9,7 +9,7 @@ mkdir -p "$DATA_DIR"
 
 # Configure file-based back-ends
 export CORTEX_BACKEND=file
-export CORTEX_PATH="$DATA_DIR/cortex.jsonl"
+export CORTEX_PATH="$DATA_DIR/cortex_memory_spiral.jsonl"
 export EMOTION_BACKEND=file
 export EMOTION_DB_PATH="$DATA_DIR/emotions.db"
 export MENTAL_BACKEND=file
