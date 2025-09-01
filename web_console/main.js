@@ -7,7 +7,7 @@ const API_URL =
 const BASE_URL = API_URL.replace(/\/[a-zA-Z_-]+$/, '');
 const OFFER_URL = `${BASE_URL}/offer`;
 const STARTUP_LOG_URL = 'logs/nazarick_startup.json';
-const REGISTRY_URL = 'agents/nazarick/agent_registry.yaml';
+const REGISTRY_URL = 'agents/nazarick/agent_registry.json';
 
 const GLYPHS = {
     joy: '🌀😊',
@@ -157,32 +157,6 @@ function loadLogs() {
         });
 }
 
-function parseRegistry(txt) {
-    const agents = [];
-    let current = null;
-    txt.split(/\r?\n/).forEach((line) => {
-        const idMatch = line.match(/^-\s*id:\s*(\S+)/);
-        if (idMatch) {
-            if (current) {
-                agents.push(current);
-            }
-            current = { id: idMatch[1] };
-            return;
-        }
-        if (!current) {
-            return;
-        }
-        const channelMatch = line.match(/channel:\s*"?([^\"]+)"?/);
-        if (channelMatch) {
-            current.channel = channelMatch[1];
-        }
-    });
-    if (current) {
-        agents.push(current);
-    }
-    return agents;
-}
-
 function openChat(agent) {
     const name = agent.channel ? agent.channel.replace('#', '') : agent.id;
     window.open(`/chat/${name}`, '_blank');
@@ -194,11 +168,11 @@ function sendCommandToAgent(agentId, command) {
 
 async function loadAgents() {
     try {
-        const [registryText, logData] = await Promise.all([
-            fetch(REGISTRY_URL).then((r) => r.text()),
+        const [registryData, logData] = await Promise.all([
+            fetch(REGISTRY_URL).then((r) => r.json()),
             fetch(STARTUP_LOG_URL).then((r) => r.json())
         ]);
-        const agents = parseRegistry(registryText);
+        const agents = registryData.agents || [];
         const statusMap = {};
         for (const evt of logData) {
             statusMap[evt.agent] = evt.status;

@@ -197,7 +197,7 @@ similar to the RAZAR component links to summarize relationships:
 
 ### Nazarick Agent Update Requirements
 For any agent addition or change:
-- Update `agent_registry.yaml` and `docs/nazarick_agents.md`.
+- Update `agent_registry.json` and `docs/nazarick_agents.md`.
 - Log launch outcomes to `logs/nazarick_startup.json`.
 - Confirm operator-facing displays reflect new agents.
 
