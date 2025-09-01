@@ -8,6 +8,8 @@ Quick links: [Developer Onboarding](developer_onboarding.md) | [Developer Etique
 - Run `black` for formatting.
 - Run `mypy` for static type checks.
 - Run tests with `pytest`.
+- After merging, record the completed task with `scripts/register_task.py` to
+  append an entry to `logs/task_registry.jsonl`.
 
 ## Adding a New Module
 - Create the module with clear names and docstrings.
