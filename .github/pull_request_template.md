@@ -24,6 +24,6 @@ I did X on Y to obtain Z, expecting behavior B.
 - [ ] AI ethics framework adhered <!-- Required: confirm principles in `docs/ai_ethics_framework.md` -->
 
 ## Connector/Index updated?
-- [ ] Connector index entry added/updated <!-- Required: confirm CONNECTOR_INDEX.md lists purpose, version, endpoints, auth method, status, and links -->
+- [ ] Connector index entry added/updated <!-- Required: confirm CONNECTOR_INDEX.md lists purpose, version, endpoints, auth method, status, and code/doc links -->
 - [ ] Index updated? <!-- Required: confirm component index and documentation index regenerated -->
 - [ ] Nazarick agent registry & docs updated
