@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  chromadb:
+    image: ghcr.io/chroma-core/chroma:latest
+    restart: unless-stopped
+    ports:
+      - "8030:8000"
+    volumes:
+      - ../../data/chroma:/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
