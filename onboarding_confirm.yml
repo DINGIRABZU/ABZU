@@ -177,12 +177,12 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: e328253a6fd074fb21fec2aed1de7211f597c461aabfcf21997362d42fe636b8
+    sha256: 2d28b85d9dcc131441b02222c730e034c6491f92dd2138ce201d8900761ffd8e
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      key_rules: Declare __version__ synced with component_index.json, include change justification, verify key-document summaries, maintain coverage thresholds, and forbid TODO/FIXME placeholders.
-      insight: Synchronize versions and document summaries; keep coverage high and remove placeholders before commit.
+      key_rules: Declare __version__ synced with component_index.json, include change justification, verify key-document summaries, apply the core PR checklist, maintain coverage thresholds, and forbid TODO/FIXME placeholders.
+      insight: Use the PR checklist to synchronize versions, connectors, and document summaries while keeping coverage high and removing placeholders before commit.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
