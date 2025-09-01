@@ -133,11 +133,17 @@
       "type": "agent",
       "version": "0.1.1",
       "path": "agents/nazarick",
-      "purpose": "Guardian hierarchy and narrative scribe",
+      "purpose": "Guardian hierarchy, ethics manifesto, trust matrix and narrative scribe",
       "dependencies": [
-        "memory"
+        "memory",
+        "pyyaml",
+        "redis",
+        "aiokafka"
       ],
       "tests": [
+        "tests/agents/nazarick/test_ethics_manifesto.py",
+        "tests/agents/nazarick/test_trust_matrix.py",
+        "tests/agents/test_narrative_scribe.py",
         "tests/test_nazarick_messaging.py"
       ],
       "status": "active",
