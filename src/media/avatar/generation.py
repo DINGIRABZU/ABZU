@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+"""Avatar generation utilities."""
+
+__version__ = "0.1.0"
+
 from pathlib import Path
 from typing import Any, Iterable
 

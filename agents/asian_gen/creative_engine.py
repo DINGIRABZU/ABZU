@@ -8,6 +8,8 @@ operations still function offline.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Union
@@ -39,8 +41,8 @@ class CreativeEngine:
     log_level: Optional[Union[int, str]] = None
 
     def __post_init__(self) -> None:
-        level: Union[int, str, None] = (
-            self.log_level or os.getenv("CREATIVE_ENGINE_LOG_LEVEL")
+        level: Union[int, str, None] = self.log_level or os.getenv(
+            "CREATIVE_ENGINE_LOG_LEVEL"
         )
         if isinstance(level, str):
             level = getattr(logging, level.upper(), logging.INFO)

@@ -26,6 +26,7 @@ repos:
     name: Confirm onboarding reading
     entry: python scripts/confirm_reading.py
     language: system
+    types: [python]
     pass_filenames: false
   - id: check-key-documents
     name: Check key documents exist
@@ -66,7 +67,7 @@ repos:
     name: Ensure modules declare __version__
     entry: python scripts/verify_versions.py
     language: system
-    types: [python]
+    pass_filenames: false
   - id: check-connector-index
     name: Check connector index entries
     entry: python scripts/check_connector_index.py

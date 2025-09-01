@@ -8,6 +8,8 @@ Responsibilities:
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 from typing import Any, Dict
 
 from ..event_bus import emit_event

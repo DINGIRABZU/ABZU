@@ -27,6 +27,7 @@ Omitting any field fails verification checks enforced by `scripts/verify_doc_has
 | [System Blueprint](system_blueprint.md) | Architectural overview | Quarterly |
 | [Project Mission & Vision](project_mission_vision.md) | Unified mission, vision, and purpose | Quarterly |
 | [Component Index](component_index.md) | Inventory of modules and services | Quarterly |
+| [component_index.json](../component_index.json) | Machine-readable component registry | Quarterly |
 | [Component Status](component_status.md) | Tracks component readiness | Quarterly |
 | [Connector Index](connectors/CONNECTOR_INDEX.md) | Canonical registry of connector IDs with purpose, version, endpoints, linked agents, status, and operator interface flows (chat, file, image, audio, video). Update this index whenever connector details change. | Quarterly |
 | [Connector Overview](connectors/README.md) | Maintenance rules and schema templates for connector implementations | Quarterly |
@@ -72,9 +73,9 @@ is missing.
 Contributors must also record a short summary for every protected file in
 `onboarding_confirm.yml`. Each summary must note the document's purpose, scope,
 key rules, and one actionable insight. At minimum, `onboarding_confirm.yml` must track the
-current versions of `docs/system_blueprint.md`, `docs/connectors/CONNECTOR_INDEX.md`,
-`docs/primordials_service.md`, and `docs/component_index.md` with hashed
-summaries.
+current versions of `docs/system_blueprint.md`, `component_index.json`,
+`docs/connectors/CONNECTOR_INDEX.md`, `docs/primordials_service.md`, and
+`docs/component_index.md` with hashed summaries.
 
 ## Onboarding Confirmation
 
