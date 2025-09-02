@@ -37,6 +37,23 @@ Requires `pyyaml`, `prometheus_client`, `websockets`, and a reachable `CROWN_WS_
 python -m razar.boot_orchestrator --mission demo
 ```
 
+## Remote Assistance
+RAZAR can delegate missing or failing components to remote agents through
+`ai_invoker.handover`. When a component fails, `ai_invoker` forwards context to a
+configured remote agent, applies any suggested patch with
+`code_repair.repair_module`, and records the interaction in
+`logs/razar_ai_invocations.json` while applied patches are tracked in
+`logs/razar_ai_patches.json`.
+
+```mermaid
+flowchart TD
+    A[Failure Detected] --> B{ai_invoker.handover}
+    B -->|delegate| C[Remote Agent]
+    C -->|suggest patch| D[code_repair.repair_module]
+    D --> E[Component Patched]
+    B -->|log| F[logs/razar_ai_invocations.json]
+```
+
 ## Configuration Schemas
 
 ### boot_config.json
@@ -129,6 +146,6 @@ logs/mission_briefs/
 ## Version History
 | Version | Date | Notes |
 |---------|------|-------|
-| 0.2.3 | 2025-09-21 | Added schema diagrams and ignition example with log excerpts. |
+| 0.2.3 | 2025-09-21 | Added remote assistance section with flow diagram plus schema diagrams and ignition example. |
 | 0.2.2 | 2025-09-21 | Expanded remote assistance workflow and patch logging. |
 | 0.1.0 | 2025-08-30 | Initial release of RAZAR runtime orchestrator. |

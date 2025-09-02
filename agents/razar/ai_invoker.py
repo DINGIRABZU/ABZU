@@ -13,7 +13,7 @@ remote agent or a confirmation that no suggestion was provided.
 
 from __future__ import annotations
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 from datetime import datetime
 import json
@@ -21,7 +21,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Tuple, List
 
-from . import remote_loader
+from . import remote_loader, code_repair
 
 logger = logging.getLogger(__name__)
 
@@ -151,6 +151,22 @@ def handover(
         name, endpoint, patch_context=patch_context
     )
 
+    applied: bool | None = None
+    if isinstance(suggestion, dict):
+        module_path = suggestion.get("module")
+        tests = suggestion.get("tests")
+        error = suggestion.get("error", "")
+        if module_path and tests:
+            try:
+                test_paths = [
+                    Path(p) for p in (tests if isinstance(tests, list) else [tests])
+                ]
+                applied = code_repair.repair_module(
+                    Path(module_path), test_paths, error
+                )
+            except Exception as exc:  # pragma: no cover - runtime safeguard
+                logger.error("code_repair failed: %s", exc)
+
     log_entry: Dict[str, Any] = {
         "event": "suggestion" if suggestion is not None else "no_suggestion",
         "name": name,
@@ -160,6 +176,8 @@ def handover(
         log_entry["config"] = agent_config
     if suggestion is not None:
         log_entry["suggestion"] = suggestion
+    if applied is not None:
+        log_entry["applied"] = applied
     _append_log(PATCH_LOG_PATH, log_entry)
 
     return suggestion if suggestion is not None else {"handover": True}
