@@ -758,3 +758,5 @@ Generated automatically. Lists each Python file with its description and externa
 | `vision/__init__.py` | Vision utilities and adapters. | None |
 | `vision/yoloe_adapter.py` | YOLOE wrapper emitting detections to the LargeWorldModel. | numpy, ultralytics |
 | `vocal_isolation.py` | Helpers for isolating vocals and other stems using external tools. | src |
+
+Backlinks: [Connector Index](connectors/CONNECTOR_INDEX.md) | [Dependency Index](dependency_index.md) | [Test Index](test_index.md)

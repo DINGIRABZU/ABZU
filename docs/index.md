@@ -23,7 +23,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [Data Manifest](data_manifest.md)
 
 ## Development
-- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.9, updated 2025-09-02)
+- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.86, updated 2025-09-02)
 - [Developer Etiquette](developer_etiquette.md)
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Checklist](development_checklist.md)
@@ -33,3 +33,9 @@ Curated starting points for understanding and operating the project. For an exha
 - [Feature Specifications](features/README.md)
 - [Example Feature](features/example_feature.md)
 - [RAZAR Agent](RAZAR_AGENT.md)
+
+## Indices
+- [Component Index](component_index.md)
+- [Connector Index](connectors/CONNECTOR_INDEX.md)
+- [Dependency Index](dependency_index.md)
+- [Test Index](test_index.md)

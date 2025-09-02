@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.85
+**Version:** v1.0.86
 **Last updated:** 2025-09-02
 
 ## How to Use This Protocol
@@ -95,7 +95,10 @@ Before opening a pull request, confirm each item:
   - [System Blueprint](system_blueprint.md)
   - [Project Mission & Vision](project_mission_vision.md) – confirm alignment before proposing major changes
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
+  - [Component Index](component_index.md) – inventory of modules and services with versions and chakra layers
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, linked agents, status, operator interface flows, and code/doc links are current
+  - [Dependency Index](dependency_index.md) – approved runtimes and libraries with minimum versions
+  - [Test Index](test_index.md) – catalog of test modules and coverage targets
   - [Protocol Compliance](protocol_compliance.md) – dashboard of component alignment
 - [ ] Commit and PR descriptions follow [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format) and include a change-justification
 - [ ] Onboarding quiz answers included in first pull request (`onboarding_quiz.yml`)
@@ -103,7 +106,7 @@ Before opening a pull request, confirm each item:
 - [ ] Crown availability verified – `CROWN_WS_URL` is set and the Crown server responds to the handshake
 - [ ] Touched connectors, modules, and key documents re-validated after fixes
 - [ ] All modules, connectors, and services expose `__version__` that matches `component_index.json`; the `verify-versions` pre-commit hook enforces alignment, so bump both for user-facing changes
-- [ ] Component index entry added/updated in [component_index.md](component_index.md)
+- [ ] Relevant index entries updated in [component_index.md](component_index.md), [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md), [dependency_index.md](dependency_index.md), and [test_index.md](test_index.md)
 - [ ] `ignition_stage` set for each component in `component_index.json` and reflected in [Ignition Map](ignition_map.md); see [Ignition](Ignition.md) for boot priorities
 - [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`; see [ignition_flow.md](ignition_flow.md)
 - [ ] Ignition step changes reflected in [bana_engine.md](bana_engine.md) and Nazarick docs such as [nazarick_narrative_system.md](nazarick_narrative_system.md)
@@ -408,12 +411,18 @@ All endpoints must publish machine-validated schemas:
 - Continuous integration must verify that committed schemas match the server's
   live specification.
 
+### Component Index Protocol
+
+- Regenerate [component_index.md](component_index.md) from `component_index.json` using `scripts/build_component_index.py`.
+- Each entry must include `id`, `chakra`, `type`, `version`, `status`, and `ignition_stage` aligned with component `__version__` values.
+- Validate updates with `pre-commit run --files component_index.json docs/component_index.md docs/INDEX.md`.
+
 ### Technology Registry Protocol
 
 - Maintain the [Dependency Registry](dependency_registry.md) of approved runtimes, frameworks, and library minimum versions.
 - Update the registry when dependencies are added, upgraded, or deprecated, and validate changes with `pre-commit run --files docs/dependency_registry.md docs/INDEX.md`.
 
-### Connector Registry Protocol
+### Connector Index Protocol
 
 - Register each connector in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, authentication method, status, and links to documentation and source code.
 - Any connector change must update `docs/connectors/CONNECTOR_INDEX.md`.
@@ -422,6 +431,18 @@ All endpoints must publish machine-validated schemas:
 - Ensure connectors expose a top-level `__version__`, implement `start_call` and `close_peers`, and sync versions with `component_index.json`.
 - CI executes `scripts/component_inventory.py` to fail builds when connector versions mismatch the registry or required entries are missing.
 - Run `python scripts/health_check_connectors.py` before merging to confirm connectors respond.
+
+### Dependency Index Protocol
+
+- Maintain [dependency_index.md](dependency_index.md) enumerating third-party libraries and internal packages.
+- Update the index when dependencies are added, upgraded, or removed.
+- Validate changes with `pre-commit run --files docs/dependency_index.md docs/INDEX.md`.
+
+### Test Index Protocol
+
+- Document test modules and scenarios in [test_index.md](test_index.md) with related components.
+- Append new tests to the index and remove entries for deleted tests.
+- Validate with `pre-commit run --files docs/test_index.md docs/INDEX.md`.
 
 ### API & Connector Schema Protocol
 
