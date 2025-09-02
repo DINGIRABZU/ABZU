@@ -1,0 +1,48 @@
+name: Dependency Audit
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+      
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install pip-audit
+        run: python -m pip install pip-audit
+
+      - name: Run pip-audit
+        run: pip-audit -r requirements.txt --format json --output pip-audit.json --severity high --strict
+
+      - name: Upload pip audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-audit-report
+          path: pip-audit.json
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install floor_client dependencies
+        working-directory: floor_client
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: floor_client
+        run: npm audit --audit-level=high --json > npm-audit.json
+
+      - name: Upload npm audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: floor_client/npm-audit.json

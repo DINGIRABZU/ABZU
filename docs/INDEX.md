@@ -159,7 +159,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../QNL_LANGUAGE/QNL_FUSION_OVERVIEW.md](../QNL_LANGUAGE/QNL_FUSION_OVERVIEW.md) | ✴ QNL LANGUAGE ∞ FUSION | - | - |
 | [../QNL_LANGUAGE/SOUND CORE 1 4 20545dfc251d802aaaaad1abd8d415bb.md](../QNL_LANGUAGE/SOUND CORE 1 4 20545dfc251d802aaaaad1abd8d415bb.md) | SOUND CORE 1.4 | Expanded QNL Framework: QNL-SONGCORE-∞1.4 | - |
 | [../QNL_LANGUAGE/VERSION 1 20545dfc251d809da419e23e0af899fd.md](../QNL_LANGUAGE/VERSION 1 20545dfc251d809da419e23e0af899fd.md) | VERSION 1 | - | - |
-| [../README.md](../README.md) | THE CRYSTAL CODEX | ![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![CodeQL](http... | - |
+| [../README.md](../README.md) | THE CRYSTAL CODEX | ![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![Black](https... | - |
 | [../README_CODE_FUNCTION.md](../README_CODE_FUNCTION.md) | Code Function Overview | For high-level goals and architecture see [docs/project_overview.md](docs/project_overview.md) and [docs/architecture... | - |
 | [../README_OPERATOR.md](../README_OPERATOR.md) | Operator Guide | This repository contains several command line utilities for working with the INANNA music tools and Quantum Narrative... | - |
 | [../README_QNL_OS.md](../README_QNL_OS.md) | QNL Integration Overview | The Quantum Narrative Language (QNL) bridges textual symbols with music in Spiral OS. This document explains where th... | - |
@@ -200,7 +200,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) | Repository Structure | The following table outlines the top-level layout of this repository. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.84 **Last updated:** 2025-09-02 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.85 **Last updated:** 2025-09-02 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
