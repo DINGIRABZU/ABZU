@@ -5,8 +5,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import jsonschema
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INDEX_PATH = REPO_ROOT / "component_index.json"
+SCHEMA_PATH = REPO_ROOT / "docs" / "schemas" / "component_index.json"
 ALLOWED_STATUS = {"active", "deprecated", "experimental"}
 __version__ = "0.1.0"
 
@@ -14,9 +17,11 @@ __version__ = "0.1.0"
 def main() -> int:
     """Return 0 if all components declare valid status and ADR fields."""
     try:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         data = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        print(f"Invalid JSON: {exc}")
+        jsonschema.validate(data, schema)
+    except (json.JSONDecodeError, jsonschema.ValidationError) as exc:
+        print(f"component_index.json validation failed: {exc}")
         return 1
 
     errors: list[str] = []

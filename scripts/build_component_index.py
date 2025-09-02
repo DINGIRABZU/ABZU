@@ -21,6 +21,7 @@ The resulting JSON is validated elsewhere against
 
 from __future__ import annotations
 
+import ast
 import json
 import re
 from pathlib import Path
@@ -57,25 +58,43 @@ def detect_type(path: Path) -> str:
     return "module"
 
 
-def has_tests(component_id: str, component_path: Path) -> bool:
-    """Check whether a test mentions the component id or path."""
+def find_tests(component_id: str, component_path: Path) -> list[str]:
+    """Return list of test files referencing the component."""
 
     tests_dir = Path("tests")
     if not tests_dir.exists():
-        return False
+        return []
 
     pattern = re.compile(rf"\b{re.escape(component_id)}\b")
+    matches: list[str] = []
     for test_file in tests_dir.rglob("*.py"):
         try:
             text = test_file.read_text()
         except Exception:  # pragma: no cover - unreadable file
             continue
         if pattern.search(text) or component_path.as_posix() in text:
-            return True
-    return False
+            matches.append(test_file.relative_to(Path(".")).as_posix())
+    return sorted(matches)
 
 
-def determine_status(path: Path, text: str, component_id: str) -> tuple[str, str]:
+def gather_dependencies(text: str) -> list[str]:
+    """Extract imported modules from source text."""
+
+    try:
+        tree = ast.parse(text)
+    except Exception:  # pragma: no cover - parse errors are rare
+        return []
+    deps: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                deps.add(alias.name.split(".")[0])
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            deps.add(node.module.split(".")[0])
+    return sorted(deps)
+
+
+def determine_status(path: Path, text: str, tests: list[str]) -> tuple[str, str]:
     """Determine component status and rationale."""
 
     if not path.exists():
@@ -84,7 +103,7 @@ def determine_status(path: Path, text: str, component_id: str) -> tuple[str, str
         return "deprecated", "Marked deprecated in source"
     if RE_EXPERIMENTAL.search(text):
         return "experimental", "Marked experimental in source"
-    if has_tests(component_id, path):
+    if tests:
         return "active", "No known issues"
     return "experimental", "No tests found"
 
@@ -117,7 +136,9 @@ def main() -> None:
         )
         chakra = detect_chakra(rel)
         comp_type = detect_type(rel)
-        status, issues = determine_status(py_file, text, component_id)
+        dependencies = gather_dependencies(text)
+        tests = find_tests(component_id, py_file)
+        status, issues = determine_status(py_file, text, tests)
 
         components.append(
             {
@@ -126,8 +147,12 @@ def main() -> None:
                 "type": comp_type,
                 "path": rel.as_posix(),
                 "version": version,
+                "dependencies": dependencies,
+                "tests": tests,
+                "metrics": {},
                 "status": status,
                 "issues": issues,
+                "adr": None,
             }
         )
 
