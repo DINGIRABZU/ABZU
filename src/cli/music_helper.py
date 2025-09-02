@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Utility functions for handling music generation commands."""
+
+from __future__ import annotations
 
 import logging
 from pathlib import Path

@@ -1,3 +1,5 @@
+"""Tests for albedo state machine."""
+
 from albedo import Magnitude, State
 from albedo.state_machine import AlbedoStateMachine, EntityCategory
 

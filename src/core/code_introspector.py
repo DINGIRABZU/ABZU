@@ -1,10 +1,10 @@
-from __future__ import annotations
-
 """Utilities for inspecting repository code.
 
 This module enumerates Python files in the repository, extracts short snippets
 and writes them to ``audit_logs/code_analysis.txt`` for later review.
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 from typing import Iterable, List

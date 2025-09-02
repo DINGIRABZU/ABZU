@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Screen capture and GUI detection utilities."""
+
+from __future__ import annotations
 
 import logging
 import time

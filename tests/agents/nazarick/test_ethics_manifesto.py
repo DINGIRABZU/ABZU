@@ -1,3 +1,5 @@
+"""Tests for ethics manifesto."""
+
 from __future__ import annotations
 
 from agents.nazarick.ethics_manifesto import Manifesto, LAWS

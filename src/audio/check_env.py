@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Diagnostic CLI to verify audio dependencies are installed."""
+
+from __future__ import annotations
 
 import importlib
 import sys

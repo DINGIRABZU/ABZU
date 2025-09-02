@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Waveform synthesis utilities."""
+
+from __future__ import annotations
 
 import numpy as np
 
@@ -53,7 +53,9 @@ def _synthesize_melody(
     segments: list[np.ndarray] = []
     for note in melody:
         freq = _note_to_freq_simple(str(note))
-        t = np.linspace(0, beat_duration, int(sample_rate * beat_duration), endpoint=False)
+        t = np.linspace(
+            0, beat_duration, int(sample_rate * beat_duration), endpoint=False
+        )
         if wave_type == "square":
             seg = 0.5 * np.sign(np.sin(2 * np.pi * freq * t))
         else:

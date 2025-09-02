@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Build a component dependency graph from Markdown blueprints.
 
 The synthesizer walks ``docs/system_blueprint.md`` and
@@ -9,6 +5,10 @@ The synthesizer walks ``docs/system_blueprint.md`` and
 A directed graph is produced where edges represent markdown links between
 documents. The graph is exported in node-link JSON format for later planning.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 import json
 import re

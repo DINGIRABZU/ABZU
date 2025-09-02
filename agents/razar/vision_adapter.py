@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Stream YOLOE detections into RAZAR's planning engine.
 
 The adapter connects the vision system provided by
@@ -20,6 +16,10 @@ The class is intentionally lightweight and purely synchronous which keeps
 unit tests fast while exercising the integration points between vision and
 planning.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from typing import Callable, Dict, Iterable, Mapping
 import numpy as np

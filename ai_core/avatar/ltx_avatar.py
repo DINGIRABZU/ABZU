@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Lightweight wrapper for an imaginary LTX distilled avatar model.
 
 The implementation purposely avoids external dependencies.  The goal is to
@@ -9,6 +7,8 @@ creates greyscale images whose intensity encodes the frame index.  The behaviour
 is sufficient for unit tests and documentation examples and mirrors the API a
 real model might expose.
 """
+
+from __future__ import annotations
 
 import time
 from dataclasses import dataclass

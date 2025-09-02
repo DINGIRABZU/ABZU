@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Voice modulation layer with alchemical tone presets."""
+
+from __future__ import annotations
 
 from typing import Dict
 

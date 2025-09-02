@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Apply reverb and timbre effects based on the current emotion."""
+
+from __future__ import annotations
 
 import logging
 import shutil

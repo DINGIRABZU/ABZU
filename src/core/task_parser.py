@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple text command parser returning structured intents."""
+
+from __future__ import annotations
 
 from typing import Dict, List
 

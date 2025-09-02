@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Command line tool for exploring ``cortex_memory_spiral.jsonl``."""
+
+from __future__ import annotations
 
 import argparse
 import time

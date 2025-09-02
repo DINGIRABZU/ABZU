@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Clone a user's voice using the optional EmotiVoice library."""
+
+from __future__ import annotations
 
 import logging
 from pathlib import Path

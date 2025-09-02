@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Simple CLI dashboard reporting boot status and quarantine information.
 
 The dashboard reads component priority definitions from
@@ -13,6 +9,10 @@ Running ``python -m razar.status_dashboard`` prints a table summarising the
 current boot attempt, component priority/criticality and links to the
 quarantine log and boot history.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from pathlib import Path
 import json

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Resource watchdog exposing Prometheus metrics for key services."""
+
+from __future__ import annotations
 
 import json
 import logging

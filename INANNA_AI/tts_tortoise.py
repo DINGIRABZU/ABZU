@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Text-to-speech wrapper for the Tortoise library."""
+
+from __future__ import annotations
 
 import tempfile
 from pathlib import Path

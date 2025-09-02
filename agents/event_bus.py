@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Simple event bus helper for agents.
 
 This module exposes :func:`emit_event` which routes agent events through the
@@ -8,6 +6,8 @@ environment variables so tests and environments without a broker remain
 functional. Consumers like ``nazarick.narrative_scribe`` can subscribe to the
 same broker to receive these events.
 """
+
+from __future__ import annotations
 
 import asyncio
 import os

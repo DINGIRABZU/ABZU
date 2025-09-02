@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Development cycle orchestrator using lightweight multi-agent workflow.
 
 This module spawns planner, coder and reviewer agents backed by the existing
@@ -12,6 +10,8 @@ The implementation optionally leverages the
 `autogen <https://github.com/microsoft/autogen>`_ framework when installed. If
 unavailable, the orchestrator still functions with minimal dependencies.
 """
+
+from __future__ import annotations
 
 __version__ = "0.1.0"
 

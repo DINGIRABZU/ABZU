@@ -1,3 +1,5 @@
+"""Tests for razar health checks."""
+
 from unittest import mock
 
 

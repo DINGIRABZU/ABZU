@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Command line interface for OS Guardian."""
+
+from __future__ import annotations
 
 import argparse
 

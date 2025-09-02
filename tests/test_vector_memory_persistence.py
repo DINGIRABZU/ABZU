@@ -1,3 +1,5 @@
+"""Tests for vector memory persistence."""
+
 import sys
 from pathlib import Path
 

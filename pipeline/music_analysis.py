@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """High-level music analysis pipeline combining feature and emotion extraction."""
+
+from __future__ import annotations
 
 import json
 from dataclasses import dataclass

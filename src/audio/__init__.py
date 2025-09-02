@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Audio processing utilities and playback helpers."""
+
+from __future__ import annotations
 
 from .engine import (
     compress,

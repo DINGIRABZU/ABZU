@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Automate fine-tuning and deployment of INANNA models."""
+
+from __future__ import annotations
 
 import argparse
 import os

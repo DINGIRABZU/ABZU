@@ -1,13 +1,13 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Environment builder for RAZAR.
 
 This module verifies that a suitable Python interpreter is available,
 creates an isolated virtual environment and installs dependencies for
 each component layer defined in a configuration file.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 import argparse
 import logging

@@ -1,3 +1,5 @@
+"""Tests for nazarick messaging."""
+
 from agents.albedo import compose_message_nazarick
 from albedo import State, Magnitude
 

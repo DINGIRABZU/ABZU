@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Run code patches in an isolated sandbox and execute tests."""
+
+from __future__ import annotations
 
 import logging
 import subprocess

@@ -1,3 +1,5 @@
+"""Tests for runtime manager."""
+
 import json
 import logging
 
@@ -83,7 +85,9 @@ def test_runtime_manager_health_check_quarantine(tmp_path, monkeypatch):
     cfg = tmp_path / "cfg.yaml"
     cfg.write_text(yaml.safe_dump(config), encoding="utf-8")
 
-    manager = RuntimeManager(cfg, state_path=tmp_path / "state.json", venv_path=tmp_path / "venv")
+    manager = RuntimeManager(
+        cfg, state_path=tmp_path / "state.json", venv_path=tmp_path / "venv"
+    )
     # Avoid slow environment creation
     monkeypatch.setattr(RuntimeManager, "ensure_venv", lambda self, deps=None: None)
 

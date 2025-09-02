@@ -1,3 +1,5 @@
+"""Tests for citadel event producer."""
+
 import asyncio
 
 from citadel.event_producer import Event, EventProducer

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Utilities for fine-tuning the :class:`RFA7D` core."""
+
+from __future__ import annotations
 
 import argparse
 import hashlib

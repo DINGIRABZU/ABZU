@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Wrapper around a placeholder GLM-4.1V-9B endpoint."""
+
+from __future__ import annotations
 
 import logging
 import os

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Helpers to compose prompts for Albedo's enlightened responses."""
+
+from __future__ import annotations
 
 from typing import Callable, Dict
 

@@ -1,3 +1,5 @@
+"""Tests for boot orchestrator."""
+
 import json
 from pathlib import Path
 

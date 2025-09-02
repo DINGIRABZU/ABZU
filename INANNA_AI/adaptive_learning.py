@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Adaptive learning agents for threshold and wording tuning."""
+
+from __future__ import annotations
 
 import json
 import os

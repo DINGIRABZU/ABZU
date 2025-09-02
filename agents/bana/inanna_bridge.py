@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Bridge structured INANNA interactions into Bana's narrative engine."""
+
+from __future__ import annotations
 
 from typing import Mapping, Any
 

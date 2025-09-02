@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """CLI helper for inserting embeddings into ``spiral_vector_db``."""
+
+from __future__ import annotations
 
 import argparse
 import json

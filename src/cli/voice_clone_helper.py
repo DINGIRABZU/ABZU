@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Helper for voice cloning within the console interface."""
+
+from __future__ import annotations
 
 import logging
 from pathlib import Path

@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Planner that consolidates blueprints, failures, and Crown suggestions.
 
 The planner reads component priorities from ``docs/component_priorities.yaml``,
@@ -12,6 +8,10 @@ plan and appends it to ``logs/razar_cocreation_plans.json``.
 This module is intentionally lightweight and acts as a scaffold for future
 integration with the RAZAR runtime manager.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 import json
 import logging

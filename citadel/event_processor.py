@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """FastAPI service that processes agent events."""
+
+from __future__ import annotations
 
 import asyncio
 import contextlib
@@ -51,7 +51,9 @@ class Neo4jWriter:
     async def _connect(self) -> None:
         from neo4j import AsyncGraphDatabase  # type: ignore
 
-        self._driver = AsyncGraphDatabase.driver(self.uri, auth=(self.user, self.password))
+        self._driver = AsyncGraphDatabase.driver(
+            self.uri, auth=(self.user, self.password)
+        )
 
     async def write_event(self, event: Event) -> None:
         if self._driver is None:
@@ -71,14 +73,18 @@ class Neo4jWriter:
             )
 
 
-async def process_event(event: Event, ts_writer: TimescaleWriter, neo_writer: Neo4jWriter) -> None:
+async def process_event(
+    event: Event, ts_writer: TimescaleWriter, neo_writer: Neo4jWriter
+) -> None:
     """Write the event to all backends."""
 
     await ts_writer.write_event(event)
     await neo_writer.write_event(event)
 
 
-async def _redis_listener(channel: str, url: str, ts_writer: TimescaleWriter, neo_writer: Neo4jWriter) -> None:
+async def _redis_listener(
+    channel: str, url: str, ts_writer: TimescaleWriter, neo_writer: Neo4jWriter
+) -> None:
     import redis.asyncio as redis  # type: ignore
 
     redis_client = redis.from_url(url)
@@ -91,7 +97,12 @@ async def _redis_listener(channel: str, url: str, ts_writer: TimescaleWriter, ne
         await process_event(event, ts_writer, neo_writer)
 
 
-async def _kafka_listener(topic: str, bootstrap_servers: str, ts_writer: TimescaleWriter, neo_writer: Neo4jWriter) -> None:
+async def _kafka_listener(
+    topic: str,
+    bootstrap_servers: str,
+    ts_writer: TimescaleWriter,
+    neo_writer: Neo4jWriter,
+) -> None:
     from aiokafka import AIOKafkaConsumer  # type: ignore
 
     consumer = AIOKafkaConsumer(topic, bootstrap_servers=bootstrap_servers)

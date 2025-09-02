@@ -1,3 +1,5 @@
+"""Tests for operator command route."""
+
 import json
 from pathlib import Path
 

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Mood tracking and emotion analysis utilities."""
+
+from __future__ import annotations
 
 from typing import Any, Dict
 

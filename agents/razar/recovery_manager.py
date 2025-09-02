@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Recovery manager using ZeroMQ for error handling.
 
 The recovery protocol is initiated when a running component reports an
@@ -17,6 +13,10 @@ RAZAR takes ownership of the recovery process:
 
 A confirmation response is sent back to the component once recovery completes.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 import json
 import logging

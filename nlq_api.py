@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """NLQ API powered by Vanna AI."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from fastapi import APIRouter

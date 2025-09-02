@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Parse the categorized INANNA training guide."""
+
+from __future__ import annotations
 
 import re
 from pathlib import Path

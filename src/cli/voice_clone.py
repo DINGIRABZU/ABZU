@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """CLI for recording samples and synthesizing speech via :mod:`EmotiVoice`."""
+
+from __future__ import annotations
 
 import argparse
 import logging

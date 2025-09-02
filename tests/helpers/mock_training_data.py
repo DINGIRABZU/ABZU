@@ -1,3 +1,5 @@
+"""Tests for mock training data."""
+
 from __future__ import annotations
 
 MOCK_INSIGHTS = {

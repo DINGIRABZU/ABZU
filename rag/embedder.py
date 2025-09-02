@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Embed RAG text chunks with optional sentiment tags."""
+
+from __future__ import annotations
 
 import argparse
 import json

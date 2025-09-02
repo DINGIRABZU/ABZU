@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Run basic environment validation in a single command."""
+
+from __future__ import annotations
 
 __version__ = "0.1.0"
 

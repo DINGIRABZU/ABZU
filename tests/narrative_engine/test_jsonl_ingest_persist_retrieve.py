@@ -1,3 +1,5 @@
+"""Tests for jsonl ingest persist retrieve."""
+
 from pathlib import Path
 
 from memory import narrative_engine

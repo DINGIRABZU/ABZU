@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Environment variable validation utilities."""
+
+from __future__ import annotations
 
 import importlib
 import logging

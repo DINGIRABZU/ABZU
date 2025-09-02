@@ -1,12 +1,12 @@
-from __future__ import annotations
-
-
 """HTTP API for logging and retrieving persistent stories.
 
 - **Endpoints:** ``POST /story``, ``GET /story/log``, ``GET /story/stream``
 - **Auth:** Bearer token
 - **Linked service:** vector_memory
 """
+
+from __future__ import annotations
+
 
 __version__ = "0.2.0"
 

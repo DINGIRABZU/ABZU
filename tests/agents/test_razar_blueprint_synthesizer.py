@@ -1,3 +1,5 @@
+"""Tests for razar blueprint synthesizer."""
+
 from __future__ import annotations
 
 import importlib.util
@@ -5,7 +7,10 @@ from pathlib import Path
 
 spec = importlib.util.spec_from_file_location(
     "razar_blueprint_synthesizer",
-    Path(__file__).resolve().parents[2] / "agents" / "razar" / "blueprint_synthesizer.py",
+    Path(__file__).resolve().parents[2]
+    / "agents"
+    / "razar"
+    / "blueprint_synthesizer.py",
 )
 blueprint = importlib.util.module_from_spec(spec)
 assert spec and spec.loader

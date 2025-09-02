@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Command line tool to synthesize speech and play or stream it."""
+
+from __future__ import annotations
 
 import argparse
 import logging

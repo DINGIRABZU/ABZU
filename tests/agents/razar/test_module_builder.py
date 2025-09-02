@@ -1,3 +1,5 @@
+"""Tests for module builder."""
+
 from pathlib import Path
 from types import SimpleNamespace
 

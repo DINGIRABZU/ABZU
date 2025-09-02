@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Constants related to the Great Mother archetype."""
+
+from __future__ import annotations
 
 
 class LoveMatrix:

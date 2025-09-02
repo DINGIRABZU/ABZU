@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Benchmark message routing through the chat gateway."""
+
+from __future__ import annotations
 
 import asyncio
 import json

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Helpers for retrieving texts from Project Gutenberg."""
+
+from __future__ import annotations
 
 import re
 import types

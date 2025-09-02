@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple emotion-to-filter mapping with memory adjustment."""
+
+from __future__ import annotations
 
 from typing import Any, Dict, Iterable
 

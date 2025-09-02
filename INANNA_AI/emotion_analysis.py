@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Lightweight emotion analysis tools using Librosa."""
+
+from __future__ import annotations
 
 from typing import Any, Dict, Tuple
 

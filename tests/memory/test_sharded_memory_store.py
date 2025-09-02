@@ -1,3 +1,5 @@
+"""Tests for sharded memory store."""
+
 import types
 
 import numpy as np

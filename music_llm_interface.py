@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Interface between the music analysis pipeline and LLM CROWN.
 
 This module exposes a small utility that analyses an audio or MIDI file and
@@ -8,6 +6,8 @@ Results from the music pipeline and the language model are combined into a
 single JSON structure printed to ``stdout``.  The entry point can be invoked
 from the command line via ``python music_llm_interface.py <audio_or_midi>``.
 """
+
+from __future__ import annotations
 
 import argparse
 import json

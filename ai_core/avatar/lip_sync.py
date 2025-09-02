@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Utilities for aligning phonemes with video frame indices."""
+
+from __future__ import annotations
 
 from typing import List, Sequence, Tuple
 

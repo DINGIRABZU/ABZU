@@ -1,3 +1,5 @@
+"""Tests for narrative scribe."""
+
 from __future__ import annotations
 
 from citadel.event_producer import Event

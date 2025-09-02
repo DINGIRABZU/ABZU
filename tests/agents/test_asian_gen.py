@@ -1,3 +1,5 @@
+"""Tests for asian gen."""
+
 from __future__ import annotations
 
 import logging
@@ -9,6 +11,7 @@ from agents.asian_gen.creative_engine import CreativeEngine
 
 def test_locale_routed_generation(monkeypatch, caplog):
     caplog.set_level(logging.INFO)
+
     class DummyTokenizer:
         lang_code_to_id = {"ja": 7}
 

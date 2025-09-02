@@ -1,3 +1,5 @@
+"""Tests for mix and store."""
+
 from pathlib import Path
 
 import numpy as np

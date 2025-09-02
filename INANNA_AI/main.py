@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Command line interface for INANNA AI.
 
 This tool runs the interactive voice loop and also exposes ingestion helpers to
@@ -7,6 +5,8 @@ fetch external texts.  The ``fetch-gutenberg`` and ``fetch-github`` subcommands
 download materials used for learning while ``voice`` starts the normal Albedo
 conversation flow.
 """
+
+from __future__ import annotations
 
 import argparse
 

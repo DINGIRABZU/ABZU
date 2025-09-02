@@ -1,3 +1,5 @@
+"""Tests for land graph geo knowledge."""
+
 from agents.land_graph.geo_knowledge import GeoKnowledge
 
 

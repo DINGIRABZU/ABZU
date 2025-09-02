@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Interfaces for emitting agent events to message brokers."""
+
+from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass, field

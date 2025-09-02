@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Prompt templates for each alchemical state."""
+
+from __future__ import annotations
 
 CONTEXTS = {
     "nigredo": "[Nigredo] ({entity}) {text} {triggers} {qcontext}",

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Minimal connector for sending metrics to the Primordials service.
 
 This module posts JSON payloads to the Primordials API. It is intentionally
@@ -10,6 +8,8 @@ runtime dependencies.
 - **Auth:** Bearer token
 - **Linked services:** Primordials
 """
+
+from __future__ import annotations
 
 __version__ = "0.1.1"
 

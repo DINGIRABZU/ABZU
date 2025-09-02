@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Simple heuristics for classifying failure logs.
 
 The :mod:`issue_analyzer` inspects failure logs and attempts to label the
@@ -14,6 +10,10 @@ underlying issue.  Three categories are supported:
 ``external``
     Network outages, remote service errors, or unclassified failures.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from enum import Enum
 from pathlib import Path

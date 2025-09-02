@@ -1,3 +1,5 @@
+"""Tests for event structurizer."""
+
 import csv
 from pathlib import Path
 

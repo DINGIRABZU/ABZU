@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Ingest music theory books into the vector memory."""
+
+from __future__ import annotations
 
 import argparse
 from pathlib import Path

@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Utilities for quarantining failing components.
 
 Components that fail during runtime are moved to the repository‑level
@@ -10,6 +6,10 @@ Components that fail during runtime are moved to the repository‑level
 information which is recorded in the same Markdown log.  A component remains
 quarantined until it is explicitly resolved or reactivated.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from datetime import datetime
 from pathlib import Path

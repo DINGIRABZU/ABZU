@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Vanna-powered data lookup agent.
 
 Responsibilities:
@@ -7,6 +5,8 @@ Responsibilities:
 - execute generated SQL queries
 - store raw results in mental memory and narrative summaries in narrative memory
 """
+
+from __future__ import annotations
 
 from dataclasses import asdict
 import json

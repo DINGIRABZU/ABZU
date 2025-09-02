@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Illumination phase personality layer."""
+
+from __future__ import annotations
 
 
 class CitrinitasPersonality:

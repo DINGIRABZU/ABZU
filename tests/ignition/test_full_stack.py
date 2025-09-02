@@ -1,3 +1,5 @@
+"""Tests for full stack."""
+
 import json
 import sys
 import types

@@ -1,11 +1,11 @@
+"""Tests for bana narrator."""
+
 from __future__ import annotations
 
 import numpy as np
-import pytest
 from types import SimpleNamespace
 
 from agents.bana.bio_adaptive_narrator import generate_story
-from tests.agents.test_bana import synthetic_ecg
 
 
 class DummyGenerator:

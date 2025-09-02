@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Download text sources and optionally embed them."""
+
+from __future__ import annotations
 
 import argparse
 import json

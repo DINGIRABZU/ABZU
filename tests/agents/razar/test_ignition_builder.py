@@ -1,3 +1,5 @@
+"""Tests for ignition builder."""
+
 import json
 import os
 import subprocess
@@ -10,6 +12,7 @@ from pathlib import Path
 # at module import time so ``build_ignition`` can be imported safely.
 guardian = types.ModuleType("agents.guardian")
 
+
 def _run_validated_task(*a, **k):
     task = k.get("task")
     return task(*a, **k) if callable(task) else None
@@ -21,6 +24,7 @@ cocytus = types.ModuleType("agents.cocytus")
 cocytus.__path__ = []
 sys.modules.setdefault("agents.cocytus", cocytus)
 pa = types.ModuleType("agents.cocytus.prompt_arbiter")
+
 
 def _arbitrate(*a, **k):
     return None

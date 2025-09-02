@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Avatar video generation utilities."""
+
+from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field

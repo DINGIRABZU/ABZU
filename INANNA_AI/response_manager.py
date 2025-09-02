@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple dialogue manager blending audio and text context."""
+
+from __future__ import annotations
 
 from typing import Dict
 

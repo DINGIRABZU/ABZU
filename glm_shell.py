@@ -1,10 +1,10 @@
-from __future__ import annotations
-
 """Send shell commands to the Crown GLM endpoint.
 
 Usage:
     python glm_shell.py "<command>"
 """
+
+from __future__ import annotations
 
 import argparse
 

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Fetch README files from GitHub repositories."""
+
+from __future__ import annotations
 
 import base64
 import json
