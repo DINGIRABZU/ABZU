@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import logging
 from fastapi import APIRouter
 
 from agents.vanna_data import query_db, query_logs
@@ -10,21 +11,25 @@ from core.utils.optional_deps import lazy_import
 
 router = APIRouter()
 vanna = lazy_import("vanna")
+logger = logging.getLogger(__name__)
 
 
-def _train_vanna() -> None:
+def _train_vanna() -> list[Path]:
     """Train Vanna on channel and log schemas if available."""
+    failed: list[Path] = []
     if getattr(vanna, "__stub__", False):
-        return
+        return failed
     schemas_dir = Path("schemas")
     for sql_file in schemas_dir.glob("*.sql"):
         try:
             vanna.train(ddl=sql_file.read_text())
         except Exception:  # pragma: no cover - best effort
-            pass
+            logger.exception("failed to train Vanna on %s", sql_file)
+            failed.append(sql_file)
+    return failed
 
 
-_train_vanna()
+FAILED_VANNA_FILES = _train_vanna()
 
 
 @router.post("/nlq")
