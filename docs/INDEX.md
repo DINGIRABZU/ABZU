@@ -216,7 +216,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [Nazarick_GUIDE.md](Nazarick_GUIDE.md) | Nazarick Guide | - | - |
 | [PROJECT_STATUS.md](PROJECT_STATUS.md) | Project Status | ![Coverage](../coverage.svg) | - |
 | [QUALITY_EVALUATION.md](QUALITY_EVALUATION.md) | Quality Evaluation | - | - |
-| [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and operator oversight. | - |
+| [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and operator oversight. | `../razar/boot_orchestrator.py` |
 | [RAZAR_GUIDE.md](RAZAR_GUIDE.md) | RAZAR Guide | - | - |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) | Repository Structure | The following table outlines the top-level layout of this repository. | - |
