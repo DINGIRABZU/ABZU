@@ -11,3 +11,5 @@ To reinstate a component once it is fixed:
 
 | Timestamp (UTC) | Component | Action | Details |
 |-----------------|-----------|--------|---------|
+| 2025-09-02T22:06:32Z | boot_orchestrator | quarantined | dependency: circular import prevents import of run_validated_task from agents.guardian; refactor imports to break cycle |
+
