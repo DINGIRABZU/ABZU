@@ -223,7 +223,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [SOCIAL_INVESTOR_ONE_PAGER.md](SOCIAL_INVESTOR_ONE_PAGER.md) | ABZU: Social Investor One-Pager | --- | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.86 **Last updated:** 2025-09-02 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.87 **Last updated:** 2025-09-03 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -241,6 +241,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [avatar_ethics.md](avatar_ethics.md) | Avatar Ethics | The avatar and call features rely on audiovisual data that may reveal personal information. Operators must handle rec... | - |
 | [avatar_pipeline.md](avatar_pipeline.md) | Avatar Pipeline | The avatar pipeline synchronises generated speech with visual animation. It reads configuration from `guides/avatar_c... | - |
 | [bana_engine.md](bana_engine.md) | Bana Engine | This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sourc... | - |
+| [blueprint_spine.md](blueprint_spine.md) | **ABZU Project: Deep-Dive Overview** | - | - |
 | [chakra_architecture.md](chakra_architecture.md) | Chakra Architecture | This document summarizes the major modules aligned with each chakra layer, their operational state, current quality l... | - |
 | [chakra_koan_system.md](chakra_koan_system.md) | Chakra System Koan | A meditative sequence exploring the seven energy centers of Spiral OS. It complements the version manifest, grounding... | - |
 | [chakra_overview.md](chakra_overview.md) | Chakra Overview | This table summarizes each chakra layer's role in the system along with its current semantic version, aggregated qual... | - |

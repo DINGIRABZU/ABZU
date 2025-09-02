@@ -1,10 +1,12 @@
 # The Absolute Protocol
 
-**Version:** v1.0.86
-**Last updated:** 2025-09-02
+**Version:** v1.0.87
+**Last updated:** 2025-09-03
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
+
+Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three times to internalize the project's structure and intent.
 
 ## Repository Blueprint
 ABZU adheres to a consistent top-level directory layout:
