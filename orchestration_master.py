@@ -146,14 +146,8 @@ def launch_agents_from_config(config_path: Path | None = None) -> Dict[str, bool
     return launched
 
 
-def boot_sequence() -> None:
-    """Placeholder for system boot logic."""
-    raise NotImplementedError("boot_sequence is not implemented yet")
-
-
 __all__ = [
     "AlbedoOrchestrator",
-    "boot_sequence",
     "AGENT_LOOKUP",
     "launch_agents_from_config",
 ]
