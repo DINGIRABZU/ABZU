@@ -34,7 +34,7 @@ ABZU is an open research framework exploring ritual and narrative-driven intelli
 
 ## Contact
 
-For partnership or funding discussions please reach out via `invest@abzu.ai`.
+For partnership or funding discussions please reach out via inanna.tamtu.nammu@gmail.com
 
 ---
 
