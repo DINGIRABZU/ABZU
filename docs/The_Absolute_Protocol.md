@@ -1,10 +1,24 @@
 # The Absolute Protocol
 
-**Version:** v1.0.81
-**Last updated:** 2025-09-04
+**Version:** v1.0.82
+**Last updated:** 2025-09-05
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
+
+## Repository Blueprint
+ABZU adheres to a consistent top-level directory layout:
+
+- `src/` – Core application source code
+- `tests/` – Automated test suites and fixtures
+- `docs/` – Documentation and guides
+- `data/` – Sample datasets and data artifacts
+- `scripts/` – Utility scripts and command-line tools
+- `deployment/` – Deployment configurations and manifests
+- `tools/` – Developer tools and automation helpers
+- `notebooks/` – Experimental notebooks and prototypes
+
+See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidance on the repository layout.
 
 ## Version Synchronization
 Every module, connector, and service must expose a top-level `__version__` string that matches the entry in `component_index.json`. Update both the source and the index together and run `scripts/verify_versions.py` to confirm alignment; the `verify-versions` pre-commit hook blocks mismatches. Experimental components still require `__version__` and should be marked `experimental` in `component_index.json`. Documentation-only changes may leave versions untouched but must still run `scripts/verify_versions.py` to validate alignment.
