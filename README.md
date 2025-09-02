@@ -1,6 +1,15 @@
 # THE CRYSTAL CODEX
 
-![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![CodeQL](https://github.com/DINGIRABZU/ABZU/actions/workflows/codeql.yml/badge.svg) ![Black](https://img.shields.io/badge/code%20style-black-000000.svg) ![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
+![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![Black](https://img.shields.io/badge/code%20style-black-000000.svg) ![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
+ABZU is a modular research platform for composing multi-modal AI agents with strong ethical guardrails. Its mission is to help researchers, creative technologists, and industry teams orchestrate advanced capabilities while retaining transparent oversight. Key differentiators include a unified memory architecture, ritual-based invocation engine, and built-in ethics gating.
+
+Example applications include:
+
+- interactive narrative agents
+- ethics-gated industrial automation
+- emotion-aware virtual assistants
+
+For deeper technical detail, visit the [Documentation Index](docs/index.md) and [Project Mission & Vision](docs/project_mission_vision.md).
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Index
