@@ -191,7 +191,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
 | [ABZU_project_declaration.md](ABZU_project_declaration.md) | ABZU_project_declaration.md | - | - |
-| [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Deprecated | See [Albedo Guide](Albedo_GUIDE.md). | - |
+| [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Layer | Albedo is a personality layer that shapes responses through a four-phase alchemical cycle. | - |
 | [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |
 | [BLUEPRINT_EXPORT.md](BLUEPRINT_EXPORT.md) | Blueprint Export | This snapshot lists major documentation assets with links that can be pinned to a specific commit. For general contri... | - |
 | [CI_OVERVIEW.md](CI_OVERVIEW.md) | CI Overview | This guide summarizes the repository's continuous integration workflow. | - |
@@ -310,7 +310,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [monitoring.md](monitoring.md) | Monitoring | The application writes JSON-formatted logs to `logs/INANNA_AI.log`. The file rotates when it reaches roughly 10 MB, k... | - |
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
-| [nazarick_agents.md](nazarick_agents.md) | Deprecated | See [Nazarick Guide](Nazarick_GUIDE.md). | - |
+| [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Deprecated | See [Narrative Engine Guide](narrative_engine_GUIDE.md). | - |
 | [nazarick_web_console.md](nazarick_web_console.md) | Nazarick Web Console | The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing m... | `../connectors/webrtc_connector.py`, `../operator_api.py` |

@@ -53,18 +53,18 @@ The Mermaid source lives at [assets/nazarick_web_console.mmd](assets/nazarick_we
 - **`web_console/index.html`** – static page that loads the console and basic styles.
 - **`web_console/main.js`** – handles command dispatch, emotion glyphs, music prompts, and WebRTC streaming.
 - **`web_console/operator.js`** – helper module exposing `sendCommand`, `startStream`, and `uploadFiles` utilities for operator dashboards.
-- **Agent panel** – lists agents by parsing `agents/nazarick/agent_registry.json` and `logs/nazarick_startup.json`. Each entry shows the channel and launch status with buttons to open the chat room or send a command directly to that agent.
+- **Agent panel** – lists agents by parsing `agents/nazarick/agent_registry.json` and `logs/nazarick_startup.json`. Each entry shows the role, launch command, channel, and launch status with buttons to open the chat room or send a command directly to that agent.
 
-## Channel Mapping
+## Agent Mapping
 
-Channel information is derived from the [agent registry](../agents/nazarick/agent_registry.json).
+Details are derived from the [agent registry](../agents/nazarick/agent_registry.json).
 
-| Agent ID | Channel |
-| --- | --- |
-| orchestration_master | `#throne-room` |
-| prompt_orchestrator | `#signal-hall` |
-| qnl_engine | `#insight-observatory` |
-| memory_scribe | `#memory-vault` |
+| Agent ID | Role | Launch Command | Channel |
+| --- | --- | --- | --- |
+| orchestration_master | Boot order and pipeline supervision | `./launch_servants.sh orchestration_master` | `#throne-room` |
+| prompt_orchestrator | Route prompts and recall context | `./launch_servants.sh crown_prompt_orchestrator` | `#signal-hall` |
+| qnl_engine | Process QNL sequences and insights | `./launch_servants.sh qnl_engine` | `#insight-observatory` |
+| memory_scribe | Persist transcripts and embeddings | `./launch_servants.sh memory_scribe` | `#memory-vault` |
 
 ## Dependencies
 
