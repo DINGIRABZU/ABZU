@@ -13,7 +13,7 @@ from .inanna_bridge import process_interaction
 
 _manifesto = Manifesto()
 _trust_matrix = TrustMatrix()
-_AGENT = "bana"
+_AGENT = "bana_agent"
 
 
 def execute_task(action: str, entity: str, task, *args, **kwargs):
