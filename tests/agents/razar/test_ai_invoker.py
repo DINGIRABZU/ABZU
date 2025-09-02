@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 import json
 from types import SimpleNamespace
 from pathlib import Path
+from typing import Any
 
 import agents.razar.ai_invoker as ai_invoker
 
@@ -84,3 +85,45 @@ def test_handover_returns_confirmation(monkeypatch, tmp_path: Path) -> None:
     assert patch_records[0]["event"] == "no_suggestion"
     assert patch_records[0]["name"] == "alpha"
     assert "suggestion" not in patch_records[0]
+
+
+def test_handover_applies_code_repair(monkeypatch, tmp_path: Path) -> None:
+    module_file = tmp_path / "mod.py"
+    test_file = tmp_path / "test_mod.py"
+    suggestion = {
+        "module": str(module_file),
+        "tests": [str(test_file)],
+        "error": "boom",
+    }
+
+    def fake_loader(name: str, url: str, patch_context=None):
+        return SimpleNamespace(__name__=name), {}, suggestion
+
+    called: dict[str, Any] = {}
+
+    def fake_repair(module_path: Path, tests, error, *, models=None):
+        called["module"] = module_path
+        called["tests"] = list(tests)
+        called["error"] = error
+        return True
+
+    monkeypatch.setattr(ai_invoker.remote_loader, "load_remote_agent", fake_loader)
+    monkeypatch.setattr(ai_invoker.code_repair, "repair_module", fake_repair)
+
+    inv_log = tmp_path / "inv.json"
+    patch_log = tmp_path / "patch.json"
+    monkeypatch.setattr(ai_invoker, "INVOCATION_LOG_PATH", inv_log)
+    monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", patch_log)
+
+    config = {"agents": [{"name": "beta", "endpoint": "http://agent"}]}
+    cfg = tmp_path / "config.json"
+    cfg.write_text(json.dumps(config), encoding="utf-8")
+
+    result = ai_invoker.handover(config_path=cfg)
+    assert result == suggestion
+    assert called["module"] == module_file
+    assert called["tests"] == [test_file]
+    assert called["error"] == "boom"
+
+    log = json.loads(patch_log.read_text(encoding="utf-8"))
+    assert log[0]["applied"] is True
