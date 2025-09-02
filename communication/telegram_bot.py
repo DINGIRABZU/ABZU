@@ -1,4 +1,9 @@
-"""Telegram bot forwarding messages to the avatar."""
+"""Telegram bot forwarding messages to the avatar.
+
+- **Endpoint:** ``POST /telegram/webhook``
+- **Auth:** Bot token
+- **Linked services:** Nazarick Agents
+"""
 
 from __future__ import annotations
 

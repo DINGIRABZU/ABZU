@@ -1,4 +1,9 @@
-"""Operator command API exposing the :class:`OperatorDispatcher`."""
+"""Operator command API exposing the :class:`OperatorDispatcher`.
+
+- **Endpoints:** ``POST /operator/command``, ``POST /operator/upload``
+- **Auth:** Bearer token
+- **Linked agents:** Orchestration Master via Crown, RAZAR
+"""
 
 from __future__ import annotations
 

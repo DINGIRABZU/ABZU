@@ -5,6 +5,10 @@ from __future__ import annotations
 This module posts JSON payloads to the Primordials API. It is intentionally
 lightweight and relies only on the standard library to avoid additional
 runtime dependencies.
+
+- **Endpoints:** ``POST /metrics``, ``GET /health``
+- **Auth:** Bearer token
+- **Linked services:** Primordials
 """
 
 __version__ = "0.1.1"

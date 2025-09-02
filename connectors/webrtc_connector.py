@@ -4,6 +4,10 @@ Configuration flags (``ENABLE_DATA``, ``ENABLE_AUDIO``, ``ENABLE_VIDEO``)
 toggle corresponding streams. Track helpers from
 ``communication.webrtc_server`` gracefully return ``None`` when disabled or
 unavailable, allowing clients to fall back to data-only operation.
+
+- **Endpoint:** ``POST /call``
+- **Auth:** JWT
+- **Linked services:** Nazarick Web Console
 """
 
 from __future__ import annotations

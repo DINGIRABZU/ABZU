@@ -11,6 +11,10 @@ in tests:
 Authentication is handled by a lightweight OAuth2 bearer token system. Real
 deployments would integrate with a dedicated identity provider and persistent
 storage.
+
+- **Endpoints:** ``/health``, ``POST /glm-command``, ``/avatar-frame``, ``/music``
+- **Auth:** Bearer token
+- **Linked services:** Open WebUI console
 """
 
 from __future__ import annotations
