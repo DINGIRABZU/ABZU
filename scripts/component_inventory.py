@@ -34,6 +34,7 @@ INDEX_MD = REPO_ROOT / "docs" / "component_index.md"
 SNAPSHOT_JSON = REPO_ROOT / "docs" / "component_status.json"
 INDEX_JSON = REPO_ROOT / "component_index.json"
 COVERAGE_SVG = REPO_ROOT / "coverage.svg"
+CONNECTOR_INDEX = REPO_ROOT / "docs" / "connectors" / "CONNECTOR_INDEX.md"
 
 
 @dataclass
@@ -263,6 +264,7 @@ def verify_component_versions(index_path: Path) -> None:
     except (json.JSONDecodeError, FileNotFoundError):
         return
     mismatches: list[str] = []
+    missing: list[str] = []
     for component in data.get("components", []):
         rel = component.get("path", "")
         comp_path = REPO_ROOT / rel
@@ -275,13 +277,77 @@ def verify_component_versions(index_path: Path) -> None:
         except Exception:
             continue
         version = extract_version(tree)
-        if version != component.get("version"):
+        if version == "0.0.0":
+            missing.append(f"{component.get('id')}: missing __version__ in {rel}")
+        elif version != component.get("version"):
             mismatches.append(
                 f"{component.get('id')}: {version} != {component.get('version')}"
             )
+    messages: list[str] = []
+    if missing:
+        messages.append("Missing __version__ declarations:\n" + "\n".join(missing))
     if mismatches:
-        msg = "Version mismatch with component_index.json:\n" + "\n".join(mismatches)
-        raise SystemExit(msg)
+        messages.append(
+            "Version mismatch with component_index.json:\n" + "\n".join(mismatches)
+        )
+    if messages:
+        raise SystemExit("\n\n".join(messages))
+
+
+def verify_connector_registry(index_path: Path) -> None:
+    """Ensure connector registry entries exist and versions align."""
+    try:
+        text = index_path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return
+    mismatches: list[str] = []
+    missing: list[str] = []
+    registered_paths: set[Path] = set()
+    for line in text.splitlines():
+        if not line.startswith("|") or line.startswith("| id "):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 8:
+            continue
+        connector_id = cells[0].strip("`")
+        version = cells[2]
+        code_cell = cells[7]
+        match = re.search(r"\(([^)]+)\)", code_cell)
+        if not match:
+            continue
+        rel_path = match.group(1)
+        abs_path = (index_path.parent / rel_path).resolve()
+        registered_paths.add(abs_path)
+        if not abs_path.exists():
+            missing.append(f"{connector_id}: missing file {rel_path}")
+            continue
+        try:
+            tree = ast.parse(abs_path.read_text(encoding="utf-8"))
+        except Exception:
+            missing.append(f"{connector_id}: unreadable file {rel_path}")
+            continue
+        module_version = extract_version(tree)
+        if module_version == "0.0.0":
+            missing.append(f"{connector_id}: missing __version__ in {rel_path}")
+        elif module_version != version:
+            mismatches.append(
+                f"{connector_id}: {module_version} != {version} ({rel_path})"
+            )
+    connector_dir = REPO_ROOT / "connectors"
+    for file in connector_dir.glob("*.py"):
+        if file.name == "__init__.py":
+            continue
+        if file.resolve() not in registered_paths:
+            missing.append(
+                f"unregistered connector: {file.relative_to(REPO_ROOT).as_posix()}"
+            )
+    messages: list[str] = []
+    if missing:
+        messages.append("Connector registry issues:\n" + "\n".join(missing))
+    if mismatches:
+        messages.append("Connector version mismatches:\n" + "\n".join(mismatches))
+    if messages:
+        raise SystemExit("\n\n".join(messages))
 
 
 def main() -> None:
@@ -299,6 +365,7 @@ def main() -> None:
     coverage = parse_coverage_svg(COVERAGE_SVG)
     update_coverage(INDEX_JSON, coverage)
     verify_component_versions(INDEX_JSON)
+    verify_connector_registry(CONNECTOR_INDEX)
 
 
 if __name__ == "__main__":

@@ -375,6 +375,7 @@ All exchanges between RAZAR, Crown, and Operator must append JSON lines to
 - Maintain clear module boundaries to prevent tight coupling.
 - Every module, connector, and service must declare a `__version__` field for traceability.
 - `scripts/verify_versions.py` verifies source versions match `component_index.json`.
+- Continuous integration runs `scripts/component_inventory.py` to confirm every module has a `__version__` and that connectors are properly registered.
 
 #### Placeholder Elimination
 
@@ -413,6 +414,7 @@ All endpoints must publish machine-validated schemas:
 - Update the registry whenever a connector's interface, version, or status changes.
 - Validate updates with `pre-commit run --files docs/connectors/CONNECTOR_INDEX.md docs/INDEX.md`.
 - Ensure connectors expose a top-level `__version__`, implement `start_call` and `close_peers`, and sync versions with `component_index.json`.
+- CI executes `scripts/component_inventory.py` to fail builds when connector versions mismatch the registry or required entries are missing.
 - Run `python scripts/health_check_connectors.py` before merging to confirm connectors respond.
 
 ### API & Connector Schema Protocol
