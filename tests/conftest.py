@@ -207,6 +207,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_orchestrator.py"),
     str(ROOT / "tests" / "test_play_ritual_music_smoke.py"),
     str(ROOT / "tests" / "test_play_ritual_music.py"),
+    str(ROOT / "tests" / "test_bana_narrative_engine.py"),
     str(ROOT / "tests" / "test_mix_tracks_emotion.py"),
     str(ROOT / "tests" / "test_sonic_emotion_mapper.py"),
     str(ROOT / "tests" / "test_transformation_smoke.py"),
