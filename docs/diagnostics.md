@@ -43,10 +43,11 @@ attempt as a JSON line to `logs/razar.log`. Entries capture the `event`,
 as `log_error`, `log_recovery` and `log_quarantine` provide a consistent,
 machine-parsable audit trail.
 
-## TODO
-- [x] Distinguish between vital modules and optional components to prioritise recovery efforts.
-- [x] Isolate failing modules so remaining services continue operating in a degraded but functional state.
-- [x] Record detected failures and recovery attempts in structured logs for auditability.
-- [x] Implement automated recovery routines to reinstall or stub missing modules during boot diagnostics.
-- [x] Add log repair and quarantine for corrupted entries when replaying state from backups.
-- [x] Introduce retry and restart logic when API health checks fail repeatedly.
+## Completed Work
+
+- Distinguished between vital modules and optional components to prioritise recovery efforts.
+- Isolated failing modules so remaining services continue operating in a degraded but functional state.
+- Recorded detected failures and recovery attempts in structured logs for auditability.
+- Implemented automated recovery routines to reinstall or stub missing modules during boot diagnostics.
+- Added log repair and quarantine for corrupted entries when replaying state from backups.
+- Introduced retry and restart logic when API health checks fail repeatedly.
