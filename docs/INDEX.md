@@ -169,17 +169,20 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
-| [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Personality Layer | A four-phase state machine powers the **Albedo** layer, signalling Nazarick agents and driving responses through a re... | - |
+| [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Deprecated | See [Albedo Guide](Albedo_GUIDE.md). | - |
+| [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |
 | [BLUEPRINT_EXPORT.md](BLUEPRINT_EXPORT.md) | Blueprint Export | This snapshot lists major documentation assets with links that can be pinned to a specific commit. For general contri... | - |
 | [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) | Contributor Guide | - | - |
 | [CONTRIBUTOR_HANDBOOK.md](CONTRIBUTOR_HANDBOOK.md) | Contributor Handbook | This handbook helps new contributors get set up, understand the repository layout, and work through common developmen... | - |
 | [CORPUS_MEMORY.md](CORPUS_MEMORY.md) | Corpus Memory | This repository preserves several collections of source texts used by the music and language tools. Each directory se... | - |
-| [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md) | Crown Agent Overview | The diagram below shows how the main components interact when using the console. A later section outlines deployment... | `../init_crown_agent.py`, `../razar/crown_handshake.py`, `../start_dev_agents.py` |
+| [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md) | Deprecated | See [Crown Guide](Crown_GUIDE.md). | - |
 | [CRYSTAL_CODEX.md](CRYSTAL_CODEX.md) | CRYSTAL CODEX | The codex gathers the mission, architecture diagrams, module index, dependency matrix, testing strategy and style pol... | `../archetype_feedback_loop.py`, `../auto_retrain.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../music_generation.py`, `../server.py`, `../spiral_memory.py`, `../tools/preflight.py`, `../vector_memory.py`, `../video_stream.py` |
+| [Crown_GUIDE.md](Crown_GUIDE.md) | Crown Guide | - | - |
 | [DASHBOARD.md](DASHBOARD.md) | Metrics Dashboard | This dashboard visualises recent model performance and the predicted best LLM. | - |
 | [ETHICS_POLICY.md](ETHICS_POLICY.md) | Ethics Policy | This document outlines the minimum rules for handling data while working with Spiral OS. | - |
 | [ETHICS_VALIDATION.md](ETHICS_VALIDATION.md) | Ethics Validation | `EthicalValidator` inspects prompts before they reach the language models. Keyword scanning is combined with a semant... | - |
-| [INANNA_CORE.md](INANNA_CORE.md) | INANNA Core Configuration | `crown_config/INANNA_CORE.yaml` defines the default settings used by the Crown agent. Each option can be overridden b... | `../memory/cortex.py`, `../memory/emotional.py`, `../memory/mental.py`, `../memory/narrative_engine.py`, `../memory/spiritual.py`, `../tests/test_corpus_memory.py`, `../tests/test_launch_servants_script.py`, `../tests/test_vector_memory.py` |
+| [INANNA_CORE.md](INANNA_CORE.md) | Deprecated | See [INANNA Guide](INANNA_GUIDE.md). | - |
+| [INANNA_GUIDE.md](INANNA_GUIDE.md) | INANNA Guide | - | - |
 | [Ignition.md](Ignition.md) | Ignition | RAZAR coordinates system boot and records runtime health. Components are grouped by priority so operators can track s... | - |
 | [JSON_STRUCTURES.md](JSON_STRUCTURES.md) | JSON Structures and Invocations | This page describes the small JSON files used by Spiral OS and how to trigger registered invocations. | - |
 | [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md) | Key Documents | The files listed here are foundational and must never be deleted or renamed. For every protected file, contributors m... | `../scripts/check_env.py` |
@@ -187,9 +190,11 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [LLM_MODELS.md](LLM_MODELS.md) | LLM Models | This document describes the language models used in SPIRAL_OS and how to download them. | - |
 | [MAINTENANCE.md](MAINTENANCE.md) | Maintenance | - | - |
 | [MISSION.md](MISSION.md) | Mission | - | - |
+| [Nazarick_GUIDE.md](Nazarick_GUIDE.md) | Nazarick Guide | - | - |
 | [PROJECT_STATUS.md](PROJECT_STATUS.md) | Project Status | ![Coverage](../coverage.svg) | - |
 | [QUALITY_EVALUATION.md](QUALITY_EVALUATION.md) | Quality Evaluation | - | - |
-| [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | Bootstrapper for local services, operator protocol alignment, and mission brief exchange with the CROWN stack. | `../agents/nazarick/service_launcher.py`, `../agents/razar/ai_invoker.py`, `../agents/razar/boot_orchestrator.py`, `../agents/razar/checkpoint_manager.py`, `../agents/razar/code_repair.py`, `../agents/razar/crown_link.py`, `../agents/razar/doc_sync.py`, `../agents/razar/health_checks.py`, `../agents/razar/lifecycle_bus.py`, `../agents/razar/mission_logger.py`, `../agents/razar/module_builder.py`, `../agents/razar/quarantine_manager.py`, `../agents/razar/runtime_manager.py`, `../razar/adaptive_orchestrator.py`, `../razar/boot_orchestrator.py`, `../razar/checkpoint_manager.py`, `../razar/cocreation_planner.py`, `../razar/crown_handshake.py`, `../razar/crown_link.py`, `../razar/doc_sync.py`, `../razar/environment_builder.py`, `../razar/health_checks.py`, `../razar/issue_analyzer.py`, `../razar/mission_logger.py`, `../razar/module_sandbox.py`, `../razar/quarantine_manager.py`, `../razar/recovery_manager.py`, `../razar/status_dashboard.py` |
+| [RAZAR_AGENT.md](RAZAR_AGENT.md) | Deprecated | See [RAZAR Guide](RAZAR_GUIDE.md). | - |
+| [RAZAR_GUIDE.md](RAZAR_GUIDE.md) | RAZAR Guide | - | - |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) | Repository Structure | The following table outlines the top-level layout of this repository. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
@@ -271,16 +276,18 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [memory_architecture.md](memory_architecture.md) | Memory Architecture | The system layers multiple specialised stores, each recording a different facet of experience. Every layer supports t... | `../memory/cortex.py`, `../memory/emotional.py`, `../memory/mental.py`, `../memory/narrative_engine.py`, `../memory/spiritual.py`, `../scripts/init_memory_layers.py` |
 | [memory_cortex.md](memory_cortex.md) | Cortex Memory Search | The `memory.cortex` module stores spiral decisions as JSON lines under `data/cortex_memory_spiral.jsonl`. Each entry... | - |
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
-| [memory_layer.md](memory_layer.md) | Memory Layer | The `memory.cortex` module stores spiral decisions and maintains an index for fast retrieval. Each entry is appended... | - |
+| [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
+| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | - | - |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |
 | [ml_environment.md](ml_environment.md) | ML Environment Setup | This guide explains how to create an isolated Python environment and start Jupyter notebooks for experimenting with S... | - |
 | [module_execution_flow.md](module_execution_flow.md) | Module Execution Flow | Overview of key modules with their inputs, core processing, outputs, and error handling. Flowcharts summarize the exe... | - |
 | [monitoring.md](monitoring.md) | Monitoring | The application writes JSON-formatted logs to `logs/INANNA_AI.log`. The file rotates when it reaches roughly 10 MB, k... | - |
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
-| [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | This guide summarizes core agents within ABZU's Nazarick system. Each agent aligns with a chakra layer, defines its m... | `../SPIRAL_OS/qnl_engine.py`, `../agents/asian_gen/creative_engine.py`, `../agents/bana/bio_adaptive_narrator.py`, `../agents/cocytus/prompt_arbiter.py`, `../agents/demiurge/strategic_simulator.py`, `../agents/ecosystem/aura_capture.py`, `../agents/ecosystem/mare_gardener.py`, `../agents/land_graph/geo_knowledge.py`, `../agents/nazarick/ethics_manifesto.py`, `../agents/nazarick/narrative_scribe.py`, `../agents/nazarick/trust_matrix.py`, `../agents/pandora/persona_emulator.py`, `../agents/pleiades/signal_router.py`, `../agents/pleiades/star_map.py`, `../agents/sebas/compassion_module.py`, `../agents/shalltear/fast_inference_agent.py`, `../agents/victim/security_canary.py`, `../crown_prompt_orchestrator.py`, `../memory_scribe.py`, `../orchestration_master.py` |
+| [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
+| [nazarick_agents.md](nazarick_agents.md) | Deprecated | See [Nazarick Guide](Nazarick_GUIDE.md). | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
-| [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | This guide explains how biosignals become `StoryEvent` objects inside Nazarick. Each event links to a servant agent a... | `../agents/bana/bio_adaptive_narrator.py`, `../bana/event_structurizer.py`, `../memory/cortex.py`, `../memory/emotional.py`, `../memory/narrative_engine.py`, `../scripts/ingest_biosignals.py`, `../scripts/ingest_biosignals_jsonl.py` |
+| [nazarick_narrative_system.md](nazarick_narrative_system.md) | Deprecated | See [Narrative Engine Guide](narrative_engine_GUIDE.md). | - |
 | [nazarick_web_console.md](nazarick_web_console.md) | Nazarick Web Console | The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing m... | `../connectors/webrtc_connector.py`, `../operator_api.py` |
 | [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onbo... | - |
 | [onboarding/test_planning.md](onboarding/test_planning.md) | Test Planning Guide | Instructions for opening a "Test Plan" issue to coordinate tests across chakras and maintain coverage goals. | - |
@@ -288,7 +295,8 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [operations.md](operations.md) | Operations | - | - |
-| [operator_protocol.md](operator_protocol.md) | Operator Protocol | Outlines the operator-facing interfaces used to control the Crown and RAZAR stack. | - |
+| [operator_interface_GUIDE.md](operator_interface_GUIDE.md) | Operator Interface Guide | - | - |
+| [operator_protocol.md](operator_protocol.md) | Deprecated | See [Operator Interface Guide](operator_interface_GUIDE.md). | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | Sources: [`../os_guardian/perception.py`](../os_guardian/perception.py), [`../os_guardian/planning.py`](../os_guardia... | `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py` |
 | [os_guardian_container.md](os_guardian_container.md) | OS Guardian Container | This guide covers running the `os_guardian` tools inside Docker. | - |
 | [os_guardian_permissions.md](os_guardian_permissions.md) | OS Guardian Permission Policies | The `safety` module guards high-risk actions executed by the OS Guardian utilities. Permissions are configured with e... | - |
