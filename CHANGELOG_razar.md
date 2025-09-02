@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 ### Changed
 - Boot orchestrator now persists the handshake response before starting
   components and triggers `crown_model_launcher.sh` when `GLM4V` is absent.
+- Bumped `crown_handshake` to 0.2.4 and recorded version in connector registry.
 
 ## [0.1.0] - 2025-08-30
 

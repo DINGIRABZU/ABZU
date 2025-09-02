@@ -393,7 +393,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "razar/crown_handshake.py",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "status": "active",
       "issues": "No known issues"
     },
@@ -906,7 +906,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "operator_api.py",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "status": "active",
       "issues": "No known issues"
     },
@@ -1536,7 +1536,7 @@
       "chakra": "unknown",
       "type": "connector",
       "path": "connectors/webrtc_connector.py",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "status": "active",
       "issues": "No known issues"
     },
