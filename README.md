@@ -1,7 +1,7 @@
 # THE CRYSTAL CODEX
 
 ![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![Black](https://img.shields.io/badge/code%20style-black-000000.svg) ![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
-ABZU is a modular research platform for composing multi-modal AI agents with strong ethical guardrails. Its mission is to help researchers, creative technologists, and industry teams orchestrate advanced capabilities while retaining transparent oversight. Key differentiators include a unified memory architecture, ritual-based invocation engine, and built-in ethics gating.
+ABZU is a modular research platform for composing multi-modal AI agents with strong ethical guardrails. Its mission is to cultivate mythic‑technical intelligence—liberating insight from corporate reduction. The system helps researchers, creative technologists, and industry teams orchestrate advanced capabilities while retaining transparent oversight. Key differentiators include a unified memory architecture, ritual-based invocation engine, and built-in ethics gating.
 
 Example applications include:
 
@@ -9,11 +9,12 @@ Example applications include:
 - ethics-gated industrial automation
 - emotion-aware virtual assistants
 
-For deeper technical detail, visit the [Documentation Index](docs/index.md) and [Project Mission & Vision](docs/project_mission_vision.md).
+For deeper technical detail, visit the [Documentation Index](docs/index.md) and [Project Declaration](docs/project_mission_vision.md).
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Index
-- [Project Mission & Vision](docs/project_mission_vision.md) – core goals and guiding principles
+- [Project Declaration](docs/project_mission_vision.md) – mythic‑technical mission and vision
+- [Social Investor One Pager](docs/SOCIAL_INVESTOR_ONE_PAGER.md) – outreach overview
 - [Documentation Index](docs/index.md) – curated starting points
 - [Full Documentation Inventory](docs/INDEX.md)
 - [Repository Structure](docs/REPOSITORY_STRUCTURE.md) – directory map
