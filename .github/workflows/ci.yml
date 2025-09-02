@@ -83,6 +83,9 @@ jobs:
 import importlib, sys
 sys.exit(0 if importlib.util.find_spec('pytest_cov') else 1)
 PY
+      - name: Scan for TODO/FIXME markers
+        run: |
+          python scripts/check_placeholders.py $(git ls-files)
       - name: Run tests
         run: pytest --cov --cov-fail-under=90
       - name: Export coverage metrics
@@ -98,6 +101,33 @@ PY
         with:
           name: pytest-metrics
           path: monitoring/pytest_metrics.prom
+      - name: Build component index
+        run: python scripts/build_component_index.py
+      - name: Ensure component statuses present
+        run: |
+          python - <<'PY'
+import json, sys
+data = json.load(open('component_index.json'))
+missing = [c['id'] for c in data.get('components', []) if not c.get('status')]
+if missing:
+    print('Missing status for components:', ', '.join(missing))
+    sys.exit(1)
+PY
+      - name: Archive component index
+        run: |
+          mkdir -p data/archives
+          cp component_index.json "data/archives/component_index_${GITHUB_SHA}.json"
+      - name: Verify folder layout
+        run: |
+          if git status --short | grep '^??' | grep -v '^?? data/archives/'; then
+            echo "Stray files detected outside expected directories"
+            exit 1
+          fi
+      - name: Upload component index artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-index
+          path: data/archives/component_index_${GITHUB_SHA}.json
       - name: Validate component index schema
         run: jsonschema -i component_index.json schemas/component_index.schema.json
 
