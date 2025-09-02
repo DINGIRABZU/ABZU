@@ -337,3 +337,9 @@ PY
 | Version | Date | Summary |
 |---------|------|---------|
 | [Unreleased](../CHANGELOG.md#documentation-audit) | - | Added storage back-end options, initialization commands, and query examples for cortex, emotional, mental, spiritual, and narrative stores. |
+
+## Dataset Versions
+
+| Commit | Dataset |
+| --- | --- |
+| [eac758a](https://github.com/search?q=eac758a06df7a5e1db89b510d690d415a2536d46) | [biosignal samples](../data/biosignals/README.md) |

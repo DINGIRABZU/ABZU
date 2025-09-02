@@ -3,15 +3,21 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from data.biosignals import DATASET_HASHES, hash_file
 from memory import narrative_engine
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "biosignals"
 
 
 def ingest_file(jsonl_path: Path) -> None:
     """Read ``jsonl_path`` and store each row as a structured event."""
+    expected = DATASET_HASHES.get(jsonl_path.name)
+    actual = hash_file(jsonl_path)
+    if expected and actual != expected:
+        raise ValueError(f"hash mismatch for {jsonl_path.name}")
+
     with jsonl_path.open("r", encoding="utf-8") as f:
         for line in f:
             if not line.strip():
