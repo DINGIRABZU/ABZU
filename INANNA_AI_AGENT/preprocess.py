@@ -8,6 +8,7 @@ downstream benchmarking.
 from __future__ import annotations
 
 import json
+import logging
 import re
 from pathlib import Path
 from typing import Dict, List
@@ -22,6 +23,9 @@ except Exception:  # pragma: no cover - optional dependency
     SentenceTransformer = None  # type: ignore
 
 import markdown
+
+
+logger = logging.getLogger(__name__)
 
 
 class _HTMLStripper:
@@ -88,8 +92,8 @@ def preprocess_texts(
             try:
                 processed[name] = json.loads(cache_file.read_text(encoding="utf-8"))
                 continue
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning("Failed to read token cache %s: %s", cache_file, exc)
         tokens = tokenize(normalize_whitespace(strip_markdown(text)))
         processed[name] = tokens
         cache_file.write_text(json.dumps(tokens), encoding="utf-8")
@@ -122,8 +126,8 @@ def generate_embeddings(
             try:
                 embeddings[name] = np.load(cache_file)
                 continue
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning("Failed to read embedding cache %s: %s", cache_file, exc)
 
         text = " ".join(tokens)
         emb = model.encode(text)
