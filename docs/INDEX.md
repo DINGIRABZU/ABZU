@@ -172,6 +172,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Deprecated | See [Albedo Guide](Albedo_GUIDE.md). | - |
 | [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |
 | [BLUEPRINT_EXPORT.md](BLUEPRINT_EXPORT.md) | Blueprint Export | This snapshot lists major documentation assets with links that can be pinned to a specific commit. For general contri... | - |
+| [CI_OVERVIEW.md](CI_OVERVIEW.md) | CI Overview | This guide summarizes the repository's continuous integration workflow. | - |
 | [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) | Contributor Guide | - | - |
 | [CONTRIBUTOR_HANDBOOK.md](CONTRIBUTOR_HANDBOOK.md) | Contributor Handbook | This handbook helps new contributors get set up, understand the repository layout, and work through common developmen... | - |
 | [CORPUS_MEMORY.md](CORPUS_MEMORY.md) | Corpus Memory | This repository preserves several collections of source texts used by the music and language tools. Each directory se... | - |
