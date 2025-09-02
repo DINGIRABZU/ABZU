@@ -27,6 +27,12 @@ flowchart TD
 Requires `pyyaml`, `prometheus_client`, `websockets`, and a reachable `CROWN_WS_URL`.
 
 ## Deployment
+1. `boot_orchestrator` exchanges a mission brief with Crown via
+   `crown_handshake.perform` and writes the acknowledgement, capabilities, and
+   downtime details to `logs/razar_state.json`.
+2. If the handshake does not report `GLM-4.1V`, it runs
+   `crown_model_launcher.sh` and appends the launch outcome to the same state
+   file.
 ```bash
 python -m razar.boot_orchestrator --mission demo
 ```
