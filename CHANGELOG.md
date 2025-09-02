@@ -46,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added INANNA core deployment notes and memory component entries in
   `component_index.json`.
 - Documented RAZAR environment configuration schema in `docs/RAZAR_AGENT.md`.
+- Added configuration schema diagrams, ignition example with log excerpts, and mission-brief archive notes to `docs/RAZAR_AGENT.md`; refreshed protocol compliance dashboard.
+- Linked protocol compliance dashboard from RAZAR agent guide.
 - Added `__version__` fields across modules and added version checks in `scripts/component_inventory.py`.
 - Documented Nazarick agent triggers for Albedo state transitions and added
   state-to-channel table; refreshed `docs/INDEX.md`.

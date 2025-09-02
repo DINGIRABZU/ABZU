@@ -33,7 +33,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Detailed handover and patch application flow with `ai_invoker` → `code_repair` diagram and patch log reference.
 - Added unit tests for `ai_invoker.handover` and `code_repair.repair_module`.
 
-- Expanded guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
+ - Expanded guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
+- Added schema diagrams for configuration files and a full ignition example with log excerpts and mission-brief archive notes.
+
 ### Changed
 - Boot orchestrator now persists the handshake response before starting
   components and triggers `crown_model_launcher.sh` when `GLM4V` is absent.
