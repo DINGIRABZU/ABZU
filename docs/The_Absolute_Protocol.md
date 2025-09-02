@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.82
-**Last updated:** 2025-09-05
+**Version:** v1.0.83
+**Last updated:** 2025-09-10
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -20,8 +20,34 @@ ABZU adheres to a consistent top-level directory layout:
 
 See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidance on the repository layout.
 
+## Repository Layout Protocol
+Repositories must keep these directories at the root:
+
+- `src/`
+- `docs/`
+- `tests/`
+- `data/`
+
 ## Version Synchronization
 Every module, connector, and service must expose a top-level `__version__` string that matches the entry in `component_index.json`. Update both the source and the index together and run `scripts/verify_versions.py` to confirm alignment; the `verify-versions` pre-commit hook blocks mismatches. Experimental components still require `__version__` and should be marked `experimental` in `component_index.json`. Documentation-only changes may leave versions untouched but must still run `scripts/verify_versions.py` to validate alignment.
+
+## Component Status Protocol
+`component_index.json` entries must include:
+
+- `id`
+- `type`
+- `path`
+- `version`
+- `status`
+- `issues`
+- `chakra`
+
+Statuses define lifecycle expectations:
+
+- `active` – production-ready and supported
+- `deprecated` – still available but replaced and slated for removal
+- `experimental` – unstable, subject to rapid change
+- `broken` – failing or incomplete; exclude from releases until fixed
 
 ## Change-Justification Field
 Pull requests must fill out the **Change justification** field in the template using the format "I did X on Y to obtain Z, expecting behavior B." This statement appears in the PR description and mirrors the commit message. Reverts should reference the original commit and rationale.
@@ -48,6 +74,7 @@ Confirm these items before submitting a pull request:
 
  - [ ] Key-document summaries verified with `scripts/verify_doc_hashes.py`
  - [ ] Version bumps applied and synchronized in `component_index.json`
+ - [ ] If any component or connector changes, rebuild `component_index.json` and confirm registry updates
  - [ ] Connector registry updated for added or modified connectors ([docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md))
  - [ ] Connector entries verified — each connector lists version, endpoints, auth method, status, and doc links
  - [ ] Obsolete or failing connectors flagged as `deprecated` or `broken` and scheduled for maintenance.
@@ -382,6 +409,7 @@ All endpoints must publish machine-validated schemas:
 ### Connector Registry Protocol
 
 - Register each connector in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) with purpose, version, endpoints, authentication method, status, and links to documentation and source code.
+- Any connector change must update `docs/connectors/CONNECTOR_INDEX.md`.
 - Update the registry whenever a connector's interface, version, or status changes.
 - Validate updates with `pre-commit run --files docs/connectors/CONNECTOR_INDEX.md docs/INDEX.md`.
 - Ensure connectors expose a top-level `__version__`, implement `start_call` and `close_peers`, and sync versions with `component_index.json`.
