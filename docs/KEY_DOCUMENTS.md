@@ -56,6 +56,14 @@ graph LR
 | [Change Intent Ledger](../logs/change_intent.jsonl) | Records commit intents and observed behavior | Each commit |
 | [Task Registry](../logs/task_registry.jsonl) | Records completed tasks with metadata | Each merge |
 
+## Validation Commands
+
+Run these helpers to verify key registries stay consistent:
+
+- `python scripts/check_component_index_json.py`
+- `python scripts/check_connector_index.py`
+- `python scripts/check_dependency_registry.py`
+
 ## Task Registry
 
 `logs/task_registry.jsonl` stores one JSON object per line with the fields:
