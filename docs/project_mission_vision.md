@@ -1,7 +1,7 @@
 # ABZU Project Declaration
 
-**Version:** v1.2.0
-**Last updated:** 2025-09-30
+**Version:** v1.3.0
+**Last updated:** 2025-10-01
 
 ABZU ∴ Vision & System Overview (BANA Narrative Engine)
 
@@ -198,6 +198,7 @@ link.springer.com
 .
 
 ## Change Log
+- v1.3.0 (2025-10-01): Replaced mission, vision, purpose, applications, innovation, and explanation sections with updated ABZU Project Declaration content.
 - v1.2.0 (2025-09-30): Integrated ABZU Project Declaration.
 - v1.1.0 (2025-09-15): Expanded mission and vision content and added purpose, applications, innovation, and explanation sections.
 - v1.0.0 (2025-09-01): Initial version.
