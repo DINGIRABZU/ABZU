@@ -81,7 +81,7 @@ Confirm these items before submitting a pull request:
  - [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
 
 ## Coverage & Testing Requirements
-Each milestone must uphold repository coverage thresholds of **at least 90%** by running `pytest --cov --cov-fail-under=90`; the CI pipeline fails when coverage drops below this target. Audit any failing tests and record them in [docs/testing/failure_inventory.md](testing/failure_inventory.md) before merging. Placeholder markers such as `TODO` or `FIXME` are forbidden—the `scan-todo-fixme` pre-commit hook (`scripts/scan_todo_fixme.py`) blocks commits containing them. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
+Each milestone must uphold repository coverage thresholds of **at least 90%**. Run `pytest --cov`; CI parses the results and fails when any active component drops below the target. Audit failing tests and record them in [docs/testing/failure_inventory.md](testing/failure_inventory.md) before merging. Placeholder markers such as `TODO` or `FIXME` are forbidden—the `scan-todo-fixme` pre-commit hook (`scripts/scan_todo_fixme.py`) blocks commits containing them. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
 
 ### Test Failure Audit
 Log each failing test with date, category, and remediation steps in [docs/testing/failure_inventory.md](testing/failure_inventory.md). Update entries once resolved and rerun affected tests to confirm fixes.
@@ -108,7 +108,7 @@ Before opening a pull request, confirm each item:
 - [ ] Milestones touching ignition components run `scripts/validate_ignition.py` and `pytest --cov`; see [ignition_flow.md](ignition_flow.md)
 - [ ] Ignition step changes reflected in [bana_engine.md](bana_engine.md) and Nazarick docs such as [nazarick_narrative_system.md](nazarick_narrative_system.md)
 - [ ] Each `component_index.json` entry declares a lifecycle `status` (`active`, `deprecated`, or `experimental`) and links to an `adr` describing major changes
-- [ ] Tests follow [The Absolute Pytest](the_absolute_pytest.md); run `pytest --cov --cov-fail-under=90` to ensure ≥90% coverage
+ - [ ] Tests follow [The Absolute Pytest](the_absolute_pytest.md); run `pytest --cov` and ensure ≥90% coverage
 - [ ] No `TODO` or `FIXME` markers in committed code (`pre-commit` `scan-todo-fixme` hook)
 - [ ] "Test Plan" issue filed per [Test Planning Guide](onboarding/test_planning.md) outlining scope, chakra, and coverage goals
 - [ ] Connector registry updated:
@@ -205,7 +205,7 @@ When contributing, consult resources in this order:
 Code coverage must remain **at or above 90%**. Generate and report coverage using:
 
 ```bash
-pytest --cov --cov-fail-under=90
+pytest --cov
 coverage report
 coverage-badge -o coverage.svg
 ```
@@ -215,9 +215,15 @@ status documents.
 
 ## Pytest Protocol
 
-- Achieve **over 90%** coverage when running `pytest --cov --cov-fail-under=90`.
+- Achieve **over 90%** coverage when running `pytest --cov`.
 - Organize tests within chakra-aligned directories and include matching metadata fields.
 - Record updated coverage metrics in `component_index.json` whenever tests change.
+
+## Testing Workflow
+
+1. Execute `pytest --cov` locally.
+2. Run `python scripts/export_coverage.py` to update metrics and fail if any active component drops below **90%** coverage.
+3. Ensure `pre-commit run --files <changed_files>` passes; the `scan-todo-fixme` hook rejects `TODO` and `FIXME` markers.
 
 ## Documentation Standards
 
