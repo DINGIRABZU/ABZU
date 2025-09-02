@@ -106,6 +106,7 @@ The Mermaid source lives at [assets/memory_flow.mmd](assets/memory_flow.mmd).
 - **Purpose:** Persist application state with semantic tags.
 - **Implementation:** [memory/cortex.py](../memory/cortex.py)
 - **Component entry:** [component_index.md#L199](component_index.md#L199)
+- **Setup script:** [scripts/init_memory_layers.py](../scripts/init_memory_layers.py)
 
 Reader and writer locks guard the log and index so multiple threads can record
 and query safely. Helper utilities allow concurrent queries and pruning of old
@@ -156,6 +157,7 @@ PY
 - **Purpose:** Capture affective reactions and valence values.
 - **Implementation:** [memory/emotional.py](../memory/emotional.py)
 - **Component entry:** [component_index.md#L201](component_index.md#L201)
+- **Setup script:** [scripts/init_memory_layers.py](../scripts/init_memory_layers.py)
 
 Entries can be queried to modulate tone or influence downstream reasoning.
 
@@ -202,6 +204,7 @@ PY
 - **Purpose:** Hold temporary working memory for in‑progress reasoning and planning.
 - **Implementation:** [memory/mental.py](../memory/mental.py)
 - **Component entry:** [component_index.md#L202](component_index.md#L202)
+- **Setup script:** [scripts/init_memory_layers.py](../scripts/init_memory_layers.py)
 
 Items decay quickly to keep the space focused on current tasks.
 
@@ -246,6 +249,7 @@ PY
 - **Purpose:** Maintain ritual insights and symbolic states for long‑range guidance.
 - **Implementation:** [memory/spiritual.py](../memory/spiritual.py)
 - **Component entry:** [component_index.md#L208](component_index.md#L208)
+- **Setup script:** [scripts/init_memory_layers.py](../scripts/init_memory_layers.py)
 
 These records provide long‑range guidance during ceremonial flows.
 
@@ -292,6 +296,7 @@ PY
 - **Purpose:** Record story events linking actors, actions and symbolism.
 - **Implementation:** [memory/narrative_engine.py](../memory/narrative_engine.py)
 - **Component entry:** [component_index.md#L204](component_index.md#L204)
+- **Setup script:** [scripts/init_memory_layers.py](../scripts/init_memory_layers.py)
 
 Each event binds an actor, an action and optional symbolism so later modules can
 weave a coherent narrative thread across memories.
