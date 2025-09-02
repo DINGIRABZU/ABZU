@@ -130,6 +130,8 @@ PY
           path: data/archives/component_index_${GITHUB_SHA}.json
       - name: Validate component index schema
         run: jsonschema -i component_index.json schemas/component_index.schema.json
+      - name: Verify component inventory
+        run: python scripts/component_inventory.py
 
   ci:
     runs-on: ubuntu-latest
