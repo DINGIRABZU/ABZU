@@ -160,8 +160,9 @@
       "type": "module",
       "path": "data/biosignals/__init__.py",
       "version": "0.1.0",
-      "status": "stable",
-      "metrics": {"files": 10},
+      "status": "active",
+      "metrics": {"coverage": 0.0},
+      "adr": null,
       "issues": "No known issues"
     },
     {
@@ -674,8 +675,9 @@
       "type": "script",
       "path": "scripts/ingest_biosignal_events.py",
       "version": "0.2.0",
-      "status": "stable",
-      "metrics": {"hash_validation": true},
+      "status": "active",
+      "metrics": {"coverage": 0.0},
+      "adr": null,
       "issues": "No known issues"
     },
     {
@@ -684,8 +686,9 @@
       "type": "script",
       "path": "scripts/ingest_biosignals.py",
       "version": "0.2.0",
-      "status": "stable",
-      "metrics": {"hash_validation": true},
+      "status": "active",
+      "metrics": {"coverage": 0.0},
+      "adr": null,
       "issues": "No known issues"
     },
     {
@@ -694,8 +697,9 @@
       "type": "script",
       "path": "scripts/ingest_biosignals_jsonl.py",
       "version": "0.2.0",
-      "status": "stable",
-      "metrics": {"hash_validation": true},
+      "status": "active",
+      "metrics": {"coverage": 0.0},
+      "adr": null,
       "issues": "No known issues"
     },
     {
