@@ -625,6 +625,15 @@
       "issues": "No known issues"
     },
     {
+      "id": "guardian",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/guardian.py",
+      "version": "0.1.0",
+      "status": "active",
+      "issues": "No known issues"
+    },
+    {
       "id": "health_check_connectors",
       "chakra": "unknown",
       "type": "script",
