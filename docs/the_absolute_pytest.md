@@ -1,5 +1,21 @@
 # The Absolute Pytest
 
+## Chakra-Aligned Test Layout
+
+Tests mirror the system's chakra map and should live in the matching
+directory under `tests/`:
+
+- `tests/root/`
+- `tests/sacral/`
+- `tests/solar_plexus/`
+- `tests/heart/`
+- `tests/throat/`
+- `tests/third_eye/`
+- `tests/crown/`
+
+Place new tests in the directory corresponding to the component's chakra.
+Continuous integration enforces **≥90 %** coverage for all active components.
+
 ## AI Feedback Loop
 
 - `crown_prompt_orchestrator` reviews Prometheus test metrics after each run.
