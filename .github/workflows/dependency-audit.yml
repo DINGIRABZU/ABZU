@@ -20,7 +20,7 @@ jobs:
         run: python -m pip install pip-audit
 
       - name: Run pip-audit
-        run: pip-audit -r requirements.txt --format json --output pip-audit.json --severity high --strict
+        run: pip-audit -r requirements.txt -r dev-requirements.txt --format json --output pip-audit.json --severity high --strict
 
       - name: Upload pip audit report
         uses: actions/upload-artifact@v4

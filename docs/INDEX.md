@@ -164,7 +164,25 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../README_OPERATOR.md](../README_OPERATOR.md) | Operator Guide | This repository contains several command line utilities for working with the INANNA music tools and Quantum Narrative... | - |
 | [../README_QNL_OS.md](../README_QNL_OS.md) | QNL Integration Overview | The Quantum Narrative Language (QNL) bridges textual symbols with music in Spiral OS. This document explains where th... | - |
 | [../SEVEN_DIMENSIONAL_MUSIC.md](../SEVEN_DIMENSIONAL_MUSIC.md) | 7‑Dimensional Music System | This system layers sound so different beings perceive a single track in unique ways. A core melody becomes the human... | - |
+| [../agents/nazarick/albedo_agent_template.md](../agents/nazarick/albedo_agent_template.md) | Sacred Connection System | womb_reconnection_engine.py# Eternal return to source nursing_interface.py# Continuous nourishment from ZOHAR quantum... | - |
 | [../agents/nazarick/albedo_character.md](../agents/nazarick/albedo_character.md) | albedo_character.md | - | - |
+| [../agents/nazarick/aura&mare_character.md](../agents/nazarick/aura&mare_character.md) | aura&mare_character.md | - | - |
+| [../agents/nazarick/cocytus_agent_template.md](../agents/nazarick/cocytus_agent_template.md) | cocytus_agent_template.md | - | - |
+| [../agents/nazarick/cocytus_character.md](../agents/nazarick/cocytus_character.md) | cocytus_character.md | - | - |
+| [../agents/nazarick/demiurge_character.md](../agents/nazarick/demiurge_character.md) | demiurge_character.md | - | - |
+| [../agents/nazarick/demurge_agent_template.md](../agents/nazarick/demurge_agent_template.md) | demurge_agent_template.md | - | - |
+| [../agents/nazarick/gargantua_agent_template.md](../agents/nazarick/gargantua_agent_template.md) | gargantua_agent_template.md | - | - |
+| [../agents/nazarick/gargantua_character.md](../agents/nazarick/gargantua_character.md) | gargantua_character.md | - | - |
+| [../agents/nazarick/nazarick_core_architecture.md](../agents/nazarick/nazarick_core_architecture.md) | nazarick_core_architecture.md | - | - |
+| [../agents/nazarick/pandora_agent_template.md](../agents/nazarick/pandora_agent_template.md) | pandora_agent_template.md | - | - |
+| [../agents/nazarick/pandora_character.md](../agents/nazarick/pandora_character.md) | pandora_character.md | - | - |
+| [../agents/nazarick/pleiades_agent_template.md](../agents/nazarick/pleiades_agent_template.md) | pleiades_agent_template.md | - | - |
+| [../agents/nazarick/pleiades_character.md](../agents/nazarick/pleiades_character.md) | pleiades_character.md | - | - |
+| [../agents/nazarick/sebastiara_agent_template.md](../agents/nazarick/sebastiara_agent_template.md) | sebastiara_agent_template.md | - | - |
+| [../agents/nazarick/sebastiara_character.md](../agents/nazarick/sebastiara_character.md) | sebastiara_character.md | - | - |
+| [../agents/nazarick/shalltear_agent_template.md](../agents/nazarick/shalltear_agent_template.md) | shalltear_agent_template.md | - | - |
+| [../agents/nazarick/shalltear_character.md](../agents/nazarick/shalltear_character.md) | shalltear_character.md | - | - |
+| [../agents/nazarick/victim_character.md](../agents/nazarick/victim_character.md) | victim_character.md | - | - |
 | [../agents/nazarick/zohar-zero_character.md](../agents/nazarick/zohar-zero_character.md) | zohar-zero_character.md | - | - |
 | [../benchmarks/README.md](../benchmarks/README.md) | Benchmarks | Run `make bench` to execute all benchmarks. Results are written to `data/benchmarks`. | - |
 | [../data/biosignals/README.md](../data/biosignals/README.md) | Biosignal Acquisition Guidelines | This directory hosts anonymized biosignal samples used by the Nazarick Narrative System. | - |

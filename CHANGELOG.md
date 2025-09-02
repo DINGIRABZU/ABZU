@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recorded sample biosignal datasets and tests covering ingestion, persistence, and retrieval.
 - Enforced ≥90% coverage in CI workflows; pipelines fail when thresholds are not met.
 - Added `scan_todo_fixme` pre-commit hook to block `TODO`/`FIXME` markers and documented rule in The Absolute Protocol.
+- Added GitHub Actions workflow `dependency-audit.yml` to run `pip-audit` and `npm audit`, failing on high-severity vulnerabilities and uploading reports.
 
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
