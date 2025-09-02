@@ -71,10 +71,6 @@ class AutoTokenizer:
         return PreTrainedTokenizerFast()
 
 
-class GenerationMixin:
-    pass
-
-
 __all__ = [
     "GPT2Config",
     "GPT2LMHeadModel",
@@ -82,5 +78,4 @@ __all__ = [
     "AutoConfig",
     "AutoModelForCausalLM",
     "AutoTokenizer",
-    "GenerationMixin",
 ]
