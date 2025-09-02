@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.84
+**Version:** v1.0.85
 **Last updated:** 2025-09-02
 
 ## How to Use This Protocol
@@ -464,6 +464,7 @@ Narrative modules must maintain traceability by:
 - [ ] Audit documents in KEY_DOCUMENTS.md quarterly and log overdue items with `scripts/schedule_doc_audit.py`.
 - [ ] Run `pre-commit run --files docs/The_Absolute_Protocol.md docs/dependency_registry.md docs/INDEX.md onboarding_confirm.yml`.
 - [ ] Run component tests with `pytest --cov` and attach the coverage badge or report to the PR.
+- [ ] Run dependency audits (`pip-audit` for Python and `npm audit` for `floor_client`); fail on high-severity findings and upload reports as artifacts.
 - [ ] Run `scripts/verify_doc_hashes.py` to confirm `onboarding_confirm.yml` hashes.
 - [ ] Ensure connectors appear in the connector registry [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
 
