@@ -50,8 +50,8 @@ def _connect(db_path: Path) -> sqlite3.Connection:
             conn.execute("ALTER TABLE events ADD COLUMN glyph_path TEXT")
         if "phrase" not in cols:
             conn.execute("ALTER TABLE events ADD COLUMN phrase TEXT")
-    except Exception:  # pragma: no cover - best effort
-        pass
+    except Exception as exc:  # pragma: no cover - best effort
+        logger.exception("failed to ensure event table schema: %s", exc)
     return conn
 
 
