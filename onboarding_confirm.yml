@@ -240,13 +240,14 @@ documents:
       key_rules: Maintain curated documentation entry points.
       insight: Add Crown overview to architecture section.
   docs/nazarick_narrative_system.md:
-    sha256: dfd66c57f6af09f203ea9227608771c6860af7126eec00a2aa70898cb4a6ff90
+    sha256: aa86c1e0e1cf0b4a5a9cfe80b4e1e34af815482d357630827d72994404fd065b
     summary:
-      purpose: Guide to how biosignals become narrative events within the Nazarick
-        domain.
+      purpose: Describes architecture, dataset schema, and event flow for converting
+        biosignals into narratives.
       scope: Nazarick narrative system.
-      key_rules: Use defined agents and pipelines when transforming biosignals.
-      insight: Reference for converting biosignals into multi-modal narrative outputs.
+      key_rules: Use documented schema and narrative_api endpoints when processing
+        biosignals.
+      insight: Reference for biosignal ingestion and narrative logging pipeline.
   docs/assets/narrative_engine_flow.mmd:
     sha256: 9b418b5de9a790064dca91375f560d6378c8d111a0c563deafb637a8e65284d9
     summary:
