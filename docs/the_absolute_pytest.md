@@ -18,6 +18,12 @@
 
 Run tests as usual and inspect the metrics file or have Prometheus scrape the path for dashboarding and alerting.
 
+## Coverage Enforcement
+
+- CI runs `pytest --cov` and then `scripts/export_coverage.py` parses the results.
+- The step fails if any active component drops below **90%** coverage.
+- The `scan-todo-fixme` pre-commit hook blocks commits containing `TODO` or `FIXME` markers.
+
 ## Component Tests
 
 Run targeted tests for event structuring, persistence, and multi-track mixing:

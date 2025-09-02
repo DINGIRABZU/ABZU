@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Export coverage metrics to component_index.json, generate HTML reports, and enforce thresholds."""
+"""Export coverage metrics to component_index.json,
+generate HTML reports, and enforce thresholds."""
 
 from __future__ import annotations
 
@@ -22,7 +23,7 @@ def main() -> None:
         ["coverage", "json", "-i", "--fail-under=0", "-o", str(COVERAGE_JSON)],
         check=True,
     )
-    subprocess.run(["coverage", "html", "-i"], check=True)
+    subprocess.run(["coverage", "html", "-i", "--fail-under=0"], check=True)
     subprocess.run(
         ["coverage-badge", "-o", str(REPO_ROOT / "coverage.svg")], check=True
     )

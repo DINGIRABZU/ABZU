@@ -8,7 +8,7 @@ from pathlib import Path
 
 __version__ = "0.1.0"
 
-PLACEHOLDER_RE = re.compile(r"\b(TODO|FIXME)\b")
+PLACEHOLDER_RE = re.compile(r"\b(TODO|FIXME)\b", re.IGNORECASE)
 
 
 def main() -> int:
@@ -19,8 +19,11 @@ def main() -> int:
         check=True,
     )
     files = [Path(p) for p in diff.stdout.splitlines() if p]
+    script_path = Path(__file__).resolve()
     failed = False
     for path in files:
+        if path.resolve() == script_path:
+            continue
         if path.suffix.lower() == ".md":
             continue
         try:

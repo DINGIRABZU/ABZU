@@ -63,11 +63,12 @@ repos:
     name: Placeholder Elimination
     entry: python scripts/check_placeholders.py
     language: system
-  - id: scan-todo-fixme
-    name: Scan TODO/FIXME markers
+  - id: scan-placeholder-tags
+    name: Scan placeholder markers
     entry: python scripts/scan_todo_fixme.py
     language: system
     pass_filenames: false
+    stages: [commit]
   - id: verify-versions
     name: Ensure modules declare __version__
     entry: python scripts/verify_versions.py
