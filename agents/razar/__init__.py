@@ -16,7 +16,7 @@ from . import pytest_runner
 
 _manifesto = Manifesto()
 _trust_matrix = TrustMatrix()
-_AGENT = "razar"
+_AGENT = "razar_agent"
 
 
 def execute_task(action: str, entity: str, task, *args, **kwargs):
