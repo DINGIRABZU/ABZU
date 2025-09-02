@@ -1,5 +1,5 @@
 {
-  "generated": "2025-08-30",
+  "generated": "2025-09-02",
   "components": {
     "INANNA_AI/__init__.py": {
       "version": "0.1.0",
@@ -379,72 +379,77 @@
     "agents/albedo/messaging.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-08-30"
     },
     "agents/albedo/trust.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-30"
     },
     "agents/albedo/vision.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-30"
     },
     "agents/asian_gen/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/asian_gen/creative_engine.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/bana/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.0.2",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-31"
     },
     "agents/bana/bio_adaptive_narrator.py": {
-      "version": "0.0.0",
+      "version": "0.0.2",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-08-31"
+    },
+    "agents/bana/inanna_bridge.py": {
+      "version": "0.0.2",
+      "score": 1,
+      "last_update": "2025-08-31"
     },
     "agents/cocytus/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/cocytus/prompt_arbiter.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/demiurge/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/demiurge/strategic_simulator.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/ecosystem/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/ecosystem/aura_capture.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/ecosystem/mare_gardener.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/event_bus.py": {
       "version": "0.0.0",
@@ -452,39 +457,44 @@
       "last_update": "2025-08-28"
     },
     "agents/guardian.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-02"
     },
     "agents/land_graph/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/land_graph/geo_knowledge.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/nazarick/__init__.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-30"
+      "last_update": "2025-08-31"
     },
     "agents/nazarick/ethics_manifesto.py": {
       "version": "0.1.1",
       "score": 3,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-30"
     },
     "agents/nazarick/narrative_scribe.py": {
       "version": "0.1.1",
       "score": 3,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-30"
+    },
+    "agents/nazarick/service_launcher.py": {
+      "version": "0.1.2",
+      "score": 2,
+      "last_update": "2025-09-01"
     },
     "agents/nazarick/trust_matrix.py": {
       "version": "0.1.1",
       "score": 3,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-30"
     },
     "agents/operator_dispatcher.py": {
       "version": "0.0.0",
@@ -492,159 +502,159 @@
       "last_update": "2025-08-28"
     },
     "agents/pandora/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/pandora/persona_emulator.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/pleiades/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/pleiades/signal_router.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/pleiades/star_map.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/razar/__init__.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/ai_invoker.py": {
-      "version": "0.1.1",
+      "version": "0.2.2",
       "score": 3,
-      "last_update": "2025-10-02"
+      "last_update": "2025-08-31"
     },
     "agents/razar/blueprint_synthesizer.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/boot_orchestrator.py": {
-      "version": "0.1.3",
+      "version": "0.2.2",
       "score": 3,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-01"
     },
     "agents/razar/checkpoint_manager.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/cli.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/code_repair.py": {
-      "version": "0.1.1",
-      "score": 2,
-      "last_update": "2025-10-02"
+      "version": "0.2.2",
+      "score": 3,
+      "last_update": "2025-08-31"
     },
     "agents/razar/crown_link.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/doc_sync.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/health_checks.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/ignition_builder.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 3,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/lifecycle_bus.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/mission_logger.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/module_builder.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 3,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/planning_engine.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/pytest_runner.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 3,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/quarantine_manager.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/recovery_manager.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/remote_loader.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 3,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/retro_bootstrap.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/runtime_manager.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 4,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/razar/vision_adapter.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "agents/sebas/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/sebas/compassion_module.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/shalltear/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/shalltear/fast_inference_agent.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "agents/vanna_data.py": {
       "version": "0.0.0",
@@ -652,14 +662,14 @@
       "last_update": "2025-08-28"
     },
     "agents/victim/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-09-01"
     },
     "agents/victim/security_canary.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "ai_core/__init__.py": {
       "version": "0.0.0",
@@ -741,6 +751,21 @@
       "score": 3,
       "last_update": "2025-08-26"
     },
+    "bana/__init__.py": {
+      "version": "0.1.0",
+      "score": 1,
+      "last_update": "2025-08-31"
+    },
+    "bana/event_structurizer.py": {
+      "version": "0.1.0",
+      "score": 3,
+      "last_update": "2025-08-31"
+    },
+    "bana/narrative_api.py": {
+      "version": "0.1.1",
+      "score": 2,
+      "last_update": "2025-09-01"
+    },
     "benchmarks/chat_gateway_benchmark.py": {
       "version": "0.0.0",
       "score": 1,
@@ -799,22 +824,27 @@
     "communication/telegram_bot.py": {
       "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-02"
     },
     "communication/webrtc_server.py": {
-      "version": "0.0.0",
+      "version": "0.2.0",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-08-31"
     },
     "connectors/__init__.py": {
-      "version": "0.2.0",
+      "version": "0.3.0",
       "score": 1,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-01"
+    },
+    "connectors/primordials_api.py": {
+      "version": "0.1.1",
+      "score": 1,
+      "last_update": "2025-09-02"
     },
     "connectors/webrtc_connector.py": {
-      "version": "0.2.0",
+      "version": "0.3.3",
       "score": 3,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-02"
     },
     "corpus_memory_logging.py": {
       "version": "0.0.1",
@@ -850,6 +880,11 @@
       "version": "0.1.0",
       "score": 2,
       "last_update": "2025-08-30"
+    },
+    "data/biosignals/__init__.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-02"
     },
     "deployment/__init__.py": {
       "version": "0.0.0",
@@ -954,62 +989,62 @@
     "memory/__init__.py": {
       "version": "0.1.1",
       "score": 1,
-      "last_update": "2025-08-22"
+      "last_update": "2025-09-01"
     },
     "memory/cortex.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-08-30"
     },
     "memory/cortex_cli.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-25"
+      "last_update": "2025-08-30"
     },
     "memory/emotional.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "memory/mental.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-22"
+      "last_update": "2025-08-30"
     },
     "memory/music_memory.py": {
       "version": "0.1.1",
       "score": 3,
-      "last_update": "2025-08-21"
+      "last_update": "2025-08-30"
     },
     "memory/narrative_engine.py": {
-      "version": "0.1.1",
+      "version": "0.4.0",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "memory/sacred.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-22"
+      "last_update": "2025-08-30"
     },
     "memory/search.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "memory/spiral_cortex.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-21"
+      "last_update": "2025-08-30"
     },
     "memory/spiritual.py": {
       "version": "0.1.1",
       "score": 2,
-      "last_update": "2025-08-21"
+      "last_update": "2025-08-30"
     },
     "memory/trust_registry.py": {
       "version": "0.1.1",
       "score": 3,
-      "last_update": "2025-08-26"
+      "last_update": "2025-08-30"
     },
     "memory_scribe.py": {
       "version": "0.0.0",
@@ -1066,13 +1101,18 @@
       "score": 1,
       "last_update": "2025-08-25"
     },
+    "narrative_api.py": {
+      "version": "0.2.0",
+      "score": 1,
+      "last_update": "2025-09-02"
+    },
     "nlq_api.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-28"
     },
     "operator_api.py": {
-      "version": "0.2.0",
+      "version": "0.3.3",
       "score": 3,
       "last_update": "2025-09-02"
     },
@@ -1162,89 +1202,94 @@
       "last_update": "2025-08-21"
     },
     "razar/__init__.py": {
-      "version": "0.1.0",
+      "version": "0.2.3",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/__main__.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/adaptive_orchestrator.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
+    },
+    "razar/ai_invoker.py": {
+      "version": "0.1.1",
+      "score": 3,
+      "last_update": "2025-09-01"
     },
     "razar/boot_orchestrator.py": {
-      "version": "0.1.0",
+      "version": "0.2.4",
       "score": 3,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-01"
     },
     "razar/checkpoint_manager.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 3,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/cocreation_planner.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/crown_handshake.py": {
-      "version": "0.1.0",
+      "version": "0.2.4",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-02"
     },
     "razar/crown_link.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-02"
     },
     "razar/doc_sync.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/environment_builder.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/health_checks.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/issue_analyzer.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/mission_logger.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/module_sandbox.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/quarantine_manager.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/recovery_manager.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "razar/status_dashboard.py": {
-      "version": "0.1.0",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
     },
     "recursive_emotion_router.py": {
       "version": "0.0.0",
@@ -1252,9 +1297,9 @@
       "last_update": "2025-08-21"
     },
     "release.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-25"
+      "last_update": "2025-09-01"
     },
     "ritual_trainer.py": {
       "version": "0.0.0",
@@ -1269,14 +1314,24 @@
     "scripts/albedo_demo.py": {
       "version": "0.0.0",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "scripts/bootstrap.py": {
       "version": "0.0.0",
       "score": 3,
       "last_update": "2025-08-24"
     },
+    "scripts/build_component_index.py": {
+      "version": "0.0.0",
+      "score": 2,
+      "last_update": "2025-09-02"
+    },
     "scripts/check_connector_index.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-08-30"
+    },
+    "scripts/check_env.py": {
       "version": "0.1.0",
       "score": 2,
       "last_update": "2025-08-30"
@@ -1286,10 +1341,15 @@
       "score": 2,
       "last_update": "2025-08-29"
     },
-    "scripts/check_no_binaries.py": {
-      "version": "0.0.0",
+    "scripts/check_memory_layers.py": {
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-29"
+      "last_update": "2025-09-01"
+    },
+    "scripts/check_no_binaries.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-08-31"
     },
     "scripts/check_placeholders.py": {
       "version": "0.1.0",
@@ -1299,7 +1359,7 @@
     "scripts/component_inventory.py": {
       "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-02"
     },
     "scripts/confirm_reading.py": {
       "version": "0.1.0",
@@ -1324,27 +1384,57 @@
     "scripts/export_coverage.py": {
       "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-02"
+    },
+    "scripts/generate_protocol_task.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-01"
     },
     "scripts/generate_sbom.py": {
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-24"
     },
-    "scripts/ingest_biosignals.py": {
-      "version": "0.0.0",
+    "scripts/health_check_connectors.py": {
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-30"
+      "last_update": "2025-08-31"
+    },
+    "scripts/ingest_biosignal_events.py": {
+      "version": "0.2.0",
+      "score": 2,
+      "last_update": "2025-09-02"
+    },
+    "scripts/ingest_biosignals.py": {
+      "version": "0.2.0",
+      "score": 2,
+      "last_update": "2025-09-02"
+    },
+    "scripts/ingest_biosignals_jsonl.py": {
+      "version": "0.2.0",
+      "score": 1,
+      "last_update": "2025-09-02"
     },
     "scripts/ingest_music_books.py": {
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-21"
     },
+    "scripts/init_memory_layers.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-01"
+    },
     "scripts/list_layers.py": {
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-21"
+    },
+    "scripts/log_intent.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-01"
     },
     "scripts/offsite_backup.py": {
       "version": "0.0.0",
@@ -1361,15 +1451,30 @@
       "score": 2,
       "last_update": "2025-08-21"
     },
+    "scripts/register_task.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-01"
+    },
     "scripts/replay_state.py": {
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-28"
     },
+    "scripts/require_connector_registry_update.py": {
+      "version": "0.1.0",
+      "score": 1,
+      "last_update": "2025-09-01"
+    },
     "scripts/require_onboarding_update.py": {
       "version": "0.1.0",
       "score": 2,
-      "last_update": ""
+      "last_update": "2025-08-30"
+    },
+    "scripts/scan_todo_fixme.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-02"
     },
     "scripts/schedule_doc_audit.py": {
       "version": "0.1.0",
@@ -1391,6 +1496,11 @@
       "score": 2,
       "last_update": "2025-08-30"
     },
+    "scripts/validate_change_justification.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-08-30"
+    },
     "scripts/validate_component_index.py": {
       "version": "0.0.0",
       "score": 2,
@@ -1402,9 +1512,19 @@
       "last_update": "2025-08-30"
     },
     "scripts/validate_configs.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-08-30"
+    },
+    "scripts/validate_ignition.py": {
+      "version": "0.2.0",
+      "score": 1,
+      "last_update": "2025-08-31"
+    },
+    "scripts/validate_links.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-01"
     },
     "scripts/validate_schemas.py": {
       "version": "0.0.0",
@@ -1422,19 +1542,19 @@
       "last_update": "2025-08-30"
     },
     "scripts/verify_doc_hashes.py": {
-      "version": "0.1.0",
-      "score": 2,
-      "last_update": "2025-08-30"
-    },
-    "scripts/verify_doc_summaries.py": {
-      "version": "0.0.0",
-      "score": 2,
-      "last_update": "2025-08-29"
-    },
-    "scripts/verify_versions.py": {
-      "version": "0.3.0",
+      "version": "0.2.0",
       "score": 2,
       "last_update": "2025-08-31"
+    },
+    "scripts/verify_doc_summaries.py": {
+      "version": "0.2.0",
+      "score": 2,
+      "last_update": "2025-08-31"
+    },
+    "scripts/verify_versions.py": {
+      "version": "0.4.0",
+      "score": 2,
+      "last_update": "2025-09-01"
     },
     "servant_model_manager.py": {
       "version": "0.0.0",
@@ -1444,7 +1564,7 @@
     "server.py": {
       "version": "0.1.1",
       "score": 4,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-02"
     },
     "seven_dimensional_music.py": {
       "version": "0.0.0",
@@ -1522,9 +1642,9 @@
       "last_update": "2025-08-24"
     },
     "src/audio/mix_tracks.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-09-01"
     },
     "src/audio/play_ritual_music.py": {
       "version": "0.0.0",
@@ -1662,9 +1782,9 @@
       "last_update": "2025-08-23"
     },
     "src/core/memory_physical.py": {
-      "version": "0.0.0",
-      "score": 1,
-      "last_update": "2025-08-23"
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-01"
     },
     "src/core/model_selector.py": {
       "version": "0.0.0",
@@ -1687,14 +1807,14 @@
       "last_update": "2025-08-22"
     },
     "src/core/utils/optional_deps.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-24"
+      "last_update": "2025-09-01"
     },
     "src/core/utils/seed.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-23"
+      "last_update": "2025-09-01"
     },
     "src/core/video_engine.py": {
       "version": "0.0.0",
@@ -1772,49 +1892,49 @@
       "last_update": "2025-08-23"
     },
     "src/media/audio/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-23"
+      "last_update": "2025-09-01"
     },
     "src/media/audio/backends.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-25"
+      "last_update": "2025-09-01"
     },
     "src/media/audio/base.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-23"
+      "last_update": "2025-09-01"
     },
     "src/media/audio/generation.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-24"
+      "last_update": "2025-09-01"
     },
     "src/media/audio/playback.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-24"
+      "last_update": "2025-09-01"
     },
     "src/media/avatar/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-23"
+      "last_update": "2025-09-01"
     },
     "src/media/avatar/base.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-23"
+      "last_update": "2025-09-01"
     },
     "src/media/avatar/generation.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-23"
+      "last_update": "2025-09-01"
     },
     "src/media/avatar/playback.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-23"
+      "last_update": "2025-09-01"
     },
     "src/media/base.py": {
       "version": "0.0.0",
@@ -1917,14 +2037,19 @@
       "last_update": "2025-08-28"
     },
     "tests/agents/razar/test_ai_invoker.py": {
-      "version": "0.1.1",
+      "version": "0.2.2",
       "score": 1,
-      "last_update": "2025-10-02"
+      "last_update": "2025-08-31"
     },
     "tests/agents/razar/test_boot_orchestrator.py": {
       "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-01"
+    },
+    "tests/agents/razar/test_boot_orchestrator_logging.py": {
+      "version": "0.1.0",
+      "score": 1,
+      "last_update": "2025-09-01"
     },
     "tests/agents/razar/test_boot_sequence.py": {
       "version": "0.0.0",
@@ -1935,6 +2060,11 @@
       "version": "0.0.0",
       "score": 1,
       "last_update": "2025-08-28"
+    },
+    "tests/agents/razar/test_code_repair.py": {
+      "version": "0.2.2",
+      "score": 1,
+      "last_update": "2025-08-31"
     },
     "tests/agents/razar/test_crown_handshake.py": {
       "version": "0.1.0",
@@ -1954,12 +2084,17 @@
     "tests/agents/razar/test_ignition_sequence.py": {
       "version": "0.1.0",
       "score": 1,
+      "last_update": "2025-09-01"
+    },
+    "tests/agents/razar/test_mission_brief_rotation.py": {
+      "version": "0.1.0",
+      "score": 1,
       "last_update": "2025-08-30"
     },
     "tests/agents/razar/test_module_builder.py": {
       "version": "0.0.0",
       "score": 1,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-30"
     },
     "tests/agents/razar/test_planning_engine.py": {
       "version": "0.0.0",
@@ -2012,9 +2147,9 @@
       "last_update": "2025-08-26"
     },
     "tests/agents/test_narrative_scribe.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 0,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-31"
     },
     "tests/agents/test_razar_blueprint_synthesizer.py": {
       "version": "0.0.0",
@@ -2026,10 +2161,30 @@
       "score": 0,
       "last_update": "2025-08-28"
     },
+    "tests/audio/test_mix_tracks.py": {
+      "version": "0.0.0",
+      "score": 0,
+      "last_update": "2025-08-31"
+    },
+    "tests/bana/test_event_structurizer.py": {
+      "version": "0.0.0",
+      "score": 1,
+      "last_update": "2025-08-31"
+    },
     "tests/conftest.py": {
       "version": "0.0.1",
       "score": 2,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-01"
+    },
+    "tests/core/test_memory_physical.py": {
+      "version": "0.0.0",
+      "score": 1,
+      "last_update": "2025-08-31"
+    },
+    "tests/crown/server/test_server.py": {
+      "version": "0.0.0",
+      "score": 2,
+      "last_update": "2025-09-01"
     },
     "tests/crown/test_config.py": {
       "version": "0.0.0",
@@ -2106,6 +2261,16 @@
       "score": 1,
       "last_update": "2025-08-23"
     },
+    "tests/fixtures/razar_base_module.py": {
+      "version": "0.0.0",
+      "score": 0,
+      "last_update": "2025-08-30"
+    },
+    "tests/heart/memory_emotional/test_memory_emotional.py": {
+      "version": "0.0.0",
+      "score": 1,
+      "last_update": "2025-09-01"
+    },
     "tests/helpers/config_stub.py": {
       "version": "0.0.0",
       "score": 1,
@@ -2120,6 +2285,26 @@
       "version": "0.0.0",
       "score": 0,
       "last_update": "2025-08-26"
+    },
+    "tests/ignition/test_crown_wakes_services.py": {
+      "version": "0.1.0",
+      "score": 1,
+      "last_update": "2025-09-01"
+    },
+    "tests/ignition/test_full_stack.py": {
+      "version": "0.1.0",
+      "score": 1,
+      "last_update": "2025-09-02"
+    },
+    "tests/ignition/test_validate_ignition_script.py": {
+      "version": "0.1.0",
+      "score": 1,
+      "last_update": "2025-08-31"
+    },
+    "tests/integration/test_mix_and_store.py": {
+      "version": "0.0.0",
+      "score": 0,
+      "last_update": "2025-08-31"
     },
     "tests/memory/test_cortex_concurrency.py": {
       "version": "0.0.0",
@@ -2147,14 +2332,44 @@
       "last_update": "2025-08-24"
     },
     "tests/narrative_engine/test_biosignal_pipeline.py": {
-      "version": "0.0.0",
-      "score": 2,
+      "version": "0.1.0",
+      "score": 1,
       "last_update": "2025-08-30"
     },
     "tests/narrative_engine/test_biosignal_transformation.py": {
       "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-30"
+      "last_update": "2025-08-31"
+    },
+    "tests/narrative_engine/test_dataset_hashes.py": {
+      "version": "0.0.0",
+      "score": 2,
+      "last_update": "2025-09-02"
+    },
+    "tests/narrative_engine/test_event_storage.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-09-01"
+    },
+    "tests/narrative_engine/test_ingest_persist_retrieve.py": {
+      "version": "0.2.0",
+      "score": 0,
+      "last_update": "2025-09-01"
+    },
+    "tests/narrative_engine/test_ingestion_to_mistral_output.py": {
+      "version": "0.1.0",
+      "score": 1,
+      "last_update": "2025-08-31"
+    },
+    "tests/narrative_engine/test_jsonl_ingest_persist_retrieve.py": {
+      "version": "0.1.0",
+      "score": 0,
+      "last_update": "2025-09-01"
+    },
+    "tests/narrative_engine/test_multitrack_output.py": {
+      "version": "0.1.0",
+      "score": 0,
+      "last_update": "2025-08-31"
     },
     "tests/performance/test_task_parser_performance.py": {
       "version": "0.0.0",
@@ -2721,11 +2936,6 @@
       "score": 2,
       "last_update": "2025-08-23"
     },
-    "tests/test_memory_emotional.py": {
-      "version": "0.0.0",
-      "score": 1,
-      "last_update": "2025-08-23"
-    },
     "tests/test_memory_persistence.py": {
       "version": "0.0.0",
       "score": 2,
@@ -2849,7 +3059,12 @@
     "tests/test_operator_api.py": {
       "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-30"
+      "last_update": "2025-09-01"
+    },
+    "tests/test_operator_command_route.py": {
+      "version": "0.0.0",
+      "score": 1,
+      "last_update": "2025-09-01"
     },
     "tests/test_optional_imports.py": {
       "version": "0.0.0",
@@ -3110,11 +3325,6 @@
       "version": "0.0.0",
       "score": 2,
       "last_update": "2025-08-23"
-    },
-    "tests/test_server.py": {
-      "version": "0.0.0",
-      "score": 2,
-      "last_update": "2025-08-27"
     },
     "tests/test_server_endpoints.py": {
       "version": "0.0.0",
@@ -3452,84 +3662,89 @@
       "last_update": "2025-08-22"
     },
     "tools/bot_discord.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-23"
+      "last_update": "2025-08-30"
     },
     "tools/bot_telegram.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-23"
+      "last_update": "2025-08-30"
     },
     "tools/dependency_audit.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "tools/dependency_installer.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-22"
+      "last_update": "2025-08-30"
     },
     "tools/dev_orchestrator.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-26"
+      "last_update": "2025-08-30"
     },
     "tools/doc_indexer.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-28"
+      "last_update": "2025-08-30"
     },
     "tools/kimi_k2_client.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-07-18"
+      "last_update": "2025-08-30"
     },
     "tools/preflight.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-23"
+      "last_update": "2025-08-30"
     },
     "tools/project_audit.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-21"
+      "last_update": "2025-08-30"
     },
     "tools/reflection_loop.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "tools/sandbox_session.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "tools/session_logger.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "tools/virtual_env_manager.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "tools/voice_conversion.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
+    },
+    "training/fine_tune_mistral.py": {
+      "version": "0.1.0",
+      "score": 2,
+      "last_update": "2025-08-31"
     },
     "training_guide.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "transformers/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-22"
+      "last_update": "2025-08-30"
     },
     "vector_memory.py": {
       "version": "0.0.0",
@@ -3537,24 +3752,24 @@
       "last_update": "2025-08-26"
     },
     "video_stream.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 4,
-      "last_update": "2025-08-24"
+      "last_update": "2025-08-30"
     },
     "vision/__init__.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 1,
-      "last_update": "2025-08-27"
+      "last_update": "2025-08-30"
     },
     "vision/yoloe_adapter.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-08-27"
+      "last_update": "2025-08-30"
     },
     "vocal_isolation.py": {
-      "version": "0.0.0",
+      "version": "0.1.0",
       "score": 3,
-      "last_update": "2025-08-23"
+      "last_update": "2025-08-30"
     }
   }
 }

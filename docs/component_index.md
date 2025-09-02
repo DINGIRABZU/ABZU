@@ -85,7 +85,8 @@ Generated automatically. Lists each Python file with its description and externa
 | `agents/asian_gen/__init__.py` | Asian language creative agents. | agents |
 | `agents/asian_gen/creative_engine.py` | Creative engine for Asian language text generation. | sentencepiece, transformers |
 | `agents/bana/__init__.py` | Bana bio-adaptive narrator agent. | agents |
-| `agents/bana/bio_adaptive_narrator.py` | No description | biosppy, memory, numpy, transformers |
+| `agents/bana/bio_adaptive_narrator.py` | No description | biosppy, connectors, memory, numpy, transformers |
+| `agents/bana/inanna_bridge.py` | No description | agents |
 | `agents/cocytus/__init__.py` | Cocytus agent modules. | agents |
 | `agents/cocytus/prompt_arbiter.py` | Cocytus prompt arbitration utilities. | None |
 | `agents/demiurge/__init__.py` | Demiurge agent modules. | agents |
@@ -100,6 +101,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `agents/nazarick/__init__.py` | Nazarick agent package. | None |
 | `agents/nazarick/ethics_manifesto.py` | Ethics Manifesto for Nazarick agents. | None |
 | `agents/nazarick/narrative_scribe.py` | Narrative Scribe agent. | aiokafka, citadel, memory, redis, yaml |
+| `agents/nazarick/service_launcher.py` | Start core Nazarick agents after the Crown handshake. | None |
 | `agents/nazarick/trust_matrix.py` | Trust classification and protocol lookup for Nazarick entities. | None |
 | `agents/operator_dispatcher.py` | No description | None |
 | `agents/pandora/__init__.py` | Pandora persona agents. | agents |
@@ -108,7 +110,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `agents/pleiades/signal_router.py` | Responsibilities: | None |
 | `agents/pleiades/star_map.py` | Responsibilities: | None |
 | `agents/razar/__init__.py` | RAZAR agents. | agents |
-| `agents/razar/ai_invoker.py` | High level wrapper for remote RAZAR agents. | None |
+| `agents/razar/ai_invoker.py` | RAZAR AI handover invocation helper. | None |
 | `agents/razar/blueprint_synthesizer.py` | No description | networkx |
 | `agents/razar/boot_orchestrator.py` | Boot orchestrator for the RAZAR agent. | razar, yaml |
 | `agents/razar/checkpoint_manager.py` | No description | None |
@@ -128,7 +130,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `agents/razar/remote_loader.py` | Download and load remote RAZAR agents at runtime. | git, requests |
 | `agents/razar/retro_bootstrap.py` | No description | None |
 | `agents/razar/runtime_manager.py` | RAZAR runtime manager. | yaml |
-| `agents/razar/vision_adapter.py` | No description | agents |
+| `agents/razar/vision_adapter.py` | No description | agents, numpy |
 | `agents/sebas/__init__.py` | Sebas compassion agents. | agents |
 | `agents/sebas/compassion_module.py` | Responsibilities: | None |
 | `agents/shalltear/__init__.py` | Shalltear agent modules. | agents |
@@ -152,6 +154,9 @@ Generated automatically. Lists each Python file with its description and externa
 | `archetype_shift_engine.py` | Determine when to switch personality layers based on ritual cues or emotion. | None |
 | `aspect_processor.py` | No description | None |
 | `auto_retrain.py` | Automatically trigger fine-tuning based on feedback metrics. | INANNA_AI, core, llm_api, mlflow, yaml |
+| `bana/__init__.py` | Bana utilities. | None |
+| `bana/event_structurizer.py` | Translate Bana interactions into schema-validated events. | jsonschema |
+| `bana/narrative_api.py` | HTTP API for retrieving Bana narratives and memory metadata. | fastapi, memory |
 | `benchmarks/chat_gateway_benchmark.py` | No description | communication |
 | `benchmarks/llm_throughput_benchmark.py` | No description | torch |
 | `benchmarks/memory_store_benchmark.py` | No description | None |
@@ -166,7 +171,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `communication/telegram_bot.py` | Telegram bot forwarding messages to the avatar. | telegram |
 | `communication/webrtc_server.py` | WebRTC signaling helpers and media tracks. | aiortc, core, mediasoup, numpy, soundfile |
 | `connectors/__init__.py` | Communication connectors for Spiral OS. | None |
-| `connectors/primordials_api.py` | Send narrative metrics to Primordials service. | urllib |
+| `connectors/primordials_api.py` | No description | None |
 | `connectors/webrtc_connector.py` | WebRTC connector for streaming data, audio, and video. | aiortc, communication, fastapi |
 | `corpus_memory_logging.py` | Append and read JSONL interaction records for corpus memory usage. | None |
 | `crown_config/__init__.py` | Load application configuration from environment variables. | pydantic, pydantic_settings |
@@ -175,6 +180,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `crown_prompt_orchestrator.py` | Lightweight prompt orchestrator for the Crown console. | INANNA_AI, core, memory |
 | `crown_query_router.py` | Route questions to archetype-specific vector stores. | rag |
 | `crown_router.py` | Coordinate model and expression routing for the Crown agent. | rag |
+| `data/biosignals/__init__.py` | Biosignal dataset hashes and helpers. | None |
 | `deployment/__init__.py` | Package initialization. | None |
 | `distributed_memory.py` | Redis-backed helper for off-box vector memory backups. | redis |
 | `docs/onboarding/wizard.py` | Interactive quick-start wizard for ABZU. | None |
@@ -201,7 +207,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `memory/emotional.py` | Persist and query emotional feature vectors in SQLite. | dlib, transformers |
 | `memory/mental.py` | Neo4j-backed task memory with optional reinforcement learning hooks. | core, crown_config |
 | `memory/music_memory.py` | Persistent store for music embedding vectors with emotion labels. | numpy |
-| `memory/narrative_engine.py` | Stub narrative memory engine. | None |
+| `memory/narrative_engine.py` | Persistent narrative memory engine. | chromadb |
 | `memory/sacred.py` | VAE-based sacred memory module using PyTorch. | PIL, torch |
 | `memory/search.py` | Unified memory search across multiple subsystems. | memory |
 | `memory/spiral_cortex.py` | Store retrieval insights for the spiral cortex. | None |
@@ -218,6 +224,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `monitoring/watchdog.py` | No description | os_guardian, prometheus_client, psutil |
 | `music_generation.py` | Generate music from a text prompt using various models. | src, transformers |
 | `music_llm_interface.py` | No description | INANNA_AI, numpy, rag, src |
+| `narrative_api.py` | No description | fastapi, memory, pydantic |
 | `nlq_api.py` | No description | agents, core, fastapi |
 | `operator_api.py` | Operator command API exposing the :class:`OperatorDispatcher`. | agents, fastapi |
 | `orchestration_master.py` | High-level orchestrator selecting agents and wiring memory stores. | memory, tools, yaml |
@@ -240,7 +247,8 @@ Generated automatically. Lists each Python file with its description and externa
 | `razar/__init__.py` | Razar package hosting boot orchestration utilities. | None |
 | `razar/__main__.py` | No description | agents |
 | `razar/adaptive_orchestrator.py` | No description | yaml |
-| `razar/boot_orchestrator.py` | Simple boot orchestrator reading a JSON component configuration. | None |
+| `razar/ai_invoker.py` | High level wrapper for remote RAZAR agents. | agents |
+| `razar/boot_orchestrator.py` | Simple boot orchestrator reading a JSON component configuration. | agents |
 | `razar/checkpoint_manager.py` | Checkpoint utilities for the adaptive orchestrator. | None |
 | `razar/cocreation_planner.py` | No description | yaml |
 | `razar/crown_handshake.py` | No description | websockets |
@@ -260,8 +268,11 @@ Generated automatically. Lists each Python file with its description and externa
 | `run_song_demo.py` | Demo runner for INANNA Music Composer AI. | MUSIC_FOUNDATION, yaml |
 | `scripts/albedo_demo.py` | Command line demo for Albedo persona interactions. | agents |
 | `scripts/bootstrap.py` | Bootstrap the development environment. | torch |
+| `scripts/build_component_index.py` | Generate the component index. | None |
 | `scripts/check_connector_index.py` | Ensure touched connectors have registry entries. | None |
+| `scripts/check_env.py` | Fail if required tools or packages are missing. | None |
 | `scripts/check_key_documents.py` | Verify that key documents exist. | yaml |
+| `scripts/check_memory_layers.py` | Verify memory layers respond with seeded data. | memory |
 | `scripts/check_no_binaries.py` | Fail if any staged files are detected as binary. | None |
 | `scripts/check_placeholders.py` | Fail if files contain TODO or FIXME placeholders. | None |
 | `scripts/component_inventory.py` | Collect metadata for each Python component in the repository. | None |
@@ -269,29 +280,41 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/data_validate.py` | Validate training data schema using TensorFlow Data Validation. | tensorflow_data_validation |
 | `scripts/dependency_check.py` | Verify package imports and optional dependencies. | None |
 | `scripts/ensure_blueprint_sync.py` | Verify blueprint doc updates accompany core code changes. | None |
-| `scripts/export_coverage.py` | Export coverage metrics to component_index.json, generate HTML reports, and enforce thresholds. | None |
+| `scripts/export_coverage.py` | Export coverage metrics to component_index.json, | None |
+| `scripts/generate_protocol_task.py` | Create protocol refinement task after enough registry entries. | None |
 | `scripts/generate_sbom.py` | Generate a CycloneDX software bill of materials. | None |
-| `scripts/ingest_biosignals.py` | Ingest biosignal CSV files into the narrative engine. | memory |
+| `scripts/health_check_connectors.py` | Ping registered connectors and report readiness. | requests |
+| `scripts/ingest_biosignal_events.py` | Ingest biosignal CSV files as structured narrative events. | data, memory |
+| `scripts/ingest_biosignals.py` | Ingest biosignal CSV files into the narrative engine. | data, memory |
+| `scripts/ingest_biosignals_jsonl.py` | No description | data, memory |
 | `scripts/ingest_music_books.py` | No description | pdfplumber, unstructured |
+| `scripts/init_memory_layers.py` | Seed cortex, emotional, mental, spiritual and narrative stores. | memory |
 | `scripts/list_layers.py` | Print configured personality layers and whether they are enabled. | yaml |
+| `scripts/log_intent.py` | Append commit intent entries to the change ledger. | None |
 | `scripts/offsite_backup.py` | Manage snapshot and restoration of off-site memory backups. | None |
 | `scripts/quality_score.py` | Compute quality scores for repository components. | None |
 | `scripts/record_feedback.py` | Log user feedback to the local database. | INANNA_AI |
+| `scripts/register_task.py` | Append completed task details to the task registry. | None |
 | `scripts/replay_state.py` | Restore backups and rebuild vector memory from log files. | None |
+| `scripts/require_connector_registry_update.py` | No description | None |
 | `scripts/require_onboarding_update.py` | Fail if key documents change without updating onboarding confirmation. | None |
+| `scripts/scan_todo_fixme.py` | Fail if staged code contains TODO or FIXME markers. | None |
 | `scripts/schedule_doc_audit.py` | Audit key documents and log overdue reviews. | None |
 | `scripts/show_emotion_glyph.py` | Display the last recorded emotion with its spiral glyph. | None |
 | `scripts/train_distributed.py` | Distributed training example using PyTorch FSDP. | mlflow, omegaconf, optuna, torch |
 | `scripts/validate_api_schemas.py` | Validate API schemas against the FastAPI application. | jsonschema, openapi_spec_validator, src |
+| `scripts/validate_change_justification.py` | Verify pull requests include a Change Justification statement. | None |
 | `scripts/validate_component_index.py` | Ensure docs/component_index.md has no empty descriptions. | None |
 | `scripts/validate_component_index_json.py` | Validate status and ADR fields in component_index.json. | None |
-| `scripts/validate_configs.py` | Validate YAML templates and JSON schema files. | jsonschema, yaml |
+| `scripts/validate_configs.py` | Validate YAML templates and JSON/YAML schema files. | jsonschema, yaml |
+| `scripts/validate_ignition.py` | No description | None |
+| `scripts/validate_links.py` | Validate Markdown links for broken or outdated targets. | None |
 | `scripts/validate_schemas.py` | Validate JSON files against their JSON Schemas. | jsonschema |
 | `scripts/vast_check.py` | No description | aiortc, httpx |
 | `scripts/verify_dependencies.py` | Validate dependencies against docs/dependency_registry.md. | None |
-| `scripts/verify_doc_hashes.py` | Ensure protected documents have up-to-date hashes and summaries. | yaml |
+| `scripts/verify_doc_hashes.py` | Ensure protected documents have up-to-date hashes and summary fields. | yaml |
 | `scripts/verify_doc_summaries.py` | Check onboarding doc summaries stay in sync with file hashes. | yaml |
-| `scripts/verify_versions.py` | Compare module `__version__` values with `component_index.json` and fail on mismatches. | None |
+| `scripts/verify_versions.py` | Compare module versions against component_index.json. | None |
 | `servant_model_manager.py` | Registry and launcher for auxiliary language models. | tools |
 | `server.py` | Minimal FastAPI server exposing health and utility endpoints. | INANNA_AI, PIL, agents, communication, connectors, core, crown_config, fastapi, memory, numpy, prometheus_client, prometheus_fastapi_instrumentator, pydantic, yaml |
 | `seven_dimensional_music.py` | Utility for simple seven-dimensional music features. | MUSIC_FOUNDATION, numpy, src |
@@ -390,12 +413,15 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/agents/razar/conftest.py` | Fixtures for RAZAR runtime tests. | agents, pytest, yaml |
 | `tests/agents/razar/test_ai_invoker.py` | No description | agents |
 | `tests/agents/razar/test_boot_orchestrator.py` | No description | pytest, razar |
+| `tests/agents/razar/test_boot_orchestrator_logging.py` | No description | agents, pytest, razar |
 | `tests/agents/razar/test_boot_sequence.py` | No description | pytest, razar |
 | `tests/agents/razar/test_checkpoint_manager.py` | No description | agents |
+| `tests/agents/razar/test_code_repair.py` | No description | agents |
 | `tests/agents/razar/test_crown_handshake.py` | No description | pytest, razar |
 | `tests/agents/razar/test_crown_link.py` | No description | agents, websockets |
 | `tests/agents/razar/test_ignition_builder.py` | No description | agents |
 | `tests/agents/razar/test_ignition_sequence.py` | No description | agents, razar |
+| `tests/agents/razar/test_mission_brief_rotation.py` | No description | razar |
 | `tests/agents/razar/test_module_builder.py` | No description | agents |
 | `tests/agents/razar/test_planning_engine.py` | No description | agents, yaml |
 | `tests/agents/razar/test_pytest_runner.py` | No description | agents, pytest |
@@ -410,7 +436,11 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/agents/test_narrative_scribe.py` | No description | agents, citadel, memory |
 | `tests/agents/test_razar_blueprint_synthesizer.py` | No description | None |
 | `tests/agents/test_razar_cli.py` | No description | agents, pytest |
+| `tests/audio/test_mix_tracks.py` | No description | numpy, pytest, src |
+| `tests/bana/test_event_structurizer.py` | No description | bana, jsonschema, pytest |
 | `tests/conftest.py` | Pytest configuration and shared fixtures. | coverage, prometheus_client, pytest, scipy, spiral_os |
+| `tests/core/test_memory_physical.py` | No description | core, numpy, pytest |
+| `tests/crown/server/test_server.py` | Tests for server. | crown_config, fastapi, httpx, numpy |
 | `tests/crown/test_config.py` | Tests for crown config. | crown_config |
 | `tests/crown/test_console_startup.py` | Tests for crown console startup. | pytest |
 | `tests/crown/test_decider.py` | Tests for crown decider. | None |
@@ -426,16 +456,28 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/crown/test_start_console_trap.py` | Tests for start crown console trap. | pytest |
 | `tests/data/short_wav_base64.py` | No description | None |
 | `tests/data/test1_wav_base64.py` | Tests for test1 wav base64. | None |
+| `tests/fixtures/razar_base_module.py` | No description | None |
+| `tests/heart/memory_emotional/test_memory_emotional.py` | Tests for memory emotional. | memory, pytest |
 | `tests/helpers/config_stub.py` | Provide a minimal configuration object for tests. | None |
 | `tests/helpers/emotion_stub.py` | Minimal stub for :mod:`INANNA_AI.emotion_analysis` used in tests. | None |
 | `tests/helpers/mock_training_data.py` | No description | None |
+| `tests/ignition/test_crown_wakes_services.py` | No description | agents, numpy, pytest, razar |
+| `tests/ignition/test_full_stack.py` | No description | agents, pytest, razar |
+| `tests/ignition/test_validate_ignition_script.py` | No description | scripts |
+| `tests/integration/test_mix_and_store.py` | No description | core, numpy, src |
 | `tests/memory/test_cortex_concurrency.py` | Concurrency checks for cortex memory operations. | memory |
 | `tests/memory/test_memory_store_fallback.py` | No description | None |
 | `tests/memory/test_sharded_memory_store.py` | No description | numpy |
 | `tests/memory/test_vector_memory.py` | Verify snapshot persistence and clustering for vector memory. | numpy, pytest |
 | `tests/memory/test_vector_persistence.py` | Exercise FAISS/SQLite backed vector persistence. | numpy, pytest |
-| `tests/narrative_engine/test_biosignal_pipeline.py` | Tests for biosignal ingestion and transformation. | memory, pytest, src |
+| `tests/narrative_engine/test_biosignal_pipeline.py` | No description | memory, pytest, src |
 | `tests/narrative_engine/test_biosignal_transformation.py` | Validate biosignal action transformation during ingestion. | memory, pytest, scripts |
+| `tests/narrative_engine/test_dataset_hashes.py` | Verify biosignal dataset hashes. | data, pytest |
+| `tests/narrative_engine/test_event_storage.py` | Ensure biosignal rows transform, persist, and can be retrieved. | memory, pytest, scripts |
+| `tests/narrative_engine/test_ingest_persist_retrieve.py` | No description | fastapi, memory, scripts |
+| `tests/narrative_engine/test_ingestion_to_mistral_output.py` | No description | memory, pytest, scripts, src |
+| `tests/narrative_engine/test_jsonl_ingest_persist_retrieve.py` | No description | memory, scripts |
+| `tests/narrative_engine/test_multitrack_output.py` | No description | memory |
 | `tests/performance/test_task_parser_performance.py` | Tests for task parser performance. | None |
 | `tests/performance/test_vector_memory_performance.py` | Tests for vector memory performance. | None |
 | `tests/root/test_chakra_integration.py` | Tests for root chakra integration. | INANNA_AI, INANNA_AI_AGENT, dashboard |
@@ -549,7 +591,6 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_media_audio.py` | Regression tests for media.audio package. | pytest, src |
 | `tests/test_media_avatar.py` | Regression tests for media.avatar package. | pytest, src |
 | `tests/test_media_video.py` | Regression tests for media.video module. | pytest, src |
-| `tests/test_memory_emotional.py` | Tests for memory emotional. | memory, pytest |
 | `tests/test_memory_persistence.py` | Test concurrent vector memory persistence and recovery. | fakeredis, pytest |
 | `tests/test_memory_search.py` | Tests for memory search. | memory |
 | `tests/test_memory_snapshot.py` | Tests for memory snapshot. | None |
@@ -575,6 +616,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_nigredo_layer.py` | Tests for nigredo layer. | INANNA_AI |
 | `tests/test_openwebui_state_updates.py` | No description | httpx, tests |
 | `tests/test_operator_api.py` | No description | fastapi, pytest |
+| `tests/test_operator_command_route.py` | No description | fastapi, pytest |
 | `tests/test_optional_imports.py` | Tests for optional imports. | None |
 | `tests/test_orchestration_master.py` | Tests for orchestration master optional agents. | src |
 | `tests/test_orchestrator.py` | Tests for orchestrator. | core, rag, tests |
@@ -627,7 +669,6 @@ Generated automatically. Lists each Python file with its description and externa
 | `tests/test_security_canary.py` | No description | agents |
 | `tests/test_self_correction_engine.py` | Tests for self correction engine. | core |
 | `tests/test_servant_model_manager.py` | Tests for servant model manager. | None |
-| `tests/test_server.py` | Tests for server. | crown_config, fastapi, httpx, numpy |
 | `tests/test_server_endpoints.py` | Exercise lightweight server endpoints. | crown_config, fastapi, pytest |
 | `tests/test_session_logger.py` | Tests for session logger. | tools |
 | `tests/test_seven_dimensional_music.py` | Tests for seven dimensional music. | MUSIC_FOUNDATION, SPIRAL_OS, numpy, soundfile |
@@ -709,6 +750,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `tools/session_logger.py` | Utility functions to log session audio and video. | imageio, numpy |
 | `tools/virtual_env_manager.py` | Utilities for working with Python virtual environments. | None |
 | `tools/voice_conversion.py` | Command line wrappers for voice conversion tools. | None |
+| `training/fine_tune_mistral.py` | Fine-tune Mistral model on mythological and project corpora. | None |
 | `training_guide.py` | Log intent outcomes for reinforcement learning. | INANNA_AI, crown_config |
 | `transformers/__init__.py` | Lightweight transformer stubs for testing. | None |
 | `vector_memory.py` | FAISS/SQLite-backed text vector store with decay and operation logging. | MUSIC_FOUNDATION, crown_config, faiss, memory, numpy, sklearn |
