@@ -378,8 +378,9 @@ class MoGEOrchestrator:
             if "Extended" in meaning and self._invocation_engine is not None:
                 steps = self._invocation_engine.invoke_ritual("silence_introspection")
                 self._memory_logger.log_ritual_result("silence_introspection", steps)
-        except Exception:
-            pass
+        except Exception:  # pragma: no cover - safeguard
+            logger.exception("silence introspection failed; skipping ritual")
+            self._memory_logger.log_ritual_result("silence_introspection", [])
 
         return result
 
