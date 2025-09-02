@@ -7,6 +7,7 @@ optional dependencies such as ``faiss`` or ``numpy`` are unavailable.
 from __future__ import annotations
 
 import json
+import logging
 import shutil
 import sqlite3
 import threading
@@ -25,6 +26,9 @@ try:  # pragma: no cover - optional dependency
     import faiss
 except Exception:  # pragma: no cover - optional dependency
     faiss = cast(Any, None)
+
+
+logger = logging.getLogger(__name__)
 
 
 class MemoryStore:
@@ -250,8 +254,8 @@ class MemoryStore:
         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
         try:
             self.snapshot(self.snapshot_dir / self.db_path.name)
-        except Exception:
-            pass
+        except Exception:  # pragma: no cover - best effort
+            logger.exception("snapshot failed")
 
 
 class ShardedMemoryStore:
