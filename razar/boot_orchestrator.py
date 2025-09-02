@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 import argparse
 import asyncio
@@ -97,9 +97,18 @@ def _persist_handshake(response: Optional[CrownResponse]) -> None:
     if response is not None:
         data["capabilities"] = response.capabilities
         data["downtime"] = response.downtime
+        data["handshake"] = {
+            "acknowledgement": response.acknowledgement,
+            "capabilities": response.capabilities,
+            "downtime": response.downtime,
+        }
     else:
         data.setdefault("capabilities", [])
         data.setdefault("downtime", {})
+        data.setdefault(
+            "handshake",
+            {"acknowledgement": "", "capabilities": [], "downtime": {}},
+        )
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps(data, indent=2))
 
@@ -139,19 +148,13 @@ def _ensure_glm4v(capabilities: List[str]) -> None:
 
     launcher = Path(__file__).resolve().parents[1] / "crown_model_launcher.sh"
     LOGGER.info("Launching GLM-4.1V via %s", launcher)
-    result = subprocess.run(
-        ["bash", str(launcher)],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    status = "success" if result.returncode == 0 else "failure"
-    mission_logger.log_event(
-        "model_launch",
-        "GLM-4.1V",
-        status,
-        result.stdout.strip(),
-    )
+    proc = subprocess.Popen(["bash", str(launcher)])
+    returncode = 0
+    if hasattr(proc, "wait"):
+        proc.wait()
+        returncode = getattr(proc, "returncode", 0)
+    status = "success" if returncode == 0 else "failure"
+    mission_logger.log_event("model_launch", "GLM-4.1V", status, "")
     launches = data.get("launched_models", [])
     if "GLM-4.1V" not in launches:
         launches.append("GLM-4.1V")
@@ -159,8 +162,8 @@ def _ensure_glm4v(capabilities: List[str]) -> None:
     data["last_model_launch"] = {
         "model": "GLM-4.1V",
         "status": status,
-        "returncode": result.returncode,
-        "output": result.stdout.strip(),
+        "returncode": returncode,
+        "output": "",
     }
 
     archive_dir = LOGS_DIR / "mission_briefs"
@@ -173,7 +176,7 @@ def _ensure_glm4v(capabilities: List[str]) -> None:
         encoding="utf-8",
     )
     response_path.write_text(
-        json.dumps({"status": status, "returncode": result.returncode}),
+        json.dumps({"status": status, "returncode": returncode}),
         encoding="utf-8",
     )
     _rotate_mission_briefs(archive_dir)
@@ -223,6 +226,7 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
 
     mission_logger.log_event("handshake", "crown", status, details)
     _persist_handshake(response)
+    _ensure_glm4v(response.capabilities)
     response_path.write_text(json.dumps(asdict(response), indent=2))
     _rotate_mission_briefs(archive_dir)
 
@@ -278,8 +282,7 @@ def main() -> None:
     )
 
     components = load_config(args.config)
-    response = _perform_handshake(components)
-    _ensure_glm4v(response.capabilities)
+    _perform_handshake(components)
     launch_required_agents()
     processes: List[subprocess.Popen] = []
 
