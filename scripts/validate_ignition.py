@@ -1,3 +1,5 @@
+"""Validate ignition module for scripts."""
+
 from __future__ import annotations
 
 import asyncio

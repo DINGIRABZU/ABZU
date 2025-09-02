@@ -1,6 +1,7 @@
+"""Retrieval helper for vector memory documents."""
+
 from __future__ import annotations
 
-"""Retrieval helper for vector memory documents."""
 # ruff: noqa: E402
 
 import argparse

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Run all benchmark scripts and report their metrics."""
+
+from __future__ import annotations
 
 import json
 import sys

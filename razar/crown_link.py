@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """WebSocket link between RAZAR and the CROWN agent.
 
 This module implements a tiny WebSocket client used by the external RAZAR
@@ -23,6 +19,10 @@ A structured prompt template for the GLM‑4.1V‑9B model is provided via
 :func:`build_patch_prompt` which fills the ``PATCH_PROMPT_TEMPLATE`` with error
 context.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from dataclasses import asdict, dataclass
 import json

@@ -1,3 +1,5 @@
+"""Tests for corpus memory logging."""
+
 import json
 
 import corpus_memory_logging as cml

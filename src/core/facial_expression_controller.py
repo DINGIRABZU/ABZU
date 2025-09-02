@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Basic facial expression control utilities."""
+
+from __future__ import annotations
 
 from typing import Dict, Tuple
 

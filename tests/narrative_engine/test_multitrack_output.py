@@ -1,3 +1,5 @@
+"""Tests for multitrack output."""
+
 from memory.narrative_engine import StoryEvent, compose_multitrack_story
 
 __version__ = "0.1.0"

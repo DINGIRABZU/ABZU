@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """LTX video processing utilities."""
+
+from __future__ import annotations
 
 
 class LTXVideoProcessor:

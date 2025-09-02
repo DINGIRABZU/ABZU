@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Albedo personality layer combining state context with the GLM."""
+
+from __future__ import annotations
 
 from SPIRAL_OS import qnl_engine
 

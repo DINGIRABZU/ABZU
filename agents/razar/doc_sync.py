@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Synchronize key documentation after component changes.
 
 This helper refreshes the primary RAZAR documentation artefacts:
@@ -14,6 +10,10 @@ This helper refreshes the primary RAZAR documentation artefacts:
 Call :func:`sync_docs` after any successful repair or scaffold so operators can
 rely on up‑to‑date references. Run manually with ``python -m agents.razar.doc_sync``.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from pathlib import Path
 import subprocess

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Music oracle that mixes RAG search with audio emotion analysis."""
+
+from __future__ import annotations
 
 import argparse
 from pathlib import Path

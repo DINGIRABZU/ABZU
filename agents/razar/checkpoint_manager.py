@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Simple checkpoint manager for RAZAR components.
 
 The manager persists boot progress in ``logs/razar_state.json`` so the runtime
@@ -10,6 +6,10 @@ successful component name is appended to a ``history`` list alongside the
 ``last_component`` field.  Checkpoints can be cleared to restart from the
 beginning.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from pathlib import Path
 import json

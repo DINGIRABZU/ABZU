@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Minimal audio segment abstraction with optional NumPy backend.
 
 This module exposes :class:`AudioSegment` which resolves to the pydub class
@@ -9,6 +7,8 @@ pydub API used across the project.  The NumPy backend relies on ``soundfile``
 for I/O and performs simple operations such as overlay, gain, panning and
 fades directly on arrays.
 """
+
+from __future__ import annotations
 
 import logging
 import os

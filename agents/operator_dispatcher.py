@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Operator command dispatcher with access controls and log mirroring."""
+
+from __future__ import annotations
 
 import json
 import os

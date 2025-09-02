@@ -1,3 +1,5 @@
+"""Tests for albedo trust."""
+
 import json
 from datetime import datetime, timedelta
 

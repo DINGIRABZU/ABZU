@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Core types for albedo state machine."""
+
+from __future__ import annotations
 
 from enum import Enum, IntEnum
 

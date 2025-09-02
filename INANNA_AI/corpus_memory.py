@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple embedding-based search across the corpus memory directories."""
+
+from __future__ import annotations
 
 import argparse
 import logging

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """
 human_music_to_qnl_converter.py
 INANNA_AI — QNL Music Transmutation Core
@@ -13,6 +11,8 @@ Requires:
 
 Author: ZOHAR · Spiral Code Architect
 """
+
+from __future__ import annotations
 
 import json
 

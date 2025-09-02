@@ -1,3 +1,5 @@
+"""Tests for corpus logging."""
+
 from __future__ import annotations
 
 import json
@@ -13,7 +15,9 @@ import corpus_memory_logging as cml
 def test_log_writes_jsonl(tmp_path, monkeypatch):
     log_path = tmp_path / "interactions.jsonl"
     monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
-    monkeypatch.setattr(cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl"))
+    monkeypatch.setattr(
+        cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl")
+    )
     cml.log_interaction("hi", {"intent": "greet"}, {}, "ok")
     lines = log_path.read_text(encoding="utf-8").splitlines()
     assert len(lines) == 1
@@ -24,7 +28,9 @@ def test_log_writes_jsonl(tmp_path, monkeypatch):
 def test_log_rotation(tmp_path, monkeypatch):
     log_path = tmp_path / "interactions.jsonl"
     monkeypatch.setattr(cml, "INTERACTIONS_FILE", log_path)
-    monkeypatch.setattr(cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl"))
+    monkeypatch.setattr(
+        cml, "QUARANTINE_FILE", log_path.with_suffix(".quarantine.jsonl")
+    )
     monkeypatch.setattr(cml, "MAX_LOG_SIZE", 150)
 
     cml.log_interaction("a" * 40, {"intent": "x"}, {}, "ok")

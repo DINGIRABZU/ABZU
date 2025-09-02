@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Utility to parse directories into text chunks for RAG."""
+
+from __future__ import annotations
 
 import argparse
 from pathlib import Path

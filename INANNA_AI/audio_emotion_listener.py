@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Capture microphone audio and estimate the speaker's emotion.
 
 This module previously relied on :mod:`core.utils.optional_deps` to lazily
@@ -14,6 +12,8 @@ on ``core`` and instead perform lightweight ``try``/``except`` imports.  When
 ``librosa`` is unavailable a simple NumPy based analysis is used so that the
 functions remain functional for the unit tests.
 """
+
+from __future__ import annotations
 
 import logging
 from typing import Dict

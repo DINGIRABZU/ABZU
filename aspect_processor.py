@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Utility functions for aspect analysis and logging.
 
 This module provides simple analysis helpers that log results under
@@ -7,6 +5,8 @@ This module provides simple analysis helpers that log results under
 appending the same information to an aspect-specific log file for
 auditing and cross-layer referencing.
 """
+
+from __future__ import annotations
 
 import json
 from datetime import datetime

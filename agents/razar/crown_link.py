@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Communication link between the RAZAR agent and CROWN.
 
 This module implements a tiny WebSocket client used by the development
@@ -11,6 +7,10 @@ turn replies with code suggestions or architectural revisions.  Every request
 and response pair is recorded as a JSON line under
 ``logs/razar_crown_dialogues.json`` for later inspection.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone

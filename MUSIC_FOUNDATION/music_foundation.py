@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """
 music_foundation.py
 INANNA_AI — QNL Sonic Decoder
@@ -11,6 +9,8 @@ pitch, and harmonic structure, and prepares it for QNL transformation
 Requirements:
     pip install librosa soundfile numpy scipy
 """
+
+from __future__ import annotations
 
 import numpy as np
 

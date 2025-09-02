@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Structured mission logger for RAZAR components.
 
 This module records lifecycle events for RAZAR components in a JSON lines log
@@ -20,6 +16,10 @@ find the last successful component or rendered as a chronological timeline for
 debugging.  The ``razar timeline`` CLI subcommand uses this module to
 reconstruct mission events.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from dataclasses import dataclass
 import argparse

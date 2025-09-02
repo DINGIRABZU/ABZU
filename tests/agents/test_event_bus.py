@@ -1,3 +1,5 @@
+"""Tests for event bus."""
+
 from citadel.event_producer import Event, EventProducer
 
 from agents.event_bus import emit_event, set_event_producer

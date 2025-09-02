@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Large World Model package."""
+
+from __future__ import annotations
 
 from .config_model import LWMConfig, load_config
 from .large_world_model import LargeWorldModel

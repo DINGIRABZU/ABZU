@@ -1,3 +1,5 @@
+"""Tests for task profiling wrappers."""
+
 import sys
 from pathlib import Path
 
@@ -13,5 +15,8 @@ def test_classify_and_ritual_sequence(monkeypatch):
     monkeypatch.setattr(tp, "_profiler", TaskProfiler(ritual_profile=profile))
     assert tp.classify_task("how to bake") == "instructional"
     assert tp.classify_task({"text": "I feel joy"}) == "emotional"
-    assert tp.classify_task({"ritual_condition": "sleep", "emotion_trigger": "tired"}) == "ritual"
+    assert (
+        tp.classify_task({"ritual_condition": "sleep", "emotion_trigger": "tired"})
+        == "ritual"
+    )
     assert tp.ritual_action_sequence("sleep", "tired") == ["rest"]

@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Rebuild RAZAR modules from documentation references.
 
 This utility scans project documentation and the system blueprint for links to
@@ -14,6 +10,10 @@ original repository remains untouched.  This is primarily intended for recovery
 or "from scratch" rebuild scenarios where a clean project tree must be
 reconstructed from the docs alone.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from pathlib import Path
 import re

@@ -1,3 +1,5 @@
+"""Tests for memory store fallback."""
+
 import memory_store as ms
 
 

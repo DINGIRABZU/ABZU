@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Check that the server is healthy and ready on Vast.ai."""
+
+from __future__ import annotations
 
 import argparse
 import asyncio

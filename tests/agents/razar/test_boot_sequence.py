@@ -1,3 +1,5 @@
+"""Tests for boot sequence."""
+
 import json
 from pathlib import Path
 

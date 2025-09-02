@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Generate rudimentary facial landmarks based on dialogue cues."""
+
+from __future__ import annotations
 
 from typing import Dict, List, Sequence, Tuple
 

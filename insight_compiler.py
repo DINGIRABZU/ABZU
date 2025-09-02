@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Aggregate interaction logs into an insight matrix."""
+
+from __future__ import annotations
 
 import json
 import os

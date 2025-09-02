@@ -1,11 +1,11 @@
-from __future__ import annotations
-
 """Bio-adaptive narrator using biosignal streams to craft stories.
 
 This module ingests biosignals via :mod:`biosppy` and uses a
 :mod:`transformers` text generation pipeline to narrate the subject's
 state. The main entry point is :func:`generate_story`.
 """
+
+from __future__ import annotations
 
 from typing import Iterable
 

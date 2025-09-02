@@ -1,3 +1,5 @@
+"""Tests for crown wakes services."""
+
 import sys
 import json
 import types

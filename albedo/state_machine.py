@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """State machine driven by trust and entity category."""
+
+from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum

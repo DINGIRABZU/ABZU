@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Helpers for preparing language model insights for spoken summaries.
 
 The insight system generates structured metrics describing how well different
@@ -13,6 +11,8 @@ here so the module can be reused by the CLI, the server or other tools without
 pulling in heavy dependencies.  Missing fields are handled gracefully so callers
 may pass partially filled mappings without defensive checks.
 """
+
+from __future__ import annotations
 
 from typing import Dict, Optional
 

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Train and apply a simple emotion classifier using scikit-learn."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple

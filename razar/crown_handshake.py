@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.4"
-
 """WebSocket handshake between RAZAR and the CROWN stack.
 
 This module sends a mission brief to the CROWN agent and awaits an
@@ -9,6 +5,10 @@ acknowledgment containing the capabilities available for the current
 session.  Every exchange is appended to ``logs/razar_crown_dialogues.json``
 so operators can audit the dialogue later.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.4"
 
 from dataclasses import asdict, dataclass
 import json

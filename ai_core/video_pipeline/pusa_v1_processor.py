@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Pusa V1 video processing utilities."""
+
+from __future__ import annotations
 
 
 class PusaV1Processor:

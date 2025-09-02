@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Analyze spiral memory to suggest archetype shifts."""
+
+from __future__ import annotations
 
 from collections import Counter
 from typing import List

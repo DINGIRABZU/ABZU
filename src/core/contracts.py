@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Protocol definitions for cross-module services."""
+
+from __future__ import annotations
 
 from typing import Any, Dict, List, Protocol
 

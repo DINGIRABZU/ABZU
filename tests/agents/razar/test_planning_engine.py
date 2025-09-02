@@ -1,3 +1,5 @@
+"""Tests for planning engine."""
+
 import json
 from pathlib import Path
 
@@ -43,9 +45,7 @@ def test_plan_generation(tmp_path):
     )
 
     output = tmp_path / "plans.json"
-    plans = pe.plan(
-        knowledge_path=kp, output=output, log_path=log, priorities_path=pp
-    )
+    plans = pe.plan(knowledge_path=kp, output=output, log_path=log, priorities_path=pp)
 
     assert output.exists()
     assert plans["a"]["steps"] == ["c", "b", "a"]

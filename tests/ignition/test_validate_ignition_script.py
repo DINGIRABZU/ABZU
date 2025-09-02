@@ -1,3 +1,5 @@
+"""Tests for validate ignition script."""
+
 import asyncio
 import json
 from pathlib import Path

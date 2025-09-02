@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Real-time microphone listening with basic feature extraction."""
+
+from __future__ import annotations
 
 import asyncio
 import json

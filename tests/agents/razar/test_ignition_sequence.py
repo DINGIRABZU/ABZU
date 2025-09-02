@@ -1,3 +1,5 @@
+"""Tests for ignition sequence."""
+
 import json
 import sys
 import types

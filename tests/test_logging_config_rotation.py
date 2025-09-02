@@ -1,3 +1,5 @@
+"""Tests for logging config rotation."""
+
 import hashlib
 import logging
 import logging.config

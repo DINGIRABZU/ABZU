@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Fine-tune the model from retrieval insights."""
+
+from __future__ import annotations
 
 import argparse
 import json

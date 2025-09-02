@@ -1,3 +1,5 @@
+"""Tests for rival messaging."""
+
 from agents.albedo import compose_message_rival
 from albedo import State, Magnitude
 from src.core.utils.seed import seed_all

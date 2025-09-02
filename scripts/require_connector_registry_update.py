@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Ensure connector registry updates accompany connector changes.
 
 If any tracked connector source files are staged for commit, this hook
@@ -8,6 +6,8 @@ staged files as well. Tracked connector paths are derived from the
 ``code`` column of the registry so the check automatically adapts when
 new connectors are registered.
 """
+
+from __future__ import annotations
 
 __version__ = "0.1.0"
 

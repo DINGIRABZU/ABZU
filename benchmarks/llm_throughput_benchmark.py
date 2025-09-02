@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Benchmark transformer throughput in tokens per second."""
+
+from __future__ import annotations
 
 import json
 import sys

@@ -1,3 +1,5 @@
+"""Tests for remote loader."""
+
 from __future__ import annotations
 
 import threading
@@ -38,7 +40,7 @@ def test_patch_on_failure(tmp_path: Path) -> None:
     agent_dir.mkdir()
     agent_code = (
         "def configure():\n    return {'name': 'patcher'}\n\n"
-        "def patch(context=None):\n    return \"def add(a, b):\\n    return a + b\\n\"\n"
+        'def patch(context=None):\n    return "def add(a, b):\\n    return a + b\\n"\n'
     )
     (agent_dir / "remote_agent.py").write_text(agent_code, encoding="utf-8")
 

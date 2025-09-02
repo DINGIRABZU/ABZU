@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Cluster spiral memory vectors into archetypal groups."""
+
+from __future__ import annotations
 
 import argparse
 import json

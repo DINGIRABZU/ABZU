@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple runtime context flags."""
+
+from __future__ import annotations
 
 from dataclasses import dataclass
 

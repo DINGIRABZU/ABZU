@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Utilities for quarantining failing components.
 
 Components that fail during boot are moved to the top-level ``quarantine``
@@ -10,6 +6,10 @@ additional diagnostic information which is recorded alongside quarantine
 events. Once a patch is verified, components can be reactivated either
 manually or automatically.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from datetime import datetime
 from pathlib import Path

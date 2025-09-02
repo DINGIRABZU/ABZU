@@ -1,3 +1,5 @@
+"""Tests for biosignal pipeline."""
+
 from __future__ import annotations
 
 import csv

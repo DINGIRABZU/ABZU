@@ -1,6 +1,7 @@
+"""Tests for pytest runner."""
+
 import json
 
-import pytest
 
 from agents.razar import pytest_runner as pr
 
@@ -20,9 +21,15 @@ def test_run_pytest_logs_and_plans(monkeypatch, tmp_path):
         return 1
 
     monkeypatch.setattr(pr.pytest, "main", fake_main)
-    monkeypatch.setattr(pr, "_last_failed", lambda root: "tests/test_example.py::test_fail")
+    monkeypatch.setattr(
+        pr, "_last_failed", lambda root: "tests/test_example.py::test_fail"
+    )
     monkeypatch.setattr(pr, "_attempt_repair", lambda *a, **k: False)
-    monkeypatch.setattr(pr, "_guess_module_path", lambda root, node: (module_path, root / node.split("::")[0]))
+    monkeypatch.setattr(
+        pr,
+        "_guess_module_path",
+        lambda root, node: (module_path, root / node.split("::")[0]),
+    )
 
     called = {}
 

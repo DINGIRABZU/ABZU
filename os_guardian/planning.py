@@ -1,11 +1,11 @@
-from __future__ import annotations
-
 """LangChain-based planner turning instructions into tool sequences.
 
 The planner exposes :class:`GuardianPlanner` which builds a small LangChain agent
 using the perception and action modules as tools. Generated plans are stored in a
 vector store so future instructions may reference past context.
 """
+
+from __future__ import annotations
 
 import logging
 from dataclasses import dataclass

@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Discord bot that forwards messages to the `/glm-command` endpoint."""
+
+from __future__ import annotations
 
 __version__ = "0.1.0"
 

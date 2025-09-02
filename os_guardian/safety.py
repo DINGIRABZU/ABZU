@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Permission checks and rollback helpers for OS Guardian actions."""
+
+from __future__ import annotations
 
 import logging
 import os

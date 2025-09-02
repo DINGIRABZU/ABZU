@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Temporary sandbox for module patches from CROWN.
 
 This helper clones selected components into a temporary directory, applies
@@ -12,6 +8,10 @@ Example::
 
     python -m razar.module_sandbox path/to/module --patch response.diff
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 import argparse
 import shutil

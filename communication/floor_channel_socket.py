@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Socket.IO server managing floor and channel rooms."""
+
+from __future__ import annotations
 
 import socketio
 

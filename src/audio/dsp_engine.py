@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Basic audio DSP utilities primarily using ffmpeg."""
+
+from __future__ import annotations
 
 import shutil
 import subprocess

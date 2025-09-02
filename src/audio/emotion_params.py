@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Emotion to music parameter resolution helpers."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from typing import List, Tuple
@@ -23,7 +23,9 @@ def _load_map() -> dict:
     return load_emotion_music_map(EMOTION_MAP)
 
 
-def resolve(emotion: str, archetype: str | None = None) -> Tuple[float, List[str], str, str]:
+def resolve(
+    emotion: str, archetype: str | None = None
+) -> Tuple[float, List[str], str, str]:
     """Return tempo, melody, wave type and resolved archetype."""
 
     if archetype is None:

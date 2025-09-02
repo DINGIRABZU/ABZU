@@ -1,3 +1,5 @@
+"""Tests for openwebui state updates."""
+
 from __future__ import annotations
 
 import asyncio

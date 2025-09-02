@@ -1,3 +1,5 @@
+"""Tests for vision adapter."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -21,9 +23,7 @@ def test_stream_triggers_plan() -> None:
         called["count"] += 1
         return {"vision_adapter": {"component": "agents.razar.vision_adapter"}}
 
-    adapter = VisionAdapter(
-        module_map={"object": "vision_adapter"}, planner=fake_plan
-    )
+    adapter = VisionAdapter(module_map={"object": "vision_adapter"}, planner=fake_plan)
 
     results = list(adapter.stream([frame]))
     assert called["count"] == 1

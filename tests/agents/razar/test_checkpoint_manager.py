@@ -1,3 +1,5 @@
+"""Tests for checkpoint manager."""
+
 from pathlib import Path
 import json
 

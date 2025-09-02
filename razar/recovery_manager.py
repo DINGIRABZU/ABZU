@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Basic recovery manager coordinating shutdown, patching and resumption.
 
 The real system uses a message bus and remote code repair agents.  For the
@@ -9,6 +5,10 @@ purposes of this repository we persist a minimal audit trail under the
 ``recovery_state`` directory so unit tests can assert behaviour without the
 runtime infrastructure.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 from dataclasses import dataclass, asdict
 import json

@@ -1,3 +1,5 @@
+"""Tests for security canary."""
+
 from __future__ import annotations
 
 import sys
@@ -22,9 +24,7 @@ def test_canary_triggers_snapshot_and_alert(tmp_path):
     def fake_alert(msg: str) -> None:
         messages.append(msg)
 
-    handled = security_canary.detect_breach(
-        True, snap_func=fake_snap, alert=fake_alert
-    )
+    handled = security_canary.detect_breach(True, snap_func=fake_snap, alert=fake_alert)
 
     assert handled is True
     assert snap_called

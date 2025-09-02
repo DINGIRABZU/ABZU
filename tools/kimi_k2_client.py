@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """HTTP client for the Kimi-K2 servant model."""
+
+from __future__ import annotations
 
 __version__ = "0.1.0"
 

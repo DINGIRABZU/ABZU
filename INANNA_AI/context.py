@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Lightweight context memory for recent user prompts."""
+
+from __future__ import annotations
 
 from collections import deque
 from typing import Deque, List

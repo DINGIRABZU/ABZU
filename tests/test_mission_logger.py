@@ -1,3 +1,5 @@
+"""Tests for mission logger."""
+
 import json
 from razar import mission_logger
 

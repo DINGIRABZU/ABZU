@@ -1,9 +1,9 @@
-from __future__ import annotations
-
 """Simple JSONL log of emotional interactions for language models.
 
 The timestamp is stored in ISO format with UTC timezone.
 """
+
+from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass, field

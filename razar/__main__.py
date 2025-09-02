@@ -1,8 +1,8 @@
+"""Command line utilities for operating the RAZAR lifecycle bus."""
+
 from __future__ import annotations
 
 __version__ = "0.2.2"
-
-"""Command line utilities for operating the RAZAR lifecycle bus."""
 
 import argparse
 from pathlib import Path

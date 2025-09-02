@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Evaluate pretrained emotion models on a labelled dataset."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from typing import Iterable, Tuple

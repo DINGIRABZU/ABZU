@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Wrappers around OS input automation and browser control."""
+
+from __future__ import annotations
 
 import logging
 import shlex

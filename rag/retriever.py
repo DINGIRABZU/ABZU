@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Query Chroma collections using a shared embedding model."""
+
+from __future__ import annotations
 
 import logging
 import math

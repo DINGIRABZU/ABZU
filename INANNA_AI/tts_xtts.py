@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Text-to-speech wrapper for the XTTS model from Coqui TTS."""
+
+from __future__ import annotations
 
 import tempfile
 from pathlib import Path

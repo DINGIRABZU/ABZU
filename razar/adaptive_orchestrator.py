@@ -1,7 +1,3 @@
-from __future__ import annotations
-
-__version__ = "0.2.2"
-
 """Adaptive orchestrator that searches for efficient boot sequences.
 
 The orchestrator reads component priorities from ``component_priorities.yaml`` and
@@ -13,6 +9,10 @@ current best.
 This module is intentionally lightweight.  It does not launch real services but
 acts as a scaffold for future integration with the RAZAR runtime manager.
 """
+
+from __future__ import annotations
+
+__version__ = "0.2.2"
 
 import argparse
 import json

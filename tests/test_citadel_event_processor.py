@@ -1,3 +1,5 @@
+"""Tests for citadel event processor."""
+
 import asyncio
 from unittest.mock import AsyncMock
 

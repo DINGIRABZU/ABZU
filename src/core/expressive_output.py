@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Coordinate speech synthesis, playback and avatar frames."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from threading import Thread

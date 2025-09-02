@@ -1,3 +1,5 @@
+"""Tests for ingestion to mistral output."""
+
 from __future__ import annotations
 
 from pathlib import Path

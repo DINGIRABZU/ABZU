@@ -1,3 +1,5 @@
+"""Tests for trust registry."""
+
 from __future__ import annotations
 
 import json
@@ -27,6 +29,9 @@ def test_entity_detection_and_persistence(tmp_path, monkeypatch):
     # Invoke again to confirm history persistence
     trust_registry.detect_entity("Albedo")
     data = json.loads(registry.read_text())
-    assert data["albedo"] == [trust_registry.NAZARICK_ROLES["albedo"], trust_registry.NAZARICK_ROLES["albedo"]]
+    assert data["albedo"] == [
+        trust_registry.NAZARICK_ROLES["albedo"],
+        trust_registry.NAZARICK_ROLES["albedo"],
+    ]
     assert data["clementine"] == [trust_registry.RIVALS["clementine"]]
     assert data["bob"] == [trust_registry.DEFAULT_OUTSIDER_TRUST]

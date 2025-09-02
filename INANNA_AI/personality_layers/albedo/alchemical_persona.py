@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """State machine tracking alchemical progress and emotional metrics."""
+
+from __future__ import annotations
 
 import random
 import re

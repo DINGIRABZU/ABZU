@@ -1,3 +1,5 @@
+"""Tests for quarantine manager."""
+
 import json
 from agents.razar import quarantine_manager as qm
 

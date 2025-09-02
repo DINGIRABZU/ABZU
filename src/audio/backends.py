@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Audio playback backends."""
+
+from __future__ import annotations
 
 from pathlib import Path
 from threading import Thread

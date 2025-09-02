@@ -1,3 +1,5 @@
+"""Tests for mission brief rotation."""
+
 from pathlib import Path
 import os
 

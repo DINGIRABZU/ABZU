@@ -1,3 +1,5 @@
+"""Tests for crown handshake."""
+
 import asyncio
 import json
 import types

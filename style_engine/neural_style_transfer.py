@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple neural style transfer utilities."""
+
+from __future__ import annotations
 
 from typing import Iterable
 

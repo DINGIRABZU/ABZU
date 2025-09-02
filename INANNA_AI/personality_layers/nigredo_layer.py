@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Shadow phase personality layer."""
+
+from __future__ import annotations
 
 
 class NigredoPersonality:

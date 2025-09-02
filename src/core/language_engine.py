@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Speech synthesis wrapper that optionally routes audio via a connector."""
+
+from __future__ import annotations
 
 from typing import Callable, Optional
 

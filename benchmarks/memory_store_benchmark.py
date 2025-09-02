@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Benchmark basic memory store operations."""
+
+from __future__ import annotations
 
 import json
 import sys

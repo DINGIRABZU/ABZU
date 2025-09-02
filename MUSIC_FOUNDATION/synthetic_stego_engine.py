@@ -1,6 +1,6 @@
-from __future__ import annotations
-
 """Simple frequency-based steganography routines."""
+
+from __future__ import annotations
 
 from typing import Sequence
 

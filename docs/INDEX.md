@@ -164,6 +164,8 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../README_OPERATOR.md](../README_OPERATOR.md) | Operator Guide | This repository contains several command line utilities for working with the INANNA music tools and Quantum Narrative... | - |
 | [../README_QNL_OS.md](../README_QNL_OS.md) | QNL Integration Overview | The Quantum Narrative Language (QNL) bridges textual symbols with music in Spiral OS. This document explains where th... | - |
 | [../SEVEN_DIMENSIONAL_MUSIC.md](../SEVEN_DIMENSIONAL_MUSIC.md) | 7‑Dimensional Music System | This system layers sound so different beings perceive a single track in unique ways. A core melody becomes the human... | - |
+| [../agents/nazarick/albedo_character.md](../agents/nazarick/albedo_character.md) | albedo_character.md | - | - |
+| [../agents/nazarick/zohar-zero_character.md](../agents/nazarick/zohar-zero_character.md) | zohar-zero_character.md | - | - |
 | [../benchmarks/README.md](../benchmarks/README.md) | Benchmarks | Run `make bench` to execute all benchmarks. Results are written to `data/benchmarks`. | - |
 | [../data/biosignals/README.md](../data/biosignals/README.md) | Biosignal Acquisition Guidelines | This directory hosts anonymized biosignal samples used by the Nazarick Narrative System. | - |
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |

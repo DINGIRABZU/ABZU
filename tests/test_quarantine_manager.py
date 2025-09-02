@@ -1,3 +1,5 @@
+"""Tests for quarantine manager."""
+
 from __future__ import annotations
 
 import sys
@@ -44,4 +46,3 @@ def test_reactivate_requires_verification(tmp_path, monkeypatch):
     assert not (quarantine_dir / "beta.json").exists()
     lines = log_file.read_text(encoding="utf-8").splitlines()
     assert any("reactivated" in line and "auto" in line for line in lines)
-
