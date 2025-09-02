@@ -13,3 +13,5 @@ Canonical registry of ABZU's connectors. Each entry lists the purpose, version, 
 | `telegram_bot` | Telegram channel relay for chat | 0.1.0 | Bot token | `POST /telegram/webhook` | Nazarick Agents | broken | [communication/telegram_bot.py](../../communication/telegram_bot.py) | [communication_interfaces.md](../communication_interfaces.md) | N/A |
 | `primordials_api` | metrics bridge to Primordials service | 0.1.1 | Bearer | `POST /metrics`, `GET /health` | Primordials | experimental | [connectors/primordials_api.py](../../connectors/primordials_api.py) | [primordials_service.md](../primordials_service.md) | [primordials_api.schema.json](../../schemas/primordials_api.schema.json) |
 | `narrative_api` | narrative logging and stream | 0.2.0 (`__version__`) | Bearer | `POST /story`, `GET /story/log`, `GET /story/stream` | vector_memory | experimental | [narrative_api.py](../../narrative_api.py) | [nazarick_narrative_system.md](../nazarick_narrative_system.md) | N/A |
+
+Backlinks: [Component Index](../component_index.md) | [Dependency Index](../dependency_index.md) | [Test Index](../test_index.md)
