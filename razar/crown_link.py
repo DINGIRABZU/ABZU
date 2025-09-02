@@ -8,6 +8,10 @@ This module implements a tiny WebSocket client used by the external RAZAR
 agent to exchange diagnostics with the CROWN LLM stack.  Two message types are
 supported:
 
+- **Endpoints:** ``WS /crown_link``, ``POST /glm-command``
+- **Auth:** Bearer token
+- **Linked agents:** Crown
+
 * ``status`` – notification that a component finished an operation.  The
   payload includes the component name, result (``"ok"``/``"failed"``) and a
   short log snippet.

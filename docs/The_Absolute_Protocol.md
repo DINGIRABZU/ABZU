@@ -32,11 +32,12 @@ During onboarding, contributors record purpose, scope, key rules, and an actiona
 ## Core Pull Request Checklist
 Confirm these items before submitting a pull request:
 
-- [ ] Key-document summaries verified with `scripts/verify_doc_hashes.py`
-- [ ] Version bumps applied and synchronized in `component_index.json`
-- [ ] Connector registry updated for added or modified connectors ([docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md))
-- [ ] Connector entries verified — each connector lists version, endpoints, auth method, status, and doc links
-- [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
+ - [ ] Key-document summaries verified with `scripts/verify_doc_hashes.py`
+ - [ ] Version bumps applied and synchronized in `component_index.json`
+ - [ ] Connector registry updated for added or modified connectors ([docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md))
+ - [ ] Connector entries verified — each connector lists version, endpoints, auth method, status, and doc links
+ - [ ] Obsolete or failing connectors flagged as `deprecated` or `broken` and scheduled for maintenance.
+ - [ ] Change-justification statement included ("I did X on Y to obtain Z, expecting behavior B")
 
 ## Coverage & Testing Requirements
 Each milestone must uphold repository coverage thresholds of **at least 90%** by running `pytest --cov --cov-fail-under=90`; the CI pipeline fails when coverage drops below this target. Audit any failing tests and record them in [docs/testing/failure_inventory.md](testing/failure_inventory.md) before merging. Placeholder markers such as `TODO` or `FIXME` are forbidden—the `scan-todo-fixme` pre-commit hook (`scripts/scan_todo_fixme.py`) blocks commits containing them. See [The Absolute Pytest](the_absolute_pytest.md) for observability and testing guidance.
