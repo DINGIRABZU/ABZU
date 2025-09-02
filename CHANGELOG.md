@@ -55,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Integrated ABZU Project Declaration into `docs/project_mission_vision.md`.
 - Enforced Persona & Responsibilities and Component & Link sections in agent docs and updated contributor checklist.
 - Updated Nazarick narrative system guide with mermaid pipeline diagram and removed obsolete image reference.
 - Added Albedo layer state-machine diagram and deployment guide with sample configuration.
