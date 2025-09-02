@@ -1,7 +1,17 @@
 """Tests for nazarick messaging."""
 
-from agents.albedo import compose_message_nazarick
+import importlib.util
+from pathlib import Path
+
 from albedo import State, Magnitude
+
+
+spec = importlib.util.spec_from_file_location(
+    "albedo_messaging", Path("agents/albedo/messaging.py")
+)
+messaging = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(messaging)
+compose_message_nazarick = messaging.compose_message_nazarick
 
 
 def test_demiurge_message_high_trust():
