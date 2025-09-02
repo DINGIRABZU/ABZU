@@ -5,14 +5,45 @@ RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and o
 ## Vision
 RAZAR bootstraps ABZU services in a reproducible environment and negotiates startup handshakes with the Crown stack.
 
-## Module Overview
+## Persona & Responsibilities
+- Orchestrate multi-layer boot sequences under operator direction.
+- Maintain mission state and quarantine failing components.
+- Delegate complex repairs to remote agents when needed.
+
+## Module Coverage
 RAZAR reads mission briefs, prepares per-layer virtual environments, launches components defined in `boot_config.json`, and records runtime state in `logs/razar_state.json`.
 
-## Workflow
+Covered modules:
+- `boot_orchestrator` – sequential component ignition.
+- `crown_handshake` – capability negotiation with Crown.
+- `environment_builder` – per-layer Python environment setup.
+- `mission_logger` – mission progress persistence.
+- `quarantine_manager` – isolates failed components.
+
+## Functional Workflows
+
+### Boot Orchestration
 1. Parse `boot_config.json` to determine components and health probes.
 2. Prepare Python environments from `razar_env.yaml`.
 3. Ignite components sequentially, validating each with `health_checks.py`.
 4. Persist handshake and mission outcomes to `logs/razar_state.json` and mission‑brief archives.
+
+### Remote Assistance
+RAZAR can delegate missing or failing components to remote agents through
+`ai_invoker.handover`. When a component fails, `ai_invoker` forwards context to a
+configured remote agent, applies any suggested patch with
+`code_repair.repair_module`, and records the interaction in
+`logs/razar_ai_invocations.json` while applied patches are tracked in
+`logs/razar_ai_patches.json`.
+
+```mermaid
+flowchart TD
+    A[Failure Detected] --> B{ai_invoker.handover}
+    B -->|delegate| C[Remote Agent]
+    C -->|suggest patch| D[code_repair.repair_module]
+    D --> E[Component Patched]
+    B -->|log| F[logs/razar_ai_invocations.json]
+```
 
 ## Architecture Diagram
 ```mermaid
@@ -37,24 +68,7 @@ Requires `pyyaml`, `prometheus_client`, `websockets`, and a reachable `CROWN_WS_
 python -m razar.boot_orchestrator --mission demo
 ```
 
-## Remote Assistance
-RAZAR can delegate missing or failing components to remote agents through
-`ai_invoker.handover`. When a component fails, `ai_invoker` forwards context to a
-configured remote agent, applies any suggested patch with
-`code_repair.repair_module`, and records the interaction in
-`logs/razar_ai_invocations.json` while applied patches are tracked in
-`logs/razar_ai_patches.json`.
-
-```mermaid
-flowchart TD
-    A[Failure Detected] --> B{ai_invoker.handover}
-    B -->|delegate| C[Remote Agent]
-    C -->|suggest patch| D[code_repair.repair_module]
-    D --> E[Component Patched]
-    B -->|log| F[logs/razar_ai_invocations.json]
-```
-
-## Configuration Schemas
+## Config Schemas
 
 ### boot_config.json
 ```mermaid
@@ -107,7 +121,7 @@ classDiagram
     RazarState --> ComponentStatus
 ```
 
-## Ignition Example
+## Example Runs
 ```bash
 python -m razar.boot_orchestrator --mission demo --brief examples/demo_brief.json
 ```
@@ -136,12 +150,15 @@ logs/mission_briefs/
 └── demo_2025-09-21T00-00-05Z.json
 ```
 
-## Cross-Links
+## Cross-links
 - [System Blueprint](system_blueprint.md)
 - [RAZAR Guide](RAZAR_GUIDE.md)
 - [Deployment Guide](deployment.md)
 - [Monitoring Guide](monitoring.md)
 - [Protocol Compliance](protocol_compliance.md)
+
+## Component & Link
+- [razar/boot_orchestrator.py](../razar/boot_orchestrator.py)
 
 ## Version History
 | Version | Date | Notes |
