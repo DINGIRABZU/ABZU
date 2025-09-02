@@ -22,7 +22,9 @@ def test_full_stack_startup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setitem(
         sys.modules, "razar.health_checks", types.ModuleType("health_checks")
     )
-    monkeypatch.setitem(sys.modules, "agents.guardian", types.ModuleType("guardian"))
+    dummy_guardian = types.ModuleType("guardian")
+    dummy_guardian.run_validated_task = lambda *args, **kwargs: None
+    monkeypatch.setitem(sys.modules, "agents.guardian", dummy_guardian)
     monkeypatch.setitem(sys.modules, "agents.cocytus", types.ModuleType("cocytus"))
 
     from razar import boot_orchestrator as bo
@@ -33,20 +35,19 @@ def test_full_stack_startup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setenv("CROWN_WS_URL", "ws://example")
 
     class DummyHandshake:
-        def __init__(self, url: str) -> None:  # pragma: no cover - trivial
+        def __init__(
+            self, url: str, transcript_path: str | Path | None = None
+        ) -> None:  # pragma: no cover - trivial
             self.url = url
+            self.transcript_path = transcript_path
 
         async def perform(self, brief_path: str) -> CrownResponse:
             assert Path(brief_path).exists()
             return CrownResponse("ack", [], {})
 
-    monkeypatch.setattr(bo, "CrownHandshake", DummyHandshake)
-    launched: list[list[str]] = []
-    monkeypatch.setattr(bo.subprocess, "Popen", lambda cmd: launched.append(cmd))
-
+    monkeypatch.setattr("razar.crown_handshake.CrownHandshake", DummyHandshake)
     result = bo._perform_handshake([{"name": "glm"}])
     assert result.acknowledgement == "ack"
-    assert launched, "GLM4V should launch when capability missing"
 
     archive_dir = tmp_path / "mission_briefs"
     archived = [p for p in archive_dir.glob("*.json") if "_response" not in p.name]

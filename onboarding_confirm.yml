@@ -70,7 +70,7 @@ documents:
       key_rules: Preserve vector memory API contracts.
       insight: Review before modifying memory features.
   docs/rag_pipeline.md:
-    sha256: 24d2154f4a2db1aceba6aaf05c03bc6c34119ba58b82159345f5d2c0eb36e0dc
+    sha256: ede89d0370b924a386236c48cde9b21f959f90c8518f805712c9539568099a20
     summary:
       purpose: Retrieval-augmented generation pipeline.
       scope: RAG processes.
