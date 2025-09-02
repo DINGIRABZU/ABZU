@@ -312,7 +312,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
-| [nazarick_narrative_system.md](nazarick_narrative_system.md) | Deprecated | See [Narrative Engine Guide](narrative_engine_GUIDE.md). | - |
+| [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | The Nazarick Narrative System converts biosignals into narrative events and persistent memory records. | - |
 | [nazarick_web_console.md](nazarick_web_console.md) | Nazarick Web Console | The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing m... | `../connectors/webrtc_connector.py`, `../operator_api.py` |
 | [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onbo... | - |
 | [onboarding/test_planning.md](onboarding/test_planning.md) | Test Planning Guide | Instructions for opening a "Test Plan" issue to coordinate tests across chakras and maintain coverage goals. | - |

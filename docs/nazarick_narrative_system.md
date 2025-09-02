@@ -1,9 +1,35 @@
-# Deprecated
+# Nazarick Narrative System
 
-See [Narrative Engine Guide](narrative_engine_GUIDE.md).
+The Nazarick Narrative System converts biosignals into narrative events and persistent memory records.
 
-## Version Table
+## Architecture Diagram
 
-| Commit | Dataset |
-| --- | --- |
-| [eac758a](https://github.com/search?q=eac758a06df7a5e1db89b510d690d415a2536d46) | [biosignal samples](../data/biosignals/README.md) |
+```mermaid
+%% Narrative engine flow
+flowchart LR
+    B[Biosignal Event] --> I[Ingestion Scripts]
+    I --> M{Narrative Engine}
+    M --> A[Narrative API]
+    A --> L[Memory Store]
+    A --> O[Operator]
+```
+
+## Dataset Schema
+
+Biosignal samples are stored as CSV or JSON Lines with the following fields:
+
+| column | type | unit |
+| --- | --- | --- |
+| `timestamp` | ISO 8601 UTC | - |
+| `heart_rate` | float | BPM |
+| `skin_temp` | float | °C |
+| `eda` | float | µS |
+
+See [data/biosignals/README.md](../data/biosignals/README.md) for collection and anonymization guidelines.
+
+## Event Flow
+
+1. Sensors produce anonymized biosignals at 1 Hz.
+2. `scripts/ingest_biosignals.py` transforms rows into descriptive story events via `narrative_engine`.
+3. `narrative_api` exposes `POST /story` for logging events and `GET /story/log` and `GET /story/stream` for retrieval.
+4. Logged stories persist in narrative memory and can be streamed to operators or other agents.
