@@ -36,6 +36,10 @@ data/training/
 
 # Local virtual environment
 .venv/
+
+# Node dependencies
 node_modules/
 floor_client/node_modules/
+
+# Floor client build output
 floor_client/dist/

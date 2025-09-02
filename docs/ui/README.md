@@ -9,6 +9,7 @@ This React/Tailwind interface renders floors with channel tiles and streams mess
    cd floor_client
    npm install
    ```
+   This creates `node_modules/`, which is excluded from version control.
 2. Start the development server:
    ```bash
    npm run dev
