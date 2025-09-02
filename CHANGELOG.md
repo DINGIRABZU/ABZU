@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `docs/SOCIAL_INVESTOR_ONE_PAGER.md` summarizing the project for prospective social investors.
 - Added `docs/component_maturity.md` tracking documentation completeness, coverage, and open issues.
 
+- Documented chakra-aligned test directories and 90% coverage rule in `docs/the_absolute_pytest.md`.
+- Configured CI to archive `htmlcov/` and log coverage metrics even when tests fail.
+
 - Introduced `training/fine_tune_mistral.py` configuring mythological and project corpora.
 - Recorded mythology and project material datasets in `component_index.json`.
 - Listed dataset licensing, version history, and evaluation metrics in `docs/bana_engine.md`.

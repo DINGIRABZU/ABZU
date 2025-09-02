@@ -89,8 +89,10 @@ PY
       - name: Run tests with coverage
         run: pytest --cov
       - name: Export coverage metrics
+        if: always()
         run: python scripts/export_coverage.py
       - name: Upload coverage report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: htmlcov
