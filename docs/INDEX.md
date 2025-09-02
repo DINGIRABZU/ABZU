@@ -198,7 +198,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) | Contributor Guide | - | - |
 | [CONTRIBUTOR_HANDBOOK.md](CONTRIBUTOR_HANDBOOK.md) | Contributor Handbook | This handbook helps new contributors get set up, understand the repository layout, and work through common developmen... | - |
 | [CORPUS_MEMORY.md](CORPUS_MEMORY.md) | Corpus Memory | This repository preserves several collections of source texts used by the music and language tools. Each directory se... | - |
-| [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md) | Crown Overview | This overview is deprecated; see [Crown Guide](Crown_GUIDE.md) for full details. | - |
+| [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md) | Crown Overview | Crown coordinates mission briefs and routes operator commands across the ABZU stack. It exposes a WebSocket diagnosti... | - |
 | [CRYSTAL_CODEX.md](CRYSTAL_CODEX.md) | CRYSTAL CODEX | The codex gathers the mission, architecture diagrams, module index, dependency matrix, testing strategy and style pol... | `../archetype_feedback_loop.py`, `../auto_retrain.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../music_generation.py`, `../server.py`, `../spiral_memory.py`, `../tools/preflight.py`, `../vector_memory.py`, `../video_stream.py` |
 | [Crown_GUIDE.md](Crown_GUIDE.md) | Crown Guide | - | - |
 | [DASHBOARD.md](DASHBOARD.md) | Metrics Dashboard | This dashboard visualises recent model performance and the predicted best LLM. | - |
@@ -321,7 +321,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [operations.md](operations.md) | Operations | - | - |
 | [operator_interface_GUIDE.md](operator_interface_GUIDE.md) | Operator Interface Guide | - | - |
-| [operator_protocol.md](operator_protocol.md) | Operator Protocol | This guide is deprecated; see [Operator Interface Guide](operator_interface_GUIDE.md) for full instructions. | - |
+| [operator_protocol.md](operator_protocol.md) | Operator Protocol | Defines endpoints for operators to dispatch commands and upload assets to agents. | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | Sources: [`../os_guardian/perception.py`](../os_guardian/perception.py), [`../os_guardian/planning.py`](../os_guardia... | `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py` |
 | [os_guardian_container.md](os_guardian_container.md) | OS Guardian Container | This guide covers running the `os_guardian` tools inside Docker. | - |
 | [os_guardian_permissions.md](os_guardian_permissions.md) | OS Guardian Permission Policies | The `safety` module guards high-risk actions executed by the OS Guardian utilities. Permissions are configured with e... | - |
