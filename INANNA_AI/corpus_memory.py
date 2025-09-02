@@ -24,18 +24,46 @@ except ImportError:  # pragma: no cover - optional dependency
     _HAVE_CHROMADB = False
 
     class _Collection:  # type: ignore
-        def add(self, *a, **k):
-            pass
+        """Very small in-memory stand-in for Chroma's ``Collection``."""
 
-        def query(self, *a, **k):  # pragma: no cover - stub
-            return {"ids": [[]]}
+        def __init__(self) -> None:
+            self._embeddings: Dict[str, np.ndarray] = {}
+            self._metadatas: Dict[str, dict] = {}
+
+        def add(self, ids, embeddings, metadatas) -> None:
+            for _id, emb, meta in zip(ids, embeddings, metadatas):
+                self._embeddings[_id] = np.asarray(emb, dtype=float)
+                self._metadatas[_id] = meta
+
+        def query(self, query_embeddings, n_results: int = 3):
+            if not self._embeddings:
+                return {"ids": [[]]}
+            q = np.asarray(query_embeddings[0], dtype=float)
+            sims = []
+            for _id, emb in self._embeddings.items():
+                denom = np.linalg.norm(q) * np.linalg.norm(emb) or 1.0
+                sims.append((_id, float(np.dot(q, emb) / denom)))
+            sims.sort(key=lambda x: x[1], reverse=True)
+            return {
+                "ids": [[_id for _id, _ in sims[:n_results]]]
+            }  # pragma: no cover - simple
+
+    _collections: Dict[str, _Collection] = {}
 
     def _client(*a, **k):
-        return types.SimpleNamespace(
-            get_or_create_collection=lambda name: _Collection(),
-            delete_collection=lambda name: None,
-            create_collection=lambda name: _Collection(),
-        )
+        class _Client:
+            def get_or_create_collection(self, name: str) -> _Collection:
+                return _collections.setdefault(name, _Collection())
+
+            def delete_collection(self, name: str) -> None:
+                _collections.pop(name, None)
+
+            def create_collection(self, name: str) -> _Collection:
+                col = _Collection()
+                _collections[name] = col
+                return col
+
+        return _Client()
 
     chromadb = types.SimpleNamespace(PersistentClient=_client)  # type: ignore
     Collection = _Collection  # type: ignore
@@ -98,11 +126,12 @@ def _build_embeddings(texts: List[str], model: SentenceTransformer) -> np.ndarra
 
 
 def create_collection(name: str = "corpus", dir_path: Path = CHROMA_DIR) -> Collection:
-    """Return a Chroma collection stored under ``dir_path``."""
-    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
-        raise RuntimeError("chromadb library not installed")
-    dir_path.mkdir(parents=True, exist_ok=True)
-    client = chromadb.PersistentClient(path=str(dir_path))
+    """Return a Chroma collection or an in-memory fallback."""
+    if _HAVE_CHROMADB:
+        dir_path.mkdir(parents=True, exist_ok=True)
+        client = chromadb.PersistentClient(path=str(dir_path))
+    else:  # pragma: no cover - optional dependency missing
+        client = chromadb.PersistentClient()
     return client.get_or_create_collection(name)
 
 
@@ -150,10 +179,12 @@ def reindex_corpus(
         return True
     if not _HAVE_SENTENCE_TRANSFORMER:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
-    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
-        raise RuntimeError("chromadb library not installed")
     model = SentenceTransformer(model_name)
-    client = chromadb.PersistentClient(path=str(dir_path))
+    if _HAVE_CHROMADB:
+        dir_path.mkdir(parents=True, exist_ok=True)
+        client = chromadb.PersistentClient(path=str(dir_path))
+    else:  # pragma: no cover - optional dependency missing
+        client = chromadb.PersistentClient()
     try:
         client.delete_collection(name)
     except Exception:
@@ -174,9 +205,6 @@ def search_corpus(
     """Return ``top_k`` matching files and snippets for ``query``."""
     if not _HAVE_SENTENCE_TRANSFORMER:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
-    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
-        raise RuntimeError("chromadb library not installed")
-
     collection = create_collection()
     model = SentenceTransformer(model_name)
     query_emb = _build_embeddings([query], model)[0]
