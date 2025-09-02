@@ -198,7 +198,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) | Repository Structure | The following table outlines the top-level layout of this repository. | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.82 **Last updated:** 2025-09-05 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.83 **Last updated:** 2025-09-10 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
