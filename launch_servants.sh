@@ -77,11 +77,21 @@ wait_health() {
     local url="$2"
     local health="${url%/}/health"
     local timeout="${SERVANT_TIMEOUT:-60}"
+    local status msg
     for ((i=0; i<timeout; i++)); do
-        if curl -fsS "$health" >/dev/null 2>&1; then
+        status=$(curl -o /dev/null -s -w "%{http_code}" "$health" || echo "000")
+        if [[ "$status" =~ ^2 ]]; then
             log "Health check passed for $name at $health"
             return 0
         fi
+        case "$status" in
+            401) msg="401 Unauthorized – check GLM_API_KEY" ;;
+            403) msg="403 Forbidden – verify permissions" ;;
+            404) msg="404 Not Found" ;;
+            000) msg="Connection failed" ;;
+            *)   msg="HTTP $status" ;;
+        esac
+        log "$name health check attempt $((i+1))/$timeout: $msg"
         sleep 1
     done
     log "Health check failed for $name at $health"
