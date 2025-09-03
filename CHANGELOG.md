@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enforced ≥90% coverage in CI workflows; pipelines fail when thresholds are not met.
 - Added `scan_todo_fixme` pre-commit hook to block `TODO`/`FIXME` markers and documented rule in The Absolute Protocol.
 - Added GitHub Actions workflow `dependency-audit.yml` to run `pip-audit` and `npm audit`, failing on high-severity vulnerabilities and uploading reports.
+- Cross-linked `docs/The_Absolute_Protocol.md`, `docs/project_mission_vision.md`, and `docs/nazarick_manifesto.md` for governance and ethics coherence.
+- Added `scripts/require_module_docs.py` pre-commit hook ensuring new modules update `CHANGELOG.md` and `docs/component_index.md`.
+- Added `docs/operator_quickstart.md` summarizing the triple-reading rule and consent logging.
 
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.

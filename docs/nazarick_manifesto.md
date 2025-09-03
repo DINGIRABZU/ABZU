@@ -2,7 +2,7 @@
 
 Guiding ethics for the Nazarick hierarchy. Architectural context lives in the
 [Great Tomb of Nazarick](great_tomb_of_nazarick.md) with servant details in
-[Nazarick Agents](nazarick_agents.md).
+[Nazarick Agents](nazarick_agents.md). See [project_mission_vision.md](project_mission_vision.md) for strategic goals and follow the contribution rules in [The_Absolute_Protocol.md](The_Absolute_Protocol.md).
 
 The Nazarick agents abide by the following laws:
 

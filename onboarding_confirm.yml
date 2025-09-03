@@ -42,7 +42,7 @@ documents:
       key_rules: Keep contributions aligned with project scope.
       insight: Confirm contributions align with project goals.
   docs/project_mission_vision.md:
-    sha256: e9fcd6d8f460c00aaa02fba3e1760accf06d24c8caa3cb8358e2e5f75aed832e
+    sha256: 7a6eb00309cbcd954facf388f0a805db83d09f0e7fd31c39bebcccede506da1a
     summary:
       purpose: Unified mission and vision for ABZU.
       scope: Project direction and guiding principles.
@@ -184,7 +184,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 78eb175d65ec0da6058e4d3fe3649c6d68607f62adeb30f8892ac5e9f318515e
+    sha256: 98fcaa5ea4384ab0bb7d91a4a9a5b70525e43795d1886ca37c470a9b074b10f0
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
