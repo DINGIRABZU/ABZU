@@ -9,24 +9,20 @@ The [The Absolute Protocol](The_Absolute_Protocol.md) requires triple-reading th
 [Blueprint Spine](blueprint_spine.md) before contributing. Confirm this review
 before operating the interface.
 
-### Step 1: Select an Agent
+### Step 1: Select a Voice
 
 ```mermaid
 flowchart TD
-    Operator -->|open| Console[Nazarick Web Console]
-    Console -->|choose| Agent[Agent Room]
+    Operator -->|open| VoiceMenu[Voice Menu]
+    VoiceMenu -->|choose| Voice[Preferred Voice]
 ```
 
-### Step 2: Issue a Command
+### Step 2: Review the Agent Roster
 
 ```mermaid
-sequenceDiagram
-    participant Operator
-    participant Crown
-    participant RAZAR
-    Operator->>Crown: POST /operator/command
-    Crown->>RAZAR: forward command
-    RAZAR-->>Operator: status response
+flowchart TD
+    Operator -->|open| Roster[Agent Roster]
+    Roster -->|inspect| Agent[Agent Profiles]
 ```
 
 ## Architecture
