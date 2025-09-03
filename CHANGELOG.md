@@ -167,6 +167,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped `crown_handshake` to 0.2.4 and `operator_api`/`webrtc_connector` to 0.3.3 and recorded versions in connector registry.
 - Added mission brief and operator chat examples with connector checklist cross-links in Crown and operator docs.
 - Removed unused `boot_sequence` placeholder from `orchestration_master.py`.
+- Hardened Crown prompt orchestrator to target known exceptions and surface unexpected failures.
 
 ### Chakra Versions
 

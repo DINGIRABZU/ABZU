@@ -38,7 +38,7 @@ from task_profiling import classify_task
 try:
     _settings_mod = import_module("config.settings")
     is_layer_enabled = getattr(_settings_mod, "is_layer_enabled", lambda name: True)
-except Exception:  # pragma: no cover - missing config
+except ImportError:  # pragma: no cover - missing config
 
     def is_layer_enabled(name: str) -> bool:  # type: ignore
         return True
@@ -81,9 +81,9 @@ def _apply_layer(message: str) -> tuple[str | None, str | None]:
         return None, None
     try:
         layers_mod = import_module("INANNA_AI.personality_layers")
-        registry = getattr(layers_mod, "REGISTRY", {})
-    except Exception:
+    except ImportError:
         return None, None
+    registry = getattr(layers_mod, "REGISTRY", {})
     cls = registry.get(layer_name)
     if cls is None:
         return None, None
@@ -93,8 +93,12 @@ def _apply_layer(message: str) -> tuple[str | None, str | None]:
             return str(layer.generate_response(message)), layer_name
         if hasattr(layer, "speak"):
             return str(layer.speak(message)), layer_name
-    except Exception:
+    except (AttributeError, TypeError):
         logging.exception("layer %s failed", layer_name)
+        return None, None
+    except Exception:
+        logging.exception("unexpected error in layer %s", layer_name)
+        raise
     return None, None
 
 
@@ -116,7 +120,7 @@ def review_test_outcomes(metrics_file: Path = TEST_METRICS_FILE) -> list[str]:
             suggestion = f"Resolve {failures} failing test(s)"
             log_suggestion(suggestion, {"failures": failures})
             suggestions.append(suggestion)
-    except Exception:  # pragma: no cover - metrics parsing is best effort
+    except (OSError, UnicodeDecodeError, ValueError):  # pragma: no cover - best effort
         logging.exception("test outcome review failed")
     return suggestions
 
@@ -138,13 +142,19 @@ async def crown_prompt_orchestrator_async(
     # ----------------------------------------------- cross-layer integrations
     try:
         store_physical_event(PhysicalEvent("text", message))
-    except Exception:
+    except (OSError, RuntimeError, ValueError):
         logging.exception("physical store failed")
+    except Exception:
+        logging.exception("unexpected physical store error")
+        raise
 
     try:
         record_task_flow(f"msg_{stable_id}", {"message": message, "emotion": emotion})
-    except Exception:
+    except RuntimeError:
         logging.exception("task flow logging failed")
+    except Exception:
+        logging.exception("unexpected task flow logging error")
+        raise
 
     symbols = [
         "☉",
@@ -168,8 +178,11 @@ async def crown_prompt_orchestrator_async(
     symbol = symbols[symbol_index]
     try:
         map_to_symbol((message, symbol))
-    except Exception:
+    except sqlite3.Error:
         logging.exception("symbol mapping failed")
+    except Exception:
+        logging.exception("unexpected symbol mapping error")
+        raise
 
     glyph_path: str | None = None
     glyph_phrase: str | None = None
@@ -202,14 +215,20 @@ async def crown_prompt_orchestrator_async(
                 ),
                 (datetime.utcnow().isoformat(), message, glyph_path, glyph_phrase),
             )
-    except Exception:
+    except (sqlite3.Error, ValueError, OSError):
         logging.exception("glyph generation failed")
+    except Exception:
+        logging.exception("unexpected glyph generation error")
+        raise
 
     try:
         recall = spiral_recall(message)
-    except Exception:
+    except (sqlite3.Error, OSError):
         logging.exception("spiral recall failed")
         recall = ""
+    except Exception:
+        logging.exception("unexpected spiral recall error")
+        raise
 
     if glyph_path:
         meta_file = Path(__file__).resolve().parent / "data" / "last_glyph.json"
@@ -219,8 +238,11 @@ async def crown_prompt_orchestrator_async(
                 json.dumps({"path": glyph_path, "phrase": glyph_phrase}),
                 encoding="utf-8",
             )
-        except Exception:
+        except OSError:
             logging.exception("failed to write glyph metadata")
+        except Exception:
+            logging.exception("unexpected glyph metadata error")
+            raise
 
     layer_text, layer_model = _apply_layer(message)
 
@@ -232,18 +254,23 @@ async def crown_prompt_orchestrator_async(
         task_type = classify_task(message)
         model = crown_decider.recommend_llm(task_type, emotion)
         success = True
+        invoke_error: str | None = None
         try:
             if model == "glm":
                 text = await _delegate(prompt, glm)
             else:
                 text = await smm.invoke(model, message)
-        except Exception:
+        except (KeyError, RuntimeError, OSError, ValueError) as exc:
             success = False
+            invoke_error = str(exc)
             crown_decider.record_result(model, False)
             log_interaction(message, {"emotion": emotion}, {"model": model}, "error")
             model = "glm"
             text = await _delegate(prompt, glm)
             crown_decider.record_result(model, True)
+        except Exception:
+            logging.exception("unexpected model invocation error")
+            raise
         affect = emotional_memory.score_affect(text, emotion)
         emotional_memory.record_interaction(
             emotional_memory.EmotionalMemoryNode(
@@ -272,6 +299,9 @@ async def crown_prompt_orchestrator_async(
         "glyph_phrase": glyph_phrase,
         "spiral_recall": recall,
     }
+
+    if "invoke_error" in locals() and invoke_error is not None:
+        result["error"] = invoke_error
 
     suggestions = review_test_outcomes()
     if suggestions:
