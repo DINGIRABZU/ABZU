@@ -8,65 +8,22 @@ import os
 import types
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Tuple
 
 import numpy as np
 
 import corpus_memory_logging
 import crown_config
 
-try:
+try:  # pragma: no cover - optional dependency
     import chromadb
     from chromadb.api import Collection
 
     _HAVE_CHROMADB = True
 except ImportError:  # pragma: no cover - optional dependency
+    chromadb = None  # type: ignore[assignment]
+    Collection = Any  # type: ignore[assignment,misc]
     _HAVE_CHROMADB = False
-
-    class _Collection:  # type: ignore
-        """Very small in-memory stand-in for Chroma's ``Collection``."""
-
-        def __init__(self) -> None:
-            self._embeddings: Dict[str, np.ndarray] = {}
-            self._metadatas: Dict[str, dict] = {}
-
-        def add(self, ids, embeddings, metadatas) -> None:
-            for _id, emb, meta in zip(ids, embeddings, metadatas):
-                self._embeddings[_id] = np.asarray(emb, dtype=float)
-                self._metadatas[_id] = meta
-
-        def query(self, query_embeddings, n_results: int = 3):
-            if not self._embeddings:
-                return {"ids": [[]]}
-            q = np.asarray(query_embeddings[0], dtype=float)
-            sims = []
-            for _id, emb in self._embeddings.items():
-                denom = np.linalg.norm(q) * np.linalg.norm(emb) or 1.0
-                sims.append((_id, float(np.dot(q, emb) / denom)))
-            sims.sort(key=lambda x: x[1], reverse=True)
-            return {
-                "ids": [[_id for _id, _ in sims[:n_results]]]
-            }  # pragma: no cover - simple
-
-    _collections: Dict[str, _Collection] = {}
-
-    def _client(*a, **k):
-        class _Client:
-            def get_or_create_collection(self, name: str) -> _Collection:
-                return _collections.setdefault(name, _Collection())
-
-            def delete_collection(self, name: str) -> None:
-                _collections.pop(name, None)
-
-            def create_collection(self, name: str) -> _Collection:
-                col = _Collection()
-                _collections[name] = col
-                return col
-
-        return _Client()
-
-    chromadb = types.SimpleNamespace(PersistentClient=_client)  # type: ignore
-    Collection = _Collection  # type: ignore
 try:
     from sentence_transformers import SentenceTransformer
 
@@ -126,12 +83,19 @@ def _build_embeddings(texts: List[str], model: SentenceTransformer) -> np.ndarra
 
 
 def create_collection(name: str = "corpus", dir_path: Path = CHROMA_DIR) -> Collection:
-    """Return a Chroma collection or an in-memory fallback."""
-    if _HAVE_CHROMADB:
-        dir_path.mkdir(parents=True, exist_ok=True)
-        client = chromadb.PersistentClient(path=str(dir_path))
-    else:  # pragma: no cover - optional dependency missing
-        client = chromadb.PersistentClient()
+    """Return a Chroma collection.
+
+    Raises
+    ------
+    NotImplementedError
+        If the optional :mod:`chromadb` dependency is missing.
+    """
+
+    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
+        raise NotImplementedError("chromadb library is required for corpus storage")
+
+    dir_path.mkdir(parents=True, exist_ok=True)
+    client = chromadb.PersistentClient(path=str(dir_path))
     return client.get_or_create_collection(name)
 
 
@@ -180,11 +144,11 @@ def reindex_corpus(
     if not _HAVE_SENTENCE_TRANSFORMER:  # pragma: no cover - optional dependency
         raise RuntimeError("sentence-transformers library not installed")
     model = SentenceTransformer(model_name)
-    if _HAVE_CHROMADB:
-        dir_path.mkdir(parents=True, exist_ok=True)
-        client = chromadb.PersistentClient(path=str(dir_path))
-    else:  # pragma: no cover - optional dependency missing
-        client = chromadb.PersistentClient()
+    if not _HAVE_CHROMADB:  # pragma: no cover - optional dependency
+        raise NotImplementedError("chromadb library is required for corpus storage")
+
+    dir_path.mkdir(parents=True, exist_ok=True)
+    client = chromadb.PersistentClient(path=str(dir_path))
     try:
         client.delete_collection(name)
     except Exception:
