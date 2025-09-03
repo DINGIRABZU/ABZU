@@ -8,6 +8,23 @@ import json
 from pathlib import Path
 
 
+class GenerationMixin:
+    """Minimal text generation utilities."""
+
+    def generate(self, max_length: int = 1, **kwargs):
+        """Return a sequence of token ids filled with zeros.
+
+        Parameters
+        ----------
+        max_length:
+            Length of the generated sequence.
+        kwargs:
+            Unused additional parameters for API compatibility.
+        """
+
+        return [[0] * max_length]
+
+
 class GPT2Config:
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
@@ -25,7 +42,7 @@ class GPT2Config:
         return cls(**data)
 
 
-class GPT2LMHeadModel:
+class GPT2LMHeadModel(GenerationMixin):
     def __init__(self, config):
         self.config = config
 
@@ -40,9 +57,6 @@ class GPT2LMHeadModel:
 
     def save_pretrained(self, path):
         self.config.save_pretrained(path)
-
-    def generate(self, **kwargs):
-        return [[0]]
 
 
 class AutoConfig:
@@ -72,6 +86,7 @@ class AutoTokenizer:
 
 
 __all__ = [
+    "GenerationMixin",
     "GPT2Config",
     "GPT2LMHeadModel",
     "PreTrainedTokenizerFast",
