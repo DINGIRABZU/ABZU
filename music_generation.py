@@ -107,6 +107,7 @@ class MusicGenerator(AudioProcessor):
 
         result = pipe(prompt, **gen_params)
         if stream:
+
             def _stream() -> Iterator[bytes]:
                 for chunk in result:
                     yield chunk.get("audio", b"")
@@ -148,6 +149,30 @@ def generate_from_text(
     )
 
 
+def register_music_invocation(symbols: str, emotion: str | None = None) -> None:
+    """Register a ritual callback that triggers text-to-music generation.
+
+    Parameters
+    ----------
+    symbols:
+        Symbol sequence that activates the callback.
+    emotion:
+        Optional emotion filter for invocation matching.
+
+    The invocation engine will call the registered callback when the specified
+    ``symbols`` and ``emotion`` are detected in a command. The callback forwards
+    the extracted values to :func:`generate_from_text` and returns the generated
+    audio path.
+    """
+
+    from invocation_engine import register_invocation
+
+    def _callback(s: str, emo: str | None, _orch) -> Path | Iterable[bytes]:
+        return generate_from_text(s or symbols, emotion=emo)
+
+    register_invocation(symbols, emotion, callback=_callback)
+
+
 def main(argv: list[str] | None = None) -> None:
     """Command-line interface for music generation."""
     parser = argparse.ArgumentParser(description="Generate music from text")
@@ -155,16 +180,21 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--model",
         default="musicgen",
-        help=
-        "Model key or HF id (default: musicgen). Available keys: "
+        help="Model key or HF id (default: musicgen). Available keys: "
         + ", ".join(MODEL_IDS),
     )
     parser.add_argument("--emotion", help="Optional emotion to guide style")
     parser.add_argument("--tempo", type=int, help="Optional tempo in BPM")
-    parser.add_argument("--temperature", type=float, default=1.0, help="Sampling temperature")
-    parser.add_argument("--duration", type=int, default=5, help="Approximate duration in seconds")
+    parser.add_argument(
+        "--temperature", type=float, default=1.0, help="Sampling temperature"
+    )
+    parser.add_argument(
+        "--duration", type=int, default=5, help="Approximate duration in seconds"
+    )
     parser.add_argument("--seed", type=int, help="Random seed for reproducibility")
-    parser.add_argument("--stream", action="store_true", help="Stream audio chunks to stdout")
+    parser.add_argument(
+        "--stream", action="store_true", help="Stream audio chunks to stdout"
+    )
     args = parser.parse_args(argv)
 
     result = generate_from_text(

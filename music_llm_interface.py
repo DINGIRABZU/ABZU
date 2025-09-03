@@ -17,6 +17,7 @@ from typing import Any, Dict
 
 import numpy as np
 
+import music_generation
 from src.media.audio.backends import load_backend
 
 from INANNA_AI.emotion_analysis import analyze_audio_emotion
@@ -97,14 +98,65 @@ def run_interface(
     return {"analysis": payload, "llm_response": llm_reply}
 
 
+def generate_and_analyze(
+    prompt: str,
+    *,
+    model: str = "musicgen",
+    emotion: str | None = None,
+    tempo: int | None = None,
+    orchestrator: MoGEOrchestrator | None = None,
+    **gen_args: Any,
+) -> Dict[str, Any]:
+    """Generate music from ``prompt`` then analyse it with the LLM bridge."""
+
+    out = music_generation.generate_from_text(
+        prompt,
+        model=model,
+        emotion=emotion,
+        tempo=tempo,
+        **gen_args,
+    )
+    if not isinstance(out, Path):
+        raise RuntimeError("Streaming generation not supported")
+    return run_interface(out, orchestrator)
+
+
+def register_music_llm_invocation(symbols: str) -> None:
+    """Register invocation callback that generates and analyses music."""
+
+    from invocation_engine import register_invocation
+
+    def _callback(s: str, emotion: str | None, orch):
+        return generate_and_analyze(s or symbols, emotion=emotion, orchestrator=orch)
+
+    register_invocation(symbols, callback=_callback)
+
+
 def main(argv: list[str] | None = None) -> None:
     """Command line interface for the music LLM bridge."""
-
     parser = argparse.ArgumentParser(description="Analyse music and query LLM CROWN")
-    parser.add_argument("file", type=Path, help="Path to an audio or MIDI file")
+    parser.add_argument(
+        "file", nargs="?", type=Path, help="Path to an audio or MIDI file"
+    )
+    parser.add_argument("--prompt", help="Generate music from text before analysis")
+    parser.add_argument("--emotion", help="Optional emotion hint for generation")
+    parser.add_argument(
+        "--model", default="musicgen", help="Model key or HF id for generation"
+    )
     args = parser.parse_args(argv)
 
-    result = run_interface(args.file)
+    if args.file and args.prompt:
+        parser.error("file and --prompt are mutually exclusive")
+    if args.prompt:
+        result = generate_and_analyze(
+            args.prompt,
+            model=args.model,
+            emotion=args.emotion,
+        )
+    elif args.file:
+        result = run_interface(args.file)
+    else:  # pragma: no cover - argument check
+        parser.error("file or --prompt required")
     print(json.dumps(result, indent=2))
 
 
