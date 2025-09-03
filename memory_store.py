@@ -256,6 +256,7 @@ class MemoryStore:
             self.snapshot(self.snapshot_dir / self.db_path.name)
         except Exception:  # pragma: no cover - best effort
             logger.exception("snapshot failed")
+            raise
 
 
 class ShardedMemoryStore:
