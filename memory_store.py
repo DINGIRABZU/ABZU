@@ -281,11 +281,11 @@ class ShardedMemoryStore:
         if self.snapshot_dir.exists():
             try:
                 self.restore(self.snapshot_dir)
-            except Exception:
+            except Exception as exc:
                 logger.exception(
                     "failed to restore snapshot from %s", self.snapshot_dir
                 )
-                raise
+                raise exc
 
     # ------------------------------------------------------------------
     @property
