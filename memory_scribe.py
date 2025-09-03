@@ -17,14 +17,21 @@ logger = logging.getLogger(__name__)
 
 
 def store_embedding(text: str) -> None:
-    """Embed ``text`` and persist it to vector memory."""
+    """Embed ``text`` and persist it to the vector memory backend.
+
+    Uses :func:`vector_memory.add` when available and falls back to
+    :func:`vector_memory.add_vector` for older backends.
+    """
     if vector_memory is None:
         logger.warning("vector memory backend unavailable")
         return
     try:
-        vector_memory.add_vector(text, {})
+        if hasattr(vector_memory, "add"):
+            vector_memory.add(text)
+        else:
+            vector_memory.add_vector(text, {})
     except Exception:  # pragma: no cover - best effort logging
-        logger.warning("vector_memory.add_vector failed", exc_info=True)
+        logger.warning("vector memory add failed", exc_info=True)
 
 
 __all__ = ["store_embedding"]
