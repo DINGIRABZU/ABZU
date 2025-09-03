@@ -133,6 +133,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enforced "No Placeholder" rule with `check-placeholders` pre-commit hook and
   documented remediation steps in agent guides.
 - Hardened operator and Primordials connectors with additional error handling and version bumps.
+- Added logging and fallback behaviour when the invocation engine is unavailable or fails.
 
 ### Vector Memory
 

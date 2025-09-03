@@ -350,18 +350,25 @@ class MoGEOrchestrator:
             if layer and layer != current:
                 emotional_state.set_current_layer(layer)
 
+        tasks: List[str]
         if self._invocation_engine is not None:
-            symbols = self._invocation_engine._extract_symbols(text)
-            tasks = ritual_action_sequence(symbols, dominant)
-            for res in self._invocation_engine.invoke(f"{symbols} [{dominant}]", self):
-                if isinstance(res, list):
-                    tasks.extend(res)
-            for act in tasks:
-                symbolic_parser.parse_intent({"text": act, "tone": dominant})
+            try:
+                symbols = self._invocation_engine._extract_symbols(text)
+                tasks = ritual_action_sequence(symbols, dominant)
+                for res in self._invocation_engine.invoke(
+                    f"{symbols} [{dominant}]", self
+                ):
+                    if isinstance(res, list):
+                        tasks.extend(res)
+            except Exception:  # pragma: no cover - safeguard
+                logger.exception("invocation engine failed; using default ritual")
+                tasks = ritual_action_sequence("", dominant)
         else:
+            logger.info("invocation engine unavailable; skipping ritual invocation")
             tasks = ritual_action_sequence("", dominant)
-            for act in tasks:
-                symbolic_parser.parse_intent({"text": act, "tone": dominant})
+
+        for act in tasks:
+            symbolic_parser.parse_intent({"text": act, "tone": dominant})
 
         result = self.route(text, emotion_data, qnl_data=qnl_data)
         if self._active_layer_name:
