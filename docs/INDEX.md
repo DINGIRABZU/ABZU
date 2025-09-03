@@ -363,7 +363,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [testing/failure_inventory.md](testing/failure_inventory.md) | Failure Inventory | Test run: `pytest -vv --cov` on 2025-08-31. | `../../tests/test_dashboard_app.py`, `../../tests/test_dashboard_qnl_mixer.py`, `../../tests/test_emotion_classifier.py`, `../../tests/test_quarantine_manager.py`, `../../tests/test_vector_memory.py`, `../../tests/test_voice_cloner_cli.py` |
 | [testing.md](testing.md) | Testing | ```mermaid flowchart LR D[Developer] --> T[pytest] T --> R[Report] ``` | - |
 | [testing_music_pipeline.md](testing_music_pipeline.md) | Testing Music Pipeline | To run the unit tests for the ritual music pipeline: | - |
-| [the_absolute_pytest.md](the_absolute_pytest.md) | The Absolute Pytest | - | - |
+| [the_absolute_pytest.md](the_absolute_pytest.md) | The Absolute Pytest | > **Note:** Before writing tests, review [blueprint_spine.md](blueprint_spine.md) and consult the [Module Index](modu... | - |
 | [troubleshooting.md](troubleshooting.md) | Troubleshooting | This guide addresses frequent setup problems, driver issues, and environment pitfalls. Refer to [installation](instal... | `../download_models.py`, `../env_validation.py`, `../scripts/bootstrap.py` |
 | [ui/README.md](ui/README.md) | Floor Client UI | This React/Tailwind interface renders floors with channel tiles and streams messages over a WebSocket feed. | - |
 | [updates/2025-08.md](updates/2025-08.md) | August 2025 Roadmap | - | - |

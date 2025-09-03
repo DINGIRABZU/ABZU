@@ -1,5 +1,7 @@
 # The Absolute Pytest
 
+> **Note:** Before writing tests, review [blueprint_spine.md](blueprint_spine.md) and consult the [Module Index](module_index.md) for context.
+
 ## Chakra-Aligned Test Layout
 
 Tests mirror the system's chakra map and should live in the matching
