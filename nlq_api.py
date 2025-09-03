@@ -14,8 +14,16 @@ vanna = lazy_import("vanna")
 logger = logging.getLogger(__name__)
 
 
-def _train_vanna() -> list[Path]:
-    """Train Vanna on channel and log schemas if available."""
+def _train_vanna(*, collect_failed: bool = False) -> list[Path]:
+    """Train Vanna on channel and log schemas if available.
+
+    Parameters
+    ----------
+    collect_failed:
+        If ``True``, return a list of SQL files that failed to train so the
+        caller can retry them later.
+    """
+
     failed: list[Path] = []
     if getattr(vanna, "__stub__", False):
         return failed
@@ -25,11 +33,12 @@ def _train_vanna() -> list[Path]:
             vanna.train(ddl=sql_file.read_text())
         except Exception:  # pragma: no cover - best effort
             logger.exception("failed to train Vanna on %s", sql_file)
-            failed.append(sql_file)
+            if collect_failed:
+                failed.append(sql_file)
     return failed
 
 
-FAILED_VANNA_FILES = _train_vanna()
+FAILED_VANNA_FILES = _train_vanna(collect_failed=True)
 
 
 @router.post("/nlq")
