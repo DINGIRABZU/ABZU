@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configured CI to archive `htmlcov/` and log coverage metrics even when tests fail.
 
 - Introduced `training/fine_tune_mistral.py` configuring mythological and project corpora.
+- Extended `scripts/check_requirements.sh` to report missing Python modules.
 - Published memory layer bus events and `query_memory` aggregator.
 - Recorded mythology and project material datasets in `component_index.json`.
 - Listed dataset licensing, version history, and evaluation metrics in `docs/bana_engine.md`.
