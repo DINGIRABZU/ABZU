@@ -56,25 +56,32 @@ _EXTERNAL_KEYWORDS: Iterable[str] = [
     "gateway",
 ]
 
+REMEDIATION_HINTS = {
+    IssueType.DEPENDENCY: "Install missing packages or verify the environment.",
+    IssueType.LOGIC: "Inspect the stack trace and fix the underlying code logic.",
+    IssueType.EXTERNAL: "Check network connectivity and external service status.",
+}
+
 
 def _match(keywords: Iterable[str], text: str) -> bool:
     return any(k in text for k in keywords)
 
 
-def analyze_text(log_text: str) -> IssueType:
-    """Return an :class:`IssueType` classification for ``log_text``."""
+def analyze_text(log_text: str) -> tuple[IssueType, str]:
+    """Return issue classification and remediation hint for ``log_text``."""
 
     normalized = log_text.lower()
     if _match(_DEPENDENCY_KEYWORDS, normalized):
-        return IssueType.DEPENDENCY
-    if _match(_LOGIC_KEYWORDS, normalized):
-        return IssueType.LOGIC
-    # External issues are the fallback when no other keywords match.
-    return IssueType.EXTERNAL
+        issue = IssueType.DEPENDENCY
+    elif _match(_LOGIC_KEYWORDS, normalized):
+        issue = IssueType.LOGIC
+    else:
+        issue = IssueType.EXTERNAL
+    return issue, REMEDIATION_HINTS[issue]
 
 
-def analyze_file(path: str | Path) -> IssueType:
-    """Read ``path`` and classify its contents."""
+def analyze_file(path: str | Path) -> tuple[IssueType, str]:
+    """Read ``path`` and classify its contents with a remediation hint."""
 
     text = Path(path).read_text(errors="ignore")
     return analyze_text(text)

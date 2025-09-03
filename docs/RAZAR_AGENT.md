@@ -150,6 +150,25 @@ logs/mission_briefs/
 └── demo_2025-09-21T00-00-05Z.json
 ```
 
+## Troubleshooting
+
+### Checklist
+1. Ensure each component in `boot_config.json` defines a health probe.
+2. Inspect `boot_orchestrator.log` for failed launches.
+3. Run `python -m razar.issue_analyzer <logfile>` to classify failures and apply the suggested fix.
+4. Review `docs/quarantine_log.md` for quarantined modules and remediation notes.
+
+### Sample log outputs
+`boot_orchestrator.log`:
+```text
+[2025-09-21T00:00:00Z] ERROR Health check failed for basic_service
+```
+
+`docs/quarantine_log.md`:
+```text
+| 2025-09-21T00:00:01Z | basic_service | dependency | Install missing packages or verify the environment. |
+```
+
 ## Cross-links
 - [System Blueprint](system_blueprint.md)
 - [RAZAR Guide](RAZAR_GUIDE.md)
