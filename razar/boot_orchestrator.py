@@ -239,15 +239,36 @@ def load_config(path: Path) -> List[Dict[str, Any]]:
     ``path`` points to a JSON file with a ``components`` list.
     """
     data = json.loads(path.read_text())
-    return data.get("components", [])
+    components = data.get("components", [])
+    for comp in components:
+        name = comp.get("name", "")
+        has_probe = comp.get("health_check") or name in health_checks.CHECKS
+        if not has_probe:
+            LOGGER.warning("Component %s lacks a health probe", name)
+    return components
 
 
 def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
-    """Launch ``component`` and run its health check."""
+    """Launch ``component`` and run its health check.
+
+    ``component`` may specify a ``health_check`` command. If absent, a named
+    probe from :mod:`health_checks` is used. When no probe exists, a warning is
+    logged and the component is assumed healthy.
+    """
     name = component.get("name")
     LOGGER.info("Launching %s", name)
     proc = subprocess.Popen(component["command"])
-    if not health_checks.run(name):
+
+    cmd = component.get("health_check")
+    if cmd:
+        result = subprocess.run(cmd)
+        ok = result.returncode == 0
+    else:
+        ok = health_checks.run(name)
+        if name not in health_checks.CHECKS:
+            LOGGER.warning("No health probe defined for %s", name)
+
+    if not ok:
         LOGGER.error("Health check failed for %s", name)
         proc.terminate()
         proc.wait()
