@@ -77,7 +77,7 @@ class VersionInfo:
     patch: int
 
 
-__version__ = VersionInfo(0, 1, 3)
+__version__ = VersionInfo(0, 1, 4)
 _STORE: Any | None = None
 _STORE_LOCK = threading.RLock()
 _DIST: Any | None = None
@@ -164,6 +164,37 @@ def _log_narrative(actor: str, action: str, symbolism: str | None = None) -> Non
             fh.write("\n")
     except Exception:  # pragma: no cover - best effort
         logger.exception("failed to log narrative event")
+
+
+def embed_text(text: str) -> Any:
+    """Return the embedding vector for ``text``.
+
+    The return type is ``numpy.ndarray`` when :mod:`numpy` is available,
+    otherwise a simple list of floats.
+    """
+
+    emb_raw = _EMBED(text)
+    if np is not None:  # pragma: no branch - optional numpy
+        return np.asarray(emb_raw, dtype=float)
+    return [float(x) for x in emb_raw]
+
+
+def cosine_similarity(vec_a: Any, vec_b: Any) -> float:
+    """Compute cosine similarity between two vectors."""
+
+    if np is not None:  # pragma: no branch - optional numpy
+        va = np.asarray(vec_a, dtype=float)
+        vb = np.asarray(vec_b, dtype=float)
+        dot = float(va @ vb)
+        norm = float(np.linalg.norm(va) * np.linalg.norm(vb))
+    else:
+        va = [float(x) for x in vec_a]
+        vb = [float(x) for x in vec_b]
+        dot = sum(a * b for a, b in zip(va, vb))
+        norm_a = math.sqrt(sum(a * a for a in va))
+        norm_b = math.sqrt(sum(b * b for b in vb))
+        norm = norm_a * norm_b
+    return dot / (norm + 1e-8)
 
 
 def _get_store() -> Any:
@@ -287,15 +318,15 @@ def _decay(ts: str) -> float:
 
 
 def search(
-    query: str, filter: Optional[Dict[str, Any]] = None, *, k: int = 5
+    query: str,
+    filter: Optional[Dict[str, Any]] = None,
+    *,
+    k: int = 5,
+    scoring: str = "hybrid",
 ) -> List[Dict[str, Any]]:
-    """Return ``k`` fuzzy matches for ``query`` ordered by decayed similarity."""
+    """Return ``k`` fuzzy matches for ``query`` ordered by ``scoring``."""
 
-    qvec_raw = _EMBED(query)
-    if np is not None:
-        qvec = np.asarray(qvec_raw, dtype=float)
-    else:
-        qvec = [float(x) for x in qvec_raw]
+    qvec = embed_text(query)
     col = _get_collection()
     k_search = max(k * 5, k)
     results: List[Dict[str, Any]] = []
@@ -323,19 +354,16 @@ def search(
                 continue
         if np is not None:
             emb = np.asarray(emb_list, dtype=float)
-            dot = float(emb @ qvec)
-            norm_emb = float(np.linalg.norm(emb))
-            norm_q = float(np.linalg.norm(qvec))
         else:
             emb = [float(x) for x in emb_list]
-            dot = sum(float(a) * float(b) for a, b in zip(emb, qvec))
-            norm_emb = math.sqrt(sum(float(x) ** 2 for x in emb))
-            norm_q = math.sqrt(sum(float(x) ** 2 for x in qvec))
-        if norm_emb == 0 or norm_q == 0:
-            continue
-        sim = float(dot / ((norm_emb * norm_q) + 1e-8))
+        sim = cosine_similarity(emb, qvec)
         weight = _decay(meta.get("timestamp", ""))
-        score = sim * weight
+        if scoring == "similarity":
+            score = sim
+        elif scoring == "recency":
+            score = weight
+        else:
+            score = sim * weight
         out = dict(meta)
         out["score"] = score
         results.append(out)
@@ -344,10 +372,14 @@ def search(
 
 
 def search_batch(
-    queries: List[str], filter: Optional[Dict[str, Any]] = None, *, k: int = 5
+    queries: List[str],
+    filter: Optional[Dict[str, Any]] = None,
+    *,
+    k: int = 5,
+    scoring: str = "hybrid",
 ) -> List[List[Dict[str, Any]]]:
     """Search for multiple ``queries`` returning a list of result lists."""
-    return [search(q, filter=filter, k=k) for q in queries]
+    return [search(q, filter=filter, k=k, scoring=scoring) for q in queries]
 
 
 def rewrite_vector(old_id: str, new_text: str) -> bool:
@@ -603,5 +635,7 @@ __all__ = [
     "add_vectors",
     "search_batch",
     "cluster_vectors",
+    "embed_text",
+    "cosine_similarity",
     "LOG_FILE",
 ]
