@@ -68,6 +68,18 @@ from operator_api import router as operator_router
 
 logger = logging.getLogger(__name__)
 
+START_TIME = time.perf_counter()
+
+BOOT_DURATION_GAUGE = (
+    Gauge(
+        "service_boot_duration_seconds",
+        "Duration of service startup in seconds",
+        ["service"],
+    )
+    if Gauge is not None
+    else None
+)
+
 REQUEST_LATENCY = (
     Histogram(
         "http_request_duration_seconds",
@@ -206,10 +218,13 @@ def get_current_user(
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Manage startup and shutdown tasks for the FastAPI app.
 
-    The context manager yields control to FastAPI and, once the server begins
-    shutting down, closes any open WebRTC or video streaming connections so the
-    test harness and local development environment exit cleanly.
+    The context manager records boot duration before yielding control to
+    FastAPI and, once the server begins shutting down, closes any open WebRTC
+    or video streaming connections so the test harness and local development
+    environment exit cleanly.
     """
+    if BOOT_DURATION_GAUGE is not None:
+        BOOT_DURATION_GAUGE.labels(service="core").set(time.perf_counter() - START_TIME)
     yield
     await video_stream.close_peers()
     await webrtc_connector.close_peers()

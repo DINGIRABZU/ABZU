@@ -26,6 +26,17 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     requests = None  # type: ignore
 
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Gauge
+except Exception:  # pragma: no cover - optional dependency
+    Gauge = None  # type: ignore[assignment]
+
+SERVANT_HEALTH_GAUGE = (
+    Gauge("servant_health_status", "1=healthy,0=unhealthy", ["servant"])
+    if Gauge is not None
+    else None
+)
+
 vector_memory = _vector_memory  # Optional vector memory subsystem
 
 logger = logging.getLogger(__name__)
@@ -154,6 +165,7 @@ def _verify_servant_health(servants: dict) -> None:
     failed: list[str] = []
     for name, url in servants.items():
         health_url = url.rstrip("/") + "/health"
+        healthy = False
         try:
             if hasattr(requests, "get"):
                 resp = requests.get(health_url, timeout=5)
@@ -161,9 +173,12 @@ def _verify_servant_health(servants: dict) -> None:
                 resp = requests.post(health_url, timeout=5)
             resp.raise_for_status()
             logger.info("Servant %s healthy at %s", name, health_url)
+            healthy = True
         except Exception as exc:  # pragma: no cover - network errors
             logger.error("Servant %s health check failed: %s", name, exc)
             failed.append(name)
+        if SERVANT_HEALTH_GAUGE is not None:
+            SERVANT_HEALTH_GAUGE.labels(servant=name).set(1 if healthy else 0)
     if failed:
         raise SystemExit(f"Unavailable servant models: {', '.join(failed)}")
 

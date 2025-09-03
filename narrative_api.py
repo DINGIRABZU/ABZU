@@ -21,6 +21,20 @@ from memory import narrative_engine
 
 router = APIRouter()
 
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Counter
+except Exception:  # pragma: no cover - optional dependency
+    Counter = None  # type: ignore[assignment]
+
+NARRATIVE_THROUGHPUT = (
+    Counter(
+        "narrative_events_total",
+        "Total number of narrative events logged",
+    )
+    if Counter is not None
+    else None
+)
+
 
 class Story(BaseModel):
     """Request body for logging a story."""
@@ -31,8 +45,9 @@ class Story(BaseModel):
 @router.post("/story")
 def log_story(story: Story) -> dict[str, str]:
     """Persist ``story`` text to the narrative store."""
-
     narrative_engine.log_story(story.text)
+    if NARRATIVE_THROUGHPUT is not None:
+        NARRATIVE_THROUGHPUT.inc()
     return {"status": "ok"}
 
 
