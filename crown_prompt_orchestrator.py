@@ -11,6 +11,7 @@ __version__ = "0.0.0"
 
 import argparse
 import asyncio
+import hashlib
 import json
 import logging
 import sqlite3
@@ -130,6 +131,8 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
     prompt_body = f"{context}\n{message}" if context else message
     prompt = f"[{state}]\n{prompt_body}"
 
+    stable_id = hashlib.sha256(message.encode()).hexdigest()
+
     # ----------------------------------------------- cross-layer integrations
     try:
         store_physical_event(PhysicalEvent("text", message))
@@ -137,9 +140,7 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
         logging.exception("physical store failed")
 
     try:
-        record_task_flow(
-            f"msg_{abs(hash(message))}", {"message": message, "emotion": emotion}
-        )
+        record_task_flow(f"msg_{stable_id}", {"message": message, "emotion": emotion})
     except Exception:
         logging.exception("task flow logging failed")
 
@@ -161,7 +162,8 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
         "♒",
         "♓",
     ]
-    symbol = symbols[abs(hash(message)) % len(symbols)]
+    symbol_index = int(stable_id, 16) % len(symbols)
+    symbol = symbols[symbol_index]
     try:
         map_to_symbol((message, symbol))
     except Exception:
