@@ -1,0 +1,10 @@
+site_name: ABZU Documentation
+docs_dir: docs
+nav:
+  - Home: index.md
+  - Module Index: module_index.md
+plugins:
+  - search
+  - mkdocs-simple-hooks:
+      hooks:
+        on_pre_build: "scripts.build_index:run"

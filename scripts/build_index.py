@@ -1,0 +1,121 @@
+"""Generate a Markdown index of Python modules, classes, and functions.
+
+The script scans Python files under a given root (default: ``src``) and
+emits a ``docs/module_index.md`` file documenting modules, classes, and
+functions with one-line summaries from their docstrings. The output is
+suitable for inclusion in MkDocs or Sphinx documentation.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+from pathlib import Path
+from typing import Iterable, List, Tuple
+
+__version__ = "0.1.0"
+
+
+def _first_line(text: str | None) -> str:
+    """Return the first non-empty line of ``text`` or an empty string."""
+    if not text:
+        return ""
+    for line in text.strip().splitlines():
+        stripped = line.strip()
+        if stripped:
+            return stripped
+    return ""
+
+
+def parse_file(path: Path) -> dict:
+    """Parse ``path`` and return module info."""
+    try:
+        tree = ast.parse(path.read_text())
+    except Exception:  # pragma: no cover - unreadable or invalid files
+        return {}
+
+    module_doc = _first_line(ast.get_docstring(tree))
+    classes: List[Tuple[str, str]] = []
+    functions: List[Tuple[str, str]] = []
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef):
+            classes.append((node.name, _first_line(ast.get_docstring(node))))
+        elif isinstance(node, ast.FunctionDef) and not node.name.startswith("_"):
+            functions.append((node.name, _first_line(ast.get_docstring(node))))
+    return {
+        "module": path,
+        "doc": module_doc,
+        "classes": classes,
+        "functions": functions,
+    }
+
+
+def iter_python_files(root: Path) -> Iterable[Path]:
+    """Yield Python files under ``root`` excluding common junk directories."""
+    for py_file in root.rglob("*.py"):
+        if any(part.startswith(".") for part in py_file.parts):
+            continue
+        if "tests" in py_file.parts or "docs" in py_file.parts:
+            continue
+        yield py_file
+
+
+def build_index(root: Path) -> List[dict]:
+    """Collect parsed info for Python files under ``root``."""
+    entries: List[dict] = []
+    for path in iter_python_files(root):
+        info = parse_file(path)
+        if info:
+            entries.append(info)
+    entries.sort(key=lambda e: e["module"].as_posix())
+    return entries
+
+
+def render_markdown(entries: List[dict]) -> str:
+    """Render collected entries to a Markdown string."""
+    lines = ["# Module Index", ""]
+    for entry in entries:
+        rel = entry["module"].as_posix()
+        lines.append(f"## `{rel}`")
+        if entry["doc"]:
+            lines.append(entry["doc"])
+        if entry["classes"]:
+            lines.append("\n### Classes")
+            for name, doc in entry["classes"]:
+                lines.append(f"- **{name}** – {doc}")
+        if entry["functions"]:
+            lines.append("\n### Functions")
+            for name, doc in entry["functions"]:
+                lines.append(f"- **{name}** – {doc}")
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description="Build module index")
+    parser.add_argument(
+        "--root",
+        default="src",
+        type=Path,
+        help="Directory to scan for Python modules",
+    )
+    parser.add_argument(
+        "--output",
+        default=Path("docs/module_index.md"),
+        type=Path,
+        help="Output Markdown file",
+    )
+    args = parser.parse_args(argv)
+
+    entries = build_index(args.root)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(render_markdown(entries))
+
+
+def run(**_: object) -> None:  # pragma: no cover - hook for MkDocs
+    """MkDocs hook entry point."""
+    main([])
+
+
+if __name__ == "__main__":  # pragma: no cover - script entry
+    main()
