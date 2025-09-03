@@ -2,8 +2,14 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
+
+try:  # pragma: no cover - optional dependency
+    import aiohttp
+except Exception:  # pragma: no cover - fallback when aiohttp missing
+    aiohttp = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
     import requests
@@ -65,6 +71,39 @@ class GLMIntegration:
             text = resp.json().get("text", "")
         except Exception:  # pragma: no cover - non-json response
             text = resp.text
+        return text or SAFE_ERROR_MESSAGE
+
+    async def complete_async(
+        self, prompt: str, *, quantum_context: str | None = None
+    ) -> str:
+        """Asynchronously return the GLM completion for ``prompt``.
+
+        Uses :mod:`aiohttp` when available and falls back to running
+        :meth:`complete` in a thread when it isn't.
+        """
+        if aiohttp is None:
+            logger.warning("aiohttp missing; using thread fallback")
+            return await asyncio.to_thread(
+                self.complete, prompt, quantum_context=quantum_context
+            )
+
+        payload = {"prompt": prompt, "temperature": self.temperature}
+        if quantum_context is not None:
+            payload["quantum_context"] = quantum_context
+        try:
+            async with aiohttp.ClientSession(headers=self.headers) as session:
+                async with session.post(
+                    self.endpoint, json=payload, timeout=10
+                ) as resp:
+                    resp.raise_for_status()
+                    try:
+                        data = await resp.json()
+                        text = data.get("text", "")
+                    except Exception:  # pragma: no cover - non-json response
+                        text = await resp.text()
+        except Exception as exc:  # pragma: no cover - network errors
+            logger.error("Failed to query %s: %s", self.endpoint, exc)
+            return SAFE_ERROR_MESSAGE
         return text or SAFE_ERROR_MESSAGE
 
 
