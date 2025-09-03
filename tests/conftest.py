@@ -220,6 +220,8 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_music_generation_emotion.py"),
     str(ROOT / "tests" / "test_music_generation_streaming.py"),
     str(ROOT / "tests" / "test_music_backends_missing.py"),
+    str(ROOT / "tests" / "test_music_generation_invocation.py"),
+    str(ROOT / "tests" / "test_music_llm_interface_prompt.py"),
     str(ROOT / "tests" / "test_albedo_state_machine.py"),
     str(ROOT / "tests" / "test_albedo_trust.py"),
     str(ROOT / "tests" / "test_vector_memory_extensions.py"),

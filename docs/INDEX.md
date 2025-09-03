@@ -12,6 +12,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -311,6 +312,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [module_execution_flow.md](module_execution_flow.md) | Module Execution Flow | Overview of key modules with their inputs, core processing, outputs, and error handling. Flowcharts summarize the exe... | - |
 | [monitoring.md](monitoring.md) | Monitoring | The application writes JSON-formatted logs to `logs/INANNA_AI.log`. The file rotates when it reaches roughly 10 MB, k... | - |
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
+| [music_generation_usage.md](music_generation_usage.md) | Music Generation Usage | Generate audio from text prompts or ritual invocations. | - |
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
