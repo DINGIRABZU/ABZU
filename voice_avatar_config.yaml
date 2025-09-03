@@ -3,13 +3,16 @@ Soprano:
   gender: female
   resonance: high
   tone: excited
+  lip_sync: true
 Baritone:
   timbre: warm
   gender: male
   resonance: low
   tone: calm
+  lip_sync: true
 Androgynous:
   timbre: airy
   gender: neutral
   resonance: mid
   tone: neutral
+  lip_sync: true
