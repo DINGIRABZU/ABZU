@@ -24,12 +24,12 @@ from typing import Iterable, Sequence
 from INANNA_AI.glm_integration import GLMIntegration
 
 from . import doc_sync, quarantine_manager
+from razar.bootstrap_utils import PATCH_LOG_PATH
 
 logger = logging.getLogger(__name__)
 
 # Determine repository root relative to this file
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-PATCH_LOG_PATH = PROJECT_ROOT / "logs" / "razar_ai_patches.json"
 
 
 def _record_patch(component: str, diff: str, tests: str) -> None:

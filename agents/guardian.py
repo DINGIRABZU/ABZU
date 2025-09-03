@@ -7,7 +7,6 @@ __version__ = "0.1.0"
 from typing import Any, Callable
 
 from .event_bus import emit_event
-from .cocytus.prompt_arbiter import arbitrate
 
 
 def run_validated_task(
@@ -34,6 +33,8 @@ def run_validated_task(
     emit_event(actor, "evaluate_entity", entity_result)
 
     if not ethics_result.get("compliant", False):
+        from .cocytus.prompt_arbiter import arbitrate
+
         arbitrate(actor, action, entity_result)
         return None
 

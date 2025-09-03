@@ -14,14 +14,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 
-from agents.razar import ai_invoker as remote_ai_invoker
-from agents.razar import code_repair
+from .bootstrap_utils import PATCH_LOG_PATH
 
 __version__ = "0.1.1"
 
 LOGGER = logging.getLogger(__name__)
-
-PATCH_LOG_PATH = code_repair.PATCH_LOG_PATH
 
 
 def _append_patch_log(entry: Dict[str, Any]) -> None:
@@ -67,6 +64,9 @@ def handover(
         ``True`` if at least one patch was applied successfully, otherwise
         ``False``.
     """
+    from agents.razar import ai_invoker as remote_ai_invoker
+    from agents.razar import code_repair
+
     ctx: Dict[str, Any] = {"component": component, "error": error}
     if context:
         ctx.update(context)
