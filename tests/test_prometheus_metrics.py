@@ -76,6 +76,13 @@ sys.modules.setdefault("music_generation", music_generation_stub)
 
 crown_mod = ModuleType("crown_prompt_orchestrator")
 crown_mod.crown_prompt_orchestrator = lambda msg, glm: {"model": "stub"}
+
+
+async def _cpo_async(msg, glm):
+    return {"model": "stub"}
+
+
+crown_mod.crown_prompt_orchestrator_async = _cpo_async
 sys.modules.setdefault("crown_prompt_orchestrator", crown_mod)
 
 guardian_stub = ModuleType("agents.guardian")

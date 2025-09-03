@@ -19,7 +19,7 @@ import re
 from datetime import datetime
 from importlib import import_module
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Awaitable
 
 import crown_decider
 import emotional_state
@@ -121,7 +121,9 @@ def review_test_outcomes(metrics_file: Path = TEST_METRICS_FILE) -> list[str]:
     return suggestions
 
 
-def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, Any]:
+async def crown_prompt_orchestrator_async(
+    message: str, glm: GLMIntegration
+) -> Dict[str, Any]:
     """Return GLM or servant model reply with metadata."""
     emotion = _detect_emotion(message)
     archetype = emotion_analysis.emotion_to_archetype(emotion)
@@ -222,7 +224,9 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
 
     layer_text, layer_model = _apply_layer(message)
 
-    async def _process() -> tuple[str, str]:
+    if layer_text is not None:
+        text, model = layer_text, layer_model or "layer"
+    else:
         current = await emotional_state.get_last_emotion_async()
         logger.debug("processing with last emotion %s", current)
         task_type = classify_task(message)
@@ -254,12 +258,6 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
         )
         if success:
             crown_decider.record_result(model, True)
-        return text, model
-
-    if layer_text is not None:
-        text, model = layer_text, layer_model or "layer"
-    else:
-        text, model = asyncio.run(_process())
 
     result = {
         "text": text,
@@ -280,6 +278,19 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
         result["suggestions"] = suggestions
 
     return result
+
+
+def crown_prompt_orchestrator(
+    message: str, glm: GLMIntegration
+) -> Dict[str, Any] | Awaitable[Dict[str, Any]]:
+    """Synchronously run or return async orchestrator based on event loop."""
+    coro = crown_prompt_orchestrator_async(message, glm)
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    else:
+        return coro
 
 
 def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
@@ -309,7 +320,7 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
     print(result.get("text", ""))
 
 
-__all__ = ["crown_prompt_orchestrator", "main"]
+__all__ = ["crown_prompt_orchestrator", "crown_prompt_orchestrator_async", "main"]
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry
