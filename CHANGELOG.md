@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `docs/SOCIAL_INVESTOR_ONE_PAGER.md` summarizing the project for prospective social investors.
 - Added `docs/component_maturity.md` tracking documentation completeness, coverage, and open issues.
 
+- Documented onboarding triple-reading requirement and Nazarick Web Console access in `docs/operator_interface_GUIDE.md` and updated `docs/INDEX.md`.
+
 - Documented chakra-aligned test directories and 90% coverage rule in `docs/the_absolute_pytest.md`.
 - Configured CI to archive `htmlcov/` and log coverage metrics even when tests fail.
 
