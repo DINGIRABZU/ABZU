@@ -314,6 +314,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
 | [music_generation_usage.md](music_generation_usage.md) | Music Generation Usage | Generate audio from text prompts or ritual invocations. | - |
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
+| [narrative_system.md](narrative_system.md) | Narrative System | The narrative system transforms physiological data into cohesive multitrack stories. | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | The Nazarick Narrative System converts biosignals into narrative events and persistent memory records. | - |
