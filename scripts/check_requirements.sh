@@ -31,6 +31,14 @@ for cmd in docker nc sox ffmpeg curl jq wget aria2c; do
     fi
 done
 
+# Check for required Python modules
+for module in core audio; do
+    if ! python -c "import $module" >/dev/null 2>&1; then
+        echo "Python module '$module' is missing. Install it or ensure it's on PYTHONPATH." >&2
+        missing=1
+    fi
+done
+
 if [ "$missing" -ne 0 ]; then
     exit 1
 fi
