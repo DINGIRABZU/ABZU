@@ -113,6 +113,23 @@ def _persist_handshake(response: Optional[CrownResponse]) -> None:
     STATE_FILE.write_text(json.dumps(data, indent=2))
 
 
+def _record_probe(name: str, ok: bool) -> None:
+    """Persist the result of a component health probe."""
+    data: Dict[str, Any] = {}
+    if STATE_FILE.exists():
+        try:
+            data = json.loads(STATE_FILE.read_text())
+        except json.JSONDecodeError:
+            data = {}
+    probes = data.setdefault("probes", {})
+    probes[name] = {
+        "status": "ok" if ok else "fail",
+        "timestamp": time.time(),
+    }
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(json.dumps(data, indent=2))
+
+
 def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -> None:
     """Remove oldest mission briefs beyond ``limit`` pairs."""
     briefs = sorted(
@@ -267,7 +284,7 @@ def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
         ok = health_checks.run(name)
         if name not in health_checks.CHECKS:
             LOGGER.warning("No health probe defined for %s", name)
-
+    _record_probe(name, ok)
     if not ok:
         LOGGER.error("Health check failed for %s", name)
         proc.terminate()
