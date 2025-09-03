@@ -174,6 +174,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_gateway.py"),
     str(ROOT / "tests" / "test_core_scipy_smoke.py"),
     str(ROOT / "tests" / "test_download_models.py"),
+    str(ROOT / "tests" / "test_servant_download.py"),
     str(ROOT / "tests" / "test_download_model.py"),
     str(ROOT / "tests" / "test_api_endpoints.py"),
     str(ROOT / "tests" / "test_style_selection.py"),

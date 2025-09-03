@@ -262,6 +262,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [connectors/README.md](connectors/README.md) | Connector Overview | Guidelines for modules that bridge Spiral OS to external services. The live registry of available connectors lives in... | - |
 | [contribution_guide.md](contribution_guide.md) | Contribution Guide | Thank you for considering a contribution! | - |
 | [crown_manifest.md](crown_manifest.md) | CROWN Manifest | The **CROWN** agent runs the GLM-4.1V-9B model and acts as the root layer of Spiral OS. It holds the highest permissi... | - |
+| [crown_servant_models.md](crown_servant_models.md) | Crown Servant Models | Servant models provide auxiliary language capabilities alongside the primary GLM. Registration follows a simple seque... | - |
 | [data_flow.md](data_flow.md) | Request to Memory Data Flow | ```mermaid graph LR A[Client Request] --> B[Root Chakra] B --> C[Sacral] C --> D[Solar Plexus] D --> E[Heart] E --> F... | `../crown_prompt_orchestrator.py`, `../emotional_state.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../memory_store.py`, `../server.py`, `../start_spiral_os.py`, `../vector_memory.py` |
 | [data_manifest.md](data_manifest.md) | Data Manifest | This document enumerates datasets and external resources used by the project. | `../aspect_processor.py`, `../memory/sacred.py`, `../src/core/memory_physical.py` |
 | [data_security.md](data_security.md) | Data Security and Compliance | This document outlines how training data should be handled with respect to GDPR and HIPAA regulations. | - |

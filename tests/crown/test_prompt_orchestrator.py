@@ -23,6 +23,9 @@ import crown_decider
 import servant_model_manager as smm
 import crown_prompt_orchestrator as cpo
 
+# Avoid external Neo4j connections during tests
+cpo.record_task_flow = lambda *a, **k: None
+
 
 class DummyGLM:
     def __init__(self):
@@ -56,6 +59,18 @@ def test_servant_invocation(monkeypatch):
     assert result["model"] == "deepseek"
 
 
+def test_servant_failure_falls_back_to_glm(monkeypatch):
+    glm = DummyGLM()
+    smm.register_model("deepseek", lambda p: f"ds:{p}")
+    monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
+    monkeypatch.setattr(
+        smm, "invoke", lambda name, prompt: (_ for _ in ()).throw(RuntimeError("boom"))
+    )
+    result = cpo.crown_prompt_orchestrator("oops", glm)
+    assert result["model"] == "glm"
+    assert result["text"].startswith("glm:")
+
+
 def test_state_engine_integration(monkeypatch):
     glm = DummyGLM()
     monkeypatch.setattr(
@@ -74,6 +89,7 @@ def test_empty_interactions_response(monkeypatch):
         "load_interactions",
         lambda limit=3: [],
     )
+    monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "glm")
     result = cpo.crown_prompt_orchestrator("hello", glm)
     assert result["text"].startswith("glm:")
     assert "<no interactions>" in glm.seen
@@ -98,7 +114,12 @@ def test_reviews_test_metrics(monkeypatch, tmp_path):
     glm = DummyGLM()
     metrics = tmp_path / "pytest_metrics.prom"
     metrics.write_text("pytest_test_failures_total 2\n", encoding="utf-8")
-    monkeypatch.setattr(cpo, "TEST_METRICS_FILE", metrics)
+    orig_review = cpo.review_test_outcomes
+    monkeypatch.setattr(
+        cpo,
+        "review_test_outcomes",
+        lambda metrics_file=metrics: orig_review(metrics_file),
+    )
 
     logged: list[tuple[str, dict | None]] = []
 
