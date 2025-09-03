@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.87
+**Version:** v1.0.88
 **Last updated:** 2025-09-03
 
 ## How to Use This Protocol
@@ -9,6 +9,12 @@ This document consolidates ABZU's guiding rules. Review it before contributing t
 Align contributions with the overarching goals in [project_mission_vision.md](project_mission_vision.md) and the servant ethics defined in the [nazarick_manifesto.md](nazarick_manifesto.md).
 
 Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three times to internalize the project's structure and intent.
+
+### Environment Preparation
+Set up the local environment before running tools or tests:
+
+1. Copy `secrets.env.template` to `secrets.env` and provide values for `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY`.
+2. Run `scripts/check_requirements.sh` to confirm required binaries, the Python 3.11+ runtime, and necessary Python modules are present.
 
 ## Repository Blueprint
 ABZU adheres to a consistent top-level directory layout:
@@ -78,6 +84,7 @@ During onboarding, contributors record purpose, scope, key rules, and an actiona
 ## Core Pull Request Checklist
 Confirm these items before submitting a pull request:
 
+ - [ ] Environment prepared per [Environment Preparation](#environment-preparation)
  - [ ] Key-document summaries verified with `scripts/verify_doc_hashes.py`
  - [ ] [blueprint_spine.md](blueprint_spine.md) read and acknowledged
  - [ ] Version bumps applied and synchronized in `component_index.json`

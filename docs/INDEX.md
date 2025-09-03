@@ -12,7 +12,6 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -224,7 +223,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [SOCIAL_INVESTOR_ONE_PAGER.md](SOCIAL_INVESTOR_ONE_PAGER.md) | ABZU: Social Investor One-Pager | --- | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.87 **Last updated:** 2025-09-03 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.88 **Last updated:** 2025-09-03 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -383,6 +382,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../floor_client/README.md](../floor_client/README.md) | Floor Client | This folder contains the React interface for Floor channels. | - |
 | [../guides/visual_customization.md](../guides/visual_customization.md) | Avatar Visual Customization | This guide outlines how to turn a 2D concept image into the 3D model used by the video engine. | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus and Grafana alongside an NVIDIA GPU exporter. Metrics include frames per second (FPS),... | - |
+| [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |
 | [../sacred_inputs/00-INVOCATION.md](../sacred_inputs/00-INVOCATION.md) | 00-INVOCATION.md | - | - |
 | [../scripts/install_profiles.md](../scripts/install_profiles.md) | Installation Profiles | This project provides several installation profiles using optional dependencies defined in `pyproject.toml`. | - |
 | [../src/dashboard/OVERVIEW.md](../src/dashboard/OVERVIEW.md) | Dashboard Overview | Streamlit dashboard for monitoring and interacting with Spiral OS components. | - |
