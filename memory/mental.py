@@ -111,14 +111,25 @@ if gym is not None and np is not None:
 else:  # pragma: no cover - dependencies missing
 
     class _ContextEnv:  # type: ignore[no-redef]
-        """Stub environment indicating reinforcement learning is disabled."""
+        """Stub environment used when RL dependencies are missing."""
 
-        def __init__(
-            self, *args: Any, **kwargs: Any
-        ) -> None:  # pragma: no cover - runtime guard
-            raise NotImplementedError(
-                "gymnasium or numpy not installed; reinforcement learning is disabled"
+        def __init__(self, *args: Any, **kwargs: Any) -> None:  # pragma: no cover
+            """Initialise stub environment and note RL support is unavailable."""
+            logger.info(
+                "gymnasium or numpy not installed; reinforcement learning is disabled",
             )
+            self.observation_space = None
+            self.action_space = None
+
+        def reset(self, *args: Any, **kwargs: Any) -> tuple[None, Dict[str, Any]]:
+            """Raise to indicate RL features are not operational."""
+            raise NotImplementedError("reinforcement learning is disabled")
+
+        def step(
+            self, *args: Any, **kwargs: Any
+        ) -> tuple[None, float, bool, bool, Dict[str, Any]]:
+            """Raise to indicate RL features are not operational."""
+            raise NotImplementedError("reinforcement learning is disabled")
 
 
 def init_rl_model() -> None:
