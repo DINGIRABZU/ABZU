@@ -5,6 +5,7 @@ from __future__ import annotations
 __version__ = "0.0.0"
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -12,17 +13,34 @@ import types
 from pathlib import Path
 
 import pytest
+from cli import console_interface
 
 ROOT = Path(__file__).resolve().parents[2]
 
 SKIP = shutil.which("bash") is None or not os.access(
     ROOT / "start_crown_console.sh", os.X_OK
 )
-pytestmark = pytest.mark.skipif(
-    SKIP, reason="requires bash and executable start_crown_console.sh"
-)
 
 
+class DummySession:
+    def __init__(self, prompts: list[str]):
+        self._prompts = prompts
+
+    def prompt(self, _prompt: str) -> str:
+        if not self._prompts:
+            raise EOFError
+        return self._prompts.pop(0)
+
+
+class DummyContext:
+    def __enter__(self) -> "DummyContext":
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> bool:
+        return False
+
+
+@pytest.mark.skipif(SKIP, reason="requires bash and executable start_crown_console.sh")
 def test_crown_console_startup(monkeypatch):
     calls: list[str] = []
 
@@ -76,3 +94,82 @@ def test_crown_console_startup(monkeypatch):
 
     assert launcher_idx < servants_idx
     assert servants_idx < console_idx
+
+
+def _setup_console(monkeypatch, tmp_path: Path, prompts: list[str]):
+    dummy_audio = tmp_path / "reply.wav"
+    dummy_audio.write_bytes(b"data")
+
+    monkeypatch.setattr(console_interface, "_wait_for_glm_ready", lambda: object())
+    monkeypatch.setattr(
+        console_interface,
+        "crown_prompt_orchestrator",
+        lambda m, g: {"text": "ok", "emotion": "neutral"},
+    )
+    monkeypatch.setattr(
+        console_interface,
+        "PromptSession",
+        lambda history=None: DummySession(prompts),
+    )
+    monkeypatch.setattr(console_interface, "patch_stdout", lambda: DummyContext())
+    monkeypatch.setattr(console_interface.context_tracker.state, "avatar_loaded", True)
+    monkeypatch.setattr(console_interface.requests, "post", lambda *a, **k: None)
+
+    dummy_orch = types.SimpleNamespace(
+        route=lambda *a, **k: {"voice_path": str(dummy_audio)}
+    )
+    monkeypatch.setattr(console_interface, "MoGEOrchestrator", lambda: dummy_orch)
+
+    frames: list[bytes] = []
+
+    def fake_stream(_path: Path):
+        for f in [b"f1", b"f2"]:
+            frames.append(f)
+            yield f
+
+    monkeypatch.setattr(
+        console_interface.avatar_expression_engine, "stream_avatar_audio", fake_stream
+    )
+
+    audio_calls: list[str] = []
+    monkeypatch.setattr(
+        console_interface.speaking_engine,
+        "play_wav",
+        lambda p: audio_calls.append(str(p)),
+    )
+
+    log_dir = tmp_path / "logs" / "bana"
+    monkeypatch.setattr(console_interface.session_logger, "AUDIO_DIR", log_dir)
+    monkeypatch.setattr(console_interface.session_logger, "VIDEO_DIR", log_dir)
+    monkeypatch.setattr(console_interface.session_logger, "imageio", None)
+    monkeypatch.setattr(console_interface.session_logger, "np", None)
+
+    return dummy_audio, frames, audio_calls, log_dir
+
+
+def test_console_creates_bana_logs(monkeypatch, tmp_path):
+    _, frames, audio_calls, log_dir = _setup_console(
+        monkeypatch, tmp_path, ["hello", "/exit"]
+    )
+
+    console_interface.run_repl(["--speak"])
+
+    files = list(log_dir.iterdir())
+    assert files
+    assert audio_calls
+    assert frames
+    assert all(re.search(r"\d{8}_\d{6}", f.name) for f in files)
+
+
+def test_console_streaming_output(monkeypatch, tmp_path):
+    dummy_audio, frames, audio_calls, log_dir = _setup_console(
+        monkeypatch, tmp_path, ["hi", "/exit"]
+    )
+
+    console_interface.run_repl(["--speak"])
+
+    assert audio_calls == [str(dummy_audio)]
+    assert frames
+    files = list(log_dir.iterdir())
+    assert any(f.suffix == ".wav" for f in files)
+    assert any(f.suffix != ".wav" for f in files)
