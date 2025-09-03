@@ -1,7 +1,13 @@
 # Operator Interface Guide
+Instructions for operator API usage, onboarding requirements, and Nazarick Web Console chat rooms.
 
 ## Vision
 Defines REST endpoints that let operators control Crown and RAZAR.
+
+## Onboarding
+The [The Absolute Protocol](The_Absolute_Protocol.md) requires triple-reading the
+[Blueprint Spine](blueprint_spine.md) before contributing. Confirm this review
+before operating the interface.
 
 ## Architecture
 - `/operator/command` forwards actions to RAZAR.
@@ -10,6 +16,11 @@ Defines REST endpoints that let operators control Crown and RAZAR.
 
 ## Deployment
 Expose the API via the Crown console and export `OPERATOR_TOKEN` for authentication.
+
+### Nazarick Web Console
+Access the [Nazarick Web Console](nazarick_web_console.md) to monitor agents and
+open their chat rooms. Select an agent to start a room and issue commands
+through the Operator API.
 
 ## Configuration Schemas
 - JSON body: `{ "action": "status", "parameters": {} }`.
