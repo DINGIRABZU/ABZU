@@ -29,6 +29,8 @@ from aspect_processor import (
 )
 from crown_config import settings
 
+from .context_env import ContextEnv as _ContextEnv
+
 np = lazy_import("numpy")
 gym = lazy_import("gymnasium")
 sb3 = lazy_import("stable_baselines3")
@@ -88,56 +90,12 @@ def _get_driver() -> Driver:
     return _DRIVER
 
 
-if gym is not None and np is not None:
-
-    class _ContextEnv(gym.Env):  # pragma: no cover - simple RL environment
-        """Minimal environment for context-based reinforcement learning."""
-
-        def __init__(self) -> None:
-            self.observation_space = gym.spaces.Box(-np.inf, np.inf, (1,), dtype=float)
-            self.action_space = gym.spaces.Discrete(1)
-
-        def reset(
-            self,
-            *,
-            seed: int | None = None,
-            options: Dict[str, Any] | None = None,
-        ):
-            return np.zeros(1, dtype=float), {}
-
-        def step(self, action: int):
-            return np.zeros(1, dtype=float), 0.0, True, False, {}
-
-else:  # pragma: no cover - dependencies missing
-
-    class _ContextEnv:  # type: ignore[no-redef]
-        """Stub environment used when RL dependencies are missing."""
-
-        def __init__(self, *args: Any, **kwargs: Any) -> None:  # pragma: no cover
-            """Initialise stub environment and note RL support is unavailable."""
-            logger.info(
-                "gymnasium or numpy not installed; reinforcement learning is disabled",
-            )
-            self.observation_space = None
-            self.action_space = None
-
-        def reset(self, *args: Any, **kwargs: Any) -> tuple[None, Dict[str, Any]]:
-            """Raise to indicate RL features are not operational."""
-            raise NotImplementedError("reinforcement learning is disabled")
-
-        def step(
-            self, *args: Any, **kwargs: Any
-        ) -> tuple[None, float, bool, bool, Dict[str, Any]]:
-            """Raise to indicate RL features are not operational."""
-            raise NotImplementedError("reinforcement learning is disabled")
-
-
 def init_rl_model() -> None:
     """Initialise the reinforcement learning model if dependencies exist."""
 
     global _RL_MODEL
     if DQN is None or gym is None or np is None:
-        logger.info("stable-baselines3 or gymnasium not installed; RL disabled")
+        logger.warning("stable-baselines3 or gymnasium not installed; RL disabled")
         return
     if _RL_MODEL is None:
         env = _ContextEnv()
@@ -148,6 +106,7 @@ def _update_rl(context: Dict[str, Any], reward: float) -> None:
     """Update RL model with a new experience."""
 
     if _RL_MODEL is None or np is None:
+        logger.warning("RL model unavailable or numpy not installed; skipping update")
         return
     obs = np.array([float(len(context))])
     _RL_MODEL.replay_buffer.add(

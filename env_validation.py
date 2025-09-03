@@ -76,6 +76,12 @@ def check_audio_binaries(*, require: bool = True) -> bool:
     return True
 
 
+def check_rl_packages() -> None:
+    """Log warnings if reinforcement learning packages are missing."""
+
+    check_optional_packages(["gymnasium", "numpy", "stable_baselines3"])
+
+
 def parse_servant_models(
     env: str | None = None, *, require: bool = False
 ) -> Dict[str, str]:
