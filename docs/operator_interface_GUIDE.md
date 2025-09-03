@@ -9,6 +9,26 @@ The [The Absolute Protocol](The_Absolute_Protocol.md) requires triple-reading th
 [Blueprint Spine](blueprint_spine.md) before contributing. Confirm this review
 before operating the interface.
 
+### Step 1: Select an Agent
+
+```mermaid
+flowchart TD
+    Operator -->|open| Console[Nazarick Web Console]
+    Console -->|choose| Agent[Agent Room]
+```
+
+### Step 2: Issue a Command
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant Crown
+    participant RAZAR
+    Operator->>Crown: POST /operator/command
+    Crown->>RAZAR: forward command
+    RAZAR-->>Operator: status response
+```
+
 ## Architecture
 - `/operator/command` forwards actions to RAZAR.
 - `/operator/upload` sends files and metadata.
