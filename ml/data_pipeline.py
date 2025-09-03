@@ -51,17 +51,23 @@ def run(embed: bool = False, update: bool = False) -> list[Path]:
 
     for repo in _load_list(GITHUB_LIST):
         meta = gs.config.GITHUB_DIR / f"{repo.replace('/', '_')}_metadata.json"
-        if update and not _repo_up_to_date(repo, meta):
-            try:
-                latest = gs.github_metadata.fetch_repo_metadata(repo)
-                meta.parent.mkdir(parents=True, exist_ok=True)
-                meta.write_text(
-                    json.dumps(latest, indent=2, sort_keys=True),
-                    encoding="utf-8",
-                )
-            except Exception:
+        up_to_date = _repo_up_to_date(repo, meta)
+        if not up_to_date:
+            if update:
+                try:
+                    latest = gs.github_metadata.fetch_repo_metadata(repo)
+                    meta.parent.mkdir(parents=True, exist_ok=True)
+                    meta.write_text(
+                        json.dumps(latest, indent=2, sort_keys=True),
+                        encoding="utf-8",
+                    )
+                except Exception:
+                    continue
+            else:
+                # Metadata is stale and no refresh requested; skip repo.
                 continue
-        elif update and meta.is_file():
+        elif update:
+            # Up-to-date metadata and update requested; nothing new to fetch.
             continue
         try:
             fetched = gs.fetch_repo(repo)
