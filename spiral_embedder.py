@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from pathlib import Path
 
 import spiral_vector_db as svdb
+
+logger = logging.getLogger(__name__)
 
 
 def _load(path: Path) -> list[dict]:
@@ -15,17 +18,33 @@ def _load(path: Path) -> list[dict]:
         data = json.loads(text)
         if isinstance(data, list):
             return [dict(d) for d in data]
-    except Exception:
-        pass
+    except json.JSONDecodeError as exc:
+        logger.warning(
+            "Failed to parse %s as JSON at line %d column %d: %s",
+            path,
+            exc.lineno,
+            exc.colno,
+            exc,
+        )
+    except Exception as exc:  # pragma: no cover - unexpected
+        logger.warning("Failed to parse %s as JSON: %s", path, exc)
     items: list[dict] = []
-    for line in text.splitlines():
+    for lineno, line in enumerate(text.splitlines(), start=1):
         line = line.strip()
         if not line:
             continue
         try:
             items.append(json.loads(line))
-        except Exception:
-            continue
+        except json.JSONDecodeError as exc:
+            logger.warning(
+                "Skipping invalid JSON line %d in %s at column %d: %s",
+                lineno,
+                path,
+                exc.colno,
+                exc,
+            )
+        except Exception as exc:  # pragma: no cover - unexpected
+            logger.warning("Skipping invalid JSON line %d in %s: %s", lineno, path, exc)
     return items
 
 
