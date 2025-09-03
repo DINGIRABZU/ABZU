@@ -7,7 +7,8 @@ Defines REST endpoints that let operators control Crown and RAZAR.
 ## Onboarding
 The [The Absolute Protocol](The_Absolute_Protocol.md) requires triple-reading the
 [Blueprint Spine](blueprint_spine.md) before contributing. Confirm this review
-before operating the interface.
+before operating the interface. See the [Contributor Checklist](contributor_checklist.md)
+for error index updates and test requirements.
 
 ### Step 1: Select a Voice
 
