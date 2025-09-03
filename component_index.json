@@ -184,7 +184,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "razar/ai_invoker.py",
-      "version": "0.1.2",
+      "version": "0.1.1",
       "dependencies": [
         "__future__",
         "agents",
@@ -266,7 +266,7 @@
       "chakra": "unknown",
       "type": "agent",
       "path": "agents/asian_gen/__init__.py",
-      "version": "0.1.1",
+      "version": "0.1.0",
       "dependencies": [
         "agents",
         "creative_engine",
@@ -1942,7 +1942,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/ingest_biosignals.py",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "dependencies": [
         "__future__",
         "csv",

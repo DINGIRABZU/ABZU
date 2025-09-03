@@ -19,3 +19,22 @@ def test_multitrack_tracks_present():
     assert result["prose"]
     for track in ("audio", "visual", "usd"):
         assert isinstance(result[track], list) and result[track]
+
+
+def test_multitrack_story_content():
+    """`compose_multitrack_story` expands events into expected track data."""
+    events = [
+        StoryEvent(actor="hero", action="smiles"),
+        StoryEvent(actor="villain", action="frowns"),
+    ]
+    result = compose_multitrack_story(events)
+    assert result["prose"] == "hero smiles. villain frowns."
+    assert result["audio"] == [{"cue": "hero_smiles"}, {"cue": "villain_frowns"}]
+    assert result["visual"] == [
+        {"directive": "frame hero smiles"},
+        {"directive": "frame villain frowns"},
+    ]
+    assert result["usd"] == [
+        {"op": "AddPrim", "path": "/hero", "action": "smiles"},
+        {"op": "AddPrim", "path": "/villain", "action": "frowns"},
+    ]
