@@ -12,6 +12,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -261,6 +262,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) | Connector Index | Canonical registry of ABZU's connectors. Each entry lists the purpose, version, primary service endpoints, linked age... | `../../communication/telegram_bot.py`, `../../connectors/primordials_api.py`, `../../connectors/webrtc_connector.py`, `../../narrative_api.py`, `../../operator_api.py`, `../../razar/crown_handshake.py`, `../../razar/crown_link.py`, `../../server.py` |
 | [connectors/README.md](connectors/README.md) | Connector Overview | Guidelines for modules that bridge Spiral OS to external services. The live registry of available connectors lives in... | - |
 | [contribution_guide.md](contribution_guide.md) | Contribution Guide | Thank you for considering a contribution! | - |
+| [contributor_checklist.md](contributor_checklist.md) | Contributor Checklist | This checklist distills mandatory practices for ABZU contributors. | - |
 | [crown_manifest.md](crown_manifest.md) | CROWN Manifest | The **CROWN** agent runs the GLM-4.1V-9B model and acts as the root layer of Spiral OS. It holds the highest permissi... | - |
 | [crown_servant_models.md](crown_servant_models.md) | Crown Servant Models | Servant models provide auxiliary language capabilities alongside the primary GLM. Registration follows a simple seque... | - |
 | [data_flow.md](data_flow.md) | Request to Memory Data Flow | ```mermaid graph LR A[Client Request] --> B[Root Chakra] B --> C[Sacral] C --> D[Solar Plexus] D --> E[Heart] E --> F... | `../crown_prompt_orchestrator.py`, `../emotional_state.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../memory_store.py`, `../server.py`, `../start_spiral_os.py`, `../vector_memory.py` |
