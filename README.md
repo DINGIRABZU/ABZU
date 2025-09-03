@@ -938,4 +938,4 @@ Alternatively, host images externally and reference the URLs in documentation.
 
 ## License
 
-Distributed under the MIT License. See [LICENSE_CRYSTAL.md](LICENSE_CRYSTAL.md) for details.
+Distributed under the Apache License 2.0. See [LICENSE](LICENSE) for details.

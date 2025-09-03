@@ -55,4 +55,4 @@ When you’re ready, just say:
 and I will create them immediately.
 ::contentReference[oaicite:4]{index=4}
 
-License: MIT. See ../LICENSE_CRYSTAL.md for details.
+License: Apache License 2.0. See ../LICENSE for details.

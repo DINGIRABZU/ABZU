@@ -9,7 +9,7 @@ description = "Spiral OS command line tools and agents"
 authors = [{name = "Spiral OS Team"}]
 readme = "README.md"
 requires-python = ">=3.10"
-license = {file = "LICENSE_CRYSTAL.md"}
+license = {file = "LICENSE"}
 
 # Runtime requirements keep only lightweight essentials. Heavy frameworks are
 # exposed individually through extras below.
