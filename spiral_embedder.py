@@ -20,10 +20,11 @@ def _load(path: Path) -> list[dict]:
             return [dict(d) for d in data]
     except json.JSONDecodeError as exc:
         logger.warning(
-            "Failed to parse %s as JSON at line %d column %d: %s",
+            "Failed to parse %s as JSON at line %d column %d (char %d): %s",
             path,
             exc.lineno,
             exc.colno,
+            exc.pos,
             exc,
         )
     except Exception as exc:  # pragma: no cover - unexpected
@@ -37,10 +38,11 @@ def _load(path: Path) -> list[dict]:
             items.append(json.loads(line))
         except json.JSONDecodeError as exc:
             logger.warning(
-                "Skipping invalid JSON line %d in %s at column %d: %s",
+                "Skipping invalid JSON line %d in %s at column %d (char %d): %s",
                 lineno,
                 path,
                 exc.colno,
+                exc.pos,
                 exc,
             )
         except Exception as exc:  # pragma: no cover - unexpected
