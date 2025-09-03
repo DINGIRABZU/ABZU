@@ -9,6 +9,7 @@ from __future__ import annotations
 
 __version__ = "0.0.0"
 
+import argparse
 import asyncio
 import json
 import logging
@@ -279,4 +280,35 @@ def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, An
     return result
 
 
-__all__ = ["crown_prompt_orchestrator"]
+def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
+    """Run a single orchestrated prompt from the command line."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("message", help="Input message to process")
+    parser.add_argument("--model", help="Dotted path to model class")
+    parser.add_argument("--endpoint", help="Model endpoint URL")
+    parser.add_argument("--api-key", help="Model API key")
+    parser.add_argument(
+        "--temperature", type=float, default=0.8, help="Sampling temperature"
+    )
+    args = parser.parse_args(argv)
+
+    if args.model:
+        mod_name, cls_name = args.model.rsplit(".", 1)
+        cls = getattr(import_module(mod_name), cls_name)
+    else:
+        cls = GLMIntegration
+
+    glm = cls(
+        endpoint=args.endpoint,
+        api_key=args.api_key,
+        temperature=args.temperature,
+    )
+    result = crown_prompt_orchestrator(args.message, glm)
+    print(result.get("text", ""))
+
+
+__all__ = ["crown_prompt_orchestrator", "main"]
+
+
+if __name__ == "__main__":  # pragma: no cover - CLI entry
+    main()
