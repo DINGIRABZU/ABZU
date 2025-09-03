@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `VersionInfo` dataclass and `__version__` constant for explicit semantic versioning.
 
 ### Bug Fixes
-- None.
+- Added logging and fallback behaviour when the invocation engine is unavailable or fails.
 
 ### Score
 - No score changes.
