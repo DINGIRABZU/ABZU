@@ -21,17 +21,17 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from . import ai_invoker, crown_handshake, doc_sync, health_checks, mission_logger
+from .bootstrap_utils import (
+    HISTORY_FILE,
+    LOGS_DIR,
+    MAX_MISSION_BRIEFS,
+    STATE_FILE,
+)
 from .crown_handshake import CrownResponse
 from .quarantine_manager import is_quarantined, quarantine_component
 from agents.nazarick.service_launcher import launch_required_agents
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
-
-LOGS_DIR = Path(__file__).resolve().parents[1] / "logs"
-HISTORY_FILE = LOGS_DIR / "razar_boot_history.json"
-STATE_FILE = LOGS_DIR / "razar_state.json"
-# keep a limited number of mission brief archives for auditability
-MAX_MISSION_BRIEFS = 20
 
 
 def load_history() -> Dict[str, Any]:
