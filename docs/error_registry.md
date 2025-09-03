@@ -9,3 +9,8 @@ This registry tracks recurring issues observed during component startup and oper
 | config-mismatch | Component rejects configuration files due to unexpected fields or schema changes. | Update the configuration to the latest schema and reload the component. |
 
 Add new entries as additional patterns emerge.
+
+## Logged Errors
+
+- CROWN_WS_URL not set
+- RAZAR: Initial ImportError - missing `run_validated_task` in patched `agents.guardian`; added stub to satisfy dependency.
