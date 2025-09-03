@@ -71,7 +71,7 @@ def _build_context(limit: int = 3) -> str:
 
 
 async def _delegate(prompt: str, glm: GLMIntegration) -> str:
-    return glm.complete(prompt)
+    return await asyncio.to_thread(glm.complete, prompt)
 
 
 def _apply_layer(message: str) -> tuple[str | None, str | None]:
