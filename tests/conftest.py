@@ -268,6 +268,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "core" / "test_memory_physical.py"),
     str(ROOT / "tests" / "audio" / "test_mix_tracks.py"),
     str(ROOT / "tests" / "integration" / "test_mix_and_store.py"),
+    str(ROOT / "tests" / "test_transformers_generate.py"),
 }
 
 
