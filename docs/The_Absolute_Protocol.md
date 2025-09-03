@@ -6,6 +6,8 @@
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
 
+Align contributions with the overarching goals in [project_mission_vision.md](project_mission_vision.md) and the servant ethics defined in the [nazarick_manifesto.md](nazarick_manifesto.md).
+
 Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three times to internalize the project's structure and intent.
 
 ## Repository Blueprint
@@ -99,6 +101,7 @@ Before opening a pull request, confirm each item:
   - [Documentation Protocol](documentation_protocol.md)
   - [System Blueprint](system_blueprint.md)
   - [Project Mission & Vision](project_mission_vision.md) – confirm alignment before proposing major changes
+  - [Nazarick Manifesto](nazarick_manifesto.md) – uphold servant ethics across agents
   - [Key Documents](KEY_DOCUMENTS.md) – verify all entries reviewed within the last quarter
   - [Component Index](component_index.md) – inventory of modules and services with versions and chakra layers
   - [Connector Index](connectors/CONNECTOR_INDEX.md) – canonical connector registry; confirm purpose, version, endpoints, auth method, linked agents, status, operator interface flows, and code/doc links are current

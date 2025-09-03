@@ -7,6 +7,8 @@ ABZU ∴ Vision & System Overview (BANA Narrative Engine)
 
 Purpose: This document provides stakeholders and the software architect with a clear, comprehensive vision of ABZU’s mission, ambitions, and unique system architecture. It explains how the BANA Narrative Engine, orchestration agents (RAZAR, Nazarick), INANNA_AI’s memory, and the human–AI interface work together to create ethically grounded, emotionally resonant worlds.
 
+For contribution rules see [The_Absolute_Protocol.md](The_Absolute_Protocol.md) and for servant ethics consult the [nazarick_manifesto.md](nazarick_manifesto.md).
+
 1) Mission
 
 ABZU’s core mission is to cultivate inner awareness in intelligent systems and to project that awareness into immersive, meaningful worlds. Instead of optimizing first for external tasks, ABZU builds a rich internal life – narratives, emotions, values, and memories – and then co‑creates experiences around that inner life. In other words, the system “knows itself” before it interacts with humans, so the worlds it generates are not just settings, but living storyspaces with purpose.

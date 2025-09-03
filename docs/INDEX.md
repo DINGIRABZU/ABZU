@@ -327,6 +327,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [operations.md](operations.md) | Operations | - | - |
 | [operator_interface_GUIDE.md](operator_interface_GUIDE.md) | Operator Interface Guide | Instructions for operator API usage, onboarding requirements, and Nazarick Web Console chat rooms. | - |
 | [operator_protocol.md](operator_protocol.md) | Operator Protocol | Defines endpoints for operators to dispatch commands and upload assets to agents. | - |
+| [operator_quickstart.md](operator_quickstart.md) | Operator Quickstart | A concise orientation for operators interacting with ABZU. | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | Sources: [`../os_guardian/perception.py`](../os_guardian/perception.py), [`../os_guardian/planning.py`](../os_guardia... | `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py` |
 | [os_guardian_container.md](os_guardian_container.md) | OS Guardian Container | This guide covers running the `os_guardian` tools inside Docker. | - |
 | [os_guardian_permissions.md](os_guardian_permissions.md) | OS Guardian Permission Policies | The `safety` module guards high-risk actions executed by the OS Guardian utilities. Permissions are configured with e... | - |

@@ -97,6 +97,12 @@ repos:
     language: system
     pass_filenames: false
     files: ^component_index.json$
+  - id: require-module-docs
+    name: Require changelog and component index for new modules
+    entry: python scripts/require_module_docs.py
+    language: system
+    pass_filenames: false
+    always_run: true
   - id: verify-dependencies
     name: Verify dependency versions
     entry: python scripts/verify_dependencies.py
