@@ -92,8 +92,9 @@ def preprocess_texts(
             try:
                 processed[name] = json.loads(cache_file.read_text(encoding="utf-8"))
                 continue
-            except Exception as exc:
-                logger.warning("Failed to read token cache %s: %s", cache_file, exc)
+            except Exception:
+                logger.exception("Failed to read token cache %s", cache_file)
+                raise
         tokens = tokenize(normalize_whitespace(strip_markdown(text)))
         processed[name] = tokens
         cache_file.write_text(json.dumps(tokens), encoding="utf-8")
@@ -126,8 +127,9 @@ def generate_embeddings(
             try:
                 embeddings[name] = np.load(cache_file)
                 continue
-            except Exception as exc:
-                logger.warning("Failed to read embedding cache %s: %s", cache_file, exc)
+            except Exception:
+                logger.exception("Failed to read embedding cache %s", cache_file)
+                raise
 
         text = " ".join(tokens)
         emb = model.encode(text)
