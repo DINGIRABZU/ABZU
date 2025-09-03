@@ -30,6 +30,8 @@ When bumping versions in
 
 ## Setup
 
+Copy `secrets.env.template` to `secrets.env` and fill in the required tokens and URLs before running any scripts.
+
 Use Python 3.10 or later. Install development dependencies with:
 
 ```bash
