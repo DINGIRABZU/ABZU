@@ -24,3 +24,18 @@ docker run -it abzu
 
 Pass environment variables with `--env-file` or `-e` as needed for your
 platform.
+
+## Reinforcement learning extras
+
+Components that rely on reinforcement learning require additional libraries:
+
+```bash
+pip install gymnasium numpy stable-baselines3
+```
+
+You can verify their availability with:
+
+```python
+from env_validation import check_rl_packages
+check_rl_packages()
+```
