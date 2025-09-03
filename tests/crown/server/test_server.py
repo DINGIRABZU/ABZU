@@ -81,6 +81,13 @@ crown_mod.crown_prompt_orchestrator = lambda msg, glm: {
     "text": "stubbed",
     "model": "stub",
 }
+
+
+async def _cpo_async(msg, glm):
+    return {"text": "stubbed", "model": "stub"}
+
+
+crown_mod.crown_prompt_orchestrator_async = _cpo_async
 sys.modules.setdefault("crown_prompt_orchestrator", crown_mod)
 
 from crown_config import settings

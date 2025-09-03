@@ -7,6 +7,7 @@ __version__ = "0.0.0"
 import sys
 import types
 from pathlib import Path
+import asyncio
 
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
@@ -43,7 +44,7 @@ def test_basic_flow(monkeypatch):
         "load_interactions",
         lambda limit=3: [{"input": "hi"}],
     )
-    result = cpo.crown_prompt_orchestrator("hello", glm)
+    result = asyncio.run(cpo.crown_prompt_orchestrator_async("hello", glm))
     assert result["text"].startswith("glm:")
     assert result["model"] == "glm"
     assert "hi" in glm.seen
@@ -54,7 +55,9 @@ def test_servant_invocation(monkeypatch):
     glm = DummyGLM()
     smm.register_model("deepseek", lambda p: f"ds:{p}")
     monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
-    result = cpo.crown_prompt_orchestrator("how do things work?", glm)
+    result = asyncio.run(
+        cpo.crown_prompt_orchestrator_async("how do things work?", glm)
+    )
     assert result["text"] == "ds:how do things work?"
     assert result["model"] == "deepseek"
 
@@ -66,7 +69,7 @@ def test_servant_failure_falls_back_to_glm(monkeypatch):
     monkeypatch.setattr(
         smm, "invoke", lambda name, prompt: (_ for _ in ()).throw(RuntimeError("boom"))
     )
-    result = cpo.crown_prompt_orchestrator("oops", glm)
+    result = asyncio.run(cpo.crown_prompt_orchestrator_async("oops", glm))
     assert result["model"] == "glm"
     assert result["text"].startswith("glm:")
 
@@ -78,7 +81,7 @@ def test_state_engine_integration(monkeypatch):
         "load_interactions",
         lambda limit=3: [],
     )
-    result = cpo.crown_prompt_orchestrator("begin the ritual", glm)
+    result = asyncio.run(cpo.crown_prompt_orchestrator_async("begin the ritual", glm))
     assert result["state"] == "ritual"
 
 
@@ -90,7 +93,7 @@ def test_empty_interactions_response(monkeypatch):
         lambda limit=3: [],
     )
     monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "glm")
-    result = cpo.crown_prompt_orchestrator("hello", glm)
+    result = asyncio.run(cpo.crown_prompt_orchestrator_async("hello", glm))
     assert result["text"].startswith("glm:")
     assert "<no interactions>" in glm.seen
 
@@ -105,7 +108,7 @@ def test_technical_prefers_kimi(monkeypatch):
         lambda limit=3: [],
     )
     monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "kimi_k2")
-    result = cpo.crown_prompt_orchestrator("import os", glm)
+    result = asyncio.run(cpo.crown_prompt_orchestrator_async("import os", glm))
     assert result["text"] == "k2:import os"
     assert result["model"] == "kimi_k2"
 
@@ -130,6 +133,6 @@ def test_reviews_test_metrics(monkeypatch, tmp_path):
     monkeypatch.setattr(cpo, "load_interactions", lambda limit=3: [])
     monkeypatch.setattr(cpo, "spiral_recall", lambda msg: "")
 
-    result = cpo.crown_prompt_orchestrator("hello", glm)
+    result = asyncio.run(cpo.crown_prompt_orchestrator_async("hello", glm))
     assert logged and "2" in logged[0][0]
     assert result["suggestions"] == [logged[0][0]]
