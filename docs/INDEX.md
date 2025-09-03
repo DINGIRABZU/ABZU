@@ -12,7 +12,6 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -310,6 +309,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |
 | [ml_environment.md](ml_environment.md) | ML Environment Setup | This guide explains how to create an isolated Python environment and start Jupyter notebooks for experimenting with S... | - |
 | [module_execution_flow.md](module_execution_flow.md) | Module Execution Flow | Overview of key modules with their inputs, core processing, outputs, and error handling. Flowcharts summarize the exe... | - |
+| [module_index.md](module_index.md) | Module Index | - | - |
 | [monitoring.md](monitoring.md) | Monitoring | The application writes JSON-formatted logs to `logs/INANNA_AI.log`. The file rotates when it reaches roughly 10 MB, k... | - |
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
 | [music_generation_usage.md](music_generation_usage.md) | Music Generation Usage | Generate audio from text prompts or ritual invocations. | - |
