@@ -1,5 +1,6 @@
-RAZAR: Initial ImportError - missing `run_validated_task` in patched `agents.guardian`; added stub to satisfy dependency.
-Crown: `CrownHandshake` dependency on websockets and missing attribute caused handshake failure; patched with dummy handshake.
-RAZAR/Crown: Outdated expectation for GLM4V launch via subprocess; removed assertion to match current orchestrator behavior.
-Testing config: Coverage threshold of 90% causes failures for isolated runs; used `--cov-fail-under=0` for verification.
-INANNA, Albedo, Nazarick, narrative engine, operator interface: No issues observed after above fixes.
+
+ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+pytest: error: unrecognized arguments: --cov=src --cov=agents --cov-fail-under=90
+  inifile: /workspace/ABZU/pytest.ini
+  rootdir: /workspace/ABZU
+

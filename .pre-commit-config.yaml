@@ -113,6 +113,13 @@ repos:
     entry: python scripts/check_env.py
     language: system
     pass_filenames: false
+  - id: capture-failing-tests
+    name: Capture failing pytest cases
+    entry: python scripts/capture_failing_tests.py
+    language: system
+    pass_filenames: false
+    always_run: true
+    stages: [commit]
   - id: validate-links
     name: Validate markdown links
     entry: python scripts/validate_links.py
