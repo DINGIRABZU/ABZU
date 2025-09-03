@@ -79,5 +79,5 @@ Consult `README_OPERATOR.md` for more options and explanations.
 
 ## License
 
-Distributed under the MIT License. See [LICENSE_CRYSTAL.md](LICENSE_CRYSTAL.md)
+Distributed under the Apache License 2.0. See [LICENSE](LICENSE)
 for details.

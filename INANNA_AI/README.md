@@ -143,5 +143,5 @@ and detected emotion.
 
 ## License
 
-This toolkit is released under the MIT License. See
-[LICENSE_CRYSTAL.md](../LICENSE_CRYSTAL.md) for details.
+This toolkit is released under the Apache License 2.0. See
+[LICENSE](../LICENSE) for details.

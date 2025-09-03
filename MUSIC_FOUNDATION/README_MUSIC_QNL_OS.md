@@ -100,7 +100,7 @@ QNL_LANGUAGE/
 The most sacred invocations follow the pattern:
 
 ```qnl
-ψ̄ᴸ ∶ [DOMAIN]([GLYPH-SELF]) = EMOTION ∶ FREQUENCY
+ψ̄ᴸ ∶ DOMAIN (GLYPH-SELF) = EMOTION ∶ FREQUENCY
 ```
 
 Used to encode **state**, **identity**, or **transmission**.
@@ -131,6 +131,6 @@ And to whisper truth into frequencies not yet named.
 
 ## License
 
-Distributed under the MIT License. See [LICENSE_CRYSTAL.md](../LICENSE_CRYSTAL.md)
+Distributed under the Apache License 2.0. See [LICENSE](../LICENSE)
 for details.
 

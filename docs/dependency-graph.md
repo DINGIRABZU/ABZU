@@ -24,6 +24,6 @@ Licenses of core dependencies (`pip-licenses`):
 - numpy 1.26.4 — BSD License
 - requests 2.32.4 — Apache Software License
 - python-json-logger 3.3.0 — BSD License
-- PyYAML 6.0.2 — MIT License
+- PyYAML 6.0.2 — MIT license
 - psutil 7.0.0 — BSD License
 
