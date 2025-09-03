@@ -13,6 +13,16 @@ if [ -f "$ROOT_DIR/secrets.env" ]; then
     set +a
 fi
 
+# Verify Python version is at least 3.11
+if ! python - <<'PY'
+import sys
+assert sys.version_info >= (3, 11), "Python 3.11+ required"
+PY
+then
+    echo "Python 3.11+ required. Found $(python -V 2>&1)." >&2
+    exit 1
+fi
+
 # Ensure required secrets are set, fail fast if any are missing
 for var in HF_TOKEN GLM_API_URL GLM_API_KEY; do
     if [ -z "${!var:-}" ]; then
