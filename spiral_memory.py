@@ -16,14 +16,15 @@ from typing import Iterable, List, Mapping, Sequence
 
 from memory.sacred import generate_sacred_glyph
 
+logger = logging.getLogger(__name__)
+
 try:  # pragma: no cover - optional dependency
     import torch
     import torch.nn as nn
-except Exception:  # pragma: no cover - optional dependency
+except Exception as exc:  # pragma: no cover - optional dependency
+    logger.exception("optional torch dependency failed to import: %s", exc)
     torch = None  # type: ignore
     nn = None  # type: ignore
-
-logger = logging.getLogger(__name__)
 
 REGISTRY_DB = Path("data/spiral_registry.db")
 
