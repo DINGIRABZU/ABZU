@@ -1,0 +1,31 @@
+{
+  "prose": "hero smiles. villain frowns.",
+  "audio": [
+    {
+      "cue": "hero_smiles"
+    },
+    {
+      "cue": "villain_frowns"
+    }
+  ],
+  "visual": [
+    {
+      "directive": "frame hero smiles"
+    },
+    {
+      "directive": "frame villain frowns"
+    }
+  ],
+  "usd": [
+    {
+      "op": "AddPrim",
+      "path": "/hero",
+      "action": "smiles"
+    },
+    {
+      "op": "AddPrim",
+      "path": "/villain",
+      "action": "frowns"
+    }
+  ]
+}

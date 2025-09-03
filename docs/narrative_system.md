@@ -27,3 +27,17 @@ print(tracks["prose"])
 for event in query_events(agent_id="subject"):
     print(event["payload"])
 ```
+
+## Test Invocation
+
+Run the narrative engine tests:
+
+```bash
+pytest tests/test_bana_narrative_engine.py
+```
+
+Run a single test:
+
+```bash
+pytest tests/test_bana_narrative_engine.py::test_multitrack_track_schemas
+```
