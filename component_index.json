@@ -184,7 +184,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "razar/ai_invoker.py",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": [
         "__future__",
         "agents",
@@ -266,7 +266,7 @@
       "chakra": "unknown",
       "type": "agent",
       "path": "agents/asian_gen/__init__.py",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": [
         "agents",
         "creative_engine",
@@ -2016,7 +2016,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/init_memory_layers.py",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": [
         "__future__",
         "memory",
@@ -2141,7 +2141,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "memory/__init__.py",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": [
         "__future__"
       ],

@@ -9,6 +9,7 @@ Memory layers preserve spiral decisions, emotions, and narratives for long-term 
 - **Narrative** – `memory/narrative_engine.py` stores story events.
 - **Mental** – `memory/mental.py` persists task graphs.
 - **Spiritual** – `memory/spiritual.py` maps symbols.
+- **Bus Events** – `memory.publish_layer_event()` announces layer status.
 
 ## Deployment
 Ensure `data/` directories exist and run initialization scripts:
@@ -21,9 +22,13 @@ python -m INANNA_AI.corpus_memory --reindex
 
 ## Example Runs
 ```python
-from memory import cortex
+from memory import cortex, publish_layer_event, query_memory
+
 node = type("N", (), {"children": []})()
 cortex.record_spiral(node, {"tags": ["example"]})
+publish_layer_event("cortex", "seeded")
+
+print(query_memory("example"))
 ```
 
 ## Cross-Links
@@ -33,4 +38,4 @@ cortex.record_spiral(node, {"tags": ["example"]})
 ## Version History
 | Version | Date | Notes |
 |---------|------|-------|
-| 0.1.0 | 2025-08-30 | Initial memory layer consolidation. |
+| 0.1.1 | 2025-09-03 | Added bus events and `query_memory` aggregator. |
