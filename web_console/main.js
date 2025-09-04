@@ -213,12 +213,20 @@ async function startStream() {
     }
 
     pc.addTransceiver('video');
+    pc.addTransceiver('audio');
 
     pc.ontrack = (ev) => {
         const [stream] = ev.streams;
-        const video = document.getElementById('avatar');
-        if (video.srcObject !== stream) {
-            video.srcObject = stream;
+        if (ev.track.kind === 'video') {
+            const video = document.getElementById('avatar');
+            if (video.srcObject !== stream) {
+                video.srcObject = stream;
+            }
+        } else if (ev.track.kind === 'audio') {
+            const audio = document.getElementById('avatar-audio');
+            if (audio.srcObject !== stream) {
+                audio.srcObject = stream;
+            }
         }
     };
 
@@ -228,6 +236,10 @@ async function startStream() {
                 const payload = JSON.parse(msg.data);
                 if (payload.transcript) {
                     document.getElementById('transcript').textContent = payload.transcript;
+                }
+                if (payload.prose) {
+                    const n = document.getElementById('narrative');
+                    n.textContent += payload.prose;
                 }
                 if (payload.style) {
                     applyStyle(payload.style);
