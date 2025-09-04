@@ -147,6 +147,12 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/
+  - id: verify-chakra-monitoring
+    name: Verify chakra monitoring
+    entry: python scripts/verify_chakra_monitoring.py
+    language: system
+    pass_filenames: false
+    files: ^(docs/|monitoring/)
 
 - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
   rev: v9.19.0
