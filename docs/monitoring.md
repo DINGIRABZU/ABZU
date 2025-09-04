@@ -108,6 +108,19 @@ docker compose -f monitoring/docker-compose.yml up
 
 Grafana listens on `http://localhost:3000` and Prometheus on `http://localhost:9090`.
 
+### Resource dashboards
+
+The docker-compose stack also launches resource exporters:
+
+- **Node Exporter** gathers CPU, RAM, disk, and network metrics from the host.
+- **cAdvisor** exposes container-level statistics.
+- **gpu-exporter** (DCGM) publishes GPU utilization and memory data.
+
+Import `monitoring/grafana-dashboard.json` into Grafana to view panels for
+these metrics. CPU, memory, disk, network, and GPU graphs are preconfigured.
+The `monitoring/watchdog.py` script augments these dashboards with system
+network throughput using `psutil.net_io_counters`.
+
 ## Timing metrics
 
 Latency histograms are exported via Prometheus:
