@@ -208,6 +208,9 @@ PY
       - name: Validate templates and schemas
         run: python scripts/validate_configs.py
 
+      - name: Verify component maturity
+        run: python scripts/verify_component_maturity.py
+
       - name: Profiling
         run: python -m cProfile -m task_profiling
 
