@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+# mypy: ignore-errors
 __version__ = "0.0.1"
 
 import importlib.util
@@ -198,6 +199,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_media_audio.py"),
     str(ROOT / "tests" / "test_audio_backends.py"),
     str(ROOT / "tests" / "test_audio_segment.py"),
+    str(ROOT / "tests" / "chakracon" / "test_api.py"),
     str(ROOT / "tests" / "test_video_stream_helpers.py"),
     str(ROOT / "tests" / "test_media_video.py"),
     str(ROOT / "tests" / "test_media_avatar.py"),
