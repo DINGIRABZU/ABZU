@@ -268,7 +268,10 @@ async def crown_prompt_orchestrator_async(
         current = await emotional_state.get_last_emotion_async()
         logger.debug("processing with last emotion %s", current)
         task_type = classify_task(message)
-        model = crown_decider.recommend_llm(task_type, emotion)
+        if task_type in {"repair", "refactor"}:
+            model = "opencode"
+        else:
+            model = crown_decider.recommend_llm(task_type, emotion)
         success = True
         invoke_error: str | None = None
         try:
