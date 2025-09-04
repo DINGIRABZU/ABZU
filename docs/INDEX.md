@@ -350,6 +350,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [recovery_playbook.md](recovery_playbook.md) | Recovery Playbook | This playbook outlines how RAZAR restores service after a component failure. Recurring problems and their fixes are c... | - |
 | [registry_audit.md](registry_audit.md) | Registry Audit | This guide describes how to validate `logs/task_registry.jsonl` to keep the task log accurate. | - |
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
+| [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
