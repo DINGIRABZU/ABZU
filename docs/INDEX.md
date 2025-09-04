@@ -14,7 +14,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -353,6 +352,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [recovery_playbook.md](recovery_playbook.md) | Recovery Playbook | This playbook outlines how RAZAR restores service after a component failure. Recurring problems and their fixes are c... | - |
 | [registry_audit.md](registry_audit.md) | Registry Audit | This guide describes how to validate `logs/task_registry.jsonl` to keep the task log accurate. | - |
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
+| [release_process.md](release_process.md) | Release Process | This guide covers signing build artifacts and verifying their integrity. | - |
 | [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
