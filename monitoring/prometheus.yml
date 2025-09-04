@@ -4,21 +4,35 @@ scrape_configs:
   - job_name: 'api'
     static_configs:
       - targets: ['api:8000']
+        labels:
+          chakra: throat
   - job_name: 'mediasoup'
     static_configs:
       - targets: ['mediasoup:3000']
+        labels:
+          chakra: third_eye
   - job_name: 'gpu'
     static_configs:
       - targets: ['gpu-exporter:9400']
+        labels:
+          chakra: sacral
   - job_name: 'node'
     static_configs:
       - targets: ['node-exporter:9100']
+        labels:
+          chakra: root
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
+        labels:
+          chakra: solar_plexus
   - job_name: 'watchdog'
     static_configs:
       - targets: ['watchdog:9100']
+        labels:
+          chakra: root
   - job_name: 'razar-health'
     static_configs:
       - targets: ['razar-health:9350']
+        labels:
+          chakra: crown
