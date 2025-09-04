@@ -146,9 +146,15 @@ def _register_http_servant(name: str, url: str) -> None:
 def _init_servants(cfg: dict) -> None:
     servants = dict(cfg.get("servant_models") or {})
     kimi_url = servants.pop("kimi_k2", None) or os.getenv("KIMI_K2_URL")
+    opencode_present = "opencode" in servants or os.getenv("OPENCODE_URL")
+    opencode_url = servants.pop("opencode", None) or os.getenv("OPENCODE_URL")
     if kimi_url:
         os.environ.setdefault("KIMI_K2_URL", kimi_url)
         smm.register_kimi_k2()
+    if opencode_present:
+        if opencode_url:
+            os.environ.setdefault("OPENCODE_URL", opencode_url)
+        smm.register_opencode()
     for name, url in servants.items():
         _register_http_servant(name, url)
 

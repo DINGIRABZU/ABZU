@@ -6,7 +6,7 @@ import asyncio
 import threading
 from typing import Awaitable, Callable, Dict, List, cast
 
-from tools import kimi_k2_client
+from tools import kimi_k2_client, opencode_client
 
 _Handler = Callable[[str], Awaitable[str] | str]
 _REGISTRY: Dict[str, _Handler] = {}
@@ -39,6 +39,11 @@ def register_subprocess_model(name: str, command: List[str]) -> None:
 def register_kimi_k2() -> None:
     """Register the Kimi-K2 servant model."""
     register_model("kimi_k2", kimi_k2_client.complete)
+
+
+def register_opencode() -> None:
+    """Register the Opencode servant model."""
+    register_model("opencode", opencode_client.complete)
 
 
 def has_model(name: str) -> bool:
@@ -78,4 +83,5 @@ __all__ = [
     "list_models",
     "has_model",
     "register_kimi_k2",
+    "register_opencode",
 ]
