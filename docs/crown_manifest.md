@@ -12,6 +12,20 @@ Commands typed into the Crown Console reach the agent through `crown_prompt_orch
 
 Memory mutations happen through `vector_memory.py` and are authorised only when the CROWN is active. This ensures a single authority controls persistent memories and the rituals that can reshape them.
 
+### Command-line usage
+
+`crown_prompt_orchestrator.py` exposes a CLI that processes a single message with optional model configuration. After installing the package it can be invoked via the `crown-prompt` command:
+
+```bash
+crown-prompt "hello world" --model path.to.CustomModel
+```
+
+Without installation the module may be executed directly:
+
+```bash
+python -m crown_prompt_orchestrator "hello world"
+```
+
 ## Emotion model mapping
 
 The orchestrator exposes a lookup table called `_EMOTION_MODEL_MATRIX` which matches a detected emotion to the LLM best suited to respond. This mapping is tested to guarantee consistent routing behaviour.

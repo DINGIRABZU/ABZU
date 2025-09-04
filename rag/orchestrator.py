@@ -22,6 +22,8 @@ from pathlib import Path
 from time import perf_counter
 from typing import Any, Callable, Deque, Dict, List
 
+import hashlib
+
 try:
     import soundfile as sf  # pragma: no cover
 except Exception:
@@ -251,7 +253,8 @@ class MoGEOrchestrator:
         if music_modality and np is not None:
             hex_input = text.encode("utf-8").hex()
             phrases, wave = qnl_engine.hex_to_song(hex_input, duration_per_byte=0.05)
-            wav_path = Path(tempfile.gettempdir()) / f"qnl_{abs(hash(hex_input))}.wav"
+            digest = hashlib.sha256(hex_input.encode("utf-8")).hexdigest()[:8]
+            wav_path = Path(tempfile.gettempdir()) / f"qnl_{digest}.wav"
             if sf is None:
                 wav_data = np.clip(wave, -1.0, 1.0)
                 wav_data = (wav_data * 32767).astype(np.int16)

@@ -5,6 +5,7 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
+import hashlib
 import numpy as np
 
 from .utils import save_wav
@@ -40,7 +41,8 @@ def _sine_placeholder(text: str, path: Path, pitch: float) -> None:
 def synthesize(text: str, emotion: str) -> str:
     """Return a WAV path containing ``text`` spoken in ``emotion`` style."""
     style = get_voice_params(emotion)
-    out_path = Path(tempfile.gettempdir()) / f"xtts_{abs(hash(text))}.wav"
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
+    out_path = Path(tempfile.gettempdir()) / f"xtts_{digest}.wav"
 
     if TTS is not None:
         try:  # pragma: no cover - external library

@@ -7,6 +7,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, Iterable, Tuple
 
+import hashlib
 import numpy as np
 
 from core.utils.optional_deps import lazy_import
@@ -95,7 +96,8 @@ def _synthesize_gtts(
         }
     )
     archetype = emotion_to_archetype(emotion)
-    out_path = Path(tempfile.gettempdir()) / f"gtts_{abs(hash(text))}.wav"
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
+    out_path = Path(tempfile.gettempdir()) / f"gtts_{digest}.wav"
 
     if gTTS is None:
         wave, sr = _sine_placeholder(f"{archetype} {text}")

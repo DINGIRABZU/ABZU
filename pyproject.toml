@@ -118,6 +118,7 @@ voice-cli = "cli.voice:main"
 spiral-os = "spiral_os.__main__:main"
 # Unified developer helper
 inanna = "cli:main"
+crown-prompt = "crown_prompt_orchestrator:main"
 
 [tool.poetry.scripts]
 abzu = "cli:main"

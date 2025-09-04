@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterator, Optional
 
+import hashlib
 import numpy as np
 import tomllib
 
@@ -150,7 +151,8 @@ def _upscale(frame: np.ndarray, scale: int) -> np.ndarray:
 
 def _skin_color(name: str) -> np.ndarray:
     """Return a deterministic RGB colour derived from ``name``."""
-    value = abs(hash(name)) & 0xFFFFFF
+    digest = hashlib.sha256(name.encode("utf-8")).digest()
+    value = int.from_bytes(digest[:3], "big")
     return np.array(
         [(value >> 16) & 255, (value >> 8) & 255, value & 255], dtype=np.uint8
     )

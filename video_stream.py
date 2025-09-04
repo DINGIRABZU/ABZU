@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Optional, Set, cast
 
 import numpy as np
+import hashlib
 from fastapi import APIRouter, HTTPException, Request
 from numpy.typing import NDArray
 
@@ -136,7 +137,8 @@ class AvatarVideoTrack(VideoStreamTrack):  # type: ignore[misc]
         self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
 
     def _cue_colour(self, text: str) -> NDArray[np.uint8]:
-        value = abs(hash(text)) & 0xFFFFFF
+        digest = hashlib.sha256(text.encode("utf-8")).digest()
+        value = int.from_bytes(digest[:3], "big")
         return np.array(
             [(value >> 16) & 255, (value >> 8) & 255, value & 255],
             dtype=np.uint8,
