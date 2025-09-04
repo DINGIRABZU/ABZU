@@ -28,12 +28,20 @@ import time
 from contextlib import asynccontextmanager
 from io import BytesIO
 from pathlib import Path
-from typing import Any, AsyncIterator, Iterator, Optional, TypedDict
+from typing import (
+    Any,
+    AsyncIterator,
+    Awaitable,
+    Callable,
+    Iterator,
+    Optional,
+    TypedDict,
+)
 import uuid
 
 import numpy as np
-import yaml
-from fastapi import Depends, FastAPI, HTTPException, Security, Request
+import yaml  # type: ignore[import-untyped]
+from fastapi import Depends, FastAPI, HTTPException, Security, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import (
     OAuth2PasswordBearer,
@@ -72,7 +80,9 @@ START_TIME = time.perf_counter()
 
 if Gauge is not None and REGISTRY is not None:
     if "service_boot_duration_seconds" in REGISTRY._names_to_collectors:
-        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors["service_boot_duration_seconds"]  # type: ignore[assignment]
+        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors[
+            "service_boot_duration_seconds"
+        ]  # type: ignore[assignment]
     else:
         BOOT_DURATION_GAUGE = Gauge(
             "service_boot_duration_seconds",
@@ -227,6 +237,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """
     if BOOT_DURATION_GAUGE is not None:
         BOOT_DURATION_GAUGE.labels(service="core").set(time.perf_counter() - START_TIME)
+    try:
+        _glm.health_check()
+    except Exception as exc:  # pragma: no cover - network dependent
+        logger.error("GLM health check failed: %s", exc)
+        raise SystemExit("GLM endpoint unavailable") from exc
     yield
     await video_stream.close_peers()
     await webrtc_connector.close_peers()
@@ -254,7 +269,10 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()) -> dict[str, str]:
 
 
 @app.middleware("http")
-async def log_request_time(request: Request, call_next):
+async def log_request_time(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
     """Record request latency and export it to Prometheus."""
     start = time.perf_counter()
     response = await call_next(request)

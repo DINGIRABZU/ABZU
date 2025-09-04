@@ -62,7 +62,10 @@ The GLM endpoint and credentials are provided through environment variables:
 | `SERVANT_MODELS`| Comma‑separated `name=url` pairs for servants |
 
 `init_crown_agent.initialize_crown()` reads these settings and registers any
-servant endpoints before performing startup checks.
+servant endpoints before performing startup checks. The Crown agent requires the
+`requests` package and aborts immediately if it is missing. During startup the
+GLM endpoint is contacted at `/health`; a failing response stops initialization
+so misconfiguration is detected early.
 
 ## Health check
 
