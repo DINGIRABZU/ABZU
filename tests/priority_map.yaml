@@ -10,6 +10,7 @@ P3:
 P4:
   - tests/test_music_generation.py
   - tests/test_dashboard_app.py
+  - tests/integration/test_full_flows.py
 P5:
   - tests/test_orchestrator.py
   - tests/test_rag_engine.py
