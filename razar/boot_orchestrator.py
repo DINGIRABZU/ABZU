@@ -113,6 +113,23 @@ def _persist_handshake(response: Optional[CrownResponse]) -> None:
     STATE_FILE.write_text(json.dumps(data, indent=2))
 
 
+def _emit_event(step: str, status: str, **details: Any) -> None:
+    """Append a structured health event to :data:`STATE_FILE`."""
+    data: Dict[str, Any] = {}
+    if STATE_FILE.exists():
+        try:
+            data = json.loads(STATE_FILE.read_text())
+        except json.JSONDecodeError:
+            data = {}
+    events = data.setdefault("events", [])
+    event = {"step": step, "status": status, "timestamp": time.time()}
+    if details:
+        event.update(details)
+    events.append(event)
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(json.dumps(data, indent=2))
+
+
 def _record_probe(name: str, ok: bool) -> None:
     """Persist the result of a component health probe."""
     data: Dict[str, Any] = {}
@@ -128,6 +145,7 @@ def _record_probe(name: str, ok: bool) -> None:
     }
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps(data, indent=2))
+    _emit_event("probe", "ok" if ok else "fail", component=name)
 
 
 def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -> None:
@@ -229,16 +247,19 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
     brief_archive.write_text(json.dumps(brief, indent=2))
     response_path = archive_dir / f"{timestamp}_response.json"
 
+    _emit_event("handshake", "start")
     try:
         response = asyncio.run(crown_handshake.perform(str(brief_path)))
         details = json.dumps(
             {"capabilities": response.capabilities, "downtime": response.downtime}
         )
         status = "success"
+        _emit_event("handshake", "success", capabilities=response.capabilities)
     except Exception as exc:  # pragma: no cover - handshake must succeed
         LOGGER.exception("CROWN handshake failed")
         mission_logger.log_event("handshake", "crown", "failure", str(exc))
         _persist_handshake(None)
+        _emit_event("handshake", "fail", error=str(exc))
         raise RuntimeError("CROWN handshake failed") from exc
 
     mission_logger.log_event("handshake", "crown", status, details)
@@ -274,6 +295,7 @@ def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
     """
     name = component.get("name")
     LOGGER.info("Launching %s", name)
+    _emit_event("launch", "start", component=name)
     proc = subprocess.Popen(component["command"])
 
     cmd = component.get("health_check")
@@ -289,8 +311,10 @@ def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
         LOGGER.error("Health check failed for %s", name)
         proc.terminate()
         proc.wait()
+        _emit_event("launch", "fail", component=name)
         raise RuntimeError(f"Health check failed for {name}")
     LOGGER.info("%s started successfully", name)
+    _emit_event("launch", "success", component=name)
     return proc
 
 
@@ -320,6 +344,7 @@ def main() -> None:
     )
 
     components = load_config(args.config)
+    _emit_event("boot_sequence", "start")
     _perform_handshake(components)
     launch_required_agents()
     processes: List[subprocess.Popen] = []
@@ -386,6 +411,7 @@ def main() -> None:
 
         LOGGER.info("All components launched")
         doc_sync.sync_docs()
+        _emit_event("doc_sync", "success")
         for proc in processes:
             proc.wait()
     except Exception:  # pragma: no cover - logs on failure
@@ -396,6 +422,11 @@ def main() -> None:
         raise SystemExit(1)
     finally:
         finalize_metrics(run_metrics, history, failure_counts, run_start)
+        _emit_event(
+            "boot_sequence",
+            "complete",
+            success_rate=run_metrics.get("success_rate", 0.0),
+        )
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry point

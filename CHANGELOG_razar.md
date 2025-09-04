@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ### Added
 - Documented remediation steps for placeholder violations in RAZAR agent
+- Structured health events recorded for each boot step.
+- Added recovery daemon monitoring `razar_state.json` for automatic restarts.
   guide.
 - Added logging requirement for RAZAR ↔ Crown ↔ Operator exchanges in `logs/interaction_log.jsonl`.
 - Persisted CROWN handshake responses to `logs/mission_briefs/` and
