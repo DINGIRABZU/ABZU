@@ -7,6 +7,7 @@ This checklist distills mandatory practices for ABZU contributors.
 
 ## Documentation Doctrine
 - Run `python scripts/audit_doctrine.py` to confirm key docs exist, required index entries are present, and doctrine rules remain intact. The pre-commit hook executes this automatically when documentation changes.
+- Review [chakra_metrics.md](chakra_metrics.md) to ensure monitoring aligns with chakra standards.
 
 ## Error Index Updates
 - Record recurring issues in [error_registry.md](error_registry.md).
@@ -21,3 +22,4 @@ This checklist distills mandatory practices for ABZU contributors.
 |---------|------|-------|
 | 0.1.0 | 2025-10-25 | Initial checklist. |
 | 0.1.1 | 2025-09-04 | Replace verify_doctrine with audit_doctrine. |
+| 0.1.2 | 2025-09-04 | Require chakra metrics review. |
