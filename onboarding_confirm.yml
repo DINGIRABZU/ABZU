@@ -239,6 +239,27 @@ documents:
       scope: Top-level docs index.
       key_rules: Maintain curated documentation entry points.
       insight: Links to Nazarick architecture and memory blueprints.
+  agents/nazarick/nazarick_core_architecture.md:
+    sha256: d30ed1392ff91d4269e644da871f2ed5bb565e5d202a8abf683e10c80845f516
+    summary:
+      purpose: Design real-time observability framework and channel hierarchy for Spiral OS.
+      scope: Nazarick monitoring architecture and operator interface.
+      key_rules: Stream agent events with narrative tags and archive critical logs immutably.
+      insight: Operator commands supersede all agent actions.
+  agents/nazarick/nazarick_memory_blueprint.md:
+    sha256: 45bbde8a01a6531d169f537380e47c54b07a8a97641b611a4d833b1631f5f621
+    summary:
+      purpose: Blueprint for human-like agent personality, memory, planning, and expression.
+      scope: Nazarick agent traits, memory stores, and communication protocols.
+      key_rules: Store memories in vectors, summarize long interactions, and coordinate via defined APIs.
+      insight: Personality fragments from vectors adapt agents to current state.
+  docs/nazarick_agents.md:
+    sha256: 9cfdb5732c777137ca29fe3796729c7a2fd3af751dddf6dca9faedd435c0321f
+    summary:
+      purpose: Roster and launch guide for Nazarick servant agents.
+      scope: Agent roles, channels, and Chakracon telemetry.
+      key_rules: Launch servants with provided scripts and monitor chakra alerts.
+      insight: Chakracon telemetry signals energy anomalies to operators.
   docs/nazarick_narrative_system.md:
     sha256: aa86c1e0e1cf0b4a5a9cfe80b4e1e34af815482d357630827d72994404fd065b
     summary:

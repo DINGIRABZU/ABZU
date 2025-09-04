@@ -51,6 +51,9 @@ graph LR
 | [Test Planning Guide](onboarding/test_planning.md) | Filing "Test Plan" issues defining scope, chakra, and coverage goals | Quarterly |
 | [Bana Engine](bana_engine.md) | Mistral 7B fine-tuning, event processing, and output paths | Quarterly |
 | [Nazarick Narrative System](nazarick_narrative_system.md) | Biosignal→StoryEvent pipeline and memory hooks | Quarterly |
+| [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md) | Observability framework and channel hierarchy | Quarterly |
+| [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md) | Personality, memory, and communication design for agents | Quarterly |
+| [Nazarick Agents](nazarick_agents.md) | Roster and launch commands for Nazarick servant agents | Quarterly |
 | [RAZAR AI agents config](../config/razar_ai_agents.json) | Roster of handover agents and authentication settings | Quarterly |
 | [Environment check script](../scripts/check_env.py) | Verifies required packages and tools are installed | Each commit |
 | [Change Intent Ledger](../logs/change_intent.jsonl) | Records commit intents and observed behavior | Each commit |
