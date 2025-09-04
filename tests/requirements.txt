@@ -13,6 +13,7 @@ streamlit
 stable-baselines3
 python-json-logger
 httpx
+requests
 requests-mock
 fastapi
 pydantic

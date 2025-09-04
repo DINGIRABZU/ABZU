@@ -6,10 +6,13 @@ import logging
 import os
 from pathlib import Path
 
-try:  # pragma: no cover - optional dependency
+try:  # pragma: no cover - enforce dependency
     import requests
-except Exception:  # pragma: no cover - fallback when requests missing
-    requests = None  # type: ignore
+except ImportError as exc:  # pragma: no cover - requests must be installed
+    raise ImportError(
+        "existential_reflector requires the 'requests' package."
+        " Install it via 'pip install requests'."
+    ) from exc
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +36,6 @@ class ExistentialReflector:
     @staticmethod
     def reflect_on_identity() -> str:
         """Return a concise self-description derived from project texts."""
-        if requests is None:
-            raise RuntimeError("requests library is required")
-
         texts = []
         for directory in (INANNA_DIR, QNL_DIR):
             if directory.exists():
@@ -66,9 +66,6 @@ class ExistentialReflector:
     @staticmethod
     def reflect_on_dilemma(prompt: str, emotion: str) -> str:
         """Return a short reflection on ``prompt`` using recent context."""
-        if requests is None:
-            raise RuntimeError("requests library is required")
-
         context.add(prompt)
         recent_ctx = context.recent()
         payload = {
