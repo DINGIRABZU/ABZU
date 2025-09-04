@@ -108,6 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented Crown service wake sequence linking servant launch scripts and required `SERVANT_MODELS`/`NAZARICK_ENV` settings; cross-linked ignition flow and regenerated docs index.
 - Referenced the task cycle script in The Absolute Protocol and refreshed the docs index.
 - Extended component index schema to list Bana memory layers with ignition stages and updated ignition flow to show RAZAR triggering Bana after INANNA memory initialization; cross-linked Bana from RAZAR and memory architecture guides.
+- Added `docs/chakra_metrics.md` mapping chakra layers to system metrics and thresholds; linked from `docs/INDEX.md`.
 
 ### Added
 
