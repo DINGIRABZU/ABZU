@@ -1,5 +1,6 @@
 """Operator command dispatcher with access controls and log mirroring."""
 
+# @ip-sensitive: Audited dispatch of operator commands
 from __future__ import annotations
 
 import json
