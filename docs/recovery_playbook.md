@@ -22,3 +22,15 @@ Recurring problems and their fixes are cataloged in the
 ## Monitoring
 
 `agents.razar.health_checks` exposes Prometheus metrics when `prometheus_client` is installed. These probes allow external systems to track service readiness and latency during recovery.
+
+## Opencode Integration
+
+Automate patch generation by installing the Opencode CLI:
+
+```bash
+pip install opencode-cli
+```
+
+Call `razar.ai_invoker.handover(component, error, use_opencode=True)` with the
+failure details. The failure context is piped to `opencode run --json` and any
+patch suggestions are applied through `code_repair.repair_module`.

@@ -273,6 +273,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "audio" / "test_mix_tracks.py"),
     str(ROOT / "tests" / "integration" / "test_mix_and_store.py"),
     str(ROOT / "tests" / "test_transformers_generate.py"),
+    str(ROOT / "tests" / "razar" / "test_ai_invoker.py"),
 }
 
 

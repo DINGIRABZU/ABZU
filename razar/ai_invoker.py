@@ -10,13 +10,14 @@ __all__ = ["handover"]
 
 import json
 import logging
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 
 from .bootstrap_utils import PATCH_LOG_PATH
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -44,8 +45,9 @@ def handover(
     *,
     context: Dict[str, Any] | None = None,
     config_path: Path | str | None = None,
+    use_opencode: bool = False,
 ) -> bool:
-    """Delegate ``component`` failure to a remote agent and apply patches.
+    """Delegate ``component`` failure to a remote agent or the ``opencode`` CLI.
 
     Parameters
     ----------
@@ -57,6 +59,9 @@ def handover(
         Optional additional context forwarded to the remote agent.
     config_path:
         Optional override for the remote agent configuration file.
+    use_opencode:
+        When ``True`` invoke ``opencode run --json`` with the failure context
+        instead of delegating to a remote agent.
 
     Returns
     -------
@@ -70,11 +75,34 @@ def handover(
     ctx: Dict[str, Any] = {"component": component, "error": error}
     if context:
         ctx.update(context)
-    try:
-        suggestion = remote_ai_invoker.handover(context=ctx, config_path=config_path)
-    except Exception:  # pragma: no cover - defensive
-        LOGGER.exception("Remote agent invocation failed for %s", component)
-        return False
+    if use_opencode:
+        try:
+            result = subprocess.run(
+                ["opencode", "run", "--json"],
+                input=json.dumps(ctx),
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except Exception:  # pragma: no cover - defensive
+            LOGGER.exception("opencode CLI failed for %s", component)
+            return False
+        if result.returncode != 0:
+            LOGGER.error("opencode exited with code %s", result.returncode)
+            return False
+        try:
+            suggestion = json.loads(result.stdout or "null")
+        except json.JSONDecodeError:
+            LOGGER.warning("Could not decode opencode output for %s", component)
+            return False
+    else:
+        try:
+            suggestion = remote_ai_invoker.handover(
+                context=ctx, config_path=config_path
+            )
+        except Exception:  # pragma: no cover - defensive
+            LOGGER.exception("Remote agent invocation failed for %s", component)
+            return False
     if not suggestion:
         return False
     patches = suggestion if isinstance(suggestion, list) else [suggestion]
