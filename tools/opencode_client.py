@@ -8,6 +8,8 @@ import logging
 import os
 import subprocess
 
+from . import kimi_k2_client
+
 try:  # pragma: no cover - optional dependency
     import requests
 except Exception:  # pragma: no cover - requests optional
@@ -16,16 +18,21 @@ except Exception:  # pragma: no cover - requests optional
 logger = logging.getLogger(__name__)
 
 _ENDPOINT = os.getenv("OPENCODE_URL")
+_BACKEND = os.getenv("OPENCODE_BACKEND", "").lower()
 
 
 def complete(prompt: str) -> str:
     """Return the code diff for ``prompt`` via Opencode.
 
-    If ``OPENCODE_URL`` is set, an HTTP request is issued. Otherwise the local
-    ``opencode`` CLI is invoked. Errors are wrapped in :class:`RuntimeError`.
+    If ``OPENCODE_BACKEND`` is ``"kimi"`` the Kimi-K2 client is used directly.
+    When ``OPENCODE_URL`` is set, an HTTP request is issued. Otherwise the
+    local ``opencode`` CLI is invoked. Errors are wrapped in
+    :class:`RuntimeError`.
     """
 
     try:
+        if _BACKEND in {"kimi", "kimi-k2"}:
+            return kimi_k2_client.complete(prompt)
         if _ENDPOINT and requests is not None:
             resp = requests.post(_ENDPOINT, json={"prompt": prompt}, timeout=30)
             resp.raise_for_status()
