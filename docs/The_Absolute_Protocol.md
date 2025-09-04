@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.89
+**Version:** v1.0.90
 **Last updated:** 2025-09-04
 
 ## How to Use This Protocol
@@ -510,6 +510,14 @@ Narrative modules must maintain traceability by:
 - [ ] Run dependency audits (`pip-audit` for Python and `npm audit` for `floor_client`) via the GitHub Actions workflow `.github/workflows/dependency-audit.yml`; it fails on high-severity findings and uploads JSON reports as artifacts.
 - [ ] Run `scripts/verify_doc_hashes.py` to confirm `onboarding_confirm.yml` hashes.
 - [ ] Ensure connectors appear in the connector registry [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
+
+## Chakra-Aligned Monitoring & Self-Healing
+
+Agents must uphold resilience across chakra layers:
+
+- Track telemetry for each chakra using metrics defined in [chakra_metrics.md](chakra_metrics.md).
+- Trigger self-diagnostic and recovery routines when chakra health degrades.
+- Log healing actions and unresolved anomalies in [error_registry.md](error_registry.md).
 
 ## Task Cycle Protocol
 
