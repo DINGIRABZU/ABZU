@@ -80,6 +80,8 @@ def write_index(entries: List[Tuple[str, str, str, List[str]]]) -> None:
         "",
         "This index excludes `node_modules`, `dist`, and `build` directories.",
         "",
+        "Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.",
+        "",
         "| File | Title | Summary | Related Modules |",
         "|------|-------|---------|-----------------|",
     ]
