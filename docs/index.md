@@ -9,6 +9,8 @@ Curated starting points for understanding and operating the project. For an exha
 - [Crown Agent Overview](CROWN_OVERVIEW.md)
 ## Nazarick
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
+- [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md)
+- [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md)
 - [Nazarick Agents](nazarick_agents.md)
 - [Nazarick Narrative System](nazarick_narrative_system.md) – maps story events to agents and memory layers
 - [Nazarick Manifesto](nazarick_manifesto.md)

@@ -162,12 +162,12 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 829f695e39205bfc9e698e44fc6b159cb290aef6209df27bf79f63f63e32865b
+    sha256: 92badfba3843ada084139df166b23c05aee24f1998a97770b094d626b44168d7
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
       key_rules: Align changes with blueprint structure.
-      insight: Align changes with blueprint structure.
+      insight: References Nazarick architecture and memory blueprints.
   docs/KEY_DOCUMENTS.md:
     sha256: 740cf6675a3180ebad0b83b3dd5ad63ad782149538ce1667ef5a9a1b9eeb002c
     summary:
@@ -233,12 +233,12 @@ documents:
       key_rules: Regenerate index after documentation updates.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
-    sha256: 2acebbe3802143e395727844880430a286ae76dce858936ecaf23c46366937c3
+    sha256: d046489925a9aaedd77e2ee5a2c4daaf882fc64e6399b8d10b3ab3a615ac112e
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
       key_rules: Maintain curated documentation entry points.
-      insight: Add Crown overview to architecture section.
+      insight: Links to Nazarick architecture and memory blueprints.
   docs/nazarick_narrative_system.md:
     sha256: aa86c1e0e1cf0b4a5a9cfe80b4e1e34af815482d357630827d72994404fd065b
     summary:
