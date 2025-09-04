@@ -1339,7 +1339,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "crown_prompt_orchestrator.py",
-      "version": "0.0.0",
+      "version": "0.0.1",
       "dependencies": [
         "INANNA_AI",
         "__future__",
@@ -2213,6 +2213,29 @@
         "argparse",
         "json",
         "pathlib",
+        "subprocess",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {},
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "manage_servants",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/manage_servants.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "json",
+        "os",
+        "pathlib",
+        "requests",
+        "signal",
         "subprocess",
         "typing"
       ],
