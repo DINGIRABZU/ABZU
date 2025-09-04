@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `docs/operator_quickstart.md` summarizing the triple-reading rule and consent logging.
 - Introduced optional Opencode CLI handover in `razar.ai_invoker` with
   accompanying setup instructions in RAZAR docs.
+- Enabled Opencode to delegate code generation to the Kimi-K2 servant model and documented setup in `docs/tools/kimi_integration.md`.
 
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.

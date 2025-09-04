@@ -20,6 +20,12 @@ logger = logging.getLogger(__name__)
 _ENDPOINT = os.getenv("KIMI_K2_URL", "http://localhost:8004")
 
 
+def endpoint() -> str:
+    """Return the configured Kimi-K2 endpoint."""
+
+    return _ENDPOINT
+
+
 def complete(prompt: str) -> str:
     """Return the completion from Kimi-K2 for ``prompt``."""
 
@@ -35,4 +41,4 @@ def complete(prompt: str) -> str:
         raise RuntimeError("Kimi-K2 request failed") from exc
 
 
-__all__ = ["complete"]
+__all__ = ["complete", "endpoint"]

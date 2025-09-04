@@ -367,6 +367,7 @@ This index excludes `node_modules`, `dist`, and `build` directories.
 | [testing.md](testing.md) | Testing | ```mermaid flowchart LR D[Developer] --> T[pytest] T --> R[Report] ``` | - |
 | [testing_music_pipeline.md](testing_music_pipeline.md) | Testing Music Pipeline | To run the unit tests for the ritual music pipeline: | - |
 | [the_absolute_pytest.md](the_absolute_pytest.md) | The Absolute Pytest | > **Note:** Before writing tests, review [blueprint_spine.md](blueprint_spine.md) and consult the [Module Index](modu... | - |
+| [tools/kimi_integration.md](tools/kimi_integration.md) | Kimi Integration | Opencode can delegate code generation to the Kimi-K2 model when the service is available. | - |
 | [troubleshooting.md](troubleshooting.md) | Troubleshooting | This guide addresses frequent setup problems, driver issues, and environment pitfalls. Refer to [installation](instal... | `../download_models.py`, `../env_validation.py`, `../scripts/bootstrap.py` |
 | [ui/README.md](ui/README.md) | Floor Client UI | This React/Tailwind interface renders floors with channel tiles and streams messages over a WebSocket feed. | - |
 | [updates/2025-08.md](updates/2025-08.md) | August 2025 Roadmap | - | - |
