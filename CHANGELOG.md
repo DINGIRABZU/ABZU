@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Persisted narrative engine stories and events to SQLite with optional Chroma search and exposed `narrative_api` in connector registry.
 - Recorded sample biosignal datasets and tests covering ingestion, persistence, and retrieval.
 - Enforced ≥90% coverage in CI workflows; pipelines fail when thresholds are not met.
+- Introduced Chakracon metric monitoring with `start_monitoring` hooks for multiple agents.
 - Integrated Node Exporter, cAdvisor, and DCGM GPU exporter into monitoring stack, added network I/O watchdog metrics, and expanded Grafana dashboards.
 - Added GPG-based release signing scripts and documentation for verifying build artifacts.
 - Added `scan_todo_fixme` pre-commit hook to block `TODO`/`FIXME` markers and documented rule in The Absolute Protocol.
