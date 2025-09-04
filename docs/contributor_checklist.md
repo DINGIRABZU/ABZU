@@ -5,6 +5,9 @@ This checklist distills mandatory practices for ABZU contributors.
 ## Triple-Reading Rule
 - Read [blueprint_spine.md](blueprint_spine.md) **three times** before making changes. The repetition ensures deep architectural awareness as required by [The Absolute Protocol](The_Absolute_Protocol.md).
 
+## Documentation Doctrine
+- Run `python scripts/verify_doctrine.py` to confirm key docs exist and doctrine rules remain intact. The pre-commit hook executes this automatically when documentation changes.
+
 ## Error Index Updates
 - Record recurring issues in [error_registry.md](error_registry.md).
 - Update entries whenever new error patterns are resolved or observed.

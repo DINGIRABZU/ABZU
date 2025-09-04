@@ -14,7 +14,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -387,6 +386,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../floor_client/README.md](../floor_client/README.md) | Floor Client | This folder contains the React interface for Floor channels. | - |
 | [../guides/visual_customization.md](../guides/visual_customization.md) | Avatar Visual Customization | This guide outlines how to turn a 2D concept image into the 3D model used by the video engine. | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus and Grafana alongside an NVIDIA GPU exporter. Metrics include frames per second (FPS),... | - |
+| [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |
 | [../sacred_inputs/00-INVOCATION.md](../sacred_inputs/00-INVOCATION.md) | 00-INVOCATION.md | - | - |
 | [../scripts/install_profiles.md](../scripts/install_profiles.md) | Installation Profiles | This project provides several installation profiles using optional dependencies defined in `pyproject.toml`. | - |
