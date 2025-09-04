@@ -136,9 +136,9 @@ repos:
     language: system
     types: [markdown]
     exclude: ^docs/INDEX\.md$
-  - id: verify-doctrine
-    name: Verify documentation doctrine
-    entry: python scripts/verify_doctrine.py
+  - id: audit-doctrine
+    name: Audit documentation doctrine
+    entry: python scripts/audit_doctrine.py
     language: system
     pass_filenames: false
     files: ^docs/

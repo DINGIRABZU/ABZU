@@ -6,7 +6,7 @@ This checklist distills mandatory practices for ABZU contributors.
 - Read [blueprint_spine.md](blueprint_spine.md) **three times** before making changes. The repetition ensures deep architectural awareness as required by [The Absolute Protocol](The_Absolute_Protocol.md).
 
 ## Documentation Doctrine
-- Run `python scripts/verify_doctrine.py` to confirm key docs exist and doctrine rules remain intact. The pre-commit hook executes this automatically when documentation changes.
+- Run `python scripts/audit_doctrine.py` to confirm key docs exist, required index entries are present, and doctrine rules remain intact. The pre-commit hook executes this automatically when documentation changes.
 
 ## Error Index Updates
 - Record recurring issues in [error_registry.md](error_registry.md).
@@ -20,3 +20,4 @@ This checklist distills mandatory practices for ABZU contributors.
 | Version | Date | Notes |
 |---------|------|-------|
 | 0.1.0 | 2025-10-25 | Initial checklist. |
+| 0.1.1 | 2025-09-04 | Replace verify_doctrine with audit_doctrine. |
