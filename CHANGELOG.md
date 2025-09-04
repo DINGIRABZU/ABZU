@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `docs/component_maturity.md` tracking documentation completeness, coverage, and open issues.
 
 - Documented onboarding triple-reading requirement and Nazarick Web Console access in `docs/operator_interface_GUIDE.md` and updated `docs/INDEX.md`.
+- Expanded `docs/component_status.md` with detailed alpha/beta/stable criteria.
+- Added `scripts/verify_component_maturity.py` and enforced its check in CI.
 
 - Documented chakra-aligned test directories and 90% coverage rule in `docs/the_absolute_pytest.md`.
 
