@@ -228,6 +228,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
+| [absolute_protocol_checklist.md](absolute_protocol_checklist.md) | Absolute Protocol Release Checklist | Complete this checklist before tagging a release. Mark each item with `[x]` once satisfied. | - |
 | [adr/0001-use-faiss-for-vector-search.md](adr/0001-use-faiss-for-vector-search.md) | ADR 0001: Use FAISS for Vector Search | Date: 2024-11-25 | - |
 | [adr/0002-prefer-asyncio-over-threads.md](adr/0002-prefer-asyncio-over-threads.md) | ADR 0002: Prefer asyncio over Threads | Date: 2024-11-25 | - |
 | [adr/0003-require-adrs-for-protocol-updates.md](adr/0003-require-adrs-for-protocol-updates.md) | ADR 0003: Require ADRs for Absolute Protocol Updates | - **Status:** Accepted - **Date:** 2025-08-31 | - |

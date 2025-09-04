@@ -1,0 +1,36 @@
+name: Release Checklist
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r dev-requirements.txt
+          pip install -e .
+      - name: Verify docs index
+        run: |
+          python tools/doc_indexer.py
+          git diff --exit-code docs/INDEX.md
+      - name: Run tests with coverage
+        run: pytest --cov --cov-fail-under=80
+      - name: Verify environment specs unchanged
+        run: |
+          git fetch origin main --depth=1
+          git diff --exit-code origin/main...HEAD environment.yml environment.gpu.yml
+      - name: Ensure checklist completed
+        run: python scripts/validate_absolute_protocol_checklist.py
