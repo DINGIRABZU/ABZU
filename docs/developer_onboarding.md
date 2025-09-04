@@ -18,6 +18,11 @@ The codebase is organized across seven chakra‑themed module directories (curre
 - `third_eye/` – insight and pattern analysis modules (v1.0.0).
 - `crown/` – high‑level orchestration and launch scripts (v1.0.1).
 
+After mapping these layers, review the Nazarick system documents:
+[Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md),
+[Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md), and
+[Nazarick Agents](nazarick_agents.md). These are mandatory reading for all contributors.
+
 This guide introduces the ABZU codebase, highlights core entry points, and covers environment setup, chakra architecture overview, CLI usage, and troubleshooting tips. For a guided CLI quick‑start run the [onboarding wizard](onboarding/wizard.py). Additional architecture diagrams are available in [architecture.md](architecture.md).
 
 ## Prerequisites

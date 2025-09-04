@@ -106,6 +106,8 @@ The Tomb establishes a chakra-aligned command hierarchy—from Crown to Root—w
 
 Events emitted by agents flow through an “emit_event → Redis/Kafka → FastAPI processor” pipeline and persist in TimescaleDB (temporal) and Neo4j (relational) stores, enabling reconstruction of Nazarick’s activity history.
 
+For deeper architectural detail, see [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md) and [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md).
+
 ## **2. Nazarick Agents and Ethics**
 
 The agent roster includes orchestration_master, prompt_orchestrator, qnl_engine, and memory_scribe—each mapped to a specific channel and launch command, enabling structured supervision and context-aware routing.

@@ -52,6 +52,8 @@ feedback.
 - **Agent ecosystem**
   - [RAZAR Agent](RAZAR_AGENT.md) – pre‑creation igniter, virtual‑environment manager, and recovery coordinator
   - [Nazarick Agents](nazarick_agents.md) – roster of specialized servants
+  - [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md) – channel hierarchy and servant topology
+  - [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md) – memory layers and flows
   - [ALBEDO Layer](ALBEDO_LAYER.md) – persona modules and archetypal behavior hooks
   - [Persona API Guide](persona_api_guide.md) – conventions for persona profiles and hooks
   - [Nazarick Manifesto](nazarick_manifesto.md) – narrative charter governing personas
