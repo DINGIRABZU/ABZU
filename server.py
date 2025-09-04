@@ -44,9 +44,9 @@ from PIL import Image
 from prometheus_fastapi_instrumentator import Instrumentator
 
 try:  # pragma: no cover - optional dependency
-    from prometheus_client import Histogram, Gauge
+    from prometheus_client import Histogram, Gauge, REGISTRY
 except ImportError:  # pragma: no cover - optional dependency
-    Histogram = Gauge = None  # type: ignore[assignment]
+    Histogram = Gauge = REGISTRY = None  # type: ignore[assignment]
 from pydantic import BaseModel, Field
 
 from agents.razar.lifecycle_bus import LifecycleBus
@@ -70,15 +70,17 @@ logger = logging.getLogger(__name__)
 
 START_TIME = time.perf_counter()
 
-BOOT_DURATION_GAUGE = (
-    Gauge(
-        "service_boot_duration_seconds",
-        "Duration of service startup in seconds",
-        ["service"],
-    )
-    if Gauge is not None
-    else None
-)
+if Gauge is not None and REGISTRY is not None:
+    if "service_boot_duration_seconds" in REGISTRY._names_to_collectors:
+        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors["service_boot_duration_seconds"]  # type: ignore[assignment]
+    else:
+        BOOT_DURATION_GAUGE = Gauge(
+            "service_boot_duration_seconds",
+            "Duration of service startup in seconds",
+            ["service"],
+        )
+else:
+    BOOT_DURATION_GAUGE = None
 
 REQUEST_LATENCY = (
     Histogram(

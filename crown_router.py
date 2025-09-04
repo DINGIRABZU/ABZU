@@ -10,10 +10,50 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 from typing import Any, Dict
+import time
 
 import emotional_state
 from crown_decider import decide_expression_options
 from rag.orchestrator import MoGEOrchestrator
+
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Counter, Gauge, REGISTRY
+except Exception:  # pragma: no cover - optional dependency
+    Counter = Gauge = REGISTRY = None  # type: ignore[assignment]
+
+_START_TIME = time.perf_counter()
+
+if Gauge is not None and REGISTRY is not None:
+    if "service_boot_duration_seconds" in REGISTRY._names_to_collectors:
+        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors["service_boot_duration_seconds"]  # type: ignore[assignment]
+    else:
+        BOOT_DURATION_GAUGE = Gauge(
+            "service_boot_duration_seconds",
+            "Duration of service startup in seconds",
+            ["service"],
+        )
+else:
+    BOOT_DURATION_GAUGE = None
+
+if Counter is not None and REGISTRY is not None:
+    if "narrative_throughput_total" in REGISTRY._names_to_collectors:
+        THROUGHPUT_COUNTER = REGISTRY._names_to_collectors["narrative_throughput_total"]  # type: ignore[assignment]
+    else:
+        THROUGHPUT_COUNTER = Counter(
+            "narrative_throughput_total",
+            "Narrative events processed",
+            ["service"],
+        )
+    if "service_errors_total" in REGISTRY._names_to_collectors:
+        ERROR_COUNTER = REGISTRY._names_to_collectors["service_errors_total"]  # type: ignore[assignment]
+    else:
+        ERROR_COUNTER = Counter(
+            "service_errors_total",
+            "Number of errors encountered",
+            ["service"],
+        )
+else:
+    THROUGHPUT_COUNTER = ERROR_COUNTER = None
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -21,6 +61,9 @@ except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
+
+if BOOT_DURATION_GAUGE is not None:
+    BOOT_DURATION_GAUGE.labels("crown").set(time.perf_counter() - _START_TIME)
 
 
 def route_decision(
@@ -53,30 +96,37 @@ def route_decision(
         Decision containing ``model``, ``tts_backend``, ``avatar_style`` and
         ``aura``.
     """
-    orch = orchestrator or MoGEOrchestrator()
-    result = orch.route(
-        text,
-        emotion_data,
-        text_modality=False,
-        voice_modality=False,
-        music_modality=False,
-    )
+    if THROUGHPUT_COUNTER is not None:
+        THROUGHPUT_COUNTER.labels("crown").inc()
+    try:
+        orch = orchestrator or MoGEOrchestrator()
+        result = orch.route(
+            text,
+            emotion_data,
+            text_modality=False,
+            voice_modality=False,
+            music_modality=False,
+        )
 
-    emotion = emotion_data.get("emotion", "neutral")
-    opts = decide_expression_options(emotion)
+        emotion = emotion_data.get("emotion", "neutral")
+        opts = decide_expression_options(emotion)
 
-    soul = emotional_state.get_soul_state()
-    if vector_memory is not None:
-        try:
-            records = vector_memory.search(
-                "",
-                filter={"type": "expression_decision", "emotion": emotion},
-                k=20,
-            )
-        except Exception:
+        soul = emotional_state.get_soul_state()
+        if vector_memory is not None:
+            try:
+                records = vector_memory.search(
+                    "",
+                    filter={"type": "expression_decision", "emotion": emotion},
+                    k=20,
+                )
+            except Exception:
+                records = []
+        else:
             records = []
-    else:
-        records = []
+    except Exception:
+        if ERROR_COUNTER is not None:
+            ERROR_COUNTER.labels("crown").inc()
+        raise
 
     backend_weights: Dict[str, float] = {opts.get("tts_backend", ""): 1.0}
     avatar_weights: Dict[str, float] = {opts.get("avatar_style", ""): 1.0}

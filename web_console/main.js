@@ -262,7 +262,25 @@ async function startStream() {
     await pc.setRemoteDescription(answer);
 }
 
+async function loadMetrics() {
+    try {
+        const resp = await fetch(`${BASE_URL}/metrics`);
+        const text = await resp.text();
+        const lines = text
+            .split('\n')
+            .filter((l) =>
+                l.startsWith('service_boot_duration_seconds') ||
+                l.startsWith('narrative_throughput_total') ||
+                l.startsWith('service_errors_total')
+            );
+        document.getElementById('status-metrics').textContent = lines.join('\n');
+    } catch (err) {
+        document.getElementById('status-metrics').textContent = 'Error: ' + err;
+    }
+}
+
 window.addEventListener('load', () => {
     startStream();
     loadAgents();
+    loadMetrics();
 });
