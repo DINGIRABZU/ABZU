@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   accompanying setup instructions in RAZAR docs.
 - Enabled Opencode to delegate code generation to the Kimi-K2 servant model and documented setup in `docs/tools/kimi_integration.md`.
 
+- Clarified test coverage expectations, error logging requirements, and added a milestone retrospective template in `docs/The_Absolute_Protocol.md`.
+
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
 - Added step-by-step handover and patch application flow with `ai_invoker` → `code_repair` diagram and logging policy reference.
