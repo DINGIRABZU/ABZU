@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented onboarding triple-reading requirement and Nazarick Web Console access in `docs/operator_interface_GUIDE.md` and updated `docs/INDEX.md`.
 
 - Documented chakra-aligned test directories and 90% coverage rule in `docs/the_absolute_pytest.md`.
+- Added `scripts/update_error_index.py` to record new log errors in `docs/error_registry.md`.
+- Extended `scripts/capture_failing_tests.py` so pytest runs append results to `docs/testing/failure_inventory.md`.
 - Configured CI to archive `htmlcov/` and log coverage metrics even when tests fail.
 
 - Introduced `training/fine_tune_mistral.py` configuring mythological and project corpora.
