@@ -36,6 +36,17 @@ configured remote agent, applies any suggested patch with
 `logs/razar_ai_invocations.json` while applied patches are tracked in
 `logs/razar_ai_patches.json`.
 
+To run repairs locally, install the Opencode CLI and enable the optional
+handover mode:
+
+```bash
+pip install opencode-cli
+```
+
+Invoke `ai_invoker.handover(..., use_opencode=True)` to stream the failure
+context to `opencode run --json`. The CLI's patch suggestions are parsed and
+forwarded to `code_repair.repair_module` for application.
+
 ```mermaid
 flowchart TD
     A[Failure Detected] --> B{ai_invoker.handover}

@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cross-linked `docs/The_Absolute_Protocol.md`, `docs/project_mission_vision.md`, and `docs/nazarick_manifesto.md` for governance and ethics coherence.
 - Added `scripts/require_module_docs.py` pre-commit hook ensuring new modules update `CHANGELOG.md` and `docs/component_index.md`.
 - Added `docs/operator_quickstart.md` summarizing the triple-reading rule and consent logging.
+- Introduced optional Opencode CLI handover in `razar.ai_invoker` with
+  accompanying setup instructions in RAZAR docs.
 
 ### Documentation Audit
 - Expanded RAZAR agent guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.

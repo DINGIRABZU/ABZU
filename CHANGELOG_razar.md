@@ -33,6 +33,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Detailed handover and patch application flow with `ai_invoker` → `code_repair` diagram and patch log reference.
 - Integrated `code_repair.repair_module` into `ai_invoker.handover` to apply remote patches and documented Remote Assistance section with flow diagram.
 - Added unit tests for `ai_invoker.handover` and `code_repair.repair_module`.
+- Added optional Opencode CLI handover path in `ai_invoker.handover` and
+  documented setup in RAZAR agent guide and recovery playbook. The CLI output
+  feeds into `code_repair.repair_module`.
 
  - Expanded guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
 - Added schema diagrams for configuration files and a full ignition example with log excerpts and mission-brief archive notes.
