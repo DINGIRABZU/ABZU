@@ -20,6 +20,22 @@ from datetime import datetime
 from importlib import import_module
 from pathlib import Path
 from typing import Any, Dict, Awaitable
+import os
+import sys
+
+# ---------------------------------------------------------------------------
+# Ensure local packages like ``audio`` are importable without installation.
+# This mirrors the pytest configuration that adds ``src`` to ``PYTHONPATH``.
+# ---------------------------------------------------------------------------
+_ROOT = Path(__file__).resolve().parent
+_SRC = _ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+_py_path = os.environ.get("PYTHONPATH", "")
+if str(_SRC) not in _py_path.split(os.pathsep):
+    os.environ["PYTHONPATH"] = os.pathsep.join([p for p in (str(_SRC), _py_path) if p])
+
+import audio  # noqa: F401  # Required for crown_decider audio features
 
 import crown_decider
 import emotional_state
