@@ -103,8 +103,12 @@ Add the endpoint to the Prometheus configuration:
 Start the bundled monitoring stack to explore dashboards in Grafana:
 
 ```bash
-docker compose -f monitoring/docker-compose.yml up
+docker compose -f monitoring/docker-compose.yml up -d
 ```
+
+The stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and the DCGM
+GPU exporter. Prometheus labels each target with its chakra layer as defined in
+`monitoring/prometheus.yml` so metrics are grouped by `chakra=<layer>`.
 
 Grafana listens on `http://localhost:3000` and Prometheus on `http://localhost:9090`.
 

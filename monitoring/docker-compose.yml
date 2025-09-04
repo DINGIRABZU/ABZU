@@ -16,6 +16,8 @@ services:
       - grafana-data:/var/lib/grafana
   node-exporter:
     image: prom/node-exporter
+    container_name: node-exporter
+    restart: unless-stopped
     ports:
       - "9101:9100"
     volumes:
@@ -28,6 +30,8 @@ services:
       - '--path.rootfs=/rootfs'
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
     ports:
       - "8080:8080"
     volumes:
@@ -37,6 +41,8 @@ services:
       - /sys:/sys:ro
   gpu-exporter:
     image: nvidia/dcgm-exporter:3.2.6
+    container_name: gpu-exporter
+    restart: unless-stopped
     runtime: nvidia
     ports:
       - "9400:9400"
