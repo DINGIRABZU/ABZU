@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `environment.gpu.yml` and CPU/GPU Dockerfiles with pinned versions and documented hardware setup.
 - Added `docs/SOCIAL_INVESTOR_ONE_PAGER.md` summarizing the project for prospective social investors.
 - Added `docs/component_maturity.md` tracking documentation completeness, coverage, and open issues.
 
