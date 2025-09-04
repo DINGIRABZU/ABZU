@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 VITAL_MODULES = [
+    "requests",
     "server",
     "invocation_engine",
     "emotional_state",

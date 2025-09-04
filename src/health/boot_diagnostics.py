@@ -50,6 +50,10 @@ def run_boot_checks() -> Dict[str, Optional[ModuleType]]:
             continue
         except ImportError as exc:  # module missing
             logger.error("Missing module %s: %s", name, exc)
+            if name == "requests":
+                raise SystemExit(
+                    "Required dependency 'requests' not installed"
+                ) from exc
             if _install_module(name):
                 try:
                     results[name] = importlib.import_module(name)
