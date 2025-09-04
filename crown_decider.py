@@ -11,6 +11,7 @@ from typing import Any, Dict
 import crown_config
 import emotional_state
 import servant_model_manager as smm
+import audio  # noqa: F401
 from audio import voice_aura
 from INANNA_AI import emotional_memory
 from task_profiling import classify_task
