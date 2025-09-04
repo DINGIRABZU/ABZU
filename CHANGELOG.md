@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Introduced chakra healing scripts and monitoring agents with logging and documentation.
+
 - Emitted structured health events during RAZAR boot and introduced recovery daemon for automated restarts.
 
 - Added `environment.gpu.yml` and CPU/GPU Dockerfiles with pinned versions and documented hardware setup.
