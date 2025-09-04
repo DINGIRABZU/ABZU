@@ -28,7 +28,7 @@ ABZU adheres to a consistent top-level directory layout:
 - `tools/` – Developer tools and automation helpers
 - `notebooks/` – Experimental notebooks and prototypes
 
-Consult the [Module Index](module_index.md) for an overview of modules, classes, and functions within the repository.
+Consult the [Code Index](code_index.md) for an overview of modules, classes, and functions within the repository.
 
 See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidance on the repository layout.
 
