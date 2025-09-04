@@ -16,6 +16,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [Operator Protocol](operator_protocol.md)
 ## Setup
 - [Setup Guide](setup.md)
+- [Environment Setup](environment_setup.md)
 ## Usage
 - [How to Use](how_to_use.md)
 

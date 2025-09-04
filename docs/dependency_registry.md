@@ -26,3 +26,8 @@ Track CVE monitoring links to ensure timely vulnerability remediation. Update th
 | neo4j | 5.23.1 | 5.23.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=neo4j) | Graph database client (optional) |
 | python-socketio | 5.13.0 | 5.13.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=python-socketio) | WebSocket support (optional) |
 | vanna | 0.7.9 | 0.7.9 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=vanna) | NLQ queries (optional) |
+| faiss-cpu | 1.8.0 | 1.8.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=faiss-cpu) | Similarity search (CPU) |
+| pytorch | 2.3.1 | 2.3.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=pytorch) | Deep learning framework |
+| torchvision | 0.18.1 | 0.18.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=torchvision) | Vision utilities for PyTorch |
+| torchaudio | 2.3.1 | 2.3.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=torchaudio) | Audio utilities for PyTorch |
+| cudatoolkit | 12.1 | 12.1 | [NVD](https://nvd.nist.gov/vuln/search/results?query=CUDA%20Toolkit) | CUDA runtime libraries |

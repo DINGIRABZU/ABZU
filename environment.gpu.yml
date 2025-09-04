@@ -1,11 +1,16 @@
-name: abzu
+name: abzu-gpu
 channels:
+  - pytorch
+  - nvidia
   - conda-forge
 dependencies:
   - python=3.10
   - pip=24.2
   - sqlite=3.45
-  - faiss-cpu=1.8.0
+  - pytorch=2.3.1
+  - torchvision=0.18.1
+  - torchaudio=2.3.1
+  - cudatoolkit=12.1
   - pip:
       - -r requirements.txt
       - -r dev-requirements.txt
