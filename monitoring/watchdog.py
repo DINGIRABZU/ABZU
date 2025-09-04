@@ -71,6 +71,7 @@ def emit_alert(service: str, metric: str, value: Any, threshold: Any) -> None:
 def monitor() -> None:
     """Monitor configured services for resource usage."""
     registry = cpu_gauge = mem_gauge = fd_gauge = None
+    net_sent_gauge = net_recv_gauge = None
     if start_http_server is not None:
         registry = CollectorRegistry()  # type: ignore[assignment]
         cpu_gauge = Gauge(
@@ -82,8 +83,20 @@ def monitor() -> None:
         fd_gauge = Gauge(
             "service_open_fds", "Open file descriptors", ["service"], registry=registry
         )  # type: ignore[assignment]
+        net_sent_gauge = Gauge(
+            "system_network_sent_bytes_per_sec",
+            "Network bytes sent per second",
+            registry=registry,
+        )  # type: ignore[assignment]
+        net_recv_gauge = Gauge(
+            "system_network_recv_bytes_per_sec",
+            "Network bytes received per second",
+            registry=registry,
+        )  # type: ignore[assignment]
         start_http_server(PROM_PORT, registry=registry)  # type: ignore[arg-type]
         LOGGER.info("Prometheus metrics exposed on port %s", PROM_PORT)
+
+    prev_net = psutil.net_io_counters()
 
     while True:
         for name, cfg in SERVICES.items():
@@ -111,6 +124,14 @@ def monitor() -> None:
                 emit_alert(name, "memory", mem, MEM_THRESHOLD_MB)
             if fds > FD_THRESHOLD:
                 emit_alert(name, "fds", fds, FD_THRESHOLD)
+
+        net = psutil.net_io_counters()
+        if net_sent_gauge is not None and net_recv_gauge is not None:
+            sent = (net.bytes_sent - prev_net.bytes_sent) / CHECK_INTERVAL
+            recv = (net.bytes_recv - prev_net.bytes_recv) / CHECK_INTERVAL
+            net_sent_gauge.set(sent)  # type: ignore[call-arg]
+            net_recv_gauge.set(recv)  # type: ignore[call-arg]
+        prev_net = net
 
         time.sleep(CHECK_INTERVAL)
 

@@ -387,9 +387,11 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [voice_setup.md](voice_setup.md) | Voice Model Setup | This guide explains how to install external text-to-speech models so ABZU can produce spoken output. | - |
 | [../floor_client/README.md](../floor_client/README.md) | Floor Client | This folder contains the React interface for Floor channels. | - |
 | [../guides/visual_customization.md](../guides/visual_customization.md) | Avatar Visual Customization | This guide outlines how to turn a 2D concept image into the 3D model used by the video engine. | - |
-| [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus and Grafana alongside an NVIDIA GPU exporter. Metrics include frames per second (FPS),... | - |
+| [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |
+| [../patents/recursive_emotion_router_sigil_interpretation.md](../patents/recursive_emotion_router_sigil_interpretation.md) | Recursive Emotion Router with Sigil Interpretation | **Version:** 0.1 **Status:** Draft | - |
+| [../patents/sacred_glyph_vae_pipeline.md](../patents/sacred_glyph_vae_pipeline.md) | Sacred Glyph VAE Pipeline | **Version:** 0.1 **Status:** Draft | - |
 | [../sacred_inputs/00-INVOCATION.md](../sacred_inputs/00-INVOCATION.md) | 00-INVOCATION.md | - | - |
 | [../scripts/install_profiles.md](../scripts/install_profiles.md) | Installation Profiles | This project provides several installation profiles using optional dependencies defined in `pyproject.toml`. | - |
 | [../src/dashboard/OVERVIEW.md](../src/dashboard/OVERVIEW.md) | Dashboard Overview | Streamlit dashboard for monitoring and interacting with Spiral OS components. | - |
