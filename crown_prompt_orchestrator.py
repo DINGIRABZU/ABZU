@@ -7,7 +7,7 @@ and write state to databases and memory logs as part of those duties.
 
 from __future__ import annotations
 
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 import argparse
 import asyncio
@@ -19,7 +19,7 @@ import re
 from datetime import datetime
 from importlib import import_module
 from pathlib import Path
-from typing import Any, Dict, Awaitable
+from typing import Any, Dict, Awaitable, cast
 import os
 import sys
 
@@ -68,6 +68,20 @@ _EMOTION_KEYS = list(emotion_analysis.EMOTION_ARCHETYPES.keys())
 _STATE_ENGINE = StateTransitionEngine()
 
 TEST_METRICS_FILE = Path("monitoring/pytest_metrics.prom")
+_SERVANT_STATE_FILE = Path("data/servant_state.json")
+
+
+def _is_servant_healthy(name: str) -> bool:
+    """Return stored health flag for servant ``name``.
+
+    Absent or unreadable state files default to ``True`` so newly deployed
+    servants are considered healthy until proven otherwise.
+    """
+    try:
+        data = json.loads(_SERVANT_STATE_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return True
+    return bool(data.get("health", {}).get(name, True))
 
 
 def _detect_emotion(text: str) -> str:
@@ -274,22 +288,34 @@ async def crown_prompt_orchestrator_async(
             model = crown_decider.recommend_llm(task_type, emotion)
         success = True
         invoke_error: str | None = None
-        try:
-            if model == "glm":
-                text = await _delegate(prompt, glm)
-            else:
-                text = await smm.invoke(model, message)
-        except (KeyError, RuntimeError, OSError, ValueError) as exc:
+        if model != "glm" and not _is_servant_healthy(model):
             success = False
-            invoke_error = str(exc)
+            invoke_error = "unhealthy"
             crown_decider.record_result(model, False)
             log_interaction(message, {"emotion": emotion}, {"model": model}, "error")
+            logger.warning("servant %s unhealthy; falling back to glm", model)
             model = "glm"
             text = await _delegate(prompt, glm)
             crown_decider.record_result(model, True)
-        except Exception:
-            logging.exception("unexpected model invocation error")
-            raise
+        else:
+            try:
+                if model == "glm":
+                    text = await _delegate(prompt, glm)
+                else:
+                    text = await smm.invoke(model, message)
+            except (KeyError, RuntimeError, OSError, ValueError) as exc:
+                success = False
+                invoke_error = str(exc)
+                crown_decider.record_result(model, False)
+                log_interaction(
+                    message, {"emotion": emotion}, {"model": model}, "error"
+                )
+                model = "glm"
+                text = await _delegate(prompt, glm)
+                crown_decider.record_result(model, True)
+            except Exception:
+                logging.exception("unexpected model invocation error")
+                raise
         affect = emotional_memory.score_affect(text, emotion)
         emotional_memory.record_interaction(
             emotional_memory.EmotionalMemoryNode(
@@ -366,7 +392,9 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
         temperature=args.temperature,
     )
     result = crown_prompt_orchestrator(args.message, glm)
-    print(result.get("text", ""))
+    if asyncio.iscoroutine(result):
+        result = asyncio.run(result)
+    print(cast(Dict[str, Any], result).get("text", ""))
 
 
 __all__ = ["crown_prompt_orchestrator", "crown_prompt_orchestrator_async", "main"]
