@@ -40,6 +40,7 @@ def test_crown_servant_registration(monkeypatch, tmp_path):
         (),
         {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
+    dummy.get = lambda *a, **k: type("R", (), {"raise_for_status": lambda self: None})()
     dummy.RequestException = Exception
 
     monkeypatch.setattr(gi, "requests", dummy)
@@ -71,6 +72,7 @@ def test_servant_models_env(monkeypatch, tmp_path):
         (),
         {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
+    dummy.get = lambda *a, **k: type("R", (), {"raise_for_status": lambda self: None})()
     dummy.RequestException = Exception
 
     monkeypatch.setattr(gi, "requests", dummy)
@@ -99,6 +101,7 @@ def test_servant_models_validation(monkeypatch, tmp_path, caplog):
         (),
         {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
+    dummy.get = lambda *a, **k: type("R", (), {"raise_for_status": lambda self: None})()
     dummy.RequestException = Exception
 
     monkeypatch.setattr(gi, "requests", dummy)
@@ -133,6 +136,7 @@ def test_servant_models_requires_valid_pair(monkeypatch, tmp_path):
         (),
         {"raise_for_status": lambda self: None, "json": lambda self: {"text": "pong"}},
     )()
+    dummy.get = lambda *a, **k: type("R", (), {"raise_for_status": lambda self: None})()
     dummy.RequestException = Exception
 
     monkeypatch.setattr(gi, "requests", dummy)

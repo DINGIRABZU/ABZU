@@ -12,10 +12,13 @@ except Exception:  # pragma: no cover - fallback when scapy missing
     sniff = None
     wrpcap = None
 
-try:  # pragma: no cover - optional dependency
+try:  # pragma: no cover - enforce dependency
     import requests
-except Exception:  # pragma: no cover - fallback when requests missing
-    requests = None  # type: ignore
+except ImportError as exc:  # pragma: no cover - requests must be installed
+    raise ImportError(
+        "defensive_network_utils requires the 'requests' package."
+        " Install it via 'pip install requests'."
+    ) from exc
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +44,6 @@ def secure_communication(url: str, data: dict[str, Any]):
 
     Returns the :class:`requests.Response` object on success.
     """
-    if requests is None:
-        raise RuntimeError("requests library is required for secure communication")
-
     try:
         response = requests.post(url, json=data, timeout=10)
         response.raise_for_status()

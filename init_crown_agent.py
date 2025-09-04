@@ -13,7 +13,6 @@ import yaml  # type: ignore[import-untyped]
 import servant_model_manager as smm
 from env_validation import parse_servant_models
 from INANNA_AI import corpus_memory
-from INANNA_AI import glm_integration as gi
 from INANNA_AI.glm_integration import GLMIntegration
 
 try:  # pragma: no cover - optional dependency
@@ -21,10 +20,13 @@ try:  # pragma: no cover - optional dependency
 except ImportError:  # pragma: no cover - optional dependency
     _vector_memory = None  # type: ignore[assignment]
 
-try:  # pragma: no cover - optional dependency
+try:  # pragma: no cover - enforce dependency
     import requests  # type: ignore[import-untyped]
-except Exception:  # pragma: no cover - optional dependency
-    requests = None  # type: ignore
+except ImportError as exc:  # pragma: no cover - requests must be installed
+    raise ImportError(
+        "init_crown_agent requires the 'requests' package."
+        " Install it via 'pip install requests'."
+    ) from exc
 
 try:  # pragma: no cover - optional dependency
     from prometheus_client import Gauge
@@ -118,19 +120,15 @@ def _init_memory(cfg: dict) -> None:
 
 def _check_glm(integration: GLMIntegration) -> None:
     try:
-        resp = integration.complete("ping")
+        integration.health_check()
     except Exception as exc:  # pragma: no cover - network errors
-        logger.error("Failed to reach GLM endpoint: %s", exc)
+        logger.error("GLM health check failed: %s", exc)
         raise RuntimeError("GLM endpoint unavailable") from exc
-    logger.info("GLM test response: %s", resp)
-    if resp == gi.SAFE_ERROR_MESSAGE:
-        raise RuntimeError("GLM endpoint returned error")
+    logger.info("GLM health check succeeded")
 
 
 def _register_http_servant(name: str, url: str) -> None:
     def _invoke(prompt: str) -> str:
-        if requests is None:
-            return ""
         try:
             resp = requests.post(url, json={"prompt": prompt}, timeout=10)
             resp.raise_for_status()
@@ -159,18 +157,12 @@ def _verify_servant_health(servants: dict) -> None:
     """Check that each servant model responds to a health request."""
     if not servants:
         return
-    if requests is None:
-        logger.warning("requests library not available; skipping servant health checks")
-        return
     failed: list[str] = []
     for name, url in servants.items():
         health_url = url.rstrip("/") + "/health"
         healthy = False
         try:
-            if hasattr(requests, "get"):
-                resp = requests.get(health_url, timeout=5)
-            else:  # pragma: no cover - fallback when get unavailable
-                resp = requests.post(health_url, timeout=5)
+            resp = requests.get(health_url, timeout=5)
             resp.raise_for_status()
             logger.info("Servant %s healthy at %s", name, health_url)
             healthy = True

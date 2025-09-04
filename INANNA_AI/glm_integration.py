@@ -11,10 +11,13 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - fallback when aiohttp missing
     aiohttp = None  # type: ignore
 
-try:  # pragma: no cover - optional dependency
+try:  # pragma: no cover - enforce dependency
     import requests
-except Exception:  # pragma: no cover - fallback when requests missing
-    requests = None  # type: ignore
+except ImportError as exc:  # pragma: no cover - requests must be installed
+    raise ImportError(
+        "GLMIntegration requires the 'requests' package."
+        " Install it via 'pip install requests'."
+    ) from exc
 
 logger = logging.getLogger(__name__)
 
@@ -51,10 +54,6 @@ class GLMIntegration:
 
         ``quantum_context`` is included in the request payload when provided.
         """
-        if requests is None:
-            logger.warning("requests missing; returning safe message")
-            return SAFE_ERROR_MESSAGE
-
         payload = {"prompt": prompt, "temperature": self.temperature}
         if quantum_context is not None:
             payload["quantum_context"] = quantum_context
@@ -65,13 +64,13 @@ class GLMIntegration:
             resp.raise_for_status()
         except requests.RequestException as exc:  # pragma: no cover - network errors
             logger.error("Failed to query %s: %s", self.endpoint, exc)
-            return SAFE_ERROR_MESSAGE
+            raise RuntimeError(f"GLM request failed: {exc}") from exc
 
         try:
             text = resp.json().get("text", "")
         except Exception:  # pragma: no cover - non-json response
             text = resp.text
-        return text or SAFE_ERROR_MESSAGE
+        return text
 
     async def complete_async(
         self, prompt: str, *, quantum_context: str | None = None
@@ -103,8 +102,17 @@ class GLMIntegration:
                         text = await resp.text()
         except Exception as exc:  # pragma: no cover - network errors
             logger.error("Failed to query %s: %s", self.endpoint, exc)
-            return SAFE_ERROR_MESSAGE
-        return text or SAFE_ERROR_MESSAGE
+            raise RuntimeError(f"GLM async request failed: {exc}") from exc
+        return text
+
+    def health_check(self) -> None:
+        """Validate connectivity to the GLM endpoint."""
+        url = self.endpoint.rstrip("/") + "/health"
+        try:
+            resp = requests.get(url, timeout=5, headers=self.headers)
+            resp.raise_for_status()
+        except Exception as exc:  # pragma: no cover - network errors
+            raise RuntimeError(f"GLM health check failed: {exc}") from exc
 
 
 __all__ = ["GLMIntegration", "DEFAULT_ENDPOINT", "SAFE_ERROR_MESSAGE"]

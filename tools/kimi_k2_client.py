@@ -7,10 +7,13 @@ __version__ = "0.1.0"
 import logging
 import os
 
-try:  # pragma: no cover - optional dependency
+try:  # pragma: no cover - enforce dependency
     import requests
-except Exception:  # pragma: no cover - when requests missing
-    requests = None  # type: ignore
+except ImportError as exc:  # pragma: no cover - requests must be installed
+    raise ImportError(
+        "Kimi-K2 client requires the 'requests' package."
+        " Install it via 'pip install requests'."
+    ) from exc
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +22,6 @@ _ENDPOINT = os.getenv("KIMI_K2_URL", "http://localhost:8004")
 
 def complete(prompt: str) -> str:
     """Return the completion from Kimi-K2 for ``prompt``."""
-    if requests is None:
-        logger.warning("requests missing; returning empty response")
-        return ""
 
     try:
         resp = requests.post(_ENDPOINT, json={"prompt": prompt}, timeout=10)
@@ -32,7 +32,7 @@ def complete(prompt: str) -> str:
             return resp.text
     except Exception as exc:  # pragma: no cover - network errors
         logger.error("Kimi-K2 request failed: %s", exc)
-        return ""
+        raise RuntimeError("Kimi-K2 request failed") from exc
 
 
 __all__ = ["complete"]

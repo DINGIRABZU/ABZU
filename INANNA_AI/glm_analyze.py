@@ -7,10 +7,13 @@ from pathlib import Path
 
 from INANNA_AI.glm_integration import GLMIntegration
 
-try:  # pragma: no cover - optional dependency
+try:  # pragma: no cover - enforce dependency
     import requests
-except Exception:  # pragma: no cover - fallback when requests missing
-    requests = None  # type: ignore
+except ImportError as exc:  # pragma: no cover - requests must be installed
+    raise ImportError(
+        "glm_analyze requires the 'requests' package."
+        " Install it via 'pip install requests'."
+    ) from exc
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +26,6 @@ ANALYSIS_FILE = AUDIT_DIR / "code_analysis.txt"
 def analyze_code(integration: GLMIntegration | None = None) -> str:
     """Send code base to the GLM endpoint and store the suggestions."""
     integration = integration or GLMIntegration()
-    if requests is None:
-        raise RuntimeError("requests library is required")
 
     snippets = []
     if CODE_DIR.exists():

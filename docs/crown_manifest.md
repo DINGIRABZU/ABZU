@@ -36,3 +36,30 @@ For a neutral summary of the router and related modules, see [architecture_overv
 - `init_crown_agent.py` prepares the Crown agent, servants and optional vector memory.
 - `crown_router.py` routes model and expression decisions using recent emotional context.
 - `crown_decider.py` selects language models and expressive options based on heuristic rules.
+
+## Endpoint configuration
+
+The GLM endpoint and credentials are provided through environment variables:
+
+| Variable        | Purpose                                    |
+|-----------------|--------------------------------------------|
+| `GLM_API_URL`   | Base URL of the primary GLM endpoint       |
+| `GLM_API_KEY`   | Bearer token for authenticated GLM access  |
+| `SERVANT_MODELS`| Comma‑separated `name=url` pairs for servants |
+
+`init_crown_agent.initialize_crown()` reads these settings and registers any
+servant endpoints before performing startup checks.
+
+## Health check
+
+During startup the Crown agent calls `/health` on the configured GLM endpoint
+and each servant model. A failing request raises `RuntimeError` and aborts
+initialization. The same health endpoint is exposed by the Crown server and can
+be queried manually:
+
+```bash
+curl http://localhost:8000/health
+```
+
+The command returns `{"status": "alive"}` when the service is ready to accept
+requests.
