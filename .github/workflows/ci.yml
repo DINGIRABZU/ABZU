@@ -199,6 +199,11 @@ PY
           python tools/doc_indexer.py
           git diff --exit-code docs/INDEX.md
 
+      - name: Verify code index
+        run: |
+          python scripts/build_index.py
+          git diff --exit-code docs/code_index.md
+
       - name: Validate markdown links
         run: git ls-files '*.md' | xargs python scripts/validate_links.py
 

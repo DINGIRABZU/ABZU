@@ -2,7 +2,7 @@ site_name: ABZU Documentation
 docs_dir: docs
 nav:
   - Home: index.md
-  - Module Index: module_index.md
+  - Code Index: code_index.md
 plugins:
   - search
   - mkdocs-simple-hooks:

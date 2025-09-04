@@ -17,7 +17,7 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Social Investor One Pager](docs/SOCIAL_INVESTOR_ONE_PAGER.md) – outreach overview
 - [Documentation Index](docs/index.md) – curated starting points
 - [Full Documentation Inventory](docs/INDEX.md)
-- [Module Index](docs/module_index.md) – generated inventory of modules, classes, and functions
+- [Code Index](docs/code_index.md) – generated inventory of modules, classes, and functions
 - [Repository Structure](docs/REPOSITORY_STRUCTURE.md) – directory map
 - [Developer Onboarding](docs/developer_onboarding.md)
 - [Contributor Handbook](docs/CONTRIBUTOR_HANDBOOK.md) – environment setup and workflows
