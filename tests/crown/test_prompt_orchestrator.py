@@ -8,9 +8,11 @@ import sys
 import types
 from pathlib import Path
 import asyncio
+import hashlib
 
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
+sys.modules.setdefault("cv2", types.ModuleType("cv2"))
 dummy_np = types.ModuleType("numpy")
 dummy_np.clip = lambda val, lo, hi: lo if val < lo else hi if val > hi else val
 dummy_np.mean = lambda arr: sum(arr) / len(arr)
@@ -136,3 +138,60 @@ def test_reviews_test_metrics(monkeypatch, tmp_path):
     result = asyncio.run(cpo.crown_prompt_orchestrator_async("hello", glm))
     assert logged and "2" in logged[0][0]
     assert result["suggestions"] == [logged[0][0]]
+
+
+def test_deterministic_ids(monkeypatch):
+    """Stable IDs and symbols derive from SHA256 of the message."""
+    glm = DummyGLM()
+    captured: dict[str, str] = {}
+
+    def fake_record_task_flow(identifier, _data):
+        captured["id"] = identifier
+
+    monkeypatch.setattr(cpo, "record_task_flow", fake_record_task_flow)
+    monkeypatch.setattr(cpo, "load_interactions", lambda limit=3: [])
+
+    message = "hello"
+    result = asyncio.run(cpo.crown_prompt_orchestrator_async(message, glm))
+
+    stable_hash = hashlib.sha256(message.encode()).hexdigest()
+    assert captured["id"] == f"msg_{stable_hash}"
+
+    symbols = [
+        "☉",
+        "☾",
+        "⚚",
+        "♇",
+        "♈",
+        "♉",
+        "♊",
+        "♋",
+        "♌",
+        "♍",
+        "♎",
+        "♏",
+        "♐",
+        "♑",
+        "♒",
+        "♓",
+    ]
+    expected_symbol = symbols[int(stable_hash, 16) % len(symbols)]
+    assert result["symbol"] == expected_symbol
+
+
+def test_cli_entry(monkeypatch, capsys):
+    """CLI ``main`` prints the orchestrator result."""
+
+    def fake_orchestrator(message, glm):
+        return {"text": f"resp:{message}"}
+
+    class DummyMainGLM:
+        def __init__(self, endpoint=None, api_key=None, temperature=0.8):
+            pass
+
+    monkeypatch.setattr(cpo, "crown_prompt_orchestrator", fake_orchestrator)
+    monkeypatch.setattr(cpo, "GLMIntegration", DummyMainGLM)
+
+    cpo.main(["hello"])
+    out = capsys.readouterr().out
+    assert out.strip() == "resp:hello"
