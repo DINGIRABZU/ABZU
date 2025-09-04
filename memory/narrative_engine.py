@@ -18,6 +18,7 @@ from pathlib import Path
 import sqlite3
 import json
 import uuid
+import time
 from typing import Iterable, Iterator, Optional, Dict, Any, Callable
 
 try:  # pragma: no cover - optional dependency
@@ -25,6 +26,48 @@ try:  # pragma: no cover - optional dependency
     from chromadb.api import Collection
 except Exception:  # pragma: no cover - optional dependency
     chromadb = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Counter, Gauge, REGISTRY
+except Exception:  # pragma: no cover - optional dependency
+    Counter = Gauge = REGISTRY = None  # type: ignore[assignment]
+
+_START_TIME = time.perf_counter()
+
+if Gauge is not None and REGISTRY is not None:
+    if "service_boot_duration_seconds" in REGISTRY._names_to_collectors:
+        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors["service_boot_duration_seconds"]  # type: ignore[assignment]
+    else:
+        BOOT_DURATION_GAUGE = Gauge(
+            "service_boot_duration_seconds",
+            "Duration of service startup in seconds",
+            ["service"],
+        )
+else:
+    BOOT_DURATION_GAUGE = None
+
+if Counter is not None and REGISTRY is not None:
+    if "narrative_throughput_total" in REGISTRY._names_to_collectors:
+        THROUGHPUT_COUNTER = REGISTRY._names_to_collectors["narrative_throughput_total"]  # type: ignore[assignment]
+    else:
+        THROUGHPUT_COUNTER = Counter(
+            "narrative_throughput_total",
+            "Narrative events processed",
+            ["service"],
+        )
+    if "service_errors_total" in REGISTRY._names_to_collectors:
+        ERROR_COUNTER = REGISTRY._names_to_collectors["service_errors_total"]  # type: ignore[assignment]
+    else:
+        ERROR_COUNTER = Counter(
+            "service_errors_total",
+            "Number of errors encountered",
+            ["service"],
+        )
+else:
+    THROUGHPUT_COUNTER = ERROR_COUNTER = None
+
+if BOOT_DURATION_GAUGE is not None:
+    BOOT_DURATION_GAUGE.labels("memory").set(time.perf_counter() - _START_TIME)
 
 DB_PATH = Path(__file__).resolve().parents[1] / "data" / "narrative_engine.db"
 CHROMA_DIR = Path(__file__).resolve().parents[1] / "data" / "narrative_events.chroma"
@@ -134,9 +177,15 @@ def _get_collection() -> Collection:
 
 def log_story(text: str) -> None:
     """Persist ``text`` to the story log."""
-
-    with _get_conn() as conn:
-        conn.execute("INSERT INTO stories (text) VALUES (?)", (text,))
+    if THROUGHPUT_COUNTER is not None:
+        THROUGHPUT_COUNTER.labels("memory").inc()
+    try:
+        with _get_conn() as conn:
+            conn.execute("INSERT INTO stories (text) VALUES (?)", (text,))
+    except Exception:
+        if ERROR_COUNTER is not None:
+            ERROR_COUNTER.labels("memory").inc()
+        raise
 
 
 def stream_stories() -> Iterable[str]:
@@ -149,28 +198,34 @@ def stream_stories() -> Iterable[str]:
 
 def log_event(event: Dict[str, Any]) -> None:
     """Persist a structured ``event`` to SQLite and ChromaDB."""
-
-    event_id = uuid.uuid4().hex
-    with _get_conn() as conn:
-        conn.execute(
-            "INSERT INTO events (id, time, agent_id, event_type, payload) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (
-                event_id,
-                event["time"],
-                event["agent_id"],
-                event["event_type"],
-                json.dumps(event["payload"]),
-            ),
-        )
-    if chromadb is not None:  # pragma: no cover - optional dependency
-        collection = _get_collection()
-        collection.add(
-            ids=[event_id],
-            documents=[
-                json.dumps({"event_type": event["event_type"], **event["payload"]})
-            ],
-        )
+    if THROUGHPUT_COUNTER is not None:
+        THROUGHPUT_COUNTER.labels("memory").inc()
+    try:
+        event_id = uuid.uuid4().hex
+        with _get_conn() as conn:
+            conn.execute(
+                "INSERT INTO events (id, time, agent_id, event_type, payload) "
+                "VALUES (?, ?, ?, ?, ?)",
+                (
+                    event_id,
+                    event["time"],
+                    event["agent_id"],
+                    event["event_type"],
+                    json.dumps(event["payload"]),
+                ),
+            )
+        if chromadb is not None:  # pragma: no cover - optional dependency
+            collection = _get_collection()
+            collection.add(
+                ids=[event_id],
+                documents=[
+                    json.dumps({"event_type": event["event_type"], **event["payload"]})
+                ],
+            )
+    except Exception:
+        if ERROR_COUNTER is not None:
+            ERROR_COUNTER.labels("memory").inc()
+        raise
 
 
 def query_events(
