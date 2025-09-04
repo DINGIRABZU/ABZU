@@ -126,6 +126,12 @@ repos:
     language: system
     types: [markdown]
     exclude: ^docs/INDEX\.md$
+  - id: verify-doctrine-refs
+    name: Verify doctrine references
+    entry: python scripts/verify_doctrine_refs.py
+    language: system
+    pass_filenames: false
+    files: ^docs/
 
 - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
   rev: v9.19.0
