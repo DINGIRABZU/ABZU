@@ -1,5 +1,6 @@
 """Self-correct emotional output using recent feedback."""
 
+# @ip-sensitive: Emotion mismatch adjustment logic
 from __future__ import annotations
 
 import logging

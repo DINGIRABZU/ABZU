@@ -1,5 +1,6 @@
 """Synchronise avatar expressions with audio playback."""
 
+# @ip-sensitive: Avatar rendering and emotion-driven overlay logic
 from __future__ import annotations
 
 from pathlib import Path

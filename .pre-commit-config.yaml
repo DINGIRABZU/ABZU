@@ -79,6 +79,11 @@ repos:
     entry: python scripts/verify_versions.py
     language: system
     pass_filenames: false
+  - id: verify-ip-tags
+    name: Ensure IP-sensitive files registered
+    entry: python scripts/verify_ip_tags.py
+    language: system
+    pass_filenames: false
   - id: check-connector-index
     name: Check connector index entries
     entry: python scripts/check_connector_index.py

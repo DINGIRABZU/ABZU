@@ -1,5 +1,6 @@
 """Shared utilities for guardian agents."""
 
+# @ip-sensitive: Ethics validation gatekeeper
 from __future__ import annotations
 
 __version__ = "0.1.0"

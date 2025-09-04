@@ -304,6 +304,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [index.md](index.md) | Documentation Index | Curated starting points for understanding and operating the project. For an exhaustive, auto-generated inventory of a... | - |
 | [insight_system.md](insight_system.md) | Insight System | The insight system aggregates interaction logs into structured matrices used by reflection and adaptive learning comp... | - |
 | [installation.md](installation.md) | Installation | Set up the project either with Conda or Docker. Both methods run the bootstrap script, which verifies the Python vers... | - |
+| [ip_registry.md](ip_registry.md) | IP Registry | The following modules are tagged with `@ip-sensitive` and require tracking in this registry. | - |
 | [learning_pipeline.md](learning_pipeline.md) | Learning Pipeline | The learning pipeline pairs two utilities: | - |
 | [logging_guidelines.md](logging_guidelines.md) | RAZAR Logging Guidelines | The mission logger records component activity in `logs/razar.log` using one JSON object per line. Each entry contains: | - |
 | [memory_architecture.md](memory_architecture.md) | Memory Architecture | The system layers multiple specialised stores, each recording a different facet of experience. Every layer supports t... | `../memory/cortex.py`, `../memory/emotional.py`, `../memory/mental.py`, `../memory/narrative_engine.py`, `../memory/spiritual.py`, `../scripts/init_memory_layers.py` |
