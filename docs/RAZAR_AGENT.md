@@ -56,6 +56,29 @@ flowchart TD
     B -->|log| F[logs/razar_ai_invocations.json]
 ```
 
+### Recovery Flow
+```mermaid
+flowchart TD
+    M[Monitor razar_state.json] --> N{Failure event?}
+    N -->|yes| O[request_shutdown]
+    O --> P[ai_invoker.handover]
+    P --> Q{patch applied?}
+    Q -->|yes| R[resume component]
+    Q -->|no| S[operator escalation]
+    N -->|no| M
+```
+
+Example health event from `logs/razar_state.json`:
+```json
+{
+  "step": "launch",
+  "component": "crown_router",
+  "status": "fail",
+  "error": "Health check failed",
+  "timestamp": 0
+}
+```
+
 ## Architecture Diagram
 ```mermaid
 flowchart TD
