@@ -14,6 +14,21 @@ Nazarick hosts specialized servant agents aligned to chakra layers and coordinat
 
 The registry lives at [agents/nazarick/agent_registry.json](../agents/nazarick/agent_registry.json). For the full channel hierarchy see [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md).
 
+## Chakra Healing Agents
+
+These guardians poll Chakracon metrics and invoke recovery scripts when thresholds are exceeded. See [Chakra Healing](chakra_healing.md) for script details.
+
+| Agent | Script | Action |
+| --- | --- | --- |
+| `root_agent` | `scripts/chakra_healing/root_restore_network.sh` | Restart network interface or reduce disk I/O |
+| `sacral_agent` | `scripts/chakra_healing/sacral_gpu_recover.py` | Reset GPU VRAM or pause GPU tasks |
+| `solar_agent` | `scripts/chakra_healing/solar_cpu_throttle.py` | Cap runaway CPU processes via cgroups |
+| `heart_agent` | `scripts/chakra_healing/heart_memory_repair.py` | Compact or purge memory layers |
+| `throat_agent` | `scripts/chakra_healing/throat_api_stabilize.sh` | Adjust rate limits or restart gateway services |
+| `third_eye_agent` | `scripts/chakra_healing/third_eye_inference_flush.py` | Clear model queue and hot-reload model |
+| `crown_agent` | `scripts/chakra_healing/crown_full_restart.sh` | Orchestrate system reboot and operator notification |
+
+
 ## Launch Commands
 
 Start all servants for development:
