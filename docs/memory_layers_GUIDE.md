@@ -1,32 +1,46 @@
 # Memory Layers Guide
 
-## Vision
-Coordinates cortex, emotional, mental, spiritual, and narrative stores and
-announces their status over the event bus to keep subsystems in sync.
+This guide describes the event bus protocol connecting the Cortex, Emotional,
+Mental, Spiritual, and Narrative memory layers.
 
-## Architecture
-- `scripts/init_memory_layers.py` seeds all stores and publishes `layer_init`
-  events.
-- `memory/*` modules persist records to file‑backed databases.
-- `agents.event_bus` routes cross‑layer messages to subscribed services.
+## Bus protocol
 
-## Deployment
-```bash
-python scripts/init_memory_layers.py
+The layers communicate via the `agents.event_bus` channel named `memory`.
+Initialization broadcasts use the `layer_init` event type.
+
+### Broadcasting layer initialization
+
+```python
+from memory import broadcast_layer_event
+
+broadcast_layer_event({
+    "cortex": "seeded",
+    "emotional": "seeded",
+    "mental": "skipped",
+    "spiritual": "seeded",
+    "narrative": "seeded",
+})
 ```
-Requires SQLite for emotional, spiritual, and narrative layers. Mental layer
-falls back to a skipped state when Neo4j or dependencies are unavailable.
 
-## Example Runs
-```bash
-pytest tests/test_memory_bus.py::test_init_memory_layers_bootstrap_and_persist
+Each emitted event carries a payload:
+
+```json
+{"layer": "<layer_name>", "status": "<status>"}
 ```
 
-## Cross-Links
-- [Narrative Engine Guide](narrative_engine_GUIDE.md)
-- [Nazarick Guide](Nazarick_GUIDE.md)
+Subscribers listen on the `memory` channel to react when individual layers
+initialize or change state.
 
-## Version History
-| Version | Date | Notes |
-|---------|------|-------|
-| 0.1.0 | 2025-09-23 | Documented memory layer event flow and persistence check. |
+## Search API
+
+Use `memory.search_api.aggregate_search` to query across these layers. Results
+are ranked by exponential recency decay and can be weighted per source through
+`source_weights`.
+
+```python
+from memory.search_api import aggregate_search
+
+results = aggregate_search("omen", source_weights={"spiritual": 2.0})
+```
+
+

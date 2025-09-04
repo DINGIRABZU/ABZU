@@ -4,7 +4,8 @@ from citadel.event_producer import Event, EventProducer
 
 from agents.event_bus import set_event_producer
 import memory
-from memory import publish_layer_event, query_memory
+from memory import broadcast_layer_event, query_memory
+from memory.search_api import aggregate_search
 
 from scripts import init_memory_layers
 from memory import cortex, emotional, narrative_engine, spiritual
@@ -35,13 +36,23 @@ class DummyProducer(EventProducer):
         self.events.append(event)
 
 
-def test_publish_layer_event_emits():
+def test_broadcast_layer_event_emits():
     producer = DummyProducer()
     set_event_producer(producer)
 
-    publish_layer_event("cortex", "seeded")
+    broadcast_layer_event(
+        {
+            "cortex": "seeded",
+            "emotional": "seeded",
+            "mental": "skipped",
+            "spiritual": "seeded",
+            "narrative": "seeded",
+        }
+    )
 
-    assert producer.events[0].payload == {"layer": "cortex", "status": "seeded"}
+    layers = {e.payload["layer"]: e.payload["status"] for e in producer.events}
+    assert layers["cortex"] == "seeded"
+    assert layers["mental"] == "skipped"
     set_event_producer(None)
 
 
@@ -52,6 +63,34 @@ def test_query_memory_aggregates(monkeypatch):
 
     res = query_memory("demo")
     assert res == {"cortex": ["c"], "vector": ["v"], "spiral": "s"}
+
+
+def test_aggregate_search_ranks(monkeypatch):
+    from types import SimpleNamespace
+    from datetime import datetime, timedelta
+
+    now = datetime.utcnow()
+    old = now - timedelta(days=1)
+
+    monkeypatch.setattr(
+        memory.search_api,
+        "query_spirals",
+        lambda text: [{"decision": {"result": "c"}, "timestamp": old.isoformat()}],
+    )
+
+    emo_entry = SimpleNamespace(vector=[0.1], timestamp=now)
+    monkeypatch.setattr(
+        memory.search_api,
+        "fetch_emotion_history",
+        lambda limit: [emo_entry],
+    )
+
+    monkeypatch.setattr(memory.search_api, "lookup_symbol_history", lambda q: [])
+    monkeypatch.setattr(memory.search_api, "stream_stories", lambda: iter([]))
+    monkeypatch.setattr(memory.search_api, "query_related_tasks", lambda q: [])
+
+    res = aggregate_search("0.1", source_weights={"emotional": 2.0})
+    assert res[0]["source"] == "emotional"
 
 
 def test_init_memory_layers_bootstrap_and_persist(tmp_path, monkeypatch):

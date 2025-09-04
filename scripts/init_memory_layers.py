@@ -7,12 +7,12 @@ is skipped if Neo4j or its dependencies are unavailable.
 """
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import os
 from pathlib import Path
 
-from memory import publish_layer_event
+from memory import broadcast_layer_event
 from memory.cortex import record_spiral, query_spirals
 from memory.emotional import (
     log_emotion,
@@ -52,24 +52,28 @@ def main() -> None:
     class Node:
         children = []
 
+    statuses = {}
+
     record_spiral(Node(), {"result": "demo", "tags": ["example"]})
-    publish_layer_event("cortex", "seeded")
+    statuses["cortex"] = "seeded"
 
     log_emotion([0.8], conn=emotion_conn())
-    publish_layer_event("emotional", "seeded")
+    statuses["emotional"] = "seeded"
 
     if record_task_flow and query_related_tasks:
         record_task_flow("taskA", {"step": 1})
-        publish_layer_event("mental", "seeded")
+        statuses["mental"] = "seeded"
     else:
-        publish_layer_event("mental", "skipped")
+        statuses["mental"] = "skipped"
 
     spirit = spirit_conn()
     map_to_symbol(("eclipse", "\u263E"), conn=spirit)
-    publish_layer_event("spiritual", "seeded")
+    statuses["spiritual"] = "seeded"
 
     log_story("hero meets guide")
-    publish_layer_event("narrative", "seeded")
+    statuses["narrative"] = "seeded"
+
+    broadcast_layer_event(statuses)
 
     print("Cortex:", query_spirals(tags=["example"]))
     print("Emotional:", fetch_emotion_history(60, conn=emotion_conn()))

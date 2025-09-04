@@ -10,13 +10,24 @@ from memory.cortex import query_spirals
 from spiral_memory import spiral_recall
 from vector_memory import query_vectors
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
+
+LAYERS = ("cortex", "emotional", "mental", "spiritual", "narrative")
 
 
-def publish_layer_event(layer: str, status: str) -> None:
-    """Emit initialization ``status`` for memory ``layer`` via the event bus."""
+def broadcast_layer_event(statuses: Dict[str, str]) -> None:
+    """Emit initialization ``statuses`` for all memory layers via the event bus.
 
-    emit_event("memory", "layer_init", {"layer": layer, "status": status})
+    ``statuses`` maps layer names to their corresponding status strings.
+    Layers missing from the mapping default to ``"unknown"``.
+    """
+
+    for layer in LAYERS:
+        emit_event(
+            "memory",
+            "layer_init",
+            {"layer": layer, "status": statuses.get(layer, "unknown")},
+        )
 
 
 def query_memory(query: str) -> Dict[str, Any]:
@@ -29,4 +40,4 @@ def query_memory(query: str) -> Dict[str, Any]:
     }
 
 
-__all__ = ["publish_layer_event", "query_memory"]
+__all__ = ["broadcast_layer_event", "query_memory", "LAYERS"]
