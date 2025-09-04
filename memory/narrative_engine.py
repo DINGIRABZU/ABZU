@@ -18,7 +18,7 @@ from pathlib import Path
 import sqlite3
 import json
 import uuid
-from typing import Iterable, Iterator, Optional, Dict, Any
+from typing import Iterable, Iterator, Optional, Dict, Any, Callable
 
 try:  # pragma: no cover - optional dependency
     import chromadb
@@ -39,13 +39,28 @@ class StoryEvent:
     symbolism: str | None = None
 
 
-def compose_multitrack_story(events: Iterable[StoryEvent]) -> Dict[str, Any]:
+def compose_multitrack_story(
+    events: Iterable[StoryEvent],
+    *,
+    stream: bool = False,
+    emotion: str = "neutral",
+    frame_callback: Callable[[Any], None] | None = None,
+) -> Dict[str, Any]:
     """Compose cinematic, audio, visual and USD tracks from ``events``.
 
     Parameters
     ----------
     events:
         Sequence of :class:`StoryEvent` objects forming the narrative.
+    stream:
+        If ``True`` the prose is spoken via :mod:`core.expressive_output` and
+        avatar frames are streamed to ``frame_callback``.
+    emotion:
+        Vocal style passed to the speech synthesizer when ``stream`` is
+        enabled.
+    frame_callback:
+        Optional callback receiving avatar frames. Ignored if ``stream`` is
+        ``False``.
 
     Returns
     -------
@@ -57,12 +72,19 @@ def compose_multitrack_story(events: Iterable[StoryEvent]) -> Dict[str, Any]:
     audio = [{"cue": f"{e.actor}_{e.action}".replace(" ", "_")} for e in events]
     visual = [{"directive": f"frame {e.actor} {e.action}"} for e in events]
     usd = [{"op": "AddPrim", "path": f"/{e.actor}", "action": e.action} for e in events]
-    return {
+    tracks = {
         "prose": " ".join(prose),
         "audio": audio,
         "visual": visual,
         "usd": usd,
     }
+    if stream:
+        from core import expressive_output
+
+        if frame_callback is not None:
+            expressive_output.set_frame_callback(frame_callback)
+        expressive_output.speak(tracks["prose"], emotion)
+    return tracks
 
 
 class NarrativeEngine:

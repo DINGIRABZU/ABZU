@@ -38,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added GitHub Actions workflow `dependency-audit.yml` to run `pip-audit` and `npm audit`, failing on high-severity vulnerabilities and uploading reports.
 - Cross-linked `docs/The_Absolute_Protocol.md`, `docs/project_mission_vision.md`, and `docs/nazarick_manifesto.md` for governance and ethics coherence.
 - Added `scripts/require_module_docs.py` pre-commit hook ensuring new modules update `CHANGELOG.md` and `docs/component_index.md`.
+- Connected `compose_multitrack_story` to `expressive_output` for synchronized audio and avatar frames.
+- Updated web console to stream avatar video, play audio, and display prose in real time.
+- Added sample outputs and troubleshooting guidance to `docs/narrative_system.md`.
 - Added `docs/operator_quickstart.md` summarizing the triple-reading rule and consent logging.
 - Introduced optional Opencode CLI handover in `razar.ai_invoker` with
   accompanying setup instructions in RAZAR docs.
