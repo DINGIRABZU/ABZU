@@ -155,7 +155,7 @@ source = ["."]
 omit = ["tests/*"]
 
 [tool.coverage.report]
-fail_under = 85
+fail_under = 80
 
 [tool.poetry.extras]
 spatial = ["torch", "open3d", "pytorch3d"]

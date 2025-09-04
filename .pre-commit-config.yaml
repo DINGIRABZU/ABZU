@@ -15,6 +15,11 @@ repos:
   rev: 7.1.0
   hooks:
   - id: flake8
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.17.1
+  hooks:
+  - id: mypy
+    args: [--config-file=mypy.ini]
 - repo: https://github.com/pycqa/pydocstyle
   rev: 6.3.0
   hooks:
@@ -116,6 +121,11 @@ repos:
   - id: capture-failing-tests
     name: Capture failing pytest cases
     entry: python scripts/capture_failing_tests.py
+    language: system
+    pass_filenames: false
+  - id: pytest-cov
+    name: Run tests with coverage
+    entry: pytest
     language: system
     pass_filenames: false
     always_run: true
