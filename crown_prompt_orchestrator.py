@@ -400,5 +400,5 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
 __all__ = ["crown_prompt_orchestrator", "crown_prompt_orchestrator_async", "main"]
 
 
-if __name__ == "__main__":  # pragma: no cover - CLI entry
+if __name__ == "__main__":  # pragma: no cover - module CLI
     main()

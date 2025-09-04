@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict
 
+import hashlib
 import numpy as np
 
 from .utils import save_wav
@@ -45,7 +46,8 @@ def synthesize_speech(text: str, emotion: str) -> str:
     The resulting WAV file path is returned.
     """
     style = get_voice_params(emotion)
-    out_path = Path(tempfile.gettempdir()) / f"tts_{abs(hash(text))}.wav"
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
+    out_path = Path(tempfile.gettempdir()) / f"tts_{digest}.wav"
 
     if CoquiTTS is not None:
         tts = _get_tts()
