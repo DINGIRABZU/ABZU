@@ -246,6 +246,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [blueprint_spine.md](blueprint_spine.md) | **ABZU Project: Deep-Dive Overview** | - | - |
 | [chakra_architecture.md](chakra_architecture.md) | Chakra Architecture | This document summarizes the major modules aligned with each chakra layer, their operational state, current quality l... | - |
 | [chakra_koan_system.md](chakra_koan_system.md) | Chakra System Koan | A meditative sequence exploring the seven energy centers of Spiral OS. It complements the version manifest, grounding... | - |
+| [chakra_metrics.md](chakra_metrics.md) | Chakra Metrics | This table links each chakra layer to operational metrics used for telemetry and health checks. | - |
 | [chakra_overview.md](chakra_overview.md) | Chakra Overview | This table summarizes each chakra layer's role in the system along with its current semantic version, aggregated qual... | - |
 | [chakra_status.md](chakra_status.md) | Chakra Status | This document tracks capabilities, limitations, and planned evolutions for each chakra layer. Update after every mile... | `../INANNA_AI_AGENT/inanna_ai.py`, `../SPIRAL_OS/qnl_engine.py`, `../agents/bana/bio_adaptive_narrator.py`, `../crown_prompt_orchestrator.py`, `../emotion_registry.py`, `../emotional_state.py`, `../init_crown_agent.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../server.py`, `../seven_dimensional_music.py`, `../start_spiral_os.py`, `../state_transition_engine.py`, `../vector_memory.py` |
 | [chat2db.md](chat2db.md) | Chat2DB Interface | Chat2DB connects conversational agents to persistent storage. It logs transcripts, feedback and model metrics in a li... | `../INANNA_AI/db_storage.py`, `../spiral_vector_db/__init__.py` |
@@ -390,6 +391,8 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus and Grafana alongside an NVIDIA GPU exporter. Metrics include frames per second (FPS),... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |
+| [../patents/recursive_emotion_router_sigil_interpretation.md](../patents/recursive_emotion_router_sigil_interpretation.md) | Recursive Emotion Router with Sigil Interpretation | **Version:** 0.1 **Status:** Draft | - |
+| [../patents/sacred_glyph_vae_pipeline.md](../patents/sacred_glyph_vae_pipeline.md) | Sacred Glyph VAE Pipeline | **Version:** 0.1 **Status:** Draft | - |
 | [../sacred_inputs/00-INVOCATION.md](../sacred_inputs/00-INVOCATION.md) | 00-INVOCATION.md | - | - |
 | [../scripts/install_profiles.md](../scripts/install_profiles.md) | Installation Profiles | This project provides several installation profiles using optional dependencies defined in `pyproject.toml`. | - |
 | [../src/dashboard/OVERVIEW.md](../src/dashboard/OVERVIEW.md) | Dashboard Overview | Streamlit dashboard for monitoring and interacting with Spiral OS components. | - |
