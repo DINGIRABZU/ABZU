@@ -1,5 +1,8 @@
 # Memory Layers Guide
 
+**Version:** v1.0.0
+**Last updated:** 2025-09-05
+
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
 
@@ -114,3 +117,7 @@ Extras can be combined, for example
 `pip install "spiral-os[mental,emotional]"` to enable multiple layers.
 
 
+
+---
+
+Backlinks: [Blueprint Spine](blueprint_spine.md) | [System Blueprint](system_blueprint.md)
