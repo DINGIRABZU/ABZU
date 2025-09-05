@@ -42,6 +42,7 @@ class OperatorDispatcher:
         agent: str,
         command: Callable[..., Any],
         *args: Any,
+        command_id: str | None = None,
         **kwargs: Any,
     ) -> Any:
         """Execute ``command`` on behalf of ``operator`` for ``agent``.
@@ -62,6 +63,8 @@ class OperatorDispatcher:
             "args": args,
             "kwargs": kwargs,
         }
+        if command_id is not None:
+            record["command_id"] = command_id
         self._record_private(operator, record)
         if agent.lower() in {"cocytus", "victim"}:
             self._worm_mirror(agent.lower(), record)
