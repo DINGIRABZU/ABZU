@@ -3,6 +3,8 @@
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
 
+Refer to the [Unified Memory Bundle](The_Absolute_Protocol.md#unified-memory-bundle) section of the protocol for repository-wide conventions. Any update to memory layers must be mirrored across all referenced diagrams, including [figures/memory_bundle.mmd](figures/memory_bundle.mmd).
+
 ## Bus protocol
 
 The layers communicate via the `agents.event_bus` channel named `memory`.
