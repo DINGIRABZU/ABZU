@@ -1,15 +1,22 @@
 """Examples for memory bus and query aggregator."""
 
+# mypy: ignore-errors
+
 from citadel.event_producer import Event, EventProducer
 
 import logging
 import pytest
+from pathlib import Path
+
+import tests.conftest as conftest_module
 
 from agents.event_bus import set_event_producer
 import memory
 import memory.query_memory as qm
 from memory import broadcast_layer_event, query_memory
 from memory.search_api import aggregate_search
+
+conftest_module.ALLOWED_TESTS.add(str(Path(__file__).resolve()))
 
 from scripts import init_memory_layers
 from memory import cortex, emotional, narrative_engine, spiritual
@@ -67,15 +74,44 @@ def test_query_memory_aggregates(monkeypatch):
     monkeypatch.setattr(qm, "spiral_recall", lambda q: "s")
 
     res = query_memory("demo")
-    assert res == {"cortex": ["c"], "vector": ["v"], "spiral": "s"}
+    assert res == {
+        "cortex": ["c"],
+        "vector": ["v"],
+        "spiral": "s",
+        "failed_layers": [],
+    }
 
 
 @pytest.mark.parametrize(
     "broken,expected",
     [
-        ("query_spirals", {"cortex": [], "vector": ["v"], "spiral": "s"}),
-        ("query_vectors", {"cortex": ["c"], "vector": [], "spiral": "s"}),
-        ("spiral_recall", {"cortex": ["c"], "vector": ["v"], "spiral": ""}),
+        (
+            "query_spirals",
+            {
+                "cortex": [],
+                "vector": ["v"],
+                "spiral": "s",
+                "failed_layers": ["cortex"],
+            },
+        ),
+        (
+            "query_vectors",
+            {
+                "cortex": ["c"],
+                "vector": [],
+                "spiral": "s",
+                "failed_layers": ["vector"],
+            },
+        ),
+        (
+            "spiral_recall",
+            {
+                "cortex": ["c"],
+                "vector": ["v"],
+                "spiral": "",
+                "failed_layers": ["spiral"],
+            },
+        ),
     ],
 )
 def test_query_memory_partial_results(monkeypatch, caplog, broken, expected):
@@ -98,6 +134,27 @@ def test_query_memory_partial_results(monkeypatch, caplog, broken, expected):
 
     assert res == expected
     assert any(msg in r.message for r in caplog.records)
+
+
+def test_query_memory_multiple_failures(monkeypatch, caplog):
+    monkeypatch.setattr(qm, "spiral_recall", lambda q: "s")
+
+    def boom(*a, **k):
+        raise RuntimeError("fail")
+
+    monkeypatch.setattr(qm, "query_spirals", boom)
+    monkeypatch.setattr(qm, "query_vectors", boom)
+
+    with caplog.at_level(logging.ERROR):
+        res = query_memory("demo")
+
+    assert res["cortex"] == []
+    assert res["vector"] == []
+    assert res["spiral"] == "s"
+    assert sorted(res["failed_layers"]) == ["cortex", "vector"]
+    messages = [r.message for r in caplog.records]
+    assert any("cortex query failed" in m for m in messages)
+    assert any("vector query failed" in m for m in messages)
 
 
 def test_aggregate_search_ranks(monkeypatch):
