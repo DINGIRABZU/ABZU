@@ -12,26 +12,29 @@ Initialization broadcasts use the `layer_init` event type.
 
 ### Broadcasting layer initialization
 
-`broadcast_layer_event` now emits **one** event containing a mapping for all
-layers, allowing subscribers to process initialization in a single step.
+`MemoryBundle.initialize` wraps `broadcast_layer_event` and emits **one**
+`layer_init` mapping for all layers, allowing subscribers to process
+initialization in a single step:
 
 ```python
-from memory import broadcast_layer_event
+from memory.bundle import MemoryBundle
 
-broadcast_layer_event({
-    "cortex": "seeded",
-    "emotional": "seeded",
-    "mental": "skipped",
-    "spiritual": "seeded",
-    "narrative": "seeded",
-})
+bundle = MemoryBundle()
+statuses = bundle.initialize()
 ```
 
-The payload contains a `layers` object:
+The event payload contains a `layers` object:
 
 ```json
 {"layers": {"cortex": "seeded", "emotional": "seeded", ...}}
 ```
+
+```mermaid
+{{#include figures/layer_init_broadcast.mmd}}
+```
+
+The Mermaid source lives at
+[figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd).
 
 ## Bundle Initialization
 
@@ -55,14 +58,23 @@ continues and emits a consolidated result.
 
 ## Query aggregation
 
-Use `memory.query_memory.query_memory` to retrieve results across cortex,
-vector, and spiral stores:
+Use `MemoryBundle.query` to retrieve results across cortex, vector, and spiral
+stores:
 
 ```python
-from memory import query_memory
+from memory.bundle import MemoryBundle
 
-records = query_memory("omen")
+bundle = MemoryBundle()
+bundle.initialize()
+records = bundle.query("omen")
 ```
+
+```mermaid
+{{#include figures/query_memory_aggregation.mmd}}
+```
+
+The Mermaid source lives at
+[figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd).
 
 ## Search API
 

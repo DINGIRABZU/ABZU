@@ -1,0 +1,12 @@
+graph TD
+    Caller[Caller] --> MB[MemoryBundle.query]
+    MB --> QM[query_memory]
+    QM --> Cortex[Cortex store]
+    QM --> Vector[Vector store]
+    QM --> Spiral[Spiral store]
+    Cortex --> QM
+    Vector --> QM
+    Spiral --> QM
+    QM --> MB
+    MB --> Caller
+
