@@ -10,7 +10,7 @@ thread pool helper.
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import json
 import re
@@ -49,6 +49,7 @@ class SpiralNode(Protocol):
 CORTEX_MEMORY_FILE = Path("data/cortex_memory_spiral.jsonl")
 # Inverted index mapping semantic tags to entry identifiers.
 CORTEX_INDEX_FILE = Path("data/cortex_memory_index.json")
+PATCH_LINKS_FILE = Path("data/patch_links.jsonl")
 
 
 class _RWLock:
@@ -241,6 +242,21 @@ def search_index(
     return ids or set()
 
 
+def link_patch_metadata(component: str, patch: str, story: str) -> None:
+    """Record association between a ``component`` patch and its ``story``."""
+
+    entry = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "component": component,
+        "patch": patch,
+        "story": story,
+    }
+    PATCH_LINKS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with PATCH_LINKS_FILE.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, ensure_ascii=False))
+        fh.write("\n")
+
+
 def query_spirals(
     filter: Optional[Dict[str, Any]] | None = None,
     tags: Optional[List[str]] = None,
@@ -364,6 +380,7 @@ def export_spirals(
 __all__ = [
     "record_spiral",
     "search_index",
+    "link_patch_metadata",
     "hash_tag",
     "query_spirals",
     "query_spirals_concurrent",
@@ -371,5 +388,6 @@ __all__ = [
     "export_spirals",
     "CORTEX_MEMORY_FILE",
     "CORTEX_INDEX_FILE",
+    "PATCH_LINKS_FILE",
     "SpiralNode",
 ]

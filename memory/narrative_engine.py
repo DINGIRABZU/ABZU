@@ -11,7 +11,7 @@ support semantic search.
 
 from __future__ import annotations
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,6 +20,7 @@ import json
 import uuid
 import time
 from typing import Iterable, Iterator, Optional, Dict, Any, Callable
+from . import cortex
 
 try:  # pragma: no cover - optional dependency
     import chromadb
@@ -240,6 +241,18 @@ def log_story(text: str) -> None:
         raise
 
 
+def log_self_heal_story(text: str, component: str, patch: str) -> None:
+    """Persist self-heal ``text`` and link ``component`` ``patch`` metadata."""
+
+    log_story(text)
+    try:
+        cortex.link_patch_metadata(component, patch, text)
+    except Exception:
+        if ERROR_COUNTER is not None:
+            ERROR_COUNTER.labels("memory").inc()
+        raise
+
+
 def stream_stories() -> Iterable[str]:
     """Yield recorded stories in insertion order."""
 
@@ -353,6 +366,7 @@ __all__ = [
     "StoryEvent",
     "NarrativeEngine",
     "log_story",
+    "log_self_heal_story",
     "stream_stories",
     "log_event",
     "compose_multitrack_story",
