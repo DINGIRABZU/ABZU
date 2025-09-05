@@ -43,6 +43,9 @@ class GLMIntegration:
         self.api_key = api_key
         self.temperature = temperature
 
+        # Fail fast if the GLM endpoint cannot be reached at startup.
+        self.health_check()
+
     @property
     def headers(self) -> dict[str, str] | None:
         if self.api_key:
