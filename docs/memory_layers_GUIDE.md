@@ -1,6 +1,6 @@
 # Memory Layers Guide
 
-**Version:** v1.0.0
+**Version:** v1.0.1
 **Last updated:** 2025-09-05
 
 This guide describes the event bus protocol and query flow connecting the
@@ -53,11 +53,11 @@ records = bundle.query("omen")
 ```
 
 `initialize()` imports each layer and immediately calls
-`broadcast_layer_event()` with the resulting status mapping. When the optional
-mental layer or its dependencies are missing, the bundle substitutes the
-no-op implementation from `memory.optional.mental` and marks the status as
-`defaulted`. Any other import error is reported as `error`, but initialization
-continues and emits a consolidated result.
+`broadcast_layer_event()` with the resulting status mapping. When a layer
+or its dependencies are missing, the bundle substitutes the no-op
+implementation from `memory.optional` and marks the status as `defaulted`.
+Any other import error is reported as `error`, but initialization continues
+and emits a consolidated result.
 
 ## Query aggregation
 
@@ -93,11 +93,11 @@ results = aggregate_search("omen", source_weights={"spiritual": 2.0})
 ## Optional Layers
 
 Some memory layers rely on external services and may be absent. When a layer
-fails to import, the system substitutes a no-op implementation from
-`memory/optional/` with the same public API. Initialization marks these
-substituted layers as `defaulted`, and calls such as `aggregate_search` simply
-yield empty results for them while logging any underlying errors. Queries still
-return data from the remaining active layers.
+fails to import, `broadcast_layer_event` and `query_memory` attempt to load a
+no-op implementation from `memory/optional/` that exposes the same public API.
+Substituted layers are reported as `defaulted`, and calls such as
+`aggregate_search` simply yield empty results for them while logging any
+underlying errors. Queries still return data from the remaining active layers.
 
 ## Installation Options
 
