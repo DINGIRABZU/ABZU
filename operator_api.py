@@ -13,6 +13,8 @@ import json
 import logging
 import shutil
 from pathlib import Path
+from uuid import uuid4
+from datetime import datetime
 
 from fastapi import (
     APIRouter,
@@ -38,6 +40,14 @@ _dispatcher = OperatorDispatcher(
 )
 
 _event_clients: set[WebSocket] = set()
+
+
+def _log_command(entry: dict[str, object]) -> None:
+    """Append ``entry`` to ``logs/operator_commands.jsonl``."""
+    path = Path("logs") / "operator_commands.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, default=repr) + "\n")
 
 
 async def broadcast_event(event: dict[str, object]) -> None:
@@ -72,25 +82,45 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
         raise HTTPException(
             status_code=400, detail="operator, agent and command required"
         )
+    command_id = str(uuid4())
+    started_at = datetime.utcnow().isoformat()
 
     def _noop() -> dict[str, str]:
         return {"ack": command_name}
 
-    await broadcast_event({"event": "ack", "command": command_name})
+    await broadcast_event(
+        {"event": "ack", "command": command_name, "command_id": command_id}
+    )
 
     try:
-        result = _dispatcher.dispatch(operator, agent, _noop)
+        result = _dispatcher.dispatch(operator, agent, _noop, command_id=command_id)
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - dispatcher failure
         logger.error("dispatch failed: %s", exc)
         raise HTTPException(status_code=500, detail="dispatch failed") from exc
 
-    await broadcast_event(
-        {"event": "progress", "command": command_name, "percent": 100}
+    completed_at = datetime.utcnow().isoformat()
+    _log_command(
+        {
+            "command_id": command_id,
+            "agent": agent,
+            "result": result,
+            "started_at": started_at,
+            "completed_at": completed_at,
+        }
     )
 
-    return {"result": result}
+    await broadcast_event(
+        {
+            "event": "progress",
+            "command": command_name,
+            "percent": 100,
+            "command_id": command_id,
+        }
+    )
+
+    return {"command_id": command_id, "result": result}
 
 
 @router.post("/operator/upload")
@@ -104,6 +134,9 @@ async def upload_file(
     ``files`` may be empty, allowing metadata-only uploads that are still
     relayed to Crown for context.
     """
+    command_id = str(uuid4())
+    started_at = datetime.utcnow().isoformat()
+
     try:
         meta = json.loads(metadata)
     except json.JSONDecodeError as exc:
@@ -111,6 +144,10 @@ async def upload_file(
 
     upload_dir = Path("uploads") / operator
     upload_dir.mkdir(parents=True, exist_ok=True)
+
+    await broadcast_event(
+        {"event": "ack", "command": "upload", "command_id": command_id}
+    )
 
     stored: list[str] = []
     for item in files or []:
@@ -124,6 +161,7 @@ async def upload_file(
                     "event": "progress",
                     "command": "upload",
                     "file": item.filename,
+                    "command_id": command_id,
                 }
             )
         except Exception as exc:  # pragma: no cover - disk failure
@@ -136,17 +174,32 @@ async def upload_file(
         def _send(m: dict[str, object]) -> dict[str, object]:
             return {"received": m, "files": stored}
 
-        return _dispatcher.dispatch("crown", "razar", _send, meta)
+        return _dispatcher.dispatch(
+            "crown", "razar", _send, meta, command_id=command_id
+        )
 
-    meta_with_files = {**meta, "files": stored}
+    meta_with_files = {**meta, "files": stored, "command_id": command_id}
 
     try:
-        _dispatcher.dispatch(operator, "crown", _relay, meta_with_files)
+        _dispatcher.dispatch(
+            operator, "crown", _relay, meta_with_files, command_id=command_id
+        )
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
     except Exception as exc:  # pragma: no cover - dispatcher failure
         logger.error("metadata relay failed: %s", exc)
         raise HTTPException(status_code=500, detail="relay failed") from exc
+
+    completed_at = datetime.utcnow().isoformat()
+    _log_command(
+        {
+            "command_id": command_id,
+            "agent": "crown",
+            "result": {"stored": stored, "metadata": meta_with_files},
+            "started_at": started_at,
+            "completed_at": completed_at,
+        }
+    )
 
     await broadcast_event(
         {
@@ -154,10 +207,15 @@ async def upload_file(
             "command": "upload",
             "percent": 100,
             "files": stored,
+            "command_id": command_id,
         }
     )
 
-    return {"stored": stored, "metadata": meta_with_files}
+    return {
+        "command_id": command_id,
+        "stored": stored,
+        "metadata": meta_with_files,
+    }
 
 
 __all__ = ["router"]
