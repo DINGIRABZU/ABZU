@@ -135,6 +135,7 @@ spiral-os = "spiral_os.__main__:main"
 inanna = "cli:main"
 crown-prompt = "crown_prompt_orchestrator:main"
 abzu-memory-bootstrap = "scripts.bootstrap_memory:main"
+abzu-bootstrap-world = "scripts.bootstrap_world:main"
 
 [tool.poetry.scripts]
 abzu = "cli:main"
