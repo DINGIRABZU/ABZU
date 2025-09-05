@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `docs/operator_nazarick_bridge.md` detailing Vanna data flow, agent channels, and console usage; cross-referenced from onboarding and system docs.
 - Expanded `docs/component_status.md` with detailed alpha/beta/stable criteria.
 - Added `scripts/verify_component_maturity.py` and enforced its check in CI.
+- Documented unified `layer_init` and `query_memory` flow with cross-layer diagrams in the Absolute Protocol, Blueprint Spine, and System Blueprint.
 
 - Documented chakra-aligned test directories and 90% coverage rule in `docs/the_absolute_pytest.md`.
 

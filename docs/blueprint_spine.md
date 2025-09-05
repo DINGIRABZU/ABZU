@@ -36,17 +36,13 @@ Contributors must pair system enhancements with operator-facing improvements, up
 
 ### **Memory Architecture**
 
-Five layered stores (file or vector‑DB backed, toggleable via environment variables):
+ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores through a unified memory bundle. `broadcast_layer_event("layer_init")` boots all layers in parallel, and `query_memory` fans out reads across them before combining results into a single response.
 
-| **Layer** | **Purpose** | **Default Path / DB** |
-| --- | --- | --- |
-| Cortex | Persistent state with semantic tags | **`data/cortex_memory_spiral.jsonl`** |
-| Emotional | Affective snapshots | **`data/emotions.db`** (SQLite) |
-| Mental | Short-lived reasoning fragments | **`data/tasks.jsonl`** |
-| Spiritual | Symbol/ritual insights | **`data/ontology.db`** |
-| Narrative | Story events linking actors & symbolism | **`data/story.log`** |
+```mermaid
+{{#include figures/layer_init_query_flow.mmd}}
+```
 
-Scripts under **`scripts/`** initialize and verify layers; RAZAR activates the Bana engine once stores are ready.
+The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd). Scripts under **`scripts/`** initialize and verify the layers, and RAZAR activates the Bana engine once the bundle reports readiness.
 
 ## **3. Key Components & Modules**
 
