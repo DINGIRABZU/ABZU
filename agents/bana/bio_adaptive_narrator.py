@@ -24,11 +24,68 @@ from memory import narrative_engine
 from spiral_memory import DEFAULT_MEMORY
 from connectors.primordials_api import send_metrics
 
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Gauge, Histogram, REGISTRY
+except Exception:  # pragma: no cover - optional dependency
+    Gauge = Histogram = REGISTRY = None  # type: ignore[assignment]
+
+try:  # pragma: no cover - optional dependency
+    import psutil
+except Exception:  # pragma: no cover - optional dependency
+    psutil = None  # type: ignore[assignment]
+
+try:  # pragma: no cover - optional dependency
+    import pynvml
+
+    pynvml.nvmlInit()
+except Exception:  # pragma: no cover - GPU may be unavailable
+    pynvml = None  # type: ignore[assignment]
+
 __version__ = "0.0.2"
 
 CHAKRA = "third_eye"
 CHAKRACON_URL = "http://localhost:8080"
 THRESHOLD_HEART_RATE = 120.0
+
+if Gauge is not None and REGISTRY is not None:
+    if "service_cpu_usage_percent" in REGISTRY._names_to_collectors:
+        CPU_GAUGE = REGISTRY._names_to_collectors["service_cpu_usage_percent"]  # type: ignore[assignment]
+    else:
+        CPU_GAUGE = Gauge(
+            "service_cpu_usage_percent",
+            "CPU usage percentage",
+            ["service"],
+        )
+    if "service_memory_usage_bytes" in REGISTRY._names_to_collectors:
+        MEMORY_GAUGE = REGISTRY._names_to_collectors["service_memory_usage_bytes"]  # type: ignore[assignment]
+    else:
+        MEMORY_GAUGE = Gauge(
+            "service_memory_usage_bytes",
+            "Memory usage in bytes",
+            ["service"],
+        )
+    if "service_gpu_memory_usage_bytes" in REGISTRY._names_to_collectors:
+        GPU_GAUGE = REGISTRY._names_to_collectors["service_gpu_memory_usage_bytes"]  # type: ignore[assignment]
+    else:
+        GPU_GAUGE = Gauge(
+            "service_gpu_memory_usage_bytes",
+            "GPU memory usage in bytes",
+            ["service"],
+        )
+else:
+    CPU_GAUGE = MEMORY_GAUGE = GPU_GAUGE = None
+
+if Histogram is not None and REGISTRY is not None:
+    if "service_request_latency_seconds" in REGISTRY._names_to_collectors:
+        LATENCY_HIST = REGISTRY._names_to_collectors["service_request_latency_seconds"]  # type: ignore[assignment]
+    else:
+        LATENCY_HIST = Histogram(
+            "service_request_latency_seconds",
+            "Request latency in seconds",
+            ["service"],
+        )
+else:
+    LATENCY_HIST = None
 
 
 def fetch_metrics() -> dict:
@@ -75,6 +132,7 @@ def generate_story(bio_stream: Iterable[float], sampling_rate: float = 1000.0) -
     str
         Narrative text describing the subject.
     """
+    start = time.perf_counter()
     samples = np.asarray(list(bio_stream), dtype=float)
     if samples.size == 0:
         raise ValueError("bio_stream must contain at least one sample")
@@ -112,6 +170,19 @@ def generate_story(bio_stream: Iterable[float], sampling_rate: float = 1000.0) -
     narrative_engine.log_story(text)
     DEFAULT_MEMORY.register_event(text, layers={"quality": [float(len(text))]})
     send_metrics({"story_length": len(text)})
+    duration = time.perf_counter() - start
+    if LATENCY_HIST is not None:
+        LATENCY_HIST.labels("bana").observe(duration)  # type: ignore[call-arg]
+    if psutil is not None and CPU_GAUGE is not None and MEMORY_GAUGE is not None:
+        CPU_GAUGE.labels("bana").set(psutil.cpu_percent())  # type: ignore[call-arg]
+        MEMORY_GAUGE.labels("bana").set(psutil.virtual_memory().used)  # type: ignore[call-arg]
+    if pynvml is not None and GPU_GAUGE is not None:
+        try:  # pragma: no cover - GPU optional
+            handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+            mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+            GPU_GAUGE.labels("bana").set(mem_info.used)  # type: ignore[call-arg]
+        except Exception:
+            pass
     return text
 
 

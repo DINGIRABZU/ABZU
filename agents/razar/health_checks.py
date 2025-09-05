@@ -26,10 +26,25 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     Gauge = start_http_server = None  # type: ignore
 
+try:  # pragma: no cover - optional dependency
+    import psutil
+except Exception:  # pragma: no cover - optional dependency
+    psutil = None  # type: ignore[assignment]
+
+try:  # pragma: no cover - optional dependency
+    import pynvml
+
+    pynvml.nvmlInit()
+except Exception:  # pragma: no cover - GPU may be unavailable
+    pynvml = None  # type: ignore[assignment]
+
 LOGGER = logging.getLogger("agents.razar.health_checks")
 
 HEALTH_GAUGE: Gauge | None = None
 LATENCY_GAUGE: Gauge | None = None
+CPU_GAUGE: Gauge | None = None
+MEMORY_GAUGE: Gauge | None = None
+GPU_GAUGE: Gauge | None = None
 
 # Exported helpers for external modules
 __all__ = [
@@ -43,13 +58,28 @@ __all__ = [
 
 def init_metrics(port: int = 9350) -> None:
     """Start a Prometheus server if the client library is installed."""
-    global HEALTH_GAUGE, LATENCY_GAUGE
+    global HEALTH_GAUGE, LATENCY_GAUGE, CPU_GAUGE, MEMORY_GAUGE, GPU_GAUGE
     if Gauge is None or start_http_server is None or HEALTH_GAUGE is not None:
         return
     HEALTH_GAUGE = Gauge("service_health_status", "1=healthy,0=unhealthy", ["service"])
     LATENCY_GAUGE = Gauge(
         "service_health_latency_seconds",
         "Health check latency in seconds",
+        ["service"],
+    )
+    CPU_GAUGE = Gauge(
+        "service_cpu_usage_percent",
+        "CPU usage percentage",
+        ["service"],
+    )
+    MEMORY_GAUGE = Gauge(
+        "service_memory_usage_bytes",
+        "Memory usage in bytes",
+        ["service"],
+    )
+    GPU_GAUGE = Gauge(
+        "service_gpu_memory_usage_bytes",
+        "GPU memory usage in bytes",
         ["service"],
     )
     start_http_server(port)
@@ -247,6 +277,16 @@ def _execute(func: Callable[[], bool], name: str) -> bool:
     if HEALTH_GAUGE is not None:
         HEALTH_GAUGE.labels(name).set(1 if result else 0)  # type: ignore[call-arg]
         LATENCY_GAUGE.labels(name).set(duration)  # type: ignore[call-arg]
+        if psutil is not None and CPU_GAUGE is not None and MEMORY_GAUGE is not None:
+            CPU_GAUGE.labels(name).set(psutil.cpu_percent())  # type: ignore[call-arg]
+            MEMORY_GAUGE.labels(name).set(psutil.virtual_memory().used)  # type: ignore[call-arg]
+        if pynvml is not None and GPU_GAUGE is not None:
+            try:  # pragma: no cover - GPU optional
+                handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+                mem = pynvml.nvmlDeviceGetMemoryInfo(handle)
+                GPU_GAUGE.labels(name).set(mem.used)  # type: ignore[call-arg]
+            except Exception:
+                pass
     return result
 
 

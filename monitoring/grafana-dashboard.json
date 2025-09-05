@@ -74,6 +74,46 @@
           "legendFormat": "gpu"
         }
       ]
+    },
+    {
+      "type": "graph",
+      "title": "Service CPU Usage",
+      "targets": [
+        {
+          "expr": "service_cpu_usage_percent",
+          "legendFormat": "{{service}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Service Memory Usage",
+      "targets": [
+        {
+          "expr": "service_memory_usage_bytes",
+          "legendFormat": "{{service}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Service GPU Memory",
+      "targets": [
+        {
+          "expr": "service_gpu_memory_usage_bytes",
+          "legendFormat": "{{service}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Service Request Latency",
+      "targets": [
+        {
+          "expr": "service_request_latency_seconds",
+          "legendFormat": "{{service}}"
+        }
+      ]
     }
   ]
 }
