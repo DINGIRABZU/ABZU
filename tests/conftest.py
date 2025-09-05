@@ -168,6 +168,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_dependency_installer.py"),
     str(ROOT / "tests" / "test_bootstrap.py"),
     str(ROOT / "tests" / "test_avatar_lipsync.py"),
+    str(ROOT / "tests" / "test_boot_sequence.py"),
     str(ROOT / "tests" / "test_lip_sync.py"),
     str(ROOT / "tests" / "test_memory_search.py"),
     str(ROOT / "tests" / "test_memory_persistence.py"),

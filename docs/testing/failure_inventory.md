@@ -87,3 +87,18 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-05: ERROR    __main__:app.py:49 Failed to predict best model: boom
 
 - 2025-09-05: No failures detected.
+
+- 2025-09-05: ERROR    nlq_api:nlq_api.py:35 failed to train Vanna on schemas/agent_interactions.sql
+- 2025-09-05: ERROR    fastapi:utils.py:114 Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR    fastapi:utils.py:114 Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR    fastapi:utils.py:114 Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR    fastapi:utils.py:114 Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR    fastapi:utils.py:114 Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR    fastapi:utils.py:114 Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR tests/agents/razar/test_crown_link.py
+- 2025-09-05: ERROR tests/crown/server/test_server.py - RuntimeError: Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR tests/monitoring/test_escalation_notifier.py - RuntimeError: Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR tests/test_operator_api.py - RuntimeError: Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR tests/test_operator_audit.py - RuntimeError: Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR tests/test_operator_command_route.py - RuntimeError: Form data requires "python-multipart" to be installed.
+- 2025-09-05: ERROR tests/web_console/test_conversation_timeline.py - RuntimeError: Form data requires "python-multipart" to be installed.

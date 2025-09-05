@@ -38,6 +38,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Added optional Opencode CLI handover path in `ai_invoker.handover` and
   documented setup in RAZAR agent guide and recovery playbook. The CLI output
   feeds into `code_repair.repair_module`.
+- Enforced explicit health probes for boot components and logged probe results
+  in `razar_state.json`.
 
  - Expanded guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
 - Added schema diagrams for configuration files and a full ignition example with log excerpts and mission-brief archive notes.

@@ -203,12 +203,12 @@ logs/mission_briefs/
 | 2025-09-21T00:00:01Z | basic_service | dependency | Install missing packages or verify the environment. |
 ```
 
-### Probe Failure Matrix
+### Probe Failure Troubleshooting Matrix
 
-| Probe           | Failure Indicator                         | Remediation                                                  |
-|-----------------|-------------------------------------------|--------------------------------------------------------------|
-| basic_service   | `Health check failed for basic_service`   | Validate dependencies and restart the service.               |
-| complex_service | `Health check failed for complex_service` | Inspect configuration or escalate repair to a remote agent. |
+| Component       | Health Probe                          | Failure Indicator                         | Remediation                                                  |
+|-----------------|---------------------------------------|-------------------------------------------|--------------------------------------------------------------|
+| basic_service   | `http://localhost:8000/healthz`       | `Health check failed for basic_service`   | Validate dependencies and restart the service.               |
+| complex_service | `/var/log/complex_service.log`        | `Health check failed for complex_service` | Inspect configuration or escalate repair to a remote agent. |
 
 ## Cross-links
 - [System Blueprint](system_blueprint.md)

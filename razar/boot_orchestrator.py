@@ -282,7 +282,7 @@ def load_config(path: Path) -> List[Dict[str, Any]]:
         name = comp.get("name", "")
         has_probe = comp.get("health_check") or name in health_checks.CHECKS
         if not has_probe:
-            LOGGER.warning("Component %s lacks a health probe", name)
+            raise ValueError(f"Component {name} lacks a health probe")
     return components
 
 
