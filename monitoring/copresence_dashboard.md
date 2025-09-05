@@ -9,6 +9,13 @@ It focuses on boot health, narrative flow and error rates across core agents.
 - **Narrative Throughput** – rate of `narrative_throughput_total` per service graphed over 5 m to show story activity.
 - **Error Counts** – `service_errors_total` broken down by service to highlight failing components.
 
+## Metrics Sources
+
+Crown, Bana and memory layers expose Prometheus metrics on `/metrics` when
+started with `prometheus_fastapi_instrumentator`. Each sets the
+`service_boot_duration_seconds` gauge during startup, which feeds the **Service
+Boot Time** panel.
+
 ## Import
 
 ```json

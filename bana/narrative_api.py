@@ -3,6 +3,7 @@
 __version__ = "0.1.1"
 
 import json
+import time
 from typing import Iterable
 
 from fastapi import APIRouter
@@ -10,7 +11,31 @@ from fastapi.responses import StreamingResponse
 
 from memory import narrative_engine
 
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Gauge, REGISTRY
+except Exception:  # pragma: no cover - optional dependency
+    Gauge = REGISTRY = None  # type: ignore[assignment]
+
+_START_TIME = time.perf_counter()
+
+if Gauge is not None and REGISTRY is not None:
+    if "service_boot_duration_seconds" in REGISTRY._names_to_collectors:
+        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors[
+            "service_boot_duration_seconds"
+        ]  # type: ignore[assignment]
+    else:
+        BOOT_DURATION_GAUGE = Gauge(
+            "service_boot_duration_seconds",
+            "Duration of service startup in seconds",
+            ["service"],
+        )
+else:
+    BOOT_DURATION_GAUGE = None
+
 router = APIRouter()
+
+if BOOT_DURATION_GAUGE is not None:
+    BOOT_DURATION_GAUGE.labels("bana").set(time.perf_counter() - _START_TIME)
 
 
 @router.get("/story/log")
