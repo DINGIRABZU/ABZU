@@ -53,4 +53,10 @@ from memory.search_api import aggregate_search
 results = aggregate_search("omen", source_weights={"spiritual": 2.0})
 ```
 
+## Handling missing layers
+
+Each memory layer is optional. `aggregate_search` guards against failures by
+skipping any layer that raises during lookup and logging an error. Queries will
+still return results from the remaining layers.
+
 
