@@ -80,6 +80,11 @@ eventLog.id = 'event-log';
 eventLog.style.marginTop = '1rem';
 document.body.appendChild(eventLog);
 
+const statusPanel = document.createElement('pre');
+statusPanel.id = 'status-panel';
+statusPanel.style.marginTop = '1rem';
+document.body.appendChild(statusPanel);
+
 function connectEvents() {
     try {
         const ws = new WebSocket(EVENTS_URL);
@@ -296,9 +301,21 @@ async function loadMetrics() {
     }
 }
 
+async function loadStatus() {
+    try {
+        const resp = await fetch(`${BASE_URL}/operator/status`);
+        const data = await resp.json();
+        document.getElementById('status-panel').textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+        document.getElementById('status-panel').textContent = 'Status error: ' + err;
+    }
+}
+
 window.addEventListener('load', () => {
     startStream();
     loadAgents();
     loadMetrics();
     connectEvents();
+    loadStatus();
+    setInterval(loadStatus, 5000);
 });
