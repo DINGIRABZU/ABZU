@@ -153,6 +153,12 @@ repos:
     language: system
     pass_filenames: false
     files: ^(docs/|monitoring/)
+  - id: verify-self-healing
+    name: Verify self healing
+    entry: python scripts/verify_self_healing.py
+    language: system
+    pass_filenames: false
+    files: ^(docs/|logs/|quarantine/)
 
 - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
   rev: v9.19.0
