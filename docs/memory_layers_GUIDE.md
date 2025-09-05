@@ -31,6 +31,26 @@ The payload contains a `layers` object:
 {"layers": {"cortex": "seeded", "emotional": "seeded", ...}}
 ```
 
+## Bundle Initialization
+
+`MemoryBundle` wraps the layer modules behind a single interface and reports
+their startup state in one event.
+
+```python
+from memory.bundle import MemoryBundle
+
+bundle = MemoryBundle()
+statuses = bundle.initialize()
+records = bundle.query("omen")
+```
+
+`initialize()` imports each layer and immediately calls
+`broadcast_layer_event()` with the resulting status mapping. When the optional
+mental layer or its dependencies are missing, the bundle substitutes the
+no-op implementation from `memory.optional.mental` and marks the status as
+`defaulted`. Any other import error is reported as `error`, but initialization
+continues and emits a consolidated result.
+
 ## Query aggregation
 
 Use `memory.query_memory.query_memory` to retrieve results across cortex,
