@@ -2,6 +2,9 @@
 
 from citadel.event_producer import Event, EventProducer
 
+import logging
+import pytest
+
 from agents.event_bus import set_event_producer
 import memory
 import memory.query_memory as qm
@@ -65,6 +68,36 @@ def test_query_memory_aggregates(monkeypatch):
 
     res = query_memory("demo")
     assert res == {"cortex": ["c"], "vector": ["v"], "spiral": "s"}
+
+
+@pytest.mark.parametrize(
+    "broken,expected",
+    [
+        ("query_spirals", {"cortex": [], "vector": ["v"], "spiral": "s"}),
+        ("query_vectors", {"cortex": ["c"], "vector": [], "spiral": "s"}),
+        ("spiral_recall", {"cortex": ["c"], "vector": ["v"], "spiral": ""}),
+    ],
+)
+def test_query_memory_partial_results(monkeypatch, caplog, broken, expected):
+    monkeypatch.setattr(qm, "query_spirals", lambda **kw: ["c"])
+    monkeypatch.setattr(qm, "query_vectors", lambda **kw: ["v"])
+    monkeypatch.setattr(qm, "spiral_recall", lambda q: "s")
+
+    def boom(*a, **k):
+        raise RuntimeError("fail")
+
+    monkeypatch.setattr(qm, broken, boom)
+    msg = {
+        "query_spirals": "cortex query failed",
+        "query_vectors": "vector query failed",
+        "spiral_recall": "spiral recall failed",
+    }[broken]
+
+    with caplog.at_level(logging.ERROR):
+        res = query_memory("demo")
+
+    assert res == expected
+    assert any(msg in r.message for r in caplog.records)
 
 
 def test_aggregate_search_ranks(monkeypatch):
