@@ -10,6 +10,11 @@
 </head>
 <body>
     <h1>Spiral OS Web Console</h1>
+    <div id="search-bar">
+        <input id="global-search" type="text" placeholder="Search conversations">
+        <button id="search-btn">Search</button>
+        <div id="search-results" style="margin-top:0.5rem;"></div>
+    </div>
     <input id="command-input" type="text" placeholder="Enter command">
     <button id="send-btn">Send</button>
     <div id="emotion" style="margin-top:1rem;"></div>
@@ -24,6 +29,10 @@
     <div id="agents-section" style="margin-top:1rem;">
         <h2>Agents</h2>
         <ul id="agent-list" style="list-style:none;padding:0;"></ul>
+    </div>
+    <div id="timeline-section" style="margin-top:1rem;">
+        <h2>Conversation Timeline</h2>
+        <div id="conversation-timeline"></div>
     </div>
     <div id="status-panel" style="margin-top:1rem;">
         <h2>Status</h2>
