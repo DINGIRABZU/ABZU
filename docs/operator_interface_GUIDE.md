@@ -29,6 +29,7 @@ flowchart TD
 ## Architecture
 - `/operator/command` forwards actions to RAZAR.
 - `/operator/upload` sends files and metadata.
+- `/operator/events` streams command acknowledgements and progress updates.
 - All requests require Bearer tokens issued by Crown.
 
 ## Deployment

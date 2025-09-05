@@ -2,6 +2,8 @@
 
 The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing music generation. It also displays the current roster of Nazarick agents with their launch status and chat channels. It talks to the same FastAPI services used by agents and is intended for local development.
 
+`web_console/main.js` now subscribes to the `/operator/events` WebSocket to display command acknowledgements and progress.
+
 ## Interaction Diagram
 
 ```mermaid
@@ -51,7 +53,7 @@ The Mermaid source lives at [assets/nazarick_web_console.mmd](assets/nazarick_we
 ## UI Components
 
 - **`web_console/index.html`** – static page that loads the console and basic styles.
-- **`web_console/main.js`** – handles command dispatch, emotion glyphs, music prompts, and WebRTC streaming.
+- **`web_console/main.js`** – handles command dispatch, emotion glyphs, music prompts, WebRTC streaming, and event logs from `/operator/events`.
 - **`web_console/operator.js`** – helper module exposing `sendCommand`, `startStream`, and `uploadFiles` utilities for operator dashboards.
 - **Agent panel** – lists agents by parsing `agents/nazarick/agent_registry.json` and `logs/nazarick_startup.json`. Each entry shows the role, launch command, channel, and launch status with buttons to open the chat room or send a command directly to that agent.
 

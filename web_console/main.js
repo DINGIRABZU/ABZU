@@ -8,6 +8,7 @@ const BASE_URL = API_URL.replace(/\/[a-zA-Z_-]+$/, '');
 const OFFER_URL = `${BASE_URL}/offer`;
 const STARTUP_LOG_URL = 'logs/nazarick_startup.json';
 const REGISTRY_URL = 'agents/nazarick/agent_registry.json';
+const EVENTS_URL = `${BASE_URL.replace(/^http/, 'ws')}/operator/events`;
 
 const GLYPHS = {
     joy: '🌀😊',
@@ -73,6 +74,22 @@ downloadLink.style.marginTop = '0.5rem';
 musicContainer.appendChild(downloadLink);
 
 document.body.appendChild(musicContainer);
+
+const eventLog = document.createElement('pre');
+eventLog.id = 'event-log';
+eventLog.style.marginTop = '1rem';
+document.body.appendChild(eventLog);
+
+function connectEvents() {
+    try {
+        const ws = new WebSocket(EVENTS_URL);
+        ws.onmessage = (ev) => {
+            eventLog.textContent += `${ev.data}\n`;
+        };
+    } catch (err) {
+        console.error('event stream failed', err);
+    }
+}
 
 function sendCommand(command, agent) {
     let cmd = command;
@@ -283,4 +300,5 @@ window.addEventListener('load', () => {
     startStream();
     loadAgents();
     loadMetrics();
+    connectEvents();
 });
