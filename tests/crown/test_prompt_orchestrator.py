@@ -9,6 +9,7 @@ import types
 from pathlib import Path
 import asyncio
 import hashlib
+import pytest
 
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
@@ -25,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 import crown_decider
 import servant_model_manager as smm
 import crown_prompt_orchestrator as cpo
+import INANNA_AI.glm_integration as gi
 
 # Avoid external Neo4j connections during tests
 cpo.record_task_flow = lambda *a, **k: None
@@ -177,6 +179,34 @@ def test_deterministic_ids(monkeypatch):
     ]
     expected_symbol = symbols[int(stable_hash, 16) % len(symbols)]
     assert result["symbol"] == expected_symbol
+
+
+def test_glm_health_check_success(monkeypatch):
+    """``GLMIntegration`` probes the endpoint during initialization."""
+    called = {}
+
+    class DummyResp:
+        def raise_for_status(self) -> None:
+            pass
+
+    def fake_get(url, timeout, headers=None):
+        called["url"] = url
+        return DummyResp()
+
+    monkeypatch.setattr(gi.requests, "get", fake_get)
+    gi.GLMIntegration(endpoint="https://glm.example.com")
+    assert called["url"].endswith("/health")
+
+
+def test_glm_health_check_failure(monkeypatch):
+    """Initialization fails fast when the endpoint is unreachable."""
+
+    def fake_get(url, timeout, headers=None):
+        raise gi.requests.RequestException("boom")
+
+    monkeypatch.setattr(gi.requests, "get", fake_get)
+    with pytest.raises(RuntimeError):
+        gi.GLMIntegration(endpoint="https://glm.example.com")
 
 
 def test_cli_entry(monkeypatch, capsys):
