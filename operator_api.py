@@ -27,6 +27,8 @@ from fastapi import (
 )
 
 from agents.operator_dispatcher import OperatorDispatcher
+from agents.interaction_log import log_agent_interaction
+from fastapi.responses import HTMLResponse
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +42,7 @@ _dispatcher = OperatorDispatcher(
 )
 
 _event_clients: set[WebSocket] = set()
+_chat_rooms: dict[str, set[WebSocket]] = {}
 
 
 def _log_command(entry: dict[str, object]) -> None:
@@ -70,6 +73,60 @@ async def operator_events(websocket: WebSocket) -> None:
             await websocket.receive_text()
     except WebSocketDisconnect:
         _event_clients.discard(websocket)
+
+
+@router.websocket("/agent/chat/{agents}")
+async def agent_chat(websocket: WebSocket, agents: str) -> None:
+    """WebSocket room forwarding messages between ``agents``.
+
+    The ``agents`` path parameter uses ``<agentA>-<agentB>``. Any JSON message
+    received is broadcast to all peers in the room and recorded via
+    :func:`log_agent_interaction`.
+    """
+
+    await websocket.accept()
+    clients = _chat_rooms.setdefault(agents, set())
+    clients.add(websocket)
+    parts = agents.split("-", 1)
+    agent_a = parts[0] if parts else ""
+    agent_b = parts[1] if len(parts) > 1 else ""
+    try:
+        while True:
+            message = await websocket.receive_text()
+            try:
+                data = json.loads(message)
+            except json.JSONDecodeError:
+                continue
+            sender = data.get("sender", "")
+            text = data.get("text", "")
+            target = data.get("target") or (agent_b if sender == agent_a else agent_a)
+            log_agent_interaction(
+                {"source": sender, "target": target, "text": text, "room": agents}
+            )
+            payload = {
+                "sender": sender,
+                "target": target,
+                "text": text,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+            for ws in set(clients):
+                try:
+                    await ws.send_text(json.dumps(payload))
+                except Exception:
+                    clients.discard(ws)
+    except WebSocketDisconnect:
+        clients.discard(websocket)
+    finally:
+        if not clients:
+            _chat_rooms.pop(agents, None)
+
+
+@router.get("/chat/{agents}")
+async def chat_page(agents: str) -> HTMLResponse:  # pragma: no cover - simple
+    """Return the static chat console page."""
+
+    path = Path("web_console") / "chat.html"
+    return HTMLResponse(path.read_text(encoding="utf-8"))
 
 
 @router.post("/operator/command")
@@ -179,6 +236,17 @@ async def agent_interactions(
                 continue
             records.append(entry)
     return records[-limit:]
+
+
+@router.get("/conversation/logs")
+async def conversation_logs(
+    agent: str | None = None, limit: int = 100
+) -> dict[str, object]:
+    """Return logged conversation entries for ``agent``."""
+
+    agents = [agent] if agent else None
+    logs = await agent_interactions(agents, limit)
+    return {"logs": logs}
 
 
 @router.post("/operator/upload")
