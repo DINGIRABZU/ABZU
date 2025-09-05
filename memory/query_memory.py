@@ -1,4 +1,9 @@
-"""Aggregated memory queries across cortex, vector, and spiral stores."""
+"""Aggregated memory queries across cortex, vector, and spiral stores.
+
+Each layer is queried independently so that failures in one layer do not
+prevent returning results from the others. Any exceptions are logged and the
+names of failing layers are collected in the ``failed_layers`` field.
+"""
 
 from __future__ import annotations
 
