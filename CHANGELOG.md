@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented operator-first principle and contributor guidance across core docs.
 
 - WebSocket `/operator/events` for command acknowledgements and progress with console subscription.
+- Nazarick Web Console docs explain viewing agent interactions, NLQ log search, and live chat streams; added tests for paginated conversation logs.
 
 - Instrumented Crown, Bana and memory layers with Prometheus gauges, documented
   the copresence dashboard and added tests for metrics endpoints.

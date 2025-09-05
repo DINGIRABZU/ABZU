@@ -60,6 +60,27 @@ The Mermaid source lives at [assets/nazarick_web_console.mmd](assets/nazarick_we
 - **Agent panel** – lists agents by parsing `agents/nazarick/agent_registry.json` and `logs/nazarick_startup.json`. Each entry shows the role, launch command, channel, and launch status with buttons to open the chat room or send a command directly to that agent.
 - **Status panel** – polls `/operator/status` and renders component health, recent errors, and memory summaries.
 
+- **Conversation timeline** – displays recent interactions for each agent by calling `/conversation/logs`.
+- **NLQ bar** – posts natural language queries to `/nlq/logs` and highlights matching entries in the timeline.
+
+## Viewing Agent Interactions
+
+The console loads a timeline for every agent when it starts. Each request to
+`/conversation/logs?agent=<id>&limit=100` retrieves the newest messages. Raise
+the `limit` parameter to page through older history.
+
+## Using the NLQ Bar
+
+A search field at the top accepts free‑form questions. It sends the text to
+`/nlq/logs` and renders the returned rows while marking any matches in the
+conversation timeline.
+
+## Subscribing to Chat Streams
+
+The **Open Chat** button next to each agent launches `/chat/<agent>-<peer>` in a
+new tab. The page connects to the WebSocket `/agent/chat/<agent>-<peer>` and
+streams messages between the pair in real time.
+
 ## Agent Mapping
 
 Details are derived from the [agent registry](../agents/nazarick/agent_registry.json).
