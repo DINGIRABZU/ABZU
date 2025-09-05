@@ -28,9 +28,21 @@ except Exception:  # pragma: no cover - optional dependency
     chromadb = None  # type: ignore
 
 try:  # pragma: no cover - optional dependency
-    from prometheus_client import Counter, Gauge, REGISTRY
+    from prometheus_client import Counter, Gauge, Histogram, REGISTRY
 except Exception:  # pragma: no cover - optional dependency
-    Counter = Gauge = REGISTRY = None  # type: ignore[assignment]
+    Counter = Gauge = Histogram = REGISTRY = None  # type: ignore[assignment]
+
+try:  # pragma: no cover - optional dependency
+    import psutil
+except Exception:  # pragma: no cover - optional dependency
+    psutil = None  # type: ignore[assignment]
+
+try:  # pragma: no cover - optional dependency
+    import pynvml
+
+    pynvml.nvmlInit()
+except Exception:  # pragma: no cover - GPU may be unavailable
+    pynvml = None  # type: ignore[assignment]
 
 _START_TIME = time.perf_counter()
 
@@ -65,6 +77,46 @@ if Counter is not None and REGISTRY is not None:
         )
 else:
     THROUGHPUT_COUNTER = ERROR_COUNTER = None
+
+if Gauge is not None and REGISTRY is not None:
+    if "service_cpu_usage_percent" in REGISTRY._names_to_collectors:
+        CPU_GAUGE = REGISTRY._names_to_collectors["service_cpu_usage_percent"]  # type: ignore[assignment]
+    else:
+        CPU_GAUGE = Gauge(
+            "service_cpu_usage_percent",
+            "CPU usage percentage",
+            ["service"],
+        )
+    if "service_memory_usage_bytes" in REGISTRY._names_to_collectors:
+        MEMORY_GAUGE = REGISTRY._names_to_collectors["service_memory_usage_bytes"]  # type: ignore[assignment]
+    else:
+        MEMORY_GAUGE = Gauge(
+            "service_memory_usage_bytes",
+            "Memory usage in bytes",
+            ["service"],
+        )
+    if "service_gpu_memory_usage_bytes" in REGISTRY._names_to_collectors:
+        GPU_GAUGE = REGISTRY._names_to_collectors["service_gpu_memory_usage_bytes"]  # type: ignore[assignment]
+    else:
+        GPU_GAUGE = Gauge(
+            "service_gpu_memory_usage_bytes",
+            "GPU memory usage in bytes",
+            ["service"],
+        )
+else:
+    CPU_GAUGE = MEMORY_GAUGE = GPU_GAUGE = None
+
+if Histogram is not None and REGISTRY is not None:
+    if "service_request_latency_seconds" in REGISTRY._names_to_collectors:
+        LATENCY_HIST = REGISTRY._names_to_collectors["service_request_latency_seconds"]  # type: ignore[assignment]
+    else:
+        LATENCY_HIST = Histogram(
+            "service_request_latency_seconds",
+            "Request latency in seconds",
+            ["service"],
+        )
+else:
+    LATENCY_HIST = None
 
 if BOOT_DURATION_GAUGE is not None:
     BOOT_DURATION_GAUGE.labels("memory").set(time.perf_counter() - _START_TIME)
@@ -198,6 +250,7 @@ def stream_stories() -> Iterable[str]:
 
 def log_event(event: Dict[str, Any]) -> None:
     """Persist a structured ``event`` to SQLite and ChromaDB."""
+    start = time.perf_counter()
     if THROUGHPUT_COUNTER is not None:
         THROUGHPUT_COUNTER.labels("memory").inc()
     try:
@@ -226,6 +279,20 @@ def log_event(event: Dict[str, Any]) -> None:
         if ERROR_COUNTER is not None:
             ERROR_COUNTER.labels("memory").inc()
         raise
+    finally:
+        duration = time.perf_counter() - start
+        if LATENCY_HIST is not None:
+            LATENCY_HIST.labels("memory").observe(duration)  # type: ignore[call-arg]
+        if psutil is not None and CPU_GAUGE is not None and MEMORY_GAUGE is not None:
+            CPU_GAUGE.labels("memory").set(psutil.cpu_percent())  # type: ignore[call-arg]
+            MEMORY_GAUGE.labels("memory").set(psutil.virtual_memory().used)  # type: ignore[call-arg]
+        if pynvml is not None and GPU_GAUGE is not None:
+            try:  # pragma: no cover - GPU optional
+                handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+                mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+                GPU_GAUGE.labels("memory").set(mem_info.used)  # type: ignore[call-arg]
+            except Exception:
+                pass
 
 
 def query_events(

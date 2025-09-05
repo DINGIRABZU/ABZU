@@ -125,6 +125,21 @@ these metrics. CPU, memory, disk, network, and GPU graphs are preconfigured.
 The `monitoring/watchdog.py` script augments these dashboards with system
 network throughput using `psutil.net_io_counters`.
 
+### Service metrics
+
+Core layers now expose Prometheus gauges for CPU, memory, GPU, and latency.
+`crown_router`, `agents.razar.health_checks`, `agents.bana.bio_adaptive_narrator`,
+and `memory.narrative_engine` publish:
+
+- `service_cpu_usage_percent`
+- `service_memory_usage_bytes`
+- `service_gpu_memory_usage_bytes`
+- `service_request_latency_seconds`
+
+Each metric is labelled by `service` so Grafana panels can display resource
+usage and latency for Crown, RAZAR, Bana, and Memory side by side. Import
+`monitoring/grafana-dashboard.json` to visualize these metrics.
+
 ## Timing metrics
 
 Latency histograms are exported via Prometheus:

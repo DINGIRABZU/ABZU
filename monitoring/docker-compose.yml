@@ -2,6 +2,11 @@ version: '3.8'
 services:
   prometheus:
     image: prom/prometheus
+    # Ensure resource exporters are available before Prometheus starts
+    depends_on:
+      - node-exporter
+      - cadvisor
+      - gpu-exporter
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -17,6 +22,7 @@ services:
   node-exporter:
     image: prom/node-exporter
     container_name: node-exporter
+    # Exposes host-level CPU, memory, and disk metrics
     restart: unless-stopped
     ports:
       - "9101:9100"
@@ -31,6 +37,7 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
+    # Publishes container-level metrics for Prometheus scraping
     restart: unless-stopped
     ports:
       - "8080:8080"
@@ -42,6 +49,7 @@ services:
   gpu-exporter:
     image: nvidia/dcgm-exporter:3.2.6
     container_name: gpu-exporter
+    # Reports GPU utilization and memory statistics via DCGM
     restart: unless-stopped
     runtime: nvidia
     ports:
