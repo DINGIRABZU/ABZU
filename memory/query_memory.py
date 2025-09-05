@@ -7,12 +7,51 @@ names of failing layers are collected in the ``failed_layers`` field.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
 import logging
+from typing import Any, Dict, List
 
-from .cortex import query_spirals
-from spiral_memory import spiral_recall
-from vector_memory import query_vectors
+try:  # pragma: no cover - cortex may be unavailable
+    from .cortex import query_spirals
+except Exception:  # pragma: no cover - logged lazily
+
+    def query_spirals(*args: Any, **kwargs: Any) -> list[Any]:
+        """Fallback returning no cortex results."""
+        return []
+
+
+try:  # pragma: no cover - optional dependency
+    from vector_memory import query_vectors as _query_vectors
+except Exception:  # pragma: no cover - dependency may be missing
+    try:
+        from .optional import vector_memory as _vector_memory
+
+        def _query_vectors(*args: Any, **kwargs: Any) -> List[Dict[str, Any]]:
+            return _vector_memory.query_vectors(*args, **kwargs)
+
+    except Exception:  # pragma: no cover - fallback missing
+
+        def _query_vectors(*args: Any, **kwargs: Any) -> List[Dict[str, Any]]:
+            return []
+
+
+query_vectors = _query_vectors
+
+try:  # pragma: no cover - optional dependency
+    from spiral_memory import spiral_recall as _spiral_recall
+except Exception:  # pragma: no cover - dependency may be missing
+    try:
+        from .optional import spiral_memory as _spiral_memory
+
+        def _spiral_recall(*args: Any, **kwargs: Any) -> str:
+            return _spiral_memory.spiral_recall(*args, **kwargs)
+
+    except Exception:  # pragma: no cover - fallback missing
+
+        def _spiral_recall(*args: Any, **kwargs: Any) -> str:
+            return ""
+
+
+spiral_recall = _spiral_recall
 
 
 logger = logging.getLogger(__name__)
