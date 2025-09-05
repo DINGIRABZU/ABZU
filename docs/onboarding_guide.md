@@ -20,6 +20,7 @@ Study the system design materials to grasp component responsibilities and data f
 - [System Blueprint](system_blueprint.md)
 - [Architecture Overview](architecture_overview.md)
 - [Data Flow](data_flow.md)
+- [Operator-Nazarick Bridge](operator_nazarick_bridge.md)
 
 ## 4. Follow the Development Workflow
 Use the process documents to build and modify modules:

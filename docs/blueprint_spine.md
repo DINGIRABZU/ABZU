@@ -378,7 +378,7 @@ Communication is organized through a chakra-inspired channel hierarchy: Crown Co
 
 ## **4. Operator Interaction**
 
-The Nazarick Web Console exposes a browser-based interface for operators to issue commands, stream media, and chat with individual agents. It reads the agent registry and startup logs to populate an agent panel with chat-room links and direct command buttons. Additionally, the Nazarick Agents guide encourages monitoring agents and issuing commands through this console, which leverages the same FastAPI services used by the agents themselves.
+The Nazarick Web Console exposes a browser-based interface for operators to issue commands, stream media, and chat with individual agents. It reads the agent registry and startup logs to populate an agent panel with chat-room links and direct command buttons. Additionally, the Nazarick Agents guide encourages monitoring agents and issuing commands through this console, which leverages the same FastAPI services used by the agents themselves. See the [Operator-Nazarick Bridge](operator_nazarick_bridge.md) for a walkthrough of Vanna’s data flow, channel personalities, and web console usage.
 
 ## **5. Summary**
 
