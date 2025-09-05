@@ -9,6 +9,8 @@ const OFFER_URL = `${BASE_URL}/offer`;
 const STARTUP_LOG_URL = 'logs/nazarick_startup.json';
 const REGISTRY_URL = 'agents/nazarick/agent_registry.json';
 const EVENTS_URL = `${BASE_URL.replace(/^http/, 'ws')}/operator/events`;
+const CONVO_LOG_URL = `${BASE_URL}/conversation/logs`;
+const NLQ_LOGS_URL = `${BASE_URL}/nlq/logs`;
 
 const GLYPHS = {
     joy: '🌀😊',
@@ -37,6 +39,17 @@ document.getElementById('command-input').addEventListener('keydown', (e) => {
         sendCommand();
     }
 });
+document.getElementById('command-input').title =
+    'Enter natural language commands for any agent.';
+
+document.getElementById('search-btn').addEventListener('click', runSearch);
+document.getElementById('global-search').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        runSearch();
+    }
+});
+document.getElementById('global-search').title =
+    'Search conversation logs using natural language queries.';
 
 // Music generation elements
 const musicContainer = document.createElement('div');
@@ -179,6 +192,39 @@ function loadLogs() {
         });
 }
 
+async function runSearch() {
+    const term = document.getElementById('global-search').value.trim();
+    if (!term) {
+        return;
+    }
+    try {
+        const resp = await fetch(NLQ_LOGS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: term })
+        });
+        const data = await resp.json();
+        document.getElementById('search-results').textContent = JSON.stringify(
+            data.rows,
+            null,
+            2
+        );
+        highlightMatches(term);
+    } catch (err) {
+        document.getElementById('search-results').textContent =
+            'Search error: ' + err;
+    }
+}
+
+function highlightMatches(term) {
+    const entries = document.querySelectorAll('.conversation-entry');
+    const re = new RegExp(term, 'gi');
+    entries.forEach((el) => {
+        const raw = el.textContent;
+        el.innerHTML = raw.replace(re, (m) => `<mark>${m}</mark>`);
+    });
+}
+
 function openChat(agent) {
     const name = agent.channel ? agent.channel.replace('#', '') : agent.id;
     window.open(`/chat/${name}`, '_blank');
@@ -220,9 +266,72 @@ async function loadAgents() {
             li.appendChild(cmdBtn);
             list.appendChild(li);
         });
+        return agents;
     } catch (err) {
         console.error('Failed to load agents', err);
+        return [];
     }
+}
+
+async function loadConversationLogs(agentIds) {
+    const container = document.getElementById('conversation-timeline');
+    container.innerHTML = '';
+    for (const id of agentIds) {
+        try {
+            const resp = await fetch(
+                `${CONVO_LOG_URL}?agent=${encodeURIComponent(id)}`
+            );
+            const data = await resp.json();
+            renderTimeline(id, data.logs || data);
+        } catch (err) {
+            console.error('failed to load logs for', id, err);
+        }
+    }
+}
+
+function renderTimeline(agentId, entries) {
+    const container = document.getElementById('conversation-timeline');
+    const block = document.createElement('div');
+    block.className = 'agent-timeline';
+    const title = document.createElement('h3');
+    title.textContent = agentId;
+    block.appendChild(title);
+    const ul = document.createElement('ul');
+    entries.forEach((e) => {
+        const li = document.createElement('li');
+        li.className = 'conversation-entry';
+        const text = e.text || e.transcript || JSON.stringify(e);
+        const ts = e.timestamp ? `[${e.timestamp}] ` : '';
+        li.textContent = ts + text;
+        ul.appendChild(li);
+    });
+    block.appendChild(ul);
+    container.appendChild(block);
+}
+
+function showOnboarding() {
+    if (localStorage.getItem('consoleOnboarded')) {
+        return;
+    }
+    const box = document.createElement('div');
+    box.id = 'onboarding';
+    box.style.position = 'fixed';
+    box.style.top = '1rem';
+    box.style.right = '1rem';
+    box.style.background = '#fff';
+    box.style.border = '1px solid #ccc';
+    box.style.padding = '1rem';
+    box.style.zIndex = '1000';
+    box.innerHTML =
+        '<p>Welcome! Use the command box to issue tasks and the search bar to explore past conversations.</p>';
+    const btn = document.createElement('button');
+    btn.textContent = 'Got it';
+    btn.addEventListener('click', () => {
+        box.remove();
+        localStorage.setItem('consoleOnboarded', '1');
+    });
+    box.appendChild(btn);
+    document.body.appendChild(box);
 }
 
 async function startStream() {
@@ -312,8 +421,9 @@ async function loadStatus() {
 }
 
 window.addEventListener('load', () => {
+    showOnboarding();
     startStream();
-    loadAgents();
+    loadAgents().then((agents) => loadConversationLogs(agents.map((a) => a.id)));
     loadMetrics();
     connectEvents();
     loadStatus();
