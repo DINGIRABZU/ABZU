@@ -11,6 +11,8 @@ ABZU positions itself as a **“mythic‑technical operating system”** that 
 
 The ambition is a reference architecture for transparent, inner-focused AI that can adapt to domains like education, therapy, research, and cultural preservation.
 
+Contributors must pair system enhancements with operator-facing improvements, upholding an operator-first principle.
+
 ## **2. High-Level Architecture**
 
 ### **Triadic Stack**

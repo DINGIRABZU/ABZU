@@ -1,7 +1,7 @@
 # THE CRYSTAL CODEX
 
 ![Coverage](coverage.svg) ![CI](https://github.com/DINGIRABZU/ABZU/actions/workflows/ci.yml/badge.svg) ![Black](https://img.shields.io/badge/code%20style-black-000000.svg) ![isort](https://img.shields.io/badge/imports-isort-ef8336.svg)
-ABZU is a modular research platform for composing multi-modal AI agents with strong ethical guardrails. Its mission is to cultivate mythic‑technical intelligence—liberating insight from corporate reduction. The system helps researchers, creative technologists, and industry teams orchestrate advanced capabilities while retaining transparent oversight. Key differentiators include a unified memory architecture, ritual-based invocation engine, and built-in ethics gating.
+ABZU is a modular research platform for composing multi-modal AI agents with strong ethical guardrails. Its mission is to cultivate mythic‑technical intelligence—liberating insight from corporate reduction. The system helps researchers, creative technologists, and industry teams orchestrate advanced capabilities while retaining transparent oversight. Key differentiators include a unified memory architecture, ritual-based invocation engine, and built-in ethics gating. Contributions follow an operator-first principle: each system enhancement should be paired with an operator-facing improvement.
 
 Example applications include:
 
