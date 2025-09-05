@@ -147,6 +147,12 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/
+  - id: verify-doctrine-refs
+    name: Verify doctrine references
+    entry: python scripts/verify_doctrine_refs.py
+    language: system
+    pass_filenames: false
+    files: ^docs/INDEX\.md$
   - id: verify-chakra-monitoring
     name: Verify chakra monitoring
     entry: python scripts/verify_chakra_monitoring.py
