@@ -73,6 +73,21 @@ ultralytics = ["ultralytics==8.3.179"]
 optuna = ["optuna==3.6.1"]
 shap = ["shap==0.45.0"]
 
+mental = [
+    "neo4j==5.23.1",
+    "gymnasium==1.2.0",
+    "stable-baselines3==2.7.0",
+]
+emotional = [
+    "transformers==4.55.2",
+    "dlib==19.24.2",
+]
+spiritual = []
+narrative = [
+    "chromadb==1.0.17",
+    "pynvml==11.5.3",
+]
+
 citadel = [
     "redis==5.0.3",
     "aiokafka==0.10.0",
@@ -160,3 +175,7 @@ fail_under = 80
 
 [tool.poetry.extras]
 spatial = ["torch", "open3d", "pytorch3d"]
+mental = ["neo4j", "gymnasium", "stable-baselines3"]
+emotional = ["transformers", "dlib"]
+spiritual = []
+narrative = ["chromadb", "pynvml"]

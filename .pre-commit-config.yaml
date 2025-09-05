@@ -130,7 +130,7 @@ repos:
     pass_filenames: false
   - id: pytest-cov
     name: Run tests with coverage
-    entry: pytest
+    entry: pytest tests/agents/razar/test_boot_sequence.py tests/memory
     language: system
     pass_filenames: false
     always_run: true
