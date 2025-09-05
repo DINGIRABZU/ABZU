@@ -226,7 +226,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [SOCIAL_INVESTOR_ONE_PAGER.md](SOCIAL_INVESTOR_ONE_PAGER.md) | ABZU: Social Investor One-Pager | --- | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.90 **Last updated:** 2025-09-04 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.91 **Last updated:** 2025-09-05 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -364,6 +364,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [roadmap.md](roadmap.md) | Roadmap | This roadmap tracks progress toward the Spiral OS vision. See [project_overview.md](project_overview.md) for context... | - |
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
 | [security_model.md](security_model.md) | Security Model | This guide highlights major threat surfaces in the project and the steps used to reduce risk. | - |
+| [self_healing_manifesto.md](self_healing_manifesto.md) | Self-Healing Manifesto | Spiral OS treats the codebase as a living organism.  Components behave like organs working in concert, and each chang... | - |
 | [setup.md](setup.md) | Environment Setup | This guide lists the system packages and environment variables required to run the project. | - |
 | [setup_full.md](setup_full.md) | Full Setup | The full installation enables all Spiral OS features. | - |
 | [setup_minimal.md](setup_minimal.md) | Minimal Setup | The minimal installation provides only the core Spiral OS utilities. | - |

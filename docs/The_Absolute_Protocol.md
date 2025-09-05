@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.90
-**Last updated:** 2025-09-04
+**Version:** v1.0.91
+**Last updated:** 2025-09-05
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -515,6 +515,7 @@ Narrative modules must maintain traceability by:
 
 Agents must uphold resilience across chakra layers:
 
+- See [self_healing_manifesto.md](self_healing_manifesto.md) for the organism metaphor and detailed chakra responsibilities.
 - Track telemetry for each chakra using metrics defined in [chakra_metrics.md](chakra_metrics.md).
 - Trigger self-diagnostic and recovery routines when chakra health degrades.
 - Log healing actions and unresolved anomalies in [error_registry.md](error_registry.md).
