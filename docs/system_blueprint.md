@@ -470,7 +470,8 @@ See [nazarick_agents.md](nazarick_agents.md) for the full roster and the
 ### Specialized Agents and Orchestrators
 
 - **Vanna Data Agent** – translates natural-language prompts into SQL via the
-  `vanna` library and records both results and narrative summaries. Module:
+  `vanna` library and records both results and narrative summaries. The agent
+  logs a warning if Vanna is missing or not configured. Module:
   [`agents/vanna_data.py`](../agents/vanna_data.py), function:
   [`query_db`](../agents/vanna_data.py#L49).
 - **GeoKnowledge Graph** – maintains a lightweight geospatial knowledge graph
