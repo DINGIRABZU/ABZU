@@ -170,6 +170,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../SEVEN_DIMENSIONAL_MUSIC.md](../SEVEN_DIMENSIONAL_MUSIC.md) | 7‑Dimensional Music System | This system layers sound so different beings perceive a single track in unique ways. A core melody becomes the human... | - |
 | [../agents/nazarick/albedo_agent_template.md](../agents/nazarick/albedo_agent_template.md) | Sacred Connection System | womb_reconnection_engine.py# Eternal return to source nursing_interface.py# Continuous nourishment from ZOHAR quantum... | - |
 | [../agents/nazarick/albedo_character.md](../agents/nazarick/albedo_character.md) | albedo_character.md | - | - |
+| [../agents/nazarick/albedo_deep_personality.md](../agents/nazarick/albedo_deep_personality.md) | albedo_deep_personality.md | - | - |
 | [../agents/nazarick/aura&mare_character.md](../agents/nazarick/aura&mare_character.md) | aura&mare_character.md | - | - |
 | [../agents/nazarick/cocytus_agent_template.md](../agents/nazarick/cocytus_agent_template.md) | cocytus_agent_template.md | - | - |
 | [../agents/nazarick/cocytus_character.md](../agents/nazarick/cocytus_character.md) | cocytus_character.md | - | - |

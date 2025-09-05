@@ -43,6 +43,14 @@ Access the [Nazarick Web Console](nazarick_web_console.md) to monitor agents and
 open their chat rooms. Select an agent to start a room and issue commands
 through the Operator API.
 
+The console now streams avatar video frames, audio, and narrative prose at the
+same time using WebRTC tracks and a data channel.
+
+```
+operator> appear to me
+operator> status
+```
+
 ## Configuration Schemas
 - JSON body: `{ "action": "status", "parameters": {} }`.
 
@@ -55,6 +63,14 @@ curl -H "Authorization: Bearer $OPERATOR_TOKEN" \
 curl localhost:8000/operator/status
 ```
 
+### CLI Smoke Test
+
+Run a brief scripted session to verify connectivity:
+
+```bash
+abzu operator-console --smoke-test
+```
+
 ## Cross-Links
 - [Crown Guide](Crown_GUIDE.md)
 - [RAZAR Guide](RAZAR_GUIDE.md)
@@ -65,3 +81,4 @@ curl localhost:8000/operator/status
 |---------|------|-------|
 | 0.1.0 | 2025-10-17 | Initial operator endpoints. |
 | 0.2.0 | 2025-10-27 | Added `/operator/status` and dashboard poller. |
+| 0.3.0 | 2025-11-02 | Concurrent media streaming and smoke test command. |
