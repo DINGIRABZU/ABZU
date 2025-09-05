@@ -12,6 +12,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from chat_gateway_benchmark import benchmark_chat_gateway
 from llm_throughput_benchmark import benchmark_llm
 from memory_store_benchmark import benchmark_memory_store
+from query_memory_bench import benchmark_query_memory
 
 
 def main() -> None:
@@ -19,6 +20,7 @@ def main() -> None:
         "memory_store": benchmark_memory_store(),
         "chat_gateway": benchmark_chat_gateway(),
         "llm_throughput": benchmark_llm(),
+        "query_memory": benchmark_query_memory(),
     }
     print(json.dumps(results, indent=2))
 
