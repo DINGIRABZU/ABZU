@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-This guide describes the event bus protocol connecting the Cortex, Emotional,
-Mental, Spiritual, and Narrative memory layers.
+This guide describes the event bus protocol and query flow connecting the
+Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
 
 ## Bus protocol
 
@@ -9,6 +9,9 @@ The layers communicate via the `agents.event_bus` channel named `memory`.
 Initialization broadcasts use the `layer_init` event type.
 
 ### Broadcasting layer initialization
+
+`broadcast_layer_event` now emits **one** event containing a mapping for all
+layers, allowing subscribers to process initialization in a single step.
 
 ```python
 from memory import broadcast_layer_event
@@ -22,20 +25,27 @@ broadcast_layer_event({
 })
 ```
 
-Each emitted event carries a payload:
+The payload contains a `layers` object:
 
 ```json
-{"layer": "<layer_name>", "status": "<status>"}
+{"layers": {"cortex": "seeded", "emotional": "seeded", ...}}
 ```
 
-Subscribers listen on the `memory` channel to react when individual layers
-initialize or change state.
+## Query aggregation
+
+Use `memory.query_memory.query_memory` to retrieve results across cortex,
+vector, and spiral stores:
+
+```python
+from memory import query_memory
+
+records = query_memory("omen")
+```
 
 ## Search API
 
-Use `memory.search_api.aggregate_search` to query across these layers. Results
-are ranked by exponential recency decay and can be weighted per source through
-`source_weights`.
+`memory.search_api.aggregate_search` combines ranked signals from the layers.
+Results are weighted by exponential recency decay and optional `source_weights`.
 
 ```python
 from memory.search_api import aggregate_search
