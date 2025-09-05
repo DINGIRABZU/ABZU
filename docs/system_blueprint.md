@@ -35,6 +35,34 @@ summary metrics are reported back to the Primordials service through
 `primordials_api`, ensuring upstream models receive continuous quality
 feedback.
 
+### Memory Bundle Architecture
+
+ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle, enabling cross-layer
+reasoning. Each layer receives a `layer_init` broadcast on startup, and incoming queries fan out across all layers before being
+aggregated into a single response. See [Memory Layers Guide](memory_layers_GUIDE.md) and [Blueprint Spine](blueprint_spine.md)
+for implementation details and schema references.
+
+```mermaid
+flowchart LR
+    layer_init --> Cortex
+    layer_init --> Emotional
+    layer_init --> Mental
+    layer_init --> Spiritual
+    layer_init --> Narrative
+
+    Query --> Cortex
+    Query --> Emotional
+    Query --> Mental
+    Query --> Spiritual
+    Query --> Narrative
+
+    Cortex --> Aggregate
+    Emotional --> Aggregate
+    Mental --> Aggregate
+    Spiritual --> Aggregate
+    Narrative --> Aggregate
+```
+
 ### Document Map
 
 - **High‑level docs**
