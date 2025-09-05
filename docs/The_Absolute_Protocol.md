@@ -42,6 +42,16 @@ The repository's memory layers are orchestrated through a unified `MemoryBundle`
 
 The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd). See [memory_layers_GUIDE.md](memory_layers_GUIDE.md) for implementation details. Any change to a memory layer must update this diagram and all related visuals across the repository to keep documentation synchronized.
 
+### Layer Initialization & Cross-Layer Queries
+
+`bundle.initialize()` consolidates startup by dispatching a single `layer_init` event that reports readiness for the Cortex, Emotional, Mental, Spiritual, and Narrative layers. Subsequent calls to `query_memory` fan out across all layers before merging results into one aggregated response.
+
+```mermaid
+{{#include figures/layer_init_query_flow.mmd}}
+```
+
+The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd).
+
 ## Repository Layout Protocol
 Repositories must keep these directories at the root:
 

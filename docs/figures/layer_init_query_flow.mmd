@@ -1,0 +1,18 @@
+flowchart LR
+    layer_init[(layer_init)] --> Cortex
+    layer_init --> Emotional
+    layer_init --> Mental
+    layer_init --> Spiritual
+    layer_init --> Narrative
+
+    Query[query_memory] --> Cortex
+    Query --> Emotional
+    Query --> Mental
+    Query --> Spiritual
+    Query --> Narrative
+
+    Cortex --> Aggregate
+    Emotional --> Aggregate
+    Mental --> Aggregate
+    Spiritual --> Aggregate
+    Narrative --> Aggregate

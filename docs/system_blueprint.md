@@ -37,29 +37,10 @@ feedback.
 
 ### Memory Bundle Architecture
 
-ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle, enabling cross-layer
-reasoning. Each layer receives a `layer_init` broadcast on startup, and incoming queries fan out across all layers before being
-aggregated into a single response. See [Memory Layers Guide](memory_layers_GUIDE.md), [Blueprint Spine](blueprint_spine.md), and diagrams such as [Memory Bundle](figures/memory_bundle.mmd), [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd), [Memory Layer Flow](figures/memory_layer_flow.mmd), and [Query Memory Aggregation](figures/query_memory_aggregation.mmd) for implementation details and schema references.
+ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle that Crown and subsidiary services consult for state exchange and recall. `broadcast_layer_event("layer_init")` signals readiness across all layers, and `query_memory` spreads incoming requests before aggregating a single response. See [Memory Layers Guide](memory_layers_GUIDE.md), [Blueprint Spine](blueprint_spine.md), and diagrams such as [Memory Bundle](figures/memory_bundle.mmd) and [Layer Init & Query Flow](figures/layer_init_query_flow.mmd) for implementation details.
 
 ```mermaid
-flowchart LR
-    layer_init --> Cortex
-    layer_init --> Emotional
-    layer_init --> Mental
-    layer_init --> Spiritual
-    layer_init --> Narrative
-
-    Query --> Cortex
-    Query --> Emotional
-    Query --> Mental
-    Query --> Spiritual
-    Query --> Narrative
-
-    Cortex --> Aggregate
-    Emotional --> Aggregate
-    Mental --> Aggregate
-    Spiritual --> Aggregate
-    Narrative --> Aggregate
+{{#include figures/layer_init_query_flow.mmd}}
 ```
 
 ### Document Map
