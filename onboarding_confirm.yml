@@ -162,7 +162,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 180be91291b971c0f02a76186dcf800763593f12f8231a9bb0d43dcd4851ca68
+    sha256: 9411fd238e5aaf5d751c9eb18a48ef47ec3a583aff2a11fde57f9bc6c710bf4f
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.

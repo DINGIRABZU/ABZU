@@ -21,6 +21,7 @@ logs/*
 !logs/change_intent.jsonl
 !logs/task_registry.jsonl
 !logs/operator_commands.jsonl
+!logs/operator_escalations.jsonl
 
 # Ignore Blender files
 *.blend
