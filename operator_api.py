@@ -158,6 +158,29 @@ async def operator_status() -> dict[str, object]:
     }
 
 
+@router.get("/agents/interactions")
+async def agent_interactions(
+    agents: list[str] | None = None, limit: int = 100
+) -> list[dict[str, object]]:
+    """Return recent agent interactions filtered by ``agents``."""
+    path = Path("logs") / "agent_interactions.jsonl"
+    if not path.exists():
+        return []
+    records: list[dict[str, object]] = []
+    with path.open("r", encoding="utf-8") as fh:
+        for line in fh:
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if agents and not (
+                entry.get("source") in agents or entry.get("target") in agents
+            ):
+                continue
+            records.append(entry)
+    return records[-limit:]
+
+
 @router.post("/operator/upload")
 async def upload_file(
     operator: str = Form(...),

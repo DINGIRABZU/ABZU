@@ -13,6 +13,8 @@ import asyncio
 import os
 from typing import Any, Dict, Optional
 
+from .interaction_log import log_agent_interaction
+
 from citadel.event_producer import (
     Event,
     EventProducer,
@@ -55,8 +57,23 @@ def _get_producer() -> Optional[EventProducer]:
 def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:
     """Emit an event for ``actor`` performing ``action`` with ``metadata``.
 
-    If no event producer is configured, the function quietly returns.
+    The interaction is recorded to ``logs/agent_interactions.jsonl``. If no
+    event producer is configured, the function still logs locally and quietly
+    returns.
     """
+
+    entry: Dict[str, Any] = {
+        "source": actor,
+        "action": action,
+        "metadata": metadata,
+        "function": "emit_event",
+    }
+    target = (
+        metadata.get("target") or metadata.get("agent") or metadata.get("target_agent")
+    )
+    if isinstance(target, str):
+        entry["target"] = target
+    log_agent_interaction(entry)
 
     producer = _get_producer()
     if producer is None:

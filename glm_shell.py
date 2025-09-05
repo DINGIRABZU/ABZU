@@ -11,6 +11,7 @@ import argparse
 from crown_config import require, settings
 from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown
+from agents.interaction_log import log_agent_interaction
 
 
 def send_command(command: str) -> str:
@@ -27,7 +28,17 @@ def send_command(command: str) -> str:
     else:
         glm = initialize_crown()
     prompt = f"[shell]{command}"
-    return glm.complete(prompt)
+    response = glm.complete(prompt)
+    log_agent_interaction(
+        {
+            "source": "operator",
+            "target": "crown",
+            "command": command,
+            "response": response,
+            "function": "send_command",
+        }
+    )
+    return response
 
 
 def main(argv: list[str] | None = None) -> None:
