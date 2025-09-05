@@ -7,6 +7,8 @@ import logging
 import math
 from typing import Any, Dict, List
 
+__version__ = "0.1.1"
+
 from memory.cortex import query_spirals
 from memory.emotional import fetch_emotion_history
 from memory.narrative_engine import stream_stories
@@ -15,7 +17,7 @@ from memory.spiritual import lookup_symbol_history
 try:  # mental layer optional
     from memory.mental import query_related_tasks
 except Exception:  # pragma: no cover - dependency may be missing
-    query_related_tasks = None
+    from memory.optional.mental import query_related_tasks
 
 _DECAY_SECONDS = 86_400.0
 

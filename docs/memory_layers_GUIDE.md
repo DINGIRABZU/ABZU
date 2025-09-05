@@ -53,10 +53,13 @@ from memory.search_api import aggregate_search
 results = aggregate_search("omen", source_weights={"spiritual": 2.0})
 ```
 
-## Handling missing layers
+## Optional Layers
 
-Each memory layer is optional. `aggregate_search` guards against failures by
-skipping any layer that raises during lookup and logging an error. Queries will
-still return results from the remaining layers.
+Some memory layers rely on external services and may be absent. When a layer
+fails to import, the system substitutes a no-op implementation from
+`memory/optional/` with the same public API. Initialization marks these
+substituted layers as `defaulted`, and calls such as `aggregate_search` simply
+yield empty results for them while logging any underlying errors. Queries still
+return data from the remaining active layers.
 
 
