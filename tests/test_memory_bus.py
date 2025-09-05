@@ -128,6 +128,57 @@ def test_aggregate_search_ranks(monkeypatch):
     assert res[0]["source"] == "emotional"
 
 
+@pytest.mark.parametrize(
+    "broken,missing",
+    [
+        ("query_spirals", "cortex"),
+        ("fetch_emotion_history", "emotional"),
+        ("query_related_tasks", "mental"),
+        ("lookup_symbol_history", "spiritual"),
+        ("stream_stories", "narrative"),
+    ],
+)
+def test_aggregate_search_handles_missing_layers(monkeypatch, caplog, broken, missing):
+    from types import SimpleNamespace
+    from datetime import datetime
+
+    now = datetime.utcnow()
+
+    monkeypatch.setattr(
+        memory.search_api,
+        "query_spirals",
+        lambda text: [{"decision": {"result": "c"}, "timestamp": now.isoformat()}],
+    )
+    emo_entry = SimpleNamespace(vector=[0.1], timestamp=now)
+    monkeypatch.setattr(
+        memory.search_api, "fetch_emotion_history", lambda limit: [emo_entry]
+    )
+    monkeypatch.setattr(memory.search_api, "query_related_tasks", lambda q: ["task"])
+    monkeypatch.setattr(memory.search_api, "lookup_symbol_history", lambda q: ["sym"])
+    monkeypatch.setattr(memory.search_api, "stream_stories", lambda: iter(["story"]))
+
+    def boom(*a, **k):
+        raise RuntimeError("fail")
+
+    monkeypatch.setattr(memory.search_api, broken, boom)
+
+    msg = {
+        "query_spirals": "cortex search failed",
+        "fetch_emotion_history": "emotional search failed",
+        "query_related_tasks": "mental search failed",
+        "lookup_symbol_history": "spiritual search failed",
+        "stream_stories": "narrative search failed",
+    }[broken]
+
+    with caplog.at_level(logging.ERROR):
+        res = aggregate_search("0.1")
+
+    sources = {r["source"] for r in res}
+    expected = {"cortex", "emotional", "mental", "spiritual", "narrative"} - {missing}
+    assert sources == expected
+    assert any(msg in r.message for r in caplog.records)
+
+
 def test_init_memory_layers_bootstrap_and_persist(tmp_path, monkeypatch):
     """Boot layers via script and verify cross-layer event propagation."""
 

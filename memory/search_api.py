@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import logging
 import math
 from typing import Any, Dict, List
 
@@ -38,35 +39,50 @@ def aggregate_search(
     source_weights = source_weights or {}
     results: List[Dict[str, Any]] = []
 
-    for entry in query_spirals(text=query):
-        results.append(
-            {
-                "source": "cortex",
-                "text": entry.get("decision", {}).get("result", ""),
-                "timestamp": entry.get("timestamp", ""),
-            }
-        )
-
-    for emo in fetch_emotion_history(100):
-        if q in str(emo.vector):
+    try:
+        for entry in query_spirals(text=query):
             results.append(
                 {
-                    "source": "emotional",
-                    "text": str(emo.vector),
-                    "timestamp": emo.timestamp.isoformat(),
+                    "source": "cortex",
+                    "text": entry.get("decision", {}).get("result", ""),
+                    "timestamp": entry.get("timestamp", ""),
                 }
             )
+    except Exception as exc:  # pragma: no cover - log and continue
+        logging.error("cortex search failed: %s", exc)
+
+    try:
+        for emo in fetch_emotion_history(100):
+            if q in str(emo.vector):
+                results.append(
+                    {
+                        "source": "emotional",
+                        "text": str(emo.vector),
+                        "timestamp": emo.timestamp.isoformat(),
+                    }
+                )
+    except Exception as exc:  # pragma: no cover - log and continue
+        logging.error("emotional search failed: %s", exc)
 
     if query_related_tasks:
-        for task in query_related_tasks(query):
-            results.append({"source": "mental", "text": task, "timestamp": ""})
+        try:
+            for task in query_related_tasks(query):
+                results.append({"source": "mental", "text": task, "timestamp": ""})
+        except Exception as exc:  # pragma: no cover - log and continue
+            logging.error("mental search failed: %s", exc)
 
-    for sym in lookup_symbol_history(query):
-        results.append({"source": "spiritual", "text": sym, "timestamp": ""})
+    try:
+        for sym in lookup_symbol_history(query):
+            results.append({"source": "spiritual", "text": sym, "timestamp": ""})
+    except Exception as exc:  # pragma: no cover - log and continue
+        logging.error("spiritual search failed: %s", exc)
 
-    for story in stream_stories():
-        if q in story.lower():
-            results.append({"source": "narrative", "text": story, "timestamp": ""})
+    try:
+        for story in stream_stories():
+            if q in story.lower():
+                results.append({"source": "narrative", "text": story, "timestamp": ""})
+    except Exception as exc:  # pragma: no cover - log and continue
+        logging.error("narrative search failed: %s", exc)
 
     for res in results:
         res["score"] = _recency_weight(res.get("timestamp", "")) * source_weights.get(
