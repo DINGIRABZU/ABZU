@@ -18,7 +18,7 @@ from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from memory import narrative_engine
+from memory import narrative_engine, story_lookup
 
 router = APIRouter()
 
@@ -117,6 +117,25 @@ def story_stream(limit: int = 100) -> StreamingResponse:
                 yield json.dumps({"story": text}) + "\n"
 
         return StreamingResponse(_gen(), media_type="application/json")
+    except Exception:
+        if ERROR_COUNTER is not None:
+            ERROR_COUNTER.labels("bana").inc()
+        raise
+
+
+@router.get("/narrative/search")
+def narrative_search(
+    agent_id: str | None = None,
+    event_type: str | None = None,
+    text: str | None = None,
+) -> dict[str, object]:
+    """Return indexed stories with matching event payloads."""
+
+    try:
+        results = list(
+            story_lookup.find(agent_id=agent_id, event_type=event_type, text=text)
+        )
+        return {"results": results}
     except Exception:
         if ERROR_COUNTER is not None:
             ERROR_COUNTER.labels("bana").inc()
