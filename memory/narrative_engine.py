@@ -11,7 +11,7 @@ support semantic search.
 
 from __future__ import annotations
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -49,7 +49,9 @@ _START_TIME = time.perf_counter()
 
 if Gauge is not None and REGISTRY is not None:
     if "service_boot_duration_seconds" in REGISTRY._names_to_collectors:
-        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors["service_boot_duration_seconds"]  # type: ignore[assignment]
+        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors[
+            "service_boot_duration_seconds"
+        ]  # type: ignore[assignment]
     else:
         BOOT_DURATION_GAUGE = Gauge(
             "service_boot_duration_seconds",
@@ -215,6 +217,15 @@ def _get_conn() -> sqlite3.Connection:
         "payload TEXT NOT NULL"
         ")"
     )
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS story_index ("
+        "time REAL NOT NULL, "
+        "agent_id TEXT NOT NULL, "
+        "event_type TEXT NOT NULL, "
+        "text TEXT NOT NULL, "
+        "PRIMARY KEY (agent_id, time)"
+        ")"
+    )
     return conn
 
 
@@ -247,6 +258,25 @@ def log_self_heal_story(text: str, component: str, patch: str) -> None:
     log_story(text)
     try:
         cortex.link_patch_metadata(component, patch, text)
+    except Exception:
+        if ERROR_COUNTER is not None:
+            ERROR_COUNTER.labels("memory").inc()
+        raise
+
+
+def index_story(
+    agent_id: str, event_type: str, text: str, timestamp: float | None = None
+) -> None:
+    """Store ``text`` in ``story_index`` keyed by ``agent_id`` and ``timestamp``."""
+
+    ts = timestamp if timestamp is not None else time.time()
+    try:
+        with _get_conn() as conn:
+            conn.execute(
+                "INSERT INTO story_index (time, agent_id, event_type, text)"
+                " VALUES (?, ?, ?, ?)",
+                (ts, agent_id, event_type, text),
+            )
     except Exception:
         if ERROR_COUNTER is not None:
             ERROR_COUNTER.labels("memory").inc()
@@ -326,10 +356,10 @@ def query_events(
         sql += " WHERE " + " AND ".join(clauses)
     sql += " ORDER BY time"
     with _get_conn() as conn:
-        for _id, time, ag, et, payload in conn.execute(sql, params):
+        for _id, ts, ag, et, payload in conn.execute(sql, params):
             yield {
                 "id": _id,
-                "time": time,
+                "time": ts,
                 "agent_id": ag,
                 "event_type": et,
                 "payload": json.loads(payload),
@@ -367,6 +397,7 @@ __all__ = [
     "NarrativeEngine",
     "log_story",
     "log_self_heal_story",
+    "index_story",
     "stream_stories",
     "log_event",
     "compose_multitrack_story",
