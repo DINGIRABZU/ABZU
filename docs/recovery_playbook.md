@@ -23,6 +23,16 @@ Recurring problems and their fixes are cataloged in the
 
 `agents.razar.health_checks` exposes Prometheus metrics when `prometheus_client` is installed. These probes allow external systems to track service readiness and latency during recovery.
 
+## Escalation and Chakra self-healing
+
+Chakra agents attempt automatic recovery when health metrics rise above
+defined thresholds. The Root agent triggers `scripts/chakra_healing/root_restore_network.sh`
+to reset networking, while the Sacral agent runs
+`scripts/chakra_healing/sacral_gpu_recover.py` to flush GPU tasks. When
+errors persist, `scripts/escalation_notifier.py` scans log files for
+recurring failures, posts an alert to `/operator/command` and records the
+event in `logs/operator_escalations.jsonl`.
+
 ## Opencode Integration
 
 Automate patch generation by installing the Opencode CLI:
