@@ -2710,7 +2710,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "operator_api.py",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "dependencies": [
         "__future__",
         "agents",

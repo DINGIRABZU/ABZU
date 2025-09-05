@@ -7,14 +7,22 @@
 
 from __future__ import annotations
 
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 
 import json
 import logging
 import shutil
 from pathlib import Path
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import (
+    APIRouter,
+    File,
+    Form,
+    HTTPException,
+    UploadFile,
+    WebSocket,
+    WebSocketDisconnect,
+)
 
 from agents.operator_dispatcher import OperatorDispatcher
 
@@ -28,6 +36,30 @@ _dispatcher = OperatorDispatcher(
         "crown": ["razar"],
     }
 )
+
+_event_clients: set[WebSocket] = set()
+
+
+async def broadcast_event(event: dict[str, object]) -> None:
+    """Send ``event`` to all connected operator event clients."""
+    message = json.dumps(event)
+    for ws in set(_event_clients):
+        try:
+            await ws.send_text(message)
+        except Exception:  # pragma: no cover - network failure
+            _event_clients.discard(ws)
+
+
+@router.websocket("/operator/events")
+async def operator_events(websocket: WebSocket) -> None:
+    """WebSocket channel streaming command acknowledgements and progress."""
+    await websocket.accept()
+    _event_clients.add(websocket)
+    try:
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        _event_clients.discard(websocket)
 
 
 @router.post("/operator/command")
@@ -44,6 +76,8 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     def _noop() -> dict[str, str]:
         return {"ack": command_name}
 
+    await broadcast_event({"event": "ack", "command": command_name})
+
     try:
         result = _dispatcher.dispatch(operator, agent, _noop)
     except PermissionError as exc:
@@ -51,6 +85,11 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     except Exception as exc:  # pragma: no cover - dispatcher failure
         logger.error("dispatch failed: %s", exc)
         raise HTTPException(status_code=500, detail="dispatch failed") from exc
+
+    await broadcast_event(
+        {"event": "progress", "command": command_name, "percent": 100}
+    )
+
     return {"result": result}
 
 
@@ -80,6 +119,13 @@ async def upload_file(
             with dest.open("wb") as fh:
                 shutil.copyfileobj(item.file, fh)
             stored.append(str(dest.relative_to(Path("uploads"))))
+            await broadcast_event(
+                {
+                    "event": "progress",
+                    "command": "upload",
+                    "file": item.filename,
+                }
+            )
         except Exception as exc:  # pragma: no cover - disk failure
             logger.error("failed to store %s: %s", item.filename, exc)
             raise HTTPException(status_code=500, detail="failed to store file") from exc
@@ -101,6 +147,15 @@ async def upload_file(
     except Exception as exc:  # pragma: no cover - dispatcher failure
         logger.error("metadata relay failed: %s", exc)
         raise HTTPException(status_code=500, detail="relay failed") from exc
+
+    await broadcast_event(
+        {
+            "event": "progress",
+            "command": "upload",
+            "percent": 100,
+            "files": stored,
+        }
+    )
 
     return {"stored": stored, "metadata": meta_with_files}
 

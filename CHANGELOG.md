@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- WebSocket `/operator/events` for command acknowledgements and progress with console subscription.
+
 - Instrumented Crown, Bana and memory layers with Prometheus gauges, documented
   the copresence dashboard and added tests for metrics endpoints.
 

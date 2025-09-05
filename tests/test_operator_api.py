@@ -19,6 +19,7 @@ def client(tmp_path: Path, monkeypatch) -> TestClient:
     app = FastAPI()
     app.include_router(operator_api.router)
     monkeypatch.chdir(tmp_path)
+    operator_api._event_clients.clear()
     with TestClient(app) as c:
         yield c
 
@@ -123,3 +124,21 @@ def test_upload_metadata_only(client: TestClient, monkeypatch) -> None:
     assert resp.status_code == 200
     assert resp.json()["stored"] == []
     assert captured["meta"] == {"x": 1, "files": []}
+
+
+def test_events_websocket(client: TestClient, mock_dispatch) -> None:
+    """WebSocket receives command acknowledgement and progress."""
+
+    mock_dispatch(result={"ack": "noop"})
+    with client.websocket_connect("/operator/events") as ws:
+        resp = client.post(
+            "/operator/command",
+            json={"operator": "overlord", "agent": "crown", "command": "noop"},
+        )
+        assert resp.status_code == 200
+        assert ws.receive_json() == {"event": "ack", "command": "noop"}
+        assert ws.receive_json() == {
+            "event": "progress",
+            "command": "noop",
+            "percent": 100,
+        }
