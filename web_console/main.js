@@ -226,8 +226,16 @@ function highlightMatches(term) {
 }
 
 function openChat(agent) {
+    const peer = prompt(
+        `Open chat between ${agent.id} and which agent?`,
+        'crown'
+    );
+    if (!peer) {
+        return;
+    }
     const name = agent.channel ? agent.channel.replace('#', '') : agent.id;
-    window.open(`/chat/${name}`, '_blank');
+    const room = `${name}-${peer}`;
+    window.open(`/chat/${room}`, '_blank');
 }
 
 function sendCommandToAgent(agentId, command) {

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Agent Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 1rem; }
+        #messages { list-style: none; padding: 0; }
+        #messages li { margin-bottom: 0.25rem; }
+    </style>
+</head>
+<body>
+    <h1 id="room-title"></h1>
+    <ul id="messages"></ul>
+    <div>
+        <select id="sender"></select>
+        <select id="target"></select>
+        <input id="chat-input" type="text" placeholder="Message">
+        <button id="send-btn">Send</button>
+    </div>
+    <script src="chat.js"></script>
+</body>
+</html>
