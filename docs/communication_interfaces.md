@@ -34,14 +34,17 @@ text or other payloads can still reach the client.
 
 ## Authentication
 
-Each channel is responsible for authenticating its users:
+All connectors call ``communication.gateway.authentication.verify_token`` to
+enforce token-based access control. Tokens are provided per channel via
+environment variables:
 
-- **WebRTC** – Clients must include a JWT in the signalling request. The server
-  validates the token before establishing a session.
-- **Telegram** – The bot token grants access to the Telegram API. User identity
-  is derived from the incoming update's `user_id`.
+- **WebRTC** – Clients include ``Authorization: Bearer <token>`` in requests to
+  the signalling endpoints. The token is checked against ``WEBRTC_TOKEN``.
+- **Telegram** – The bot token supplied to the connector must match
+  ``TELEGRAM_TOKEN`` before messages are forwarded.
 
-Gateway integrations should verify credentials before forwarding messages.
+Additional channels should expose a token and use ``verify_token`` prior to
+calling the ``Gateway``.
 
 ## Adding New Channels
 

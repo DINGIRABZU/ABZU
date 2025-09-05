@@ -22,6 +22,7 @@ from fastapi import APIRouter, HTTPException, Request
 from numpy.typing import NDArray
 
 from core import avatar_expression_engine, video_engine
+from communication.gateway import authentication
 from src.media.video.base import VideoProcessor
 
 try:  # pragma: no cover - optional dependency
@@ -184,6 +185,14 @@ class WebRTCStreamProcessor(VideoProcessor):  # type: ignore[misc]
 
     async def offer(self, request: Request) -> dict[str, str]:
         """Handle WebRTC offer and return answer."""
+        auth_header = request.headers.get("Authorization", "")
+        token = None
+        if auth_header.lower().startswith("bearer "):
+            token = auth_header.split(" ", 1)[1]
+        try:
+            authentication.verify_token("webrtc", token)
+        except PermissionError as exc:  # pragma: no cover - auth failure
+            raise HTTPException(status_code=401, detail="invalid token") from exc
         params = await request.json()
         offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
 
@@ -201,6 +210,14 @@ class WebRTCStreamProcessor(VideoProcessor):  # type: ignore[misc]
 
     async def avatar_audio(self, request: Request) -> dict[str, str]:
         """Update the active ``AvatarVideoTrack`` with ``audio_path``."""
+        auth_header = request.headers.get("Authorization", "")
+        token = None
+        if auth_header.lower().startswith("bearer "):
+            token = auth_header.split(" ", 1)[1]
+        try:
+            authentication.verify_token("webrtc", token)
+        except PermissionError as exc:  # pragma: no cover - auth failure
+            raise HTTPException(status_code=401, detail="invalid token") from exc
         data = await request.json()
         path = Path(data["path"])
         if _active_track is None:
