@@ -8,7 +8,7 @@ recorded via :func:`memory.narrative_engine.log_story`.
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import asyncio
 import json
@@ -56,14 +56,42 @@ class NarrativeScribe:
             tone=tone,
         )
 
+    def compose_self_heal(self, event: Event) -> str:
+        """Return narrative for a self-heal ``event``."""
+
+        profile = self._select_profile(event.agent_id)
+        template = profile.get(
+            "self_heal_template",
+            "{agent} restored {component} with patch {patch}",
+        )
+        tone = profile.get("tone", "")
+        component = event.payload.get("component", "")
+        patch = event.payload.get("patch", "")
+        return template.format(
+            agent=event.agent_id,
+            component=component,
+            patch=patch,
+            tone=tone,
+        )
+
     def process_event(self, event: Event) -> None:
         """Compose narrative for ``event`` and log it."""
 
-        narrative = self.compose(event)
+        if event.event_type == "self_heal":
+            narrative = self.compose_self_heal(event)
+        else:
+            narrative = self.compose(event)
         LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
         with LOG_FILE.open("a", encoding="utf-8") as fh:
             fh.write(narrative + "\n")
-        narrative_engine.log_story(narrative)
+        if event.event_type == "self_heal":
+            narrative_engine.log_self_heal_story(
+                narrative,
+                event.payload.get("component", ""),
+                event.payload.get("patch", ""),
+            )
+        else:
+            narrative_engine.log_story(narrative)
 
     async def _redis_listener(self, channel: str, url: str) -> None:
         import redis.asyncio as redis  # type: ignore
