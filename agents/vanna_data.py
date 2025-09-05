@@ -24,6 +24,33 @@ vanna = lazy_import("vanna")
 logger = logging.getLogger(__name__)
 
 
+def _check_environment() -> bool:
+    """Return ``True`` when ``vanna`` is installed and configured.
+
+    Logs a warning if the optional dependency is missing or lacks database
+    configuration. ``vanna`` typically exposes ``is_configured`` once a
+    connection has been established; if unavailable we assume it is ready.
+    """
+
+    if getattr(vanna, "__stub__", False):
+        logger.warning("vanna library is not installed; data queries are disabled")
+        return False
+
+    is_configured = getattr(vanna, "is_configured", lambda: True)
+    try:
+        configured = bool(is_configured())
+    except Exception:  # pragma: no cover - defensive
+        configured = True
+    if not configured:
+        logger.warning("vanna library is not configured; connect it to a database")
+        return False
+
+    return True
+
+
+_check_environment()
+
+
 class _FileNarrativeEngine(NarrativeEngine):
     """Persist narrative events to ``data/narrative.log``."""
 
@@ -37,7 +64,7 @@ class _FileNarrativeEngine(NarrativeEngine):
 
     def stream(self) -> Iterable[StoryEvent]:
         if not self.path.exists():
-            return []
+            return
         with open(self.path, "r", encoding="utf-8") as fh:
             for line in fh:
                 data = json.loads(line)
@@ -55,8 +82,8 @@ def query_db(prompt: str) -> List[Dict[str, Any]]:
     connection.
     """
 
-    if getattr(vanna, "__stub__", False):  # pragma: no cover - optional dep
-        raise RuntimeError("vanna library is not installed")
+    if not _check_environment():  # pragma: no cover - environment guard
+        raise RuntimeError("vanna library is not installed or configured")
 
     emit_event("vanna_data", "task_delegated", {"prompt": prompt})
     sql, df, *_ = vanna.ask(prompt)  # type: ignore[attr-defined]
@@ -92,8 +119,8 @@ def query_logs(prompt: str, db_path: str | Path | None = None) -> List[Dict[str,
     to ``logs/events.db``) before delegating to :func:`query_db`.
     """
 
-    if getattr(vanna, "__stub__", False):  # pragma: no cover - optional dep
-        raise RuntimeError("vanna library is not installed")
+    if not _check_environment():  # pragma: no cover - environment guard
+        raise RuntimeError("vanna library is not installed or configured")
 
     db = Path(db_path) if db_path is not None else Path("logs/events.db")
     vanna.connect_to_sqlite(str(db))  # type: ignore[attr-defined]

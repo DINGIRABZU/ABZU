@@ -2,6 +2,36 @@
 
 The `vanna_data` agent translates natural language prompts into SQL queries using the [Vanna](https://github.com/vanna-ai/vanna) library. Query results are stored in mental memory while narrative summaries are appended to `data/narrative.log`.
 
+## Setup
+
+1. `pip install vanna`
+2. Configure credentials and database connection:
+
+   ```python
+   import vanna
+
+   vanna.set_api_key("YOUR_API_KEY")
+   vanna.set_model("your-model")
+   vanna.connect_to_sqlite("my.db")  # or another supported backend
+   ```
+
+If the library is missing or the connection is not established, `agents.vanna_data`
+logs a warning and raises a runtime error when invoked.
+
+## Training
+
+Before answering questions Vanna should learn your schema:
+
+```python
+from pathlib import Path
+
+sql_statements = Path("schema.sql").read_text()
+vanna.train(sql=sql_statements)
+```
+
+Additional domain examples can be supplied via `vanna.train(document=...)`
+to improve natural language understanding.
+
 ## Basic Example
 
 ```python

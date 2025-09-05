@@ -75,6 +75,7 @@ Scripts under **`scripts/`** initialize and verify layers; RAZAR activates the
     - **`REPOSITORY_STRUCTURE.md`** – directory map.
     - **`The_Absolute_Protocol.md`** – core contribution rules.
     - **`INDEX.md`** – exhaustive documentation inventory.
+    - **`vanna_usage.md`** – setup and training for the Vanna Data agent.
 
 ## **4. Ethical & Governance Framework**
 
