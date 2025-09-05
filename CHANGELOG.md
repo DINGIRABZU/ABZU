@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented chakra-aligned test directories and 90% coverage rule in `docs/the_absolute_pytest.md`.
 
 - Introduced IP-sensitive annotation registry and CI verification.
+- Benchmark for concurrent memory queries with CSV output and performance report.
 
 - Instrumented `agents.event_bus` with OpenTelemetry spans for trace collection.
 - Exposed `/healthz` and `/metrics` across FastAPI service modules.
