@@ -21,6 +21,7 @@ from citadel.event_producer import (
     RedisEventProducer,
     KafkaEventProducer,
 )
+from worlds.config_registry import register_broker
 
 _producer: Optional[EventProducer] = None
 
@@ -48,9 +49,11 @@ def _get_producer() -> Optional[EventProducer]:
     if channel:
         url = os.getenv("CITADEL_REDIS_URL", "redis://localhost")
         _producer = RedisEventProducer(channel=channel, url=url)
+        register_broker("redis", {"channel": channel, "url": url})
     elif topic:
         servers = os.getenv("CITADEL_KAFKA_SERVERS", "localhost:9092")
         _producer = KafkaEventProducer(topic=topic, bootstrap_servers=servers)
+        register_broker("kafka", {"topic": topic, "servers": servers})
     return _producer
 
 

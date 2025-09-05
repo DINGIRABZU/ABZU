@@ -22,6 +22,8 @@ from pathlib import Path
 from threading import Condition, Lock
 from typing import Any, Dict, Iterable, List, Protocol, Optional, Sequence, Set
 
+from worlds.config_registry import register_path
+
 from aspect_processor import analyze_phonetic, analyze_semantic, analyze_temporal
 
 import hashlib
@@ -50,6 +52,9 @@ CORTEX_MEMORY_FILE = Path("data/cortex_memory_spiral.jsonl")
 # Inverted index mapping semantic tags to entry identifiers.
 CORTEX_INDEX_FILE = Path("data/cortex_memory_index.json")
 PATCH_LINKS_FILE = Path("data/patch_links.jsonl")
+
+register_path("cortex_memory", str(CORTEX_MEMORY_FILE))
+register_path("cortex_index", str(CORTEX_INDEX_FILE))
 
 
 class _RWLock:

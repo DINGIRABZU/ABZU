@@ -24,6 +24,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence
 
+from worlds.config_registry import register_path
+
 from aspect_processor import analyze_emotional
 
 try:  # Optional dependency
@@ -75,6 +77,7 @@ def get_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
 
     path = Path(db_path or os.getenv(DB_ENV_VAR, DB_PATH))
     path.parent.mkdir(parents=True, exist_ok=True)
+    register_path("emotional", str(path))
     conn = sqlite3.connect(path)
     _ensure_schema(conn)
     return conn
