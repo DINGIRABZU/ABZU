@@ -4,6 +4,8 @@ The Nazarick Web Console provides a browser-based interface for issuing commands
 
 `web_console/main.js` now subscribes to the `/operator/events` WebSocket to display command acknowledgements and progress.
 
+The console includes a status panel that polls `/operator/status` for component health, recent errors, and memory usage.
+
 ## Interaction Diagram
 
 ```mermaid
@@ -56,6 +58,7 @@ The Mermaid source lives at [assets/nazarick_web_console.mmd](assets/nazarick_we
 - **`web_console/main.js`** – handles command dispatch, emotion glyphs, music prompts, WebRTC streaming, and event logs from `/operator/events`.
 - **`web_console/operator.js`** – helper module exposing `sendCommand`, `startStream`, and `uploadFiles` utilities for operator dashboards.
 - **Agent panel** – lists agents by parsing `agents/nazarick/agent_registry.json` and `logs/nazarick_startup.json`. Each entry shows the role, launch command, channel, and launch status with buttons to open the chat room or send a command directly to that agent.
+- **Status panel** – polls `/operator/status` and renders component health, recent errors, and memory summaries.
 
 ## Agent Mapping
 

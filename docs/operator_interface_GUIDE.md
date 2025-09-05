@@ -30,6 +30,7 @@ flowchart TD
 - `/operator/command` forwards actions to RAZAR.
 - `/operator/upload` sends files and metadata.
 - `/operator/events` streams command acknowledgements and progress updates.
+- `/operator/status` reports component health, recent errors, and memory summaries.
 - All requests require Bearer tokens issued by Crown.
 
 ## Deployment
@@ -48,6 +49,8 @@ through the Operator API.
 curl -H "Authorization: Bearer $OPERATOR_TOKEN" \
   -d '{"command":"status"}' \
   localhost:8000/operator/command
+
+curl localhost:8000/operator/status
 ```
 
 ## Cross-Links
@@ -59,3 +62,4 @@ curl -H "Authorization: Bearer $OPERATOR_TOKEN" \
 | Version | Date | Notes |
 |---------|------|-------|
 | 0.1.0 | 2025-10-17 | Initial operator endpoints. |
+| 0.2.0 | 2025-10-27 | Added `/operator/status` and dashboard poller. |

@@ -2113,7 +2113,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/init_memory_layers.py",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": [
         "__future__",
         "memory",
@@ -2263,7 +2263,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "memory/__init__.py",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "dependencies": [
         "__future__",
         "agents",
@@ -2710,7 +2710,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "operator_api.py",
-      "version": "0.3.4",
+      "version": "0.3.5",
       "dependencies": [
         "__future__",
         "agents",

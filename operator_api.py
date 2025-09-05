@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.3.4"
+__version__ = "0.3.5"
 
 import json
 import logging
@@ -121,6 +121,41 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     )
 
     return {"command_id": command_id, "result": result}
+
+
+@router.get("/operator/status")
+async def operator_status() -> dict[str, object]:
+    """Return component health, recent errors, and memory summary."""
+
+    components: list[dict[str, object]] = []
+    try:
+        from razar import status_dashboard
+
+        components = status_dashboard._component_statuses()  # type: ignore[attr-defined]
+    except Exception:  # pragma: no cover - best effort
+        components = []
+
+    errors: list[str] = []
+    log_path = Path("logs") / "razar_mission.log"
+    if log_path.exists():
+        lines = log_path.read_text().splitlines()[-20:]
+        errors = [line for line in lines if "error" in line.lower()]
+
+    mem_path = Path("memory")
+    if mem_path.exists():
+        files = [p for p in mem_path.rglob("*") if p.is_file()]
+        mem_summary = {
+            "files": len(files),
+            "size_bytes": sum(p.stat().st_size for p in files),
+        }
+    else:
+        mem_summary = {"files": 0, "size_bytes": 0}
+
+    return {
+        "components": components,
+        "errors": errors,
+        "memory": mem_summary,
+    }
 
 
 @router.post("/operator/upload")

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced chakra healing scripts and monitoring agents with logging and documentation.
 
 - Emitted structured health events during RAZAR boot and introduced recovery daemon for automated restarts.
+- Added `/operator/status` endpoint reporting component health, recent errors, and memory usage; bumped `operator_api` to 0.3.5.
 
 - Added `environment.gpu.yml` and CPU/GPU Dockerfiles with pinned versions and documented hardware setup.
 - Added `docs/SOCIAL_INVESTOR_ONE_PAGER.md` summarizing the project for prospective social investors.

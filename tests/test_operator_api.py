@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from typing import Any, Callable
 
 import pytest
 from fastapi import FastAPI
@@ -13,7 +14,7 @@ __version__ = "0.1.0"
 
 
 @pytest.fixture
-def client(tmp_path: Path, monkeypatch) -> TestClient:
+def client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
     """Return a test client with isolated upload directory."""
 
     app = FastAPI()
@@ -25,11 +26,17 @@ def client(tmp_path: Path, monkeypatch) -> TestClient:
 
 
 @pytest.fixture
-def mock_dispatch(monkeypatch):
+def mock_dispatch(monkeypatch: pytest.MonkeyPatch) -> Callable[..., None]:
     """Patch dispatcher to control remote agent responses."""
 
-    def _mock(*, result=None, error: str | None = None):
-        def dispatch(operator, agent, func, *args, **kwargs):
+    def _mock(*, result: dict | None = None, error: str | None = None) -> None:
+        def dispatch(
+            operator: str,
+            agent: str,
+            func: Callable[..., dict],
+            *args: Any,
+            **kwargs: Any,
+        ) -> dict:
             if error is not None:
                 raise PermissionError(error)
             return result if result is not None else func(*args, **kwargs)
@@ -39,7 +46,9 @@ def mock_dispatch(monkeypatch):
     return _mock
 
 
-def test_command_dispatches(client: TestClient, mock_dispatch) -> None:
+def test_command_dispatches(
+    client: TestClient, mock_dispatch: Callable[..., None]
+) -> None:
     mock_dispatch(result={"ack": "noop"})
     resp = client.post(
         "/operator/command",
@@ -54,10 +63,14 @@ def test_command_requires_fields(client: TestClient) -> None:
     assert resp.status_code == 400
 
 
-def test_upload_stores_and_forwards(client: TestClient, monkeypatch) -> None:
+def test_upload_stores_and_forwards(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
     captured: dict[str, dict] = {}
 
-    def dispatch(operator, agent, func, *args):
+    def dispatch(
+        operator: str, agent: str, func: Callable[..., dict], *args: Any
+    ) -> dict:
         if operator == "overlord" and agent == "crown":
             return func(*args)
         if operator == "crown" and agent == "razar":
@@ -86,7 +99,9 @@ def test_upload_invalid_metadata(client: TestClient) -> None:
     assert resp.status_code == 400
 
 
-def test_upload_permission_error(client: TestClient, mock_dispatch) -> None:
+def test_upload_permission_error(
+    client: TestClient, mock_dispatch: Callable[..., None]
+) -> None:
     mock_dispatch(error="denied")
     resp = client.post(
         "/operator/upload",
@@ -96,7 +111,9 @@ def test_upload_permission_error(client: TestClient, mock_dispatch) -> None:
     assert resp.status_code == 403
 
 
-def test_command_permission_error(client: TestClient, mock_dispatch) -> None:
+def test_command_permission_error(
+    client: TestClient, mock_dispatch: Callable[..., None]
+) -> None:
     mock_dispatch(error="nope")
     resp = client.post(
         "/operator/command",
@@ -105,10 +122,14 @@ def test_command_permission_error(client: TestClient, mock_dispatch) -> None:
     assert resp.status_code == 403
 
 
-def test_upload_metadata_only(client: TestClient, monkeypatch) -> None:
+def test_upload_metadata_only(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
     captured: dict[str, dict] = {}
 
-    def dispatch(operator, agent, func, meta):
+    def dispatch(
+        operator: str, agent: str, func: Callable[..., dict], meta: dict
+    ) -> dict:
         if operator == "overlord" and agent == "crown":
             return func(meta)
         if operator == "crown" and agent == "razar":
@@ -126,7 +147,9 @@ def test_upload_metadata_only(client: TestClient, monkeypatch) -> None:
     assert captured["meta"] == {"x": 1, "files": []}
 
 
-def test_events_websocket(client: TestClient, mock_dispatch) -> None:
+def test_events_websocket(
+    client: TestClient, mock_dispatch: Callable[..., None]
+) -> None:
     """WebSocket receives command acknowledgement and progress."""
 
     mock_dispatch(result={"ack": "noop"})
@@ -142,3 +165,18 @@ def test_events_websocket(client: TestClient, mock_dispatch) -> None:
             "command": "noop",
             "percent": 100,
         }
+
+
+def test_status_endpoint(client: TestClient, tmp_path: Path) -> None:
+    log_dir = tmp_path / "logs"
+    log_dir.mkdir()
+    (log_dir / "razar_mission.log").write_text("error: boom\nok\n")
+    mem_dir = tmp_path / "memory"
+    mem_dir.mkdir()
+    (mem_dir / "item.txt").write_text("data")
+    resp = client.get("/operator/status")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "components" in body
+    assert body["errors"] == ["error: boom"]
+    assert body["memory"]["files"] == 1
