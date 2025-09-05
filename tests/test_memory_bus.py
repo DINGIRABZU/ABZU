@@ -4,6 +4,7 @@ from citadel.event_producer import Event, EventProducer
 
 from agents.event_bus import set_event_producer
 import memory
+import memory.query_memory as qm
 from memory import broadcast_layer_event, query_memory
 from memory.search_api import aggregate_search
 
@@ -50,16 +51,17 @@ def test_broadcast_layer_event_emits():
         }
     )
 
-    layers = {e.payload["layer"]: e.payload["status"] for e in producer.events}
+    assert len(producer.events) == 1
+    layers = producer.events[0].payload["layers"]
     assert layers["cortex"] == "seeded"
     assert layers["mental"] == "skipped"
     set_event_producer(None)
 
 
 def test_query_memory_aggregates(monkeypatch):
-    monkeypatch.setattr(memory, "query_spirals", lambda **kw: ["c"])
-    monkeypatch.setattr(memory, "query_vectors", lambda **kw: ["v"])
-    monkeypatch.setattr(memory, "spiral_recall", lambda q: "s")
+    monkeypatch.setattr(qm, "query_spirals", lambda **kw: ["c"])
+    monkeypatch.setattr(qm, "query_vectors", lambda **kw: ["v"])
+    monkeypatch.setattr(qm, "spiral_recall", lambda q: "s")
 
     res = query_memory("demo")
     assert res == {"cortex": ["c"], "vector": ["v"], "spiral": "s"}
@@ -117,7 +119,8 @@ def test_init_memory_layers_bootstrap_and_persist(tmp_path, monkeypatch):
 
     init_memory_layers.main()
 
-    layer_events = {e.payload["layer"]: e.payload["status"] for e in producer.events}
+    assert len(producer.events) == 1
+    layer_events = producer.events[0].payload["layers"]
     assert layer_events["cortex"] == "seeded"
     assert layer_events["emotional"] == "seeded"
     assert layer_events["spiritual"] == "seeded"
