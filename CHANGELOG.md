@@ -38,6 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented chakra-aligned test directories and 90% coverage rule in `docs/the_absolute_pytest.md`.
 
 - Introduced IP-sensitive annotation registry and CI verification.
+
+- Instrumented `agents.event_bus` with OpenTelemetry spans for trace collection.
+- Exposed `/healthz` and `/metrics` across FastAPI service modules.
+- Added operations guide instructions for viewing traces and metrics.
 - Added `scripts/update_error_index.py` to record new log errors in `docs/error_registry.md`.
 - Extended `scripts/capture_failing_tests.py` so pytest runs append results to `docs/testing/failure_inventory.md`.
 - Configured CI to archive `htmlcov/` and log coverage metrics even when tests fail.

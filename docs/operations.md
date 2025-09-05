@@ -146,6 +146,22 @@ default and can be scraped with Prometheus. To verify locally:
 curl http://localhost:9100/metrics
 ```
 
+### Viewing traces and metrics
+
+All FastAPI services expose `/healthz` and Prometheus metrics on `/metrics`.
+Verify a service is responding by curling its health endpoint and inspect raw
+metrics with the `/metrics` route:
+
+```bash
+curl http://localhost:8000/healthz
+curl http://localhost:8000/metrics | head
+```
+
+Agent interactions emit OpenTelemetry spans. To view them, run an OTLP
+collector such as Jaeger and set the `OTEL_EXPORTER_OTLP_ENDPOINT` environment
+variable before starting the services. The spans then appear in the
+collector's UI for correlation with metrics.
+
 ### Troubleshooting
 
 - Ensure `psutil` and `prometheus_client` are installed.

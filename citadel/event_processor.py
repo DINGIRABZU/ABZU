@@ -5,9 +5,10 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import json
-from typing import Optional
+from typing import Any, Optional, cast
 
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from .event_producer import Event
 
@@ -17,7 +18,7 @@ class TimescaleWriter:
 
     def __init__(self, dsn: str) -> None:
         self.dsn = dsn
-        self._conn: Optional[object] = None
+        self._conn: Optional[Any] = None
 
     async def _connect(self) -> None:
         import asyncpg  # type: ignore
@@ -27,7 +28,8 @@ class TimescaleWriter:
     async def write_event(self, event: Event) -> None:
         if self._conn is None:
             await self._connect()
-        await self._conn.execute(
+        conn = cast(Any, self._conn)
+        await conn.execute(
             """
             INSERT INTO agent_events (agent_id, event_type, payload, ts)
             VALUES ($1, $2, $3, $4)
@@ -63,7 +65,10 @@ class Neo4jWriter:
                 lambda tx: tx.run(
                     """
                     MERGE (a:Agent {id: $agent_id})
-                    CREATE (a)-[:EMITTED {type: $event_type, ts: $ts}]->(:Event {payload: $payload})
+                    CREATE (
+                        a
+                    )-[:EMITTED {type: $event_type, ts: $ts}]
+                    ->(:Event {payload: $payload})
                     """,
                     agent_id=event.agent_id,
                     event_type=event.event_type,
@@ -129,6 +134,7 @@ def create_app(
     """Create the event processing application."""
 
     app = FastAPI()
+    Instrumentator().instrument(app).expose(app)
     ts_writer = TimescaleWriter(timescale_dsn)
     neo_writer = Neo4jWriter(neo4j_uri, neo4j_user, neo4j_password)
 
@@ -155,6 +161,10 @@ def create_app(
 
     @app.get("/health")
     async def health() -> dict[str, str]:
+        return {"status": "ok"}
+
+    @app.get("/healthz")
+    async def healthz() -> dict[str, str]:
         return {"status": "ok"}
 
     return app

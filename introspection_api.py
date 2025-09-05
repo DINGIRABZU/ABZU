@@ -50,4 +50,10 @@ def inspect_lwm() -> dict:
     return default_lwm.inspect_scene()
 
 
+@app.get("/healthz")
+def healthz() -> dict[str, str]:
+    """Basic liveness check."""
+    return {"status": "ok"}
+
+
 __all__ = ["app"]
