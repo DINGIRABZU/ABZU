@@ -12,6 +12,7 @@ logs/*
 !logs/razar_boot_history.json
 !logs/razar_crown_dialogues.json
 !logs/razar_cocreation_plans.json
+!logs/self_heal.jsonl
 !logs/interaction_log.jsonl
 !logs/mission_briefs/
 !logs/mission_briefs/*.json
