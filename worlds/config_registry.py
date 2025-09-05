@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+import json
 import os
 from collections import defaultdict
+from pathlib import Path
 from typing import Any, Dict, DefaultDict
 
 # Internal structure:
-# {_world: {"layers": set(), "brokers": {}, "paths": {}}}
+# {_world: {"layers": set(), "agents": set(), "brokers": {}, "paths": {}}}
 _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
-    lambda: {"layers": set(), "brokers": {}, "paths": {}}
+    lambda: {"layers": set(), "agents": set(), "brokers": {}, "paths": {}}
 )
 
 
@@ -27,6 +29,12 @@ def register_layer(layer: str, world: str | None = None) -> None:
     """Record availability of ``layer`` for ``world``."""
 
     _registry[_world_name(world)]["layers"].add(layer)
+
+
+def register_agent(agent: str, world: str | None = None) -> None:
+    """Record availability of ``agent`` for ``world``."""
+
+    _registry[_world_name(world)]["agents"].add(agent)
 
 
 def register_broker(
@@ -49,6 +57,7 @@ def export_config(world: str | None = None) -> Dict[str, Any]:
     data = _registry[_world_name(world)]
     return {
         "layers": sorted(data["layers"]),
+        "agents": sorted(data["agents"]),
         "brokers": dict(data["brokers"]),
         "paths": dict(data["paths"]),
     }
@@ -59,8 +68,27 @@ def import_config(config: Dict[str, Any], world: str | None = None) -> None:
 
     data = _registry[_world_name(world)]
     data["layers"].update(config.get("layers", []))
+    data["agents"].update(config.get("agents", []))
     data["brokers"].update(config.get("brokers", {}))
     data["paths"].update(config.get("paths", {}))
+
+
+def export_config_file(path: str | Path, world: str | None = None) -> Path:
+    """Write configuration for ``world`` to ``path`` in JSON format.
+
+    Returns the path to which the configuration was written.
+    """
+
+    p = Path(path)
+    p.write_text(json.dumps(export_config(world), indent=2, sort_keys=True), "utf-8")
+    return p
+
+
+def import_config_file(path: str | Path, world: str | None = None) -> None:
+    """Load configuration for ``world`` from JSON ``path``."""
+
+    p = Path(path)
+    import_config(json.loads(p.read_text("utf-8")), world)
 
 
 def reset_registry() -> None:
@@ -71,9 +99,12 @@ def reset_registry() -> None:
 
 __all__ = [
     "register_layer",
+    "register_agent",
     "register_broker",
     "register_path",
     "export_config",
     "import_config",
+    "export_config_file",
+    "import_config_file",
     "reset_registry",
 ]
