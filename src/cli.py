@@ -17,8 +17,11 @@ from __future__ import annotations
 import argparse
 import subprocess
 import sys
+import os
 from pathlib import Path
 from typing import Callable, List, Optional
+
+import requests  # type: ignore[import-untyped]
 
 
 def _start(_: argparse.Namespace) -> None:
@@ -50,6 +53,23 @@ def _play_music(args: argparse.Namespace) -> None:
     subprocess.run(cmd, check=True)
 
 
+def _operator_console(args: argparse.Namespace) -> None:
+    """Run the operator console or a short scripted session."""
+    api = os.getenv("WEB_CONSOLE_API_URL", "http://localhost:8000/glm-command")
+    if args.smoke_test:
+        for cmd in ["status", "exit"]:
+            try:
+                resp = requests.post(api, json={"command": cmd}, timeout=10)
+                resp.raise_for_status()
+                print(f"{cmd}: {resp.text}")
+            except requests.RequestException as exc:  # pragma: no cover - network
+                print(f"request failed: {exc}")
+        return
+    from cli.console_interface import run_repl
+
+    run_repl([])
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="inanna", description="Spiral OS helper commands"
@@ -68,6 +88,16 @@ def build_parser() -> argparse.ArgumentParser:
     music_p = sub.add_parser("play-music", help="Analyze a local audio file")
     music_p.add_argument("audio", help="Path to an MP3 or WAV file")
     music_p.set_defaults(func=_play_music)
+
+    op_p = sub.add_parser(
+        "operator-console", help="Launch the operator console or run a smoke test"
+    )
+    op_p.add_argument(
+        "--smoke-test",
+        action="store_true",
+        help="Run a short scripted session and exit",
+    )
+    op_p.set_defaults(func=_operator_console)
 
     return parser
 

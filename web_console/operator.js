@@ -11,16 +11,41 @@ function sendCommand(cmd) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ command: cmd })
-    }).then(resp => resp.json());
+    }).then((resp) => resp.json());
 }
 
-async function startStream(videoElem) {
+async function startStream(videoElem, audioElem, narrativeElem) {
     const pc = new RTCPeerConnection();
+
+    pc.addTransceiver('video');
+    pc.addTransceiver('audio');
+
     pc.ontrack = (ev) => {
         const [stream] = ev.streams;
-        if (videoElem.srcObject !== stream) {
+        if (ev.track.kind === 'video' && videoElem && videoElem.srcObject !== stream) {
             videoElem.srcObject = stream;
         }
+        if (ev.track.kind === 'audio' && audioElem && audioElem.srcObject !== stream) {
+            audioElem.srcObject = stream;
+        }
+    };
+
+    pc.ondatachannel = (ev) => {
+        ev.channel.onmessage = (msg) => {
+            if (!narrativeElem) {
+                return;
+            }
+            try {
+                const payload = JSON.parse(msg.data);
+                if (payload.prose) {
+                    narrativeElem.textContent += payload.prose;
+                } else {
+                    narrativeElem.textContent += msg.data;
+                }
+            } catch {
+                narrativeElem.textContent += msg.data;
+            }
+        };
     };
 
     const offer = await pc.createOffer();
