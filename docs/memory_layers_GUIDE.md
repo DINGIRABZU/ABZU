@@ -82,4 +82,21 @@ substituted layers as `defaulted`, and calls such as `aggregate_search` simply
 yield empty results for them while logging any underlying errors. Queries still
 return data from the remaining active layers.
 
+## Installation Options
+
+Each layer exposes an extra in the package so dependencies can be installed
+selectively:
+
+- **Mental** – `pip install "spiral-os[mental]"` installs `neo4j`,
+  `gymnasium` and `stable-baselines3` for the task graph and RL hooks.
+- **Emotional** – `pip install "spiral-os[emotional]"` installs
+  `transformers` and `dlib` to extract feature vectors from rich media.
+- **Spiritual** – uses only the Python standard library; no extra packages are
+  required.
+- **Narrative** – `pip install "spiral-os[narrative]"` installs `chromadb`
+  and `pynvml` for vector persistence and GPU metrics.
+
+Extras can be combined, for example
+`pip install "spiral-os[mental,emotional]"` to enable multiple layers.
+
 
