@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.91
+**Version:** v1.0.92
 **Last updated:** 2025-09-05
 
 ## How to Use This Protocol
@@ -31,6 +31,16 @@ ABZU adheres to a consistent top-level directory layout:
 Consult the [Code Index](code_index.md) for an overview of modules, classes, and functions within the repository.
 
 See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidance on the repository layout.
+
+### Unified Memory Bundle
+
+The repository's memory layers are orchestrated through a unified `MemoryBundle`. During startup, `bundle.initialize()` emits a single `layer_init` event on the `memory` bus, reporting the status of the Cortex, Emotional, Mental, Spiritual, and Narrative layers in one payload.
+
+```mermaid
+{{#include figures/memory_bundle.mmd}}
+```
+
+The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd). See [memory_layers_GUIDE.md](memory_layers_GUIDE.md) for implementation details. Any change to a memory layer must update this diagram and all related visuals across the repository to keep documentation synchronized.
 
 ## Repository Layout Protocol
 Repositories must keep these directories at the root:
