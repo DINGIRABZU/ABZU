@@ -45,4 +45,5 @@ With the architecture, workflow, and validation steps in hand, you can implement
 
 ## 8. Share Knowledge
 Update documentation when adding features so others can replicate your work. The [Developer Manual](developer_manual.md) and [Contribution Guide](contribution_guide.md) describe expectations for pull requests and reviews. Ensure the pull request template checkboxes for [AGENTS.md](../AGENTS.md) and [The Absolute Protocol](The_Absolute_Protocol.md) are completed.
-
+## 9. Balance Operator and System Perspectives
+Contributors should balance operator-first and system-first views. Pair any system enhancement with an operator-facing improvement so the user experience evolves alongside architecture.

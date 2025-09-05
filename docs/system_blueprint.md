@@ -13,6 +13,8 @@ exhaustive module inventory.
 
 Module versions declared in code are verified against `component_index.json`.
 
+Contributors must propose operator-facing improvements alongside system enhancements to honor the operator-first principle.
+
 ### Triadic Stack
 
 ```mermaid

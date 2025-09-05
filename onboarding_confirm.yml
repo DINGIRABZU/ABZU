@@ -162,7 +162,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 92badfba3843ada084139df166b23c05aee24f1998a97770b094d626b44168d7
+    sha256: 180be91291b971c0f02a76186dcf800763593f12f8231a9bb0d43dcd4851ca68
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -184,7 +184,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 8f3775eddc7fdd50f633c26619e778eb8fae6371dba6ad15585d9248059b7215
+    sha256: 210e40905c42c88cd696f54800b0bf401ba657d1a86b12d55f2cf14fcbcf704e
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
