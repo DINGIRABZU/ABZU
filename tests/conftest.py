@@ -161,6 +161,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "crown" / "test_config.py"),
     str(ROOT / "tests" / "test_download_deepseek.py"),
     str(ROOT / "tests" / "test_dashboard_app.py"),
+    str(ROOT / "tests" / "test_feedback_logging_import.py"),
     str(ROOT / "tests" / "test_dashboard_usage.py"),
     str(ROOT / "tests" / "test_virtual_env_manager.py"),
     str(ROOT / "tests" / "test_sandbox_session.py"),

@@ -32,6 +32,9 @@ except Exception as exc:  # pragma: no cover - external service failure
 
 if metrics:
     df = pd.DataFrame(metrics)
+    # Ensure timestamps are parsed for stable plotting with libraries like Plotly
+    # or Altair which expect datetime types instead of raw strings.
+    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
     st.write(df)
     st.line_chart(
         df.set_index("timestamp")[["response_time", "coherence", "relevance"]]
