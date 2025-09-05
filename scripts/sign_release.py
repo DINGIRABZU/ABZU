@@ -3,6 +3,8 @@
 
 The resulting hashes and signatures are written to a manifest file.
 """
+
+# @ip-sensitive: Release artifact signing logic
 from __future__ import annotations
 
 import argparse

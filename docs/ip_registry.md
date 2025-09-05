@@ -8,4 +8,5 @@ The following modules are tagged with `@ip-sensitive` and require tracking in th
 | Self-Correction Engine | Emotion mismatch adjustment logic | src/core/self_correction_engine.py |
 | Guardian Task Utilities | Ethics validation gatekeeper | agents/guardian.py |
 | Operator Dispatcher | Audited dispatch of operator commands | agents/operator_dispatcher.py |
+| Release Signing Script | Build artifact signing logic | scripts/sign_release.py |
 
