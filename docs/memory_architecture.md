@@ -18,6 +18,13 @@ query example:
 - **Spiritual** – transcendent insights and ritual state.
 - **Narrative** – story events linking actors, actions and symbolism.
 
+## Bundle Initialization
+
+Layer startup is orchestrated by the repository's `MemoryBundle`, which loads
+each module in turn and emits a consolidated `layer_init` event. See
+[The Absolute Protocol](The_Absolute_Protocol.md#unified-memory-bundle) and the
+[Memory Layers Guide](memory_layers_GUIDE.md) for the canonical workflow.
+
 After these layers ignite, RAZAR activates the [Bana engine](bana_engine.md) to
 narrate the system's evolving state.
 
@@ -31,21 +38,27 @@ Ready-made helpers are available for spinning up the storage back ends:
   [scripts/init_memory_layers.sh](../scripts/init_memory_layers.sh) seed all
   layers with example records.
 
-## Configuration paths and datasets
+## Layer overview
 
-Each layer uses environment variables to locate its file-based store:
+`MemoryBundle` coordinates all stores behind a single interface and
+`query_memory` aggregates lookup results across layers:
 
-| Layer | Variable | Default path |
-|-------|----------|--------------|
-| Cortex | `CORTEX_PATH` | `data/cortex_memory_spiral.jsonl` |
-| Emotional | `EMOTION_DB_PATH` | `data/emotions.db` |
-| Mental | `MENTAL_JSON_PATH` | `data/tasks.jsonl` |
-| Spiritual | `SPIRITUAL_DB_PATH` | `data/ontology.db` |
-| Narrative | `NARRATIVE_LOG_PATH` | `data/story.log` |
+```python
+from memory.bundle import MemoryBundle
+from memory import query_memory
 
-These datasets are recorded in `component_index.json` for traceability. Run
-`python scripts/check_memory_layers.py` to validate all layers before persona
-modules such as Albedo load.
+bundle = MemoryBundle()
+bundle.initialize()
+records = query_memory("omen")
+```
+
+```mermaid
+{{#include figures/memory_layer_flow.mmd}}
+```
+
+Layer configuration and default storage locations are tracked in
+`component_index.json`. Run `python scripts/check_memory_layers.py` to validate
+the setup before persona modules such as Albedo load.
 
 ## Quick start
 
@@ -86,20 +99,6 @@ python -c 'from memory.narrative_engine import stream_stories; print(list(stream
 The script seeds each layer using file-based back-ends and prints the results of
 these queries. The sections below describe manual setup and alternative back-end
 options.
-
-## Flow
-
-```mermaid
-flowchart LR
-    input[Experience] --> bus[Memory Bus]
-    bus --> cortex[Cortex]
-    bus --> emotional[Emotional]
-    bus --> mental[Mental]
-    bus --> spiritual[Spiritual]
-    bus --> narrative[Narrative]
-```
-
-The Mermaid source lives at [assets/memory_flow.mmd](assets/memory_flow.mmd).
 
 ### Cortex store
 

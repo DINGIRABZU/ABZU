@@ -1,0 +1,12 @@
+graph TD
+    MB[MemoryBundle.initialize] --> Cortex[Cortex]
+    MB --> Emotional[Emotional]
+    MB --> Mental[Mental]
+    MB --> Spiritual[Spiritual]
+    MB --> Narrative[Narrative]
+    Cortex --> QM[query_memory]
+    Emotional --> QM
+    Mental --> QM
+    Spiritual --> QM
+    Narrative --> QM
+    QM --> Caller[Caller]
