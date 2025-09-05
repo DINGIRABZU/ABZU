@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -306,7 +305,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ignition_flow.md](ignition_flow.md) | Ignition Flow | This guide traces the activation sequence from **RAZAR** through to the final **operator interface**, linking each st... | `../INANNA_AI_AGENT/inanna_ai.py`, `../agents/bana/bio_adaptive_narrator.py`, `../crown_router.py`, `../operator_api.py`, `../razar/boot_orchestrator.py`, `../scripts/validate_ignition.py` |
 | [ignition_map.md](ignition_map.md) | Ignition Map | Summary of components grouped by ignition stage. See [Ignition](Ignition.md) for boot priorities and [component_index... | - |
 | [ignition_sequence_protocol.md](ignition_sequence_protocol.md) | Ignition Sequence Protocol | Defines the required logging checkpoints and escalation flow during the system boot sequence. | - |
-| [index.md](index.md) | Documentation Index | Curated starting points for understanding and operating the project. For an exhaustive, auto-generated inventory of a... | - |
+| [index.md](index.md) | Documentation Index | Curated starting points for understanding and operating the project. For an exhaustive, auto-generated inventory of a... | `../scripts/bootstrap_world.py` |
 | [insight_system.md](insight_system.md) | Insight System | The insight system aggregates interaction logs into structured matrices used by reflection and adaptive learning comp... | - |
 | [installation.md](installation.md) | Installation | Set up the project either with Conda or Docker. Both methods run the bootstrap script, which verifies the Python vers... | - |
 | [ip_registry.md](ip_registry.md) | IP Registry | The following modules are tagged with `@ip-sensitive` and require tracking in this registry. | - |
@@ -371,6 +370,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [setup.md](setup.md) | Environment Setup | This guide lists the system packages and environment variables required to run the project. | - |
 | [setup_full.md](setup_full.md) | Full Setup | The full installation enables all Spiral OS features. | - |
 | [setup_minimal.md](setup_minimal.md) | Minimal Setup | The minimal installation provides only the core Spiral OS utilities. | - |
+| [setup_quickstart.md](setup_quickstart.md) | Setup Quickstart | Spin up a minimal world configuration using file-backed memory layers. | - |
 | [sonic_core_harmonics.md](sonic_core_harmonics.md) | Sonic Core Harmonics | The Sonic Core layers audio synthesis and expression modules on top of Spiral OS. It transforms QNL phrases into audi... | - |
 | [spiral_cortex_terminal.md](spiral_cortex_terminal.md) | Spiral Cortex Terminal | `spiral_cortex_terminal.py` provides a small command line interface for exploring `data/cortex_memory_spiral.jsonl`.... | - |
 | [spiritual_architecture.md](spiritual_architecture.md) | Spiritual Architecture | Spiral OS organizes its components into seven chakra layers, mirroring the energetic centers of the body. Each layer... | - |

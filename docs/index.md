@@ -19,8 +19,10 @@ Curated starting points for understanding and operating the project. For an exha
 ## Setup
 - [Setup Guide](setup.md)
 - [Environment Setup](environment_setup.md)
+- [Quickstart Setup](setup_quickstart.md) – minimal world configuration
 ## Usage
 - [How to Use](how_to_use.md)
+- [Bootstrap World Script](../scripts/bootstrap_world.py) – populate mandatory layers with defaults
 
 ## Data
 - [Data Manifest](data_manifest.md)

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Introduced `bootstrap_world.py` and a setup quickstart for minimal world configuration.
 - Enforced explicit health probes for RAZAR boot components and added boot
   sequence tests.
 - Documented operator-first principle and contributor guidance across core docs.
