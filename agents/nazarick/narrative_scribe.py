@@ -8,7 +8,7 @@ recorded via :func:`memory.narrative_engine.log_story`.
 
 from __future__ import annotations
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 import asyncio
 import json
@@ -16,7 +16,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict
 
-import yaml
+import yaml  # type: ignore[import]
 
 from citadel.event_producer import Event
 from memory import narrative_engine
@@ -81,9 +81,18 @@ class NarrativeScribe:
             narrative = self.compose_self_heal(event)
         else:
             narrative = self.compose(event)
+        json_line = json.dumps(
+            {
+                "agent_id": event.agent_id,
+                "event_type": event.event_type,
+                "text": narrative,
+            },
+            ensure_ascii=False,
+        )
         LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
         with LOG_FILE.open("a", encoding="utf-8") as fh:
             fh.write(narrative + "\n")
+            fh.write(json_line + "\n")
         if event.event_type == "self_heal":
             narrative_engine.log_self_heal_story(
                 narrative,
@@ -92,6 +101,12 @@ class NarrativeScribe:
             )
         else:
             narrative_engine.log_story(narrative)
+        narrative_engine.index_story(
+            event.agent_id,
+            event.event_type,
+            narrative,
+            event.timestamp.timestamp(),
+        )
 
     async def _redis_listener(self, channel: str, url: str) -> None:
         import redis.asyncio as redis  # type: ignore
