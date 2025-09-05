@@ -1,6 +1,12 @@
 import importlib
 
-from worlds.config_registry import export_config, import_config, reset_registry
+from worlds.config_registry import (
+    export_config,
+    export_config_file,
+    import_config,
+    import_config_file,
+    reset_registry,
+)
 
 
 def test_registration_and_roundtrip(tmp_path, monkeypatch):
@@ -9,8 +15,10 @@ def test_registration_and_roundtrip(tmp_path, monkeypatch):
 
     # Reload memory to trigger layer registration
     import memory
+    import agents
 
     importlib.reload(memory)
+    importlib.reload(agents)
 
     # Register a path via emotional layer initialiser
     from memory.emotional import get_connection
@@ -29,10 +37,18 @@ def test_registration_and_roundtrip(tmp_path, monkeypatch):
     cfg = export_config()
 
     assert set(cfg["layers"]) == set(memory.LAYERS)
+    assert set(cfg["agents"]) == set(agents.AGENTS)
     assert cfg["paths"]["emotional"] == str(emo_path)
     assert cfg["brokers"]["redis"]["channel"] == "chan"
 
-    # verify round-trip
+    # verify round-trip via dictionary
     reset_registry()
     import_config(cfg)
+    assert export_config() == cfg
+
+    # verify file round-trip
+    path = tmp_path / "world.json"
+    export_config_file(path)
+    reset_registry()
+    import_config_file(path)
     assert export_config() == cfg
