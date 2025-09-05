@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sequence tests.
 - Documented operator-first principle and contributor guidance across core docs.
 
+- `abzu-memory-bootstrap` script initializes memory layers in one step.
+
 - WebSocket `/operator/events` for command acknowledgements and progress with console subscription.
 - Nazarick Web Console docs explain viewing agent interactions, NLQ log search, and live chat streams; added tests for paginated conversation logs.
 

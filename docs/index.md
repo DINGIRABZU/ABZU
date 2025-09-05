@@ -2,6 +2,14 @@
 
 Curated starting points for understanding and operating the project. For an exhaustive, auto-generated inventory of all documentation, see [INDEX.md](INDEX.md).
 
+## Quick Start
+
+Initialize every memory layer with a single command:
+
+```bash
+abzu-memory-bootstrap
+```
+
 ## Architecture
 - [Architecture Overview](architecture_overview.md)
 - [Blueprint Export](BLUEPRINT_EXPORT.md) – versioned snapshot of key documents
