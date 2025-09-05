@@ -6,11 +6,15 @@ from __future__ import annotations
 from typing import Dict
 
 from agents.event_bus import emit_event
+from worlds.config_registry import register_layer
 from .query_memory import query_memory
 
 __version__ = "0.1.3"
 
 LAYERS = ("cortex", "emotional", "mental", "spiritual", "narrative")
+
+for _layer in LAYERS:
+    register_layer(_layer)
 
 
 def broadcast_layer_event(statuses: Dict[str, str]) -> None:
