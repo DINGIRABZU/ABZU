@@ -7,7 +7,7 @@ is skipped if Neo4j or its dependencies are unavailable.
 """
 from __future__ import annotations
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 import os
 from pathlib import Path
@@ -22,8 +22,12 @@ from memory.emotional import (
 
 try:
     from memory.mental import record_task_flow, query_related_tasks
+
+    _MENTAL_FALLBACK = False
 except Exception:  # mental layer optional
-    record_task_flow = query_related_tasks = None
+    from memory.optional.mental import record_task_flow, query_related_tasks
+
+    _MENTAL_FALLBACK = True
 
 from memory.spiritual import (
     map_to_symbol,
@@ -60,11 +64,11 @@ def main() -> None:
     log_emotion([0.8], conn=emotion_conn())
     statuses["emotional"] = "seeded"
 
-    if record_task_flow and query_related_tasks:
+    if not _MENTAL_FALLBACK:
         record_task_flow("taskA", {"step": 1})
         statuses["mental"] = "seeded"
     else:
-        statuses["mental"] = "skipped"
+        statuses["mental"] = "defaulted"
 
     spirit = spirit_conn()
     map_to_symbol(("eclipse", "\u263E"), conn=spirit)
