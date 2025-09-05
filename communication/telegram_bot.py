@@ -14,7 +14,7 @@ import logging
 from telegram import Update
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
 
-from .gateway import Gateway
+from .gateway import Gateway, authentication
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +25,7 @@ class TelegramBot:
     def __init__(self, token: str, gateway: Gateway) -> None:
         """Initialise bot with Telegram token and gateway."""
         self._gateway = gateway
+        self._token = token
         self._application = Application.builder().token(token).build()
         self._application.add_handler(
             MessageHandler(filters.TEXT & (~filters.COMMAND), self._handle_message)
@@ -35,6 +36,7 @@ class TelegramBot:
     ) -> None:
         if update.effective_user is None or update.message is None:
             return
+        authentication.verify_token("telegram", self._token)
         user_id = str(update.effective_user.id)
         content = update.message.text or ""
         await self._gateway.handle_incoming("telegram", user_id, content)

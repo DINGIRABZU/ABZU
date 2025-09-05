@@ -3,9 +3,29 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from typing import Protocol
 
 from api import server as api_server
+
+
+class authentication:
+    """Shared authentication helpers for communication channels."""
+
+    @staticmethod
+    def verify_token(channel: str, token: str | None) -> None:
+        """Validate ``token`` for ``channel``.
+
+        The expected token is taken from the environment variable
+        ``<CHANNEL>_TOKEN``. If no such variable is configured, verification is
+        skipped. A mismatch raises :class:`PermissionError`.
+        """
+
+        expected = os.getenv(f"{channel.upper()}_TOKEN")
+        if expected is None:
+            return
+        if token != expected:
+            raise PermissionError(f"invalid token for {channel}")
 
 
 @dataclass
@@ -43,4 +63,4 @@ class Gateway:
         await self.ai_core.handle_message(message)
 
 
-__all__ = ["ChannelMessage", "Gateway"]
+__all__ = ["ChannelMessage", "Gateway", "authentication"]

@@ -22,6 +22,7 @@ from typing import Set
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from fastapi import APIRouter, HTTPException, Request
 
+from communication.gateway import authentication
 from communication.webrtc_server import (
     configure_tracks,
     get_audio_track,
@@ -52,6 +53,14 @@ def configure(*, data: bool = True, audio: bool = True, video: bool = True) -> N
 @router.post("/call")
 async def offer(request: Request) -> dict[str, str]:
     """Handle WebRTC call offer and return the answer."""
+    auth_header = request.headers.get("Authorization", "")
+    token = None
+    if auth_header.lower().startswith("bearer "):
+        token = auth_header.split(" ", 1)[1]
+    try:
+        authentication.verify_token("webrtc", token)
+    except PermissionError as exc:  # pragma: no cover - auth failure
+        raise HTTPException(status_code=401, detail="invalid token") from exc
     try:
         params = await request.json()
         sdp = params["sdp"]
