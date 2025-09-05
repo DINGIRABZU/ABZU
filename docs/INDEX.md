@@ -241,6 +241,22 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [archetype_logic.md](archetype_logic.md) | Archetype Logic | This document outlines how Spiral OS interprets alchemical states to shape its responses. The progression through **N... | - |
 | [architecture.md](architecture.md) | Architecture | This guide maps the core packages that shape the ABZU system and how they cooperate. The diagram below highlights the... | `../INANNA_AI/ethical_validator.py`, `../INANNA_AI_AGENT/inanna_ai.py`, `../core/emotion_analyzer.py`, `../core/memory_logger.py`, `../core/model_selector.py`, `../dashboard/app.py` |
 | [architecture_overview.md](architecture_overview.md) | Architecture Overview | For broader project context read [project_overview.md](project_overview.md) and [README_CODE_FUNCTION.md](../README_C... | `../crown_router.py`, `../labs/cortex_sigil.py`, `../memory/cortex.py`, `../memory/emotional.py`, `../memory/mental.py`, `../memory/sacred.py`, `../memory/spiral_cortex.py`, `../memory/spiritual.py`, `../src/core/emotion_analyzer.py`, `../src/core/memory_logger.py`, `../src/core/model_selector.py`, `../tests/crown/test_crown_router_memory.py`, `../tests/test_core_services.py`, `../tests/test_cortex_memory.py`, `../tests/test_cortex_sigil_logic.py`, `../tests/test_memory_emotional.py`, `../tests/test_memory_spiritual.py`, `../tests/test_seven_dimensional_music.py`, `../tests/test_spiral_cortex_memory.py`, `../tests/test_vast_pipeline.py` |
+| [assets/ai_handover_flow.mmd](assets/ai_handover_flow.mmd) | ai_handover_flow.mmd | - | - |
+| [assets/albedo_flow.mmd](assets/albedo_flow.mmd) | albedo_flow.mmd | - | - |
+| [assets/albedo_state_machine.mmd](assets/albedo_state_machine.mmd) | albedo_state_machine.mmd | - | - |
+| [assets/crown_boot.mmd](assets/crown_boot.mmd) | crown_boot.mmd | - | - |
+| [assets/crown_flow.mmd](assets/crown_flow.mmd) | crown_flow.mmd | - | - |
+| [assets/crown_handshake_sequence.mmd](assets/crown_handshake_sequence.mmd) | crown_handshake_sequence.mmd | - | - |
+| [assets/inanna_core.mmd](assets/inanna_core.mmd) | inanna_core.mmd | - | - |
+| [assets/inanna_flow.mmd](assets/inanna_flow.mmd) | inanna_flow.mmd | - | - |
+| [assets/memory_flow.mmd](assets/memory_flow.mmd) | memory_flow.mmd | - | - |
+| [assets/narrative_engine_flow.mmd](assets/narrative_engine_flow.mmd) | Mermaid diagram of narrative engine flow | - | - |
+| [assets/narrative_flow.mmd](assets/narrative_flow.mmd) | narrative_flow.mmd | - | - |
+| [assets/nazarick_flow.mmd](assets/nazarick_flow.mmd) | nazarick_flow.mmd | - | - |
+| [assets/nazarick_web_console.mmd](assets/nazarick_web_console.mmd) | nazarick_web_console.mmd | - | - |
+| [assets/razar_architecture.mmd](assets/razar_architecture.mmd) | razar_architecture.mmd | - | - |
+| [assets/razar_flow.mmd](assets/razar_flow.mmd) | razar_flow.mmd | - | - |
+| [assets/remote_assistance_sequence.mmd](assets/remote_assistance_sequence.mmd) | remote_assistance_sequence.mmd | - | - |
 | [audio_ingestion.md](audio_ingestion.md) | Audio Ingestion | This guide outlines how Spiral OS loads audio files and enriches them with optional features such as tempo and key de... | - |
 | [avatar_animation.md](avatar_animation.md) | Avatar Animation Modules | This document describes the lightweight avatar animation helpers found in `ai_core.avatar`. | - |
 | [avatar_ethics.md](avatar_ethics.md) | Avatar Ethics | The avatar and call features rely on audiovisual data that may reveal personal information. Operators must handle rec... | - |
@@ -298,6 +314,10 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [features/FEATURE_TEMPLATE.md](features/FEATURE_TEMPLATE.md) | Feature Specification Template | - | - |
 | [features/README.md](features/README.md) | Feature Specifications | Guidelines for authoring feature specification files. | - |
 | [features/example_feature.md](features/example_feature.md) | Example Feature | - | - |
+| [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory Bundle diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/memory_layer_flow.mmd](figures/memory_layer_flow.mmd) | Memory layer flow diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [frontend_dependencies.md](frontend_dependencies.md) | Frontend Dependencies | This page outlines the core libraries used by the `floor_client` interface. Refer to each project's documentation for... | - |
 | [great_tomb_of_nazarick.md](great_tomb_of_nazarick.md) | Great Tomb of Nazarick | The foundational design for ABZU's servant hierarchy. For guiding principles see the [Nazarick Manifesto](nazarick_ma... | - |
 | [hardware_support.md](hardware_support.md) | Hardware Support | - CUDA available: False - ROCm available: False - Intel GPU available: False - Selected device: cpu | - |
@@ -315,7 +335,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_cortex.md](memory_cortex.md) | Cortex Memory Search | The `memory.cortex` module stores spiral decisions as JSON lines under `data/cortex_memory_spiral.jsonl`. Each entry... | - |
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
-| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | This guide describes the event bus protocol and query flow connecting the Cortex, Emotional, Mental, Spiritual, and N... | - |
+| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.0 **Last updated:** 2025-09-05 | - |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |
 | [ml_environment.md](ml_environment.md) | ML Environment Setup | This guide explains how to create an isolated Python environment and start Jupyter notebooks for experimenting with S... | - |

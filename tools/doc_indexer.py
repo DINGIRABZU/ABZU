@@ -20,8 +20,8 @@ MODULE_RE = re.compile(r"\[.*?\]\(([^)]+\.py)\)")
 
 
 def collect_markdown_paths() -> List[Path]:
-    """Return a sorted list of Markdown file paths under the repository."""
-    command = ["find", ".", "-name", "*.md"]
+    """Return a sorted list of Markdown and Mermaid file paths under the repository."""
+    command = ["find", ".", "(", "-name", "*.md", "-o", "-name", "*.mmd", ")"]
     for d in EXCLUDED_DIRS:
         command.extend(["-not", "-path", f"*/{d}/*"])
     result = subprocess.run(
@@ -50,19 +50,25 @@ def parse_markdown(path: Path) -> Tuple[str, str, List[str]]:
     lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
     title = path.name
     summary_lines: List[str] = []
-    for i, line in enumerate(lines):
-        match = HEADING_RE.match(line)
-        if match:
-            title = match.group(1).strip()
-            for body_line in lines[i + 1 :]:
-                if body_line.strip() == "":
-                    if summary_lines:
+    if path.suffix == ".mmd":
+        comments = [line[2:].strip() for line in lines if line.startswith("%%")]
+        if comments:
+            title = comments[0]
+            summary_lines = comments[1:]
+    else:
+        for i, line in enumerate(lines):
+            match = HEADING_RE.match(line)
+            if match:
+                title = match.group(1).strip()
+                for body_line in lines[i + 1 :]:
+                    if body_line.strip() == "":
+                        if summary_lines:
+                            break
+                        continue
+                    if body_line.startswith("#"):
                         break
-                    continue
-                if body_line.startswith("#"):
-                    break
-                summary_lines.append(body_line.strip())
-            break
+                    summary_lines.append(body_line.strip())
+                break
     summary = " ".join(summary_lines)
     if len(summary) > 120:
         summary = summary[:117].rstrip() + "..."

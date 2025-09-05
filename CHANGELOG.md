@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `/operator/status` endpoint reporting component health, recent errors, and memory usage; bumped `operator_api` to 0.3.5.
 
 - Added `environment.gpu.yml` and CPU/GPU Dockerfiles with pinned versions and documented hardware setup.
+- Documented inner memory guide and diagrams in the documentation index and linked cross-references from the Blueprint Spine and System Blueprint.
 - Added `docs/SOCIAL_INVESTOR_ONE_PAGER.md` summarizing the project for prospective social investors.
 - Added `docs/component_maturity.md` tracking documentation completeness, coverage, and open issues.
 

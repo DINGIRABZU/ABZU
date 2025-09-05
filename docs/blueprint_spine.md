@@ -123,7 +123,7 @@ Modules are organized by chakra (Root through Crown), with additional Nazarick a
 
 ## **4. Memory Architecture**
 
-ABZU layers five memory stores—Cortex, Emotional, Mental, Spiritual, and Narrative—each switchable between file-based JSON/SQLite and vector-DB back ends via environment variables.
+ABZU layers five memory stores—Cortex, Emotional, Mental, Spiritual, and Narrative—each switchable between file-based JSON/SQLite and vector-DB back ends via environment variables. See [Memory Layers Guide](memory_layers_GUIDE.md) and diagrams like [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd) and [Memory Layer Flow](figures/memory_layer_flow.mmd) for event sequencing and query aggregation.
 
 Once these stores ignite, RAZAR activates the Bana engine to narrate state transitions across layers.
 

@@ -15,6 +15,7 @@ abzu-memory-bootstrap
 - [Blueprint Export](BLUEPRINT_EXPORT.md) – versioned snapshot of key documents
 - [Detailed Architecture](architecture.md)
 - [Crown Agent Overview](CROWN_OVERVIEW.md)
+- [Inner Memory](memory_layers_GUIDE.md) – layer guide with diagrams: [Memory Bundle](figures/memory_bundle.mmd), [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd), [Memory Layer Flow](figures/memory_layer_flow.mmd), [Query Memory Aggregation](figures/query_memory_aggregation.mmd)
 ## Nazarick
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
 - [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md)

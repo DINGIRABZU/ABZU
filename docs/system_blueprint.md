@@ -39,8 +39,7 @@ feedback.
 
 ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle, enabling cross-layer
 reasoning. Each layer receives a `layer_init` broadcast on startup, and incoming queries fan out across all layers before being
-aggregated into a single response. See [Memory Layers Guide](memory_layers_GUIDE.md) and [Blueprint Spine](blueprint_spine.md)
-for implementation details and schema references.
+aggregated into a single response. See [Memory Layers Guide](memory_layers_GUIDE.md), [Blueprint Spine](blueprint_spine.md), and diagrams such as [Memory Bundle](figures/memory_bundle.mmd), [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd), [Memory Layer Flow](figures/memory_layer_flow.mmd), and [Query Memory Aggregation](figures/query_memory_aggregation.mmd) for implementation details and schema references.
 
 ```mermaid
 flowchart LR
