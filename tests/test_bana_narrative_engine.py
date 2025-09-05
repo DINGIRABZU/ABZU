@@ -7,7 +7,7 @@ import json
 from memory.narrative_engine import StoryEvent, compose_multitrack_story
 
 
-def test_multitrack_track_schemas():
+def test_multitrack_track_schemas() -> None:
     """Biosignal events yield full multitrack story output with valid schemas."""
     csv_path = Path("data/biosignals/sample_biosignals.csv")
     events = []
@@ -43,14 +43,15 @@ def test_multitrack_track_schemas():
     )
 
 
-def test_multitrack_story_golden_file():
+def test_multitrack_story_golden_file() -> None:
     """`compose_multitrack_story` output matches the recorded sample."""
     events = [
         StoryEvent(actor="hero", action="smiles"),
         StoryEvent(actor="villain", action="frowns"),
     ]
     result = compose_multitrack_story(events)
-    expected_path = Path("tests/data/bana/multitrack_story.json")
-    with expected_path.open(encoding="utf-8") as f:
-        expected = json.load(f)
-    assert result == expected
+    data_dir = Path("tests/data/bana")
+    for track in ("prose", "audio", "visual", "usd"):
+        with (data_dir / f"{track}.json").open(encoding="utf-8") as f:
+            expected = json.load(f)
+        assert result[track] == expected, f"{track} track mismatch"
