@@ -87,6 +87,7 @@ Confirm these items before submitting a pull request:
  - [ ] Environment prepared per [Environment Preparation](#environment-preparation)
  - [ ] Key-document summaries verified with `scripts/verify_doc_hashes.py`
  - [ ] [blueprint_spine.md](blueprint_spine.md) read and acknowledged
+ - [ ] [operator_nazarick_bridge.md](operator_nazarick_bridge.md) reviewed for agent-channel workflow
  - [ ] Version bumps applied and synchronized in `component_index.json`
  - [ ] If any component or connector changes, rebuild `component_index.json` and confirm registry updates
  - [ ] Connector registry updated for added or modified connectors ([docs/connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md))

@@ -60,6 +60,7 @@ feedback.
   - [Persona API Guide](persona_api_guide.md) – conventions for persona profiles and hooks
   - [Nazarick Manifesto](nazarick_manifesto.md) – narrative charter governing personas
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
+  - [Operator-Nazarick Bridge](operator_nazarick_bridge.md) – Vanna workflow, channel personas, and web console chat
   - [Primordials Service](primordials_service.md) – DeepSeek-V3 orchestration service
 - **Operational guides**
   - [Operations Guide](operations.md) – runbooks for deployment and maintenance
