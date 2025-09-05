@@ -29,6 +29,26 @@ These guardians poll Chakracon metrics and invoke recovery scripts when threshol
 | `crown_agent` | `scripts/chakra_healing/crown_full_restart.sh` | Orchestrate system reboot and operator notification |
 
 
+### Narrative History Adapter
+
+Each chakra agent can retrieve its recent narrative context using the shared
+story adapter:
+
+```python
+from agents.utils.story_adapter import get_recent_stories
+
+stories = get_recent_stories("root_agent", limit=20)
+```
+
+Streaming the full log is also supported:
+
+```python
+from agents.utils.story_adapter import watch_stories
+
+watch_stories(print)
+```
+
+
 ## Launch Commands
 
 Start all servants for development:
