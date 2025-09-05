@@ -13,6 +13,8 @@ import asyncio
 import os
 from typing import Any, Dict, Optional
 
+from opentelemetry import trace
+
 from .interaction_log import log_agent_interaction
 
 from citadel.event_producer import (
@@ -24,6 +26,7 @@ from citadel.event_producer import (
 from worlds.config_registry import register_broker
 
 _producer: Optional[EventProducer] = None
+_tracer = trace.get_tracer(__name__)
 
 
 def set_event_producer(producer: EventProducer | None) -> None:
@@ -65,31 +68,39 @@ def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:
     returns.
     """
 
-    entry: Dict[str, Any] = {
-        "source": actor,
-        "action": action,
-        "metadata": metadata,
-        "function": "emit_event",
-    }
-    target = (
-        metadata.get("target") or metadata.get("agent") or metadata.get("target_agent")
-    )
-    if isinstance(target, str):
-        entry["target"] = target
-    log_agent_interaction(entry)
+    with _tracer.start_as_current_span("agent.event") as span:
+        span.set_attribute("agent.actor", actor)
+        span.set_attribute("agent.action", action)
+        for key, value in metadata.items():
+            span.set_attribute(f"agent.metadata.{key}", str(value))
 
-    producer = _get_producer()
-    if producer is None:
-        return
+        entry: Dict[str, Any] = {
+            "source": actor,
+            "action": action,
+            "metadata": metadata,
+            "function": "emit_event",
+        }
+        target = (
+            metadata.get("target")
+            or metadata.get("agent")
+            or metadata.get("target_agent")
+        )
+        if isinstance(target, str):
+            entry["target"] = target
+        log_agent_interaction(entry)
 
-    event = Event(agent_id=actor, event_type=action, payload=metadata)
+        producer = _get_producer()
+        if producer is None:
+            return
 
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        asyncio.run(producer.emit(event))
-    else:  # pragma: no cover - depends on event loop presence
-        loop.create_task(producer.emit(event))
+        event = Event(agent_id=actor, event_type=action, payload=metadata)
+
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            asyncio.run(producer.emit(event))
+        else:  # pragma: no cover - depends on event loop presence
+            loop.create_task(producer.emit(event))
 
 
 __all__ = ["emit_event", "set_event_producer"]

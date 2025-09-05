@@ -309,6 +309,12 @@ def health_check() -> dict[str, str]:
     return {"status": "alive"}
 
 
+@app.get("/healthz")
+def healthz_check() -> dict[str, str]:
+    """Alias of ``/health`` for Kubernetes probes."""
+    return health_check()
+
+
 @app.get("/ready")
 def readiness_check() -> dict[str, str]:
     """Return service readiness status."""

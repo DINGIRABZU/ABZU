@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Set
+from typing import List, Set, cast
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from pathlib import Path
@@ -77,8 +77,8 @@ async def capture_voice(data: dict[str, object]) -> dict[str, str]:
     """Record a short voice sample for a speaker profile."""
 
     path = Path(str(data.get("path", "sample.wav")))
-    seconds = float(data.get("seconds", 3.0))
-    sr = int(data.get("sr", 22_050))
+    seconds = float(cast(float | int | str, data.get("seconds", 3.0)))
+    sr = int(cast(float | int | str, data.get("sr", 22_050)))
     speaker = str(data.get("speaker", "user"))
     try:
         voice_cloner.capture_sample(path, seconds=seconds, sr=sr, speaker=speaker)
@@ -102,6 +102,12 @@ async def synthesize_voice(data: dict[str, object]) -> dict[str, object]:
     except RuntimeError as exc:
         return {"error": str(exc)}
     return {"audio": str(out_path), "speaker": speaker, "emotion": emotion, "mos": mos}
+
+
+@app.get("/healthz")  # type: ignore[misc]
+async def healthz() -> dict[str, str]:
+    """Basic liveness endpoint."""
+    return {"status": "ok"}
 
 
 __all__ = [
