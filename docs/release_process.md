@@ -16,9 +16,10 @@ This guide covers signing build artifacts and verifying their integrity.
 1. Ensure the public portion of the project key is imported into your keyring.
 2. Validate artifacts against the manifest:
    ```bash
-   python scripts/verify_release_signature.py dist
+   python scripts/verify_release_signature.py dist --manifest release/manifest.json
    ```
-3. The verifier checks each checksum and GPG signature.
+   The verifier recomputes each file's checksum and checks its GPG signature.
+3. On success the script prints `All signatures valid.` and exits with status 0.
 
 ## Version History
 
