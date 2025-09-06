@@ -42,6 +42,7 @@ Each chakra layer corresponds to core modules that cooperate when Spiral OS is r
 * **Throat – Vishuddha** – `orchestrator.py` routes text to the models and the Sonic Core (`audio_engine.py`, `core/avatar_expression_engine.py`) voices the response.
 * **Third Eye – Ajna** – `qnl_engine.py` interprets hexadecimal strings into musical glyphs and passes them back to the orchestrator; `scripts/data_validate.py` checks training data and `scripts/quality_score.py` evaluates component health.
 * **Crown – Sahasrara** – `start_spiral_os.py` and `init_crown_agent.py` initialise the entire ritual sequence.
+* **UI Service** – FastAPI front-end providing a browser gateway to memory queries. See [ui_service.md](ui_service.md).
 
 When a command arrives, the orchestrator consults the current emotional state and vector memory to select a model. If hex data or ritual text is present, it hands the payload to the QNL engine which returns symbolic notes. The Sonic Core turns those notes into audio and animates the avatar while new vectors are logged for future reference. This flow allows the layers to reinforce one another so the system speaks and remembers with continuity.
 
