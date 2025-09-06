@@ -56,7 +56,7 @@ class RedisEventProducer(EventProducer):
     async def emit(self, event: Event) -> None:  # noqa: D401 - See base class
         if self._redis is None:
             await self._connect()
-        await self._redis.publish(self.channel, event.to_json())
+        await self._redis.publish(self.channel, event.to_json())  # type: ignore[union-attr]
 
 
 class KafkaEventProducer(EventProducer):
@@ -71,9 +71,9 @@ class KafkaEventProducer(EventProducer):
         from aiokafka import AIOKafkaProducer  # type: ignore
 
         self._producer = AIOKafkaProducer(bootstrap_servers=self.bootstrap_servers)
-        await self._producer.start()
+        await self._producer.start()  # type: ignore[union-attr]
 
     async def emit(self, event: Event) -> None:  # noqa: D401 - See base class
         if self._producer is None:
             await self._connect()
-        await self._producer.send_and_wait(self.topic, event.to_json().encode("utf-8"))
+        await self._producer.send_and_wait(self.topic, event.to_json().encode("utf-8"))  # type: ignore[union-attr]
