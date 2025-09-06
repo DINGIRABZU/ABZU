@@ -11,7 +11,6 @@ __version__ = "0.1.0"
 
 from typing import Any, Dict
 import time
-from pathlib import Path
 
 import emotional_state
 from crown_decider import decide_expression_options
@@ -36,15 +35,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - GPU may be unavailable
     pynvml = None  # type: ignore[assignment]
 
-ROOT = Path(__file__).resolve().parent
-registry = DocumentRegistry(
-    [
-        ROOT / "GENESIS",
-        ROOT / "IGNITION",
-        ROOT / "PRIME OPERATOR",
-        ROOT / "CODEX",
-    ]
-)
+registry = DocumentRegistry()
 
 _START_TIME = time.perf_counter()
 

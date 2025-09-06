@@ -15,7 +15,7 @@ from agents.nazarick.document_registry import DocumentRegistry
 
 
 def test_registry_collects_expected_files():
-    registry = DocumentRegistry([Path("GENESIS"), Path("IGNITION")])
+    registry = DocumentRegistry()
     corpus = registry.get_corpus()
     names = {Path(p).name for p in corpus}
     assert "GENESIS_.md" in names
@@ -69,7 +69,7 @@ def test_crown_router_receives_documents(monkeypatch):
 
     importlib.reload(crown_router)
 
-    registry = DocumentRegistry([Path("GENESIS"), Path("IGNITION")])
+    registry = DocumentRegistry()
     monkeypatch.setattr(crown_router, "registry", registry)
     monkeypatch.setattr(
         crown_router, "vector_memory", types.SimpleNamespace(search=lambda *a, **k: [])
