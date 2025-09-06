@@ -36,6 +36,26 @@ summary metrics are reported back to the Primordials service through
 `primordials_api`, ensuring upstream models receive continuous quality
 feedback.
 
+### Chakra Cycle Engine
+
+The chakra cycle engine distributes a steady heartbeat across every layer.
+Root through Crown report their timing ratios back to the engine, which flags
+misalignment when beats drift from the expected 1 :1 rhythm.
+
+#### Heartbeat Ratios
+
+Ratio telemetry informs operators when a layer accelerates or lags. Out-of-band
+values raise alignment events recorded in the blueprint so coupled services can
+adjust.
+
+#### Silent Chakra Handling
+
+When a layer fails to return a beat, it is marked silent. The engine issues a
+remediation signal to [NAZARICK agents](nazarick_agents.md), which restore the
+missing chakra and resume the cycle. This self-healing loop is diagrammed in the
+[Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) and
+covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
+
 ### Memory Bundle
 
 ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle that Crown and subsidiary services consult for state exchange and recall. `broadcast_layer_event("layer_init")` signals readiness across the bundle, while `query_memory` fans out incoming requests and aggregates a single response. For deeper detail, see [Blueprint Spine](blueprint_spine.md) and the [Memory Layers Guide](memory_layers_GUIDE.md).

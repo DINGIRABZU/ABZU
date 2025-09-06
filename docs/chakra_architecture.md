@@ -28,3 +28,29 @@ Additional Nazarick agents expand these layers:
 | Throat | `crown_prompt_orchestrator.py`, `INANNA_AI_AGENT/inanna_ai.py` | LLM APIs | Prompt/response JSON payloads |
 | Third Eye | `insight_compiler.py`, `SPIRAL_OS/qnl_engine.py`, `seven_dimensional_music.py` | Audio toolchain | `mirror_thresholds.json`, QNL glyph sequences |
 | Crown | `init_crown_agent.py`, `start_spiral_os.py`, `crown_model_launcher.sh` | Model runtime, container services | `pipeline` YAML, `ritual_profile.json` |
+
+## Chakra Cycle Engine
+
+The chakra cycle engine paces each layer with a timed heartbeat. Every tick
+broadcasts a pulse across Root through Crown and gathers their responses to
+keep the stack synchronized.
+
+### Heartbeat Ratios
+
+Each layer reports its beat relative to the engine’s tick. Deviations beyond
+the expected 1 :1 rhythm generate alignment events, which surface in the
+[System Blueprint](system_blueprint.md#chakra-cycle-engine).
+
+### Alignment Events
+
+Alignment events are logged and echoed into the architecture map so operators
+can correlate misfires with service health. The
+[Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing)
+illustrates the propagation path.
+
+### Silent Chakra Remediation
+
+If a layer fails to answer a heartbeat, the engine marks it silent and
+requests remediation from [NAZARICK agents](nazarick_agents.md). Those
+servants reinitialize the dormant chakra following the self-healing loop
+outlined in the [Self-Healing Manifesto](self_healing_manifesto.md).

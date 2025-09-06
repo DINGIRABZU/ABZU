@@ -1,0 +1,9 @@
+sequenceDiagram
+    participant Engine as Chakra Cycle Engine
+    participant Layers as Chakra Layers
+    participant Nazarick as NAZARICK Agents
+    Engine->>Layers: propagate heartbeat
+    Layers-->>Engine: ratio reports
+    Engine-->>Nazarick: alignment event
+    Nazarick->>Layers: remediation
+    Layers-->>Engine: heartbeat restored
