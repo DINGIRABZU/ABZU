@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `abzu-memory-bootstrap` script initializes memory layers in one step.
 - Chakra watchdog emits `chakra_down` events with NAZARICK resuscitation.
+- Detailed notes describe how the Chakra watchdog coordinates with the Resuscitator
+  to restart failing layers and log recovery metrics.
 
 - WebSocket `/operator/events` for command acknowledgements and progress with console subscription.
 - Nazarick Web Console docs explain viewing agent interactions, NLQ log search, and live chat streams; added tests for paginated conversation logs.
