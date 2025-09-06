@@ -14,7 +14,7 @@ Follow this reading order before contributing. After reviewing each document, re
    - [Persona API Guide](../persona_api_guide.md)
    - [Spiral Cortex Terminal](../spiral_cortex_terminal.md)
 
-6. [Arcade UI](../arcade_ui.md)
+6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
 
 Confirm each item before starting code changes.
 

@@ -13,6 +13,14 @@ Operator-facing arcade interface that bridges the Operator API and RAZAR.
 - `OPERATOR_TOKEN` – bearer token used for authenticated requests.
 - `CROWN_URL` – Crown service RAZAR delegates to after approval.
 
+## Quickstart
+```bash
+export OPERATOR_API_URL="http://localhost:8000"
+export OPERATOR_TOKEN="<token>"
+npm start --prefix web_console
+# visit http://localhost:5173 and click Memory Scan
+```
+
 ## Operator Interaction
 The operator uses the Arcade UI to send HTTP commands to the Operator API. Each button forwards a request that RAZAR interprets
 and relays to Crown. Responses bubble back to the arcade, giving the operator real‑time feedback on system state.
@@ -29,6 +37,20 @@ sequenceDiagram
     ArcadeUI->>OperatorAPI: REST call
     OperatorAPI->>RAZAR: delegate
     RAZAR->>Crown: orchestrate
+```
+
+## Memory Scan
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant "Arcade UI" as ArcadeUI
+    participant "/memory/query" as MemoryQuery
+    participant MemoryBundle
+
+    Operator->>ArcadeUI: click Memory Scan
+    ArcadeUI->>MemoryQuery: GET /memory/query
+    MemoryQuery->>MemoryBundle: aggregate layers
 ```
 
 ## Version History
