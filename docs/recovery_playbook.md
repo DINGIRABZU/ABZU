@@ -10,9 +10,10 @@ Recurring problems and their fixes are cataloged in the
 2. Each launch runs a service-specific probe from `agents.razar.health_checks`.
 3. On failure the orchestrator retries the component locally a limited number of times.
 4. If local retries fail, `ai_invoker.handover(component, error, use_opencode=True)` requests an automated patch. Each attempt is logged to `logs/razar_ai_invocations.json`.
-5. Returned patches are applied and the component's health check reruns until it succeeds or the remote attempt limit is reached.
-6. After exhausting remote attempts, the component's metadata is quarantined under `quarantine/` and an entry is appended to `docs/quarantine_log.md`.
-7. The last successful component is recorded in `logs/razar_state.json` so subsequent runs resume from that point.
+5. When run with `--long-task`, the orchestrator keeps invoking the handover until the component passes its health check or the operator aborts with `Ctrl+C`. Each attempt and resulting patch is appended to `logs/razar_long_task.json`.
+6. Without `--long-task`, returned patches are applied and the health check reruns until it succeeds or the remote attempt limit is reached.
+7. After exhausting remote attempts or an operator abort, the component's metadata is quarantined under `quarantine/` and an entry is appended to `docs/quarantine_log.md`.
+8. The last successful component is recorded in `logs/razar_state.json` so subsequent runs resume from that point.
 
 ## Restoring a component
 
@@ -47,4 +48,6 @@ Call `razar.ai_invoker.handover(component, error, use_opencode=True)` with the
 failure details. The failure context is piped to `opencode run --json` and any
 patch suggestions are applied through `code_repair.repair_module`. The boot
 orchestrator repeats this handover and health check cycle until the component
-recovers or the remote attempt limit is reached.
+recovers or the remote attempt limit is reached. Enable long task mode with
+`--long-task` to keep requesting patches indefinitely; abort with `Ctrl+C` to
+halt the loop. Every long task attempt is written to `logs/razar_long_task.json`.
