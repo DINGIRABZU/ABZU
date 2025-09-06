@@ -39,6 +39,15 @@ python -m razar.status_dashboard
 
 The dashboard also links to quarantine logs and the boot history.
 
+## Heartbeat polling and event routing
+
+`agents.razar.runtime_manager` polls each registered service for a heartbeat.
+Responses and misses are published on the lifecycle bus as
+`component_ready`, `chakra_down`, and `recovered` events. Operator commands and
+mission updates share the same channel so agents can react in real time.
+Refer to the [System Blueprint](system_blueprint.md#event-routing) for an
+architectural overview.
+
 For protocol details of the lifecycle bus and automated recovery flow, see
 the [RAZAR Agent guide](RAZAR_AGENT.md#lifecycle-bus-and-recovery-protocol).
 

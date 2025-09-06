@@ -38,7 +38,10 @@ feedback.
 
 ### Chakra Cycle Engine
 
-The chakra cycle engine distributes a steady heartbeat across every layer.
+The chakra cycle engine distributes a steady heartbeat across every layer and
+polls each service for a response. RAZAR pings the layers’ `/health` endpoints
+on a fixed interval, logging the returned beats and surfacing lagging components
+to operators.
 Root through Crown report their timing ratios back to the engine, which flags
 misalignment when beats drift from the expected 1 :1 rhythm.
 
@@ -50,8 +53,9 @@ adjust.
 
 #### Silent Chakra Handling
 
-When a layer fails to return a beat, it is marked silent. The engine issues a
-remediation signal to [NAZARICK agents](nazarick_agents.md), which restore the
+When a layer fails to return a beat, it is marked silent. The engine routes a
+`chakra_down` event to the responsible
+[NAZARICK agent](nazarick_agents.md), which attempts to restore the
 missing chakra and resume the cycle. This self-healing loop is diagrammed in the
 [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) and
 covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
@@ -80,6 +84,25 @@ sequenceDiagram
     Service-->>RAZAR: ready
     RAZAR-->>Operator: acknowledge
 ```
+
+### Event Routing
+
+RAZAR publishes component signals on a lifecycle bus. Heartbeat drifts,
+operator commands, and memory events are tagged with the originating chakra and
+routed to the agent responsible for that layer. `crown_router` fans out prompt
+and retrieval requests, while `nazarick_agents` subscribe to mission updates and
+state changes. See the [Operations Guide](operations.md#heartbeat-polling-and-event-routing)
+for runtime details.
+
+### Agent-Specific Recovery
+
+Each chakra has a dedicated remediation script. When the heartbeat poller
+raises a `chakra_down` event, RAZAR dispatches the event to the layer's agent,
+which runs its recovery hook—`root_restore_network.sh`,
+`sacral_gpu_recover.py`, and similar utilities under `scripts/chakra_healing/`.
+Successful repairs emit a `recovered` notice on the bus before the orchestrator
+resumes normal polling. Failure escalates to the operator as outlined in the
+[Recovery Playbook](recovery_playbook.md).
 
 ### Operator UI Flow
 
