@@ -29,3 +29,10 @@ The command:
 - **Mental layer** – uses Neo4j when available, otherwise a JSONL fallback
 - **Servant models** – custom endpoints from `SERVANT_MODELS`
 
+## Updating Models and Tokenizers
+
+Service parameters are declared per world in `worlds/services.yaml`. Adjust the
+`model` and `tokenizer` entries for your world, then rerun
+`abzu-bootstrap-world`. The bootstrap process validates the manifest and warns
+when a configured service is missing.
+
