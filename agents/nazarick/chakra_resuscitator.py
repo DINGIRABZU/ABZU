@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 import time
@@ -49,11 +50,15 @@ class ChakraResuscitator:
         actions: Dict[str, Callable[[], bool]],
         emitter: Callable[[str, str, Dict[str, object]], None] = emit_event,
         agent_id: str | None = None,
+        retries: int = 3,
+        backoff: float = 1.0,
     ) -> None:
         self.actions = actions
         self.emit = emitter
         # Resolve the current agent identifier for targeted events.
         self.agent_id = agent_id or os.getenv("AGENT_ID", "")
+        self.retries = retries
+        self.backoff = backoff
 
     async def handle_event(self, event: Event) -> None:
         """Process a ``chakra_down`` event."""
@@ -70,10 +75,19 @@ class ChakraResuscitator:
         success = False
         start = time.time()
         if action:
-            try:
-                success = action()
-            except Exception:  # pragma: no cover - unexpected failure
-                LOGGER.exception("Repair action failed for %s", chakra)
+            delay = self.backoff
+            for attempt in range(1, self.retries + 1):
+                try:
+                    success = action()
+                except Exception:  # pragma: no cover - unexpected failure
+                    LOGGER.exception("Repair action failed for %s", chakra)
+                    success = False
+                if success:
+                    break
+                if attempt < self.retries:
+                    LOGGER.debug("Retrying repair for %s in %s seconds", chakra, delay)
+                    await asyncio.sleep(delay)
+                    delay *= 2
         duration = time.time() - start
         if RESUSCITATION_DURATION is not None:
             RESUSCITATION_DURATION.labels(chakra).observe(duration)
