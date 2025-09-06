@@ -6,6 +6,12 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
+# Display welcome banner
+if ! python scripts/welcome_banner.py; then
+    echo "welcome banner failed" >&2
+    exit 1
+fi
+
 # Ensure external requirements are present
 if ! ./scripts/check_requirements.sh >/dev/null 2>&1; then
     echo "Requirement check failed. Run scripts/check_requirements.sh for details." >&2
