@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: 6e96b0fc804fdb2dbfd8580b4601b22dd3c4dce1751840ae848534e6534689c4
+    sha256: b6e7b432bab1479d06bc28d5998da0473bc8443b9e06c610507a143410447537
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -169,7 +169,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: eeb49c0b4965f7e69417462862ef363405a1617c25b8889fa112ccaf65d23ea0
+    sha256: 7c266d81870304aea4859869ff3c0b2e44f3a1af1983591d10c4264b126c2504
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -191,7 +191,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 1f9b10d1bca899379f2d91b80d4e6dbffc264524d45669f41e21214afd853baf
+    sha256: f52c68361f1a87c9018768d33db73a6844136032c1d3ca2739643149df4f4faa
     summary:
       purpose: Core contribution rules.
       scope: All contributors.

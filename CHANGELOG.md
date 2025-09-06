@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - WebSocket `/operator/events` for command acknowledgements and progress with console subscription.
 - Nazarick Web Console docs explain viewing agent interactions, NLQ log search, and live chat streams; added tests for paginated conversation logs.
+- Arcade operator interface and UI service diagrams expand console theming guidance.
 
 - Instrumented Crown, Bana and memory layers with Prometheus gauges, documented
   the copresence dashboard and added tests for metrics endpoints.

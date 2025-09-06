@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.94
-**Last updated:** 2025-10-03
+**Version:** v1.0.95
+**Last updated:** 2025-10-04
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -46,6 +46,21 @@ sequenceDiagram
     Operator-->>RAZAR: authorize launch
     RAZAR->>Operator: signal online
 ```
+
+#### Arcade Operator Interface
+The arcade console offers a retro portal for mission control.
+
+**Responsibilities**
+
+- Surface boot status and chakra readings on a single dashboard.
+- Relay operator commands with latency indicators and retry cues.
+- Archive session transcripts alongside selected themes.
+
+**Theming Rules**
+
+- Embrace neon vector aesthetics reminiscent of 1980s arcades.
+- Maintain readable contrast and avoid flashing sequences over 10 Hz.
+- Align chakra events with their canonical color palette.
 
 ## Repository Blueprint
 ABZU adheres to a consistent top-level directory layout:
