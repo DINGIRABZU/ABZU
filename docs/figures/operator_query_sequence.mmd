@@ -1,0 +1,15 @@
+%% Operator query sequence diagram
+%% Version: v1.0.0
+%% Last updated: 2025-09-05
+sequenceDiagram
+    participant UI as Arcade UI
+    participant API as /query_memory
+    participant MB as MemoryBundle
+    participant L as Layers
+
+    UI->>API: submit query
+    API->>MB: query_memory
+    MB->>L: fan out
+    L-->>MB: results
+    MB-->>API: aggregate
+    API-->>UI: respond
