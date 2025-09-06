@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Any, Dict, Optional
@@ -32,6 +33,15 @@ class Event:
         return cls(**raw)
 
 
+def _write_dead_letter(event: Event, error: Exception) -> None:
+    """Persist events that could not be dispatched."""
+
+    path = os.getenv("CITADEL_DEAD_LETTER_FILE", "dead_letter_events.jsonl")
+    entry = {"event": asdict(event), "error": str(error)}
+    with open(path, "a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, default=str) + "\n")
+
+
 class EventProducer:
     """Interface for event producers."""
 
@@ -47,7 +57,7 @@ class RedisEventProducer(EventProducer):
     def __init__(self, channel: str, url: str = "redis://localhost") -> None:
         self.channel = channel
         self.url = url
-        self._redis: Optional[object] = None
+        self._redis: Any | None = None
 
     async def _connect(self) -> None:
         import redis.asyncio as redis  # type: ignore
@@ -57,7 +67,11 @@ class RedisEventProducer(EventProducer):
     async def emit(self, event: Event) -> None:  # noqa: D401 - See base class
         if self._redis is None:
             await self._connect()
-        await self._redis.publish(self.channel, event.to_json())  # type: ignore[union-attr]
+        assert self._redis is not None
+        try:
+            await self._redis.publish(self.channel, event.to_json())
+        except Exception as err:  # pragma: no cover - network failure
+            _write_dead_letter(event, err)
 
 
 class KafkaEventProducer(EventProducer):
@@ -66,7 +80,7 @@ class KafkaEventProducer(EventProducer):
     def __init__(self, topic: str, bootstrap_servers: str = "localhost:9092") -> None:
         self.topic = topic
         self.bootstrap_servers = bootstrap_servers
-        self._producer: Optional[object] = None
+        self._producer: Any | None = None
 
     async def _connect(self) -> None:
         from aiokafka import AIOKafkaProducer  # type: ignore
@@ -77,4 +91,10 @@ class KafkaEventProducer(EventProducer):
     async def emit(self, event: Event) -> None:  # noqa: D401 - See base class
         if self._producer is None:
             await self._connect()
-        await self._producer.send_and_wait(self.topic, event.to_json().encode("utf-8"))  # type: ignore[union-attr]
+        assert self._producer is not None
+        try:
+            await self._producer.send_and_wait(
+                self.topic, event.to_json().encode("utf-8")
+            )
+        except Exception as err:  # pragma: no cover - network failure
+            _write_dead_letter(event, err)
