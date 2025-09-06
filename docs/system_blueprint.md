@@ -630,10 +630,9 @@ Offers a retro-styled portal that narrates boot sequences with Sumerian motifs.
 
 ```mermaid
 flowchart LR
-    Tablet[(Tablet of Destinies)] --> ArcadeUI[Arcade UI]
-    ArcadeUI --> RAZAR
-    RAZAR --> MemoryBundle[(Memory Bundle)]
-    MemoryBundle --> ArcadeUI
+    Console[Arcade Console] --> OperatorAPI[Operator API]
+    OperatorAPI --> MemoryBundle[(Memory Bundle)]
+    MemoryBundle --> Console
 ```
 
 - **Layer:** Throat

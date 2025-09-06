@@ -62,6 +62,23 @@ The arcade console offers a retro portal for mission control.
 - Maintain readable contrast and avoid flashing sequences over 10 Hz.
 - Align chakra events with their canonical color palette.
 
+#### Arcade Memory Interface
+The console can inspect memory readiness during ignition via `/memory/query`.
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant Console
+    participant RAZAR
+    participant Memory as "Memory Bundle"
+    Operator->>Console: start ignition
+    Console->>RAZAR: /start_ignition
+    RAZAR->>Memory: /memory/query
+    Memory-->>RAZAR: bundle status
+    RAZAR-->>Console: report
+    Console-->>Operator: display readiness
+```
+
 ## Repository Blueprint
 ABZU adheres to a consistent top-level directory layout:
 
