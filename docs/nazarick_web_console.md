@@ -6,6 +6,23 @@ The Nazarick Web Console provides a browser-based interface for issuing commands
 
 The console includes a status panel that polls `/operator/status` for component health, recent errors, and memory usage.
 
+## Crown vs. Nazarick Modes
+
+Operators can route actions through the Crown API or a Nazarick channel.
+Choose the Crown path for system‑wide commands and initialization rites.
+Switch to a Nazarick channel when collaborating with a specific servant or
+following a narrative thread.
+
+- **Crown API** – direct control of services and debugging hooks.
+- **Nazarick Channel** – chat-oriented flows for individual agents.
+
+```mermaid
+flowchart LR
+    O[Operator] --> M{Mode Selector}
+    M --> C[Crown API]
+    M --> N[Nazarick Channel]
+```
+
 ## Interaction Diagram
 
 ```mermaid

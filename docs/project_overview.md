@@ -44,6 +44,7 @@ Each chakra layer corresponds to core modules that cooperate when Spiral OS is r
 * **Crown – Sahasrara** – `start_spiral_os.py` and `init_crown_agent.py` initialise the entire ritual sequence.
 * **UI Service** – FastAPI front-end providing a browser gateway to memory queries. See [ui_service.md](ui_service.md).
 * **Operator Console** – Arcade interface driving the Operator API. See [operator_console.md](operator_console.md).
+* **Nazarick Web Console** – developer dashboard bridging Crown and Nazarick interfaces. See [Crown vs. Nazarick Modes](nazarick_web_console.md#crown-vs-nazarick-modes).
 * **Arcade UI** – features, quickstart, and memory scan sequence. See [arcade_ui.md](arcade_ui.md).
 
 When a command arrives, the orchestrator consults the current emotional state and vector memory to select a model. If hex data or ritual text is present, it hands the payload to the QNL engine which returns symbolic notes. The Sonic Core turns those notes into audio and animates the avatar while new vectors are logged for future reference. This flow allows the layers to reinforce one another so the system speaks and remembers with continuity.
