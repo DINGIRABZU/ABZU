@@ -3,17 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <title>Arcade Operator</title>
-  <style>
-    body { background: black; color: #0ff; font-family: 'Press Start 2P', monospace; text-align:center; }
-    button { background:#f0f; color:#0ff; border:2px solid #0ff; padding:10px; margin:10px; cursor:pointer; }
-    #log { background:#000; color:#0f0; border:1px solid #0ff; padding:10px; margin-top:20px; height:200px; overflow:auto; white-space:pre-wrap; }
-  </style>
+  <link rel="stylesheet" href="/static/arcade.css" />
 </head>
 <body>
+  <div id="greeting-modal" class="modal show">
+    <div class="modal-content">
+      <p>𒀭𒄩𒌆 𒄠𒂊 𒄿𒄾𒄀</p>
+      <button id="close-modal">OK</button>
+    </div>
+  </div>
   <h1>Arcade Operator</h1>
   <button id="ignite">Ignite</button>
-  <button id="handover">Handover</button>
   <button id="query">Query Memory</button>
+  <button id="status">Status</button>
   <pre id="log"></pre>
   <script>
     async function streamText(url, options) {
@@ -22,11 +24,18 @@
       document.getElementById('log').textContent = text;
     }
     document.getElementById('ignite').onclick = () => streamText('/start_ignition', {method:'POST'});
-    document.getElementById('handover').onclick = () => streamText('/handover', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({component:'demo', error:'boom'})});
     document.getElementById('query').onclick = async () => {
+      const resp = await fetch('/query', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query:'demo'})});
+      const data = await resp.json();
+      document.getElementById('log').textContent = JSON.stringify(data, null, 2);
+    };
+    document.getElementById('status').onclick = async () => {
       const resp = await fetch('/status');
       const data = await resp.json();
       document.getElementById('log').textContent = JSON.stringify(data, null, 2);
+    };
+    document.getElementById('close-modal').onclick = () => {
+      document.getElementById('greeting-modal').classList.remove('show');
     };
   </script>
 </body>
