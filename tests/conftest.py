@@ -293,6 +293,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_metrics_endpoints.py"),
     str(ROOT / "tests" / "narrative" / "test_self_heal_logging.py"),
     str(ROOT / "tests" / "test_config_registry.py"),
+    str(ROOT / "tests" / "tools" / "test_opencode_client.py"),
 }
 
 
