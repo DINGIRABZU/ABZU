@@ -10,6 +10,7 @@ from .config_registry import (
     register_layer,
     register_remote_attempt,
     register_component_hash,
+    register_patch,
     register_path,
     reset_registry,
 )
@@ -24,6 +25,7 @@ __all__ = [
     "register_layer",
     "register_remote_attempt",
     "register_component_hash",
+    "register_patch",
     "register_path",
     "reset_registry",
 ]

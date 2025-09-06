@@ -1,4 +1,7 @@
 import importlib
+from pathlib import Path
+
+import pytest
 
 from worlds.config_registry import (
     export_config,
@@ -7,11 +10,13 @@ from worlds.config_registry import (
     import_config_file,
     reset_registry,
     register_remote_attempt,
-    register_component_hash,
+    register_patch,
 )
 
 
-def test_registration_and_roundtrip(tmp_path, monkeypatch):
+def test_registration_and_roundtrip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     # start with a clean registry
     reset_registry()
 
@@ -38,7 +43,7 @@ def test_registration_and_roundtrip(tmp_path, monkeypatch):
 
     # Register remote repair metadata
     register_remote_attempt("demo")
-    register_component_hash("demo", "abc123")
+    register_patch("demo", "patch1", "abc123")
 
     cfg = export_config()
 
@@ -48,6 +53,9 @@ def test_registration_and_roundtrip(tmp_path, monkeypatch):
     assert cfg["brokers"]["redis"]["channel"] == "chan"
     assert cfg["remote_attempts"]["demo"] == 1
     assert cfg["component_hashes"]["demo"] == "abc123"
+    assert cfg["patches"] == [
+        {"component": "demo", "patch": "patch1", "hash": "abc123"}
+    ]
 
     # verify round-trip via dictionary
     reset_registry()

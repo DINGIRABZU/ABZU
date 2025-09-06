@@ -136,6 +136,7 @@ inanna = "cli:main"
 crown-prompt = "crown_prompt_orchestrator:main"
 abzu-memory-bootstrap = "scripts.bootstrap_memory:main"
 abzu-bootstrap-world = "scripts.bootstrap_world:main"
+abzu-world-export = "scripts.world_export:main"
 
 [tool.poetry.scripts]
 abzu = "cli:main"
