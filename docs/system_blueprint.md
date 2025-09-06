@@ -35,7 +35,7 @@ summary metrics are reported back to the Primordials service through
 `primordials_api`, ensuring upstream models receive continuous quality
 feedback.
 
-### Memory Bundle Architecture
+### Memory Bundle
 
 ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle that Crown and subsidiary services consult for state exchange and recall. `broadcast_layer_event("layer_init")` signals readiness across the bundle, while `query_memory` fans out incoming requests and aggregates a single response. For deeper detail, see [Blueprint Spine](blueprint_spine.md) and the [Memory Layers Guide](memory_layers_GUIDE.md).
 
@@ -58,6 +58,30 @@ flowchart LR
     Mental --> Aggregate
     Spiritual --> Aggregate
     Narrative --> Aggregate
+```
+
+### Dynamic Ignition
+
+RAZAR boots services on demand, letting the operator shape the startup sequence.
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant RAZAR
+    participant Service
+    Operator->>RAZAR: mission start
+    RAZAR->>Service: spin up
+    Service-->>RAZAR: ready
+    RAZAR-->>Operator: acknowledge
+```
+
+### Operator UI Flow
+
+```mermaid
+graph TD
+    Operator --> Console[Arcade Console]
+    Console --> RAZAR
+    RAZAR --> Console
 ```
 
 ### Document Map

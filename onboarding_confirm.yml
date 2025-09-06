@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: b6e7b432bab1479d06bc28d5998da0473bc8443b9e06c610507a143410447537
+    sha256: 6e5acee87a9c0cdb15035dad24f1a7e955dd72eaf8174b4c96835317d9933641
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -49,7 +49,7 @@ documents:
       key_rules: Keep contributions aligned with project scope.
       insight: Confirm contributions align with project goals.
   docs/project_mission_vision.md:
-    sha256: 7a6eb00309cbcd954facf388f0a805db83d09f0e7fd31c39bebcccede506da1a
+    sha256: 93fbef74abd1b02affbe63700c276faf523de816e99b9cc44752f8b6aaf6d27e
     summary:
       purpose: Unified mission and vision for ABZU.
       scope: Project direction and guiding principles.
@@ -169,7 +169,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 7c266d81870304aea4859869ff3c0b2e44f3a1af1983591d10c4264b126c2504
+    sha256: 136e125552c0c2079faa0079f4d56763de2440172d279c2685ddf1bcae786ad0
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -191,7 +191,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: f52c68361f1a87c9018768d33db73a6844136032c1d3ca2739643149df4f4faa
+    sha256: 84a94abb953d959ffe92422729f5a87bb7536a5984f3e7bf6eb30f5b11e1e92d
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -233,14 +233,14 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: c045c573ed599fd457833bb0cea6d02a7018ce193c065671838d712f3f648b96
+    sha256: 98947f93b8716476fdfbb6edd5f7d9c14e2a09020add5bbc3b67d3407cc54340
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
       key_rules: Regenerate index after documentation updates.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
-    sha256: 096baa9214beb03704e135d9b5d8772f129d05f73fe3174fd2010bccfcee368b
+    sha256: f78f5af6bcd77ec7634adccccf045a9d3924ce7111817f9649d72f63d7542897
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
