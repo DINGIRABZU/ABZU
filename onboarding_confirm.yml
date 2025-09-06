@@ -7,7 +7,7 @@ documents:
       key_rules: Review AGENTS and run pre-commit before committing.
       insight: Check AGENTS.md before committing changes.
   docs/ABZU_SUBSYSTEM_OVERVIEW.md:
-    sha256: e575ff650f076601f2dae9c09ccc3b0658999204f71a22508aab24c98f050445
+    sha256: 8168179d78a4af60a1186bf7a2b35db48f4404613000c47c24081d85d1ab4a8a
     summary:
       purpose: Overview of ABZU subsystems.
       scope: System architecture.
@@ -226,14 +226,14 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: c0622f688c8ad9d6fbd8f020e729720fa1eda44aaec23b78d802a6ebae40e6d1
+    sha256: c045c573ed599fd457833bb0cea6d02a7018ce193c065671838d712f3f648b96
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
       key_rules: Regenerate index after documentation updates.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
-    sha256: d046489925a9aaedd77e2ee5a2c4daaf882fc64e6399b8d10b3ab3a615ac112e
+    sha256: 096baa9214beb03704e135d9b5d8772f129d05f73fe3174fd2010bccfcee368b
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.

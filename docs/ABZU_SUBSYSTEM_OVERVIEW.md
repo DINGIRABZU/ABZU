@@ -60,3 +60,15 @@ graph TD
 - **Bundle initialization** – `MemoryBundle.initialize()` emits a single `layer_init` broadcast, seeding all five layers at once.
 - **Query traversal** – `MemoryBundle.query()` fans requests across every layer and aggregates the responses before returning to the RAG Orchestrator.
 - See [Memory Layers Guide](memory_layers_GUIDE.md) for implementation specifics.
+
+## Memory Bundle Layers
+
+```mermaid
+{{#include figures/memory_bundle.mmd}}
+```
+
+- **Cortex** – surface-level vectors and sensory impressions.
+- **Emotional** – affective cues that color context.
+- **Mental** – task graphs and deliberative state.
+- **Spiritual** – doctrine-aware memory and ritual traces.
+- **Narrative** – long-form stories and summaries.
