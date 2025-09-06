@@ -317,6 +317,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [features/FEATURE_TEMPLATE.md](features/FEATURE_TEMPLATE.md) | Feature Specification Template | - | - |
 | [features/README.md](features/README.md) | Feature Specifications | Guidelines for authoring feature specification files. | - |
 | [features/example_feature.md](features/example_feature.md) | Example Feature | - | - |
+| [figures/heartbeat_self_healing.mmd](figures/heartbeat_self_healing.mmd) | heartbeat_self_healing.mmd | - | - |
 | [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) | layer_init_query_flow.mmd | - | - |
 | [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.1.0 Last updated: 2025-09-07 | - |

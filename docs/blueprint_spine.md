@@ -59,6 +59,21 @@ sequenceDiagram
     RAZAR-->>Operator: status
 ```
 
+### **Heartbeat Propagation and Self-Healing**
+
+The chakra cycle engine emits heartbeats that cascade through the layers. A
+silent response triggers NAZARICK servants to mend the break and rejoin the
+cycle.
+
+```mermaid
+{{#include figures/heartbeat_self_healing.mmd}}
+```
+
+For layer-specific responsibilities, see
+[Chakra Architecture](chakra_architecture.md#chakra-cycle-engine) and
+[Nazarick Agents](nazarick_agents.md). The remediation philosophy follows the
+[Self-Healing Manifesto](self_healing_manifesto.md).
+
 ## **3. Key Components & Modules**
 
 - **RAZAR Suite (`razar/` & top-level scripts)**
