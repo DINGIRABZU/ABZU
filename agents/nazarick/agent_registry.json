@@ -7,7 +7,9 @@
       "channel": "#throne-room",
       "persona_traits": ["disciplined", "calm"],
       "responsibilities": "Boot order and pipeline supervision.",
-      "code_path": "orchestration_master.py"
+      "code_path": "orchestration_master.py",
+      "capabilities": ["orchestration"],
+      "triggers": ["launch"]
     },
     {
       "id": "prompt_orchestrator",
@@ -16,7 +18,9 @@
       "channel": "#signal-hall",
       "persona_traits": ["focused", "efficient"],
       "responsibilities": "Route prompts and recall context.",
-      "code_path": "crown_prompt_orchestrator.py"
+      "code_path": "crown_prompt_orchestrator.py",
+      "capabilities": ["prompt_routing"],
+      "triggers": ["prompt"]
     },
     {
       "id": "qnl_engine",
@@ -25,7 +29,9 @@
       "channel": "#insight-observatory",
       "persona_traits": ["introspective", "analytic"],
       "responsibilities": "Process QNL sequences and insights.",
-      "code_path": "SPIRAL_OS/qnl_engine.py"
+      "code_path": "SPIRAL_OS/qnl_engine.py",
+      "capabilities": ["qnl_processing"],
+      "triggers": ["insight"]
     },
     {
       "id": "memory_scribe",
@@ -34,7 +40,9 @@
       "channel": "#memory-vault",
       "persona_traits": ["diligent", "archival"],
       "responsibilities": "Persist transcripts and embeddings.",
-      "code_path": "memory_scribe.py"
+      "code_path": "memory_scribe.py",
+      "capabilities": ["memory_persistence"],
+      "triggers": ["persist"]
     }
   ]
 }
