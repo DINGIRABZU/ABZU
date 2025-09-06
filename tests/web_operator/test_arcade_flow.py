@@ -6,8 +6,9 @@ from typing import Iterable
 import pytest
 from fastapi.testclient import TestClient
 
+import operator_service.api as api
 from operator_service.api import app
-from razar import ai_invoker, boot_orchestrator, status_dashboard
+from razar import boot_orchestrator, status_dashboard
 from scripts import welcome_banner
 
 
@@ -34,10 +35,11 @@ def test_arcade_flow(
     )
     assert banner_output == expected_banner
 
-    # Arcade page loads
+    # Arcade page loads with greeting modal
     page_resp = client.get("/")
     assert page_resp.status_code == 200
     assert "Arcade Operator" in page_resp.text
+    assert "𒀭𒄩𒌆" in page_resp.text
 
     # Mock backend behaviors
     monkeypatch.setattr(
@@ -51,11 +53,7 @@ def test_arcade_flow(
         "_component_statuses",
         lambda: [{"name": "comp", "status": "up"}],
     )
-    monkeypatch.setattr(
-        ai_invoker,
-        "handover",
-        lambda component, error: iter([json.dumps({"handover": "done"})]),
-    )
+    monkeypatch.setattr(api, "query_memory", lambda q: {"memory": "ok"})
 
     # Ignite button
     resp = client.post("/start_ignition")
@@ -64,12 +62,11 @@ def test_arcade_flow(
     assert ignition_logs == [{"ignition": "ok"}]
 
     # Query button
+    resp = client.post("/query", json={"query": "hi"})
+    assert resp.status_code == 200
+    assert resp.json() == {"memory": "ok"}
+
+    # Status button
     resp = client.get("/status")
     assert resp.status_code == 200
     assert resp.json() == {"components": [{"name": "comp", "status": "up"}]}
-
-    # Handover button
-    resp = client.post("/handover", json={"component": "demo", "error": "boom"})
-    assert resp.status_code == 200
-    handover_logs = [json.loads(line) for line in resp.text.strip().splitlines()]
-    assert handover_logs == [{"handover": "done"}]

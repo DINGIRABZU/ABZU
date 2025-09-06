@@ -6,8 +6,9 @@ from typing import Iterable
 import pytest
 from fastapi.testclient import TestClient
 
+import operator_service.api as api
 from operator_service.api import app
-from razar import boot_orchestrator, ai_invoker, status_dashboard
+from razar import boot_orchestrator, status_dashboard
 
 
 @pytest.fixture
@@ -46,15 +47,10 @@ def test_status_returns_components(
     assert resp.json() == {"components": [{"name": "comp", "status": "up"}]}
 
 
-def test_handover_streams(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
-    captured: dict[str, tuple[str, str]] = {}
-
-    def fake_handover(component: str, error: str) -> Iterable[str]:
-        captured["args"] = (component, error)
-        yield json.dumps({"patched": True})
-
-    monkeypatch.setattr(ai_invoker, "handover", fake_handover)
-    resp = client.post("/handover", json={"component": "x", "error": "boom"})
+def test_query_returns_results(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(api, "query_memory", lambda q: {"res": "ok"})
+    resp = client.post("/query", json={"query": "hi"})
     assert resp.status_code == 200
-    assert captured["args"] == ("x", "boom")
-    assert json.loads(resp.text) == {"patched": True}
+    assert resp.json() == {"res": "ok"}
