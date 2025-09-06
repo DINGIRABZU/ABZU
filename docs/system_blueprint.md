@@ -37,10 +37,27 @@ feedback.
 
 ### Memory Bundle Architecture
 
-ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle that Crown and subsidiary services consult for state exchange and recall. `broadcast_layer_event("layer_init")` signals readiness across all layers, and `query_memory` spreads incoming requests before aggregating a single response. See [Memory Layers Guide](memory_layers_GUIDE.md), [Blueprint Spine](blueprint_spine.md), and diagrams such as [Memory Bundle](figures/memory_bundle.mmd) and [Layer Init & Query Flow](figures/layer_init_query_flow.mmd) for implementation details.
+ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle that Crown and subsidiary services consult for state exchange and recall. `broadcast_layer_event("layer_init")` signals readiness across the bundle, while `query_memory` fans out incoming requests and aggregates a single response. For deeper detail, see [Blueprint Spine](blueprint_spine.md) and the [Memory Layers Guide](memory_layers_GUIDE.md).
 
 ```mermaid
-{{#include figures/layer_init_query_flow.mmd}}
+flowchart LR
+    layer_init[(layer_init)] --> Cortex
+    layer_init --> Emotional
+    layer_init --> Mental
+    layer_init --> Spiritual
+    layer_init --> Narrative
+
+    Query[query_memory] --> Cortex
+    Query --> Emotional
+    Query --> Mental
+    Query --> Spiritual
+    Query --> Narrative
+
+    Cortex --> Aggregate
+    Emotional --> Aggregate
+    Mental --> Aggregate
+    Spiritual --> Aggregate
+    Narrative --> Aggregate
 ```
 
 ### Document Map
