@@ -61,6 +61,14 @@ graph LR
     C --> E[aggregated response]
 ```
 
+## Ethics Corpus Update Flow
+
+```mermaid
+graph TD
+    Operator -->|POST /ingest-ethics| Endpoint
+    Endpoint -->|corpus_memory.reindex_corpus| Memory[Chroma]
+```
+
 ## Milestone History
 
 Recent milestones chart the growth of this architecture:

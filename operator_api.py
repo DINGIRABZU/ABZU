@@ -39,6 +39,8 @@ from servant_model_manager import (
 )
 from typing import cast
 
+from scripts.ingest_ethics import ingest_ethics as run_ingest_ethics
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
@@ -390,6 +392,15 @@ async def upload_file(
         "stored": stored,
         "metadata": meta_with_files,
     }
+
+
+@router.post("/ingest-ethics")
+async def ingest_ethics_endpoint(directory: str | None = None) -> dict[str, object]:
+    """Reindex the ethics corpus and update Chroma memory."""
+    target_dir = Path(directory) if directory else Path("sacred_inputs")
+    if not run_ingest_ethics(target_dir):
+        raise HTTPException(status_code=500, detail="ingestion failed")
+    return {"status": "ok", "directory": str(target_dir)}
 
 
 __all__ = ["router"]

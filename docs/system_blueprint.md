@@ -108,6 +108,7 @@ graph TD
   - [INANNA Core](INANNA_CORE.md) – chronicles the system’s mythic lineage and mission
   - [Ethics Policy](ETHICS_POLICY.md) – community standards and guardrails
   - [Ethics Validation](ETHICS_VALIDATION.md) – automated checks enforcing the policy
+  - `/ingest-ethics` endpoint and [`scripts/ingest_ethics.py`](../scripts/ingest_ethics.py) rebuild the ethics vector memory
   - [Avatar Ethics](avatar_ethics.md) – behavior boundaries for persona modules
   - [sacred_inputs/](../sacred_inputs/) – canonical verses guiding system ethos
   - [INANNA_AI/](../INANNA_AI/) – activation chants and ethical corpus for the INANNA agent
