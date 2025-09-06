@@ -17,6 +17,7 @@
         "tests/crown/test_console_streaming.py",
         "tests/crown/test_initialization.py",
         "tests/crown/test_orchestrator_music.py",
+        "tests/crown/test_prompt_orchestrator.py",
         "tests/crown/test_servant_registration.py",
         "tests/helpers/emotion_stub.py",
         "tests/root/test_chakra_integration.py",
@@ -31,6 +32,7 @@
         "tests/test_avatar_state_logging.py",
         "tests/test_avatar_stream_pipeline.py",
         "tests/test_benchmark.py",
+        "tests/test_chat2db_integration.py",
         "tests/test_citrinitas_layer.py",
         "tests/test_console_reflection.py",
         "tests/test_core_services.py",
@@ -124,6 +126,7 @@
         "builtins"
       ],
       "tests": [
+        "tests/integration/test_core_regressions.py",
         "tests/root/test_chakra_integration.py",
         "tests/test_benchmark.py",
         "tests/test_existential_reflector.py",
@@ -201,8 +204,10 @@
       ],
       "tests": [
         "tests/agents/razar/test_ai_invoker.py",
+        "tests/integration/test_full_flows.py",
         "tests/razar/test_ai_invoker.py",
-        "tests/test_boot_sequence.py"
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py"
       ],
       "metrics": {},
       "status": "active",
@@ -225,8 +230,10 @@
       ],
       "tests": [
         "tests/agents/razar/test_ai_invoker.py",
+        "tests/integration/test_full_flows.py",
         "tests/razar/test_ai_invoker.py",
-        "tests/test_boot_sequence.py"
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py"
       ],
       "metrics": {},
       "status": "active",
@@ -263,7 +270,8 @@
         "tests/test_rival_messaging.py",
         "tests/test_transformation_smoke.py",
         "tests/test_trust_registry.py",
-        "tests/test_voice_layer_albedo.py"
+        "tests/test_voice_layer_albedo.py",
+        "tests/web_console/test_conversation_timeline.py"
       ],
       "metrics": {},
       "status": "active",
@@ -365,7 +373,12 @@
       "type": "agent",
       "path": "agents/ecosystem/aura_capture.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
@@ -446,6 +459,7 @@
         "tests/crown/test_console_streaming.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/test_bana_narrative_engine.py",
+        "tests/test_metrics_endpoints.py",
         "tests/test_orchestration_master.py"
       ],
       "metrics": {},
@@ -474,6 +488,7 @@
         "tests/crown/test_console_streaming.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/test_bana_narrative_engine.py",
+        "tests/test_metrics_endpoints.py",
         "tests/test_orchestration_master.py"
       ],
       "metrics": {},
@@ -494,7 +509,9 @@
       ],
       "tests": [
         "tests/agents/test_razar_cli.py",
+        "tests/chakra_healing/common.py",
         "tests/fixtures/razar_base_module.py",
+        "tests/integration/test_full_flows.py",
         "tests/memory/test_sharded_memory_store.py",
         "tests/test_audio_video_sync_profile.py",
         "tests/test_qnl_engine.py",
@@ -520,7 +537,9 @@
       ],
       "tests": [
         "tests/agents/test_razar_cli.py",
+        "tests/chakra_healing/common.py",
         "tests/fixtures/razar_base_module.py",
+        "tests/integration/test_full_flows.py",
         "tests/memory/test_sharded_memory_store.py",
         "tests/test_audio_video_sync_profile.py",
         "tests/test_qnl_engine.py",
@@ -543,9 +562,16 @@
         "__future__",
         "biosppy",
         "connectors",
+        "event_bus",
         "memory",
         "numpy",
+        "prometheus_client",
+        "psutil",
+        "pynvml",
+        "requests",
         "spiral_memory",
+        "threading",
+        "time",
         "transformers",
         "typing"
       ],
@@ -639,7 +665,13 @@
         "tests/agents/razar/test_mission_brief_rotation.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py"
+        "tests/integration/test_full_flows.py",
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py",
+        "tests/test_boot_sequence.py",
+        "tests/web_operator/test_api.py",
+        "tests/web_operator/test_arcade_flow.py",
+        "tests/web_operator/test_ignition_e2e.py"
       ],
       "metrics": {},
       "status": "active",
@@ -679,11 +711,56 @@
         "tests/agents/razar/test_mission_brief_rotation.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py"
+        "tests/integration/test_full_flows.py",
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py",
+        "tests/test_boot_sequence.py",
+        "tests/web_operator/test_api.py",
+        "tests/web_operator/test_arcade_flow.py",
+        "tests/web_operator/test_ignition_e2e.py"
       ],
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "bootstrap_memory",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/bootstrap_memory.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "logging",
+        "memory"
+      ],
+      "tests": [],
+      "metrics": {},
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "bootstrap_world",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/bootstrap_world.py",
+      "version": "0.2.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "init_crown_agent",
+        "logging",
+        "memory",
+        "os",
+        "pathlib",
+        "worlds"
+      ],
+      "tests": [],
+      "metrics": {},
+      "status": "experimental",
+      "issues": "No tests found",
       "adr": null
     },
     {
@@ -1016,7 +1093,8 @@
       "tests": [
         "tests/agents/razar/test_ai_invoker.py",
         "tests/agents/razar/test_code_repair.py",
-        "tests/razar/test_ai_invoker.py"
+        "tests/razar/test_ai_invoker.py",
+        "tests/razar/test_remote_repair.py"
       ],
       "metrics": {},
       "status": "active",
@@ -1029,7 +1107,12 @@
       "type": "agent",
       "path": "agents/sebas/compassion_module.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
@@ -1162,17 +1245,47 @@
         "pathlib",
         "re",
         "threading",
-        "typing"
+        "typing",
+        "worlds"
       ],
       "tests": [
         "tests/memory/test_cortex_concurrency.py",
+        "tests/narrative/test_self_heal_logging.py",
         "tests/test_archetype_feedback_loop.py",
         "tests/test_cortex_memory.py",
         "tests/test_cortex_sigil_logic.py",
         "tests/test_memory_bus.py",
         "tests/test_memory_search.py",
         "tests/test_spiral_cortex_integration.py",
-        "tests/test_spiral_cortex_memory.py"
+        "tests/test_spiral_cortex_memory.py",
+        "tests/web_ui/test_memory_query.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "cortex",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/cortex.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/memory/test_cortex_concurrency.py",
+        "tests/narrative/test_self_heal_logging.py",
+        "tests/test_archetype_feedback_loop.py",
+        "tests/test_cortex_memory.py",
+        "tests/test_cortex_sigil_logic.py",
+        "tests/test_memory_bus.py",
+        "tests/test_memory_search.py",
+        "tests/test_spiral_cortex_integration.py",
+        "tests/test_spiral_cortex_memory.py",
+        "tests/web_ui/test_memory_query.py"
       ],
       "metrics": {},
       "status": "active",
@@ -1223,6 +1336,26 @@
       "adr": null
     },
     {
+      "id": "crown_agent",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/chakra_healing/crown_agent.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "base",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/chakra_healing/test_crown.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "crown_decider",
       "chakra": "unknown",
       "type": "module",
@@ -1246,6 +1379,7 @@
         "tests/crown/test_decider_history.py",
         "tests/crown/test_decider_rotation.py",
         "tests/crown/test_prompt_orchestrator.py",
+        "tests/crown/test_servant_routing.py",
         "tests/test_avatar_state_logging.py",
         "tests/test_avatar_stream_pipeline.py",
         "tests/test_orchestrator.py",
@@ -1281,7 +1415,7 @@
         "tests/agents/razar/test_ignition_sequence.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py"
+        "tests/integration/test_full_flows.py"
       ],
       "metrics": {},
       "status": "active",
@@ -1372,6 +1506,7 @@
         "tests/crown/test_console_streaming.py",
         "tests/crown/test_initialization.py",
         "tests/crown/test_prompt_orchestrator.py",
+        "tests/crown/test_servant_routing.py",
         "tests/test_console_reflection.py",
         "tests/test_prometheus_metrics.py",
         "tests/test_session_logger.py"
@@ -1394,6 +1529,7 @@
       ],
       "tests": [
         "tests/crown/test_query_router.py",
+        "tests/integration/test_full_flows.py",
         "tests/test_spiral_rag.py"
       ],
       "metrics": {},
@@ -1411,12 +1547,17 @@
         "__future__",
         "crown_decider",
         "emotional_state",
+        "prometheus_client",
+        "psutil",
+        "pynvml",
         "rag",
+        "time",
         "typing",
         "vector_memory"
       ],
       "tests": [
-        "tests/crown/test_router_memory.py"
+        "tests/crown/test_router_memory.py",
+        "tests/test_metrics_endpoints.py"
       ],
       "metrics": {},
       "status": "active",
@@ -1551,7 +1692,9 @@
         "tests/agents/razar/test_code_repair.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py"
+        "tests/integration/test_full_flows.py",
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py"
       ],
       "metrics": {},
       "status": "active",
@@ -1574,7 +1717,9 @@
         "tests/agents/razar/test_code_repair.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py"
+        "tests/integration/test_full_flows.py",
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py"
       ],
       "metrics": {},
       "status": "active",
@@ -1611,10 +1756,41 @@
         "sqlite3",
         "time",
         "transformers",
+        "typing",
+        "worlds"
+      ],
+      "tests": [
+        "tests/heart/memory_emotional/test_memory_emotional.py",
+        "tests/test_config_registry.py",
+        "tests/test_emotional_memory.py",
+        "tests/test_emotional_state.py",
+        "tests/test_emotional_synaptic_engine.py",
+        "tests/test_emotional_voice.py",
+        "tests/test_memory_bus.py",
+        "tests/test_orchestrator_routing.py",
+        "tests/test_seven_dimensional_music.py",
+        "tests/test_seven_plane_analyzer.py",
+        "tests/test_task_profiling.py",
+        "tests/test_task_profiling_wrappers.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "emotional",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/emotional.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
         "typing"
       ],
       "tests": [
         "tests/heart/memory_emotional/test_memory_emotional.py",
+        "tests/test_config_registry.py",
         "tests/test_emotional_memory.py",
         "tests/test_emotional_state.py",
         "tests/test_emotional_synaptic_engine.py",
@@ -1669,6 +1845,55 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "escalation_notifier",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "monitoring/escalation_notifier.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "asyncio",
+        "datetime",
+        "json",
+        "operator_api",
+        "pathlib",
+        "re"
+      ],
+      "tests": [
+        "tests/monitoring/test_escalation_notifier.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "escalation_notifier",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/escalation_notifier.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "collections",
+        "datetime",
+        "json",
+        "pathlib",
+        "re",
+        "requests",
+        "typing"
+      ],
+      "tests": [
+        "tests/monitoring/test_escalation_notifier.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
       "adr": null
     },
     {
@@ -1736,7 +1961,12 @@
       "type": "agent",
       "path": "agents/shalltear/fast_inference_agent.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
@@ -1928,7 +2158,8 @@
         "tests/agents/razar/test_runtime_manager.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py",
+        "tests/integration/test_full_flows.py",
+        "tests/razar/test_remote_repair.py",
         "tests/test_razar_health_checks.py"
       ],
       "metrics": {},
@@ -1950,6 +2181,8 @@
         "os",
         "pathlib",
         "prometheus_client",
+        "psutil",
+        "pynvml",
         "subprocess",
         "time",
         "typing",
@@ -1960,8 +2193,29 @@
         "tests/agents/razar/test_runtime_manager.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py",
+        "tests/integration/test_full_flows.py",
+        "tests/razar/test_remote_repair.py",
         "tests/test_razar_health_checks.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "heart_agent",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/chakra_healing/heart_agent.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "base",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/chakra_healing/test_heart.py"
       ],
       "metrics": {},
       "status": "active",
@@ -2159,7 +2413,8 @@
         "requests"
       ],
       "tests": [
-        "tests/test_kimi_servant.py"
+        "tests/test_kimi_servant.py",
+        "tests/tools/test_opencode_client.py"
       ],
       "metrics": {},
       "status": "active",
@@ -2251,7 +2506,12 @@
       "type": "agent",
       "path": "agents/ecosystem/mare_gardener.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
@@ -2267,15 +2527,16 @@
       "dependencies": [
         "__future__",
         "agents",
-        "memory",
-        "spiral_memory",
+        "importlib",
+        "query_memory",
         "typing",
-        "vector_memory"
+        "worlds"
       ],
       "tests": [
         "tests/agents/test_bana.py",
         "tests/agents/test_bana_narrator.py",
         "tests/agents/test_narrative_scribe.py",
+        "tests/agents/test_story_adapter.py",
         "tests/conftest.py",
         "tests/core/test_memory_physical.py",
         "tests/crown/server/test_server.py",
@@ -2286,11 +2547,14 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_context_rl.py",
+        "tests/integration/test_full_flows.py",
         "tests/memory/test_cortex_concurrency.py",
         "tests/memory/test_memory_store_fallback.py",
         "tests/memory/test_sharded_memory_store.py",
         "tests/memory/test_vector_memory.py",
         "tests/memory/test_vector_persistence.py",
+        "tests/narrative/test_self_heal_logging.py",
+        "tests/narrative/test_story_lookup.py",
         "tests/narrative_engine/test_biosignal_pipeline.py",
         "tests/narrative_engine/test_biosignal_transformation.py",
         "tests/narrative_engine/test_event_storage.py",
@@ -2301,6 +2565,7 @@
         "tests/performance/test_vector_memory_performance.py",
         "tests/test_archetype_feedback_loop.py",
         "tests/test_bana_narrative_engine.py",
+        "tests/test_config_registry.py",
         "tests/test_corpus_memory.py",
         "tests/test_corpus_memory_extended.py",
         "tests/test_corpus_memory_logging.py",
@@ -2315,7 +2580,9 @@
         "tests/test_memory_snapshot.py",
         "tests/test_memory_spiritual.py",
         "tests/test_memory_store.py",
+        "tests/test_metrics_endpoints.py",
         "tests/test_music_memory.py",
+        "tests/test_operator_api.py",
         "tests/test_orchestrator_memory.py",
         "tests/test_os_guardian.py",
         "tests/test_os_guardian_planning.py",
@@ -2329,7 +2596,10 @@
         "tests/test_vector_memory.py",
         "tests/test_vector_memory_extensions.py",
         "tests/test_vector_memory_persistence.py",
-        "tests/test_voice_evolution_memory.py"
+        "tests/test_voice_evolution_memory.py",
+        "tests/web_console/test_arcade_ui.py",
+        "tests/web_operator/test_arcade_flow.py",
+        "tests/web_ui/test_memory_query.py"
       ],
       "metrics": {},
       "status": "active",
@@ -2394,6 +2664,28 @@
       "adr": null
     },
     {
+      "id": "mental",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/mental.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/crown/server/test_server.py",
+        "tests/integration/test_context_rl.py",
+        "tests/test_memory_bus.py",
+        "tests/test_seven_dimensional_music.py",
+        "tests/test_seven_plane_analyzer.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "messaging",
       "chakra": "unknown",
       "type": "agent",
@@ -2433,7 +2725,7 @@
         "tests/agents/razar/test_boot_orchestrator_logging.py",
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/test_razar_cli.py",
-        "tests/test_boot_sequence.py",
+        "tests/integration/test_full_flows.py",
         "tests/test_mission_logger.py"
       ],
       "metrics": {},
@@ -2461,7 +2753,7 @@
         "tests/agents/razar/test_boot_orchestrator_logging.py",
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/test_razar_cli.py",
-        "tests/test_boot_sequence.py",
+        "tests/integration/test_full_flows.py",
         "tests/test_mission_logger.py"
       ],
       "metrics": {},
@@ -2581,10 +2873,12 @@
         "memory",
         "prometheus_client",
         "pydantic",
+        "time",
         "typing"
       ],
       "tests": [
         "tests/narrative_engine/test_ingest_persist_retrieve.py",
+        "tests/test_metrics_endpoints.py",
         "tests/test_prometheus_metrics.py"
       ],
       "metrics": {},
@@ -2602,10 +2896,13 @@
         "fastapi",
         "json",
         "memory",
+        "prometheus_client",
+        "time",
         "typing"
       ],
       "tests": [
         "tests/narrative_engine/test_ingest_persist_retrieve.py",
+        "tests/test_metrics_endpoints.py",
         "tests/test_prometheus_metrics.py"
       ],
       "metrics": {},
@@ -2622,10 +2919,15 @@
       "dependencies": [
         "__future__",
         "chromadb",
+        "core",
         "dataclasses",
         "json",
         "pathlib",
+        "prometheus_client",
+        "psutil",
+        "pynvml",
         "sqlite3",
+        "time",
         "typing",
         "uuid"
       ],
@@ -2633,9 +2935,13 @@
         "tests/agents/test_bana.py",
         "tests/agents/test_bana_narrator.py",
         "tests/agents/test_narrative_scribe.py",
+        "tests/agents/test_story_adapter.py",
         "tests/conftest.py",
         "tests/crown/test_console_streaming.py",
         "tests/ignition/test_crown_wakes_services.py",
+        "tests/integration/test_full_flows.py",
+        "tests/narrative/test_self_heal_logging.py",
+        "tests/narrative/test_story_lookup.py",
         "tests/narrative_engine/test_biosignal_pipeline.py",
         "tests/narrative_engine/test_biosignal_transformation.py",
         "tests/narrative_engine/test_event_storage.py",
@@ -2644,7 +2950,46 @@
         "tests/narrative_engine/test_jsonl_ingest_persist_retrieve.py",
         "tests/narrative_engine/test_multitrack_output.py",
         "tests/test_bana_narrative_engine.py",
-        "tests/test_memory_bus.py"
+        "tests/test_memory_bus.py",
+        "tests/test_metrics_endpoints.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "narrative_engine",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/narrative_engine.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "dataclasses",
+        "typing"
+      ],
+      "tests": [
+        "tests/agents/test_bana.py",
+        "tests/agents/test_bana_narrator.py",
+        "tests/agents/test_narrative_scribe.py",
+        "tests/agents/test_story_adapter.py",
+        "tests/conftest.py",
+        "tests/crown/test_console_streaming.py",
+        "tests/ignition/test_crown_wakes_services.py",
+        "tests/integration/test_full_flows.py",
+        "tests/narrative/test_self_heal_logging.py",
+        "tests/narrative/test_story_lookup.py",
+        "tests/narrative_engine/test_biosignal_pipeline.py",
+        "tests/narrative_engine/test_biosignal_transformation.py",
+        "tests/narrative_engine/test_event_storage.py",
+        "tests/narrative_engine/test_ingest_persist_retrieve.py",
+        "tests/narrative_engine/test_ingestion_to_mistral_output.py",
+        "tests/narrative_engine/test_jsonl_ingest_persist_retrieve.py",
+        "tests/narrative_engine/test_multitrack_output.py",
+        "tests/test_bana_narrative_engine.py",
+        "tests/test_memory_bus.py",
+        "tests/test_metrics_endpoints.py"
       ],
       "metrics": {},
       "status": "active",
@@ -2671,7 +3016,8 @@
         "yaml"
       ],
       "tests": [
-        "tests/agents/test_narrative_scribe.py"
+        "tests/agents/test_narrative_scribe.py",
+        "tests/narrative/test_self_heal_logging.py"
       ],
       "metrics": {},
       "status": "active",
@@ -2696,9 +3042,32 @@
         "tests/conftest.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/test_boot_sequence.py",
+        "tests/integration/test_full_flows.py",
+        "tests/narrative/test_self_heal_logging.py",
         "tests/test_nazarick_messaging.py",
         "tests/test_trust_registry.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "opencode_client",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "tools/opencode_client.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "logging",
+        "os",
+        "requests",
+        "subprocess"
+      ],
+      "tests": [
+        "tests/razar/test_remote_repair.py",
+        "tests/tools/test_opencode_client.py"
       ],
       "metrics": {},
       "status": "active",
@@ -2714,16 +3083,21 @@
       "dependencies": [
         "__future__",
         "agents",
+        "datetime",
         "fastapi",
         "json",
         "logging",
         "pathlib",
-        "shutil"
+        "razar",
+        "shutil",
+        "uuid"
       ],
       "tests": [
         "tests/conftest.py",
         "tests/test_operator_api.py",
-        "tests/test_operator_command_route.py"
+        "tests/test_operator_audit.py",
+        "tests/test_operator_command_route.py",
+        "tests/web_console/test_conversation_timeline.py"
       ],
       "metrics": {},
       "status": "active",
@@ -2776,7 +3150,12 @@
       "type": "agent",
       "path": "agents/pandora/persona_emulator.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
@@ -2935,6 +3314,9 @@
       "dependencies": [
         "__future__",
         "event_bus",
+        "requests",
+        "threading",
+        "time",
         "typing"
       ],
       "tests": [
@@ -2992,7 +3374,7 @@
         "tests/agents/razar/test_ignition_builder.py",
         "tests/agents/razar/test_quarantine_manager.py",
         "tests/agents/razar/test_runtime_manager.py",
-        "tests/test_boot_sequence.py",
+        "tests/integration/test_full_flows.py",
         "tests/test_quarantine_manager.py"
       ],
       "metrics": {},
@@ -3021,8 +3403,35 @@
         "tests/agents/razar/test_ignition_builder.py",
         "tests/agents/razar/test_quarantine_manager.py",
         "tests/agents/razar/test_runtime_manager.py",
-        "tests/test_boot_sequence.py",
+        "tests/integration/test_full_flows.py",
         "tests/test_quarantine_manager.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "query_memory",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/query_memory.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "cortex",
+        "logging",
+        "opentelemetry",
+        "optional",
+        "spiral_memory",
+        "typing",
+        "vector_memory"
+      ],
+      "tests": [
+        "tests/test_memory_bus.py",
+        "tests/web_operator/test_api.py",
+        "tests/web_operator/test_arcade_flow.py",
+        "tests/web_ui/test_memory_query.py"
       ],
       "metrics": {},
       "status": "active",
@@ -3061,14 +3470,21 @@
         "tests/fixtures/razar_base_module.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
+        "tests/integration/test_full_flows.py",
+        "tests/monitoring/test_escalation_notifier.py",
         "tests/razar/test_ai_invoker.py",
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py",
         "tests/test_boot_sequence.py",
         "tests/test_mission_logger.py",
         "tests/test_operator_api.py",
         "tests/test_operator_command_route.py",
         "tests/test_quarantine_manager.py",
         "tests/test_razar_health_checks.py",
-        "tests/test_remote_loader.py"
+        "tests/test_remote_loader.py",
+        "tests/web_operator/test_api.py",
+        "tests/web_operator/test_arcade_flow.py",
+        "tests/web_operator/test_ignition_e2e.py"
       ],
       "metrics": {},
       "status": "active",
@@ -3112,18 +3528,45 @@
         "tests/fixtures/razar_base_module.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
+        "tests/integration/test_full_flows.py",
+        "tests/monitoring/test_escalation_notifier.py",
         "tests/razar/test_ai_invoker.py",
+        "tests/razar/test_long_task.py",
+        "tests/razar/test_remote_repair.py",
         "tests/test_boot_sequence.py",
         "tests/test_mission_logger.py",
         "tests/test_operator_api.py",
         "tests/test_operator_command_route.py",
         "tests/test_quarantine_manager.py",
         "tests/test_razar_health_checks.py",
-        "tests/test_remote_loader.py"
+        "tests/test_remote_loader.py",
+        "tests/web_operator/test_api.py",
+        "tests/web_operator/test_arcade_flow.py",
+        "tests/web_operator/test_ignition_e2e.py"
       ],
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "recovery_daemon",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/recovery_daemon.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "json",
+        "logging",
+        "razar",
+        "time",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {},
+      "status": "experimental",
+      "issues": "No tests found",
       "adr": null
     },
     {
@@ -3195,6 +3638,7 @@
       ],
       "tests": [
         "tests/crown/test_console_streaming.py",
+        "tests/integration/test_core_regressions.py",
         "tests/root/test_metrics_logging.py",
         "tests/test_avatar_state_logging.py",
         "tests/test_citrinitas_ritual.py",
@@ -3254,10 +3698,12 @@
         "subprocess",
         "tomllib"
       ],
-      "tests": [],
+      "tests": [
+        "tests/scripts/test_sign_release.py"
+      ],
       "metrics": {},
-      "status": "experimental",
-      "issues": "No tests found",
+      "status": "active",
+      "issues": "No known issues",
       "adr": null
     },
     {
@@ -3370,6 +3816,27 @@
       "adr": null
     },
     {
+      "id": "root_agent",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/chakra_healing/root_agent.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "base",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/agents/test_story_adapter.py",
+        "tests/chakra_healing/test_root.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "runtime_manager",
       "chakra": "unknown",
       "type": "agent",
@@ -3391,6 +3858,26 @@
       "tests": [
         "tests/agents/razar/conftest.py",
         "tests/agents/razar/test_runtime_manager.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "sacral_agent",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/chakra_healing/sacral_agent.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "base",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/chakra_healing/test_sacral.py"
       ],
       "metrics": {},
       "status": "active",
@@ -3512,12 +3999,35 @@
         "tests/test_cortex_memory.py",
         "tests/test_dev_orchestrator.py",
         "tests/test_invocation_engine.py",
+        "tests/test_memory_bus.py",
         "tests/test_memory_search.py",
         "tests/test_memory_store.py",
         "tests/test_project_gutenberg.py",
         "tests/test_prometheus_metrics.py",
         "tests/test_vector_memory.py",
         "tests/test_vector_memory_extensions.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "search_api",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/search_api.py",
+      "version": "0.1.1",
+      "dependencies": [
+        "__future__",
+        "datetime",
+        "logging",
+        "math",
+        "memory",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_memory_bus.py"
       ],
       "metrics": {},
       "status": "active",
@@ -3548,8 +4058,12 @@
       "version": "0.1.0",
       "dependencies": [
         "__future__",
+        "event_bus",
         "logging",
         "pathlib",
+        "requests",
+        "threading",
+        "time",
         "typing",
         "vector_memory"
       ],
@@ -3635,6 +4149,7 @@
         "tests/conftest.py",
         "tests/crown/server/test_server.py",
         "tests/root/test_metrics_logging.py",
+        "tests/scripts/test_verify_chakra_monitoring.py",
         "tests/test_api_endpoints.py",
         "tests/test_avatar_stream_pipeline.py",
         "tests/test_glm_command.py",
@@ -3650,7 +4165,8 @@
         "tests/test_video_stream.py",
         "tests/test_video_stream_audio.py",
         "tests/test_voice_cloner_cli.py",
-        "tests/test_webrtc_connector.py"
+        "tests/test_webrtc_connector.py",
+        "tests/web_operator/test_ignition_e2e.py"
       ],
       "metrics": {},
       "status": "active",
@@ -3674,7 +4190,7 @@
       ],
       "tests": [
         "tests/ignition/test_crown_wakes_services.py",
-        "tests/test_boot_sequence.py"
+        "tests/integration/test_full_flows.py"
       ],
       "metrics": {},
       "status": "active",
@@ -3734,11 +4250,36 @@
       "type": "agent",
       "path": "agents/pleiades/signal_router.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "solar_agent",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/chakra_healing/solar_agent.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "base",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/chakra_healing/test_solar.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
       "adr": null
     },
     {
@@ -3756,6 +4297,25 @@
       ],
       "tests": [
         "tests/test_spiral_cortex_memory.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "spiral_memory",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/spiral_memory.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_memory_search.py",
+        "tests/test_spiral_memory.py"
       ],
       "metrics": {},
       "status": "active",
@@ -3785,12 +4345,36 @@
       "adr": null
     },
     {
+      "id": "spiritual",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/spiritual.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_memory_bus.py",
+        "tests/test_memory_spiritual.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "star_map",
       "chakra": "unknown",
       "type": "agent",
       "path": "agents/pleiades/star_map.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
@@ -3842,10 +4426,51 @@
         "typing",
         "yaml"
       ],
-      "tests": [],
+      "tests": [
+        "tests/web_operator/test_api.py",
+        "tests/web_operator/test_arcade_flow.py"
+      ],
       "metrics": {},
-      "status": "experimental",
-      "issues": "No tests found",
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "story_adapter",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/utils/story_adapter.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "memory",
+        "typing"
+      ],
+      "tests": [
+        "tests/agents/test_story_adapter.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "story_lookup",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/story_lookup.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "json",
+        "typing"
+      ],
+      "tests": [
+        "tests/narrative/test_story_lookup.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
       "adr": null
     },
     {
@@ -3854,7 +4479,12 @@
       "type": "agent",
       "path": "agents/demiurge/strategic_simulator.py",
       "version": "0.1.0",
-      "dependencies": [],
+      "dependencies": [
+        "event_bus",
+        "requests",
+        "threading",
+        "time"
+      ],
       "tests": [],
       "metrics": {},
       "status": "experimental",
@@ -3880,6 +4510,46 @@
       "adr": null
     },
     {
+      "id": "third_eye_agent",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/chakra_healing/third_eye_agent.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "base",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/chakra_healing/test_third_eye.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "throat_agent",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/chakra_healing/throat_agent.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "base",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/chakra_healing/test_throat.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "training_guide",
       "chakra": "unknown",
       "type": "module",
@@ -3896,6 +4566,7 @@
         "pathlib"
       ],
       "tests": [
+        "tests/integration/test_core_regressions.py",
         "tests/test_model_benchmarking.py",
         "tests/test_orchestrator.py",
         "tests/test_orchestrator_integration.py",
@@ -4005,6 +4676,70 @@
       ],
       "tests": [
         "tests/test_trust_registry.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "ui_service",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "ui_service.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "fastapi",
+        "memory",
+        "typing"
+      ],
+      "tests": [
+        "tests/web_ui/test_boot_page.py",
+        "tests/web_ui/test_memory_query.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "utils",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/utils/__init__.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "story_adapter"
+      ],
+      "tests": [
+        "tests/agents/test_story_adapter.py",
+        "tests/conftest.py",
+        "tests/crown/server/test_server.py",
+        "tests/test_albedo_trust.py",
+        "tests/test_audio_tools.py",
+        "tests/test_defensive_network_utils.py",
+        "tests/test_download_deepseek.py",
+        "tests/test_download_model.py",
+        "tests/test_download_models.py",
+        "tests/test_inanna_ai.py",
+        "tests/test_listening_engine.py",
+        "tests/test_music_generation_streaming.py",
+        "tests/test_network_utils.py",
+        "tests/test_orchestration_master.py",
+        "tests/test_personality_layers.py",
+        "tests/test_project_gutenberg.py",
+        "tests/test_prometheus_metrics.py",
+        "tests/test_qnl_utils.py",
+        "tests/test_rival_messaging.py",
+        "tests/test_soul_ritual.py",
+        "tests/test_speaking_engine_streaming.py",
+        "tests/test_start_spiral_os.py",
+        "tests/test_transformers_generate.py",
+        "tests/test_utils_verify_insight_matrix.py",
+        "tests/test_vector_memory_extensions.py",
+        "tests/test_voice_profiles.py"
       ],
       "metrics": {},
       "status": "active",
@@ -4132,6 +4867,96 @@
       "adr": null
     },
     {
+      "id": "vector_memory",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/vector_memory.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/crown/server/test_server.py",
+        "tests/crown/test_initialization.py",
+        "tests/crown/test_orchestrator_music.py",
+        "tests/crown/test_router_memory.py",
+        "tests/crown/test_servant_registration.py",
+        "tests/integration/test_core_regressions.py",
+        "tests/integration/test_full_flows.py",
+        "tests/memory/test_vector_memory.py",
+        "tests/performance/test_vector_memory_performance.py",
+        "tests/root/test_metrics_logging.py",
+        "tests/test_auto_retrain.py",
+        "tests/test_avatar_state_logging.py",
+        "tests/test_avatar_stream_pipeline.py",
+        "tests/test_citrinitas_ritual.py",
+        "tests/test_core_services.py",
+        "tests/test_corpus_memory.py",
+        "tests/test_corpus_memory_extended.py",
+        "tests/test_cortex_sigil_logic.py",
+        "tests/test_dev_orchestrator.py",
+        "tests/test_emotional_voice.py",
+        "tests/test_full_audio_pipeline.py",
+        "tests/test_glm_command.py",
+        "tests/test_initial_listen.py",
+        "tests/test_invocation_engine.py",
+        "tests/test_kimi_k2_servant.py",
+        "tests/test_memory_persistence.py",
+        "tests/test_memory_search.py",
+        "tests/test_memory_snapshot.py",
+        "tests/test_model_benchmarking.py",
+        "tests/test_orchestrator.py",
+        "tests/test_orchestrator_integration.py",
+        "tests/test_orchestrator_memory.py",
+        "tests/test_orchestrator_routing.py",
+        "tests/test_orchestrator_suggestions_logging.py",
+        "tests/test_qnl_audio_pipeline.py",
+        "tests/test_rag_music_integration.py",
+        "tests/test_recursive_emotion_router.py",
+        "tests/test_reflection_thresholds_env.py",
+        "tests/test_server_endpoints.py",
+        "tests/test_spiral_cortex_integration.py",
+        "tests/test_start_spiral_os.py",
+        "tests/test_vast_pipeline.py",
+        "tests/test_vector_memory.py",
+        "tests/test_vector_memory_extensions.py",
+        "tests/test_vector_memory_persistence.py",
+        "tests/test_voice_avatar_pipeline.py",
+        "tests/test_voice_evolution.py",
+        "tests/test_voice_evolution_memory.py",
+        "tests/test_voice_profiles.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "verify_chakra_monitoring",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/verify_chakra_monitoring.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "os",
+        "pathlib",
+        "socket",
+        "sys",
+        "time",
+        "urllib"
+      ],
+      "tests": [
+        "tests/scripts/test_verify_chakra_monitoring.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "verify_dependencies",
       "chakra": "unknown",
       "type": "script",
@@ -4210,6 +5035,28 @@
       "adr": null
     },
     {
+      "id": "verify_self_healing",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/verify_self_healing.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "datetime",
+        "json",
+        "pathlib",
+        "sys"
+      ],
+      "tests": [
+        "tests/scripts/test_verify_self_healing.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "verify_versions",
       "chakra": "unknown",
       "type": "script",
@@ -4258,9 +5105,11 @@
         "__future__",
         "aiortc",
         "asyncio",
+        "communication",
         "core",
         "fastapi",
         "fractions",
+        "hashlib",
         "importlib",
         "logging",
         "numpy",

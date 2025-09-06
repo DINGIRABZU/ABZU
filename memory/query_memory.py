@@ -7,6 +7,8 @@ names of failing layers are collected in the ``failed_layers`` field.
 
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import logging
 from typing import Any, Dict, List
 
