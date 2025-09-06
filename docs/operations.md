@@ -164,6 +164,10 @@ collector's UI for correlation with metrics. Memory queries also emit spans for
 each layer, enabling trace-based performance analysis alongside agent event
 emission.
 
+Message flow across agents is traceable as well. The `agents.event_bus`
+module now wraps publish and subscribe operations in spans, allowing you to
+follow events from emission to consumption within your chosen trace viewer.
+
 ### Troubleshooting
 
 - Ensure `psutil` and `prometheus_client` are installed.

@@ -9,10 +9,12 @@ from typing import Any, Dict
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from memory.query_memory import query_memory
 
 app = FastAPI(title="UI Service")
+Instrumentator().instrument(app).expose(app)
 
 templates = Jinja2Templates(directory="templates")
 
@@ -32,6 +34,12 @@ async def boot(request: Request) -> HTMLResponse:
 @app.get("/status")
 async def status() -> Dict[str, str]:
     """Return a simple status indicator."""
+    return {"status": "ok"}
+
+
+@app.get("/healthz")
+async def healthz() -> Dict[str, str]:
+    """Alias for Kubernetes health probes."""
     return {"status": "ok"}
 
 

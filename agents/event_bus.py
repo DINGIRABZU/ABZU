@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Awaitable, Callable, Dict, Optional
 
 from opentelemetry import trace
 
@@ -108,4 +108,62 @@ def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:
             loop.create_task(producer.emit(event))
 
 
-__all__ = ["emit_event", "set_event_producer"]
+async def subscribe(
+    handler: Callable[[Event], Awaitable[None]],
+    *,
+    redis_channel: str | None = None,
+    redis_url: str | None = None,
+    kafka_topic: str | None = None,
+    kafka_servers: str | None = None,
+) -> None:
+    """Subscribe to broker events and invoke ``handler`` for each message.
+
+    The broker configuration is resolved from the arguments or matching
+    ``CITADEL_*`` environment variables. The function runs until cancelled.
+    """
+
+    channel = redis_channel or os.getenv("CITADEL_REDIS_CHANNEL")
+    topic = kafka_topic or os.getenv("CITADEL_KAFKA_TOPIC")
+
+    with _tracer.start_as_current_span("event_bus.subscribe") as span:
+        if channel:
+            url = redis_url or os.getenv("CITADEL_REDIS_URL", "redis://localhost")
+            span.set_attribute("event_bus.broker", "redis")
+            span.set_attribute("event_bus.channel", channel)
+            import redis.asyncio as redis  # type: ignore
+
+            client = redis.from_url(url)
+            pubsub = client.pubsub()
+            await pubsub.subscribe(channel)
+            async for message in pubsub.listen():
+                if message["type"] != "message":
+                    continue
+                event = Event.from_json(message["data"])
+                with _tracer.start_as_current_span("agent.event.consume") as evt_span:
+                    evt_span.set_attribute("agent.actor", event.agent_id)
+                    evt_span.set_attribute("agent.action", event.event_type)
+                await handler(event)
+        elif topic:
+            servers = kafka_servers or os.getenv(
+                "CITADEL_KAFKA_SERVERS", "localhost:9092"
+            )
+            span.set_attribute("event_bus.broker", "kafka")
+            span.set_attribute("event_bus.topic", topic)
+            from aiokafka import AIOKafkaConsumer  # type: ignore
+
+            consumer = AIOKafkaConsumer(topic, bootstrap_servers=servers)
+            await consumer.start()
+            try:
+                async for msg in consumer:
+                    event = Event.from_json(msg.value.decode("utf-8"))
+                    with _tracer.start_as_current_span(
+                        "agent.event.consume"
+                    ) as evt_span:
+                        evt_span.set_attribute("agent.actor", event.agent_id)
+                        evt_span.set_attribute("agent.action", event.event_type)
+                    await handler(event)
+            finally:
+                await consumer.stop()
+
+
+__all__ = ["emit_event", "set_event_producer", "subscribe"]
