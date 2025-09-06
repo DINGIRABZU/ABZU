@@ -2,58 +2,121 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Component Index",
   "type": "object",
-  "required": ["components"],
+  "required": [
+    "components"
+  ],
   "properties": {
-    "$schema": {"type": "string"},
-    "system_version": {"type": "string"},
-    "index_version": {"type": "number"},
+    "$schema": {
+      "type": "string"
+    },
+    "system_version": {
+      "type": "string"
+    },
+    "index_version": {
+      "type": "number"
+    },
     "components": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "chakra", "type", "version"],
-          "properties": {
-            "id": {"type": "string"},
-            "chakra": {"type": "string"},
-            "type": {"type": "string"},
-            "version": {"type": "string"},
-            "path": {"type": "string"},
-            "purpose": {"type": "string"},
-            "dependencies": {
-              "type": "array",
-              "items": {"type": "string"}
-            },
-            "tests": {
-              "type": "array",
-              "items": {"type": "string"}
-            },
-            "memory_layers": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["layer", "ignition_stage"],
-                "properties": {
-                  "layer": {"type": "string"},
-                  "ignition_stage": {"type": "number"}
-                },
-                "additionalProperties": false
-              }
-            },
-            "status": {"type": "string"},
-            "issues": {"type": "string"},
-            "metrics": {
+        "required": [
+          "id",
+          "chakra",
+          "type",
+          "version"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "chakra": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "memory_layers": {
+            "type": "array",
+            "items": {
               "type": "object",
+              "required": [
+                "layer",
+                "ignition_stage"
+              ],
               "properties": {
-                "coverage": {"type": "number"}
+                "layer": {
+                  "type": "string"
+                },
+                "ignition_stage": {
+                  "type": "number"
+                }
               },
               "additionalProperties": false
-            },
-            "ignition_stage": {"type": "number"},
-            "adr": {"type": ["string", "null"]}
+            }
           },
-          "additionalProperties": false
-        }
+          "status": {
+            "type": "string"
+          },
+          "issues": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "coverage": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false
+          },
+          "ignition_stage": {
+            "type": "number"
+          },
+          "adr": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "usage": {
+            "type": "string"
+          },
+          "function": {
+            "type": "string"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date"
+          },
+          "last_modified": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "additionalProperties": false
       }
+    }
   },
   "additionalProperties": false
 }
