@@ -35,6 +35,7 @@ abzu-memory-bootstrap
 - [Quickstart Setup](setup_quickstart.md) – minimal world configuration
 ## Usage
 - [How to Use](how_to_use.md)
+- [UI Service](ui_service.md) – lightweight FastAPI interface for memory queries
 - [Bootstrap World Script](../scripts/bootstrap_world.py) – populate mandatory layers with defaults
 
 ## Data
