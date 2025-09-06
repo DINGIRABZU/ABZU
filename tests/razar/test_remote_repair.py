@@ -1,6 +1,6 @@
 """Tests remote repair through the boot orchestrator."""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import json
 import sys
@@ -63,7 +63,6 @@ def test_remote_repair(tmp_path: Path, monkeypatch: MonkeyPatch, backend: str) -
     monkeypatch.setattr(bo, "_perform_handshake", lambda comps: None)
     monkeypatch.setattr(bo, "launch_required_agents", lambda: None)
     monkeypatch.setattr(bo.doc_sync, "sync_docs", lambda: None)
-    monkeypatch.setattr(bo, "_log_ai_invocation", lambda *a, **k: None)
     monkeypatch.setattr(bo.time, "sleep", lambda *a, **k: None)
 
     class DummyProc:
@@ -94,6 +93,9 @@ def test_remote_repair(tmp_path: Path, monkeypatch: MonkeyPatch, backend: str) -
     assert calls["complete"] == 1
     assert calls["repair"] == 1
     assert probe_state["patched"] is True
+
+    log = json.loads((tmp_path / "invocations.json").read_text())
+    assert log and log[0]["component"] == "demo"
 
     history = json.loads((tmp_path / "history.json").read_text())
     comp = history["history"][0]["components"][0]
