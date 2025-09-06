@@ -19,12 +19,16 @@ abzu-memory-bootstrap
 ## Memory Bundle
 - [Subsystem Overview](ABZU_SUBSYSTEM_OVERVIEW.md#memory-bundle-layers) – full five-layer bundle diagram and roles
 - [Memory Layers Guide](memory_layers_GUIDE.md) – bus protocol with diagrams: [Memory Bundle](figures/memory_bundle.mmd), [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd), [Query Memory Aggregation](figures/query_memory_aggregation.mmd)
+- [Narrative Engine Guide](narrative_engine_GUIDE.md) – transforms biosignals into structured StoryEvents
 
 ## Architecture
 - [Architecture Overview](architecture_overview.md)
 - [Blueprint Export](BLUEPRINT_EXPORT.md) – versioned snapshot of key documents
 - [Detailed Architecture](architecture.md)
 - [Crown Agent Overview](CROWN_OVERVIEW.md)
+- [RAZAR Guide](RAZAR_GUIDE.md) – boot orchestration and startup handshakes
+- [Crown Guide](Crown_GUIDE.md) – routes operator commands to servant models
+- [INANNA Guide](INANNA_GUIDE.md) – core GLM interface and memory access
 ## Nazarick
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
 - [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md)
@@ -34,6 +38,8 @@ abzu-memory-bootstrap
 - [Nazarick Manifesto](nazarick_manifesto.md)
 - [Nazarick Web Console](nazarick_web_console.md)
 - [Operator Protocol](operator_protocol.md)
+- [Nazarick Guide](Nazarick_GUIDE.md) – servant orchestration and configuration
+- [Albedo Guide](Albedo_GUIDE.md) – personality layer shaping responses
 ## Setup
 - [Setup Guide](setup.md)
 - [Environment Setup](environment_setup.md)
@@ -43,6 +49,7 @@ abzu-memory-bootstrap
 - [UI Service](ui_service.md) – lightweight FastAPI interface for memory queries
 - [Operator Console](operator_console.md) – Arcade UI for Operator API commands
 - [Arcade UI](arcade_ui.md) – features, env vars, and RAZAR interaction
+- [Operator Interface Guide](operator_interface_GUIDE.md) – REST endpoints for Crown and RAZAR control
 - [Bootstrap World Script](../scripts/bootstrap_world.py) – populate mandatory layers with defaults
 
 ## Data
@@ -61,6 +68,7 @@ abzu-memory-bootstrap
 - [Example Feature](features/example_feature.md)
 - [RAZAR Agent](RAZAR_AGENT.md)
 - [RAZAR Self-Healing Overview](RAZAR_AGENT.md#self-healing-overview)
+- [Persona API Guide](persona_api_guide.md) – utilities for managing persona interactions
 
 ## Indices
 - [Component Index](component_index.md)
