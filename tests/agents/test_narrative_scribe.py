@@ -13,6 +13,8 @@ __version__ = "0.1.0"
 def test_process_event_writes_log_and_memory(tmp_path, monkeypatch):
     monkeypatch.setattr(ns, "LOG_FILE", tmp_path / "story.log")
     monkeypatch.setattr(narrative_engine, "DB_PATH", tmp_path / "stories.db")
+    monkeypatch.setattr(ns.experience_replay, "replay", lambda *a, **k: [])
+    monkeypatch.setattr(ns.experience_replay, "store_event", lambda *a, **k: None)
 
     def fake_personas():
         return {

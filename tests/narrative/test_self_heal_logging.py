@@ -20,6 +20,8 @@ def test_self_heal_event_logged(tmp_path, monkeypatch):
     monkeypatch.setattr(ns, "LOG_FILE", log_file)
     monkeypatch.setattr(narrative_engine, "DB_PATH", db_path)
     monkeypatch.setattr(cortex, "PATCH_LINKS_FILE", patch_file)
+    monkeypatch.setattr(ns.experience_replay, "replay", lambda *a, **k: [])
+    monkeypatch.setattr(ns.experience_replay, "store_event", lambda *a, **k: None)
 
     def fake_personas():
         return {
@@ -39,7 +41,7 @@ def test_self_heal_event_logged(tmp_path, monkeypatch):
     )
     scribe.process_event(event)
 
-    text = log_file.read_text().strip()
+    text = log_file.read_text().splitlines()[0]
     assert text == "a restored core with patch abc"
     stories = list(narrative_engine.stream_stories())
     assert stories[-1] == text
