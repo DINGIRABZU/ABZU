@@ -29,8 +29,26 @@ sequenceDiagram
     RAZAR->>CrownKimi: Orchestrate
 ```
 
+## Runtime Model Management
+Operators can hot-swap servant models without restarting the console using the Operator API.
+
+- `POST /operator/models` registers a new servant.
+- `DELETE /operator/models/{name}` removes one.
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant API
+    participant Manager
+    Operator->>API: register servant
+    API->>Manager: register_model
+    Operator->>API: remove servant
+    API->>Manager: unregister_model
+```
+
 ## Version History
 | Version | Date       | Notes                              |
 |---------|------------|------------------------------------|
+| 0.3.0   | 2025-11-07 | Document runtime model management  |
 | 0.2.0   | 2025-11-06 | Added query endpoint and greeting  |
 | 0.1.0   | 2025-11-06 | Initial operator console doc       |

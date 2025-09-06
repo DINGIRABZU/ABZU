@@ -180,3 +180,18 @@ def test_status_endpoint(client: TestClient, tmp_path: Path) -> None:
     assert "components" in body
     assert body["errors"] == ["error: boom"]
     assert body["memory"]["files"] == 1
+
+
+def test_register_and_unregister_servant_model(client: TestClient) -> None:
+    """Operator can register and remove servant models at runtime."""
+
+    resp = client.post(
+        "/operator/models",
+        json={"name": "echo", "command": ["bash", "-lc", "cat"]},
+    )
+    assert resp.status_code == 200
+    assert "echo" in resp.json()["models"]
+
+    resp = client.delete("/operator/models/echo")
+    assert resp.status_code == 200
+    assert "echo" not in resp.json()["models"]

@@ -455,7 +455,9 @@ are registered via `init_crown_agent.py` and booted with
 guided by `_EMOTION_MODEL_MATRIX`: joy and excited map to DeepSeek,
 stress, fear and sadness route to Mistral, while calm or neutral tones
 use GLM. See [LLM Models](LLM_MODELS.md) for
-`MoGEOrchestrator` heuristics and further context.
+`MoGEOrchestrator` heuristics and further context. Servant models can
+also be swapped at runtime through Operator API endpoints that
+register or unregister handlers via `servant_model_manager`.
 
 ## Persona Layers
 

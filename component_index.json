@@ -3095,7 +3095,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "operator_api.py",
-      "version": "0.3.5",
+      "version": "0.3.6",
       "dependencies": [
         "__future__",
         "agents",

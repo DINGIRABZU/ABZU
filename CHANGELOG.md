@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Emitted structured health events during RAZAR boot and introduced recovery daemon for automated restarts.
 - Added `/operator/status` endpoint reporting component health, recent errors, and memory usage; bumped `operator_api` to 0.3.5.
+- Runtime servant model registration: `servant_model_manager` now supports
+  unregistering and reloading handlers, and `operator_api` exposes endpoints
+  to add or remove servant models at runtime (v0.3.6).
 
 - Added `environment.gpu.yml` and CPU/GPU Dockerfiles with pinned versions and documented hardware setup.
 - Documented inner memory guide and diagrams in the documentation index and linked cross-references from the Blueprint Spine and System Blueprint.

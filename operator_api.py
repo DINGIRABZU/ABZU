@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.3.5"
+__version__ = "0.3.6"
 
 import json
 import logging
@@ -29,6 +29,15 @@ from fastapi import (
 from agents.operator_dispatcher import OperatorDispatcher
 from agents.interaction_log import log_agent_interaction
 from fastapi.responses import HTMLResponse
+from servant_model_manager import (
+    has_model,
+    list_models,
+    register_kimi_k2,
+    register_opencode,
+    register_subprocess_model,
+    unregister_model,
+)
+from typing import cast
 
 logger = logging.getLogger(__name__)
 
@@ -188,7 +197,10 @@ async def operator_status() -> dict[str, object]:
     try:
         from razar import status_dashboard
 
-        components = status_dashboard._component_statuses()  # type: ignore[attr-defined]
+        components = cast(
+            list[dict[str, object]],
+            status_dashboard._component_statuses(),  # type: ignore[attr-defined]
+        )
     except Exception:  # pragma: no cover - best effort
         components = []
 
@@ -213,6 +225,42 @@ async def operator_status() -> dict[str, object]:
         "errors": errors,
         "memory": mem_summary,
     }
+
+
+@router.post("/operator/models")
+async def register_servant_model(data: dict[str, object]) -> dict[str, list[str]]:
+    """Register a servant model at runtime."""
+
+    name = str(data.get("name", ""))
+    builtin = data.get("builtin")
+    command = data.get("command")
+    replace = bool(data.get("replace", False))
+
+    if not name:
+        raise HTTPException(status_code=400, detail="name required")
+    if has_model(name) and not replace:
+        raise HTTPException(status_code=409, detail="model exists")
+    if builtin == "kimi_k2":
+        register_kimi_k2()
+    elif builtin == "opencode":
+        register_opencode()
+    elif isinstance(command, list):
+        if replace and has_model(name):
+            unregister_model(name)
+        register_subprocess_model(name, [str(c) for c in command])
+    else:
+        raise HTTPException(status_code=400, detail="builtin or command required")
+    return {"models": list_models()}
+
+
+@router.delete("/operator/models/{name}")
+async def unregister_servant_model(name: str) -> dict[str, list[str]]:
+    """Unregister a servant model at runtime."""
+
+    if not has_model(name):
+        raise HTTPException(status_code=404, detail="unknown model")
+    unregister_model(name)
+    return {"models": list_models()}
 
 
 @router.get("/agents/interactions")

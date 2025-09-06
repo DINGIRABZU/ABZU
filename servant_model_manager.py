@@ -19,6 +19,18 @@ def register_model(name: str, handler: _Handler) -> None:
         _REGISTRY[name] = handler
 
 
+def unregister_model(name: str) -> None:
+    """Remove ``name`` from the registry if present."""
+    with _LOCK:
+        _REGISTRY.pop(name, None)
+
+
+def reload_model(name: str, handler: _Handler) -> None:
+    """Replace ``name`` with ``handler``, registering if absent."""
+    with _LOCK:
+        _REGISTRY[name] = handler
+
+
 def register_subprocess_model(name: str, command: List[str]) -> None:
     """Register a model invoked via subprocess ``command``."""
 
@@ -77,6 +89,8 @@ def invoke_sync(name: str, prompt: str) -> str:
 
 __all__ = [
     "register_model",
+    "unregister_model",
+    "reload_model",
     "register_subprocess_model",
     "invoke",
     "invoke_sync",
