@@ -56,6 +56,12 @@ async def query(payload: dict) -> dict:
     return query_memory(text)
 
 
+@app.get("/memory/query")
+async def memory_query(prompt: str) -> dict:
+    """Return aggregated memory search results via ``query_memory``."""
+    return query_memory(prompt)
+
+
 @app.get("/status")
 async def status() -> dict:
     """Return component statuses from RAZAR."""

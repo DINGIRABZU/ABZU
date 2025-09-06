@@ -54,3 +54,29 @@ def test_query_returns_results(
     resp = client.post("/query", json={"query": "hi"})
     assert resp.status_code == 200
     assert resp.json() == {"res": "ok"}
+
+
+def test_memory_query_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    expected = {
+        "cortex": [],
+        "vector": [],
+        "spiral": "",
+        "failed_layers": [],
+    }
+    monkeypatch.setattr(api, "query_memory", lambda q: expected)
+    resp = client.get("/memory/query", params={"prompt": "hi"})
+    assert resp.status_code == 200
+    assert resp.json() == expected
+
+
+def test_memory_query_error(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def boom(_: str) -> dict:
+        raise RuntimeError("nope")
+
+    monkeypatch.setattr(api, "query_memory", boom)
+    resp = client.get("/memory/query", params={"prompt": "hi"})
+    assert resp.status_code == 500
