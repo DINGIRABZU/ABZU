@@ -8,6 +8,8 @@ from .config_registry import (
     register_agent,
     register_broker,
     register_layer,
+    register_remote_attempt,
+    register_component_hash,
     register_path,
     reset_registry,
 )
@@ -20,6 +22,8 @@ __all__ = [
     "register_agent",
     "register_broker",
     "register_layer",
+    "register_remote_attempt",
+    "register_component_hash",
     "register_path",
     "reset_registry",
 ]
