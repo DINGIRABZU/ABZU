@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import shlex
 import subprocess
+import threading
 import time
 from pathlib import Path
+
+from .chakra_observer import NazarickChakraObserver
 
 __version__ = "0.1.2"
 
@@ -69,6 +73,20 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
             subprocess.Popen(cmd)
             event["status"] = "launched"
             LOGGER.info("Launched %s", name)
+
+            def _relaunch() -> bool:
+                try:
+                    subprocess.Popen(cmd)
+                    LOGGER.info("Relaunched %s", name)
+                    return True
+                except Exception:
+                    LOGGER.exception("Failed to relaunch %s", name)
+                    return False
+
+            observer = NazarickChakraObserver(name, _relaunch)
+            threading.Thread(
+                target=lambda: asyncio.run(observer.run()), daemon=True
+            ).start()
         except Exception as exc:  # pragma: no cover - best effort logging
             event["status"] = "error"
             event["error"] = str(exc)
