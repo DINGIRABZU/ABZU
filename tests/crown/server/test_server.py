@@ -31,7 +31,17 @@ optional_deps_stub.lazy_import = lambda name: SimpleNamespace(__stub__=True)
 core_utils_stub.optional_deps = optional_deps_stub
 sys.modules.setdefault("core.utils", core_utils_stub)
 sys.modules.setdefault("core.utils.optional_deps", optional_deps_stub)
-from fastapi import APIRouter
+span_stub = SimpleNamespace(
+    __enter__=lambda self: self,
+    __exit__=lambda *a, **k: False,
+    set_attribute=lambda *a, **k: None,
+)
+trace_stub = SimpleNamespace(start_as_current_span=lambda *a, **k: span_stub)
+otel = ModuleType("opentelemetry")
+otel.trace = SimpleNamespace(get_tracer=lambda *_a, **_k: trace_stub)
+sys.modules.setdefault("opentelemetry", otel)
+sys.modules.setdefault("opentelemetry.trace", otel.trace)
+from fastapi import APIRouter, HTTPException
 
 video_stream_stub = ModuleType("video_stream")
 video_stream_stub.router = APIRouter()
@@ -261,10 +271,78 @@ def test_openwebui_chat_endpoint():
     assert data["choices"][0]["message"]["content"] == "stubbed"
 
 
+def test_openwebui_chat_with_channel(monkeypatch):
+    """POST /openwebui-chat should route to Nazarick when ``channel`` is set."""
+
+    called: dict[str, str] = {}
+
+    def fake_nazarick(channel: str, text: str) -> dict[str, str]:
+        called["channel"] = channel
+        called["text"] = text
+        return {"text": "nazarick", "model": "stub"}
+
+    monkeypatch.setattr(server, "nazarick_chat", fake_nazarick)
+
+    async def run_request() -> tuple[int, dict[str, object]]:
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
+            login = await client.post(
+                "/token",
+                data={"username": "user", "password": "pass"},
+            )
+            token = login.json()["access_token"]
+            resp = await client.post(
+                "/openwebui-chat",
+                params={"channel": "#nazarick"},
+                json={"model": "stub", "messages": [{"role": "user", "content": "hi"}]},
+                headers={"Authorization": f"Bearer {token}"},
+            )
+        return resp.status_code, resp.json()
+
+    status, data = asyncio.run(run_request())
+    assert status == 200
+    assert called["channel"] == "#nazarick"
+    assert called["text"] == "hi"
+    assert data["choices"][0]["message"]["content"] == "nazarick"
+
+
+def test_openwebui_chat_invalid_channel(monkeypatch):
+    """/openwebui-chat should handle invalid Nazarick channels gracefully."""
+
+    def fake_nazarick(channel: str, text: str) -> dict[str, str]:
+        raise HTTPException(status_code=404, detail="unknown channel")
+
+    monkeypatch.setattr(server, "nazarick_chat", fake_nazarick)
+
+    async def run_request() -> tuple[int, dict[str, object]]:
+        transport = httpx.ASGITransport(app=server.app)
+        async with httpx.AsyncClient(
+            transport=transport, base_url="http://testserver"
+        ) as client:
+            login = await client.post(
+                "/token",
+                data={"username": "user", "password": "pass"},
+            )
+            token = login.json()["access_token"]
+            resp = await client.post(
+                "/openwebui-chat",
+                params={"channel": "#bad"},
+                json={"model": "stub", "messages": [{"role": "user", "content": "hi"}]},
+                headers={"Authorization": f"Bearer {token}"},
+            )
+        return resp.status_code, resp.json()
+
+    status, data = asyncio.run(run_request())
+    assert status == 404
+    assert data["detail"] == "unknown channel"
+
+
 def test_openwebui_chat_requires_authorization():
     """/openwebui-chat should return 401 without a valid token."""
 
-    async def run_request(headers) -> int:
+    async def run_request(headers) -> tuple[int, dict[str, object]]:
         transport = httpx.ASGITransport(app=server.app)
         async with httpx.AsyncClient(
             transport=transport, base_url="http://testserver"
@@ -274,12 +352,16 @@ def test_openwebui_chat_requires_authorization():
                 json={"model": "stub", "messages": [{"role": "user", "content": "hi"}]},
                 headers=headers,
             )
-        return resp.status_code
+        return resp.status_code, resp.json()
 
-    status_missing = asyncio.run(run_request({}))
-    status_bad = asyncio.run(run_request({"Authorization": "Bearer bad-token"}))
+    status_missing, data_missing = asyncio.run(run_request({}))
+    status_bad, data_bad = asyncio.run(
+        run_request({"Authorization": "Bearer bad-token"})
+    )
     assert status_missing == 401
+    assert data_missing["detail"] == "Not authenticated"
     assert status_bad == 401
+    assert data_bad["detail"] == "Invalid token"
 
 
 def test_openwebui_login_rejects_invalid_credentials():
