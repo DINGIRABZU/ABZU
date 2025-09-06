@@ -1,4 +1,4 @@
-"""Fallback implementations for optional memory layers."""
+"""Fallback implementations for optional memory layers and utilities like search."""
 
 __all__ = [
     "cortex",
@@ -8,4 +8,5 @@ __all__ = [
     "narrative_engine",
     "vector_memory",
     "spiral_memory",
+    "search",
 ]

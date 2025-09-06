@@ -1270,7 +1270,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "memory/optional/cortex.py",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
         "typing"
@@ -2523,7 +2523,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "memory/__init__.py",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "dependencies": [
         "__future__",
         "agents",
@@ -2963,7 +2963,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "memory/optional/narrative_engine.py",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
         "dataclasses",
@@ -2991,6 +2991,22 @@
         "tests/test_memory_bus.py",
         "tests/test_metrics_endpoints.py"
       ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "search_optional",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/search.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [],
       "metrics": {},
       "status": "active",
       "issues": "No known issues",

@@ -6,7 +6,9 @@ from dataclasses import dataclass, field
 from importlib import import_module
 from typing import Any, Dict
 
-from . import broadcast_layer_event, query_memory
+from . import LAYERS, _LAYER_IMPORTS, broadcast_layer_event, query_memory
+
+__version__ = "0.1.1"
 
 
 @dataclass
@@ -24,29 +26,14 @@ class MemoryBundle:
         """Instantiate memory layers and emit a consolidated status event."""
         statuses: Dict[str, str] = {}
 
-        module_map = {
-            "cortex": "memory.cortex",
-            "emotional": "memory.emotional",
-            "mental": "memory.mental",
-            "spiritual": "memory.spiritual",
-            "narrative": "memory.narrative_engine",
-        }
-
-        for layer, module_path in module_map.items():
-            attr = layer
-            try:
-                module = import_module(module_path)
-                setattr(self, attr, module)
-                statuses[layer] = "ready"
-            except Exception:  # pragma: no cover - import failure logged elsewhere
-                optional_path = f"memory.optional.{module_path.split('.')[-1]}"
-                try:
-                    module = import_module(optional_path)
-                    setattr(self, attr, module)
-                    statuses[layer] = "defaulted"
-                except Exception:  # pragma: no cover - optional missing
-                    setattr(self, attr, None)
-                    statuses[layer] = "error"
+        for layer in LAYERS:
+            module_path = _LAYER_IMPORTS[layer]
+            module = import_module(module_path)
+            setattr(self, layer, module)
+            name = getattr(module, "__name__", "")
+            statuses[layer] = (
+                "defaulted" if name.startswith("memory.optional.") else "ready"
+            )
 
         broadcast_layer_event(statuses)
         self.statuses = statuses

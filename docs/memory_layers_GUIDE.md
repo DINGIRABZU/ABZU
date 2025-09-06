@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-**Version:** v1.0.2
-**Last updated:** 2025-09-06
+**Version:** v1.0.3
+**Last updated:** 2025-09-07
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
@@ -53,11 +53,11 @@ records = bundle.query("omen")
 ```
 
 `initialize()` imports each layer and immediately calls
-`broadcast_layer_event()` with the resulting status mapping. When a layer
-or its dependencies are missing, the bundle substitutes the no-op
-implementation from `memory.optional` and marks the status as `defaulted`.
-Any other import error is reported as `error`, but initialization continues
-and emits a consolidated result.
+`broadcast_layer_event()` with the resulting status mapping. During package
+import every layer attempts to load its implementation and transparently
+falls back to the module in `memory.optional` if dependencies are missing.
+Substituted layers are marked as `defaulted`; initialization continues and
+emits a consolidated result regardless of missing components.
 
 ### Command-line bootstrap
 
@@ -127,10 +127,10 @@ results = aggregate_search("omen", source_weights={"spiritual": 2.0})
 
 ## Optional Layers
 
-Some memory layers rely on external services and may be absent. When a layer
-fails to import, `broadcast_layer_event` and `query_memory` attempt to load a
-no-op implementation from `memory/optional/` that exposes the same public API.
-Substituted layers are reported as `defaulted`, and calls such as
+Some memory layers rely on external services and may be absent. The package
+automatically substitutes the corresponding module from `memory/optional/`
+whenever an import fails, exposing the same public API but returning empty
+results. Fallback layers are reported as `defaulted`, and calls such as
 `aggregate_search` simply yield empty results for them while logging any
 underlying errors. Queries still return data from the remaining active layers.
 
