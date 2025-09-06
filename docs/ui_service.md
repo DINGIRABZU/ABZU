@@ -22,5 +22,9 @@ sequenceDiagram
     Browser->>FastAPI: request /memory/query
     FastAPI->>query_memory: dispatch
     query_memory-->>FastAPI: results
-    FastAPI-->>Browser: response
+   FastAPI-->>Browser: response
 ```
+
+## Startup Narrative
+At startup, `start_crown_console.sh` runs `scripts/welcome_banner.py` to show a
+cuneiform greeting before the memory bundle initializes.
