@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.7"
+__version__ = "0.2.8"
 
 import argparse
 import asyncio
@@ -202,6 +202,33 @@ def _log_long_task(
     records.append(entry)
     LONG_TASK_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     LONG_TASK_LOG_PATH.write_text(json.dumps(records, indent=2))
+
+
+def _retry_with_ai(
+    name: str,
+    component: Dict[str, Any],
+    error_msg: str,
+    max_attempts: int,
+) -> tuple[Optional[subprocess.Popen], int, str]:
+    """Invoke AI handover until success or ``max_attempts`` is reached.
+
+    Returns a tuple of ``(process, attempts, error)`` where ``process`` is the
+    relaunched component on success, ``attempts`` is the number of AI retries
+    performed, and ``error`` is the last error message encountered.
+    """
+    for attempt in range(1, max_attempts + 1):
+        patched = ai_invoker.handover(name, error_msg, use_opencode=True)
+        _log_ai_invocation(name, attempt, error_msg, patched)
+        if not patched:
+            continue
+        LOGGER.info("Retrying %s after AI patch (remote attempt %s)", name, attempt)
+        try:
+            proc = launch_component(component)
+            return proc, attempt, error_msg
+        except Exception as exc:  # pragma: no cover - complex patch failure
+            error_msg = str(exc)
+            LOGGER.error("Remote attempt %s failed for %s: %s", attempt, name, exc)
+    return None, max_attempts, error_msg
 
 
 def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -> None:
@@ -447,7 +474,6 @@ def main() -> None:
                     LOGGER.error("Attempt %s failed for %s: %s", attempt, name, exc)
                     if attempt > args.retries:
                         error_msg = str(exc)
-                        remote_success = False
                         if args.long_task:
                             r_attempt = 0
                             while True:
@@ -484,7 +510,6 @@ def main() -> None:
                                     proc = launch_component(comp)
                                     processes.append(proc)
                                     success = True
-                                    remote_success = True
                                     break
                                 except Exception as exc2:
                                     attempts += 1
@@ -495,38 +520,16 @@ def main() -> None:
                                         name,
                                         exc2,
                                     )
-                            if remote_success:
+                            if success:
                                 break
                         else:
-                            for r_attempt in range(1, args.remote_attempts + 1):
-                                patched = ai_invoker.handover(
-                                    name, error_msg, use_opencode=True
-                                )
-                                _log_ai_invocation(name, r_attempt, error_msg, patched)
-                                if not patched:
-                                    continue
-                                LOGGER.info(
-                                    "Retrying %s after AI patch (remote attempt %s)",
-                                    name,
-                                    r_attempt,
-                                )
-                                try:
-                                    attempts += 1
-                                    proc = launch_component(comp)
-                                    processes.append(proc)
-                                    success = True
-                                    remote_success = True
-                                    break
-                                except Exception as exc2:
-                                    attempts += 1
-                                    error_msg = str(exc2)
-                                    LOGGER.error(
-                                        "Remote attempt %s failed for %s: %s",
-                                        r_attempt,
-                                        name,
-                                        exc2,
-                                    )
-                            if remote_success:
+                            patched_proc, ai_attempts, error_msg = _retry_with_ai(
+                                name, comp, error_msg, args.remote_attempts
+                            )
+                            attempts += ai_attempts
+                            if patched_proc is not None:
+                                processes.append(patched_proc)
+                                success = True
                                 break
                         failure_counts[name] = failure_counts.get(name, 0) + 1
                         quarantine_component(comp, error_msg)
