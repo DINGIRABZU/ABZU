@@ -8,6 +8,9 @@ Arcade-style web interface for issuing commands through the Operator API.
 - **Ignite** sends `/start_ignition`.
 - **Query Memory** posts to `/query` with a text payload.
 - **Status** retrieves `/status` for component health summaries.
+- **Add Model** posts to `/operator/models` with a model name and builtin.
+- **Remove Model** deletes `/operator/models/{name}`.
+- **Update Ethics** posts to `/ingest-ethics` to reindex the ethics corpus.
 
 ## Environment Variables
 - `OPERATOR_API_URL` – base URL of the Operator API (default `http://localhost:8000`).
@@ -29,26 +32,27 @@ sequenceDiagram
     RAZAR->>CrownKimi: Orchestrate
 ```
 
-## Runtime Model Management
-Operators can hot-swap servant models without restarting the console using the Operator API.
+## Runtime Model & Ethics Management
+Operators can hot-swap servant models and refresh ethics alignment without restarting the console using the Operator API.
 
 - `POST /operator/models` registers a new servant.
 - `DELETE /operator/models/{name}` removes one.
+- `POST /ingest-ethics` reindexes ethics markdown files.
 
 ```mermaid
-sequenceDiagram
-    participant Operator
-    participant API
-    participant Manager
-    Operator->>API: register servant
-    API->>Manager: register_model
-    Operator->>API: remove servant
-    API->>Manager: unregister_model
+flowchart TD
+    Operator --> UI[Arcade UI]
+    UI -->|Add Model| API[Operator API]
+    API --> Manager[Model Manager]
+    UI -->|Remove Model| API
+    UI -->|Update Ethics| API
+    API --> Ethics[Ethics Store]
 ```
 
 ## Version History
 | Version | Date       | Notes                              |
 |---------|------------|------------------------------------|
+| 0.4.0   | 2025-11-08 | Add model, remove model, and ethics update controls |
 | 0.3.0   | 2025-11-07 | Document runtime model management  |
 | 0.2.0   | 2025-11-06 | Added query endpoint and greeting  |
 | 0.1.0   | 2025-11-06 | Initial operator console doc       |
