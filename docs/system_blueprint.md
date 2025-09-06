@@ -4,7 +4,8 @@
 
 The system blueprint maps ABZU’s chakra layers, core services, and agents. It
 acts as a starting compass for new contributors—consult the
-[Documentation Index](index.md) for a full table of contents, including the
+[Documentation Index](index.md) for curated entry points and the
+[auto-generated index](INDEX.md) for a complete catalog, including the
 [Blueprint Export](BLUEPRINT_EXPORT.md) and [Onboarding Guide](onboarding_guide.md).
 Read the [Project Overview](project_overview.md) to understand goals, review the
 [Architecture Overview](architecture_overview.md) to see how components

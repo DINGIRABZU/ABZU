@@ -2,6 +2,9 @@
 
 Generated automatically. Lists each Python file with its description and external dependencies.
 
+See the [Documentation Index](index.md) for curated guides or the
+[complete index](INDEX.md) for a full catalog of documents.
+
 | File | Description | Dependencies |
 | --- | --- | --- |
 | `INANNA_AI/__init__.py` | Core package for the INANNA AI helpers. | None |
