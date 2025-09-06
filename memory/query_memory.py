@@ -13,10 +13,13 @@ from typing import Any, Dict, List
 try:  # pragma: no cover - cortex may be unavailable
     from .cortex import query_spirals
 except Exception:  # pragma: no cover - logged lazily
+    try:
+        from .optional.cortex import query_spirals
+    except Exception:
 
-    def query_spirals(*args: Any, **kwargs: Any) -> list[Any]:
-        """Fallback returning no cortex results."""
-        return []
+        def query_spirals(*args: Any, **kwargs: Any) -> list[Any]:
+            """Fallback returning no cortex results."""
+            return []
 
 
 try:  # pragma: no cover - optional dependency
@@ -82,6 +85,9 @@ def query_memory(query: str) -> Dict[str, Any]:
         logger.exception("spiral recall failed")
         spiral_res = ""
         failed_layers.append("spiral")
+
+    if failed_layers:
+        logger.warning("query_memory partial failure: %s", ", ".join(failed_layers))
 
     return {
         "cortex": cortex_res,

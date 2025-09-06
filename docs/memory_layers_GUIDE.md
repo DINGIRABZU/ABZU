@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-**Version:** v1.0.1
-**Last updated:** 2025-09-05
+**Version:** v1.0.2
+**Last updated:** 2025-09-06
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
@@ -58,6 +58,17 @@ or its dependencies are missing, the bundle substitutes the no-op
 implementation from `memory.optional` and marks the status as `defaulted`.
 Any other import error is reported as `error`, but initialization continues
 and emits a consolidated result.
+
+### Command-line bootstrap
+
+The script [`scripts/bootstrap_memory.py`](../scripts/bootstrap_memory.py)
+initializes the bundle from the command line and logs layer statuses:
+
+```bash
+python scripts/bootstrap_memory.py
+```
+
+Use this during development to verify all layers import correctly.
 
 ## Query aggregation
 
