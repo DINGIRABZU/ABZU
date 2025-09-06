@@ -12,6 +12,7 @@ import time
 from pathlib import Path
 
 from .chakra_observer import NazarickChakraObserver
+from agents.event_bus import emit_event
 
 __version__ = "0.1.2"
 
@@ -56,6 +57,8 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
         name = entry.get("id", "")
         cmd_str = entry.get("launch")
         channel = entry.get("channel", "")
+        capabilities = entry.get("capabilities", [])
+        triggers = entry.get("triggers", [])
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         event: dict[str, str] = {
             "agent": name,
@@ -66,6 +69,9 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
         if not cmd_str:
             event["status"] = "skipped"
             events.append(event)
+            emit_event(
+                name, "register", {"capabilities": capabilities, "triggers": triggers}
+            )
             continue
 
         cmd = shlex.split(cmd_str)
@@ -73,6 +79,9 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
             subprocess.Popen(cmd)
             event["status"] = "launched"
             LOGGER.info("Launched %s", name)
+            emit_event(
+                name, "register", {"capabilities": capabilities, "triggers": triggers}
+            )
 
             def _relaunch() -> bool:
                 try:
@@ -91,6 +100,9 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
             event["status"] = "error"
             event["error"] = str(exc)
             LOGGER.exception("Failed to launch %s", name)
+            emit_event(
+                name, "register", {"capabilities": capabilities, "triggers": triggers}
+            )
         events.append(event)
 
     LOG_FILE.write_text(json.dumps(existing + events, indent=2))
