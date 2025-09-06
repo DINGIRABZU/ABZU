@@ -44,6 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
  - Expanded guide with architecture diagram, requirements, deployment workflow, config schemas, cross-links, and example runs.
 - Added schema diagrams for configuration files and a full ignition example with log excerpts and mission-brief archive notes.
+- Introduced self-healing overview linking recovery playbook and Kimi integration.
 
 ### Changed
 - Boot orchestrator now records the full CROWN handshake response under

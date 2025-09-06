@@ -48,6 +48,7 @@ abzu-memory-bootstrap
 - [Feature Specifications](features/README.md)
 - [Example Feature](features/example_feature.md)
 - [RAZAR Agent](RAZAR_AGENT.md)
+- [RAZAR Self-Healing Overview](RAZAR_AGENT.md#self-healing-overview)
 
 ## Indices
 - [Component Index](component_index.md)

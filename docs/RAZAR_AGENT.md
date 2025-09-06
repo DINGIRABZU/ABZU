@@ -56,6 +56,20 @@ flowchart TD
     B -->|log| F[logs/razar_ai_invocations.json]
 ```
 
+### Self-Healing Overview
+RAZAR blends automated recovery with operator playbooks. When a failure is detected,
+`ai_invoker.handover` delegates the context to external helpers that can generate
+patches through Opencode or the [Kimi Integration](tools/kimi_integration.md). The
+patched component is relaunched following the steps in the
+[Recovery Playbook](recovery_playbook.md).
+
+```mermaid
+flowchart LR
+    A[Failure Detected] --> B[ai_invoker.handover]
+    B --> C[Opencode/Kimi Patch]
+    C --> D[Relaunch]
+```
+
 ### Recovery Flow
 ```mermaid
 flowchart TD
