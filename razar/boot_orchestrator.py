@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.6"
+__version__ = "0.2.7"
 
 import argparse
 import asyncio
@@ -35,6 +35,7 @@ LOGGER = logging.getLogger("razar.boot_orchestrator")
 
 # Path for recording AI handover attempts
 INVOCATION_LOG_PATH = LOGS_DIR / "razar_ai_invocations.json"
+LONG_TASK_LOG_PATH = LOGS_DIR / "razar_long_task.json"
 
 
 def load_history() -> Dict[str, Any]:
@@ -171,6 +172,36 @@ def _log_ai_invocation(component: str, attempt: int, error: str, patched: bool) 
     records.append(entry)
     INVOCATION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     INVOCATION_LOG_PATH.write_text(json.dumps(records, indent=2))
+
+
+def _log_long_task(
+    component: str,
+    attempt: int,
+    error: str,
+    patched: bool,
+    *,
+    aborted: bool = False,
+) -> None:
+    """Append long-task attempt details to :data:`LONG_TASK_LOG_PATH`."""
+    entry = {
+        "component": component,
+        "attempt": attempt,
+        "error": error,
+        "patched": patched,
+        "aborted": aborted,
+        "timestamp": time.time(),
+    }
+    records: List[Dict[str, Any]] = []
+    if LONG_TASK_LOG_PATH.exists():
+        try:
+            records = json.loads(LONG_TASK_LOG_PATH.read_text())
+            if not isinstance(records, list):
+                records = []
+        except json.JSONDecodeError:
+            records = []
+    records.append(entry)
+    LONG_TASK_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LONG_TASK_LOG_PATH.write_text(json.dumps(records, indent=2))
 
 
 def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -> None:
@@ -365,6 +396,11 @@ def main() -> None:
         default=3,
         help="AI handover attempts after local retries fail",
     )
+    parser.add_argument(
+        "--long-task",
+        action="store_true",
+        help="Repeatedly invoke AI handover until success or operator aborts",
+    )
     args = parser.parse_args()
 
     log_file = Path(__file__).with_name("boot_orchestrator.log")
@@ -412,36 +448,86 @@ def main() -> None:
                     if attempt > args.retries:
                         error_msg = str(exc)
                         remote_success = False
-                        for r_attempt in range(1, args.remote_attempts + 1):
-                            patched = ai_invoker.handover(
-                                name, error_msg, use_opencode=True
-                            )
-                            _log_ai_invocation(name, r_attempt, error_msg, patched)
-                            if not patched:
-                                continue
-                            LOGGER.info(
-                                "Retrying %s after AI patch (remote attempt %s)",
-                                name,
-                                r_attempt,
-                            )
-                            try:
-                                attempts += 1
-                                proc = launch_component(comp)
-                                processes.append(proc)
-                                success = True
-                                remote_success = True
-                                break
-                            except Exception as exc2:
-                                attempts += 1
-                                error_msg = str(exc2)
-                                LOGGER.error(
-                                    "Remote attempt %s failed for %s: %s",
-                                    r_attempt,
+                        if args.long_task:
+                            r_attempt = 0
+                            while True:
+                                r_attempt += 1
+                                try:
+                                    patched = ai_invoker.handover(
+                                        name, error_msg, use_opencode=True
+                                    )
+                                    _log_ai_invocation(
+                                        name, r_attempt, error_msg, patched
+                                    )
+                                    _log_long_task(name, r_attempt, error_msg, patched)
+                                except KeyboardInterrupt:
+                                    _log_long_task(
+                                        name,
+                                        r_attempt,
+                                        error_msg,
+                                        False,
+                                        aborted=True,
+                                    )
+                                    LOGGER.info(
+                                        "Operator aborted long task for %s", name
+                                    )
+                                    raise
+                                if not patched:
+                                    continue
+                                LOGGER.info(
+                                    "Retrying %s after AI patch (long task attempt %s)",
                                     name,
-                                    exc2,
+                                    r_attempt,
                                 )
-                        if remote_success:
-                            break
+                                try:
+                                    attempts += 1
+                                    proc = launch_component(comp)
+                                    processes.append(proc)
+                                    success = True
+                                    remote_success = True
+                                    break
+                                except Exception as exc2:
+                                    attempts += 1
+                                    error_msg = str(exc2)
+                                    LOGGER.error(
+                                        "Long task attempt %s failed for %s: %s",
+                                        r_attempt,
+                                        name,
+                                        exc2,
+                                    )
+                            if remote_success:
+                                break
+                        else:
+                            for r_attempt in range(1, args.remote_attempts + 1):
+                                patched = ai_invoker.handover(
+                                    name, error_msg, use_opencode=True
+                                )
+                                _log_ai_invocation(name, r_attempt, error_msg, patched)
+                                if not patched:
+                                    continue
+                                LOGGER.info(
+                                    "Retrying %s after AI patch (remote attempt %s)",
+                                    name,
+                                    r_attempt,
+                                )
+                                try:
+                                    attempts += 1
+                                    proc = launch_component(comp)
+                                    processes.append(proc)
+                                    success = True
+                                    remote_success = True
+                                    break
+                                except Exception as exc2:
+                                    attempts += 1
+                                    error_msg = str(exc2)
+                                    LOGGER.error(
+                                        "Remote attempt %s failed for %s: %s",
+                                        r_attempt,
+                                        name,
+                                        exc2,
+                                    )
+                            if remote_success:
+                                break
                         failure_counts[name] = failure_counts.get(name, 0) + 1
                         quarantine_component(comp, error_msg)
                         run_metrics["components"].append(

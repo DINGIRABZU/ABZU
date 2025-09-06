@@ -279,6 +279,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "integration" / "test_mix_and_store.py"),
     str(ROOT / "tests" / "test_transformers_generate.py"),
     str(ROOT / "tests" / "razar" / "test_ai_invoker.py"),
+    str(ROOT / "tests" / "razar" / "test_long_task.py"),
     str(ROOT / "tests" / "integration" / "test_core_regressions.py"),
     str(ROOT / "tests" / "integration" / "test_full_flows.py"),
     str(ROOT / "tests" / "scripts" / "test_verify_chakra_monitoring.py"),
