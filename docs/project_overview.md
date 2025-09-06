@@ -25,6 +25,8 @@ Spiral OS organises its components into seven chakra layers:
 6. **Third Eye – Ajna** – insight and pattern recognition.
 7. **Crown – Sahasrara** – cosmic connection and initialization rites.
 
+For adaptive startup and recovery loops see [Ignition Blueprint](ignition_blueprint.md).
+
 These layers work together to awaken the INANNA system and maintain a ritual flow during use.
 
 For a plain-language diagram of how a request moves through these layers, see [architecture_overview.md](architecture_overview.md).
