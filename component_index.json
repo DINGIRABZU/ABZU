@@ -113,7 +113,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "INANNA_AI_AGENT",
@@ -142,7 +146,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "__main__",
@@ -160,7 +168,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "adaptive_orchestrator",
@@ -183,7 +195,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ai_invoker",
@@ -212,7 +228,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ai_invoker",
@@ -238,7 +258,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "albedo",
@@ -276,7 +300,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "asian_gen",
@@ -295,7 +323,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "audio",
@@ -365,7 +397,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "aura_capture",
@@ -383,7 +419,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "avatar",
@@ -418,7 +458,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "backends",
@@ -442,7 +486,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "bana",
@@ -465,7 +513,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "bana",
@@ -494,7 +546,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "base",
@@ -522,7 +578,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "base",
@@ -550,7 +610,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "bio_adaptive_narrator",
@@ -583,7 +647,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "biosignals",
@@ -611,7 +679,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "blueprint_synthesizer",
@@ -633,7 +705,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "boot_orchestrator",
@@ -676,7 +752,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "boot_orchestrator",
@@ -722,7 +802,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "bootstrap_memory",
@@ -739,7 +823,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "bootstrap_world",
@@ -761,7 +849,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "bot_discord",
@@ -784,7 +876,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "bot_telegram",
@@ -807,7 +903,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "build_index",
@@ -826,7 +926,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "check_component_index_json",
@@ -842,7 +946,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "check_connector_index",
@@ -861,7 +969,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "check_dependency_registry",
@@ -877,7 +989,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "check_env",
@@ -896,7 +1012,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "check_memory_layers",
@@ -915,7 +1035,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "check_no_binaries",
@@ -933,7 +1057,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "check_placeholders",
@@ -951,7 +1079,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "checkpoint_manager",
@@ -970,7 +1102,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "checkpoint_manager",
@@ -989,7 +1125,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "cli",
@@ -1025,7 +1165,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "cocreation_planner",
@@ -1046,7 +1190,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "cocytus",
@@ -1067,7 +1215,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "code_repair",
@@ -1099,7 +1251,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "compassion_module",
@@ -1117,7 +1273,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "component_inventory",
@@ -1141,7 +1301,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "confirm_reading",
@@ -1160,7 +1324,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "connectors",
@@ -1188,7 +1356,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "corpus_memory_logging",
@@ -1224,7 +1396,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "cortex",
@@ -1263,7 +1439,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "cortex",
@@ -1290,7 +1470,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "cortex_cli",
@@ -1308,7 +1492,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "creative_engine",
@@ -1333,7 +1521,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_agent",
@@ -1353,7 +1545,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_decider",
@@ -1390,7 +1586,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_handshake",
@@ -1420,7 +1620,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_link",
@@ -1442,7 +1646,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_link",
@@ -1466,7 +1674,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_prompt_orchestrator",
@@ -1514,7 +1726,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_query_router",
@@ -1535,7 +1751,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "crown_router",
@@ -1562,7 +1782,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "demiurge",
@@ -1578,7 +1802,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "dependency_audit",
@@ -1599,7 +1827,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "dependency_installer",
@@ -1618,7 +1850,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "dev_orchestrator",
@@ -1649,7 +1885,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "doc_indexer",
@@ -1669,7 +1909,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "doc_sync",
@@ -1699,7 +1943,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "doc_sync",
@@ -1724,7 +1972,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ecosystem",
@@ -1737,7 +1989,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "emotional",
@@ -1776,7 +2032,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "emotional",
@@ -1805,7 +2065,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ensure_blueprint_sync",
@@ -1822,7 +2086,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "environment_builder",
@@ -1845,7 +2113,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "escalation_notifier",
@@ -1869,7 +2141,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "escalation_notifier",
@@ -1894,7 +2170,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ethics_manifesto",
@@ -1914,7 +2194,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "event_structurizer",
@@ -1934,7 +2218,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "export_coverage",
@@ -1953,7 +2241,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "fast_inference_agent",
@@ -1971,7 +2263,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "fine_tune_mistral",
@@ -1988,7 +2284,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "generate_protocol_task",
@@ -2009,7 +2309,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "generation",
@@ -2039,7 +2343,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "generation",
@@ -2066,7 +2374,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "geo_knowledge",
@@ -2088,7 +2400,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "guardian",
@@ -2116,7 +2432,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "health_check_connectors",
@@ -2135,7 +2455,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "health_checks",
@@ -2165,7 +2489,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "health_checks",
@@ -2200,7 +2528,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "heart_agent",
@@ -2220,7 +2552,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ignition_builder",
@@ -2243,7 +2579,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "inanna_bridge",
@@ -2261,7 +2601,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ingest_biosignal_events",
@@ -2282,7 +2626,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ingest_biosignals",
@@ -2307,7 +2655,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ingest_biosignals_jsonl",
@@ -2328,7 +2680,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "init_crown_agent",
@@ -2360,7 +2716,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "init_memory_layers",
@@ -2380,7 +2740,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "issue_analyzer",
@@ -2398,7 +2762,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "kimi_k2_client",
@@ -2419,7 +2787,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "land_graph",
@@ -2436,7 +2808,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "lifecycle_bus",
@@ -2455,7 +2831,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "log_intent",
@@ -2475,7 +2855,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "manage_servants",
@@ -2498,7 +2882,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "mare_gardener",
@@ -2516,7 +2904,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "memory",
@@ -2604,7 +2996,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "memory_physical",
@@ -2631,7 +3027,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "mental",
@@ -2661,7 +3061,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "mental",
@@ -2683,7 +3087,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "messaging",
@@ -2706,7 +3114,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "mission_logger",
@@ -2731,7 +3143,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "mission_logger",
@@ -2759,7 +3175,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "mix_tracks",
@@ -2791,7 +3211,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "module_builder",
@@ -2814,7 +3238,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "module_sandbox",
@@ -2835,7 +3263,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "music_memory",
@@ -2858,7 +3290,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "narrative_api",
@@ -2884,7 +3320,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "narrative_api",
@@ -2908,7 +3348,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "narrative_engine",
@@ -2956,7 +3400,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "narrative_engine",
@@ -2994,7 +3442,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "search_optional",
@@ -3010,7 +3462,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "narrative_scribe",
@@ -3038,7 +3494,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "nazarick",
@@ -3066,7 +3526,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "opencode_client",
@@ -3088,7 +3552,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "operator_api",
@@ -3118,7 +3586,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "optional_deps",
@@ -3142,7 +3614,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "pandora",
@@ -3158,7 +3634,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "persona_emulator",
@@ -3176,7 +3656,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "planning_engine",
@@ -3200,7 +3684,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "playback",
@@ -3221,7 +3709,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "playback",
@@ -3241,7 +3733,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "pleiades",
@@ -3257,7 +3753,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "preflight",
@@ -3278,7 +3778,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "primordials_api",
@@ -3298,7 +3802,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "project_audit",
@@ -3319,7 +3827,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "prompt_arbiter",
@@ -3342,7 +3854,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "pytest_runner",
@@ -3367,7 +3883,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "quarantine_manager",
@@ -3396,7 +3916,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "quarantine_manager",
@@ -3425,7 +3949,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "query_memory",
@@ -3452,7 +3980,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "razar",
@@ -3505,7 +4037,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "razar",
@@ -3563,7 +4099,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "recovery_daemon",
@@ -3583,7 +4123,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "recovery_manager",
@@ -3605,7 +4149,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "recovery_manager",
@@ -3629,7 +4177,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "reflection_loop",
@@ -3678,7 +4230,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "register_task",
@@ -3697,7 +4253,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "release",
@@ -3720,7 +4280,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "remote_loader",
@@ -3752,7 +4316,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "require_connector_registry_update",
@@ -3771,7 +4339,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "require_module_docs",
@@ -3788,7 +4360,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "require_onboarding_update",
@@ -3807,7 +4383,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "retro_bootstrap",
@@ -3829,7 +4409,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "root_agent",
@@ -3850,7 +4434,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "runtime_manager",
@@ -3878,7 +4466,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "sacral_agent",
@@ -3898,7 +4490,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "sacred",
@@ -3925,7 +4521,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "sandbox_session",
@@ -3947,7 +4547,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "scan_todo_fixme",
@@ -3965,7 +4569,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "schedule_doc_audit",
@@ -3984,7 +4592,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "search",
@@ -4026,7 +4638,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "search_api",
@@ -4048,7 +4664,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "sebas",
@@ -4064,7 +4684,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "security_canary",
@@ -4090,7 +4714,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "seed",
@@ -4116,7 +4744,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "server",
@@ -4187,7 +4819,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "service_launcher",
@@ -4211,7 +4847,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "session_logger",
@@ -4238,7 +4878,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "shalltear",
@@ -4258,7 +4902,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "signal_router",
@@ -4276,7 +4924,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "solar_agent",
@@ -4296,7 +4948,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "spiral_cortex",
@@ -4317,7 +4973,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "spiral_memory",
@@ -4336,7 +4996,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "spiritual",
@@ -4358,7 +5022,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "spiritual",
@@ -4377,7 +5045,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "star_map",
@@ -4395,7 +5067,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "start_crown_console",
@@ -4424,7 +5100,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "status_dashboard",
@@ -4449,7 +5129,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "story_adapter",
@@ -4468,7 +5152,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "story_lookup",
@@ -4487,7 +5175,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "strategic_simulator",
@@ -4505,7 +5197,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "telegram_bot",
@@ -4523,7 +5219,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "third_eye_agent",
@@ -4543,7 +5243,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "throat_agent",
@@ -4563,7 +5267,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "training_guide",
@@ -4595,7 +5303,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "transformers",
@@ -4619,7 +5331,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "trust",
@@ -4653,7 +5369,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "trust_matrix",
@@ -4676,7 +5396,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "trust_registry",
@@ -4696,7 +5420,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "ui_service",
@@ -4717,7 +5445,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "utils",
@@ -4760,7 +5492,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "validate_api_schemas",
@@ -4782,7 +5518,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "validate_change_justification",
@@ -4801,7 +5541,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "validate_component_index_json",
@@ -4819,7 +5563,11 @@
       "metrics": {},
       "status": "deprecated",
       "issues": "Marked deprecated in source",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "validate_configs",
@@ -4839,7 +5587,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "validate_ignition",
@@ -4861,7 +5613,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "validate_links",
@@ -4880,7 +5636,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "vector_memory",
@@ -4946,7 +5706,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "verify_chakra_monitoring",
@@ -4970,7 +5734,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "verify_dependencies",
@@ -4989,7 +5757,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "verify_doc_hashes",
@@ -5009,7 +5781,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "verify_doc_summaries",
@@ -5028,7 +5804,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "verify_milestone_operator_copresence",
@@ -5048,7 +5828,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "verify_self_healing",
@@ -5070,7 +5854,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "verify_versions",
@@ -5090,7 +5878,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "victim",
@@ -5109,7 +5901,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "video_stream",
@@ -5153,7 +5949,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "virtual_env_manager",
@@ -5178,7 +5978,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "vision",
@@ -5195,7 +5999,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "vision",
@@ -5217,7 +6025,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "vision_adapter",
@@ -5238,7 +6050,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "vocal_isolation",
@@ -5260,7 +6076,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "voice_conversion",
@@ -5281,7 +6101,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "webrtc_connector",
@@ -5314,7 +6138,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "webrtc_server",
@@ -5341,7 +6169,11 @@
       "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     },
     {
       "id": "yoloe_adapter",
@@ -5365,7 +6197,11 @@
       "metrics": {},
       "status": "active",
       "issues": "No known issues",
-      "adr": null
+      "adr": null,
+      "usage": "unknown",
+      "function": "unknown",
+      "date_created": "2025-09-06",
+      "last_modified": "2025-09-06"
     }
   ]
 }
