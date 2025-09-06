@@ -15,6 +15,7 @@ from typing import Dict, Iterable, List
 import numpy as np
 
 from . import adaptive_learning
+from agents.nazarick.ethics_manifesto import Manifesto
 
 try:
     from sentence_transformers import SentenceTransformer
@@ -48,13 +49,19 @@ class EthicalValidator:
         *,
         banned_keywords: Iterable[str] | None = None,
         banned_categories: Dict[str, List[str]] | None = None,
+        manifesto: Manifesto | None = None,
         log_dir: str | Path = "audit_logs",
         threshold: float = 0.7,
         model_name: str = "all-MiniLM-L6-v2",
     ) -> None:
         self.allowed = set(allowed_users or [])
         self.banned = [kw.lower() for kw in (banned_keywords or [])]
-        self.categories = banned_categories or DEFAULT_CATEGORIES
+        self.manifesto = manifesto or Manifesto()
+        self.ethos = self.manifesto.ethos
+        manifest_cats = {
+            law.name: list(law.keywords) for law in self.manifesto._laws.values()
+        }
+        self.categories = {**manifest_cats, **(banned_categories or {})}
         self.threshold = threshold
         self.log_dir = Path(log_dir)
 
@@ -111,6 +118,10 @@ class EthicalValidator:
         if user not in self.allowed:
             raise PermissionError("unauthorized")
         return True
+
+    def validate_action(self, actor: str, action: str) -> Dict[str, object]:
+        """Delegate to the underlying ethics manifesto."""
+        return self.manifesto.validate_action(actor, action)
 
     def apply_feedback(
         self,

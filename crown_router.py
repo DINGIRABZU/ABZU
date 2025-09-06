@@ -15,6 +15,7 @@ import time
 import emotional_state
 from crown_decider import decide_expression_options
 from rag.orchestrator import MoGEOrchestrator
+from INANNA_AI.ethical_validator import EthicalValidator
 
 try:  # pragma: no cover - optional dependency
     from prometheus_client import Counter, Gauge, Histogram, REGISTRY
@@ -37,7 +38,9 @@ _START_TIME = time.perf_counter()
 
 if Gauge is not None and REGISTRY is not None:
     if "service_boot_duration_seconds" in REGISTRY._names_to_collectors:
-        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors["service_boot_duration_seconds"]  # type: ignore[assignment]
+        BOOT_DURATION_GAUGE = REGISTRY._names_to_collectors[
+            "service_boot_duration_seconds"
+        ]  # type: ignore[assignment]
     else:
         BOOT_DURATION_GAUGE = Gauge(
             "service_boot_duration_seconds",
@@ -122,6 +125,7 @@ def route_decision(
     text: str,
     emotion_data: Dict[str, Any],
     orchestrator: MoGEOrchestrator | None = None,
+    validator: EthicalValidator | None = None,
 ) -> Dict[str, Any]:
     """Return combined routing decision for ``text``.
 
@@ -152,6 +156,14 @@ def route_decision(
         THROUGHPUT_COUNTER.labels("crown").inc()
     start = time.perf_counter()
     try:
+        if validator is not None:
+            validation = validator.validate_action("crown", text)
+            if not validation.get("compliant", False):
+                raise ValueError(
+                    "ethical violation: "
+                    + ", ".join(validation.get("violated_laws", []))
+                )
+
         orch = orchestrator or MoGEOrchestrator()
         result = orch.route(
             text,
