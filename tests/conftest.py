@@ -257,6 +257,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "agents" / "nazarick" / "test_ethics_manifesto.py"),
     str(ROOT / "tests" / "agents" / "nazarick" / "test_trust_matrix.py"),
     str(ROOT / "tests" / "agents" / "nazarick" / "test_document_registry.py"),
+    str(ROOT / "tests" / "agents" / "nazarick" / "test_experience_replay.py"),
     str(ROOT / "tests" / "agents" / "test_razar_cli.py"),
     str(ROOT / "tests" / "agents" / "test_razar_blueprint_synthesizer.py"),
     str(ROOT / "tests" / "test_citadel_event_producer.py"),

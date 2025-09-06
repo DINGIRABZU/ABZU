@@ -20,6 +20,7 @@ import yaml  # type: ignore[import]
 
 from citadel.event_producer import Event
 from memory import narrative_engine
+from agents import experience_replay
 
 LOG_FILE = Path("logs/nazarick_story.log")
 
@@ -76,11 +77,14 @@ class NarrativeScribe:
 
     def process_event(self, event: Event) -> None:
         """Compose narrative for ``event`` and log it."""
-
+        query = f"{event.event_type} {json.dumps(event.payload, ensure_ascii=False)}"
+        lessons = experience_replay.replay(event.agent_id, query)
         if event.event_type == "self_heal":
             narrative = self.compose_self_heal(event)
         else:
             narrative = self.compose(event)
+        if lessons:
+            narrative += " | Lessons: " + " | ".join(lessons)
         json_line = json.dumps(
             {
                 "agent_id": event.agent_id,
@@ -107,6 +111,7 @@ class NarrativeScribe:
             narrative,
             event.timestamp.timestamp(),
         )
+        experience_replay.store_event(event.agent_id, narrative)
 
     async def _redis_listener(self, channel: str, url: str) -> None:
         import redis.asyncio as redis  # type: ignore
