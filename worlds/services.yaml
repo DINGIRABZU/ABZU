@@ -1,0 +1,21 @@
+# Per-world service declarations
+# schema:
+# <world>:
+#   model: <model name>
+#   tokenizer: <tokenizer version>
+#   vector_db:
+#     backend: <backend>
+#     path: <path to database>
+#   event_bus:
+#     transport: <transport>
+#     bootstrap_servers: <servers>
+
+default:
+  model: glm-1
+  tokenizer: glm-tokenizer-v1
+  vector_db:
+    backend: faiss
+    path: data/vector.index
+  event_bus:
+    transport: kafka
+    bootstrap_servers: localhost:9092

@@ -10,6 +10,7 @@ from pathlib import Path
 from agents.nazarick.service_launcher import launch_required_agents
 from init_crown_agent import initialize_crown
 from memory.bundle import MemoryBundle
+from worlds.services import load_manifest, warn_missing_services
 
 __version__ = "0.2.0"
 
@@ -40,6 +41,10 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO)
     root = Path(__file__).resolve().parents[1]
     _prepare_file_backed_storage(root)
+
+    manifest = load_manifest(root / "worlds" / "services.yaml")
+    world = os.getenv("WORLD_NAME", "default")
+    warn_missing_services(manifest, world)
 
     bundle = MemoryBundle()
     statuses = bundle.initialize()
