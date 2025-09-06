@@ -75,8 +75,6 @@ shap = ["shap==0.45.0"]
 
 mental = [
     "neo4j==5.23.1",
-    "gymnasium==1.2.0",
-    "stable-baselines3==2.7.0",
 ]
 emotional = [
     "transformers==4.55.2",
@@ -178,7 +176,7 @@ fail_under = 80
 
 [tool.poetry.extras]
 spatial = ["torch", "open3d", "pytorch3d"]
-mental = ["neo4j", "gymnasium", "stable-baselines3"]
+mental = ["neo4j"]
 emotional = ["transformers", "dlib"]
 spiritual = []
 narrative = ["chromadb", "pynvml"]

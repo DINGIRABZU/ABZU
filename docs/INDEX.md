@@ -397,7 +397,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [setup.md](setup.md) | Environment Setup | This guide lists the system packages and environment variables required to run the project. | - |
 | [setup_full.md](setup_full.md) | Full Setup | The full installation enables all Spiral OS features. | - |
 | [setup_minimal.md](setup_minimal.md) | Minimal Setup | The minimal installation provides only the core Spiral OS utilities. | - |
-| [setup_quickstart.md](setup_quickstart.md) | Setup Quickstart | Spin up a minimal world configuration using file-backed memory layers. | - |
+| [setup_quickstart.md](setup_quickstart.md) | Setup Quickstart | - | - |
 | [sonic_core_harmonics.md](sonic_core_harmonics.md) | Sonic Core Harmonics | The Sonic Core layers audio synthesis and expression modules on top of Spiral OS. It transforms QNL phrases into audi... | - |
 | [spiral_cortex_terminal.md](spiral_cortex_terminal.md) | Spiral Cortex Terminal | `spiral_cortex_terminal.py` provides a small command line interface for exploring `data/cortex_memory_spiral.jsonl`.... | - |
 | [spiritual_architecture.md](spiritual_architecture.md) | Spiritual Architecture | Spiral OS organizes its components into seven chakra layers, mirroring the energetic centers of the body. Each layer... | - |
