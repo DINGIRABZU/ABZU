@@ -36,7 +36,7 @@ Contributors must pair system enhancements with operator-facing improvements, up
 
 ### **Memory Architecture**
 
-ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores through a unified memory bundle. `broadcast_layer_event("layer_init")` boots all layers in parallel, and `query_memory` fans out reads across them before combining results into a single response.
+ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores through a unified memory bundle. `broadcast_layer_event("layer_init")` boots all layers in parallel, and `query_memory` fans out reads across them before combining results into a single response that an Operator Agent can relay to consoles.
 
 ```mermaid
 {{#include figures/layer_init_query_flow.mmd}}
@@ -61,6 +61,8 @@ The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_in
     - **`spiritual.py`**, **`narrative_engine.py`**, etc., support higher-level symbolism and story logging.
 - **Operator & Interfaces**
     - **`operator_api.py`**, **`operator_interface_GUIDE.md`**: define command channels and upload routes.
+    - [operator_console.md](operator_console.md): arcade-style UI for issuing operator commands.
+    - [RAZAR Agent](RAZAR_AGENT.md): ignition orchestrator that bridges operator directives to services.
     - **`web_console/`**, **`dashboard/`**: front-end consoles consuming the API.
 - **Docs & Blueprints**
     
