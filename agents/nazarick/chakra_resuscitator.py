@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from typing import Callable, Dict
 
 from agents.event_bus import emit_event, subscribe
@@ -18,12 +19,22 @@ class ChakraResuscitator:
         self,
         actions: Dict[str, Callable[[], bool]],
         emitter: Callable[[str, str, Dict[str, object]], None] = emit_event,
+        agent_id: str | None = None,
     ) -> None:
         self.actions = actions
         self.emit = emitter
+        # Resolve the current agent identifier for targeted events.
+        self.agent_id = agent_id or os.getenv("AGENT_ID", "")
 
     async def handle_event(self, event: Event) -> None:
         """Process a ``chakra_down`` event."""
+
+        target = str(event.payload.get("target_agent", ""))
+        if target and target != self.agent_id:
+            LOGGER.info(
+                "Ignoring event for agent %s (current agent %s)", target, self.agent_id
+            )
+            return
 
         chakra = str(event.payload.get("chakra"))
         action = self.actions.get(chakra)
