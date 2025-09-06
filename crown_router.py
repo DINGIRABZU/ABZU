@@ -19,6 +19,13 @@ from INANNA_AI.ethical_validator import EthicalValidator
 from agents.nazarick.document_registry import DocumentRegistry
 
 try:  # pragma: no cover - optional dependency
+    from monitoring.chakra_heartbeat import ChakraHeartbeat
+
+    heartbeat_monitor = ChakraHeartbeat()
+except Exception:  # pragma: no cover - heartbeat optional
+    heartbeat_monitor = None
+
+try:  # pragma: no cover - optional dependency
     from prometheus_client import Counter, Gauge, Histogram, REGISTRY
 except Exception:  # pragma: no cover - optional dependency
     Counter = Gauge = Histogram = REGISTRY = None  # type: ignore[assignment]
@@ -157,6 +164,8 @@ def route_decision(
         Decision containing ``model``, ``tts_backend``, ``avatar_style`` and
         ``aura``.
     """
+    if heartbeat_monitor is not None and heartbeat_monitor.sync_status() != "aligned":
+        raise RuntimeError("chakras out of sync")
     if THROUGHPUT_COUNTER is not None:
         THROUGHPUT_COUNTER.labels("crown").inc()
     start = time.perf_counter()
