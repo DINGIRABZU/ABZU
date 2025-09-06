@@ -147,6 +147,7 @@ class MoGEOrchestrator:
         text_modality: bool = True,
         voice_modality: bool = False,
         music_modality: bool = False,
+        documents: Dict[str, str] | None = None,
     ) -> Dict[str, Any]:
         """Process ``text`` with models based on ``emotion_data`` and flags."""
         emotion = emotion_data.get("emotion", "neutral")

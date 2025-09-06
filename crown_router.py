@@ -11,11 +11,13 @@ __version__ = "0.1.0"
 
 from typing import Any, Dict
 import time
+from pathlib import Path
 
 import emotional_state
 from crown_decider import decide_expression_options
 from rag.orchestrator import MoGEOrchestrator
 from INANNA_AI.ethical_validator import EthicalValidator
+from agents.nazarick.document_registry import DocumentRegistry
 
 try:  # pragma: no cover - optional dependency
     from prometheus_client import Counter, Gauge, Histogram, REGISTRY
@@ -33,6 +35,16 @@ try:  # pragma: no cover - optional dependency
     pynvml.nvmlInit()
 except Exception:  # pragma: no cover - GPU may be unavailable
     pynvml = None  # type: ignore[assignment]
+
+ROOT = Path(__file__).resolve().parent
+registry = DocumentRegistry(
+    [
+        ROOT / "GENESIS",
+        ROOT / "IGNITION",
+        ROOT / "PRIME OPERATOR",
+        ROOT / "CODEX",
+    ]
+)
 
 _START_TIME = time.perf_counter()
 
@@ -126,6 +138,8 @@ def route_decision(
     emotion_data: Dict[str, Any],
     orchestrator: MoGEOrchestrator | None = None,
     validator: EthicalValidator | None = None,
+    *,
+    documents: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
     """Return combined routing decision for ``text``.
 
@@ -164,6 +178,7 @@ def route_decision(
                     + ", ".join(validation.get("violated_laws", []))
                 )
 
+        docs = documents or registry.get_corpus()
         orch = orchestrator or MoGEOrchestrator()
         result = orch.route(
             text,
@@ -171,6 +186,7 @@ def route_decision(
             text_modality=False,
             voice_modality=False,
             music_modality=False,
+            documents=docs,
         )
 
         emotion = emotion_data.get("emotion", "neutral")
