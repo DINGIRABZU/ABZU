@@ -37,6 +37,7 @@ abzu-memory-bootstrap
 - [Nazarick Narrative System](nazarick_narrative_system.md) – maps story events to agents and memory layers
 - [Nazarick Manifesto](nazarick_manifesto.md)
 - [Nazarick Web Console](nazarick_web_console.md)
+- [Crown vs. Nazarick Modes](nazarick_web_console.md#crown-vs-nazarick-modes) – choose the right interface
 - [Operator Protocol](operator_protocol.md)
 - [Nazarick Guide](Nazarick_GUIDE.md) – servant orchestration and configuration
 - [Albedo Guide](Albedo_GUIDE.md) – personality layer shaping responses
