@@ -1542,7 +1542,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "crown_router.py",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": [
         "__future__",
         "crown_decider",
@@ -5361,6 +5361,48 @@
       "tests": [
         "tests/agents/razar/test_vision_adapter.py",
         "tests/vision/test_yoloe_adapter.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "chakra_cycle",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/spiral_os/chakra_cycle.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "threading",
+        "time",
+        "typing",
+        "prometheus_client"
+      ],
+      "tests": [
+        "tests/monitoring/test_chakra_heartbeat.py"
+      ],
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "chakra_heartbeat",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "monitoring/chakra_heartbeat.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "distributed_memory",
+        "typing",
+        "time",
+        "operator_api"
+      ],
+      "tests": [
+        "tests/monitoring/test_chakra_heartbeat.py"
       ],
       "metrics": {},
       "status": "active",

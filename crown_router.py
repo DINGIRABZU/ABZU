@@ -7,7 +7,7 @@ services when available.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from typing import Any, Dict
 import time
@@ -18,6 +18,7 @@ from crown_decider import decide_expression_options
 from rag.orchestrator import MoGEOrchestrator
 from INANNA_AI.ethical_validator import EthicalValidator
 from agents.nazarick.document_registry import DocumentRegistry
+from monitoring.chakra_heartbeat import ChakraHeartbeat
 
 try:  # pragma: no cover - optional dependency
     from prometheus_client import Counter, Gauge, Histogram, REGISTRY
@@ -170,6 +171,8 @@ def route_decision(
         THROUGHPUT_COUNTER.labels("crown").inc()
     start = time.perf_counter()
     try:
+        if not ChakraHeartbeat.sync_status():
+            raise RuntimeError("chakra system out of sync")
         if validator is not None:
             validation = validator.validate_action("crown", text)
             if not validation.get("compliant", False):
