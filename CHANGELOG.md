@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented inner memory guide and diagrams in the documentation index and linked cross-references from the Blueprint Spine and System Blueprint.
 - Added `docs/SOCIAL_INVESTOR_ONE_PAGER.md` summarizing the project for prospective social investors.
 - Added `docs/component_maturity.md` tracking documentation completeness, coverage, and open issues.
+- Documented RAZAR self-healing overview with links to recovery playbook and Kimi integration.
 
 - Documented onboarding triple-reading requirement and Nazarick Web Console access in `docs/operator_interface_GUIDE.md` and updated `docs/INDEX.md`.
 - Web console streams avatar video, audio, and narrative text concurrently and `abzu operator-console --smoke-test` exercises a scripted session.
