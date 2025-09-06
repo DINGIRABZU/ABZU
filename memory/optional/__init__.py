@@ -1,6 +1,7 @@
 """Fallback implementations for optional memory layers."""
 
 __all__ = [
+    "cortex",
     "mental",
     "emotional",
     "spiritual",

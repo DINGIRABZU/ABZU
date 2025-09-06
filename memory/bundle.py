@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from importlib import import_module
 from typing import Any, Dict
 
 from . import broadcast_layer_event, query_memory
@@ -23,48 +24,29 @@ class MemoryBundle:
         """Instantiate memory layers and emit a consolidated status event."""
         statuses: Dict[str, str] = {}
 
-        try:
-            from . import cortex as cortex_layer
+        module_map = {
+            "cortex": "memory.cortex",
+            "emotional": "memory.emotional",
+            "mental": "memory.mental",
+            "spiritual": "memory.spiritual",
+            "narrative": "memory.narrative_engine",
+        }
 
-            self.cortex = cortex_layer
-            statuses["cortex"] = "ready"
-        except Exception:  # pragma: no cover - import failure logged elsewhere
-            statuses["cortex"] = "error"
-
-        try:
-            from . import emotional as emotional_layer
-
-            self.emotional = emotional_layer
-            statuses["emotional"] = "ready"
-        except Exception:  # pragma: no cover
-            statuses["emotional"] = "error"
-
-        try:
-            from . import mental as mental_layer
-
-            self.mental = mental_layer
-            statuses["mental"] = "ready"
-        except Exception:  # mental layer optional
-            from .optional import mental as mental_layer
-
-            self.mental = mental_layer
-            statuses["mental"] = "defaulted"
-
-        try:
-            from . import spiritual as spiritual_layer
-
-            self.spiritual = spiritual_layer
-            statuses["spiritual"] = "ready"
-        except Exception:  # pragma: no cover
-            statuses["spiritual"] = "error"
-
-        try:
-            from . import narrative_engine as narrative_layer
-
-            self.narrative = narrative_layer
-            statuses["narrative"] = "ready"
-        except Exception:  # pragma: no cover
-            statuses["narrative"] = "error"
+        for layer, module_path in module_map.items():
+            attr = layer
+            try:
+                module = import_module(module_path)
+                setattr(self, attr, module)
+                statuses[layer] = "ready"
+            except Exception:  # pragma: no cover - import failure logged elsewhere
+                optional_path = f"memory.optional.{module_path.split('.')[-1]}"
+                try:
+                    module = import_module(optional_path)
+                    setattr(self, attr, module)
+                    statuses[layer] = "defaulted"
+                except Exception:  # pragma: no cover - optional missing
+                    setattr(self, attr, None)
+                    statuses[layer] = "error"
 
         broadcast_layer_event(statuses)
         self.statuses = statuses
