@@ -160,7 +160,9 @@ curl http://localhost:8000/metrics | head
 Agent interactions emit OpenTelemetry spans. To view them, run an OTLP
 collector such as Jaeger and set the `OTEL_EXPORTER_OTLP_ENDPOINT` environment
 variable before starting the services. The spans then appear in the
-collector's UI for correlation with metrics.
+collector's UI for correlation with metrics. Memory queries also emit spans for
+each layer, enabling trace-based performance analysis alongside agent event
+emission.
 
 ### Troubleshooting
 

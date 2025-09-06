@@ -47,17 +47,22 @@ def _get_producer() -> Optional[EventProducer]:
     if _producer is not None:
         return _producer
 
-    channel = os.getenv("CITADEL_REDIS_CHANNEL")
-    topic = os.getenv("CITADEL_KAFKA_TOPIC")
-    if channel:
-        url = os.getenv("CITADEL_REDIS_URL", "redis://localhost")
-        _producer = RedisEventProducer(channel=channel, url=url)
-        register_broker("redis", {"channel": channel, "url": url})
-    elif topic:
-        servers = os.getenv("CITADEL_KAFKA_SERVERS", "localhost:9092")
-        _producer = KafkaEventProducer(topic=topic, bootstrap_servers=servers)
-        register_broker("kafka", {"topic": topic, "servers": servers})
-    return _producer
+    with _tracer.start_as_current_span("event_bus.producer") as span:
+        channel = os.getenv("CITADEL_REDIS_CHANNEL")
+        topic = os.getenv("CITADEL_KAFKA_TOPIC")
+        if channel:
+            url = os.getenv("CITADEL_REDIS_URL", "redis://localhost")
+            span.set_attribute("event_bus.broker", "redis")
+            span.set_attribute("event_bus.channel", channel)
+            _producer = RedisEventProducer(channel=channel, url=url)
+            register_broker("redis", {"channel": channel, "url": url})
+        elif topic:
+            servers = os.getenv("CITADEL_KAFKA_SERVERS", "localhost:9092")
+            span.set_attribute("event_bus.broker", "kafka")
+            span.set_attribute("event_bus.topic", topic)
+            _producer = KafkaEventProducer(topic=topic, bootstrap_servers=servers)
+            register_broker("kafka", {"topic": topic, "servers": servers})
+        return _producer
 
 
 def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:

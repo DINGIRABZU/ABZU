@@ -10,6 +10,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, List
 
+from opentelemetry import trace
+
 try:  # pragma: no cover - cortex may be unavailable
     from .cortex import query_spirals
 except Exception:  # pragma: no cover - logged lazily
@@ -39,6 +41,8 @@ except Exception:  # pragma: no cover - dependency may be missing
 
 query_vectors = _query_vectors
 
+_tracer = trace.get_tracer(__name__)
+
 try:  # pragma: no cover - optional dependency
     from spiral_memory import spiral_recall as _spiral_recall
 except Exception:  # pragma: no cover - dependency may be missing
@@ -63,38 +67,44 @@ logger = logging.getLogger(__name__)
 def query_memory(query: str) -> Dict[str, Any]:
     """Return aggregated results across cortex, vector, and spiral memory."""
 
-    failed_layers: List[str] = []
+    with _tracer.start_as_current_span("memory.query") as span:
+        span.set_attribute("memory.query", query)
+        failed_layers: List[str] = []
 
-    try:
-        cortex_res = query_spirals(text=query)
-    except Exception:  # pragma: no cover - logged
-        logger.exception("cortex query failed")
-        cortex_res = []
-        failed_layers.append("cortex")
+        try:
+            with _tracer.start_as_current_span("memory.cortex"):
+                cortex_res = query_spirals(text=query)
+        except Exception:  # pragma: no cover - logged
+            logger.exception("cortex query failed")
+            cortex_res = []
+            failed_layers.append("cortex")
 
-    try:
-        vector_res = query_vectors(filter={"text": query})
-    except Exception:  # pragma: no cover - logged
-        logger.exception("vector query failed")
-        vector_res = []
-        failed_layers.append("vector")
+        try:
+            with _tracer.start_as_current_span("memory.vector"):
+                vector_res = query_vectors(filter={"text": query})
+        except Exception:  # pragma: no cover - logged
+            logger.exception("vector query failed")
+            vector_res = []
+            failed_layers.append("vector")
 
-    try:
-        spiral_res = spiral_recall(query)
-    except Exception:  # pragma: no cover - logged
-        logger.exception("spiral recall failed")
-        spiral_res = ""
-        failed_layers.append("spiral")
+        try:
+            with _tracer.start_as_current_span("memory.spiral"):
+                spiral_res = spiral_recall(query)
+        except Exception:  # pragma: no cover - logged
+            logger.exception("spiral recall failed")
+            spiral_res = ""
+            failed_layers.append("spiral")
 
-    if failed_layers:
-        logger.warning("query_memory partial failure: %s", ", ".join(failed_layers))
+        if failed_layers:
+            span.set_attribute("memory.failed_layers", ",".join(failed_layers))
+            logger.warning("query_memory partial failure: %s", ", ".join(failed_layers))
 
-    return {
-        "cortex": cortex_res,
-        "vector": vector_res,
-        "spiral": spiral_res,
-        "failed_layers": failed_layers,
-    }
+        return {
+            "cortex": cortex_res,
+            "vector": vector_res,
+            "spiral": spiral_res,
+            "failed_layers": failed_layers,
+        }
 
 
 __all__ = ["query_memory"]
