@@ -306,3 +306,4 @@ documents:
       insight: Run before committing to catch missing dependencies.
 checklist:
   - "Narrative document entries verified"
+  - "Reviewed core memory docs and protocol before implementing optional fallbacks"
