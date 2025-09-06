@@ -11,6 +11,7 @@ from typing import Any, Dict, cast
 import yaml  # type: ignore[import-untyped]
 
 from env_validation import parse_servant_models
+from worlds.config_registry import register_model_endpoint
 
 # Path to the Crown configuration YAML file
 CONFIG_FILE = Path(__file__).resolve().parent.parent / "config" / "crown.yml"
@@ -55,6 +56,8 @@ def load_crown_config() -> Dict[str, object]:
 
     _RUNTIME_CONFIG.clear()
     _RUNTIME_CONFIG.update(cfg)
+    for name, url in get_model_endpoints().items():
+        register_model_endpoint(name, url)
     return cfg
 
 
@@ -67,11 +70,14 @@ def get_model_endpoints() -> Dict[str, str]:
     glm_url = _RUNTIME_CONFIG.get("glm_api_url")
     if isinstance(glm_url, str):
         endpoints["glm"] = glm_url
+        register_model_endpoint("glm", glm_url)
     for name, url in cast(
-        Dict[str, Any], _RUNTIME_CONFIG.get("servant_models") or {}
+        Dict[str, Any],
+        _RUNTIME_CONFIG.get("servant_models") or {},
     ).items():
         if isinstance(url, str):
             endpoints[name] = url
+            register_model_endpoint(name, url)
     return endpoints
 
 

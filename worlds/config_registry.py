@@ -18,6 +18,7 @@ from typing import Any, Dict, DefaultDict
 #       "remote_attempts": {},
 #       "component_hashes": {},
 #       "patches": [],
+#       "model_endpoints": {},
 #   }
 # }
 _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
@@ -29,6 +30,7 @@ _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
         "remote_attempts": {},
         "component_hashes": {},
         "patches": [],
+        "model_endpoints": {},
     }
 )
 
@@ -77,6 +79,14 @@ def register_remote_attempt(component: str, world: str | None = None) -> None:
     data[component] = data.get(component, 0) + 1
 
 
+def register_model_endpoint(
+    model: str, endpoint: str, world: str | None = None
+) -> None:
+    """Record ``endpoint`` for ``model`` within ``world``."""
+
+    _registry[_world_name(world)]["model_endpoints"][model] = endpoint
+
+
 def register_component_hash(
     component: str, digest: str, world: str | None = None
 ) -> None:
@@ -107,6 +117,7 @@ def export_config(world: str | None = None) -> Dict[str, Any]:
         "remote_attempts": dict(data["remote_attempts"]),
         "component_hashes": dict(data["component_hashes"]),
         "patches": list(data["patches"]),
+        "model_endpoints": dict(data["model_endpoints"]),
     }
 
 
@@ -121,6 +132,7 @@ def import_config(config: Dict[str, Any], world: str | None = None) -> None:
     data["remote_attempts"].update(config.get("remote_attempts", {}))
     data["component_hashes"].update(config.get("component_hashes", {}))
     data["patches"].extend(config.get("patches", []))
+    data["model_endpoints"].update(config.get("model_endpoints", {}))
 
 
 def export_config_file(path: str | Path, world: str | None = None) -> Path:
@@ -154,6 +166,7 @@ __all__ = [
     "register_path",
     "register_remote_attempt",
     "register_component_hash",
+    "register_model_endpoint",
     "register_patch",
     "export_config",
     "import_config",
