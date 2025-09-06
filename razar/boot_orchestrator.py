@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.5"
+__version__ = "0.2.6"
 
 import argparse
 import asyncio
@@ -32,6 +32,9 @@ from .quarantine_manager import is_quarantined, quarantine_component
 from agents.nazarick.service_launcher import launch_required_agents
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
+
+# Path for recording AI handover attempts
+INVOCATION_LOG_PATH = LOGS_DIR / "razar_ai_invocations.json"
 
 
 def load_history() -> Dict[str, Any]:
@@ -146,6 +149,28 @@ def _record_probe(name: str, ok: bool) -> None:
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps(data, indent=2))
     _emit_event("probe", "ok" if ok else "fail", component=name)
+
+
+def _log_ai_invocation(component: str, attempt: int, error: str, patched: bool) -> None:
+    """Append AI handover attempt details to :data:`INVOCATION_LOG_PATH`."""
+    entry = {
+        "component": component,
+        "attempt": attempt,
+        "error": error,
+        "patched": patched,
+        "timestamp": time.time(),
+    }
+    records: List[Dict[str, Any]] = []
+    if INVOCATION_LOG_PATH.exists():
+        try:
+            records = json.loads(INVOCATION_LOG_PATH.read_text())
+            if not isinstance(records, list):
+                records = []
+        except json.JSONDecodeError:
+            records = []
+    records.append(entry)
+    INVOCATION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    INVOCATION_LOG_PATH.write_text(json.dumps(records, indent=2))
 
 
 def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -> None:
@@ -293,7 +318,7 @@ def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
     probe from :mod:`health_checks` is used. When no probe exists, a warning is
     logged and the component is assumed healthy.
     """
-    name = component.get("name")
+    name = str(component.get("name"))
     LOGGER.info("Launching %s", name)
     _emit_event("launch", "start", component=name)
     proc = subprocess.Popen(component["command"])
@@ -334,6 +359,12 @@ def main() -> None:
         default=3,
         help="Quarantine component after N cumulative failures",
     )
+    parser.add_argument(
+        "--remote-attempts",
+        type=int,
+        default=3,
+        help="AI handover attempts after local retries fail",
+    )
     args = parser.parse_args()
 
     log_file = Path(__file__).with_name("boot_orchestrator.log")
@@ -356,7 +387,7 @@ def main() -> None:
 
     try:
         for comp in components:
-            name = comp.get("name", "")
+            name = str(comp.get("name", ""))
             if is_quarantined(name):
                 LOGGER.info("Skipping quarantined component %s", name)
                 continue
@@ -379,24 +410,40 @@ def main() -> None:
                 except Exception as exc:
                     LOGGER.error("Attempt %s failed for %s: %s", attempt, name, exc)
                     if attempt > args.retries:
-                        # escalate to remote agent for potential repair
-                        patched = ai_invoker.handover(name, str(exc))
-                        if patched:
-                            LOGGER.info("Retrying %s after AI patch", name)
+                        error_msg = str(exc)
+                        remote_success = False
+                        for r_attempt in range(1, args.remote_attempts + 1):
+                            patched = ai_invoker.handover(
+                                name, error_msg, use_opencode=True
+                            )
+                            _log_ai_invocation(name, r_attempt, error_msg, patched)
+                            if not patched:
+                                continue
+                            LOGGER.info(
+                                "Retrying %s after AI patch (remote attempt %s)",
+                                name,
+                                r_attempt,
+                            )
                             try:
+                                attempts += 1
                                 proc = launch_component(comp)
                                 processes.append(proc)
                                 success = True
-                                attempts += 1
+                                remote_success = True
                                 break
                             except Exception as exc2:
+                                attempts += 1
+                                error_msg = str(exc2)
                                 LOGGER.error(
-                                    "Retry after AI patch failed for %s: %s",
+                                    "Remote attempt %s failed for %s: %s",
+                                    r_attempt,
                                     name,
                                     exc2,
                                 )
+                        if remote_success:
+                            break
                         failure_counts[name] = failure_counts.get(name, 0) + 1
-                        quarantine_component(comp, str(exc))
+                        quarantine_component(comp, error_msg)
                         run_metrics["components"].append(
                             {"name": name, "attempts": attempts, "success": False}
                         )

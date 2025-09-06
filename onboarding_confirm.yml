@@ -35,7 +35,7 @@ documents:
       key_rules: Follow documentation workflow and sync blueprint.
       insight: Run pre-commit with modified docs before committing.
   docs/project_overview.md:
-    sha256: 4f4b07972085bc9341a56b1fb85f37da8354e726a73e10f03613fcc5f83b76b1
+    sha256: 265d674dc79b6554f277cf09d6b432a1ad99c1af840496d92e1361fb3d9a3c3e
     summary:
       purpose: Project goals and scope.
       scope: Entire project.
