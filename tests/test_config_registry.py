@@ -6,6 +6,8 @@ from worlds.config_registry import (
     import_config,
     import_config_file,
     reset_registry,
+    register_remote_attempt,
+    register_component_hash,
 )
 
 
@@ -34,12 +36,18 @@ def test_registration_and_roundtrip(tmp_path, monkeypatch):
     monkeypatch.setenv("CITADEL_REDIS_URL", "redis://localhost")
     eb._get_producer()
 
+    # Register remote repair metadata
+    register_remote_attempt("demo")
+    register_component_hash("demo", "abc123")
+
     cfg = export_config()
 
     assert set(cfg["layers"]) == set(memory.LAYERS)
     assert set(cfg["agents"]) == set(agents.AGENTS)
     assert cfg["paths"]["emotional"] == str(emo_path)
     assert cfg["brokers"]["redis"]["channel"] == "chan"
+    assert cfg["remote_attempts"]["demo"] == 1
+    assert cfg["component_hashes"]["demo"] == "abc123"
 
     # verify round-trip via dictionary
     reset_registry()

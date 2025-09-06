@@ -36,3 +36,11 @@ Service parameters are declared per world in `worlds/services.yaml`. Adjust the
 `abzu-bootstrap-world`. The bootstrap process validates the manifest and warns
 when a configured service is missing.
 
+## Repair Metadata
+
+Remote repair attempts and the resulting component hashes are tracked in
+`worlds/config_registry`. When exporting world configuration, the
+`remote_attempts` field counts how many AI patches were applied per component
+and `component_hashes` stores each component's final digest. Import these fields
+into newly cloned worlds to reproduce a repaired state.
+

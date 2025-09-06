@@ -9,9 +9,25 @@ from pathlib import Path
 from typing import Any, Dict, DefaultDict
 
 # Internal structure:
-# {_world: {"layers": set(), "agents": set(), "brokers": {}, "paths": {}}}
+# {
+#   _world: {
+#       "layers": set(),
+#       "agents": set(),
+#       "brokers": {},
+#       "paths": {},
+#       "remote_attempts": {},
+#       "component_hashes": {},
+#   }
+# }
 _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
-    lambda: {"layers": set(), "agents": set(), "brokers": {}, "paths": {}}
+    lambda: {
+        "layers": set(),
+        "agents": set(),
+        "brokers": {},
+        "paths": {},
+        "remote_attempts": {},
+        "component_hashes": {},
+    }
 )
 
 
@@ -51,6 +67,21 @@ def register_path(name: str, path: str, world: str | None = None) -> None:
     _registry[_world_name(world)]["paths"][name] = path
 
 
+def register_remote_attempt(component: str, world: str | None = None) -> None:
+    """Increment remote repair attempt counter for ``component``."""
+
+    data = _registry[_world_name(world)]["remote_attempts"]
+    data[component] = data.get(component, 0) + 1
+
+
+def register_component_hash(
+    component: str, digest: str, world: str | None = None
+) -> None:
+    """Record final code hash ``digest`` for ``component``."""
+
+    _registry[_world_name(world)]["component_hashes"][component] = digest
+
+
 def export_config(world: str | None = None) -> Dict[str, Any]:
     """Return a JSON-serialisable mapping for ``world``."""
 
@@ -60,6 +91,8 @@ def export_config(world: str | None = None) -> Dict[str, Any]:
         "agents": sorted(data["agents"]),
         "brokers": dict(data["brokers"]),
         "paths": dict(data["paths"]),
+        "remote_attempts": dict(data["remote_attempts"]),
+        "component_hashes": dict(data["component_hashes"]),
     }
 
 
@@ -71,6 +104,8 @@ def import_config(config: Dict[str, Any], world: str | None = None) -> None:
     data["agents"].update(config.get("agents", []))
     data["brokers"].update(config.get("brokers", {}))
     data["paths"].update(config.get("paths", {}))
+    data["remote_attempts"].update(config.get("remote_attempts", {}))
+    data["component_hashes"].update(config.get("component_hashes", {}))
 
 
 def export_config_file(path: str | Path, world: str | None = None) -> Path:
@@ -102,6 +137,8 @@ __all__ = [
     "register_agent",
     "register_broker",
     "register_path",
+    "register_remote_attempt",
+    "register_component_hash",
     "export_config",
     "import_config",
     "export_config_file",
