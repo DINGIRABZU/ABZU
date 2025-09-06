@@ -1,20 +1,23 @@
 # Setup Quickstart
 
-Spin up a minimal world configuration using file-backed memory layers.
+## Minimal Installation
 
-## Minimal World
-
-1. Install the core dependencies:
+1. Ensure Python 3.10 or later is available.
+2. From the repository root, install the core runtime:
    ```bash
-   pip install -e .[minimal]
+   pip install .
    ```
-2. Populate mandatory layers with default records:
+3. For mental-model features backed by Neo4j, include the optional extras:
    ```bash
-   python scripts/bootstrap_world.py
+   pip install .[mental]
    ```
-   The script reports progress as each layer is initialized.
 
-## Next Steps
+## World Creation
 
-- Inspect generated data under `data/` to review the seeded layers.
-- Run `scripts/list_layers.py` to verify active memory layers.
+After installation, create and initialize a world with:
+
+```bash
+abzu-bootstrap-world
+```
+
+The command prepares local file-backed memory stores under `data/`, starts Crown services, and launches required agent profiles. Set `WORLD_NAME` to select a specific world manifest; otherwise, the default manifest is used.
