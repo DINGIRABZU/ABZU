@@ -42,7 +42,7 @@ documents:
       key_rules: Follow documentation workflow and sync blueprint.
       insight: Run pre-commit with modified docs before committing.
   docs/project_overview.md:
-    sha256: c468df76c3a9862b353c650b603f9dfe88ee4e235e3a1f8da15eae784bbd0a96
+    sha256: 57e42c75981ab1e97b3002cdc741500025bf6ba39f4a8bbd91313613ab30ce3a
     summary:
       purpose: Project goals and scope.
       scope: Entire project.
@@ -169,7 +169,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 136e125552c0c2079faa0079f4d56763de2440172d279c2685ddf1bcae786ad0
+    sha256: 59c67828c311eb69c6d875e0df69f95cc3757821a385ab6e2344d2805283c8ac
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -191,7 +191,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 84a94abb953d959ffe92422729f5a87bb7536a5984f3e7bf6eb30f5b11e1e92d
+    sha256: 75084c1443ea96cb794c62dc1e3cf4403839af3b6fdd786cee025c360f3f03d2
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
