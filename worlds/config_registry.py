@@ -17,6 +17,7 @@ from typing import Any, Dict, DefaultDict
 #       "paths": {},
 #       "remote_attempts": {},
 #       "component_hashes": {},
+#       "patches": [],
 #   }
 # }
 _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
@@ -27,6 +28,7 @@ _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
         "paths": {},
         "remote_attempts": {},
         "component_hashes": {},
+        "patches": [],
     }
 )
 
@@ -37,8 +39,9 @@ def _world_name(world: str | None = None) -> str:
     When ``world`` is ``None`` the ``WORLD_NAME`` environment variable is used
     falling back to ``"default"``.
     """
-
-    return world or os.getenv("WORLD_NAME", "default")
+    if world is not None:
+        return world
+    return os.getenv("WORLD_NAME", "default")
 
 
 def register_layer(layer: str, world: str | None = None) -> None:
@@ -82,6 +85,16 @@ def register_component_hash(
     _registry[_world_name(world)]["component_hashes"][component] = digest
 
 
+def register_patch(
+    component: str, patch: str, digest: str, world: str | None = None
+) -> None:
+    """Record ``patch`` applied to ``component`` with resulting ``digest``."""
+
+    data = _registry[_world_name(world)]
+    data["patches"].append({"component": component, "patch": patch, "hash": digest})
+    data["component_hashes"][component] = digest
+
+
 def export_config(world: str | None = None) -> Dict[str, Any]:
     """Return a JSON-serialisable mapping for ``world``."""
 
@@ -93,6 +106,7 @@ def export_config(world: str | None = None) -> Dict[str, Any]:
         "paths": dict(data["paths"]),
         "remote_attempts": dict(data["remote_attempts"]),
         "component_hashes": dict(data["component_hashes"]),
+        "patches": list(data["patches"]),
     }
 
 
@@ -106,6 +120,7 @@ def import_config(config: Dict[str, Any], world: str | None = None) -> None:
     data["paths"].update(config.get("paths", {}))
     data["remote_attempts"].update(config.get("remote_attempts", {}))
     data["component_hashes"].update(config.get("component_hashes", {}))
+    data["patches"].extend(config.get("patches", []))
 
 
 def export_config_file(path: str | Path, world: str | None = None) -> Path:
@@ -139,6 +154,7 @@ __all__ = [
     "register_path",
     "register_remote_attempt",
     "register_component_hash",
+    "register_patch",
     "export_config",
     "import_config",
     "export_config_file",

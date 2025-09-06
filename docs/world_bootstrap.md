@@ -38,9 +38,22 @@ when a configured service is missing.
 
 ## Repair Metadata
 
-Remote repair attempts and the resulting component hashes are tracked in
-`worlds/config_registry`. When exporting world configuration, the
-`remote_attempts` field counts how many AI patches were applied per component
-and `component_hashes` stores each component's final digest. Import these fields
+Remote repair attempts, the patches applied, and the resulting component hashes
+are tracked in `worlds/config_registry`. When exporting world configuration, the
+`remote_attempts` field counts how many AI patches were applied per component,
+`patches` records each patch alongside its final digest, and
+`component_hashes` stores each component's current hash. Import these fields
 into newly cloned worlds to reproduce a repaired state.
+
+## Exporting Configuration
+
+Use the `abzu-world-export` command to capture the current world's metadata for
+bootstrapping elsewhere:
+
+```bash
+abzu-world-export world.json
+```
+
+The command writes `world.json` (or your chosen path) containing layer, agent,
+service, and repair data, including patches and component hashes.
 
