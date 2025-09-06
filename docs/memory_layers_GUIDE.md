@@ -1,12 +1,20 @@
 # Memory Layers Guide
 
-**Version:** v1.0.3
+**Version:** v1.0.4
 **Last updated:** 2025-09-07
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
 
 Refer to the [Unified Memory Bundle](The_Absolute_Protocol.md#unified-memory-bundle) section of the protocol for repository-wide conventions. Any update to memory layers must be mirrored across all referenced diagrams, including [figures/memory_bundle.mmd](figures/memory_bundle.mmd).
+
+## Unified Memory Bundle
+
+```mermaid
+{{#include figures/memory_bundle.mmd}}
+```
+
+The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd).
 
 ## Bus protocol
 

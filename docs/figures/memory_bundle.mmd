@@ -1,9 +1,26 @@
-%% Memory Bundle diagram
-%% Version: v1.0.0
-%% Last updated: 2025-09-05
+%% Memory bundle initialization and query aggregation diagram
+%% Version: v1.1.0
+%% Last updated: 2025-09-07
 flowchart LR
-    bundle[MemoryBundle] --> cortex[Cortex]
-    bundle --> emotional[Emotional]
-    bundle --> mental[Mental]
-    bundle --> spiritual[Spiritual]
-    bundle --> narrative[Narrative]
+    subgraph Init[Layer Initialization]
+        MBInit[MemoryBundle.initialize] --> Bus[(EventBus: memory)]
+        Bus --> Cortex[Cortex]
+        Bus --> Emotional[Emotional]
+        Bus --> Mental[Mental]
+        Bus --> Spiritual[Spiritual]
+        Bus --> Narrative[Narrative]
+    end
+    subgraph Query[Query Aggregation]
+        Caller[Caller] --> MBQuery[MemoryBundle.query]
+        MBQuery --> QCortex[Cortex]
+        MBQuery --> QEmotional[Emotional]
+        MBQuery --> QMental[Mental]
+        MBQuery --> QSpiritual[Spiritual]
+        MBQuery --> QNarrative[Narrative]
+        QCortex --> MBQuery
+        QEmotional --> MBQuery
+        QMental --> MBQuery
+        QSpiritual --> MBQuery
+        QNarrative --> MBQuery
+        MBQuery --> Caller
+    end

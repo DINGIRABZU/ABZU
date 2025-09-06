@@ -53,7 +53,16 @@ sequenceDiagram
     MemoryQuery->>MemoryBundle: aggregate layers
 ```
 
+### Memory Bundle
+
+```mermaid
+{{#include figures/memory_bundle.mmd}}
+```
+
+The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd).
+
 ## Version History
 | Version | Date       | Notes                   |
 |---------|------------|-------------------------|
+| 0.1.1   | 2025-09-07 | Embed memory bundle diagram. |
 | 0.1.0   | 2025-09-06 | Initial arcade UI doc.  |

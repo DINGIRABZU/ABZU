@@ -319,7 +319,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [features/example_feature.md](features/example_feature.md) | Example Feature | - | - |
 | [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) | layer_init_query_flow.mmd | - | - |
-| [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory Bundle diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.1.0 Last updated: 2025-09-07 | - |
 | [figures/memory_layer_flow.mmd](figures/memory_layer_flow.mmd) | Memory layer flow diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
@@ -341,7 +341,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_cortex.md](memory_cortex.md) | Cortex Memory Search | The `memory.cortex` module stores spiral decisions as JSON lines under `data/cortex_memory_spiral.jsonl`. Each entry... | - |
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
-| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.3 **Last updated:** 2025-09-07 | `../scripts/bootstrap_memory.py` |
+| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.4 **Last updated:** 2025-09-07 | `../scripts/bootstrap_memory.py` |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |
 | [ml_environment.md](ml_environment.md) | ML Environment Setup | This guide explains how to create an isolated Python environment and start Jupyter notebooks for experimenting with S... | - |
