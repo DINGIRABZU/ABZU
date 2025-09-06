@@ -107,6 +107,12 @@ repos:
     language: system
     pass_filenames: false
     files: ^component_index.json$
+  - id: validate-world-registry
+    name: Validate world registry entries
+    entry: python scripts/validate_world_registry.py
+    language: system
+    pass_filenames: false
+    files: ^(worlds/|agents/|memory/|scripts/validate_world_registry.py)
   - id: require-module-docs
     name: Require changelog and component index for new modules
     entry: python scripts/require_module_docs.py
