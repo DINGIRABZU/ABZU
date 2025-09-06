@@ -28,7 +28,13 @@ class MemoryBundle:
 
         for layer in LAYERS:
             module_path = _LAYER_IMPORTS[layer]
-            module = import_module(module_path)
+            try:
+                module = import_module(module_path)
+            except Exception:  # pragma: no cover - import errors are mocked in tests
+                module = None
+            if module is None:
+                statuses[layer] = "error"
+                continue
             setattr(self, layer, module)
             name = getattr(module, "__name__", "")
             statuses[layer] = (
