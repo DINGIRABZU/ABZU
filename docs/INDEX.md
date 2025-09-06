@@ -358,6 +358,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [opencode_client.md](opencode_client.md) | Opencode Client | - | - |
 | [operations.md](operations.md) | Operations | - | - |
+| [operator_console.md](operator_console.md) | Operator Console | Arcade-style web interface for issuing commands through the Operator API. | - |
 | [operator_interface_GUIDE.md](operator_interface_GUIDE.md) | Operator Interface Guide | Instructions for operator API usage, onboarding requirements, and Nazarick Web Console chat rooms. | - |
 | [operator_nazarick_bridge.md](operator_nazarick_bridge.md) | Operator-Nazarick Bridge | **Version:** v1.0.0 **Last updated:** 2025-09-05 | - |
 | [operator_protocol.md](operator_protocol.md) | Operator Protocol | Operator actions dispatched via the API include a unique `command_id` UUID. The identifier is returned in responses,... | - |
