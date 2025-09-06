@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.93
-**Last updated:** 2025-10-02
+**Version:** v1.0.94
+**Last updated:** 2025-10-03
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -34,7 +34,7 @@ See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidanc
 
 ### Unified Memory Bundle
 
-The repository's memory layers are orchestrated through a unified `MemoryBundle`. During startup, `bundle.initialize()` emits a single `layer_init` event on the `memory` bus, reporting the status of the Cortex, Emotional, Mental, Spiritual, and Narrative layers in one payload.
+`MemoryBundle` unifies the Cortex, Emotional, Mental, Spiritual, and Narrative layers. During startup `broadcast_layer_event("layer_init")` announces readiness over the `memory` bus, while `query_memory` fans out across all layers and aggregates responses into a single payload.
 
 ```mermaid
 {{#include figures/memory_bundle.mmd}}
@@ -42,15 +42,6 @@ The repository's memory layers are orchestrated through a unified `MemoryBundle`
 
 The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd). See [memory_layers_GUIDE.md](memory_layers_GUIDE.md) for implementation details. Any change to a memory layer must update this diagram and all related visuals across the repository to keep documentation synchronized.
 
-### Layer Initialization & Cross-Layer Queries
-
-`bundle.initialize()` consolidates startup by dispatching a single `layer_init` event that reports readiness for the Cortex, Emotional, Mental, Spiritual, and Narrative layers. Subsequent calls to `query_memory` fan out across all layers before merging results into one aggregated response.
-
-```mermaid
-{{#include figures/layer_init_query_flow.mmd}}
-```
-
-The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd).
 
 ## Repository Layout Protocol
 Repositories must keep these directories at the root:
