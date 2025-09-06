@@ -1,0 +1,6 @@
+Press Start 2P Regular - ASCII Sample
+
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+0123456789
+!@#$%^&*()_-+=[]{};:'",.<>/?\\|`

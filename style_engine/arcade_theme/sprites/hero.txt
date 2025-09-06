@@ -1,0 +1,10 @@
+# Arcade Hero Sprite
+# '#' represents a filled pixel and '.' an empty pixel.
+........
+..####..
+.######.
+###..###
+###..###
+########
+#.#..#.#
+#.#..#.#
