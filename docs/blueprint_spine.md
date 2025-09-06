@@ -64,8 +64,27 @@ The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_in
     - [operator_console.md](operator_console.md): arcade-style UI for issuing operator commands.
     - [RAZAR Agent](RAZAR_AGENT.md): ignition orchestrator that bridges operator directives to services.
     - **`web_console/`**, **`dashboard/`**: front-end consoles consuming the API.
+
+### Arcade Console Node
+
+```mermaid
+graph TD
+    Arcade[Arcade Console]
+    RAZAR[RAZAR]
+    subgraph MemoryBundle
+        Cortex
+        Emotional
+        Mental
+        Spiritual
+        Narrative
+    end
+    Arcade --> RAZAR
+    RAZAR --> MemoryBundle
+    MemoryBundle --> Arcade
+```
+
 - **Docs & Blueprints**
-    
+
     A vast documentation set with cross-referenced guides:
     
     - **`project_mission_vision.md`** – overarching declaration.

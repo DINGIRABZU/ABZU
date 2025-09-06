@@ -600,6 +600,23 @@ flowchart LR
 - **Health Check:** Probe `/operator/health`.
 - **Recovery:** Redeploy static assets or restart the service.
 
+### Arcade UI Service
+Offers a retro-styled portal that narrates boot sequences with Sumerian motifs.
+
+```mermaid
+flowchart LR
+    Tablet[(Tablet of Destinies)] --> ArcadeUI[Arcade UI]
+    ArcadeUI --> RAZAR
+    RAZAR --> MemoryBundle[(Memory Bundle)]
+    MemoryBundle --> ArcadeUI
+```
+
+- **Layer:** Throat
+- **Priority:** 3
+- **Startup:** Launch after the chat gateway.
+- **Health Check:** Probe `/arcade/health`.
+- **Recovery:** Redeploy static assets or restart the service.
+
 ### Audio Device
 Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [Voice Setup](voice_setup.md) and [Chakra Architecture](chakra_architecture.md#root).
 - **Layer:** Root
