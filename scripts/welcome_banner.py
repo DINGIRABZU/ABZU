@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
-"""Display the cuneiform welcome banner and boot the memory bundle."""
-from __future__ import annotations
-
-from pathlib import Path
-
-from memory import broadcast_layer_event
+"""Utility script to print a cuneiform greeting before serving the page."""
 
 
-def main() -> None:
-    banner_path = Path(__file__).with_name("cuneiform_message.txt")
-    message = banner_path.read_text(encoding="utf-8")
-    print(message)
-    broadcast_layer_event({})
+def print_banner() -> None:
+    """Print the cuneiform welcome banner."""
+    banner = (
+        "\U0001202D\U00012129\U00012306 "
+        "\U00012120\U0001208A "
+        "\U0001213F\U0001213E\U00012100"
+    )
+    print(banner)
 
 
 if __name__ == "__main__":
-    main()
+    print_banner()

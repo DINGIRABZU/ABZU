@@ -428,7 +428,37 @@ async function loadStatus() {
     }
 }
 
+async function fetchBackendStatus() {
+    try {
+        const resp = await fetch(`${BASE_URL}/status`);
+        const data = await resp.json();
+        document.getElementById('backend-status').textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+        document.getElementById('backend-status').textContent = 'Status error: ' + err;
+    }
+}
+
+function initArcade() {
+    const ignite = document.getElementById('ignite-btn');
+    const memory = document.getElementById('memory-btn');
+    const handover = document.getElementById('handover-btn');
+    ignite.addEventListener('click', () => {
+        fetch(`${BASE_URL}/ignite`, { method: 'POST' });
+    });
+    memory.addEventListener('click', () => {
+        fetch(`${BASE_URL}/memory/query`, { method: 'POST' });
+    });
+    handover.addEventListener('click', () => {
+        fetch(`${BASE_URL}/handover`, { method: 'POST' });
+    });
+    fetchBackendStatus();
+}
+
 window.addEventListener('load', () => {
+    if (document.getElementById('arcade')) {
+        initArcade();
+        return;
+    }
     showOnboarding();
     startStream();
     loadAgents().then((agents) => loadConversationLogs(agents.map((a) => a.id)));
