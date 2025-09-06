@@ -39,6 +39,7 @@ abzu-memory-bootstrap
 ## Usage
 - [How to Use](how_to_use.md)
 - [UI Service](ui_service.md) – lightweight FastAPI interface for memory queries
+- [Operator Console](operator_console.md) – Arcade UI for Operator API commands
 - [Bootstrap World Script](../scripts/bootstrap_world.py) – populate mandatory layers with defaults
 
 ## Data
