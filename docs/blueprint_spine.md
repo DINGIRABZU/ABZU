@@ -86,6 +86,7 @@ sequenceDiagram
 graph TD
     Arcade[Arcade Console]
     RAZAR[RAZAR]
+    Scan[Operator Memory Scan]
     subgraph MemoryBundle
         Cortex
         Emotional
@@ -94,6 +95,8 @@ graph TD
         Narrative
     end
     Arcade --> RAZAR
+    Arcade --> Scan
+    Scan --> MemoryBundle
     RAZAR --> MemoryBundle
     MemoryBundle --> Arcade
 ```
