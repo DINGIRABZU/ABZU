@@ -9,9 +9,17 @@ the [Heart chakra](chakra_overview.md#heart) via the [Memory Vault](system_bluep
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    Agents --> ChatGateway --> Chat2DB
+    Chat2DB --> SQLite
+    Chat2DB --> VectorStore
+
+    click SQLite "../INANNA_AI/db_storage.py"
+    click VectorStore "../spiral_vector_db/__init__.py"
 ```
-Agents → Chat Gateway → Chat2DB → {SQLite, Vector Store}
-```
+
+SQLite and Vector Store nodes link directly to their implementations.
 
 - **Relational Layer:** [INANNA_AI/db_storage.py](../INANNA_AI/db_storage.py)
   initializes tables for interactions, feedback and benchmarks and exposes
