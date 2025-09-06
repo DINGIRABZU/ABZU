@@ -16,6 +16,12 @@
   <button id="ignite">Ignite</button>
   <button id="query">Query Memory</button>
   <button id="status">Status</button>
+  <section id="memory-scan">
+    <h2>Memory Scan</h2>
+    <input type="text" id="memory-query" class="pixel-font" placeholder="Enter query" />
+    <button id="memory-scan-btn">Scan</button>
+    <div id="memory-results" class="scanlines"></div>
+  </section>
   <pre id="log"></pre>
   <script>
     async function streamText(url, options) {
@@ -38,5 +44,6 @@
       document.getElementById('greeting-modal').classList.remove('show');
     };
   </script>
+  <script src="/static/main.js"></script>
 </body>
 </html>
