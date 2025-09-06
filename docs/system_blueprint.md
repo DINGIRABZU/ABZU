@@ -595,9 +595,9 @@ Detects objects with YOLOE and streams bounding boxes to the Large World Model f
 ## Non‑Essential Services
 ### Operator Console Service
 Provides a web UI ([operator_console.md](operator_console.md)) that forwards operator
-commands through the Operator API and surfaces memory summaries from the unified
-bundle. Optional for headless deployments where operators issue requests via
-scripts.
+commands through the Operator API, surfaces memory summaries from the unified
+bundle, and exposes runtime model management and ethics ingestion controls. Optional
+for headless deployments where operators issue requests via scripts.
 
 ```mermaid
 flowchart LR

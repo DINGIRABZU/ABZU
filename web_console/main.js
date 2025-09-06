@@ -470,6 +470,10 @@ function initArcade() {
     const ignite = document.getElementById('ignite-btn');
     const memory = document.getElementById('memory-btn');
     const handover = document.getElementById('handover-btn');
+    const addModel = document.getElementById('add-model-btn');
+    const removeModel = document.getElementById('remove-model-btn');
+    const updateEthics = document.getElementById('update-ethics-btn');
+    const actionResult = document.getElementById('action-result');
     ignite.addEventListener('click', () => {
         fetch(`${BASE_URL}/ignite`, { method: 'POST' });
     });
@@ -478,6 +482,44 @@ function initArcade() {
     });
     handover.addEventListener('click', () => {
         fetch(`${BASE_URL}/handover`, { method: 'POST' });
+    });
+    addModel.addEventListener('click', async () => {
+        const name = document.getElementById('add-model-name').value;
+        const builtin = document.getElementById('add-model-builtin').value;
+        try {
+            const resp = await fetch(`${BASE_URL}/operator/models`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, builtin })
+            });
+            actionResult.textContent = await resp.text();
+        } catch (err) {
+            actionResult.textContent = 'Add model error: ' + err;
+        }
+    });
+    removeModel.addEventListener('click', async () => {
+        const name = document.getElementById('remove-model-name').value;
+        try {
+            const resp = await fetch(
+                `${BASE_URL}/operator/models/${encodeURIComponent(name)}`,
+                { method: 'DELETE' }
+            );
+            actionResult.textContent = await resp.text();
+        } catch (err) {
+            actionResult.textContent = 'Remove model error: ' + err;
+        }
+    });
+    updateEthics.addEventListener('click', async () => {
+        const dir = document.getElementById('ethics-dir').value;
+        const url = dir
+            ? `${BASE_URL}/ingest-ethics?directory=${encodeURIComponent(dir)}`
+            : `${BASE_URL}/ingest-ethics`;
+        try {
+            const resp = await fetch(url, { method: 'POST' });
+            actionResult.textContent = await resp.text();
+        } catch (err) {
+            actionResult.textContent = 'Update ethics error: ' + err;
+        }
     });
     fetchBackendStatus();
 }
