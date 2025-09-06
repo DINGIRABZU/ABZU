@@ -20,6 +20,21 @@ const GLYPHS = {
     neutral: '🌀'
 };
 
+let mode = 'crown';
+const modeSel = document.createElement('select');
+modeSel.id = 'mode-select';
+['Crown', 'Nazarick'].forEach((label) => {
+    const opt = document.createElement('option');
+    opt.value = label.toLowerCase();
+    opt.textContent = label;
+    modeSel.appendChild(opt);
+});
+modeSel.addEventListener('change', (e) => {
+    mode = e.target.value;
+});
+const cmdInput = document.getElementById('command-input');
+cmdInput.insertAdjacentElement('beforebegin', modeSel);
+
 function applyStyle(style) {
     const video = document.getElementById('avatar');
     let overlay = document.getElementById('style-indicator');
@@ -118,15 +133,28 @@ function sendCommand(command, agent) {
             return;
         }
     }
-    const payload = { command: cmd };
-    if (agent) {
-        payload.agent = agent;
+    let url;
+    let options;
+    if (mode === 'nazarick') {
+        url = `${BASE_URL}/openwebui-chat${agent ? `?channel=${encodeURIComponent(agent)}` : ''}`;
+        options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: [{ role: 'user', content: cmd }] })
+        };
+    } else {
+        const payload = { command: cmd };
+        if (agent) {
+            payload.agent = agent;
+        }
+        url = `${BASE_URL}/glm-command`;
+        options = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        };
     }
-    fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    })
+    fetch(url, options)
         .then((resp) => resp.json())
         .then((data) => {
             document.getElementById('output').textContent = JSON.stringify(data, null, 2);

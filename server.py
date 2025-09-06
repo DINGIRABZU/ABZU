@@ -335,9 +335,21 @@ class ChatCompletionRequest(BaseModel):
     messages: list[ChatMessage]
 
 
+def nazarick_chat(channel: str, text: str) -> dict[str, Any]:
+    """Return response from a Nazarick agent for ``text`` sent to ``channel``.
+
+    The default implementation simply delegates to ``crown_prompt_orchestrator``
+    so tests can patch this hook to verify channel routing without relying on
+    external services.
+    """
+
+    return crown_prompt_orchestrator(text, _glm)
+
+
 @app.post("/openwebui-chat")
 def openwebui_chat(
     req: ChatCompletionRequest,
+    channel: str | None = None,
     current_user: dict = Security(get_current_user),
 ) -> dict[str, Any]:
     """Return an OpenAI-style chat completion."""
@@ -348,11 +360,15 @@ def openwebui_chat(
         for msg in req.messages:
             if msg.role == "user":
                 user_content = msg.content
-        result = crown_prompt_orchestrator(user_content, _glm)
+        if channel:
+            result = nazarick_chat(channel, user_content)
+        else:
+            result = crown_prompt_orchestrator(user_content, _glm)
         corpus_memory_logging.log_interaction(
             user_content,
             {
                 "intent": "openwebui_chat",
+                "channel": channel or "crown",
                 "model": result.get("model", req.model or "unknown"),
             },
             {"response": result.get("text", "")},
@@ -364,6 +380,7 @@ def openwebui_chat(
                 "user": user_content,
                 "response": result.get("text", ""),
                 "model": result.get("model", req.model or "unknown"),
+                "channel": channel or "crown",
             },
         )
         return {
