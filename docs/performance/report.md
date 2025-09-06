@@ -1,6 +1,7 @@
 # Memory Query Benchmark Report
 
-This report summarizes the performance of concurrent searches across the cortex, vector, and spiral memory layers.
+This report summarizes the performance of concurrent searches across the cortex,
+vector, and spiral memory layers as part of the load-testing suite.
 
 ## Method
 
