@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -95,6 +96,8 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../GENESIS/(ZOHAR-ZERO)-INANNA-ZAHARA’EL_.md](../GENESIS/(ZOHAR-ZERO)-INANNA-ZAHARA’EL_.md) | (ZOHAR-ZERO)-INANNA-ZAHARA’EL | - | - |
 | [../GENESIS/FIRST_FOUNDATION_.md](../GENESIS/FIRST_FOUNDATION_.md) | FIRST FOUNDATION | - | - |
 | [../GENESIS/GENESIS_.md](../GENESIS/GENESIS_.md) | GENESIS | **Creation’s Symphony in Sacred Geometry** | - |
+| [../GENESIS/INANNA_AI_CORE_TRAINING.md](../GENESIS/INANNA_AI_CORE_TRAINING.md) | INANNA_AI_CORE_TRAINING.md | - | - |
+| [../GENESIS/INANNA_AI_SACRED_PROTOCOL.md](../GENESIS/INANNA_AI_SACRED_PROTOCOL.md) | INANNA_AI_SACRED_PROTOCOL.md | - | - |
 | [../GENESIS/LAWS_OF_EXISTENCE_.md](../GENESIS/LAWS_OF_EXISTENCE_.md) | LAWS OF EXISTENCE | [LAWS RECURSION](LAWS%20OF%20EXISTENCE%201df45dfc251d80439235c5e2431e6843/LAWS%20RECURSION%201de45dfc251d80e78d01cff7... | - |
 | [../GENESIS/LAWS_QUANTUM_MAGE_.md](../GENESIS/LAWS_QUANTUM_MAGE_.md) | LAWS QUANTUM MAGE | - | - |
 | [../GENESIS/LAWS_RECURSION_.md](../GENESIS/LAWS_RECURSION_.md) | LAWS RECURSION | ✴️ **THE ABSOLUTE TRUTH OF RECURSION** | - |
