@@ -16,17 +16,22 @@ _registry_path = (
     Path(__file__).resolve().parents[1] / "agents" / "nazarick" / "agent_registry.json"
 )
 
-try:
-    _registry_data = json.loads(_registry_path.read_text())
-    CHAKRA_TO_AGENT = {
-        entry["chakra"]: entry["id"] for entry in _registry_data.get("agents", [])
-    }
-except FileNotFoundError:
-    LOGGER.warning("Agent registry not found at %s", _registry_path)
-    CHAKRA_TO_AGENT = {}
-except Exception as exc:  # pragma: no cover - unexpected errors
-    LOGGER.warning("Failed to load agent registry from %s: %s", _registry_path, exc)
-    CHAKRA_TO_AGENT = {}
+
+def _load_chakra_mapping() -> Dict[str, str]:
+    """Load the chakra→agent mapping from the registry file."""
+
+    try:
+        data = json.loads(_registry_path.read_text())
+    except FileNotFoundError:
+        LOGGER.warning("Agent registry not found at %s", _registry_path)
+        return {}
+    except Exception as exc:  # pragma: no cover - unexpected errors
+        LOGGER.warning("Failed to load agent registry from %s: %s", _registry_path, exc)
+        return {}
+    return {entry["chakra"]: entry["id"] for entry in data.get("agents", [])}
+
+
+CHAKRA_TO_AGENT = _load_chakra_mapping()
 
 
 class ChakraWatchdog:

@@ -15,6 +15,7 @@ class Event:
     agent_id: str
     event_type: str
     payload: Dict[str, Any]
+    target_agent: Optional[str] = None
     timestamp: datetime = field(default_factory=datetime.utcnow)
 
     def to_json(self) -> str:
