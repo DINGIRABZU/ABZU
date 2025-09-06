@@ -10,10 +10,41 @@ from typing import Callable, Dict, Mapping
 
 from agents.event_bus import emit_event
 
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import Counter, Histogram
+    from agents.razar.health_checks import init_metrics as _init_metrics
+
+    _init_metrics()
+except Exception:  # pragma: no cover - metrics are optional
+    Counter = Histogram = None  # type: ignore[assignment]
+
+
 LOGGER = logging.getLogger(__name__)
 
 _registry_path = (
     Path(__file__).resolve().parents[1] / "agents" / "nazarick" / "agent_registry.json"
+)
+
+POLL_COUNTER = (
+    Counter("chakra_watchdog_polls_total", "Total watchdog poll cycles")
+    if Counter
+    else None
+)
+POLL_DURATION = (
+    Histogram(
+        "chakra_watchdog_poll_seconds", "Duration of watchdog poll cycles in seconds"
+    )
+    if Histogram
+    else None
+)
+CHAKRA_DOWN_COUNTER = (
+    Counter(
+        "chakra_watchdog_chakra_down_total",
+        "Number of chakra_down events emitted",
+        ["chakra"],
+    )
+    if Counter
+    else None
 )
 
 
@@ -52,8 +83,11 @@ class ChakraWatchdog:
     def poll_once(self, *, now: float | None = None) -> None:
         """Check heartbeats and emit events for delayed chakras."""
 
-        current = now or time.time()
+        start = time.time()
+        current = now or start
         heartbeats = self.heartbeat_fn()
+        if POLL_COUNTER is not None:
+            POLL_COUNTER.inc()
         for name, hb in heartbeats.items():
             delay = current - hb
             if delay > self.threshold:
@@ -64,7 +98,11 @@ class ChakraWatchdog:
                     payload["target_agent"] = agent_id
                 else:
                     LOGGER.warning("No agent mapping found for chakra %s", name)
+                if CHAKRA_DOWN_COUNTER is not None:
+                    CHAKRA_DOWN_COUNTER.labels(name).inc()
                 self.emit("chakra_watchdog", "chakra_down", payload)
+        if POLL_DURATION is not None:
+            POLL_DURATION.observe(time.time() - start)
 
     def run(self) -> None:
         """Continuously poll for heartbeat delays."""
