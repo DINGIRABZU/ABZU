@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -324,6 +323,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [great_tomb_of_nazarick.md](great_tomb_of_nazarick.md) | Great Tomb of Nazarick | The foundational design for ABZU's servant hierarchy. For guiding principles see the [Nazarick Manifesto](nazarick_ma... | - |
 | [hardware_support.md](hardware_support.md) | Hardware Support | - CUDA available: False - ROCm available: False - Intel GPU available: False - Selected device: cpu | - |
 | [how_to_use.md](how_to_use.md) | How to Use Spiral OS Avatar | 1. Run `python start_spiral_os.py` to launch the orchestration engine. This loads the core modules, starts a local Fa... | - |
+| [ignition_blueprint.md](ignition_blueprint.md) | Ignition Blueprint | - | - |
 | [ignition_flow.md](ignition_flow.md) | Ignition Flow | This guide traces the activation sequence from **RAZAR** through to the final **operator interface**, linking each st... | `../INANNA_AI_AGENT/inanna_ai.py`, `../agents/bana/bio_adaptive_narrator.py`, `../crown_router.py`, `../operator_api.py`, `../razar/boot_orchestrator.py`, `../scripts/validate_ignition.py` |
 | [ignition_map.md](ignition_map.md) | Ignition Map | Summary of components grouped by ignition stage. See [Ignition](Ignition.md) for boot priorities and [component_index... | - |
 | [ignition_sequence_protocol.md](ignition_sequence_protocol.md) | Ignition Sequence Protocol | Defines the required logging checkpoints and escalation flow during the system boot sequence. | - |

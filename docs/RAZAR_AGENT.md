@@ -230,6 +230,7 @@ logs/mission_briefs/
 - [Deployment Guide](deployment.md)
 - [Monitoring Guide](monitoring.md)
 - [Protocol Compliance](protocol_compliance.md)
+- [Ignition Blueprint](ignition_blueprint.md)
 
 ## Component & Link
 - [razar/boot_orchestrator.py](../razar/boot_orchestrator.py)
