@@ -43,6 +43,18 @@ Each chakra layer corresponds to core modules that cooperate when Spiral OS is r
 
 When a command arrives, the orchestrator consults the current emotional state and vector memory to select a model. If hex data or ritual text is present, it hands the payload to the QNL engine which returns symbolic notes. The Sonic Core turns those notes into audio and animates the avatar while new vectors are logged for future reference. This flow allows the layers to reinforce one another so the system speaks and remembers with continuity.
 
+## Memory Bundle
+
+`MemoryBundle` unifies the Cortex, Emotional, Mental, Spiritual and Narrative layers. `bundle.initialize()` emits a single `layer_init` event on the `memory` bus so every layer reports readiness together. Subsequent `query_memory` calls fan out requests across the layers and merge their results. See [Memory Layers Guide](memory_layers_GUIDE.md) for implementation details and future enhancements.
+
+```mermaid
+graph LR
+    A[bundle.initialize()] --> B(layer_init)
+    B --> C{Cortex / Emotional / Mental / Spiritual / Narrative}
+    D[query_memory()] --> C
+    C --> E[aggregated response]
+```
+
 ## Milestone History
 
 Recent milestones chart the growth of this architecture:
