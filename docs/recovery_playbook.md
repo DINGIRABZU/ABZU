@@ -8,9 +8,11 @@ Recurring problems and their fixes are cataloged in the
 
 1. The boot orchestrator launches components in priority order.
 2. Each launch runs a service-specific probe from `agents.razar.health_checks`.
-3. On failure the orchestrator retries the component a limited number of times.
-4. After exhausting retries, the component's metadata is quarantined under `quarantine/` and an entry is appended to `docs/quarantine_log.md`.
-5. The last successful component is recorded in `logs/razar_state.json` so subsequent runs resume from that point.
+3. On failure the orchestrator retries the component locally a limited number of times.
+4. If local retries fail, `ai_invoker.handover(component, error, use_opencode=True)` requests an automated patch. Each attempt is logged to `logs/razar_ai_invocations.json`.
+5. Returned patches are applied and the component's health check reruns until it succeeds or the remote attempt limit is reached.
+6. After exhausting remote attempts, the component's metadata is quarantined under `quarantine/` and an entry is appended to `docs/quarantine_log.md`.
+7. The last successful component is recorded in `logs/razar_state.json` so subsequent runs resume from that point.
 
 ## Restoring a component
 
@@ -43,4 +45,6 @@ pip install opencode-cli
 
 Call `razar.ai_invoker.handover(component, error, use_opencode=True)` with the
 failure details. The failure context is piped to `opencode run --json` and any
-patch suggestions are applied through `code_repair.repair_module`.
+patch suggestions are applied through `code_repair.repair_module`. The boot
+orchestrator repeats this handover and health check cycle until the component
+recovers or the remote attempt limit is reached.
