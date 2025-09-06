@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Memory UI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-6">
+  <h1 class="text-2xl font-bold mb-4">Memory Query</h1>
+  <div class="mb-4">
+    <input id="query" class="border p-2" placeholder="Enter query" />
+    <button id="search" class="bg-blue-500 text-white px-4 py-2 ml-2">Search</button>
+  </div>
+  <pre id="results" class="bg-gray-100 p-2"></pre>
+  <div class="mt-6">
+    <button id="check-status" class="bg-green-500 text-white px-4 py-2">Check Status</button>
+  </div>
+  <pre id="status" class="bg-gray-100 p-2 mt-2"></pre>
+  <script>
+    document.getElementById('search').onclick = async () => {
+      const q = document.getElementById('query').value;
+      const res = await fetch(`/memory/query?query=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      document.getElementById('results').textContent = JSON.stringify(data, null, 2);
+    };
+    document.getElementById('check-status').onclick = async () => {
+      const res = await fetch('/status');
+      const data = await res.json();
+      document.getElementById('status').textContent = JSON.stringify(data, null, 2);
+    };
+  </script>
+</body>
+</html>
