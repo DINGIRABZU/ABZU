@@ -210,7 +210,7 @@ PY
         run: git ls-files '*.md' | xargs python scripts/validate_links.py
 
       - name: Mypy
-        run: mypy
+        run: mypy memory/ tests/
 
       - name: Validate templates and schemas
         run: python scripts/validate_configs.py

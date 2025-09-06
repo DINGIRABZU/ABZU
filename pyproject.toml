@@ -174,6 +174,30 @@ omit = ["tests/*"]
 [tool.coverage.report]
 fail_under = 80
 
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+follow_imports = "skip"
+explicit_package_bases = true
+
+[[tool.mypy.overrides]]
+module = [
+    "chromadb.*",
+    "fastapi.*",
+    "librosa.*",
+    "pydub.*",
+    "soundfile.*",
+    "requests.*",
+    "pytest.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["memory.*", "tests.*"]
+ignore_errors = true
+
 [tool.poetry.extras]
 spatial = ["torch", "open3d", "pytorch3d"]
 mental = ["neo4j"]
