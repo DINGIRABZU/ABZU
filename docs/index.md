@@ -2,6 +2,10 @@
 
 Curated starting points for understanding and operating the project. For an exhaustive, auto-generated inventory of all documentation, see [INDEX.md](INDEX.md).
 
+## Orientation
+- [ABZU Project Declaration](project_mission_vision.md) – deployments must reach a living state
+- [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight
+
 ## Quick Start
 
 Initialize every memory layer with a single command:
@@ -37,7 +41,7 @@ abzu-memory-bootstrap
 - [Data Manifest](data_manifest.md)
 
 ## Development
-- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.86, updated 2025-09-02)
+- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.93, updated 2025-10-02)
 - [Developer Etiquette](developer_etiquette.md)
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Checklist](development_checklist.md)

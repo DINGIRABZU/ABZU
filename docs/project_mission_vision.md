@@ -1,7 +1,9 @@
 # ABZU Project Declaration
 
-**Version:** v1.3.0
-**Last updated:** 2025-10-01
+**Version:** v1.3.1
+**Last updated:** 2025-10-02
+
+**Preamble:** Every deployment must reach a "living" state—RAZAR confirming vitality under operator oversight—before it is considered complete.
 
 ABZU ∴ Vision & System Overview (BANA Narrative Engine)
 
