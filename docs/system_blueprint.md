@@ -580,6 +580,26 @@ Detects objects with YOLOE and streams bounding boxes to the Large World Model f
 - **Recovery:** Reload YOLOE weights or restart the adapter.
 
 ## Non‑Essential Services
+### Operator Console Service
+Provides a web UI ([operator_console.md](operator_console.md)) that forwards operator
+commands through the Operator API and surfaces memory summaries from the unified
+bundle. Optional for headless deployments where operators issue requests via
+scripts.
+
+```mermaid
+flowchart LR
+    OperatorConsole -->|commands| RAZAR
+    RAZAR -->|status| OperatorConsole
+    RAZAR --> MemoryBundle[(Memory Bundle)]
+    MemoryBundle --> RAZAR
+```
+
+- **Layer:** Throat
+- **Priority:** 3
+- **Startup:** Launch after the chat gateway.
+- **Health Check:** Probe `/operator/health`.
+- **Recovery:** Redeploy static assets or restart the service.
+
 ### Audio Device
 Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [Voice Setup](voice_setup.md) and [Chakra Architecture](chakra_architecture.md#root).
 - **Layer:** Root
@@ -614,10 +634,11 @@ recommended for both local runs and production deployments described in
 0. RAZAR Startup Orchestrator (external, priority 0) – see [RAZAR Agent](RAZAR_AGENT.md)
 1. Memory Store (Heart, priority 1)
 2. Chat Gateway (Throat, priority 2)
-3. CROWN LLM (Crown, priority 2)
-4. Vision Adapter (Third Eye, priority 2)
-5. Audio Device (priority 3)
-6. Avatar (priority 4)
+3. Operator Console Service (Throat, priority 3, optional)
+4. CROWN LLM (Crown, priority 2)
+5. Vision Adapter (Third Eye, priority 2)
+6. Audio Device (priority 3)
+7. Avatar (priority 4)
 7. Video (priority 5)
 
 Each step should report readiness before continuing. After the final service

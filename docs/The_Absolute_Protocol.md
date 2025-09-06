@@ -16,6 +16,37 @@ Set up the local environment before running tools or tests:
 1. Copy `secrets.env.template` to `secrets.env` and provide values for `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY`.
 2. Run `scripts/check_requirements.sh` to confirm required binaries, the Python 3.11+ runtime, and necessary Python modules are present.
 
+### Operator Interface
+Operators supervise ignition and runtime behaviour. They issue boot commands,
+review handshake logs, and approve escalations before services become
+operator-facing.
+
+**Responsibilities**
+
+- Initiate boot and authorize service launches.
+- Monitor audit logs and memory summaries for anomalies.
+- Escalate to recovery routines when safeguards trigger.
+
+**Security Notes**
+
+- All console actions require authenticated tokens and are written to
+  append-only logs.
+- Rotate credentials after each mission brief and restrict console access to
+  trusted networks.
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant RAZAR
+    participant "Memory Bundle" as MemoryBundle
+    Operator->>RAZAR: initiate boot
+    RAZAR->>MemoryBundle: load layers
+    MemoryBundle-->>RAZAR: ready
+    RAZAR-->>Operator: request approval
+    Operator-->>RAZAR: authorize launch
+    RAZAR->>Operator: signal online
+```
+
 ## Repository Blueprint
 ABZU adheres to a consistent top-level directory layout:
 
