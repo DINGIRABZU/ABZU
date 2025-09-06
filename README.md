@@ -37,6 +37,24 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 For deeper background, consult the [CRYSTAL CODEX](CRYSTAL_CODEX.md) and the [documentation inventory](docs/INDEX.md).
 
+## Quick Start – Arcade UI
+
+Set up the Arcade UI and run a sample memory query:
+
+```bash
+pip install -r requirements.lock
+bash scripts/start_local.sh
+```
+
+When the browser opens, click **Memory Scan** to query the memory bus.
+
+Verify the stack and docs:
+
+```bash
+pytest tests/test_memory_bus.py -q
+mkdocs build
+```
+
 ## Requirements
 - Python 3.11 or newer. Use [`pyenv`](https://github.com/pyenv/pyenv) if available to manage multiple versions.
 - Core dependencies are pinned in `requirements.txt` and `dev-requirements.txt`.
