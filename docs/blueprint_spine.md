@@ -223,13 +223,26 @@ Unit tests confirm the scribe logs stories correctly
 
 ABZU layers multiple specialized stores, each addressing a distinct facet of experience while supporting both file-based and vector-database back ends. Configuration is driven by environment variables that set storage paths for the Cortex, Emotional, Mental, Spiritual, and Narrative layers. Once all layers initialize, the Bana engine narrates evolving system state, weaving memory into the larger storytelling loop.
 
-## **Layered Stores**
+## **MemoryBundle Flow**
 
-- **Cortex** – Lightweight spiral log with a tag index and thread-safe read/write locks for concurrent access
-- **Emotional** – SQLite table of timestamped emotion vectors; optional transformers/dlib extractors allow raw media inputs to be converted into features
-- **Mental** – Neo4j-backed task and context graph with optional reinforcement learning hooks for adaptive behavior tracking
-- **Spiritual** – Event↔symbol ontology stored in SQLite, offering both forward and reverse lookups for ritual insight
-- **Narrative** – SQLite+Chroma engine that records story beats (actor, action, symbolism) and supports multitrack composition and semantic search
+The MemoryBundle wraps the Cortex, Emotional, Mental, Spiritual, and Narrative layers behind a single interface. During startup, `broadcast_layer_event("layer_init")` fans out simultaneously across all layers so they can report readiness in unison. Queries call `query_memory`, which gathers responses from each layer and merges them into a coherent reply.
+
+```mermaid
+graph TD
+    init[broadcast_layer_event("layer_init")] --> Cortex
+    init --> Emotional
+    init --> Mental
+    init --> Spiritual
+    init --> Narrative
+    Cortex --> agg((query_memory))
+    Emotional --> agg
+    Mental --> agg
+    Spiritual --> agg
+    Narrative --> agg
+    agg --> response[Aggregated recall]
+```
+
+For repository rules see [The Absolute Protocol](The_Absolute_Protocol.md) and detailed layer behavior in the [Memory Layers Guide](memory_layers_GUIDE.md).
 
 ## **Cross-Layer Integration**
 
