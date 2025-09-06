@@ -98,7 +98,12 @@ def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:
         if producer is None:
             return
 
-        event = Event(agent_id=actor, event_type=action, payload=metadata)
+        event = Event(
+            agent_id=actor,
+            event_type=action,
+            payload=metadata,
+            target_agent=metadata.get("target_agent"),
+        )
 
         try:
             loop = asyncio.get_running_loop()
