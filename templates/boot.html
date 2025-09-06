@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Arcade Boot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      color: #0ff;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+    }
+    button {
+      margin: 12px;
+      padding: 12px 20px;
+      background: #111;
+      border: 2px solid #0ff;
+      color: #0ff;
+      cursor: pointer;
+    }
+    #greeting-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ff0;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="greeting-modal">
+    <div>Silim!</div>
+  </div>
+  <div class="actions">
+    <button id="load-memory">Load Memory</button>
+    <button id="query">Query</button>
+    <button id="enter-crown">Enter Crown</button>
+  </div>
+  <script>
+    window.addEventListener('load', () => {
+      const modal = document.getElementById('greeting-modal');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

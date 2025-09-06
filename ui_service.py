@@ -23,6 +23,12 @@ async def home(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.get("/boot", response_class=HTMLResponse)
+async def boot(request: Request) -> HTMLResponse:
+    """Serve the boot page styled like a classic arcade console."""
+    return templates.TemplateResponse("boot.html", {"request": request})
+
+
 @app.get("/status")
 async def status() -> Dict[str, str]:
     """Return a simple status indicator."""
