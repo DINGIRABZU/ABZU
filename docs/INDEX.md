@@ -355,6 +355,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
+| [opencode_client.md](opencode_client.md) | Opencode Client | - | - |
 | [operations.md](operations.md) | Operations | - | - |
 | [operator_interface_GUIDE.md](operator_interface_GUIDE.md) | Operator Interface Guide | Instructions for operator API usage, onboarding requirements, and Nazarick Web Console chat rooms. | - |
 | [operator_nazarick_bridge.md](operator_nazarick_bridge.md) | Operator-Nazarick Bridge | **Version:** v1.0.0 **Last updated:** 2025-09-05 | - |
