@@ -34,7 +34,7 @@ Contributors must pair system enhancements with operator-facing improvements, up
     - **Crown**: High-level orchestration (RAZAR).
 - Agents like **Prompt Orchestrator**, **QNL Engine**, **Memory Scribe**, and **Nazarick Servants** manage specialized roles in this hierarchy.
 
-### **Memory Architecture**
+### **Memory Bundle**
 
 ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores through a unified memory bundle. `broadcast_layer_event("layer_init")` boots all layers in parallel, and `query_memory` fans out reads across them before combining results into a single response that an Operator Agent can relay to consoles.
 
@@ -43,6 +43,21 @@ ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores
 ```
 
 The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd). Scripts under **`scripts/`** initialize and verify the layers, and RAZAR activates the Bana engine once the bundle reports readiness.
+
+### **Dynamic Ignition**
+
+RAZAR evaluates mission briefs and boots only the services needed for the current run.
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant RAZAR
+    participant Service
+    Operator->>RAZAR: mission brief
+    RAZAR->>Service: conditional boot
+    Service-->>RAZAR: ready
+    RAZAR-->>Operator: status
+```
 
 ## **3. Key Components & Modules**
 
@@ -65,7 +80,7 @@ The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_in
     - [RAZAR Agent](RAZAR_AGENT.md): ignition orchestrator that bridges operator directives to services.
     - **`web_console/`**, **`dashboard/`**: front-end consoles consuming the API.
 
-### Arcade Console Node
+### Operator UI
 
 ```mermaid
 graph TD
@@ -138,7 +153,7 @@ Their behavior is bound by a seven‑law “Nazarick Manifesto” covering nonag
 
 Modules are organized by chakra (Root through Crown), with additional Nazarick agents extending layers: Bana Bio‑Adaptive Narrator (Heart), AsianGen Creative Engine (Throat), and LandGraph Geo Knowledge (Root).
 
-## **4. Memory Architecture**
+## **4. Memory Bundle**
 
 ABZU layers five memory stores—Cortex, Emotional, Mental, Spiritual, and Narrative—each switchable between file-based JSON/SQLite and vector-DB back ends via environment variables. See [Memory Layers Guide](memory_layers_GUIDE.md) and diagrams like [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd) and [Memory Layer Flow](figures/memory_layer_flow.mmd) for event sequencing and query aggregation.
 
@@ -166,7 +181,7 @@ Biosignal events captured by ingestion scripts pass through the narrative engine
 
 - **Hierarchical command stack** links Chakra-themed channels with a Redis/Kafka–backed event pipeline and dual database persistence.
 - **Agent roster & ethics** codify roles and behavior through a seven‑law manifesto.
-- **Layered memory system** orchestrates Cortex, Emotional, Mental, Spiritual, and Narrative stores, feeding the Bana engine.
+- **Layered memory bundle** orchestrates Cortex, Emotional, Mental, Spiritual, and Narrative stores, feeding the Bana engine.
 - **Bana & Vanna**: Bana translates biosignals into narratives; Vanna bridges natural language to SQL, writing results into memory.
 
 ---

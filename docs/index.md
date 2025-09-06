@@ -4,6 +4,8 @@ Curated starting points for understanding and operating the project. For an exha
 
 ## Orientation
 - [ABZU Project Declaration](project_mission_vision.md) – deployments must reach a living state
+- [Blueprint Spine](blueprint_spine.md) – mission overview, memory bundle, and ignition map
+- [System Blueprint](system_blueprint.md) – chakra layers, dynamic ignition, and operator UI
 - [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight
 
 ## Quick Start
@@ -47,7 +49,7 @@ abzu-memory-bootstrap
 - [Data Manifest](data_manifest.md)
 
 ## Development
-- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.93, updated 2025-10-02)
+- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.96, updated 2025-10-05)
 - [Developer Etiquette](developer_etiquette.md)
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Checklist](development_checklist.md)

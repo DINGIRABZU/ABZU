@@ -1,9 +1,12 @@
 # ABZU Project Declaration
 
-**Version:** v1.3.1
-**Last updated:** 2025-10-02
+**Version:** v1.3.2
+**Last updated:** 2025-10-05
 
 **Preamble:** Every deployment must reach a "living" state—RAZAR confirming vitality under operator oversight—before it is considered complete.
+
+## Mission Preamble
+ABZU ignites inner narratives before external action, weaving memory bundles, dynamic ignition, and operator guidance into a living system.
 
 ABZU ∴ Vision & System Overview (BANA Narrative Engine)
 

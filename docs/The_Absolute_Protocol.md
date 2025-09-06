@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.95
-**Last updated:** 2025-10-04
+**Version:** v1.0.96
+**Last updated:** 2025-10-05
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -87,6 +87,32 @@ See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidanc
 ```
 
 The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd). See [memory_layers_GUIDE.md](memory_layers_GUIDE.md) for implementation details. Any change to a memory layer must update this diagram and all related visuals across the repository to keep documentation synchronized.
+
+### Dynamic Ignition
+
+RAZAR evaluates ignition plans at runtime so services launch only when the operator authorizes them, keeping startup lightweight and responsive.
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant RAZAR
+    participant Service
+    Operator->>RAZAR: authorize ignition
+    RAZAR->>Service: launch
+    Service-->>RAZAR: ready
+    RAZAR-->>Operator: report online
+```
+
+### Operator UI Flow
+
+The arcade console mirrors mission state and relays commands.
+
+```mermaid
+graph TD
+    Operator --> UI[Arcade Console]
+    UI --> RAZAR
+    RAZAR --> UI
+```
 
 
 ## Repository Layout Protocol
