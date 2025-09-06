@@ -79,6 +79,30 @@ records = bundle.query("omen")
 The Mermaid source lives at
 [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd).
 
+## Operator Queries
+
+Operator consoles invoke `query_memory` via a dedicated `/query_memory` endpoint:
+
+```mermaid
+{{#include figures/operator_query_sequence.mmd}}
+```
+
+The Mermaid source lives at
+[figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd).
+
+Example operator API call:
+
+```python
+from fastapi import APIRouter
+from memory.query_memory import query_memory
+
+router = APIRouter()
+
+@router.get("/query_memory")
+async def query_memory_endpoint(query: str) -> dict[str, object]:
+    return query_memory(query)
+```
+
 ## Search API
 
 `memory.search_api.aggregate_search` combines ranked signals from the layers.
