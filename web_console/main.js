@@ -537,3 +537,5 @@ window.addEventListener('load', () => {
     loadStatus();
     setInterval(loadStatus, 5000);
 });
+
+export { BASE_URL, startStream, connectEvents };
