@@ -32,3 +32,31 @@ Record explicit consent for every session. Log the operator, participants, times
    python -m agents.task_orchestrator missions/daily_ignition_check.json
    ```
    Each event emits through the bus and reaches agents advertising the capability.
+
+## Memory Introspection
+
+Operators can inspect and manage the memory bundle through authenticated endpoints.
+
+### Query memory metrics
+
+```bash
+curl -H "x-api-key: TOKEN" http://localhost:8000/memory/query
+```
+
+### Search stored memories
+
+```bash
+curl -H "x-api-key: TOKEN" "http://localhost:8000/memory/query?q=vision"
+```
+
+### Purge a chakra
+
+```bash
+curl -X POST -H "x-api-key: TOKEN" -d chakra=root http://localhost:8000/memory/purge
+```
+
+### Snapshot current state
+
+```bash
+curl -X POST -H "x-api-key: TOKEN" http://localhost:8000/memory/snapshot
+```
