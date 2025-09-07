@@ -13,6 +13,7 @@ import requests
 
 from connectors.signal_bus import publish, subscribe
 from connectors.base import ConnectorHeartbeat
+from connectors.message_formatter import format_message
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ def create_client() -> Any:
             },
         )
         reply = send_glm_command(message.content)
-        await message.channel.send(reply)
+        await message.channel.send(format_message("discord", reply))
         try:
             from core import expressive_output
 
@@ -70,7 +71,7 @@ def create_client() -> Any:
         text = payload.get("content", "")
         channel = client.get_channel(int(channel_id)) if channel_id else None
         if channel:
-            loop.create_task(channel.send(text))
+            loop.create_task(channel.send(format_message("discord", text)))
 
     subscribe("discord:out", _outbound)
 
