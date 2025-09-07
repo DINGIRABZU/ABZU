@@ -42,6 +42,13 @@ from .ignition_builder import DEFAULT_STATUS, parse_system_blueprint
 from razar import crown_handshake
 from razar.crown_handshake import CrownResponse
 
+try:  # pragma: no cover - heartbeat optional
+    from monitoring.chakra_heartbeat import ChakraHeartbeat
+    from src.spiral_os.pulse_emitter import CHAKRAS
+except Exception:  # pragma: no cover - heartbeat optional
+    ChakraHeartbeat = None  # type: ignore[assignment]
+    CHAKRAS = ()  # type: ignore[assignment]
+
 LOGGER = logging.getLogger(__name__)
 
 MAX_MISSION_BRIEFS = 20
@@ -76,6 +83,9 @@ class BootOrchestrator:
         self.retries = retries
         self.enable_ai_handover = (
             bool(enable_ai_handover) if enable_ai_handover is not None else False
+        )
+        self.heartbeat_monitor = (
+            ChakraHeartbeat(chakras=CHAKRAS) if ChakraHeartbeat is not None else None
         )
 
     # ------------------------------------------------------------------
@@ -261,6 +271,21 @@ class BootOrchestrator:
         self.state_path.write_text(json.dumps(data), encoding="utf-8")
 
     # ------------------------------------------------------------------
+    # Chakra synchronization
+    # ------------------------------------------------------------------
+    def _verify_chakra_alignment(self, attempts: int = 3, delay: float = 1.0) -> bool:
+        """Return ``True`` when chakras report recent heartbeats."""
+
+        if self.heartbeat_monitor is None:
+            return True
+        for attempt in range(attempts):
+            if self.heartbeat_monitor.sync_status() == "aligned":
+                return True
+            LOGGER.warning("Chakras out of sync (attempt %s/%s)", attempt + 1, attempts)
+            time.sleep(delay)
+        return False
+
+    # ------------------------------------------------------------------
     # State helpers
     # ------------------------------------------------------------------
     def load_state(self) -> str:
@@ -434,6 +459,9 @@ class BootOrchestrator:
         capabilities = response.capabilities if response else []
         LOGGER.info("CROWN capabilities: %s", capabilities)
         self._ensure_glm4v(capabilities)
+        if not self._verify_chakra_alignment():
+            LOGGER.error("Chakra heartbeat out of sync; aborting startup")
+            return False
         commands = self._load_commands()
         last = self.load_state()
 

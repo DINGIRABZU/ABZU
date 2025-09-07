@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 import types
 import time
+from pathlib import Path
 
 import pytest
 
@@ -72,3 +73,26 @@ def test_out_of_sync_blocks_crown(monkeypatch) -> None:
     )
     with pytest.raises(RuntimeError):
         crown_router.route_decision("hi", {"emotion": "joy"})
+
+
+def test_orchestrator_aborts_when_out_of_sync(tmp_path: Path, monkeypatch) -> None:
+    from agents.razar import boot_orchestrator as bo
+
+    monkeypatch.setattr(bo, "parse_system_blueprint", lambda _: [])
+    orch = bo.BootOrchestrator(
+        blueprint=tmp_path / "bp.md",
+        config=tmp_path / "cfg.yaml",
+        ignition=tmp_path / "Ignition.md",
+        state=tmp_path / "state.json",
+    )
+    monkeypatch.setattr(bo.BootOrchestrator, "_start_primordials", lambda self: None)
+    monkeypatch.setattr(bo.BootOrchestrator, "_perform_handshake", lambda self: None)
+    monkeypatch.setattr(
+        bo.BootOrchestrator, "_persist_handshake", lambda self, resp: None
+    )
+    monkeypatch.setattr(bo.BootOrchestrator, "_ensure_glm4v", lambda self, caps: None)
+    monkeypatch.setattr(bo.BootOrchestrator, "_load_commands", lambda self: {})
+    monkeypatch.setattr(bo.BootOrchestrator, "load_state", lambda self: None)
+    monkeypatch.setattr(orch, "_verify_chakra_alignment", lambda: False)
+
+    assert orch.run() is False
