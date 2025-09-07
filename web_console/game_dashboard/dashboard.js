@@ -4,6 +4,7 @@ import { BASE_URL, startStream, connectEvents } from '../main.js';
 import SetupWizard from './setupWizard.js';
 import ChakraMonitor from './chakraMonitor.js';
 import AvatarRoom from './avatarRoom.js';
+import ChakraStatusBoard from './chakraStatusBoard.js';
 
 function GameDashboard() {
   const buttons = [
@@ -71,7 +72,8 @@ function GameDashboard() {
       ),
       React.createElement(AvatarRoom, null),
       React.createElement('pre', { id: 'event-log', style: { marginTop: '1rem', textAlign: 'left' } }),
-      React.createElement(ChakraMonitor)
+      React.createElement(ChakraMonitor),
+      React.createElement(ChakraStatusBoard)
     )
   );
 }
