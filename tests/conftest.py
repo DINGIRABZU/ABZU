@@ -289,6 +289,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "integration" / "test_full_flows.py"),
     str(ROOT / "tests" / "scripts" / "test_verify_chakra_monitoring.py"),
     str(ROOT / "tests" / "scripts" / "test_verify_doctrine_refs.py"),
+    str(ROOT / "tests" / "spiral_os" / "test_chakra_cycle.py"),
     str(ROOT / "tests" / "chakra_healing" / "test_root.py"),
     str(ROOT / "tests" / "chakra_healing" / "test_sacral.py"),
     str(ROOT / "tests" / "chakra_healing" / "test_solar.py"),
