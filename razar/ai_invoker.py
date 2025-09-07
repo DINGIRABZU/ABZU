@@ -11,16 +11,20 @@ __all__ = ["handover"]
 import json
 import logging
 import subprocess
+import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 
-from .bootstrap_utils import PATCH_LOG_PATH
+from .bootstrap_utils import PATCH_LOG_PATH, LOGS_DIR
+from . import health_checks
 from tools import opencode_client
 
 __version__ = "0.1.2"
 
 LOGGER = logging.getLogger(__name__)
+
+PATCH_BACKUP_DIR = LOGS_DIR / "patch_backups"
 
 
 def _append_patch_log(entry: Dict[str, Any]) -> None:
@@ -97,6 +101,7 @@ def handover(
     if context:
         ctx.update(context)
     suggestion: Any | None = None
+    suggestion_from_diff = False
     if use_opencode:
         try:
             result = subprocess.run(
@@ -114,6 +119,7 @@ def handover(
                 LOGGER.exception("opencode client failed for %s", component)
                 return False
             suggestion = _diff_to_suggestions(diff, error)
+            suggestion_from_diff = True
         except Exception:  # pragma: no cover - defensive
             LOGGER.exception("opencode CLI failed for %s", component)
             return False
@@ -129,13 +135,12 @@ def handover(
                     LOGGER.exception("opencode client failed for %s", component)
                     return False
                 suggestion = _diff_to_suggestions(diff, error)
+                suggestion_from_diff = True
             else:
                 try:
                     suggestion = json.loads(result.stdout or "null")
                 except json.JSONDecodeError:
-                    LOGGER.warning(
-                        "Could not decode opencode output for %s", component
-                    )
+                    LOGGER.warning("Could not decode opencode output for %s", component)
                     return False
     else:
         try:
@@ -153,14 +158,36 @@ def handover(
         module = patch.get("module")
         if not module:
             continue
+        module_path = Path(module)
         tests = [Path(p) for p in patch.get("tests", [])]
         err = patch.get("error", error)
+        backup_path: Path | None = None
+        if suggestion_from_diff:
+            try:
+                PATCH_BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+                ts = datetime.utcnow().strftime("%Y%m%dT%H%M%S%f")
+                backup_path = PATCH_BACKUP_DIR / f"{module_path.name}.{ts}"
+                shutil.copy2(module_path, backup_path)
+            except Exception:  # pragma: no cover - defensive
+                LOGGER.exception("Failed to snapshot %s", module)
+                backup_path = None
         for attempt in range(1, 3):
             try:
-                success = code_repair.repair_module(Path(module), tests, err)
+                success = code_repair.repair_module(module_path, tests, err)
             except Exception:  # pragma: no cover - defensive
                 LOGGER.exception("Failed to apply patch for %s", module)
                 success = False
+            if success:
+                try:
+                    if not health_checks.run(component):
+                        if backup_path and backup_path.exists():
+                            shutil.copy2(backup_path, module_path)
+                        success = False
+                except Exception:  # pragma: no cover - defensive
+                    LOGGER.exception("Post-restart check failed for %s", component)
+                    if backup_path and backup_path.exists():
+                        shutil.copy2(backup_path, module_path)
+                    success = False
             _append_patch_log(
                 {
                     "event": "patch_attempt",
