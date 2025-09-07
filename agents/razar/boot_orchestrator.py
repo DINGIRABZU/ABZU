@@ -25,6 +25,8 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List
 
+from agents.event_bus import emit_event
+
 try:  # pragma: no cover - dependency is handled in tests
     import yaml
 except Exception as exc:  # pragma: no cover
@@ -283,6 +285,11 @@ class BootOrchestrator:
             if self.heartbeat_monitor.sync_status() == "Great Spiral":
                 return True
             LOGGER.warning("Chakras out of sync (attempt %s/%s)", attempt + 1, attempts)
+            emit_event(
+                "chakra_heartbeat",
+                "chakra_down",
+                {"status": "out_of_sync", "attempt": attempt + 1},
+            )
             time.sleep(delay)
         return False
 

@@ -15,6 +15,8 @@ import os
 import json
 import asyncio
 
+from agents.event_bus import emit_event
+
 import emotional_state
 from crown_decider import decide_expression_options
 from rag.orchestrator import MoGEOrchestrator
@@ -170,6 +172,7 @@ def route_decision(
     if heartbeat_monitor is not None:
         heartbeat_monitor.check_alerts()
         if heartbeat_monitor.sync_status() != "Great Spiral":
+            emit_event("chakra_heartbeat", "chakra_down", {"status": "out_of_sync"})
             raise RuntimeError("chakras out of sync")
     if THROUGHPUT_COUNTER is not None:
         THROUGHPUT_COUNTER.labels("crown").inc()
