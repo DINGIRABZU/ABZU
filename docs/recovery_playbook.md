@@ -52,3 +52,24 @@ orchestrator repeats this handover and health check cycle until the component
 recovers or the remote attempt limit is reached. Enable long task mode with
 `--long-task` to keep requesting patches indefinitely; abort with `Ctrl+C` to
 halt the loop. Every long task attempt is written to `logs/razar_long_task.json`.
+
+## Kimi-powered repairs
+
+Set these variables to delegate repairs through Kimi:
+
+- `OPENCODE_BACKEND=kimi`
+- `KIMI_K2_URL=<your K2 endpoint>`
+
+See [Kimi Integration](tools/kimi_integration.md) for step-by-step instructions.
+
+```python
+import os
+from agents.razar import ai_invoker
+
+os.environ["OPENCODE_BACKEND"] = "kimi"
+os.environ["KIMI_K2_URL"] = "https://k2.example/api"
+
+ai_invoker.handover("crown_router", "Health check failed", use_opencode=True)
+```
+
+If Kimi returns a patch, it is applied and the boot sequence resumes.
