@@ -555,6 +555,24 @@ All endpoints must publish machine-validated schemas:
 - CI executes `scripts/component_inventory.py` to fail builds when connector versions mismatch the registry or required entries are missing.
 - Run `python scripts/health_check_connectors.py` before merging to confirm connectors respond.
 
+#### Model Context Protocol Migration
+
+ABZU is adopting the **Model Context Protocol (MCP)** to standardize authentication,
+capability negotiation, and logging for internal service connectors. MCP reduces
+ad‑hoc HTTP clients and gives operators a consistent way to trace calls across the
+stack.
+
+- **MCP connectors** – `operator_api`, `operator_upload`, and `crown_handshake`
+  already speak MCP. `primordials_api` and `narrative_api` are queued for
+  conversion.
+- **External APIs** – `telegram_bot`, `open_web_ui`, and the browser-facing
+  `webrtc` connector rely on standard HTTP endpoints and will remain outside the
+  MCP surface.
+
+Track migration status in the
+[Connector Index](connectors/CONNECTOR_INDEX.md) and mark entries as `mcp` when
+the port completes.
+
 ### Dependency Index Protocol
 
 - Maintain [dependency_index.md](dependency_index.md) enumerating third-party libraries and internal packages.

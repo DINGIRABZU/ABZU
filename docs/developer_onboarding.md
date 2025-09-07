@@ -77,7 +77,9 @@ Enable the Model Context Protocol during development by setting
 `ABZU_USE_MCP=1`. Internal services will route requests through the MCP gateway
 while external connectors and third-party APIs continue using standard HTTP
 endpoints. Choose MCP for service-to-service calls within the stack and HTTP
-for integrations beyond it or when MCP is unavailable.
+for integrations beyond it or when MCP is unavailable. See the
+[MCP Migration Guide](connectors/mcp_migration.md) for steps to convert
+existing API connectors.
 
 ## Getting Started with RAZAR
 
