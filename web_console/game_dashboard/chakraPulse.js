@@ -1,7 +1,7 @@
 import React from 'https://esm.sh/react@18';
 import { BASE_URL } from '../main.js';
 
-export default function ChakraMonitor() {
+export default function ChakraPulse() {
   const [chakras, setChakras] = React.useState({});
   const [aligned, setAligned] = React.useState(false);
   const [history, setHistory] = React.useState([]);
@@ -31,7 +31,7 @@ export default function ChakraMonitor() {
 
   return React.createElement(
     'div',
-    { id: 'chakra-monitor' },
+    { id: 'chakra-pulse' },
     resonance && React.createElement('div', { className: 'resonance' }),
     React.createElement(
       'div',
