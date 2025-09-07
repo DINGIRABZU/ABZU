@@ -1,0 +1,9 @@
+[
+  {
+    "event_type": "ignition_check",
+    "payload": {
+      "capability": "ignite",
+      "target": "crown"
+    }
+  }
+]

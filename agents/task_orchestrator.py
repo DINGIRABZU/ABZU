@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, Iterable, List
 
 from citadel.event_producer import Event
 
@@ -56,10 +56,47 @@ class TaskOrchestrator:
             )
 
     # ------------------------------------------------------------------
-    async def run(self) -> None:
-        """Continuously consume events from the bus."""
-
-        await subscribe(self.handle_event)
 
 
-__all__ = ["TaskOrchestrator"]
+async def run(self) -> None:
+    """Continuously consume events from the bus."""
+
+    await subscribe(self.handle_event)
+
+
+# ------------------------------------------------------------------
+def run_mission(events: Iterable[Dict[str, Any]]) -> None:
+    """Emit each mission event via the event bus.
+
+    ``events`` is an iterable of dictionaries with ``event_type`` and optional
+    ``payload`` keys. Each entry is forwarded as an event from the
+    ``mission_control`` actor.
+    """
+
+    for entry in events:
+        emit_event(
+            "mission_control",
+            entry.get("event_type", ""),
+            entry.get("payload", {}),
+        )
+
+
+def run_mission_file(path: str | Path) -> None:
+    """Load mission definitions from ``path`` and dispatch them."""
+
+    data = json.loads(Path(path).read_text())
+    if not isinstance(data, list):  # pragma: no cover - simple validation
+        raise ValueError("Mission file must contain a list of events")
+    run_mission(data)
+
+
+if __name__ == "__main__":  # pragma: no cover - CLI helper
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Dispatch mission events")
+    parser.add_argument("mission", help="Path to mission JSON file")
+    args = parser.parse_args()
+    run_mission_file(args.mission)
+
+
+__all__ = ["TaskOrchestrator", "run_mission", "run_mission_file"]

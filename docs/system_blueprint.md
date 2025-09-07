@@ -658,6 +658,13 @@ flowchart LR
     MemoryBundle --> RAZAR
 ```
 
+### Mission Builder
+
+Offers a Blockly-based editor (`web_console/mission_builder`) for composing mission
+event sequences. The builder exports JSON consumed by
+`agents/task_orchestrator.py`, and starter templates live in the `missions/`
+directory.
+
 - **Layer:** Throat
 - **Priority:** 3
 - **Startup:** Launch after the chat gateway.

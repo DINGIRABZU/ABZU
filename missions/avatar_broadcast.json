@@ -1,0 +1,9 @@
+[
+  {
+    "event_type": "broadcast",
+    "payload": {
+      "capability": "avatar-message",
+      "message": "hello operators"
+    }
+  }
+]
