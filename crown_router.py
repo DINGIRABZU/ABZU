@@ -121,11 +121,11 @@ else:
     LATENCY_HIST = None
 
 try:  # pragma: no cover - optional dependency
-    import vector_memory as _vector_memory
-except ImportError:  # pragma: no cover - optional dependency
-    _vector_memory = None  # type: ignore[assignment]
-vector_memory = _vector_memory
-"""Optional vector memory subsystem; ``None`` if unavailable."""
+    from memory.chakra_registry import ChakraRegistry
+except Exception:  # pragma: no cover - optional dependency
+    ChakraRegistry = None  # type: ignore[assignment]
+chakra_registry = ChakraRegistry() if ChakraRegistry is not None else None
+"""Optional chakra registry; ``None`` if unavailable."""
 
 if BOOT_DURATION_GAUGE is not None:
     BOOT_DURATION_GAUGE.labels("crown").set(time.perf_counter() - _START_TIME)
@@ -143,8 +143,8 @@ def route_decision(
 
     The function delegates model selection to :class:`MoGEOrchestrator` and
     chooses expression options based on both the current emotion and recent
-    history.  Past ``expression_decision`` records are retrieved from
-    :mod:`vector_memory` and weighted higher when their stored ``soul_state``
+    history.  Past ``expression_decision`` records are retrieved from the chakra
+    registry and weighted higher when their stored ``soul_state``
     matches :func:`emotional_state.get_soul_state`.  These weights influence the
     final ``tts_backend`` and ``avatar_style`` choices in addition to the
     baseline recommendation from :func:`crown_decider.decide_expression_options`.
@@ -195,9 +195,10 @@ def route_decision(
         opts = decide_expression_options(emotion)
 
         soul = emotional_state.get_soul_state()
-        if vector_memory is not None:
+        if chakra_registry is not None:
             try:
-                records = vector_memory.search(
+                records = chakra_registry.search(
+                    "crown",
                     "",
                     filter={"type": "expression_decision", "emotion": emotion},
                     k=20,
@@ -231,6 +232,20 @@ def route_decision(
         "avatar_style": avatar_style,
         "aura": opts.get("aura"),
     }
+    if chakra_registry is not None:
+        try:  # pragma: no cover - best effort
+            chakra_registry.record(
+                "crown",
+                text,
+                "crown_router",
+                type="expression_decision",
+                emotion=emotion,
+                tts_backend=tts_backend,
+                avatar_style=avatar_style,
+                soul_state=soul,
+            )
+        except Exception:
+            pass
     duration = time.perf_counter() - start
     if LATENCY_HIST is not None:
         LATENCY_HIST.labels("crown").observe(duration)  # type: ignore[call-arg]

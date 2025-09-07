@@ -6,24 +6,26 @@ from agents import experience_replay
 def test_store_and_replay_similarity_order(monkeypatch):
     stored = []
 
-    class DummyVM:
-        def add_vector(self, text, meta):  # pragma: no cover - simple
-            stored.append({"text": text, **meta})
+    class DummyRegistry:
+        def record(self, chakra, text, source, **meta):  # pragma: no cover - simple
+            stored.append({"text": text, "chakra": chakra, "source": source, **meta})
 
-        def search(self, query, filter=None, k=5, scoring="similarity"):
+        def search(self, chakra, query, filter=None, k=5, scoring="similarity"):
             def score(t: str) -> int:
                 return len(set(query.split()) & set(t.split()))
 
             results = []
             for item in stored:
+                if item.get("chakra") != chakra:
+                    continue
                 if filter and item.get("agent_id") != filter.get("agent_id"):
                     continue
                 results.append({"text": item["text"], "score": score(item["text"])})
             results.sort(key=lambda r: r["score"], reverse=True)
             return results[:k]
 
-    dummy = DummyVM()
-    monkeypatch.setattr(experience_replay, "vector_memory", dummy)
+    dummy = DummyRegistry()
+    monkeypatch.setattr(experience_replay, "chakra_registry", dummy)
 
     logs = []
     monkeypatch.setattr(experience_replay, "log_agent_interaction", logs.append)
