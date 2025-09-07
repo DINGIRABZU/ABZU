@@ -69,6 +69,30 @@ jobs:
       - name: Validate dependency registry
         run: python scripts/check_dependency_registry.py
 
+  validate-components:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate component versions
+        run: python scripts/validate_components.py
+
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install doc tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install openapi-spec-validator jsonschema
+      - name: Verify documentation freshness
+        run: docs/build_docs.sh
+
   pytest:
     runs-on: ubuntu-latest
     env:

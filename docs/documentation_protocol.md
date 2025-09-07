@@ -11,4 +11,8 @@ Standard workflow for updating documentation and guides.
    directories to avoid indexing generated artifacts.
 6. **Validate changes with** `pre-commit run --files <changed_files>` **before committing.**
 7. **Use traceable commit messages** that capture the rationale for changes and reference affected documents.
+8. **When bumping component or dependency versions:** update the relevant entries in
+   `requirements.txt` and lockfiles, run `python scripts/validate_components.py` to ensure
+   versions align, then execute `docs/build_docs.sh` to regenerate indexes (documentation index,
+   API docs, component status) and verify links.
 
