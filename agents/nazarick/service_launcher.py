@@ -14,6 +14,7 @@ from typing import Dict, List, Optional
 
 from .chakra_observer import NazarickChakraObserver
 from agents.event_bus import emit_event
+from agents.razar import lifecycle_bus
 
 __version__ = "0.1.3"
 
@@ -112,12 +113,36 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
 
         cmd = shlex.split(cmd_str)
         try:
-            subprocess.Popen(cmd)
+            proc = subprocess.Popen(cmd)
             event["status"] = "launched"
             LOGGER.info("Launched %s", name)
             emit_event(
                 name, "register", {"capabilities": capabilities, "triggers": triggers}
             )
+            lifecycle_bus.publish(
+                {"event": "agent_start", "agent": name, "timestamp": time.time()}
+            )
+
+            def _pulse() -> None:
+                while proc.poll() is None:
+                    lifecycle_bus.publish(
+                        {
+                            "event": "agent_beat",
+                            "agent": name,
+                            "timestamp": time.time(),
+                        }
+                    )
+                    time.sleep(5.0)
+                lifecycle_bus.publish(
+                    {
+                        "event": "agent_stop",
+                        "agent": name,
+                        "timestamp": time.time(),
+                        "returncode": proc.returncode,
+                    }
+                )
+
+            threading.Thread(target=_pulse, daemon=True).start()
 
             def _relaunch() -> bool:
                 try:

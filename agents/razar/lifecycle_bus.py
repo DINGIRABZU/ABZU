@@ -7,11 +7,13 @@ scripts and command line utilities.
 
 from __future__ import annotations
 
-__version__ = "0.2.2"
+__version__ = "0.3.0"
 
 from dataclasses import dataclass
 import json
-from typing import Dict, Iterator
+import asyncio
+import os
+from typing import Any, AsyncIterator, Dict, Iterator
 
 try:
     import redis  # type: ignore
@@ -94,3 +96,85 @@ class LifecycleBus:
                 )
             except json.JSONDecodeError:  # pragma: no cover - ignore bad msgs
                 continue
+
+
+# ---------------------------------------------------------------------------
+# Generic event helpers
+
+try:  # pragma: no cover - optional dependencies
+    import redis.asyncio as aioredis
+except Exception:  # pragma: no cover - optional dependency
+    aioredis = None  # type: ignore
+
+try:  # pragma: no cover - optional dependencies
+    from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
+except Exception:  # pragma: no cover - optional dependency
+    AIOKafkaProducer = AIOKafkaConsumer = None  # type: ignore
+
+_CHANNEL = os.getenv("RAZAR_LIFECYCLE_CHANNEL", "razar:lifecycle")
+_TOPIC = os.getenv("RAZAR_LIFECYCLE_TOPIC", "razar.lifecycle")
+_QUEUE: "asyncio.Queue[Dict[str, Any]]" = asyncio.Queue()
+
+
+async def _publish_async(event: Dict[str, Any]) -> None:
+    """Internal helper to publish ``event`` to the configured broker."""
+
+    data = json.dumps(event)
+    if aioredis is not None:  # pragma: no cover - requires redis
+        url = os.getenv("RAZAR_LIFECYCLE_REDIS_URL", "redis://localhost:6379/0")
+        client = aioredis.from_url(url)
+        await client.publish(_CHANNEL, data)
+    elif AIOKafkaProducer is not None:  # pragma: no cover - requires kafka
+        servers = os.getenv("RAZAR_LIFECYCLE_KAFKA_SERVERS", "localhost:9092")
+        producer = AIOKafkaProducer(bootstrap_servers=servers)
+        await producer.start()
+        try:
+            await producer.send_and_wait(_TOPIC, data.encode("utf-8"))
+        finally:
+            await producer.stop()
+    else:
+        await _QUEUE.put(event)
+
+
+def publish(event: Dict[str, Any]) -> None:
+    """Publish an ``event`` to Redis, Kafka, or an in-memory queue."""
+
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        asyncio.run(_publish_async(event))
+    else:  # pragma: no cover - depends on event loop presence
+        loop.create_task(_publish_async(event))
+
+
+async def subscribe() -> AsyncIterator[Dict[str, Any]]:
+    """Yield events published on the configured broker.
+
+    Falls back to an in-memory queue when no broker dependencies are available.
+    """
+
+    if aioredis is not None:  # pragma: no cover - requires redis
+        url = os.getenv("RAZAR_LIFECYCLE_REDIS_URL", "redis://localhost:6379/0")
+        client = aioredis.from_url(url)
+        pubsub = client.pubsub()
+        await pubsub.subscribe(_CHANNEL)
+        async for message in pubsub.listen():
+            if message.get("type") != "message":
+                continue
+            yield json.loads(message["data"])
+    elif AIOKafkaConsumer is not None:  # pragma: no cover - requires kafka
+        servers = os.getenv("RAZAR_LIFECYCLE_KAFKA_SERVERS", "localhost:9092")
+        consumer = AIOKafkaConsumer(_TOPIC, bootstrap_servers=servers)
+        await consumer.start()
+        try:
+            async for msg in consumer:
+                yield json.loads(msg.value.decode("utf-8"))
+        finally:
+            await consumer.stop()
+    else:
+        while True:
+            event = await _QUEUE.get()
+            yield event
+
+
+__all__ = ["Issue", "LifecycleBus", "publish", "subscribe"]
