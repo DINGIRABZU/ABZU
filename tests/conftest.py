@@ -305,6 +305,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "tools" / "test_opencode_client.py"),
     str(ROOT / "tests" / "razar" / "test_remote_repair.py"),
     str(ROOT / "tests" / "monitoring" / "test_heartbeat_logger.py"),
+    str(ROOT / "tests" / "docs" / "test_connector_links.py"),
 }
 
 

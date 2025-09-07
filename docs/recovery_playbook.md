@@ -4,6 +4,10 @@ This playbook outlines how RAZAR restores service after a component failure.
 Recurring problems and their fixes are cataloged in the
 [Error Registry](error_registry.md).
 
+Connector-specific recovery steps for chakra-tagged signals and heartbeat
+propagation are documented in
+[communication_interfaces.md](communication_interfaces.md#recovery-flows).
+
 ## Boot sequence
 
 1. The boot orchestrator launches components in priority order.

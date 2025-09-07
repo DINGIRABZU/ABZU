@@ -90,3 +90,26 @@ the agent.
 
 Following this pattern keeps message handling consistent while allowing the
 system to expand with minimal changes.
+
+## Chakra-Tagged Signals
+
+All connectors attach a `chakra` field to outbound events. The tag identifies
+the originating layer and lets downstream services track signal flow through
+the stack. See
+[system_blueprint.md](system_blueprint.md#chakra-tagged-signals) and
+[blueprint_spine.md](blueprint_spine.md#chakra-tagged-signals) for the
+architectural context.
+
+## Heartbeat Propagation
+
+Connectors forward heartbeat pings from the chakra cycle engine to remote
+clients and log the return path. Lagging or missing beats surface alignment
+issues early and are mirrored in the dashboards described in the system
+blueprint.
+
+## Recovery Flows
+
+When a connector misses consecutive heartbeats, it attempts a clean reconnect
+and emits a `chakra_down` notice for Nazarick servants. Operators can follow the
+full procedure in the
+[Recovery Playbook](recovery_playbook.md#nazarick-resuscitation).

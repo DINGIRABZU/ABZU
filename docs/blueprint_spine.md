@@ -89,6 +89,14 @@ aligned and surfaces drift for operator review. See the
 overview and [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine)
 for per-layer responsibilities.
 
+### **Chakra-Tagged Signals**
+
+Connectors stamp outbound messages with a `chakra` tag so the cycle engine and
+downstream services know which layer to engage. Operators can follow these tags
+through the stack; see
+[communication_interfaces.md](communication_interfaces.md#chakra-tagged-signals)
+for connector implementation notes.
+
 ### **Game Dashboard & Retro Arcade Integration**
 
 The [Game Dashboard](ui/game_dashboard.md) consumes the cycle engine's
@@ -115,6 +123,14 @@ For layer-specific responsibilities, see
 [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine) and
 [Nazarick Agents](nazarick_agents.md). The remediation philosophy follows the
 [Self-Healing Manifesto](self_healing_manifesto.md).
+
+### **Recovery Flows**
+
+Heartbeat telemetry powers the recovery flow: failure pulses test the path,
+Nazarick servants restore silent chakras, and operators can roll back patches
+when needed. Connector-level steps live in
+[communication_interfaces.md](communication_interfaces.md#recovery-flows) and
+the [Recovery Playbook](recovery_playbook.md).
 
 #### Failure Pulses
 
