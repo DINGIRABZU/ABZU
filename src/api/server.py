@@ -11,10 +11,12 @@ from audio.voice_cloner import VoiceCloner
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from style_engine import style_library
+from .memory_introspect import router as memory_router
 
 app = FastAPI()
 
 Instrumentator().instrument(app).expose(app)
+app.include_router(memory_router)
 
 # ---------------------------------------------------------------------------
 # Core logic functions
