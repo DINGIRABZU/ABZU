@@ -70,6 +70,27 @@ flowchart LR
     C --> D[Relaunch]
 ```
 
+### Kimi-powered repairs
+
+Set the following variables to route handover through the Kimi backend:
+
+- `OPENCODE_BACKEND=kimi`
+- `KIMI_K2_URL=<your K2 endpoint>`
+
+See [Kimi Integration](tools/kimi_integration.md) for step-by-step instructions.
+
+```python
+import os
+from agents.razar import ai_invoker
+
+os.environ["OPENCODE_BACKEND"] = "kimi"
+os.environ["KIMI_K2_URL"] = "https://k2.example/api"
+
+ai_invoker.handover("crown_router", "Health check failed", use_opencode=True)
+```
+
+If Kimi supplies a patch, it is applied and the component relaunches.
+
 ### Recovery Flow
 ```mermaid
 flowchart TD
