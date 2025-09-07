@@ -702,6 +702,9 @@ the avatar alongside the console. The script calls
 `logs/INANNA_AI.log`. Set the optional `AVATAR_SCALE` environment variable to
 adjust the video size.
 
+See [docs/avatar_setup.md](docs/avatar_setup.md) for `.env` entries such as
+`VIDEO_STREAM_URL` and `WEBRTC_TOKEN` that enable real-time streaming.
+
 Type `appear to me` at the prompt to toggle the avatar stream. This command is
 handled by :mod:`core.task_parser` and switches
 `context_tracker.state.avatar_loaded` so the video engine begins emitting

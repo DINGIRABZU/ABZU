@@ -12,12 +12,20 @@ Install the Python requirements and optional packages for lip sync:
 pip install -r SPIRAL_OS/requirements.txt
 ```
 
-`SadTalker`, `Wav2Lip` and `ControlNet` are optional but provide advanced
-animation when available.
+Optional packages unlock richer animation and streaming features:
 
-When the optional **SadTalker** package is installed the video engine generates
-frames directly from the speech sample. If not available it falls back to
-**Wav2Lip** when present or a minimal mouth overlay.
+| Package    | Feature unlocked |
+|------------|-----------------|
+| `SadTalker` | Drives facial animation directly from the speech sample |
+| `Wav2Lip`  | Adds high-quality lip sync fallback |
+| `ControlNet` | Enables gesture modulation via diffusion guides |
+| `AnimateDiff` | Generates motion sequences for gestures |
+| `aiortc`   | Provides WebRTC transport for real-time streaming |
+| `ffmpeg`   | Encodes and muxes avatar video output |
+
+When **SadTalker** is available the video engine generates frames directly from
+the speech sample. If not installed it falls back to **Wav2Lip** when present or
+to a minimal mouth overlay.
 
 Gesture control is supported through **ControlNet** or **AnimateDiff** if those
 modules can be imported. The video engine calls `apply_gesture()` from the first
@@ -58,8 +66,7 @@ import soundfile as sf
 sf.write("sample_voice.wav", np.zeros(16000), 16000)
 ```
 
-Any external WAV file can also be used; public domain samples are available at
-[https://people.sc.fsu.edu/~jburkardt/data/wav/](https://people.sc.fsu.edu/~jburkardt/data/wav/).
+Any external WAV file can also be used; public domain samples are widely available online.
 
 Generate a short sovereign voice sample from hexadecimal bytes and animate it:
 
