@@ -32,6 +32,12 @@ Heartbeat polling feeds `chakra_down` events to the agent assigned to the
 affected layer. Each agent runs a dedicated recovery script—`root_restore_network.sh`
 resets networking for the Root layer, `sacral_gpu_recover.py` flushes GPU
 tasks for Sacral, and other utilities live under `scripts/chakra_healing/`.
+The polling loop is driven by the
+[Chakra Cycle Engine](system_blueprint.md#chakra-cycle-engine), whose
+propagation path and self-healing flow are mapped in the
+[Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing)
+and detailed in the
+[Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
 When errors persist beyond these hooks,
 `scripts/escalation_notifier.py` scans log files for recurring failures,
 posts an alert to `/operator/command`, and records the event in

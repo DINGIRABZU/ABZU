@@ -35,6 +35,11 @@ The chakra cycle engine paces each layer with a timed heartbeat. Every tick
 broadcasts a pulse across Root through Crown and gathers their responses to
 keep the stack synchronized.
 
+### Heartbeat Propagation
+
+Pulses traverse the stack from Root to Crown and back, forming a closed loop
+that exposes latency at each hop and feeds alignment metrics.
+
 ### Heartbeat Ratios
 
 Each layer reports its beat relative to the engine’s tick. Deviations beyond
@@ -48,7 +53,7 @@ can correlate misfires with service health. The
 [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing)
 illustrates the propagation path.
 
-### Silent Chakra Remediation
+### Self-Healing
 
 If a layer fails to answer a heartbeat, the engine marks it silent and
 requests remediation from [NAZARICK agents](nazarick_agents.md). Those
