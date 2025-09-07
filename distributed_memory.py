@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import json
 from pathlib import Path
@@ -99,6 +99,20 @@ class CycleCounterStore:
             self.client.set(self.key, json.dumps(counts))
         else:
             self.path.write_text(json.dumps(counts), encoding="utf-8")
+
+    # ------------------------------------------------------------------
+    def increment(self, chakra: str) -> int:
+        """Increment and persist the cycle count for ``chakra``.
+
+        Returns the updated cycle identifier, allowing callers to track
+        monotonically increasing heartbeat cycles across restarts.
+        """
+
+        counts = self.load()
+        new_val = counts.get(chakra, 0) + 1
+        counts[chakra] = new_val
+        self.save(counts)
+        return new_val
 
 
 __all__ = ["DistributedMemory", "CycleCounterStore"]
