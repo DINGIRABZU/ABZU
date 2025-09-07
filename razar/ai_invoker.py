@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from .bootstrap_utils import PATCH_LOG_PATH
+from tools import opencode_client
 
 __version__ = "0.1.2"
 
@@ -37,6 +38,26 @@ def _append_patch_log(entry: Dict[str, Any]) -> None:
     PATCH_LOG_PATH.write_text(
         json.dumps(records, indent=2, sort_keys=True), encoding="utf-8"
     )
+
+
+def _diff_to_suggestions(diff: str, error: str) -> list[Dict[str, Any]]:
+    """Return patch suggestions parsed from ``diff``.
+
+    Each ``+++`` line denotes the target module path. ``/dev/null`` entries
+    are ignored. The resulting suggestions mirror the structure produced by
+    the ``opencode run --json`` command so that they can be processed by the
+    existing patch-application flow.
+    """
+
+    suggestions: list[Dict[str, Any]] = []
+    for line in diff.splitlines():
+        if line.startswith("+++ "):
+            path = line[4:].strip()
+            if path.startswith("b/"):
+                path = path[2:]
+            if path and path != "/dev/null":
+                suggestions.append({"module": path, "error": error, "tests": []})
+    return suggestions
 
 
 def handover(
@@ -75,6 +96,7 @@ def handover(
     ctx: Dict[str, Any] = {"component": component, "error": error}
     if context:
         ctx.update(context)
+    suggestion: Any | None = None
     if use_opencode:
         try:
             result = subprocess.run(
@@ -84,17 +106,37 @@ def handover(
                 text=True,
                 check=False,
             )
+        except FileNotFoundError:
+            LOGGER.info("opencode CLI not found; falling back to library")
+            try:
+                diff = opencode_client.complete(json.dumps(ctx))
+            except Exception:  # pragma: no cover - defensive
+                LOGGER.exception("opencode client failed for %s", component)
+                return False
+            suggestion = _diff_to_suggestions(diff, error)
         except Exception:  # pragma: no cover - defensive
             LOGGER.exception("opencode CLI failed for %s", component)
             return False
-        if result.returncode != 0:
-            LOGGER.error("opencode exited with code %s", result.returncode)
-            return False
-        try:
-            suggestion = json.loads(result.stdout or "null")
-        except json.JSONDecodeError:
-            LOGGER.warning("Could not decode opencode output for %s", component)
-            return False
+        else:
+            if result.returncode != 0:
+                LOGGER.error(
+                    "opencode exited with code %s; using library fallback",
+                    result.returncode,
+                )
+                try:
+                    diff = opencode_client.complete(json.dumps(ctx))
+                except Exception:  # pragma: no cover - defensive
+                    LOGGER.exception("opencode client failed for %s", component)
+                    return False
+                suggestion = _diff_to_suggestions(diff, error)
+            else:
+                try:
+                    suggestion = json.loads(result.stdout or "null")
+                except json.JSONDecodeError:
+                    LOGGER.warning(
+                        "Could not decode opencode output for %s", component
+                    )
+                    return False
     else:
         try:
             suggestion = remote_ai_invoker.handover(
