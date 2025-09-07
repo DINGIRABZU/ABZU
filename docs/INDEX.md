@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -421,6 +420,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [tools/kimi_integration.md](tools/kimi_integration.md) | Kimi Integration | Opencode can delegate code generation to the Kimi-K2 model when the service is available. | - |
 | [troubleshooting.md](troubleshooting.md) | Troubleshooting | This guide addresses frequent setup problems, driver issues, and environment pitfalls. Refer to [installation](instal... | `../download_models.py`, `../env_validation.py`, `../scripts/bootstrap.py` |
 | [ui/README.md](ui/README.md) | Floor Client UI | This React/Tailwind interface renders floors with channel tiles and streams messages over a WebSocket feed. | - |
+| [ui/arcade_mode.md](ui/arcade_mode.md) | Arcade Mode Widgets | The arcade console now surfaces minimal chakra telemetry. | - |
 | [ui/chakra_pulse.md](ui/chakra_pulse.md) | Chakra Pulse Panel | Visual panel for chakra heartbeat alignment inside the game dashboard. | - |
 | [ui/game_dashboard.md](ui/game_dashboard.md) | Game Dashboard | The game dashboard wraps the avatar video feed and chakra telemetry in a simple mission map. | - |
 | [ui_service.md](ui_service.md) | UI Service | - | - |

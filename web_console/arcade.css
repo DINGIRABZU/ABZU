@@ -32,6 +32,31 @@ body {
     font-family: inherit;
 }
 
+#chakra-bar {
+    display: flex;
+    margin-top: 1rem;
+    height: 40px;
+}
+
+#chakra-bar .chakra {
+    flex: 1;
+    margin: 0 2px;
+    background: #0ff;
+    height: 5px;
+    align-self: flex-end;
+    transition: height 0.2s;
+}
+
+#chakra-bar .chakra.down {
+    background: #f00;
+    animation: flash 1s steps(2, start) infinite;
+}
+
+#last-alignment {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
 body::before {
     content: '';
     position: absolute;
@@ -65,4 +90,9 @@ body::after {
     from { opacity: 1; }
     50% { opacity: 0; }
     to { opacity: 1; }
+}
+
+@keyframes flash {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
