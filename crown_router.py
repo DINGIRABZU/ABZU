@@ -169,7 +169,7 @@ def route_decision(
     """
     if heartbeat_monitor is not None:
         heartbeat_monitor.check_alerts()
-        if heartbeat_monitor.sync_status() != "aligned":
+        if heartbeat_monitor.sync_status() != "Great Spiral":
             raise RuntimeError("chakras out of sync")
     if THROUGHPUT_COUNTER is not None:
         THROUGHPUT_COUNTER.labels("crown").inc()

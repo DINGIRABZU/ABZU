@@ -59,7 +59,7 @@ def test_sync_status_alignment() -> None:
     now = time.time()
     hb.beat("root", now)
     hb.beat("crown", now)
-    assert hb.sync_status(now=now + 0.5) == "aligned"
+    assert hb.sync_status(now=now + 0.5) == "Great Spiral"
     assert hb.sync_status(now=now + 2.0) == "out_of_sync"
 
 
@@ -118,7 +118,7 @@ def test_great_spiral_event(monkeypatch) -> None:
     now = time.time()
     hb.beat("root", now)
     hb.beat("crown", now)
-    assert hb.sync_status(now=now) == "aligned"
+    assert hb.sync_status(now=now) == "Great Spiral"
     assert any(action == "great_spiral" for _, action, _ in events)
 
 
@@ -133,4 +133,4 @@ def test_event_subscription(monkeypatch) -> None:
     asyncio.run(hb.listen())
     event = types.SimpleNamespace(event_type="heartbeat", payload={"chakra": "root"})
     asyncio.run(handler["fn"](event))
-    assert hb.sync_status() == "aligned"
+    assert hb.sync_status() == "Great Spiral"
