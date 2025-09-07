@@ -199,6 +199,10 @@ if settings.openwebui_username and settings.openwebui_password:
     }
 
 
+# Rendering mode per agent ----------------------------------------------------
+_AVATAR_MODES: dict[str, str] = {}
+
+
 def get_current_user(
     security_scopes: SecurityScopes, token: str = Security(oauth2_scheme)
 ) -> TokenInfo:
@@ -475,6 +479,33 @@ def avatar_frame(
     b64 = base64.b64encode(buf.getvalue()).decode()
     logger.info("Avatar frame served for %s", current_user.get("sub"))
     return JSONResponse({"frame": b64})
+
+
+@app.post("/agents/{agent_id}/avatar-mode")
+def set_avatar_mode(
+    agent_id: str,
+    data: dict[str, str],
+    current_user: dict = Security(get_current_user, scopes=["avatar:read"]),
+) -> dict[str, str]:
+    """Set the rendering mode (``2d`` or ``3d``) for ``agent_id``."""
+
+    mode = data.get("mode", "")
+    if mode not in {"2d", "3d"}:
+        raise HTTPException(status_code=400, detail="mode must be '2d' or '3d'")
+    _AVATAR_MODES[agent_id] = mode
+    logger.info("Set avatar mode for %s to %s", agent_id, mode)
+    return {"agent": agent_id, "mode": mode}
+
+
+@app.get("/agents/{agent_id}/avatar-mode")
+def get_avatar_mode(
+    agent_id: str,
+    current_user: dict = Security(get_current_user, scopes=["avatar:read"]),
+) -> dict[str, str]:
+    """Return the rendering mode for ``agent_id``."""
+
+    mode = _AVATAR_MODES.get(agent_id, "2d")
+    return {"agent": agent_id, "mode": mode}
 
 
 class MusicRequest(BaseModel):
