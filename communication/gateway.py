@@ -6,6 +6,8 @@ from dataclasses import dataclass
 import os
 from typing import Protocol
 
+import httpx
+
 from api import server as api_server
 
 
@@ -45,6 +47,26 @@ class AICoreProtocol(Protocol):
         ...
 
 
+_USE_MCP = os.getenv("ABZU_USE_MCP") == "1"
+_MCP_URL = os.getenv("MCP_GATEWAY_URL", "http://localhost:8001")
+
+
+async def _mcp_invoke(model: str, text: str) -> None:
+    async with httpx.AsyncClient() as client:
+        await client.post(
+            f"{_MCP_URL}/model/invoke", json={"model": model, "text": text}, timeout=5.0
+        )
+
+
+async def _mcp_context(id_: str, data: dict[str, str]) -> None:
+    async with httpx.AsyncClient() as client:
+        await client.post(
+            f"{_MCP_URL}/context/register",
+            json={"id": id_, "data": data},
+            timeout=5.0,
+        )
+
+
 class Gateway:
     """Normalizes messages and routes them to the AI core."""
 
@@ -54,11 +76,20 @@ class Gateway:
     async def handle_incoming(self, channel: str, user_id: str, content: str) -> None:
         """Create a ``ChannelMessage`` and forward it to the AI core."""
         if channel == "generate_video":
-            await api_server.generate_video(content)
+            if _USE_MCP:
+                await _mcp_invoke("video", content)
+            else:
+                await api_server.generate_video(content)
         elif channel == "stream_avatar":
-            await api_server.broadcast_avatar_update(content)
+            if _USE_MCP:
+                await _mcp_context(user_id, {"update": content})
+            else:
+                await api_server.broadcast_avatar_update(content)
         elif channel == "styles":
-            await api_server.list_styles()
+            if _USE_MCP:
+                await _mcp_invoke("styles", "")
+            else:
+                await api_server.list_styles()
         message = ChannelMessage(channel=channel, user_id=user_id, content=content)
         await self.ai_core.handle_message(message)
 

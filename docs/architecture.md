@@ -80,6 +80,14 @@ sequenceDiagram
     CLI-->>U: deployment summary
 ```
 
+### MCP vs. HTTP
+
+Internal services invoke one another through the MCP gateway, which exposes
+tools and context registration over HTTP. External connectors and third-party
+integrations continue to rely on their existing HTTP APIs. Use MCP for
+service-to-service calls within ABZU and reserve direct HTTP calls for external
+systems or when the gateway is unavailable.
+
 ## QNL Processing Flow
 
 ```mermaid
