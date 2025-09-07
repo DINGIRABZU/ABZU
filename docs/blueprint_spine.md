@@ -46,6 +46,25 @@ ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores
 
 The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd). Scripts under **`scripts/`** initialize and verify the layers, and RAZAR activates the Bana engine once the bundle reports readiness.
 
+### **Memory Spine**
+
+The blueprint spine indexes snapshot checkpoints across the memory bundle,
+providing a chronological ledger of layer state and heartbeat offsets.
+
+#### Snapshot Cadence
+
+`memory_scribe` commits a snapshot every five minutes, storing serialized
+layer data under `memory/spine/<timestamp>/` alongside the heartbeat
+position.
+
+#### Recovery Flow
+
+During boot RAZAR scans the spine for the newest snapshot and replays
+heartbeat logs to fill any gaps, rehydrating sessions before mission
+processing resumes. See the [System Blueprint](system_blueprint.md#memory-spine)
+and [Recovery Playbook](recovery_playbook.md#snapshot-recovery) for
+operational guidance.
+
 ### **Dynamic Ignition**
 
 RAZAR evaluates mission briefs and boots only the services needed for the current run.
@@ -576,3 +595,7 @@ The Crown LLM orchestrates a fleet of optional servant models. A launch script d
 ## **Shared Mission Context**
 
 ABZU’s project declaration situates both Crown and INANNA within a larger aim: cultivate inner awareness before external action, using narrative, memory, and chakral agents to craft ethically grounded worlds
+
+## Version History
+
+- 2025-09-18: Added memory spine, snapshot cadence, and recovery flow.

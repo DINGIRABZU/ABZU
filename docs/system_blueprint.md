@@ -79,6 +79,26 @@ ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into 
 
 The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd).
 
+### Memory Spine
+
+The unified memory bundle feeds a central **memory spine** that records
+chakra state alongside heartbeat offsets. This spine acts as the
+authoritative ledger for resumes and audits.
+
+#### Snapshot Cadence
+
+RAZAR triggers a snapshot at the top of each minute, writing layer dumps
+under `memory/spine/<timestamp>/`. The cadence aligns with the chakra
+heartbeat so every snapshot pairs with a log segment.
+
+#### Recovery Flow
+
+During restart the boot orchestrator loads the newest snapshot then
+replays heartbeat logs from `logs/heartbeat.log` to rebuild sessions and
+pending events. See [Blueprint Spine](blueprint_spine.md#memory-spine)
+and the [Recovery Playbook](recovery_playbook.md#snapshot-recovery) for
+operational steps.
+
 ### Dynamic Ignition
 
 RAZAR boots services on demand, letting the operator shape the startup sequence.
@@ -883,6 +903,7 @@ deployments with user accounts and persistent chats.
 
 ## Version History
 
+- 2025-09-18: Documented memory spine, snapshot cadence, and recovery flow.
 - 2025-09-08: Noted chakra cycle gear ratios and Great Spiral alignment events.
 - 2025-08-28: Added blueprint synchronization check to ensure the blueprint is updated when core services change.
 - 2025-08-30: Documented test failure logging through `corpus_memory_logging.log_test_failure`.

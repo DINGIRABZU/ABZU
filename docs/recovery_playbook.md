@@ -26,6 +26,15 @@ Recurring problems and their fixes are cataloged in the
 
 `agents.razar.health_checks` exposes Prometheus metrics when `prometheus_client` is installed. These probes allow external systems to track service readiness and latency during recovery.
 
+## Snapshot Recovery
+
+The memory spine maintains timestamped dumps of every chakra layer. On
+restart RAZAR selects the newest snapshot and replays heartbeat logs from
+`logs/heartbeat.log` to rebuild sessions and pending events. This process
+lets the system resume from the exact point of failure. Architectural
+context lives in the [System Blueprint](system_blueprint.md#memory-spine)
+and [Blueprint Spine](blueprint_spine.md#memory-spine).
+
 ## Agent-specific recovery
 
 Heartbeat polling feeds `chakra_down` events to the agent assigned to the
@@ -79,3 +88,7 @@ ai_invoker.handover("crown_router", "Health check failed", use_opencode=True)
 ```
 
 If Kimi returns a patch, it is applied and the boot sequence resumes.
+
+## Version History
+
+- 2025-09-18: Added snapshot recovery using memory spine and heartbeat logs.
