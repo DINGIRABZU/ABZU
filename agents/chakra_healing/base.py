@@ -8,6 +8,8 @@ import subprocess
 from typing import Any
 
 import requests
+from agents.event_bus import emit_event, subscribe
+from citadel.event_producer import Event
 
 CHAKRACON_URL = "http://localhost:8080"
 LOG_PATH = Path("logs") / "chakra_healing.log"
@@ -41,4 +43,20 @@ def heal(chakra: str, threshold: float, script_path: Path) -> bool:
     return True
 
 
-__all__ = ["heal", "CHAKRACON_URL", "LOG_PATH", "QUARANTINE_LOG"]
+async def listen_for_heartbeat(chakra: str, agent_id: str) -> None:
+    """Listen for heartbeat events and confirm receipt for ``chakra``."""
+
+    async def _handle(event: Event) -> None:
+        if event.event_type == "heartbeat" and event.payload.get("chakra") == chakra:
+            emit_event(agent_id, "pulse_confirmation", {"chakra": chakra})
+
+    await subscribe(_handle)
+
+
+__all__ = [
+    "heal",
+    "listen_for_heartbeat",
+    "CHAKRACON_URL",
+    "LOG_PATH",
+    "QUARANTINE_LOG",
+]
