@@ -64,10 +64,21 @@ When a layer fails to return a beat, it is marked silent. The engine routes a
 `chakra_down` event to the responsible
 [NAZARICK agent](nazarick_agents.md), which attempts to restore the
 missing chakra and resume the cycle. This self‑healing loop is diagrammed in the
-[Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) and
+[Blueprint Spine](blueprint_spine.md#agent-heartbeats-lifecycle-events-and-self-healing) and
 covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
 When every chakra reports within the window, the engine logs a **Great Spiral**
 alignment event for operators.
+
+### Agent Heartbeats, Lifecycle Events, and Self-Healing
+
+Each ABZU agent broadcasts `agent_heartbeat` messages on RAZAR's lifecycle bus.
+These beats carry status metadata and pair with explicit lifecycle events—
+`agent_start`, `agent_stop`, `agent_error`, and `agent_recover`—so operators can
+trace every servant's state. RAZAR logs the stream and raises alerts when a beat
+is missed or an error persists. NAZARICK servants respond to gaps by triggering
+self-healing routines that restart the affected layer and emit `agent_recover`
+when restored. See [Blueprint Spine](blueprint_spine.md#agent-heartbeats-lifecycle-events-and-self-healing)
+for timing diagrams and recovery flow.
 
 ### Memory Bundle
 

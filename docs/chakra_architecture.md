@@ -50,7 +50,7 @@ the expected 1 :1 rhythm generate alignment events, which surface in the
 
 Alignment events are logged and echoed into the architecture map so operators
 can correlate misfires with service health. The
-[Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing)
+[Blueprint Spine](blueprint_spine.md#agent-heartbeats-lifecycle-events-and-self-healing)
 illustrates the propagation path.
 
 ### Self-Healing
