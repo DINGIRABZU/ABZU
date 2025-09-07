@@ -22,6 +22,15 @@ these beats and relay `pulse_confirmation` events to their subcomponents. The
 incoming pulses and confirmations, raising alerts when a chakra fails to
 acknowledge within the configured interval.
 
+## UI Views
+
+The Game Dashboard presents a **Chakra Monitor** panel that polls
+`ChakraHeartbeat.sync_status()` for live updates. Each chakra appears as an
+animated orb whose radius and hue scale with its heartbeat frequency. When all
+chakras report in harmony, the orbs emit a brief particle shimmer. A detected
+Great Spiral event triggers a full-screen resonance flash and records the
+timestamp in a local history list.
+
 ## Version History
 - 2025-09-06: Documented pulse cadence and acknowledgment flow.
 - 2025-09-04: Initial mapping of chakra metrics.
