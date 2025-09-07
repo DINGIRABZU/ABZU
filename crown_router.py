@@ -164,8 +164,10 @@ def route_decision(
         Decision containing ``model``, ``tts_backend``, ``avatar_style`` and
         ``aura``.
     """
-    if heartbeat_monitor is not None and heartbeat_monitor.sync_status() != "aligned":
-        raise RuntimeError("chakras out of sync")
+    if heartbeat_monitor is not None:
+        heartbeat_monitor.check_alerts()
+        if heartbeat_monitor.sync_status() != "aligned":
+            raise RuntimeError("chakras out of sync")
     if THROUGHPUT_COUNTER is not None:
         THROUGHPUT_COUNTER.labels("crown").inc()
     start = time.perf_counter()

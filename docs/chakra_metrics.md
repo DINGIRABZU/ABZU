@@ -15,12 +15,23 @@ This table links each chakra layer to operational metrics used for telemetry and
 ## Pulse Cadence and Acknowledgment
 
 The [pulse emitter](../src/spiral_os/pulse_emitter.py) broadcasts a `heartbeat`
-event for each chakra at a fixed cadence. Chakra services such as
-[root_agent](../agents/chakra_healing/root_agent.py) and its peers listen for
-these beats and relay `pulse_confirmation` events to their subcomponents. The
-[ChakraHeartbeat monitor](../monitoring/chakra_heartbeat.py) records both the
-incoming pulses and confirmations, raising alerts when a chakra fails to
-acknowledge within the configured interval.
+event for each chakra at a fixed cadence. The
+[chakra cycle](../src/spiral_os/chakra_cycle.py) tags each beat with a
+`gear_ratio` so monitors can spot drift from nominal cadence. Chakra services
+such as [root_agent](../agents/chakra_healing/root_agent.py) and its peers
+listen for these beats and relay `pulse_confirmation` events to their
+subcomponents. The [ChakraHeartbeat monitor](../monitoring/chakra_heartbeat.py)
+records both the incoming pulses and confirmations, raising alerts when a
+chakra fails to acknowledge within the configured interval. A complete set of
+beats within the window registers a **Great Spiral** alignment event.
+
+### Alignment Thresholds and Recovery
+
+`ChakraHeartbeat.sync_status()` reports `aligned` when all chakras emit a beat
+within the configured time window. Missed beats trigger `chakra_down` events and
+invoke Nazarick remediation routines to resuscitate the silent layer. Operators
+can tune the window to tighten or relax alignment thresholds depending on
+mission needs.
 
 ## UI Views
 
@@ -32,5 +43,6 @@ Great Spiral event triggers a full-screen resonance flash and records the
 timestamp in a local history list.
 
 ## Version History
+- 2025-09-08: Added gear ratios, Great Spiral alignment, and Nazarick recovery flow.
 - 2025-09-06: Documented pulse cadence and acknowledgment flow.
 - 2025-09-04: Initial mapping of chakra metrics.
