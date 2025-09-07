@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `abzu-memory-bootstrap` script initializes memory layers in one step.
 - Chakra watchdog emits `chakra_down` events with NAZARICK resuscitation.
+- Dashboard Avatar Room with quick avatar commands, mini missions, and per-agent selection.
 - React-based game dashboard wrapping avatar stream and mission map actions.
 - Detailed notes describe how the Chakra watchdog coordinates with the Resuscitator
   to restart failing layers and log recovery metrics.
