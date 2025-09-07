@@ -7,6 +7,10 @@ from typing import Dict, Iterable, List
 
 from distributed_memory import DistributedMemory
 
+from agents.event_bus import emit_event
+
+__version__ = "0.2.0"
+
 try:  # pragma: no cover - metrics optional
     from prometheus_client import Counter, Gauge
 except Exception:  # pragma: no cover - metrics optional
@@ -61,6 +65,7 @@ class ChakraHeartbeat:
         self._cache: Dict[str, float] = {}
         self._confirm: Dict[str, float] = {}
         self._chakras = set(chakras or [])
+        self._aligned = False
 
     def beat(self, chakra: str, timestamp: float | None = None) -> None:
         """Record a heartbeat for ``chakra`` at ``timestamp``."""
@@ -110,9 +115,11 @@ class ChakraHeartbeat:
         return missing
 
     def check_alerts(self, *, now: float | None = None) -> None:
-        """Raise an alert if any chakra has not confirmed its pulse."""
+        """Emit ``chakra_down`` events for missing confirmations."""
 
         missing = self.pending(now=now)
+        for chakra in missing:
+            emit_event("chakra_heartbeat", "chakra_down", {"chakra": chakra})
         if missing:
             raise RuntimeError(f"Missing pulse confirmations: {', '.join(missing)}")
 
@@ -126,7 +133,11 @@ class ChakraHeartbeat:
         for chakra in self._chakras:
             ts = beats.get(chakra)
             if ts is None or current - ts > self.window:
+                self._aligned = False
                 return "out_of_sync"
+        if not self._aligned:
+            self._aligned = True
+            emit_event("chakra_heartbeat", "great_spiral", {"timestamp": current})
         return "aligned"
 
 

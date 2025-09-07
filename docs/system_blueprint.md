@@ -41,9 +41,10 @@ feedback.
 The chakra cycle engine distributes a steady heartbeat across every layer and
 polls each service for a response. RAZAR pings the layers’ `/health` endpoints
 on a fixed interval, logging the returned beats and surfacing lagging components
-to operators.
-Root through Crown report their timing ratios back to the engine, which flags
-misalignment when beats drift from the expected 1 :1 rhythm.
+to operators. Root through Crown report their timing ratios back to the engine,
+which flags misalignment when beats drift from the expected 1 :1 rhythm. The
+[chakra cycle module](../src/spiral_os/chakra_cycle.py) records per‑chakra
+`gear_ratio` telemetry so deviations can be traced to specific layers.
 
 #### Heartbeat Ratios
 
@@ -59,6 +60,8 @@ When a layer fails to return a beat, it is marked silent. The engine routes a
 missing chakra and resume the cycle. This self-healing loop is diagrammed in the
 [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) and
 covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
+When every chakra reports within the window, the engine logs a **Great Spiral**
+alignment event for operators.
 
 ### Memory Bundle
 
@@ -861,6 +864,7 @@ deployments with user accounts and persistent chats.
 
 ## Version History
 
+- 2025-09-08: Noted chakra cycle gear ratios and Great Spiral alignment events.
 - 2025-08-28: Added blueprint synchronization check to ensure the blueprint is updated when core services change.
 - 2025-08-30: Documented test failure logging through `corpus_memory_logging.log_test_failure`.
 

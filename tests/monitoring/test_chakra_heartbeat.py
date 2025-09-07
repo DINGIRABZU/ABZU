@@ -50,6 +50,7 @@ sys.modules["crown_decider"] = crown_decider_mod
 
 import crown_router
 from monitoring.chakra_heartbeat import ChakraHeartbeat
+import agents.event_bus as event_bus
 
 
 def test_sync_status_alignment() -> None:
@@ -65,6 +66,12 @@ def test_out_of_sync_blocks_crown(monkeypatch) -> None:
     hb = ChakraHeartbeat(chakras=["root", "crown"], window=0.5)
     now = time.time()
     hb.beat("root", now)
+    events: list[tuple[str, str, dict[str, object]]] = []
+
+    def capture(actor: str, action: str, payload: dict[str, object]) -> None:
+        events.append((actor, action, payload))
+
+    monkeypatch.setattr(event_bus, "emit_event", capture)
     monkeypatch.setattr(crown_router, "heartbeat_monitor", hb)
     monkeypatch.setattr(
         crown_router,
@@ -73,6 +80,7 @@ def test_out_of_sync_blocks_crown(monkeypatch) -> None:
     )
     with pytest.raises(RuntimeError):
         crown_router.route_decision("hi", {"emotion": "joy"})
+    assert any(a == "chakra_heartbeat" and b == "chakra_down" for a, b, _ in events)
 
 
 def test_orchestrator_aborts_when_out_of_sync(tmp_path: Path, monkeypatch) -> None:
@@ -96,3 +104,18 @@ def test_orchestrator_aborts_when_out_of_sync(tmp_path: Path, monkeypatch) -> No
     monkeypatch.setattr(orch, "_verify_chakra_alignment", lambda: False)
 
     assert orch.run() is False
+
+
+def test_great_spiral_event(monkeypatch) -> None:
+    hb = ChakraHeartbeat(chakras=["root", "crown"], window=1.0)
+    events: list[tuple[str, str, dict[str, object]]] = []
+
+    def capture(actor: str, action: str, payload: dict[str, object]) -> None:
+        events.append((actor, action, payload))
+
+    monkeypatch.setattr(event_bus, "emit_event", capture)
+    now = time.time()
+    hb.beat("root", now)
+    hb.beat("crown", now)
+    assert hb.sync_status(now=now) == "aligned"
+    assert any(action == "great_spiral" for _, action, _ in events)

@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
   triggered `crown_model_launcher.sh` when `GLM4V` capability is absent.
 - Stored Crown handshake acknowledgement, capabilities, and downtime under
   `handshake` in `logs/razar_state.json`.
+- Boot orchestrator checks chakra heartbeat alerts and emits `chakra_down` events before verifying alignment.
 - Logged handshake and model-launch events in `logs/razar_state.json` and documented event persistence in the deployment guide.
 - Archived GLM-4.1V launch events to `logs/mission_briefs/` and added tests
 - Boot orchestrator escalates failed components through AI handover with automated patching, health-check retries, and invocation logging.
