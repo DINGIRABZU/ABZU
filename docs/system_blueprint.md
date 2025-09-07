@@ -688,13 +688,13 @@ Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [
 - **Health Check:** Run an audio loopback test.
 - **Recovery:** Reinitialize the audio backend or fall back to silent mode.
 
-### Avatar
-Renders the musical persona and drives animations. See [Music Avatar Architecture](music_avatar_architecture.md), [Avatar Pipeline](avatar_pipeline.md), [Nazarick Agents](nazarick_agents.md) and [Chakra Architecture](chakra_architecture.md#heart).
+### Avatar Subsystem
+Handles 3‑D persona rendering, streams frames over WebRTC, and exposes external chat connectors such as Discord and Telegram. The pipeline described in [Avatar Pipeline](avatar_pipeline.md) drives the render loop while the [Communication Interfaces](communication_interfaces.md) guide covers WebRTC signalling and chat bridges.
 - **Layer:** Heart
 - **Priority:** 4
 - **Startup:** Launch after the audio device using Nazarick helpers.
-- **Health Check:** Verify avatar frame rendering.
-- **Recovery:** Reload avatar assets or restart the pipeline.
+- **Health Check:** Verify avatar frame rendering and WebRTC session establishment.
+- **Recovery:** Reload avatar assets, restart `video_stream.py`, or re-run connectors.
 
 ### Video
 Streams generative visuals. See [Video Generation](video_generation.md) and [Chakra Architecture](chakra_architecture.md#third_eye).

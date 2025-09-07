@@ -340,6 +340,21 @@ See [testing.md](testing.md) for detailed instructions.
    The script sets an emotion, composes a short ritual track and logs an
    insight entry to `data/spiral_cortex_memory.jsonl`.
 
+## Avatar Console Setup
+
+1. **Configure the avatar** – adjust textures and colors in [`guides/avatar_config.toml`](../guides/avatar_config.toml) following the hints in [avatar_pipeline.md](avatar_pipeline.md).
+2. **Launch the console and stream** – start Crown services and the WebRTC video gateway:
+   ```bash
+   bash start_avatar_console.sh
+   ```
+3. **Run external connectors** – with tokens defined in `secrets.env`, start chat bridges:
+   ```bash
+   python communication/webrtc_server.py   # WebRTC browser stream
+   python tools/bot_discord.py            # Discord connector
+   python tools/bot_telegram.py           # Telegram connector
+   ```
+   See [communication_interfaces.md](communication_interfaces.md) for authentication details and additional channels.
+
 ## Setup Scripts
 
 - `scripts/check_requirements.sh` – loads `secrets.env`, ensures required commands are present, and verifies essential environment variables.
