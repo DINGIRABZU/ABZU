@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Documented heartbeat propagation, session management, and self-healing in
+  `system_blueprint.md`, `blueprint_spine.md`, `avatar_pipeline.md`, and
+  `operator_onboarding.md`; added cross-links from `GENESIS/README.md` and
+  `README_OPERATOR.md` for quick reference.
 - Track model endpoints and patches in `worlds.config_registry`; added
   `world export`/`world import` utilities and automatic registration of
   model endpoints.

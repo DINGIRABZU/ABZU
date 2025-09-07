@@ -4,6 +4,16 @@ The avatar pipeline synchronises generated speech with visual animation. It read
 configuration from `guides/avatar_config.toml` and produces frames via
 `core.video_engine`.
 
+## Heartbeat and Session Management
+
+The video engine listens for the system heartbeat so avatar streams stay in sync
+with the chakra cycle. Each active stream is tied to an operator session and is
+renewed on every beat. If the heartbeat goes missing, the stream is marked
+stalled and the pipeline triggers its self-healing routine to reconnect WebRTC
+channels and reload textures before resuming playback. Session identifiers are
+persisted in memory so multi-agent streams can restart without losing their
+place in the narrative.
+
 ## Setup
 
 Install the Python requirements and optional packages for lip sync:
