@@ -727,6 +727,19 @@ frames. For guidance on customizing the avatar textures edit
 `guides/avatar_config.toml` as described in
 [`docs/avatar_pipeline.md`](docs/avatar_pipeline.md).
 
+### Avatar Room
+
+Open `web_console/game_dashboard/index.html` and complete the setup wizard to
+reach the game dashboard. The **Avatar Room** panel streams the avatar via
+WebRTC and provides quick controls:
+
+- **Wave** – trigger a greeting gesture.
+- **Speak** – enter a short phrase and press *Speak* to voice it.
+- **Show Status** – request the avatar's current state.
+
+A small chat field forwards operator questions to a sidekick helper which
+searches the document registry for answers.
+
 ## HTTP Interface
 
 `server.py` exposes a small FastAPI application with a `/glm-command` endpoint.
