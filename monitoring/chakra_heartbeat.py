@@ -7,6 +7,41 @@ from typing import Dict, Iterable, List
 
 from distributed_memory import DistributedMemory
 
+try:  # pragma: no cover - metrics optional
+    from prometheus_client import Counter, Gauge
+except Exception:  # pragma: no cover - metrics optional
+    Counter = Gauge = None  # type: ignore[assignment]
+
+
+BEAT_COUNTER = (
+    Counter("chakra_heartbeats_total", "Total heartbeat events", ["chakra"])
+    if Counter
+    else None
+)
+LAST_BEAT_GAUGE = (
+    Gauge("chakra_last_heartbeat_timestamp", "Timestamp of last heartbeat", ["chakra"])
+    if Gauge
+    else None
+)
+CONFIRM_COUNTER = (
+    Counter(
+        "chakra_pulse_confirmations_total",
+        "Total pulse confirmations",
+        ["chakra"],
+    )
+    if Counter
+    else None
+)
+LAST_CONFIRM_GAUGE = (
+    Gauge(
+        "chakra_last_confirmation_timestamp",
+        "Timestamp of last pulse confirmation",
+        ["chakra"],
+    )
+    if Gauge
+    else None
+)
+
 
 class ChakraHeartbeat:
     """Track last heartbeat per chakra with optional Redis persistence."""
@@ -35,6 +70,10 @@ class ChakraHeartbeat:
         self._cache[chakra] = ts
         if self._memory is not None:
             self._memory.client.hset(self._memory.key, chakra, ts)
+        if BEAT_COUNTER is not None:
+            BEAT_COUNTER.labels(chakra).inc()
+        if LAST_BEAT_GAUGE is not None:
+            LAST_BEAT_GAUGE.labels(chakra).set(ts)
 
     def heartbeats(self) -> Dict[str, float]:
         """Return mapping of chakras to their last seen heartbeat."""
@@ -53,6 +92,10 @@ class ChakraHeartbeat:
         ts = timestamp or time.time()
         self._chakras.add(chakra)
         self._confirm[chakra] = ts
+        if CONFIRM_COUNTER is not None:
+            CONFIRM_COUNTER.labels(chakra).inc()
+        if LAST_CONFIRM_GAUGE is not None:
+            LAST_CONFIRM_GAUGE.labels(chakra).set(ts)
 
     def pending(self, *, now: float | None = None) -> List[str]:
         """Return chakras missing confirmation beyond the window."""
