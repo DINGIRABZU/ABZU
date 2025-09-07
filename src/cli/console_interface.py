@@ -40,9 +40,10 @@ def _send_audio_path(path: Path) -> None:
     """Notify the video stream service of new audio."""
 
     url = os.getenv("VIDEO_STREAM_URL", "http://localhost:8000")
+    agent = os.getenv("VIDEO_STREAM_AGENT", "agent")
     try:
         requests.post(
-            f"{url.rstrip('/')}/avatar-audio",
+            f"{url.rstrip('/')}/{agent}/avatar-audio",
             json={"path": str(path)},
             timeout=5,
         )

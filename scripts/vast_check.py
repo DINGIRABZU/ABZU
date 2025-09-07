@@ -10,7 +10,7 @@ import httpx
 from aiortc import RTCPeerConnection, RTCSessionDescription
 
 
-async def perform_check(base_url: str) -> None:
+async def perform_check(base_url: str, agent: str = "agent") -> None:
     async with httpx.AsyncClient(base_url=base_url, timeout=10) as client:
         resp = await client.get("/health")
         resp.raise_for_status()
@@ -23,7 +23,7 @@ async def perform_check(base_url: str) -> None:
         offer = await pc.createOffer()
         await pc.setLocalDescription(offer)
         resp = await client.post(
-            "/offer",
+            f"/{agent}/offer",
             json={"sdp": pc.localDescription.sdp, "type": pc.localDescription.type},
         )
         resp.raise_for_status()
@@ -42,9 +42,14 @@ async def main() -> None:
         default="http://localhost:8000",
         help="Base URL of the running server",
     )
+    parser.add_argument(
+        "--agent",
+        default="agent",
+        help="Agent identifier for the offer endpoint",
+    )
     args = parser.parse_args()
     try:
-        await perform_check(args.base_url.rstrip("/"))
+        await perform_check(args.base_url.rstrip("/"), agent=args.agent)
     except Exception as exc:  # pragma: no cover - network failures vary
         print(f"Check failed: {exc}", file=sys.stderr)
         raise SystemExit(1)
