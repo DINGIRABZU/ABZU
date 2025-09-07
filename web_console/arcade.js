@@ -3,6 +3,19 @@ import { BASE_URL } from './main.js';
 const CHAKRAS = ['root','sacral','solar','heart','throat','third_eye','crown'];
 let lastAligned = null;
 
+const bus = globalThis.signalBus || (globalThis.signalBus = {
+  _subs: {},
+  publish(ch, payload) {
+    (this._subs[ch] || []).forEach((cb) => cb(payload));
+  },
+  subscribe(ch, cb) {
+    (this._subs[ch] = this._subs[ch] || []).push(cb);
+    return () => {
+      this._subs[ch] = (this._subs[ch] || []).filter((f) => f !== cb);
+    };
+  }
+});
+
 function initBar() {
   const bar = document.getElementById('chakra-bar');
   if (!bar) return;
@@ -47,8 +60,21 @@ async function pollStatus() {
   }
 }
 
+function initConnectorWidget() {
+  const widget = document.getElementById('connector-widget');
+  if (!widget) return;
+  const status = {};
+  bus.subscribe('connectors', (evt) => {
+    status[evt.name] = evt.status;
+    const down = Object.values(status).includes('down');
+    widget.textContent = down ? 'CONNECTOR DOWN' : 'Connectors OK';
+    widget.className = down ? 'connector-alert' : '';
+  });
+}
+
 window.addEventListener('load', () => {
   if (!document.getElementById('arcade')) return;
   initBar();
+  initConnectorWidget();
   pollStatus();
 });

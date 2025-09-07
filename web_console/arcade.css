@@ -57,6 +57,16 @@ body {
     font-size: 0.75rem;
 }
 
+#connector-widget {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.connector-alert {
+    color: #f00;
+    animation: flash 1s steps(2, start) infinite;
+}
+
 body::before {
     content: '';
     position: absolute;
