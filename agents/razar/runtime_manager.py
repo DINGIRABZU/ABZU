@@ -20,7 +20,7 @@ import shlex
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
 import venv
-from . import checkpoint_manager, health_checks, quarantine_manager
+from . import checkpoint_manager, health_checks, quarantine_manager, state_validator
 from razar.bootstrap_utils import STATE_FILE
 
 # Re-export primary entry points for simpler imports
@@ -48,6 +48,7 @@ class RuntimeManager:
     ) -> None:
         self.config_path = config_path
         self.state_path = state_path or STATE_FILE
+        state_validator.validate_state(self.state_path)
         self.venv_path = venv_path or config_path.parent / ".razar_venv"
         # ``razar_env.yaml`` lives at the repository root and lists dependencies
         # for each component layer.  Allow ``env_path`` to be overridden for
