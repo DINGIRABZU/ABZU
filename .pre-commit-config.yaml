@@ -84,6 +84,11 @@ repos:
     entry: python scripts/verify_ip_tags.py
     language: system
     pass_filenames: false
+  - id: check-mcp-connectors
+    name: Ensure MCP connectors avoid raw HTTP
+    entry: python scripts/check_mcp_connectors.py
+    language: system
+    pass_filenames: false
   - id: check-connector-index
     name: Check connector index entries
     entry: python scripts/check_connector_index.py

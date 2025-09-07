@@ -242,6 +242,9 @@ PY
       - name: Verify component maturity
         run: python scripts/verify_component_maturity.py
 
+      - name: Check MCP connectors
+        run: python scripts/check_mcp_connectors.py
+
       - name: Profiling
         run: python -m cProfile -m task_profiling
 
