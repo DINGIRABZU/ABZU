@@ -9,3 +9,4 @@ Quick links:
 - [Avatar Pipeline](../docs/avatar_pipeline.md#heartbeat-and-session-management)
 - [Operator Onboarding](../docs/operator_onboarding.md#multi-agent-streams)
 - [Memory Spine](../docs/system_blueprint.md#memory-spine) & [Snapshot Recovery](../docs/recovery_playbook.md#snapshot-recovery) – system resumes from snapshots and heartbeat logs
+- [Game Dashboard](../docs/ui/game_dashboard.md) & [Chakra Pulse](../docs/ui/chakra_pulse.md)

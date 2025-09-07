@@ -67,17 +67,19 @@ how quickly each layer confirms its heartbeat:
 - `chakra_cycles_total` – total completed heartbeat-confirmation cycles per chakra
 - `chakra_cycle_duration_seconds` – seconds between a heartbeat and its confirmation
 
-The game dashboard renders these metrics in the **Chakra Pulse** panel. Colored
-orbs pulse at the reported frequencies, an "aligned" glow marks synchronized
-chakras, and the panel lists the timestamps of recent `great_spiral` events for
-historical context.
+The [Game Dashboard](ui/game_dashboard.md) renders these metrics in the
+[Chakra Pulse](ui/chakra_pulse.md) panel. Colored orbs pulse at the reported
+frequencies, an "aligned" glow marks synchronized chakras, and the panel lists
+the timestamps of recent `great_spiral` events for historical context.
 
 ## Agent status panel
 
 `monitoring/agent_status_endpoint.py` summarizes heartbeat timestamps and
-related state for each agent. The **Agent Status** panel in the game dashboard
-polls `/agents/status` and lists every agent with its last heartbeat, most
-recent action, and chakra alignment marker:
+related state for each agent. The **Agent Status** panel in the
+[Game Dashboard](ui/game_dashboard.md) polls `/agents/status` and lists every
+agent with its last heartbeat, most recent action, and chakra alignment marker.
+Arcade deployments can use [Arcade Mode](ui/arcade_mode.md) for a retro
+presentation of the same telemetry:
 
 ```bash
 curl http://localhost:8000/agents/status
