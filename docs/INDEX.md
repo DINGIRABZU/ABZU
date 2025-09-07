@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -265,6 +264,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [avatar_animation.md](avatar_animation.md) | Avatar Animation Modules | This document describes the lightweight avatar animation helpers found in `ai_core.avatar`. | - |
 | [avatar_ethics.md](avatar_ethics.md) | Avatar Ethics | The avatar and call features rely on audiovisual data that may reveal personal information. Operators must handle rec... | - |
 | [avatar_pipeline.md](avatar_pipeline.md) | Avatar Pipeline | The avatar pipeline synchronises generated speech with visual animation. It reads configuration from `guides/avatar_c... | - |
+| [avatar_setup.md](avatar_setup.md) | Avatar Setup | Configure the avatar pipeline by defining environment variables and adjusting textures. | - |
 | [bana_engine.md](bana_engine.md) | Bana Engine | This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sourc... | - |
 | [blueprint_spine.md](blueprint_spine.md) | **ABZU Project: Deep-Dive Overview** | - | - |
 | [chakra_architecture.md](chakra_architecture.md) | Chakra Architecture | This document summarizes the major modules aligned with each chakra layer, their operational state, current quality l... | - |
