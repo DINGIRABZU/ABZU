@@ -6,6 +6,7 @@ ROOT=$(git rev-parse --show-toplevel)
 cd "$ROOT"
 
 python tools/doc_indexer.py
+python agents/nazarick/document_registry.py
 python scripts/component_inventory.py
 python scripts/validate_api_schemas.py
 # Validate links across markdown files

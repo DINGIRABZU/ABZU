@@ -1,6 +1,6 @@
 # GENESIS Doctrine
 
-Refer to the [Doctrine Index](../docs/doctrine_index.md) for canonical files, versions, and update history.
+Refer to the [Doctrine Index](../docs/doctrine_index.md) for canonical files with checksums, versions, and last update history.
 
 Quick links:
 

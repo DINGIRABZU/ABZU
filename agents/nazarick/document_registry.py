@@ -11,8 +11,8 @@ from typing import Dict, Iterable, Iterator, List
 DEFAULT_DIRS = [
     "GENESIS",
     "IGNITION",
-    "PRIME OPERATOR",
     "CODEX",
+    "protocols",
 ]
 
 
@@ -116,9 +116,20 @@ class DocumentRegistry:
             rel = Path(doc.path).relative_to(base).as_posix()
             version = doc.version or ""
             lines.append(
-                f"| [{rel}]({rel}) | {version} | `{doc.checksum}` | {doc.last_updated} |"
+                f"| {rel} | {version} | " f"`{doc.checksum}` | {doc.last_updated} |"
             )
         Path(output).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 __all__ = ["DocumentRegistry", "DocumentInfo"]
+
+
+if __name__ == "__main__":
+    """CLI entry point used by build scripts.
+
+    Generates ``docs/doctrine_index.md`` relative to the repository root.
+    """
+
+    base = Path(__file__).resolve().parents[2]
+    output = base / "docs" / "doctrine_index.md"
+    DocumentRegistry().generate_index(output)

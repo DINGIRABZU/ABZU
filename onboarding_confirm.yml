@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: fd3016da23ac8fcf83976a5e4d376cfe0f4680e6e68f908bc7d1ff165f4401e1
+    sha256: 04b32fb9d277c190d5d32eb2155c8bb2ad699b221ad070da45cdfaf738c3ab15
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -191,7 +191,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 75084c1443ea96cb794c62dc1e3cf4403839af3b6fdd786cee025c360f3f03d2
+    sha256: db00507a4acdcbfd4b9200fb7f082e45862fd0fa4c71f1cba963210150cb213d
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
