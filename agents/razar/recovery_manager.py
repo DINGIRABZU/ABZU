@@ -20,6 +20,7 @@ __version__ = "0.2.2"
 
 import json
 import logging
+import asyncio
 from pathlib import Path
 from typing import Any, Dict
 
@@ -34,6 +35,8 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - optional dependency
     LifecycleBus = None  # type: ignore
     repair_module = None  # type: ignore
+
+from . import lifecycle_bus
 
 
 logger = logging.getLogger(__name__)
@@ -86,6 +89,9 @@ class RecoveryManager:
         self.save_state(module, state)
         self.apply_fixes(module)
         self.restart_module(module)
+        confirmed = self.wait_for_resuscitator(module)
+        if confirmed:
+            self.bus.publish_status(module, "healthy")
         self.restore_state(module, state)
         self.resume_system()
 
@@ -127,6 +133,27 @@ class RecoveryManager:
 
         logger.info("Restarting module %s", module)
         self.bus.send_control(module, "restart")
+
+    # ------------------------------------------------------------------
+    def wait_for_resuscitator(self, module: str, timeout: float = 30.0) -> bool:
+        """Block until a resuscitator confirms recovery for ``module``."""
+
+        async def _wait() -> bool:
+            async for event in lifecycle_bus.subscribe():
+                if (
+                    event.get("event") == "agent_resuscitated"
+                    and event.get("agent") == module
+                ):
+                    return True
+            return False
+
+        try:
+            return asyncio.run(asyncio.wait_for(_wait(), timeout))
+        except asyncio.TimeoutError:
+            logger.warning(
+                "Timed out waiting for resuscitator confirmation for %s", module
+            )
+            return False
 
     # ------------------------------------------------------------------
     def restore_state(self, module: str, state: Dict[str, Any]) -> None:
