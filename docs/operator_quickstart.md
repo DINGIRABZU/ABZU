@@ -22,3 +22,13 @@ Record explicit consent for every session. Log the operator, participants, times
    python tools/bot_telegram.py
    ```
    See [communication_interfaces.md](communication_interfaces.md) for connector behaviour and authentication.
+
+## Mission Builder
+
+1. **Compose** – open `web_console/mission_builder/index.html` in a browser and arrange `event` blocks, specifying an `event` name and `capability`.
+2. **Export** – click **Download Mission JSON** and save the file under the `missions/` directory. Sample templates such as `daily_ignition_check.json` and `avatar_broadcast.json` are provided.
+3. **Run** – dispatch the mission through the task orchestrator:
+   ```bash
+   python -m agents.task_orchestrator missions/daily_ignition_check.json
+   ```
+   Each event emits through the bus and reaches agents advertising the capability.
