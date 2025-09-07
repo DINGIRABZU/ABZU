@@ -77,6 +77,30 @@ python -m razar.status_dashboard
 The output lists each component with its priority and criticality and provides
 links to the quarantine log and boot history.
 
+## Mission lifecycle metrics
+
+`agents.razar.mission_logger` appends a JSON line for each lifecycle change
+recorded during a mission. These entries can be transformed into metrics for
+alerting and dashboards.
+
+Count how many times components entered recovery mode:
+
+```bash
+jq -r 'select(.event=="recovery") | .component' logs/razar.log | wc -l
+```
+
+Expose per-event counters to Prometheus using the textfile collector:
+
+```bash
+jq -r '.event' logs/razar.log | sort | uniq -c | \
+  awk '{printf "mission_events_total{event=\"%s\"} %s\n", $2,$1}' \
+  > /var/lib/node_exporter/mission.prom
+```
+
+Correlate these metrics with the remediation flow described in the
+[Recovery Playbook](recovery_playbook.md) to verify that failed components are
+patched and resolved in order.
+
 ## Health check metrics
 
 `agents/razar/health_checks.py` performs service probes with per-service latency

@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 ## [Unreleased]
 
 ### Added
+- Mission logger emits structured lifecycle events, including `resolved` and
+  `shutdown` states for recovery tracking.
 - Documented remediation steps for placeholder violations in RAZAR agent
 - Structured health events recorded for each boot step.
 - Added recovery daemon monitoring `razar_state.json` for automatic restarts.
