@@ -116,6 +116,27 @@ For layer-specific responsibilities, see
 [Nazarick Agents](nazarick_agents.md). The remediation philosophy follows the
 [Self-Healing Manifesto](self_healing_manifesto.md).
 
+#### Failure Pulses
+
+RAZAR issues periodic **failure pulses** that intentionally topple a single
+service. The induced fault proves the alerting path and is logged to
+`logs/failure_pulses.jsonl`. Successful recovery demonstrates the health checks
+and Nazarick response remain reliable.
+
+#### Nazarick Resuscitation
+
+When a pulse or genuine outage persists, the relevant Nazarick servant executes
+a resuscitation script. It replays launch rituals, reloads state from the
+[Memory Spine](system_blueprint.md#memory-spine), and reports each step to
+`/operator/command` until the chakra rejoins the cycle.
+
+#### Patch Rollbacks
+
+If a generated patch destabilizes a component, operators invoke
+`scripts/rollback_patch.py <component>` to restore the previous version. A
+`reverted` entry is appended to `logs/patch_history.jsonl` and the boot
+orchestrator reruns the component's health checks.
+
 ### **Session Management**
 
 Operator sessions are anchored to the same heartbeat cadence. RAZAR records a
@@ -611,3 +632,4 @@ ABZU’s project declaration situates both Crown and INANNA within a larger aim:
 ## Version History
 
 - 2025-09-18: Added memory spine, snapshot cadence, and recovery flow.
+- 2025-09-07: Described failure pulses, Nazarick resuscitation, and patch rollback strategy.

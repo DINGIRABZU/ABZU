@@ -52,6 +52,29 @@ When errors persist beyond these hooks,
 posts an alert to `/operator/command`, and records the event in
 `logs/operator_escalations.jsonl`.
 
+## Failure Pulses
+
+RAZAR emits scheduled **failure pulses** during idle windows to validate the
+recovery pipeline. Each pulse simulates a component fault and writes an entry to
+`logs/failure_pulses.jsonl`. The targeted service is expected to fail fast and
+re-enter the standard boot sequence, proving the health checks and orchestration
+hooks remain functional.
+
+## Nazarick Resuscitation
+
+If a pulse or live outage silences a chakra, the `chakra_down` event routes to
+the assigned [Nazarick agent](nazarick_agents.md). That servant replays the
+component’s launch ritual, restores missing state from the
+[Memory Spine](system_blueprint.md#memory-spine), and reports progress back to
+`/operator/command` until the heartbeat returns.
+
+## Patch Rollbacks
+
+All applied patches are logged in `logs/patch_history.jsonl`. When a patch
+introduces regressions, run `scripts/rollback_patch.py <component>` to restore
+the previous revision. The rollback records a `reverted` event in the history
+log and the component re-enters the boot queue for validation.
+
 ## Opencode Integration
 
 Automate patch generation by installing the Opencode CLI:
@@ -92,3 +115,4 @@ If Kimi returns a patch, it is applied and the boot sequence resumes.
 ## Version History
 
 - 2025-09-18: Added snapshot recovery using memory spine and heartbeat logs.
+- 2025-09-07: Documented failure pulses, Nazarick resuscitation flow, and patch rollback procedures.

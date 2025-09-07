@@ -69,6 +69,27 @@ covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine)
 When every chakra reports within the window, the engine logs a **Great Spiral**
 alignment event for operators.
 
+#### Failure Pulses
+
+During idle cycles RAZAR injects **failure pulses** to exercise the recovery
+path. The pulses intentionally crash a single component and record the event in
+`logs/failure_pulses.jsonl`. A clean restart confirms the monitoring hooks and
+boot sequence remain trustworthy.
+
+#### Nazarick Resuscitation
+
+If a layer stays silent after a pulse or runtime fault, the corresponding
+[Nazarick agent](nazarick_agents.md) performs resuscitation. It replays the
+component's launch ritual, restores state from the [Memory Spine](#memory-spine),
+and reports its progress to `/operator/command` until the heartbeat resumes.
+
+#### Patch Rollbacks
+
+When a generated patch destabilizes the system, operators can revert via
+`scripts/rollback_patch.py <component>`. Rollbacks append a `reverted` entry to
+`logs/patch_history.jsonl` and the boot orchestrator requeues the component for
+fresh health checks.
+
 ### Game Dashboard & Retro Arcade Integration
 
 The React-based [Game Dashboard](ui/game_dashboard.md) wraps the avatar stream
@@ -920,6 +941,7 @@ deployments with user accounts and persistent chats.
 - 2025-09-08: Noted chakra cycle gear ratios and Great Spiral alignment events.
 - 2025-08-28: Added blueprint synchronization check to ensure the blueprint is updated when core services change.
 - 2025-08-30: Documented test failure logging through `corpus_memory_logging.log_test_failure`.
+- 2025-09-07: Added failure pulses, Nazarick resuscitation, and patch rollback guidance.
 
 ---
 
