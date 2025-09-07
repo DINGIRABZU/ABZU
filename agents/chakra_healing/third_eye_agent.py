@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 from pathlib import Path
 
 from agents.utils.story_adapter import get_recent_stories
-from .base import heal
+from .base import heal, listen_for_heartbeat
 
 CHAKRA = "third_eye"
 THRESHOLD = 0.93
@@ -24,6 +24,11 @@ def recent_stories(limit: int = 50) -> list[str]:
     return get_recent_stories(AGENT_ID, limit)
 
 
+async def start_heartbeat_listener() -> None:
+    """Listen for heartbeat events and emit confirmations."""
+    await listen_for_heartbeat(CHAKRA, AGENT_ID)
+
+
 __all__ = [
     "heal_if_needed",
     "recent_stories",
@@ -31,4 +36,5 @@ __all__ = [
     "THRESHOLD",
     "SCRIPT_PATH",
     "AGENT_ID",
+    "start_heartbeat_listener",
 ]

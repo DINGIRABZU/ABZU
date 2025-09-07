@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from typing import Dict, Iterable
+from typing import Dict, Iterable, List
 
 from distributed_memory import DistributedMemory
 
@@ -24,6 +24,7 @@ class ChakraHeartbeat:
             self._memory = None
         self.window = window
         self._cache: Dict[str, float] = {}
+        self._confirm: Dict[str, float] = {}
         self._chakras = set(chakras or [])
 
     def beat(self, chakra: str, timestamp: float | None = None) -> None:
@@ -45,6 +46,32 @@ class ChakraHeartbeat:
                 name = key.decode() if hasattr(key, "decode") else key
                 beats[name] = float(val)
         return beats
+
+    def confirm(self, chakra: str, timestamp: float | None = None) -> None:
+        """Record a pulse confirmation for ``chakra``."""
+
+        ts = timestamp or time.time()
+        self._chakras.add(chakra)
+        self._confirm[chakra] = ts
+
+    def pending(self, *, now: float | None = None) -> List[str]:
+        """Return chakras missing confirmation beyond the window."""
+
+        current = now or time.time()
+        missing: List[str] = []
+        for chakra in self._chakras:
+            beat_ts = self._cache.get(chakra)
+            confirm_ts = self._confirm.get(chakra, 0.0)
+            if beat_ts and confirm_ts < beat_ts and current - beat_ts > self.window:
+                missing.append(chakra)
+        return missing
+
+    def check_alerts(self, *, now: float | None = None) -> None:
+        """Raise an alert if any chakra has not confirmed its pulse."""
+
+        missing = self.pending(now=now)
+        if missing:
+            raise RuntimeError(f"Missing pulse confirmations: {', '.join(missing)}")
 
     def sync_status(self, *, now: float | None = None) -> str:
         """Return ``aligned`` when all chakras reported recently."""
