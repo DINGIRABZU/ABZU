@@ -1,24 +1,30 @@
-# Operator Onboarding Wizard
+# Operator Onboarding
 
-The Game Dashboard includes a modal wizard that guides operators through essential setup tasks.
+A guided walkthrough for composing and executing your first mission.
 
-## Wizard Flow
-1. **Avatar Config** – The wizard checks for `avatar_config.toml`. If not found, it prompts the operator to place the file on the server.
-2. **API Tokens** – Verifies required API tokens via the `/token-status` endpoint. Missing tokens trigger a reminder to update `secrets.env`.
-3. **Completion** – When both checks pass, the wizard records completion in `localStorage` and unlocks the dashboard.
+## Mission Builder
 
-## Progress Persistence
-Current step and completion state are stored in `localStorage` so operators can resume the wizard after closing the browser.
+1. Open `web_console/mission_builder/index.html` in a browser.
+2. Arrange blocks such as **Ignite**, **Query Memory**, and **Dispatch Agent** to describe your mission.
+3. Click **Save & Run** to store the mission under `missions/` and dispatch it through the task orchestrator.
 
-## Multi-Agent Streams
-1. Launch the servant processes with `start_dev_agents.py` or via the dashboard's **Agents** panel.
-2. When prompted, select the agents to stream and confirm the WebRTC session for each.
-3. Use the **Streams** tab to verify audio and video for every agent.
+```mermaid
+{{#include assets/mission_builder.mmd}}
+```
 
-## Monitor Chakra Pulses
-1. Open the **Chakra Monitor** from the dashboard sidebar.
-2. Confirm each layer emits pulses at the expected 1 : 1 ratio.
-3. Pulses that drop or drift trigger alerts; follow the [Recovery Playbook](recovery_playbook.md) to restore alignment.
+The Mermaid source lives at [assets/mission_builder.mmd](assets/mission_builder.mmd).
 
-## Related Documents
-- [README_OPERATOR.md](../README_OPERATOR.md)
+## Game Dashboard Wizard
+
+Visiting `web_console/game_dashboard/` presents an onboarding wizard after setup.
+The wizard tracks progress in `localStorage` and guides you through mission creation
+and execution.
+
+```mermaid
+{{#include assets/mission_wizard.mmd}}
+```
+
+The Mermaid source lives at [assets/mission_wizard.mmd](assets/mission_wizard.mmd).
+
+Once both steps complete, the dashboard becomes fully interactive and streams events
+from running agents.

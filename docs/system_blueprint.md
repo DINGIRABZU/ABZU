@@ -168,6 +168,7 @@ graph TD
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
   - [Operator-Nazarick Bridge](operator_nazarick_bridge.md) – Vanna workflow, channel personas, and web console chat
   - [Operator Interface Guide](operator_interface_GUIDE.md) – API usage, streaming console, and smoke test command
+  - [Operator Onboarding](operator_onboarding.md) – mission builder blocks and first-mission wizard
   - [Primordials Service](primordials_service.md) – DeepSeek-V3 orchestration service
 - **Operational guides**
   - [Operations Guide](operations.md) – runbooks for deployment and maintenance
