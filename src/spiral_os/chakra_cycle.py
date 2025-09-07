@@ -1,18 +1,18 @@
-"""Chakra gear ratios and heartbeat metric emission."""
+"""Chakra gear ratios with persistent heartbeat scheduler."""
 
 from __future__ import annotations
 
+__version__ = "0.1.1"
+
+import asyncio
 import time
-from typing import Mapping, Iterable
+from dataclasses import dataclass
+from typing import AsyncIterator, Dict, List
 
-from agents.event_bus import emit_event
-
-from .pulse_emitter import CHAKRAS
-
-__version__ = "0.1.0"
+from distributed_memory import CycleCounterStore
 
 # Nominal gear ratios for each chakra in the cycle
-GEAR_RATIOS: Mapping[str, float] = {
+GEAR_RATIOS: Dict[str, float] = {
     "root": 1.0,
     "sacral": 1.2,
     "solar": 1.5,
@@ -23,25 +23,75 @@ GEAR_RATIOS: Mapping[str, float] = {
 }
 
 
-def emit_cycle_metrics(
-    chakras: Iterable[str] = CHAKRAS,
-    *,
-    timestamp: float | None = None,
-) -> None:
-    """Emit heartbeat metrics for ``chakras`` at ``timestamp``.
+@dataclass
+class Heartbeat:
+    """Heartbeat event emitted by the scheduler."""
 
-    Each chakra publishes its configured ``gear_ratio`` so downstream
-    monitors can evaluate cadence drift.
-    """
-
-    ts = timestamp or time.time()
-    for chakra in chakras:
-        ratio = GEAR_RATIOS.get(chakra, 1.0)
-        emit_event(
-            "chakra_cycle",
-            "heartbeat_metric",
-            {"chakra": chakra, "gear_ratio": ratio, "timestamp": ts},
-        )
+    chakra: str
+    cycle_count: int
+    timestamp: float
 
 
-__all__ = ["GEAR_RATIOS", "emit_cycle_metrics"]
+class ChakraCycle:
+    """Maintain chakra cycle counts and emit heartbeat events."""
+
+    def __init__(
+        self,
+        store: CycleCounterStore | None = None,
+        interval: float = 5.0,
+    ) -> None:
+        self.store = store or CycleCounterStore()
+        self.interval = interval
+        self.cycle_counts: Dict[str, int] = {chakra: 0 for chakra in GEAR_RATIOS}
+        self.cycle_counts.update(self.store.load())
+
+    # ------------------------------------------------------------------
+    def get_cycle(self, chakra: str) -> int:
+        """Return the current cycle count for ``chakra``."""
+
+        return self.cycle_counts.get(chakra, 0)
+
+    # ------------------------------------------------------------------
+    def emit_heartbeat(self) -> List[Heartbeat]:
+        """Increment cycle counts and return heartbeat events."""
+
+        ts = time.time()
+        events: List[Heartbeat] = []
+        for chakra in GEAR_RATIOS:
+            self.cycle_counts[chakra] += 1
+            events.append(Heartbeat(chakra, self.cycle_counts[chakra], ts))
+        self.store.save(self.cycle_counts)
+        return events
+
+    # ------------------------------------------------------------------
+    async def scheduler(self) -> AsyncIterator[Heartbeat]:
+        """Asynchronously emit heartbeat events at ``interval`` seconds."""
+
+        while True:
+            for event in self.emit_heartbeat():
+                yield event
+            await asyncio.sleep(self.interval)
+
+
+_default_cycle = ChakraCycle()
+
+
+def get_cycle(chakra: str) -> int:
+    """Convenience wrapper for the default :class:`ChakraCycle`."""
+
+    return _default_cycle.get_cycle(chakra)
+
+
+def emit_heartbeat() -> List[Heartbeat]:
+    """Emit a heartbeat using the default :class:`ChakraCycle`."""
+
+    return _default_cycle.emit_heartbeat()
+
+
+__all__ = [
+    "GEAR_RATIOS",
+    "Heartbeat",
+    "ChakraCycle",
+    "get_cycle",
+    "emit_heartbeat",
+]

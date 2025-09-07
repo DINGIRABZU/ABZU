@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+__version__ = "0.1.1"
+
 import json
+from pathlib import Path
 from typing import Any, Dict, Sequence, Tuple
 
 try:  # pragma: no cover - optional dependency
@@ -51,4 +54,51 @@ class DistributedMemory:
         self.client.delete(self.key)
 
 
-__all__ = ["DistributedMemory"]
+class CycleCounterStore:
+    """Persist chakra cycle counts in Redis or a JSON file."""
+
+    def __init__(
+        self,
+        *,
+        url: str = "redis://localhost:6379/0",
+        key: str = "chakra_cycles",
+        path: str | Path = "chakra_cycles.json",
+        client: Any | None = None,
+    ) -> None:
+        self.key = key
+        self.path = Path(path)
+        self.client: Any | None = None
+        if redis is not None:
+            try:  # pragma: no cover - optional dependency
+                self.client = client or redis.Redis.from_url(url)
+                self.client.ping()
+            except Exception:
+                self.client = None
+
+    # ------------------------------------------------------------------
+    def load(self) -> Dict[str, int]:
+        """Load cycle counts from Redis or the JSON file."""
+
+        if self.client is not None:
+            data = self.client.get(self.key)
+            if data:
+                return json.loads(data)
+            return {}
+        if self.path.exists():
+            try:
+                return json.loads(self.path.read_text(encoding="utf-8"))
+            except Exception:
+                return {}
+        return {}
+
+    # ------------------------------------------------------------------
+    def save(self, counts: Dict[str, int]) -> None:
+        """Persist cycle counts to Redis or the JSON file."""
+
+        if self.client is not None:
+            self.client.set(self.key, json.dumps(counts))
+        else:
+            self.path.write_text(json.dumps(counts), encoding="utf-8")
+
+
+__all__ = ["DistributedMemory", "CycleCounterStore"]
