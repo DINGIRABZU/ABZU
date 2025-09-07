@@ -69,6 +69,19 @@ covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine)
 When every chakra reports within the window, the engine logs a **Great Spiral**
 alignment event for operators.
 
+### Game Dashboard & Retro Arcade Integration
+
+The React-based [Game Dashboard](ui/game_dashboard.md) wraps the avatar stream
+with mission maps and operator telemetry. Its [Chakra Pulse](ui/chakra_pulse.md)
+panel animates heartbeat metrics from `monitoring/chakra_heartbeat.py`,
+highlighting `great_spiral` alignments and layer drift in real time.
+
+For minimal deployments, [Arcade Mode](ui/arcade_mode.md) mirrors the same
+chakra pulse flow using sprite-style widgets. The retro console polls
+`/chakra/status` and flashes a pulse bar plus last alignment timestamp, giving
+operators a lightweight diagnostic surface when the full dashboard is
+unavailable.
+
 ### Memory Bundle
 
 ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a unified memory bundle that Crown and subsidiary services consult for state exchange and recall. `broadcast_layer_event("layer_init")` signals readiness across the bundle, while `query_memory` fans out incoming requests and aggregates a single response. For deeper detail, see [Blueprint Spine](blueprint_spine.md) and the [Memory Layers Guide](memory_layers_GUIDE.md).

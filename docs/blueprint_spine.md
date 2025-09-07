@@ -89,6 +89,18 @@ aligned and surfaces drift for operator review. See the
 overview and [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine)
 for per-layer responsibilities.
 
+### **Game Dashboard & Retro Arcade Integration**
+
+The [Game Dashboard](ui/game_dashboard.md) consumes the cycle engine's
+`/chakra/status` feed. Its [Chakra Pulse](ui/chakra_pulse.md) panel animates
+per-layer beat frequencies and highlights `great_spiral` alignment events for
+operators. A companion Agent Status board lists recent actions and heartbeat
+timestamps.
+
+Minimal deployments can enable [Arcade Mode](ui/arcade_mode.md), which mirrors
+the chakra pulse flow with sprite-style widgets and an alignment timestamp. The
+retro console provides diagnostics when the full dashboard is unavailable.
+
 ### **Heartbeat Propagation and Self-Healing**
 
 The chakra cycle engine emits heartbeats that cascade through the layers. A
