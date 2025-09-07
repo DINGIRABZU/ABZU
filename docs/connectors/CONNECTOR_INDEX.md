@@ -13,8 +13,25 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 | `crown_handshake` | RAZAR mission brief handshake with Crown | 0.2.4 | Bearer | `WS CROWN_WS_URL` | Crown | active | [razar/crown_handshake.py](../../razar/crown_handshake.py) | [CROWN_OVERVIEW.md](../CROWN_OVERVIEW.md) | N/A |
 | `webrtc` | real-time avatar streaming bridge for audio/video | 0.3.3 | JWT | `POST /call` | Nazarick Web Console | experimental | [connectors/webrtc_connector.py](../../connectors/webrtc_connector.py) | [nazarick_web_console.md](../nazarick_web_console.md) | N/A |
 | `open_web_ui` | browser-based console interface for chat | 0.1.1 | Bearer | `POST /glm-command` | Crown | experimental | [server.py](../../server.py) | [open_web_ui.md](../open_web_ui.md) | N/A |
-| `telegram_bot` | Telegram channel relay for chat | 0.1.0 | Bot token | `POST /telegram/webhook` | Nazarick Agents | broken | [communication/telegram_bot.py](../../communication/telegram_bot.py) | [communication_interfaces.md](../communication_interfaces.md) | N/A |
+| `discord_bot` | Discord channel relay for chat | 0.3.0 | Bot token | Discord API | Nazarick Agents | experimental | [tools/bot_discord.py](../../tools/bot_discord.py) | [communication_interfaces.md](../communication_interfaces.md) | N/A |
+| `telegram_bot` | Telegram channel relay for chat | 0.3.0 | Bot token | Telegram Bot API | Nazarick Agents | experimental | [tools/bot_telegram.py](../../tools/bot_telegram.py) | [communication_interfaces.md](../communication_interfaces.md) | N/A |
 | `primordials_api` | metrics bridge to Primordials service | 0.1.1 | Bearer | `POST /metrics`, `GET /health` | Primordials | experimental | [connectors/primordials_api.py](../../connectors/primordials_api.py) | [primordials_service.md](../primordials_service.md) | [primordials_api.schema.json](../../schemas/primordials_api.schema.json) |
 | `narrative_api` | narrative logging and stream | 0.2.0 (`__version__`) | Bearer | `POST /story`, `GET /story/log`, `GET /story/stream` | vector_memory | experimental | [narrative_api.py](../../narrative_api.py) | [nazarick_narrative_system.md](../nazarick_narrative_system.md) | N/A |
+
+## MCP Migration Status
+
+| connector | protocol | migration_notes |
+| --- | --- | --- |
+| `operator_api` | API | pending MCP support |
+| `operator_upload` | API | pending MCP support |
+| `crown_ws` | API | deprecated; no migration planned |
+| `crown_handshake` | API | evaluate MCP handshake |
+| `webrtc` | API | streaming; MCP transport under review |
+| `open_web_ui` | API | candidate for MCP gateway |
+| `discord_bot` | MCP/API | uses MCP for GLM commands; Discord API remains |
+| `telegram_bot` | MCP/API | uses MCP for GLM commands; Telegram API remains |
+| `primordials_api` | API | external service requires REST |
+| `narrative_api` | API | migration pending |
+| `mcp_gateway_example` | MCP | reference implementation |
 
 Backlinks: [Component Index](../component_index.md) | [Dependency Index](../dependency_index.md) | [Test Index](../test_index.md)

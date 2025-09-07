@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 import asyncio
 import logging
@@ -19,6 +19,9 @@ logger = logging.getLogger(__name__)
 
 _TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 _GLM_URL = os.getenv("WEB_CONSOLE_API_URL", "http://localhost:8000/glm-command")
+_USE_MCP = os.getenv("ABZU_USE_MCP") == "1"
+_MCP_URL = os.getenv("MCP_GATEWAY_URL", "http://localhost:8001")
+# Discord's messaging API remains external; MCP only routes internal commands.
 
 try:  # pragma: no cover - optional dependency
     import discord  # type: ignore
@@ -27,8 +30,14 @@ except Exception:  # pragma: no cover - optional dependency
 
 
 def send_glm_command(text: str) -> str:
-    """Return response from the GLM command endpoint."""
-    res = requests.post(_GLM_URL, json={"command": text}, timeout=60)
+    """Return GLM response via MCP when enabled, otherwise via HTTP."""
+    if _USE_MCP:
+        url = f"{_MCP_URL}/model/invoke"
+        payload = {"model": "glm", "text": text}
+    else:
+        url = _GLM_URL
+        payload = {"command": text}
+    res = requests.post(url, json=payload, timeout=60)
     res.raise_for_status()
     return res.json().get("result", "")
 
