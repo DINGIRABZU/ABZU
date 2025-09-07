@@ -88,6 +88,20 @@ curl http://localhost:8000/agents/status
 Use this panel to quickly spot stalled agents or unexpected actions during
 runtime.
 
+## Self-healing panel
+
+`monitoring/self_healing_endpoint.py` streams ledger events over the
+`/self-healing/updates` WebSocket. The **Self Healing** panel in the
+[Game Dashboard](ui/game_dashboard.md) subscribes to this feed and displays
+heartbeat gaps, active repair agents, and patch results in real time.
+
+```bash
+websocat ws://localhost:8000/self-healing/updates
+```
+
+Use this stream to monitor recovery progress and verify patches restore the
+missing heartbeats.
+
 ## Boot history
 
 Component activity is written to `logs/razar.log` in JSON lines. Refer to the
