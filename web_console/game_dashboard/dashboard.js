@@ -9,6 +9,7 @@ import ChakraStatusBoard from './chakraStatusBoard.js';
 import AgentStatusPanel from './agent_status_panel.js';
 import MemoryPanel from './memory_panel/memory_panel.js';
 import ChakraStatusPanel from './chakra_status_panel/chakra_status_panel.js';
+import SelfHealingPanel from './self_healing_panel/self_healing_panel.js';
 
 function GameDashboard() {
   const buttons = [
@@ -84,7 +85,8 @@ function GameDashboard() {
       React.createElement(ChakraStatusBoard),
       React.createElement(ChakraStatusPanel),
       React.createElement(AgentStatusPanel),
-      React.createElement(MemoryPanel)
+      React.createElement(MemoryPanel),
+      React.createElement(SelfHealingPanel)
     )
   );
 }
