@@ -18,10 +18,28 @@ def test_generate_avatar_pipeline(monkeypatch) -> None:
     gen_video = mock.Mock()
     monkeypatch.setattr(avatar.generation, "generate_waveform", gen_waveform)
     monkeypatch.setattr(avatar.generation, "generate_video", gen_video)
-    result = avatar.generate_avatar(1000, [], Path("video.mp4"))
+    result, paths = avatar.generate_avatar(1000, [], Path("video.mp4"))
     assert result == "audio"
+    assert paths == []
     gen_waveform.assert_called_once_with(1000)
-    gen_video.assert_called_once_with([], Path("video.mp4"))
+    gen_video.assert_called_once_with([], Path("video.mp4"), lwm_model=None)
+
+
+def test_generate_avatar_with_lwm(monkeypatch) -> None:
+    """Passing an LWM model should return camera paths."""
+    gen_waveform = mock.Mock(return_value="audio")
+    gen_video = mock.Mock()
+    monkeypatch.setattr(avatar.generation, "generate_waveform", gen_waveform)
+    monkeypatch.setattr(avatar.generation, "generate_video", gen_video)
+    model = avatar.generation.LargeWorldModel()
+    images = [Path("a.png"), Path("b.png")]
+    result, paths = avatar.generate_avatar(
+        1000, images, Path("video.mp4"), lwm_model=model
+    )
+    assert result == "audio"
+    assert len(paths) == len(images)
+    gen_waveform.assert_called_once_with(1000)
+    gen_video.assert_called_once_with(images, Path("video.mp4"), lwm_model=model)
 
 
 def test_play_avatar_pipeline(monkeypatch) -> None:

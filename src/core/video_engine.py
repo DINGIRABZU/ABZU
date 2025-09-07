@@ -5,13 +5,19 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Iterator, Optional
+from typing import Callable, Iterable, Iterator, Optional
 
 import hashlib
 import numpy as np
 import tomllib
 
 from core.utils.optional_deps import lazy_import
+from types import SimpleNamespace
+
+try:  # pragma: no cover - optional dependency
+    from lwm import default_lwm
+except Exception:  # pragma: no cover - optional dependency
+    default_lwm = SimpleNamespace(inspect_scene=lambda: {})
 
 cv2 = lazy_import("cv2")
 if getattr(cv2, "__stub__", False):  # pragma: no cover - optional
@@ -159,7 +165,9 @@ def _skin_color(name: str) -> np.ndarray:
 
 
 def generate_avatar_stream(
-    scale: int = 1, lip_sync_audio: Optional[Path] = None
+    scale: int = 1,
+    lip_sync_audio: Optional[Path] = None,
+    camera_paths: Optional[Iterable[tuple[float, float, float]]] = None,
 ) -> Iterator[np.ndarray]:
     """Yield RGB frames representing the configured avatar."""
     traits = _apply_trait_overrides(_load_traits())
@@ -171,6 +179,12 @@ def generate_avatar_stream(
     predictor = None
     idx = 0
     sadtalker_frames = None
+    if camera_paths is None:
+        scene = default_lwm.inspect_scene()
+        points = scene.get("points") if isinstance(scene, dict) else None
+        if points:
+            camera_paths = [(float(p.get("index", 0)), 0.0, 0.0) for p in points]
+    cam_iter = iter(camera_paths) if camera_paths is not None else None
     if lip_sync_audio is not None and SadTalkerPipeline is not None:
         try:  # pragma: no cover - optional
             pipeline = SadTalkerPipeline()
@@ -240,6 +254,15 @@ def generate_avatar_stream(
                     frame = pipe(frame)
                 except Exception:  # pragma: no cover - plugin errors
                     logger.exception("gesture pipeline failed")
+
+            if cam_iter is not None:
+                try:
+                    cx, cy, _ = next(cam_iter)
+                    x = int(cx) % frame.shape[1]
+                    y = int(cy) % frame.shape[0]
+                    frame[y, x] = np.array([255, 0, 0], dtype=np.uint8)
+                except StopIteration:
+                    cam_iter = None
 
             frame = _upscale(frame, scale)
             yield frame
