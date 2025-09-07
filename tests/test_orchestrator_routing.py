@@ -161,6 +161,33 @@ def test_fallback_to_glm(monkeypatch):
     assert result["model"] == "glm"
 
 
+def test_mcp_text_routing(monkeypatch):
+    orch = MoGEOrchestrator()
+    info = {"emotion": "joy"}
+
+    monkeypatch.setattr(
+        "INANNA_AI.corpus_memory.search_corpus", lambda *a, **k: [("p", "s")]
+    )
+    monkeypatch.setattr(
+        "rag.orchestrator.vector_memory.add_vector", lambda *a, **k: None
+    )
+    monkeypatch.setattr(
+        "rag.orchestrator.vector_memory.query_vectors", lambda *a, **k: []
+    )
+
+    async def fake_invoke(model: str, text: str):
+        return {"result": "mcp text"}
+
+    monkeypatch.setenv("INTERNAL_MODEL_PROTOCOL", "mcp")
+    monkeypatch.setattr("mcp.gateway.invoke_model", fake_invoke)
+
+    result = orch.route("hello", info, text_modality=True)
+
+    assert result["text"] == "mcp text"
+
+    monkeypatch.delenv("INTERNAL_MODEL_PROTOCOL", raising=False)
+
+
 def test_expression_decision(monkeypatch, tmp_path):
     orch = MoGEOrchestrator()
     info = {"emotion": "joy"}

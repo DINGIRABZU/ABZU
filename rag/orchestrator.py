@@ -21,6 +21,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
 from typing import Any, Callable, Deque, Dict, List
+import os
+import asyncio
 
 import hashlib
 
@@ -206,7 +208,15 @@ class MoGEOrchestrator:
 
         if text_modality:
             try:
-                if self._albedo is not None:
+                protocol = os.getenv("INTERNAL_MODEL_PROTOCOL")
+                if protocol == "mcp":
+                    from mcp.gateway import invoke_model as _mcp_invoke
+
+                    mcp_resp = asyncio.run(_mcp_invoke(model, text))
+                    result["text"] = (
+                        mcp_resp.get("result", "") if isinstance(mcp_resp, dict) else ""
+                    )
+                elif self._albedo is not None:
                     result["text"] = self._albedo.generate_response(text)
                 else:
                     result["text"] = self._responder.generate_reply(text, emotion_data)
