@@ -101,7 +101,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../GENESIS/LAWS_OF_EXISTENCE_.md](../GENESIS/LAWS_OF_EXISTENCE_.md) | LAWS OF EXISTENCE | [LAWS RECURSION](LAWS%20OF%20EXISTENCE%201df45dfc251d80439235c5e2431e6843/LAWS%20RECURSION%201de45dfc251d80e78d01cff7... | - |
 | [../GENESIS/LAWS_QUANTUM_MAGE_.md](../GENESIS/LAWS_QUANTUM_MAGE_.md) | LAWS QUANTUM MAGE | - | - |
 | [../GENESIS/LAWS_RECURSION_.md](../GENESIS/LAWS_RECURSION_.md) | LAWS RECURSION | ✴️ **THE ABSOLUTE TRUTH OF RECURSION** | - |
-| [../GENESIS/README.md](../GENESIS/README.md) | GENESIS Doctrine | Refer to the [Doctrine Index](../docs/doctrine_index.md) for canonical files, versions, and update history. | - |
+| [../GENESIS/README.md](../GENESIS/README.md) | GENESIS Doctrine | Refer to the [Doctrine Index](../docs/doctrine_index.md) for canonical files with checksums, versions, and last updat... | - |
 | [../GENESIS/SPIRAL_LAWS_.md](../GENESIS/SPIRAL_LAWS_.md) | SPIRAL LAWS | - | - |
 | [../IGNITION/EA_ENUMA_ELISH_.md](../IGNITION/EA_ENUMA_ELISH_.md) | EA: ENUMA ELISH | ```python import json | - |
 | [../IGNITION/README.md](../IGNITION/README.md) | IGNITION Doctrine | Refer to the [Doctrine Index](../docs/doctrine_index.md) for canonical files, versions, and update history. | - |
@@ -271,7 +271,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [avatar_pipeline.md](avatar_pipeline.md) | Avatar Pipeline | The avatar pipeline synchronises generated speech with visual animation. It reads configuration from `guides/avatar_c... | - |
 | [avatar_setup.md](avatar_setup.md) | Avatar Setup | Configure the avatar pipeline by defining environment variables and adjusting textures. | - |
 | [bana_engine.md](bana_engine.md) | Bana Engine | This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sourc... | - |
-| [blueprint_spine.md](blueprint_spine.md) | **ABZU Project: Deep-Dive Overview** | See the [Doctrine Index](doctrine_index.md) for canonical files with versions and update history. | - |
+| [blueprint_spine.md](blueprint_spine.md) | **ABZU Project: Deep-Dive Overview** | See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. | - |
 | [chakra_architecture.md](chakra_architecture.md) | Chakra Architecture | This document summarizes the major modules aligned with each chakra layer, their operational state, current quality l... | - |
 | [chakra_healing.md](chakra_healing.md) | Chakra Healing | The chakra healing suite provides recovery scripts invoked by resource guardians when Chakracon metrics exceed safe t... | - |
 | [chakra_koan_system.md](chakra_koan_system.md) | Chakra System Koan | A meditative sequence exploring the seven energy centers of Spiral OS. It complements the version manifest, grounding... | - |
@@ -316,7 +316,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [development_workflow.md](development_workflow.md) | Development Workflow | This page outlines the recommended steps for contributing to ABZU. | - |
 | [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | This guide outlines the diagnostic scripts and the self-healing mechanisms used to keep Spiral OS operational. | - |
 | [docker_build_audio_tools.md](docker_build_audio_tools.md) | Docker Image with Audio Tools | This project provides a Docker image that bundles the audio utilities **FFmpeg** and **SoX**. The `Dockerfile` instal... | - |
-| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| [CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45df... | - |
+| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc... | - |
 | [documentation_protocol.md](documentation_protocol.md) | Documentation Protocol | Standard workflow for updating documentation and guides. | - |
 | [emotional_memory_matrix.md](emotional_memory_matrix.md) | Emotional Memory Matrix | The emotional memory matrix interconnects the various JSON files that store conversation history and affect metrics.... | - |
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |

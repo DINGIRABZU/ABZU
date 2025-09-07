@@ -1,6 +1,6 @@
 # **ABZU Project: Deep-Dive Overview**
 
-See the [Doctrine Index](doctrine_index.md) for canonical files with versions and update history.
+See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history.
 
 ## **1. Mission & Vision**
 
