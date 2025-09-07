@@ -13,6 +13,10 @@ For heartbeat propagation and recovery design, consult
 and
 [docs/chakra_architecture.md#chakra-cycle-engine](docs/chakra_architecture.md#chakra-cycle-engine).
 
+For self-healing specifics—including failure pulses, Nazarick resuscitation,
+and patch rollbacks—see
+[docs/recovery_playbook.md#failure-pulses](docs/recovery_playbook.md#failure-pulses).
+
 For session management and avatar stream resilience, see
 [docs/system_blueprint.md#session-management](docs/system_blueprint.md#session-management),
 [docs/blueprint_spine.md#session-management](docs/blueprint_spine.md#session-management),
