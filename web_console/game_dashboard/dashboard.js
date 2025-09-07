@@ -1,6 +1,7 @@
 import React from 'https://esm.sh/react@18';
 import { createRoot } from 'https://esm.sh/react-dom@18/client';
 import { BASE_URL, startStream, connectEvents } from '../main.js';
+import SetupWizard from './setupWizard.js';
 
 function GameDashboard() {
   const buttons = [
@@ -9,18 +10,23 @@ function GameDashboard() {
     { id: 'handover', label: 'Handover', action: () => fetch(`${BASE_URL}/handover`, { method: 'POST' }) }
   ];
   const [focusIndex, setFocusIndex] = React.useState(0);
+  const [wizardDone, setWizardDone] = React.useState(() => localStorage.getItem('setupWizardCompleted') === 'true');
 
   React.useEffect(() => {
-    startStream();
-    connectEvents();
-  }, []);
+    if (wizardDone) {
+      startStream();
+      connectEvents();
+    }
+  }, [wizardDone]);
 
   React.useEffect(() => {
+    if (!wizardDone) return;
     const btn = document.getElementById(buttons[focusIndex].id + '-btn');
     if (btn) btn.focus();
-  }, [focusIndex]);
+  }, [focusIndex, wizardDone]);
 
   React.useEffect(() => {
+    if (!wizardDone) return;
     const handleKey = (e) => {
       if (e.key === 'ArrowRight') setFocusIndex((i) => (i + 1) % buttons.length);
       if (e.key === 'ArrowLeft') setFocusIndex((i) => (i + buttons.length - 1) % buttons.length);
@@ -28,9 +34,10 @@ function GameDashboard() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [focusIndex]);
+  }, [focusIndex, wizardDone]);
 
   React.useEffect(() => {
+    if (!wizardDone) return;
     let raf;
     const poll = () => {
       const [gp] = navigator.getGamepads ? navigator.getGamepads() : [];
@@ -43,7 +50,11 @@ function GameDashboard() {
     };
     window.addEventListener('gamepadconnected', () => poll());
     return () => cancelAnimationFrame(raf);
-  }, [focusIndex]);
+  }, [focusIndex, wizardDone]);
+
+  if (!wizardDone) {
+    return React.createElement(SetupWizard, { onComplete: () => setWizardDone(true) });
+  }
 
   return (
     React.createElement('div', null,

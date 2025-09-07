@@ -367,6 +367,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [operator_console.md](operator_console.md) | Operator Console | Arcade-style web interface for issuing commands through the Operator API. | - |
 | [operator_interface_GUIDE.md](operator_interface_GUIDE.md) | Operator Interface Guide | Instructions for operator API usage, onboarding requirements, and Nazarick Web Console chat rooms. | - |
 | [operator_nazarick_bridge.md](operator_nazarick_bridge.md) | Operator-Nazarick Bridge | **Version:** v1.0.0 **Last updated:** 2025-09-05 | - |
+| [operator_onboarding.md](operator_onboarding.md) | Operator Onboarding Wizard | The Game Dashboard includes a modal wizard that guides operators through essential setup tasks. | - |
 | [operator_protocol.md](operator_protocol.md) | Operator Protocol | Operator actions dispatched via the API include a unique `command_id` UUID. The identifier is returned in responses,... | - |
 | [operator_quickstart.md](operator_quickstart.md) | Operator Quickstart | A concise orientation for operators interacting with ABZU. | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | Sources: [`../os_guardian/perception.py`](../os_guardian/perception.py), [`../os_guardian/planning.py`](../os_guardia... | `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py` |
