@@ -78,6 +78,9 @@ class RecoveryManager:
     # ------------------------------------------------------------------
     def recover(self, module: str, state: Dict[str, Any]) -> None:
         """Run the full recovery procedure for ``module``."""
+        # Broadcast the component failure before beginning recovery so that
+        # auxiliary services can react (e.g. Nazarick remediation agents).
+        self.bus.report_issue(module, "component_down")
 
         self.pause_system()
         self.save_state(module, state)
