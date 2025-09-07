@@ -18,6 +18,7 @@ This checklist distills mandatory practices for ABZU contributors.
 
 ## Test Requirements
 - Run `pre-commit run --files <changed files>` on every commit.
+- Run `python scripts/check_mcp_connectors.py` and fix any flagged API connectors.
 - Execute relevant tests with `pytest`. Document failing tests in [testing/failure_inventory.md](testing/failure_inventory.md) before merging.
 
 ## Version History
