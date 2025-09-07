@@ -7,6 +7,7 @@ import AvatarRoom from './avatarRoom.js';
 import ChakraStatusBoard from './chakraStatusBoard.js';
 import AgentStatusPanel from './agent_status_panel.js';
 import MemoryPanel from './memory_panel/memory_panel.js';
+import ChakraStatusPanel from './chakra_status_panel/chakra_status_panel.js';
 
 function GameDashboard() {
   const buttons = [
@@ -76,6 +77,7 @@ function GameDashboard() {
       React.createElement('pre', { id: 'event-log', style: { marginTop: '1rem', textAlign: 'left' } }),
       React.createElement(ChakraPulse),
       React.createElement(ChakraStatusBoard),
+      React.createElement(ChakraStatusPanel),
       React.createElement(AgentStatusPanel),
       React.createElement(MemoryPanel)
     )

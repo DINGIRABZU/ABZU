@@ -113,6 +113,54 @@ statusPanel.id = 'status-panel';
 statusPanel.style.marginTop = '1rem';
 document.body.appendChild(statusPanel);
 
+const chakraPanel = document.createElement('div');
+chakraPanel.id = 'chakra-status-panel';
+chakraPanel.style.marginTop = '1rem';
+document.body.appendChild(chakraPanel);
+
+function renderChakraPanel(data) {
+    chakraPanel.innerHTML = '';
+    const orbs = document.createElement('div');
+    orbs.className = 'orbs';
+    Object.entries(data.heartbeats || {}).forEach(([name, freq]) => {
+        const size = 20 + freq * 10;
+        const color = `hsl(${Math.min(120, freq * 40)}, 100%, 50%)`;
+        const duration = `${Math.max(0.5, 2 / Math.max(freq, 0.1))}s`;
+        const orb = document.createElement('div');
+        orb.className = 'orb';
+        orb.style.width = `${size}px`;
+        orb.style.height = `${size}px`;
+        orb.style.background = color;
+        orb.style.borderRadius = '50%';
+        orb.style.animation = `pulse ${duration} infinite alternate`;
+        orb.title = `${name}: ${freq.toFixed(2)}Hz`;
+        orbs.appendChild(orb);
+    });
+    chakraPanel.appendChild(orbs);
+    const ul = document.createElement('ul');
+    ul.className = 'components';
+    Object.entries(data.components || {}).forEach(([name, ver]) => {
+        const li = document.createElement('li');
+        li.textContent = `${name} ${ver}`;
+        ul.appendChild(li);
+    });
+    chakraPanel.appendChild(ul);
+}
+
+function pollChakraStatus() {
+    fetch(`${BASE_URL}/chakra/status`)
+        .then((resp) => resp.json())
+        .then((data) => renderChakraPanel(data))
+        .catch((err) => {
+            chakraPanel.textContent = 'Error: ' + err;
+        })
+        .finally(() => {
+            setTimeout(pollChakraStatus, 3000);
+        });
+}
+
+pollChakraStatus();
+
 function connectEvents() {
     try {
         const ws = new WebSocket(EVENTS_URL);
