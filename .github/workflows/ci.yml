@@ -233,6 +233,9 @@ PY
       - name: Validate markdown links
         run: git ls-files '*.md' | xargs python scripts/validate_links.py
 
+      - name: Validate docs cross-links
+        run: python scripts/validate_docs.py
+
       - name: Mypy
         run: mypy memory/ tests/
 
