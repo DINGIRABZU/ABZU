@@ -13,6 +13,7 @@ CHAKRA = "throat"
 THRESHOLD = 0.92
 SCRIPT_PATH = Path("scripts/chakra_healing/throat_api_stabilize.sh")
 AGENT_ID = "throat_agent"
+SUBCOMPONENTS: list[str] = []
 
 
 def heal_if_needed() -> bool:
@@ -26,7 +27,7 @@ def recent_stories(limit: int = 50) -> list[str]:
 
 async def start_heartbeat_listener() -> None:
     """Listen for heartbeat events and emit confirmations."""
-    await listen_for_heartbeat(CHAKRA, AGENT_ID)
+    await listen_for_heartbeat(CHAKRA, AGENT_ID, SUBCOMPONENTS)
 
 
 __all__ = [
@@ -36,5 +37,6 @@ __all__ = [
     "THRESHOLD",
     "SCRIPT_PATH",
     "AGENT_ID",
+    "SUBCOMPONENTS",
     "start_heartbeat_listener",
 ]
