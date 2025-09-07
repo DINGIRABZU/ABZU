@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import logging
 import os
@@ -12,6 +12,7 @@ from pathlib import Path
 import requests
 
 from connectors.signal_bus import publish, subscribe
+from connectors.base import ConnectorHeartbeat
 
 logger = logging.getLogger(__name__)
 
@@ -70,6 +71,17 @@ if _API:
     )
 
 
+class TelegramConnector(ConnectorHeartbeat):
+    """Telegram connector emitting heartbeats."""
+
+    def __init__(self, *, interval: float = 30.0, miss_threshold: int = 3) -> None:
+        super().__init__("telegram", interval=interval, miss_threshold=miss_threshold)
+
+    def run(self) -> None:
+        self.start()
+        poll()
+
+
 def poll() -> None:
     """Continuously poll Telegram for updates."""
     if not _API:
@@ -97,7 +109,7 @@ def poll() -> None:
 
 def main() -> None:
     """Entry point for the Telegram bot."""
-    poll()
+    TelegramConnector().run()
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry

@@ -8,6 +8,7 @@ from .webrtc_connector import close_peers as webrtc_close_peers
 from .webrtc_connector import router as webrtc_router
 from .webrtc_connector import start_call as webrtc_start_call
 from .primordials_api import send_metrics as primordials_send_metrics
+from .base import ConnectorHeartbeat
 from narrative_api import router as narrative_router
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "webrtc_close_peers",
     "primordials_send_metrics",
     "narrative_router",
+    "ConnectorHeartbeat",
 ]

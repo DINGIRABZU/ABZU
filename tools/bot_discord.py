@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import asyncio
 import logging
@@ -12,6 +12,7 @@ from typing import Any
 import requests
 
 from connectors.signal_bus import publish, subscribe
+from connectors.base import ConnectorHeartbeat
 
 logger = logging.getLogger(__name__)
 
@@ -76,12 +77,26 @@ def create_client() -> Any:
     return client
 
 
+class DiscordConnector(ConnectorHeartbeat):
+    """Discord connector emitting heartbeats."""
+
+    def __init__(
+        self, token: str, *, interval: float = 30.0, miss_threshold: int = 3
+    ) -> None:
+        super().__init__("discord", interval=interval, miss_threshold=miss_threshold)
+        self._token = token
+        self._client = create_client()
+
+    def run(self) -> None:
+        self.start()
+        self._client.run(self._token)
+
+
 def main() -> None:
     """Run the Discord bot."""
     if _TOKEN is None:
         raise RuntimeError("DISCORD_BOT_TOKEN not configured")
-    client = create_client()
-    client.run(_TOKEN)
+    DiscordConnector(_TOKEN).run()
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry

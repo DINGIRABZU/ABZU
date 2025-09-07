@@ -156,6 +156,7 @@ def pytest_sessionstart(session):  # pragma: no cover - timing varies
 
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
 ALLOWED_TESTS = {
+    str(ROOT / "tests" / "connectors" / "test_connector_heartbeat.py"),
     str(ROOT / "tests" / "test_adaptive_learning_stub.py"),
     str(ROOT / "tests" / "test_env_validation.py"),
     str(ROOT / "tests" / "crown" / "test_config.py"),
