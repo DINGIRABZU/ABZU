@@ -36,6 +36,7 @@ from . import (
     health_checks,
     mission_logger,
     quarantine_manager,
+    state_validator,
 )
 from .ignition_builder import DEFAULT_STATUS, parse_system_blueprint
 from razar import crown_handshake
@@ -65,6 +66,8 @@ class BootOrchestrator:
         self.config_path = config or root / "config" / "razar_config.yaml"
         self.ignition_path = ignition or root / "docs" / "Ignition.md"
         self.state_path = state or root / "logs" / "razar_state.json"
+
+        state_validator.validate_state(self.state_path)
 
         self.components = parse_system_blueprint(self.blueprint_path)
         self.statuses: Dict[str, str] = {
