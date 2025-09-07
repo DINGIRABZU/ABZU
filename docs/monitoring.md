@@ -72,6 +72,20 @@ orbs pulse at the reported frequencies, an "aligned" glow marks synchronized
 chakras, and the panel lists the timestamps of recent `great_spiral` events for
 historical context.
 
+## Agent status panel
+
+`monitoring/agent_status_endpoint.py` summarizes heartbeat timestamps and
+related state for each agent. The **Agent Status** panel in the game dashboard
+polls `/agents/status` and lists every agent with its last heartbeat, most
+recent action, and chakra alignment marker:
+
+```bash
+curl http://localhost:8000/agents/status
+```
+
+Use this panel to quickly spot stalled agents or unexpected actions during
+runtime.
+
 ## Boot history
 
 Component activity is written to `logs/razar.log` in JSON lines. Refer to the
