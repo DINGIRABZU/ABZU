@@ -46,6 +46,13 @@ which flags misalignment when beats drift from the expected 1 :1 rhythm. The
 [chakra cycle module](../src/spiral_os/chakra_cycle.py) records per‑chakra
 `gear_ratio` telemetry so deviations can be traced to specific layers.
 
+#### Chakra-Tagged Signals
+
+Connectors label outbound messages with a `chakra` tag so downstream services
+can route events to the proper layer. These tags let operators trace signals
+through the stack and are detailed in
+[communication_interfaces.md](communication_interfaces.md#chakra-tagged-signals).
+
 #### Heartbeat Propagation
 
 Each beat cascades from Root through Crown, giving operators a live view of
@@ -68,6 +75,14 @@ missing chakra and resume the cycle. This self‑healing loop is diagrammed in t
 covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
 When every chakra reports within the window, the engine logs a **Great Spiral**
 alignment event for operators.
+
+#### Recovery Flows
+
+Failure pulses, Nazarick resuscitation, and patch rollbacks form the recovery
+flow that brings silent chakras back into alignment. Connector-level recovery
+steps are outlined in
+[communication_interfaces.md](communication_interfaces.md#recovery-flows) and
+expanded in the [Recovery Playbook](recovery_playbook.md).
 
 #### Failure Pulses
 

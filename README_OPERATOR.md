@@ -17,6 +17,10 @@ For self-healing specifics—including failure pulses, Nazarick resuscitation,
 and patch rollbacks—see
 [docs/recovery_playbook.md#failure-pulses](docs/recovery_playbook.md#failure-pulses).
 
+Connector guidance on chakra-tagged signals, heartbeat propagation, and
+recovery flows lives in
+[docs/communication_interfaces.md#chakra-tagged-signals](docs/communication_interfaces.md#chakra-tagged-signals).
+
 For session management and avatar stream resilience, see
 [docs/system_blueprint.md#session-management](docs/system_blueprint.md#session-management),
 [docs/blueprint_spine.md#session-management](docs/blueprint_spine.md#session-management),
