@@ -14,6 +14,7 @@ import logging
 from telegram import Update
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
 
+from connectors.signal_bus import publish, subscribe
 from .gateway import Gateway, authentication
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,21 @@ class TelegramBot:
             MessageHandler(filters.TEXT & (~filters.COMMAND), self._handle_message)
         )
 
+        def _outbound(payload: dict) -> None:
+            chat_id = payload.get("chat_id")
+            text = payload.get("content", "")
+            if chat_id is None:
+                return
+
+            async def _send() -> None:
+                await self._application.bot.send_message(
+                    chat_id=int(chat_id), text=text
+                )
+
+            self._application.create_task(_send())
+
+        subscribe("telegram:out", _outbound)
+
     async def _handle_message(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> None:
@@ -39,6 +55,7 @@ class TelegramBot:
         authentication.verify_token("telegram", self._token)
         user_id = str(update.effective_user.id)
         content = update.message.text or ""
+        publish("telegram:in", {"user": user_id, "content": content})
         await self._gateway.handle_incoming("telegram", user_id, content)
 
     def run(self) -> None:

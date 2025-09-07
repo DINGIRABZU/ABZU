@@ -11,6 +11,8 @@ from pathlib import Path
 
 import requests
 
+from connectors.signal_bus import publish, subscribe
+
 logger = logging.getLogger(__name__)
 
 _TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -46,6 +48,7 @@ def send_voice(chat_id: int, path: Path) -> None:
 
 def handle_message(chat_id: int, text: str) -> None:
     """Forward ``text`` to the GLM and return the reply."""
+    publish("telegram:in", {"chat_id": chat_id, "content": text})
     reply = send_glm_command(text)
     send_message(chat_id, reply)
     try:
@@ -56,6 +59,15 @@ def handle_message(chat_id: int, text: str) -> None:
         logger.exception("Failed synthesizing voice")
         return
     send_voice(chat_id, audio)
+
+
+if _API:
+    subscribe(
+        "telegram:out",
+        lambda payload: send_message(
+            int(payload.get("chat_id", 0)), payload.get("content", "")
+        ),
+    )
 
 
 def poll() -> None:

@@ -4,11 +4,14 @@ from __future__ import annotations
 
 __version__ = "0.1.0"
 
+import asyncio
 import logging
 import os
 from typing import Any
 
 import requests
+
+from connectors.signal_bus import publish, subscribe
 
 logger = logging.getLogger(__name__)
 
@@ -37,10 +40,20 @@ def create_client() -> Any:
     intents.message_content = True
     client = discord.Client(intents=intents)
 
+    loop = asyncio.get_event_loop()
+
     @client.event  # type: ignore[misc]
     async def on_message(message: discord.Message) -> None:  # pragma: no cover
         if message.author.bot:
             return
+        publish(
+            "discord:in",
+            {
+                "channel": message.channel.id,
+                "user": str(message.author.id),
+                "content": message.content,
+            },
+        )
         reply = send_glm_command(message.content)
         await message.channel.send(reply)
         try:
@@ -50,6 +63,15 @@ def create_client() -> Any:
             await message.channel.send(file=discord.File(path))
         except Exception:
             logger.exception("Failed synthesizing voice")
+
+    def _outbound(payload: dict) -> None:
+        channel_id = payload.get("channel")
+        text = payload.get("content", "")
+        channel = client.get_channel(int(channel_id)) if channel_id else None
+        if channel:
+            loop.create_task(channel.send(text))
+
+    subscribe("discord:out", _outbound)
 
     return client
 
