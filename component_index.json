@@ -3154,7 +3154,7 @@
       "chakra": "unknown",
       "type": "agent",
       "path": "agents/razar/mission_logger.py",
-      "version": "0.2.2",
+      "version": "0.3.0",
       "dependencies": [
         "__future__",
         "argparse",

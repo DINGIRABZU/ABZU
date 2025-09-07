@@ -243,12 +243,9 @@ class WebRTCGateway(VideoProcessor):  # type: ignore[misc]
 
         pc = RTCPeerConnection()
         _pcs.add(pc)
-        vtrack = atrack = None
-        if self.session_manager is not None:
-            vtrack, atrack = self.session_manager.get_tracks(agent)
-        else:
-            vtrack = get_video_track()
-            atrack = get_audio_track()
+        if self.session_manager is None:
+            raise HTTPException(status_code=404, detail="no session manager")
+        vtrack, atrack = self.session_manager.get_tracks(agent)
         if vtrack is not None:
             pc.addTrack(vtrack)
         if atrack is not None:
