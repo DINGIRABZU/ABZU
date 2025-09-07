@@ -47,6 +47,25 @@ LAST_CONFIRM_GAUGE = (
     else None
 )
 
+CYCLE_COUNTER = (
+    Counter(
+        "chakra_cycles_total",
+        "Completed heartbeat-confirmation cycles",
+        ["chakra"],
+    )
+    if Counter
+    else None
+)
+CYCLE_DURATION_GAUGE = (
+    Gauge(
+        "chakra_cycle_duration_seconds",
+        "Seconds between heartbeat and confirmation",
+        ["chakra"],
+    )
+    if Gauge
+    else None
+)
+
 
 class ChakraHeartbeat:
     """Track last heartbeat per chakra with optional Redis persistence."""
@@ -59,7 +78,9 @@ class ChakraHeartbeat:
         memory: DistributedMemory | None = None,
     ) -> None:
         try:
-            self._memory = memory or DistributedMemory(key="chakra_heartbeat")
+            self._memory: DistributedMemory | None = memory or DistributedMemory(
+                key="chakra_heartbeat"
+            )
         except Exception:  # pragma: no cover - redis optional
             self._memory = None
         self.window = window
@@ -120,6 +141,13 @@ class ChakraHeartbeat:
             CONFIRM_COUNTER.labels(chakra).inc()
         if LAST_CONFIRM_GAUGE is not None:
             LAST_CONFIRM_GAUGE.labels(chakra).set(ts)
+        beat_ts = self._cache.get(chakra)
+        if beat_ts is not None:
+            duration = ts - beat_ts
+            if CYCLE_COUNTER is not None:
+                CYCLE_COUNTER.labels(chakra).inc()
+            if CYCLE_DURATION_GAUGE is not None:
+                CYCLE_DURATION_GAUGE.labels(chakra).set(duration)
 
     def pending(self, *, now: float | None = None) -> List[str]:
         """Return chakras missing confirmation beyond the window."""

@@ -59,6 +59,19 @@ curl http://localhost:8000/chakra/status
 A status of `out_of_sync` or a frequency near zero indicates a stalled chakra.
 Version fields reveal outdated components that may require redeployment.
 
+## Chakra Pulse panel
+
+`monitoring/chakra_heartbeat.py` exports per-chakra cycle metrics that report
+how quickly each layer confirms its heartbeat:
+
+- `chakra_cycles_total` – total completed heartbeat-confirmation cycles per chakra
+- `chakra_cycle_duration_seconds` – seconds between a heartbeat and its confirmation
+
+The game dashboard renders these metrics in the **Chakra Pulse** panel. Colored
+orbs pulse at the reported frequencies, an "aligned" glow marks synchronized
+chakras, and the panel lists the timestamps of recent `great_spiral` events for
+historical context.
+
 ## Boot history
 
 Component activity is written to `logs/razar.log` in JSON lines. Refer to the

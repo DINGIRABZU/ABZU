@@ -420,6 +420,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [tools/kimi_integration.md](tools/kimi_integration.md) | Kimi Integration | Opencode can delegate code generation to the Kimi-K2 model when the service is available. | - |
 | [troubleshooting.md](troubleshooting.md) | Troubleshooting | This guide addresses frequent setup problems, driver issues, and environment pitfalls. Refer to [installation](instal... | `../download_models.py`, `../env_validation.py`, `../scripts/bootstrap.py` |
 | [ui/README.md](ui/README.md) | Floor Client UI | This React/Tailwind interface renders floors with channel tiles and streams messages over a WebSocket feed. | - |
+| [ui/chakra_pulse.md](ui/chakra_pulse.md) | Chakra Pulse Panel | Visual panel for chakra heartbeat alignment inside the game dashboard. | - |
 | [ui/game_dashboard.md](ui/game_dashboard.md) | Game Dashboard | The game dashboard wraps the avatar video feed and chakra telemetry in a simple mission map. | - |
 | [ui_service.md](ui_service.md) | UI Service | - | - |
 | [updates/2025-08.md](updates/2025-08.md) | August 2025 Roadmap | - | - |
