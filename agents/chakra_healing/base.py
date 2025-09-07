@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 import subprocess
-from typing import Any
+from typing import Any, Iterable
 
 import requests
 from agents.event_bus import emit_event, subscribe
@@ -43,12 +43,20 @@ def heal(chakra: str, threshold: float, script_path: Path) -> bool:
     return True
 
 
-async def listen_for_heartbeat(chakra: str, agent_id: str) -> None:
-    """Listen for heartbeat events and confirm receipt for ``chakra``."""
+async def listen_for_heartbeat(
+    chakra: str, agent_id: str, subcomponents: Iterable[str] | None = None
+) -> None:
+    """Listen for heartbeat events and confirm receipt for ``chakra``.
+
+    ``subcomponents`` allows forwarding confirmations to nested components
+    associated with the chakra service.
+    """
 
     async def _handle(event: Event) -> None:
         if event.event_type == "heartbeat" and event.payload.get("chakra") == chakra:
             emit_event(agent_id, "pulse_confirmation", {"chakra": chakra})
+            for sub in subcomponents or []:
+                emit_event(sub, "pulse_confirmation", {"chakra": chakra})
 
     await subscribe(_handle)
 

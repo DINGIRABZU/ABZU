@@ -49,7 +49,7 @@ RESUSCITATION_DURATION = (
 
 
 class ChakraResuscitator:
-    """Listen for ``chakra_down`` events and attempt recovery."""
+    """Listen for aggregator ``chakra_down`` events and attempt recovery."""
 
     def __init__(
         self,
@@ -135,7 +135,10 @@ class ChakraResuscitator:
         """Subscribe to events and handle ``chakra_down`` notifications."""
 
         async def _handler(event: Event) -> None:
-            if event.event_type == "chakra_down":
+            if (
+                event.agent_id == "chakra_heartbeat"
+                and event.event_type == "chakra_down"
+            ):
                 await self.handle_event(event)
 
         await subscribe(_handler, **subscribe_kwargs)
