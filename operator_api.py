@@ -28,6 +28,7 @@ from fastapi import (
 
 from agents.operator_dispatcher import OperatorDispatcher
 from agents.interaction_log import log_agent_interaction
+from agents.task_orchestrator import run_mission
 from fastapi.responses import HTMLResponse
 from servant_model_manager import (
     has_model,
@@ -401,6 +402,21 @@ async def ingest_ethics_endpoint(directory: str | None = None) -> dict[str, obje
     if not run_ingest_ethics(target_dir):
         raise HTTPException(status_code=500, detail="ingestion failed")
     return {"status": "ok", "directory": str(target_dir)}
+
+
+@router.post("/missions")
+async def save_and_run_mission(payload: dict[str, object]) -> dict[str, str]:
+    """Persist ``payload['mission']`` under ``missions/`` and dispatch it."""
+
+    name = str(payload.get("name") or f"mission_{uuid4().hex}")
+    events = payload.get("mission", [])
+    if not isinstance(events, list):
+        raise HTTPException(status_code=400, detail="mission must be a list")
+    path = Path("missions") / f"{name}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(events, indent=2), encoding="utf-8")
+    run_mission(events)
+    return {"status": "ok", "path": str(path)}
 
 
 __all__ = ["router"]

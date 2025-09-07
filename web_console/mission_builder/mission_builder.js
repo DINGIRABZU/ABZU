@@ -18,6 +18,44 @@ Blockly.defineBlocksWithJsonArray([
     "tooltip": "Emit an event with a capability",
     "helpUrl": ""
   }
+  ,
+  {
+    "type": "ignite",
+    "message0": "ignite target %1",
+    "args0": [
+      { "type": "field_input", "name": "TARGET", "text": "crown" }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0,
+    "tooltip": "Ignite a target",
+    "helpUrl": ""
+  },
+  {
+    "type": "query_memory",
+    "message0": "query memory %1",
+    "args0": [
+      { "type": "field_input", "name": "QUERY", "text": "search" }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 120,
+    "tooltip": "Query stored memories",
+    "helpUrl": ""
+  },
+  {
+    "type": "dispatch_agent",
+    "message0": "dispatch agent %1 task %2",
+    "args0": [
+      { "type": "field_input", "name": "AGENT", "text": "agent" },
+      { "type": "field_input", "name": "TASK", "text": "task" }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 60,
+    "tooltip": "Dispatch an agent",
+    "helpUrl": ""
+  }
 ]);
 
 function missionToJson() {
@@ -28,6 +66,31 @@ function missionToJson() {
       mission.push({
         event_type: block.getFieldValue('EVENT'),
         payload: { capability: block.getFieldValue('CAPABILITY') }
+      });
+    } else if (block.type === 'ignite') {
+      mission.push({
+        event_type: 'ignite',
+        payload: {
+          capability: 'ignite',
+          target: block.getFieldValue('TARGET')
+        }
+      });
+    } else if (block.type === 'query_memory') {
+      mission.push({
+        event_type: 'query_memory',
+        payload: {
+          capability: 'query_memory',
+          query: block.getFieldValue('QUERY')
+        }
+      });
+    } else if (block.type === 'dispatch_agent') {
+      mission.push({
+        event_type: 'dispatch',
+        payload: {
+          capability: 'dispatch',
+          agent: block.getFieldValue('AGENT'),
+          task: block.getFieldValue('TASK')
+        }
       });
     }
   }
@@ -47,4 +110,16 @@ function downloadMission() {
   URL.revokeObjectURL(url);
 }
 
+async function saveMission() {
+  const name = prompt('Mission name');
+  if (!name) return;
+  const mission = missionToJson();
+  await fetch('/missions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, mission })
+  });
+}
+
 window.downloadMission = downloadMission;
+window.saveMission = saveMission;

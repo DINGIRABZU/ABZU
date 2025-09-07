@@ -2,6 +2,7 @@ import React from 'https://esm.sh/react@18';
 import { createRoot } from 'https://esm.sh/react-dom@18/client';
 import { BASE_URL, startStream, connectEvents } from '../main.js';
 import SetupWizard from './setupWizard.js';
+import MissionWizard from './missionWizard.js';
 import ChakraPulse from './chakraPulse.js';
 import AvatarRoom from './avatarRoom.js';
 import ChakraStatusBoard from './chakraStatusBoard.js';
@@ -17,22 +18,23 @@ function GameDashboard() {
   ];
   const [focusIndex, setFocusIndex] = React.useState(0);
   const [wizardDone, setWizardDone] = React.useState(() => localStorage.getItem('setupWizardCompleted') === 'true');
+  const [missionDone, setMissionDone] = React.useState(() => localStorage.getItem('missionWizardCompleted') === 'true');
 
   React.useEffect(() => {
-    if (wizardDone) {
+    if (wizardDone && missionDone) {
       startStream();
       connectEvents();
     }
-  }, [wizardDone]);
+  }, [wizardDone, missionDone]);
 
   React.useEffect(() => {
-    if (!wizardDone) return;
+    if (!wizardDone || !missionDone) return;
     const btn = document.getElementById(buttons[focusIndex].id + '-btn');
     if (btn) btn.focus();
-  }, [focusIndex, wizardDone]);
+  }, [focusIndex, wizardDone, missionDone]);
 
   React.useEffect(() => {
-    if (!wizardDone) return;
+    if (!wizardDone || !missionDone) return;
     const handleKey = (e) => {
       if (e.key === 'ArrowRight') setFocusIndex((i) => (i + 1) % buttons.length);
       if (e.key === 'ArrowLeft') setFocusIndex((i) => (i + buttons.length - 1) % buttons.length);
@@ -40,10 +42,10 @@ function GameDashboard() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [focusIndex, wizardDone]);
+  }, [focusIndex, wizardDone, missionDone]);
 
   React.useEffect(() => {
-    if (!wizardDone) return;
+    if (!wizardDone || !missionDone) return;
     let raf;
     const poll = () => {
       const [gp] = navigator.getGamepads ? navigator.getGamepads() : [];
@@ -56,10 +58,13 @@ function GameDashboard() {
     };
     window.addEventListener('gamepadconnected', () => poll());
     return () => cancelAnimationFrame(raf);
-  }, [focusIndex, wizardDone]);
+  }, [focusIndex, wizardDone, missionDone]);
 
   if (!wizardDone) {
     return React.createElement(SetupWizard, { onComplete: () => setWizardDone(true) });
+  }
+  if (!missionDone) {
+    return React.createElement(MissionWizard, { onComplete: () => setMissionDone(true) });
   }
 
   return (

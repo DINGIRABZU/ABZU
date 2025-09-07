@@ -13,8 +13,12 @@
   <div id="blocklyDiv"></div>
   <div id="controls">
     <button onclick="downloadMission()">Download Mission JSON</button>
+    <button onclick="saveMission()">Save &amp; Run</button>
   </div>
   <xml id="toolbox" style="display: none">
+    <block type="ignite"></block>
+    <block type="query_memory"></block>
+    <block type="dispatch_agent"></block>
     <block type="mission_event"></block>
   </xml>
   <script src="mission_builder.js"></script>
