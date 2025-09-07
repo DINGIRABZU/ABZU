@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-"""Lightweight experience replay using :mod:`vector_memory`.
+"""Lightweight experience replay using the chakra registry.
 
 Agent interactions are logged via :mod:`agents.interaction_log` and, when
-available, stored in the vector database for later retrieval. The
+available, stored in the chakra-aware vector database for later retrieval. The
 :func:`replay` function provides similarity search over an agent's past
-interactions so callers can supply contextual lessons before responding.
+interactions so callers can supply contextual lessons before responding. All
+events are tagged with a ``chakra`` to allow energetic filtering.
 """
 
 from typing import List
@@ -13,36 +14,36 @@ from typing import List
 from .interaction_log import log_agent_interaction
 
 try:  # pragma: no cover - optional dependency
-    import vector_memory as _vector_memory
+    from memory.chakra_registry import ChakraRegistry
 except Exception:  # pragma: no cover - optional dependency
-    _vector_memory = None  # type: ignore[assignment]
+    ChakraRegistry = None  # type: ignore[assignment]
 
-vector_memory = _vector_memory
+chakra_registry = ChakraRegistry() if ChakraRegistry is not None else None
 
 
-def store_event(agent_id: str, text: str) -> None:
-    """Record ``text`` for ``agent_id`` in logs and vector memory."""
+def store_event(agent_id: str, text: str, chakra: str = "root") -> None:
+    """Record ``text`` for ``agent_id`` in logs and chakra registry."""
     entry = {
         "agent_id": agent_id,
         "text": text,
         "function": "experience_replay.store_event",
     }
     log_agent_interaction(entry)
-    if vector_memory is None:
+    if chakra_registry is None:
         return
     try:  # pragma: no cover - best effort
-        vector_memory.add_vector(text, {"agent_id": agent_id})
+        chakra_registry.record(chakra, text, agent_id, agent_id=agent_id)
     except Exception:  # pragma: no cover - ignore storage failures
         pass
 
 
-def replay(agent_id: str, query: str, *, k: int = 5) -> List[str]:
+def replay(agent_id: str, query: str, *, k: int = 5, chakra: str = "root") -> List[str]:
     """Return up to ``k`` past events for ``agent_id`` similar to ``query``."""
-    if vector_memory is None:
+    if chakra_registry is None:
         return []
     try:  # pragma: no cover - best effort
-        hits = vector_memory.search(
-            query, filter={"agent_id": agent_id}, k=k, scoring="similarity"
+        hits = chakra_registry.search(
+            chakra, query, filter={"agent_id": agent_id}, k=k, scoring="similarity"
         )
     except Exception:  # pragma: no cover - ignore search failures
         return []
