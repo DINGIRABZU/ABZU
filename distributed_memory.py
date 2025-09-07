@@ -314,6 +314,12 @@ class CycleCounterStore:
         self.save(counts)
         return new_val
 
+    # ------------------------------------------------------------------
+    def get(self, chakra: str) -> int:
+        """Return the persisted cycle count for ``chakra``."""
+
+        return self.load().get(chakra, 0)
+
 
 # ---------------------------------------------------------------------------
 class HeartbeatTimestampStore:

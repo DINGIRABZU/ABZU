@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import asyncio
 import time
@@ -42,8 +42,10 @@ class ChakraCycle:
     ) -> None:
         self.store = store or CycleCounterStore()
         self.interval = interval
-        self.cycle_counts: Dict[str, int] = {chakra: 0 for chakra in GEAR_RATIOS}
-        self.cycle_counts.update(self.store.load())
+        # Load persisted cycle counts and ensure all chakras are present
+        self.cycle_counts: Dict[str, int] = self.store.load()
+        for chakra in GEAR_RATIOS:
+            self.cycle_counts.setdefault(chakra, 0)
 
     # ------------------------------------------------------------------
     def get_cycle(self, chakra: str) -> int:
@@ -58,9 +60,9 @@ class ChakraCycle:
         ts = time.time()
         events: List[Heartbeat] = []
         for chakra in GEAR_RATIOS:
-            self.cycle_counts[chakra] += 1
-            events.append(Heartbeat(chakra, self.cycle_counts[chakra], ts))
-        self.store.save(self.cycle_counts)
+            count = self.store.increment(chakra)
+            self.cycle_counts[chakra] = count
+            events.append(Heartbeat(chakra, count, ts))
         return events
 
     # ------------------------------------------------------------------
