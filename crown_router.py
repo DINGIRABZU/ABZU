@@ -11,6 +11,9 @@ __version__ = "0.1.0"
 
 from typing import Any, Dict
 import time
+import os
+import json
+import asyncio
 
 import emotional_state
 from crown_decider import decide_expression_options
@@ -181,15 +184,43 @@ def route_decision(
                 )
 
         docs = documents or registry.get_corpus()
-        orch = orchestrator or MoGEOrchestrator()
-        result = orch.route(
-            text,
-            emotion_data,
-            text_modality=False,
-            voice_modality=False,
-            music_modality=False,
-            documents=docs,
-        )
+
+        protocol = os.getenv("INTERNAL_MODEL_PROTOCOL")
+        if protocol == "mcp":
+            try:
+                from mcp.gateway import invoke_model as _mcp_invoke
+
+                payload = json.dumps(
+                    {
+                        "text": text,
+                        "emotion_data": emotion_data,
+                        "documents": docs,
+                    }
+                )
+                mcp_resp = asyncio.run(_mcp_invoke("orchestrator_route", payload))
+                result = (
+                    mcp_resp.get("result", {}) if isinstance(mcp_resp, dict) else {}
+                )
+            except Exception:
+                orch = orchestrator or MoGEOrchestrator()
+                result = orch.route(
+                    text,
+                    emotion_data,
+                    text_modality=False,
+                    voice_modality=False,
+                    music_modality=False,
+                    documents=docs,
+                )
+        else:
+            orch = orchestrator or MoGEOrchestrator()
+            result = orch.route(
+                text,
+                emotion_data,
+                text_modality=False,
+                voice_modality=False,
+                music_modality=False,
+                documents=docs,
+            )
 
         emotion = emotion_data.get("emotion", "neutral")
         opts = decide_expression_options(emotion)
