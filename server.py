@@ -73,6 +73,7 @@ from glm_shell import send_command
 from communication.floor_channel_socket import socket_app
 from nlq_api import router as nlq_router
 from operator_api import router as operator_router
+from agents.sidekick_helper import router as sidekick_router
 
 logger = logging.getLogger(__name__)
 
@@ -256,6 +257,7 @@ app.include_router(video_stream.router)
 app.include_router(webrtc_connector.router)
 app.include_router(nlq_router)
 app.include_router(operator_router)
+app.include_router(sidekick_router)
 
 Instrumentator().instrument(app).expose(app)
 _refresh_component_index_metrics()

@@ -150,14 +150,11 @@ downstream renderers can align motion with the audio segment.
 ## Avatar Room
 
 The game dashboard includes an **Avatar Room** for rapid operator interaction.
-From the dashboard, select an avatar from the dropdown, toggle between 2‑D
-and 3‑D presentation, and trigger quick commands:
+It displays the live WebRTC stream next to quick‑command buttons:
 
 - **Wave** – invokes a simple greeting gesture.
 - **Speak** – sends a short phrase for the avatar to voice.
 - **Show Status** – fetches the avatar's current state and displays it.
 
-Pre-scripted **mini missions** such as "Teach me about the chakras" call the
-avatar's voice and gesture pipelines to deliver short tutorials. Each mission
-fires a POST request to the backend and streams the resulting animation and
-speech through the existing WebRTC connection.
+A small chat pane relays operator questions to the sidekick helper which pulls
+answers from the document registry.

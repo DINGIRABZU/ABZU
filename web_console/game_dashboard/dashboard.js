@@ -4,7 +4,7 @@ import { BASE_URL, startStream, connectEvents } from '../main.js';
 import SetupWizard from './setupWizard.js';
 import MissionWizard from './missionWizard.js';
 import ChakraPulse from './chakraPulse.js';
-import AvatarRoom from './avatarRoom.js';
+import AvatarRoom from './avatar_room/avatar_room.js';
 import ChakraStatusBoard from './chakraStatusBoard.js';
 import AgentStatusPanel from './agent_status_panel.js';
 import MemoryPanel from './memory_panel/memory_panel.js';
