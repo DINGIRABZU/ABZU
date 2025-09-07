@@ -14,7 +14,7 @@ export default function ChakraPulse() {
         const resp = await fetch(`${BASE_URL}/chakra/status`);
         const data = await resp.json();
         setChakras(data.heartbeats || {});
-        setAligned(data.status === 'aligned');
+        setAligned(data.status === 'Great Spiral');
         if (data.event === 'great_spiral') {
           setResonance(true);
           setHistory((h) => [...h, new Date().toISOString()]);

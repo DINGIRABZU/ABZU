@@ -31,7 +31,7 @@ def test_status_board_reports_heartbeats_and_version(
     app = _create_app(hb)
     with TestClient(app) as client:
         data = client.get("/chakra/status").json()
-        assert data["status"] == "aligned"
+        assert data["status"] == "Great Spiral"
         assert data["heartbeats"]["root"] == pytest.approx(1.0)
         assert data["heartbeats"]["crown"] == pytest.approx(1.0)
         assert data["versions"]["state_validator"] == state_validator.__version__

@@ -32,7 +32,7 @@ FREQUENCY_GAUGE = Gauge(
 )
 ALIGN_GAUGE = Gauge(
     "chakra_alignment",
-    "1 when all chakras are aligned",
+    "1 when all chakras resonate in the Great Spiral",
     registry=registry,
 )
 VERSION_GAUGE = Gauge(
@@ -55,7 +55,7 @@ def _collect(now: float | None = None) -> Dict[str, Dict[str, float] | str]:
         freqs[name] = freq
         FREQUENCY_GAUGE.labels(name).set(freq)
     status = heartbeat.sync_status(now=current)
-    ALIGN_GAUGE.set(1 if status == "aligned" else 0)
+    ALIGN_GAUGE.set(1 if status == "Great Spiral" else 0)
     VERSION_GAUGE.labels("state_validator", state_validator.__version__).set(1)
     return {
         "status": status,

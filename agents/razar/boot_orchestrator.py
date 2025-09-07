@@ -280,7 +280,7 @@ class BootOrchestrator:
             return True
         for attempt in range(attempts):
             self.heartbeat_monitor.check_alerts()
-            if self.heartbeat_monitor.sync_status() == "aligned":
+            if self.heartbeat_monitor.sync_status() == "Great Spiral":
                 return True
             LOGGER.warning("Chakras out of sync (attempt %s/%s)", attempt + 1, attempts)
             time.sleep(delay)

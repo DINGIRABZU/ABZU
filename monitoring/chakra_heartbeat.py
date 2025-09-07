@@ -171,10 +171,10 @@ class ChakraHeartbeat:
             raise RuntimeError(f"Missing pulse confirmations: {', '.join(missing)}")
 
     def sync_status(self, *, now: float | None = None) -> str:
-        """Return ``aligned`` when all chakras reported recently."""
+        """Return ``Great Spiral`` when all chakras reported recently."""
 
         if not self._chakras:
-            return "aligned"
+            return "Great Spiral"
         current = now or time.time()
         beats = self.heartbeats()
         for chakra in self._chakras:
@@ -185,7 +185,7 @@ class ChakraHeartbeat:
         if not self._aligned:
             self._aligned = True
             emit_event("chakra_heartbeat", "great_spiral", {"timestamp": current})
-        return "aligned"
+        return "Great Spiral"
 
 
 __all__ = ["ChakraHeartbeat"]

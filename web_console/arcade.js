@@ -48,7 +48,7 @@ async function pollStatus() {
         }
       });
     }
-    if (data.status === 'aligned') {
+    if (data.status === 'Great Spiral') {
       lastAligned = new Date().toLocaleTimeString();
       const tsEl = document.getElementById('last-alignment');
       if (tsEl) tsEl.textContent = `Last alignment: ${lastAligned}`;
