@@ -101,3 +101,87 @@ def test_remote_repair(tmp_path: Path, monkeypatch: MonkeyPatch, backend: str) -
     comp = history["history"][0]["components"][0]
     assert comp["success"] is True
     assert comp["attempts"] == 2
+
+
+def test_remote_repair_cli_absent(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
+    """Fallback to library when the opencode CLI is missing."""
+
+    monkeypatch.setenv("OPENCODE_BACKEND", "")
+    monkeypatch.setattr(opencode_client, "_BACKEND", "")
+
+    calls = {"complete": 0, "repair": 0}
+
+    diff_text = (
+        "diff --git a/dummy.py b/dummy.py\n"
+        "--- a/dummy.py\n"
+        "+++ b/dummy.py\n"
+        "@@ -0,0 +1 @@\n"
+        "+patched\n"
+    )
+
+    def fake_complete(prompt: str) -> str:
+        calls["complete"] += 1
+        return diff_text
+
+    monkeypatch.setattr(opencode_client, "complete", fake_complete)
+
+    probe_state = {"patched": False}
+
+    def fake_repair(module_path: Path, tests: Sequence[Path], err: str) -> bool:
+        calls["repair"] += 1
+        probe_state["patched"] = True
+        return True
+
+    monkeypatch.setattr(code_repair_module, "repair_module", fake_repair)
+
+    def missing_cli(*a, **k):
+        raise FileNotFoundError
+
+    monkeypatch.setattr(ai_invoker.subprocess, "run", missing_cli)
+    monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", tmp_path / "patch_log.json")
+
+    monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "state.json")
+    monkeypatch.setattr(bo, "HISTORY_FILE", tmp_path / "history.json")
+    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", tmp_path / "invocations.json")
+    monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
+    monkeypatch.setattr(bo, "_perform_handshake", lambda comps: None)
+    monkeypatch.setattr(bo, "launch_required_agents", lambda: None)
+    monkeypatch.setattr(bo.doc_sync, "sync_docs", lambda: None)
+    monkeypatch.setattr(bo.time, "sleep", lambda *a, **k: None)
+
+    class DummyProc:
+        returncode = 0
+
+        def terminate(self) -> None:  # pragma: no cover - trivial
+            pass
+
+        def wait(self) -> None:  # pragma: no cover - trivial
+            pass
+
+    monkeypatch.setattr(bo.subprocess, "Popen", lambda *a, **k: DummyProc())
+
+    def fake_probe(name: str) -> bool:
+        return probe_state["patched"]
+
+    monkeypatch.setattr(bo.health_checks, "run", fake_probe)
+    monkeypatch.setitem(bo.health_checks.CHECKS, "demo", fake_probe)
+
+    config = {"components": [{"name": "demo", "command": ["echo", "hi"]}]}
+    cfg_path = tmp_path / "config.json"
+    cfg_path.write_text(json.dumps(config))
+
+    argv = ["bo", "--config", str(cfg_path), "--retries", "0", "--remote-attempts", "1"]
+    monkeypatch.setattr(sys, "argv", argv)
+    bo.main()
+
+    assert calls["complete"] == 1
+    assert calls["repair"] == 1
+    assert probe_state["patched"] is True
+
+    log = json.loads((tmp_path / "invocations.json").read_text())
+    assert log and log[0]["component"] == "demo"
+
+    history = json.loads((tmp_path / "history.json").read_text())
+    comp = history["history"][0]["components"][0]
+    assert comp["success"] is True
+    assert comp["attempts"] == 2
