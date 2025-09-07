@@ -15,6 +15,7 @@ from telegram import Update
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
 
 from connectors.signal_bus import publish, subscribe
+from connectors.message_formatter import format_message
 from .gateway import Gateway, authentication
 
 logger = logging.getLogger(__name__)
@@ -39,8 +40,9 @@ class TelegramBot:
                 return
 
             async def _send() -> None:
+                payload_text = format_message("telegram", text)
                 await self._application.bot.send_message(
-                    chat_id=int(chat_id), text=text
+                    chat_id=int(chat_id), text=payload_text
                 )
 
             self._application.create_task(_send())

@@ -13,6 +13,7 @@ import requests
 
 from connectors.signal_bus import publish, subscribe
 from connectors.base import ConnectorHeartbeat
+from connectors.message_formatter import format_message
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,8 @@ def send_message(chat_id: int, text: str) -> None:
     """Send ``text`` to ``chat_id`` via Telegram."""
     if not _API:
         raise RuntimeError("TELEGRAM_BOT_TOKEN not configured")
-    requests.post(f"{_API}/sendMessage", json={"chat_id": chat_id, "text": text})
+    payload = format_message("telegram", text)
+    requests.post(f"{_API}/sendMessage", json={"chat_id": chat_id, "text": payload})
 
 
 def send_voice(chat_id: int, path: Path) -> None:
