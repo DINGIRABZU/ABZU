@@ -2,7 +2,7 @@
 
 Configuration flags (``ENABLE_DATA``, ``ENABLE_AUDIO``, ``ENABLE_VIDEO``)
 toggle corresponding streams. Track helpers from
-``communication.webrtc_server`` gracefully return ``None`` when disabled or
+``communication.webrtc_gateway`` gracefully return ``None`` when disabled or
 unavailable, allowing clients to fall back to data-only operation.
 
 - **Endpoint:** ``POST /call``
@@ -23,7 +23,7 @@ from aiortc import RTCPeerConnection, RTCSessionDescription
 from fastapi import APIRouter, HTTPException, Request
 
 from communication.gateway import authentication
-from communication.webrtc_server import (
+from communication.webrtc_gateway import (
     configure_tracks,
     get_audio_track,
     get_video_track,
