@@ -2,6 +2,9 @@
 
 Canonical registry of ABZU's connectors. Each entry lists the purpose, version, primary service endpoints, linked agents, authentication method, status, and links to source code, documentation, and a JSON or YAML schema describing the interface. Operator interface entries detail the supported chat, file, image, audio, and video flows. Update this index whenever a connector's interface changes. For shared patterns across connectors see the [Connector Overview](README.md). This index is cross‑referenced from [Key Documents](../KEY_DOCUMENTS.md) and [The Absolute Protocol](../The_Absolute_Protocol.md); see the [Connector Registry Protocol](../The_Absolute_Protocol.md#connector-registry-protocol) for the checklist.
 
+For instructions on converting legacy API connectors to the Model Context Protocol,
+refer to the [MCP Migration Guide](mcp_migration.md).
+
 | id | purpose | version | auth | endpoints | linked agents | status | code | docs | schema |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `operator_api` | operator chat command dispatch | 0.3.3 | Bearer | `POST /operator/command` | Orchestration Master | experimental | [operator_api.py](../../operator_api.py) | [operator_protocol.md](../operator_protocol.md) | N/A |

@@ -53,6 +53,21 @@ can route events to the proper layer. These tags let operators trace signals
 through the stack and are detailed in
 [communication_interfaces.md](communication_interfaces.md#chakra-tagged-signals).
 
+#### Model Context Protocol Migration
+
+Internal service connectors are being refactored to use the **Model Context
+Protocol (MCP)**. MCP provides a shared handshake, authentication, and logging
+layer so operators can audit service-to-service calls.
+
+- **MCP connectors** – `operator_api`, `operator_upload`, and `crown_handshake`
+  already support MCP. `primordials_api` and `narrative_api` are queued for
+  migration.
+- **External APIs** – `telegram_bot`, `open_web_ui`, and the browser-oriented
+  `webrtc` bridge depend on standard HTTP and will remain outside MCP.
+
+See [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) for the
+current status of each connector.
+
 #### Heartbeat Propagation
 
 Each beat cascades from Root through Crown, giving operators a live view of

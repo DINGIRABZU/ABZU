@@ -97,6 +97,21 @@ through the stack; see
 [communication_interfaces.md](communication_interfaces.md#chakra-tagged-signals)
 for connector implementation notes.
 
+### **Model Context Protocol Migration**
+
+Internal service connectors are moving to the **Model Context Protocol (MCP)** so
+they share a common handshake and logging surface. MCP covers calls within the
+stack and replaces bespoke HTTP clients with a unified gateway.
+
+- **MCP connectors** – `operator_api`, `operator_upload`, and `crown_handshake`
+  already speak MCP. `primordials_api` and `narrative_api` are next in line.
+- **External APIs** – Connectors that reach outside the stack, such as
+  `telegram_bot`, `open_web_ui`, and the browser-facing `webrtc` bridge, remain
+  HTTP-only.
+
+Migration status for each connector is tracked in the
+[Connector Index](connectors/CONNECTOR_INDEX.md).
+
 ### **Game Dashboard & Retro Arcade Integration**
 
 The [Game Dashboard](ui/game_dashboard.md) consumes the cycle engine's
