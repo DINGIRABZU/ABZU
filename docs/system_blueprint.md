@@ -103,6 +103,17 @@ and retrieval requests, while `nazarick_agents` subscribe to mission updates and
 state changes. See the [Operations Guide](operations.md#heartbeat-polling-and-event-routing)
 for runtime details.
 
+### Session Management
+
+RAZAR tracks every operator session and binds it to the heartbeat stream. The
+first beat establishes a session record; subsequent beats extend the lifetime
+until the operator disconnects or a timeout elapses. Session metadata is stored
+in the unified memory bundle so agents can recover context after restarts. When
+the cycle engine flags a missing beat, the session is marked **degraded** and
+the self‑healing loop attempts to restore the underlying layer before closing or
+handing off the session. This keeps long‑running missions intact even when
+individual chakras momentarily fail.
+
 ### Mission Logging
 
 `agents.razar.mission_logger` persists each component lifecycle change to

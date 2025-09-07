@@ -13,6 +13,12 @@ For heartbeat propagation and recovery design, consult
 and
 [docs/chakra_architecture.md#chakra-cycle-engine](docs/chakra_architecture.md#chakra-cycle-engine).
 
+For session management and avatar stream resilience, see
+[docs/system_blueprint.md#session-management](docs/system_blueprint.md#session-management),
+[docs/blueprint_spine.md#session-management](docs/blueprint_spine.md#session-management),
+[docs/avatar_pipeline.md#heartbeat-and-session-management](docs/avatar_pipeline.md#heartbeat-and-session-management) and
+[docs/operator_onboarding.md#multi-agent-streams](docs/operator_onboarding.md#multi-agent-streams).
+
 For avatar setup guidance, consult [docs/system_blueprint.md#avatar-subsystem](docs/system_blueprint.md#avatar-subsystem) and [docs/blueprint_spine.md#avatar-subsystem](docs/blueprint_spine.md#avatar-subsystem). Step-by-step launch instructions are in [docs/developer_onboarding.md#avatar-console-setup](docs/developer_onboarding.md#avatar-console-setup) and [docs/operator_quickstart.md#avatar-console-setup](docs/operator_quickstart.md#avatar-console-setup).
 
 

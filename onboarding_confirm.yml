@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: 6e5acee87a9c0cdb15035dad24f1a7e955dd72eaf8174b4c96835317d9933641
+    sha256: fd3016da23ac8fcf83976a5e4d376cfe0f4680e6e68f908bc7d1ff165f4401e1
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.

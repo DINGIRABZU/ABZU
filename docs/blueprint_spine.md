@@ -85,6 +85,15 @@ For layer-specific responsibilities, see
 [Nazarick Agents](nazarick_agents.md). The remediation philosophy follows the
 [Self-Healing Manifesto](self_healing_manifesto.md).
 
+### **Session Management**
+
+Operator sessions are anchored to the same heartbeat cadence. RAZAR records a
+session when the first command arrives and renews it with each heartbeat. If a
+layer drops from the cycle, the session is flagged but retained so agents can
+replay context once the self-healing loop restores the path. Session state lives
+in the memory bundle, enabling multi-agent streams to pause and resume without
+losing narrative continuity.
+
 ## **3. Key Components & Modules**
 
 - **RAZAR Suite (`razar/` & top-level scripts)**
