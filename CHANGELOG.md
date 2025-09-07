@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Documented chakra-tagged signals, heartbeat propagation, and recovery flows
   across connector and operator guides; added tests for connector links.
+- MCP gateway exposes context registration and model invocation via MCP; added `config/mcp.toml` and `docs/mcp_overview.md`.
 - Mission builder with Ignite, Query Memory, and Dispatch Agent blocks plus server-side Save & Run routing through `agents/task_orchestrator`.
 - Game dashboard onboarding wizard guides operators through creating and running their first mission with progress stored in `localStorage`.
 - `docs/operator_onboarding.md` documents mission workflows with Mermaid diagrams and cross-links in `system_blueprint.md`.

@@ -1,0 +1,9 @@
+[models]
+crown = "models/crown.gguf"
+deepseek = "models/deepseek.gguf"
+
+[rate_limits]
+requests_per_minute = 60
+
+[auth]
+key = "change-me"

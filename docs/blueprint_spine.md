@@ -510,6 +510,7 @@ After “awakening,” the Crown LLM continuously manages prompt routing, model 
 - **`avatar_expression_engine`** renders the 3‑D persona and streams frames while playing audio, using SadTalker/Wav2Lip when available or falling back to a simple mouth overlay.
 - **`expressive_output`** coordinates speech synthesis, music, and video streaming so external GUIs can register callbacks for live animation.
 - A WebRTC gateway exposes the stream to browsers and bridges Discord and Telegram chats through connectors documented in [Communication Interfaces](communication_interfaces.md).
+- The MCP gateway registers context and invokes internal models via the Model Context Protocol; see [MCP Gateway Overview](mcp_overview.md).
 - See the [Avatar Pipeline](avatar_pipeline.md) for configuration, including texture selection via `guides/avatar_config.toml` and optional 3‑D scene support.
 
 ---
