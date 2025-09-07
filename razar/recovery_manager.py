@@ -16,6 +16,11 @@ import logging
 from pathlib import Path
 from typing import Any, Dict
 
+try:  # pragma: no cover - optional dependency
+    from agents.razar.lifecycle_bus import LifecycleBus
+except Exception:  # pragma: no cover - optional dependency
+    LifecycleBus = None  # type: ignore[assignment]
+
 LOGGER = logging.getLogger(__name__)
 
 STATE_DIR = Path(__file__).resolve().parents[1] / "recovery_state"
@@ -70,4 +75,26 @@ def resume(component: str) -> None:
     _record(component, "resume")
 
 
-__all__ = ["PatchInfo", "request_shutdown", "apply_patch", "resume"]
+def report_missed_heartbeat(component: str, *, bus: LifecycleBus | None = None) -> None:
+    """Publish a ``component_down`` issue on the lifecycle bus."""
+
+    if bus is None:
+        if LifecycleBus is None:  # pragma: no cover - dependency not available
+            LOGGER.warning(
+                "LifecycleBus unavailable; cannot publish component_down for %s",
+                component,
+            )
+            return
+        bus = LifecycleBus()  # type: ignore[call-arg]
+    LOGGER.warning("Heartbeat missing for %s", component)
+    bus.report_issue(component, "component_down")  # type: ignore[arg-type]
+    _record(component, "component_down")
+
+
+__all__ = [
+    "PatchInfo",
+    "request_shutdown",
+    "apply_patch",
+    "resume",
+    "report_missed_heartbeat",
+]
