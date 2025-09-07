@@ -2,7 +2,7 @@ from __future__ import annotations
 
 """Pluggable distributed memory with write-through replication."""
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 import json
 from pathlib import Path
@@ -315,6 +315,62 @@ class CycleCounterStore:
         return new_val
 
 
+# ---------------------------------------------------------------------------
+class HeartbeatTimestampStore:
+    """Persist last heartbeat timestamps in Redis or a JSON file."""
+
+    def __init__(
+        self,
+        *,
+        url: str = "redis://localhost:6379/0",
+        key: str = "heartbeat_timestamps",
+        path: str | Path = "heartbeat_timestamps.json",
+        client: Any | None = None,
+    ) -> None:
+        self.key = key
+        self.path = Path(path)
+        self.client: Any | None = None
+        if redis is not None:
+            try:  # pragma: no cover - optional dependency
+                self.client = client or redis.Redis.from_url(url)
+                self.client.ping()
+            except Exception:
+                self.client = None
+
+    # ------------------------------------------------------------------
+    def load(self) -> Dict[str, float]:
+        """Load heartbeat timestamps from Redis or the JSON file."""
+
+        if self.client is not None:
+            data = self.client.get(self.key)
+            if data:
+                return json.loads(data)
+            return {}
+        if self.path.exists():
+            try:
+                return json.loads(self.path.read_text(encoding="utf-8"))
+            except Exception:
+                return {}
+        return {}
+
+    # ------------------------------------------------------------------
+    def save(self, beats: Dict[str, float]) -> None:
+        """Persist heartbeat timestamps to Redis or the JSON file."""
+
+        if self.client is not None:
+            self.client.set(self.key, json.dumps(beats))
+        else:
+            self.path.write_text(json.dumps(beats), encoding="utf-8")
+
+    # ------------------------------------------------------------------
+    def update(self, component: str, timestamp: float) -> None:
+        """Update and persist the heartbeat for ``component``."""
+
+        beats = self.load()
+        beats[component] = timestamp
+        self.save(beats)
+
+
 __all__ = [
     "MemoryBackend",
     "RedisBackend",
@@ -322,4 +378,5 @@ __all__ = [
     "S3Backend",
     "DistributedMemory",
     "CycleCounterStore",
+    "HeartbeatTimestampStore",
 ]
