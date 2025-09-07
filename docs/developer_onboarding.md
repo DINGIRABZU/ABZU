@@ -351,9 +351,13 @@ See [testing.md](testing.md) for detailed instructions.
    ```bash
    python communication/webrtc_server.py   # WebRTC browser stream
    python tools/bot_discord.py            # Discord connector
-   python tools/bot_telegram.py           # Telegram connector
+   python communication/telegram_bot.py   # Telegram connector
    ```
-   See [communication_interfaces.md](communication_interfaces.md) for authentication details and additional channels.
+   These connectors relay avatar replies back to their chat channels. Discord
+   attaches a synthesized audio clip when `core.expressive_output` is available;
+   Telegram forwards text through the `Gateway`. See
+   [communication_interfaces.md](communication_interfaces.md) for authentication
+   details and additional channels.
 
 ## Setup Scripts
 
@@ -372,6 +376,7 @@ Common mistakes and their resolutions:
 | `start_avatar_console.sh` shows permission error | Run `chmod +x start_crown_console.sh` or invoke it with `bash` |
 | Tokens absent in `secrets.env` | Ensure `HF_TOKEN`, `GLM_API_URL`, and `GLM_API_KEY` are set |
 | Model download fails | Check network connectivity and token permissions |
+| Discord/Telegram connector not forwarding avatar replies | Verify `DISCORD_BOT_TOKEN` or `TELEGRAM_BOT_TOKEN` is configured, start the connector after the avatar console, and ensure `ffmpeg` is installed for audio clips |
 
 ## Glossary
 
