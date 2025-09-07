@@ -59,3 +59,26 @@ If a layer fails to answer a heartbeat, the engine marks it silent and
 requests remediation from [NAZARICK agents](nazarick_agents.md). Those
 servants reinitialize the dormant chakra following the self-healing loop
 outlined in the [Self-Healing Manifesto](self_healing_manifesto.md).
+
+### Memory Spine
+
+Each chakra persists its state into the shared memory spine so alignment
+can be restored after interruptions. The spine keeps beat-aligned logs of
+chakra activity.
+
+### Snapshot Cadence
+
+Snapshots occur at a fixed cadence—by default once per minute—creating
+`memory/<chakra>/<timestamp>/` bundles tied to the heartbeat sequence.
+
+### Recovery Flow
+
+When a chakra drops, the engine reloads its latest snapshot and replays
+its heartbeat log segment to rejoin the cycle. See
+[Blueprint Spine](blueprint_spine.md#memory-spine) and the
+[Recovery Playbook](recovery_playbook.md#snapshot-recovery) for the full
+procedure.
+
+## Version History
+
+- 2025-09-18: Added memory spine, snapshot cadence, and recovery flow.
