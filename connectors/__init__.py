@@ -2,7 +2,14 @@
 
 from __future__ import annotations
 
+import os
+
 __version__ = "0.3.0"
+
+# ``ABZU_USE_MCP`` toggles internal services to communicate via the MCP
+# gateway. External connectors continue to use HTTP APIs regardless of this
+# flag.
+USE_MCP = os.getenv("ABZU_USE_MCP") == "1"
 
 from .webrtc_connector import close_peers as webrtc_close_peers
 from .webrtc_connector import router as webrtc_router

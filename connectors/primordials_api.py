@@ -23,6 +23,9 @@ from typing import Any, Mapping
 logger = logging.getLogger(__name__)
 
 _PRIMORDIALS_URL = os.getenv("PRIMORDIALS_API_URL", "http://localhost:8000")
+# Even when MCP is enabled for internal services, the Primordials connector
+# continues to communicate via HTTP to this external endpoint.
+_USE_MCP = os.getenv("ABZU_USE_MCP") == "1"
 
 
 def send_metrics(metrics: Mapping[str, Any]) -> bool:
@@ -40,6 +43,8 @@ def send_metrics(metrics: Mapping[str, Any]) -> bool:
         url, data=data, headers={"Content-Type": "application/json"}
     )
     try:
+        if _USE_MCP:  # pragma: no cover - log only
+            logger.debug("MCP active; using HTTP fallback for Primordials API")
         with urllib.request.urlopen(req, timeout=5):  # pragma: no cover - network
             return True
     except Exception as exc:  # pragma: no cover - network

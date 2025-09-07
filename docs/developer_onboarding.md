@@ -71,6 +71,14 @@ Run the interactive wizard to scaffold the environment and launch the CLI:
 python docs/onboarding/wizard.py
 ```
 
+### MCP vs. HTTP
+
+Enable the Model Context Protocol during development by setting
+`ABZU_USE_MCP=1`. Internal services will route requests through the MCP gateway
+while external connectors and third-party APIs continue using standard HTTP
+endpoints. Choose MCP for service-to-service calls within the stack and HTTP
+for integrations beyond it or when MCP is unavailable.
+
 ## Getting Started with RAZAR
 
 See [RAZAR_AGENT.md](RAZAR_AGENT.md) for a detailed reference on its
