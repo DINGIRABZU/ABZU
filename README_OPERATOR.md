@@ -6,6 +6,8 @@ For a concise overview of the Spiral OS architecture see [CODEX_OF_CODEX.md](COD
 For the metaphysical background that informs Spiral OS, see [docs/spiritual_architecture.md](docs/spiritual_architecture.md), [docs/archetype_logic.md](docs/archetype_logic.md), [docs/psychic_loop.md](docs/psychic_loop.md) and [docs/crown_manifest.md](docs/crown_manifest.md).
 For a summary of Vast.ai and local Docker Compose deployment steps see [docs/deployment_overview.md](docs/deployment_overview.md).
 
+For avatar setup guidance, consult [docs/system_blueprint.md#avatar-subsystem](docs/system_blueprint.md#avatar-subsystem) and [docs/blueprint_spine.md#avatar-subsystem](docs/blueprint_spine.md#avatar-subsystem). Step-by-step launch instructions are in [docs/developer_onboarding.md#avatar-console-setup](docs/developer_onboarding.md#avatar-console-setup) and [docs/operator_quickstart.md#avatar-console-setup](docs/operator_quickstart.md#avatar-console-setup).
+
 
 ## Installation
 
