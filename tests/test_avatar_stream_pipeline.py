@@ -209,5 +209,5 @@ def test_avatar_stream_pipeline(tmp_path, monkeypatch):
 
     monkeypatch.setattr(server.video_stream, "RTCPeerConnection", DummyPC)
     with TestClient(server.app) as client:
-        resp = client.post("/offer", json={"sdp": "x", "type": "offer"})
+        resp = client.post("/agent/offer", json={"sdp": "x", "type": "offer"})
         assert resp.status_code == 200

@@ -1,8 +1,19 @@
+[agents.alpha]
 eye_color = [0, 128, 255]
 sigil = "spiral"
 
-[skins]
-nigredo_layer = "skins/nigredo.png"
-albedo_layer = "skins/albedo.png"
-rubedo_layer = "skins/rubedo.png"
-citrinitas_layer = "skins/citrinitas.png"
+[agents.alpha.skins]
+nigredo_layer = "skins/alpha/nigredo.png"
+albedo_layer = "skins/alpha/albedo.png"
+rubedo_layer = "skins/alpha/rubedo.png"
+citrinitas_layer = "skins/alpha/citrinitas.png"
+
+[agents.beta]
+eye_color = [255, 64, 64]
+sigil = "cube"
+
+[agents.beta.skins]
+nigredo_layer = "skins/beta/nigredo.png"
+albedo_layer = "skins/beta/albedo.png"
+rubedo_layer = "skins/beta/rubedo.png"
+citrinitas_layer = "skins/beta/citrinitas.png"
