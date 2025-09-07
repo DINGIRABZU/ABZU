@@ -94,6 +94,14 @@ and retrieval requests, while `nazarick_agents` subscribe to mission updates and
 state changes. See the [Operations Guide](operations.md#heartbeat-polling-and-event-routing)
 for runtime details.
 
+### Mission Logging
+
+`agents.razar.mission_logger` persists each component lifecycle change to
+`logs/razar.log`. These structured events drive the recovery flow in
+the [Recovery Playbook](recovery_playbook.md) and surface states such as
+`start`, `error`, `recovery`, `quarantine`, and `resolved` for every mission
+stage.
+
 ### Agent-Specific Recovery
 
 Each chakra has a dedicated remediation script. When the heartbeat poller

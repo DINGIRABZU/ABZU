@@ -3,25 +3,27 @@
 This module records lifecycle events for RAZAR components in a JSON lines log
 stored at ``logs/razar.log``. Each entry captures:
 
-- ``event`` – type of event such as ``start``, ``error`` or ``recovery``
+- ``event`` – lifecycle change such as ``start``, ``error``, ``recovery`` or
+  ``resolved``
 - ``component`` – component name
 - ``status`` – outcome or note for the event
 - ``timestamp`` – ISO-8601 time in UTC
 - ``details`` – optional free-form text
 
-Utility helpers are provided for common events including component starts,
-errors and recovery attempts. Additional helpers retain backward compatible
-names for health checks, quarantines and patches. The log can be summarised to
-find the last successful component or rendered as a chronological timeline for
-debugging.  The ``razar timeline`` CLI subcommand uses this module to
-reconstruct mission events.
+Utility helpers emit structured events for each lifecycle change. The
+resulting log aligns with the recovery workflow documented in
+``docs/recovery_playbook.md`` and can be summarised to find the last
+successful component or rendered as a chronological timeline for debugging.
+The ``razar timeline`` CLI subcommand uses this module to reconstruct mission
+events.
 """
 
 from __future__ import annotations
 
-__version__ = "0.2.2"
+__version__ = "0.3.0"
 
 from dataclasses import dataclass
+from enum import Enum
 import argparse
 import json
 from datetime import datetime, timezone
@@ -29,6 +31,21 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 LOG_PATH = Path("logs/razar.log")
+
+
+class Lifecycle(str, Enum):
+    """Lifecycle event types recognised by the mission logger."""
+
+    START = "start"
+    HEALTH = "health"
+    ERROR = "error"
+    RECOVERY = "recovery"
+    QUARANTINE = "quarantine"
+    PATCH = "patch"
+    RESOLVED = "resolved"
+    SHUTDOWN = "shutdown"
+
+    # Align event names with docs/recovery_playbook.md expectations.
 
 
 def _ensure_log_dir() -> None:
@@ -65,7 +82,7 @@ class LogEntry:
 
 
 def log_event(
-    event: str,
+    event: Lifecycle | str,
     component: str,
     status: str,
     details: str | None = None,
@@ -73,8 +90,9 @@ def log_event(
     """Append an event entry for ``component`` to the mission log."""
 
     _ensure_log_dir()
+    event_name = event.value if isinstance(event, Lifecycle) else event
     entry = LogEntry(
-        event=event,
+        event=event_name,
         component=component,
         status=status,
         timestamp=datetime.now(timezone.utc).isoformat(),
@@ -88,37 +106,49 @@ def log_event(
 def log_start(component: str, status: str, details: str | None = None) -> None:
     """Record that a component has started."""
 
-    log_event("start", component, status, details)
+    log_event(Lifecycle.START, component, status, details)
 
 
 def log_health(component: str, status: str, details: str | None = None) -> None:
     """Record a health result for a component."""
 
-    log_event("health", component, status, details)
+    log_event(Lifecycle.HEALTH, component, status, details)
 
 
 def log_quarantine(component: str, reason: str, details: str | None = None) -> None:
     """Record that a component has been quarantined."""
 
-    log_event("quarantine", component, reason, details)
+    log_event(Lifecycle.QUARANTINE, component, reason, details)
 
 
 def log_patch(component: str, patch: str, details: str | None = None) -> None:
     """Record that a patch has been applied to a component."""
 
-    log_event("patch", component, patch, details)
+    log_event(Lifecycle.PATCH, component, patch, details)
 
 
 def log_error(component: str, error: str, details: str | None = None) -> None:
     """Record that a component encountered an error."""
 
-    log_event("error", component, error, details)
+    log_event(Lifecycle.ERROR, component, error, details)
 
 
 def log_recovery(component: str, status: str, details: str | None = None) -> None:
     """Record a recovery attempt for a component."""
 
-    log_event("recovery", component, status, details)
+    log_event(Lifecycle.RECOVERY, component, status, details)
+
+
+def log_resolved(component: str, status: str, details: str | None = None) -> None:
+    """Record that a component has been resolved and restored."""
+
+    log_event(Lifecycle.RESOLVED, component, status, details)
+
+
+def log_shutdown(component: str, status: str, details: str | None = None) -> None:
+    """Record that a component has been shut down."""
+
+    log_event(Lifecycle.SHUTDOWN, component, status, details)
 
 
 # ---------------------------------------------------------------------------
