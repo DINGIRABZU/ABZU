@@ -5,7 +5,11 @@ const API_URL =
     (typeof window !== 'undefined' && window.WEB_CONSOLE_API_URL) ||
     'http://localhost:8000/glm-command';
 const BASE_URL = API_URL.replace(/\/[a-zA-Z_-]+$/, '');
-const OFFER_URL = `${BASE_URL}/offer`;
+const AGENT =
+    (typeof process !== 'undefined' && process.env && process.env.WEB_CONSOLE_AGENT) ||
+    (typeof window !== 'undefined' && window.WEB_CONSOLE_AGENT) ||
+    'agent';
+const OFFER_URL = `${BASE_URL}/${AGENT}/offer`;
 const STARTUP_LOG_URL = 'logs/nazarick_startup.json';
 const REGISTRY_URL = 'agents/nazarick/agent_registry.json';
 const EVENTS_URL = `${BASE_URL.replace(/^http/, 'ws')}/operator/events`;

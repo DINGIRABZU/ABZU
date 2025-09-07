@@ -3,7 +3,10 @@ const API_URL =
     (typeof window !== 'undefined' && window.WEB_CONSOLE_API_URL) ||
     'http://localhost:8000/glm-command';
 const BASE_URL = API_URL.replace(/\/[a-zA-Z_-]+$/, '');
-const OFFER_URL = `${BASE_URL}/offer`;
+const AGENT =
+    (typeof window !== 'undefined' && window.WEB_CONSOLE_AGENT) ||
+    'agent';
+const OFFER_URL = `${BASE_URL}/${AGENT}/offer`;
 const UPLOAD_URL = `${BASE_URL}/operator/upload`;
 
 function sendCommand(cmd) {

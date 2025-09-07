@@ -107,9 +107,9 @@ def test_vast_check_success(monkeypatch, capsys):
     async def ready() -> dict[str, str]:
         return {"status": "ready"}
 
-    @app.post("/offer")
-    async def offer(data: dict) -> dict[str, str]:
-        return {"sdp": "ans", "type": "answer"}
+    @app.post("/{agent}/offer")
+    async def offer(agent: str, data: dict) -> dict[str, str]:
+        return {"sdp": f"ans-{agent}", "type": "answer"}
 
     mod = importlib.import_module("scripts.vast_check")
 
