@@ -28,3 +28,16 @@ hertz, and component versions. Prometheus can scrape the same data from
 
 Operators review these signals to determine when to restart services or
 investigate disruptions.
+
+## Agent heartbeat metrics
+
+Operators can inspect individual agent heartbeats through
+`monitoring.agent_status_endpoint`. The endpoint reports the last heartbeat
+timestamp, most recent action, and chakra alignment for each agent:
+
+```bash
+curl http://localhost:8000/agents/status
+```
+
+These metrics feed the Agent Status panel and help identify agents that have
+stopped emitting heartbeats.
