@@ -85,3 +85,33 @@ objects to avatar textures. For example, a ``"cat"`` detection selects
 ``avatars/cat.png`` while a ``"dog"`` detection loads ``avatars/dog.png``. When
 no known objects are present the default texture is used. This allows external
 scene objects to dynamically influence the avatar's appearance.
+
+## 3-D mode
+
+`LargeWorldModel` support enables a lightweight three‑dimensional workflow. Pass
+an instance to :func:`src.media.avatar.generate_avatar` alongside captured frame
+paths. The function builds a placeholder scene and returns a list of
+``(x, y, z)`` camera coordinates synchronised with the frames. These coordinates
+can drive simple camera motion during playback.
+
+Required assets:
+
+- a sequence of still frames representing the scene
+- the built‑in ``src.lwm`` module; no external weights are needed
+
+Example:
+
+```python
+from pathlib import Path
+from src.lwm import LargeWorldModel
+from src.media.avatar import generate_avatar
+from core import video_engine
+
+frames = [Path("frame1.png"), Path("frame2.png")]
+audio, paths = generate_avatar(1000, frames, Path("out.mp4"), lwm_model=LargeWorldModel())
+for frame in video_engine.generate_avatar_stream(camera_paths=paths):
+    pass  # render or encode the frame
+```
+
+`generate_avatar_stream` highlights each camera position with a red pixel so
+downstream renderers can align motion with the audio segment.

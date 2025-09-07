@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 import emotional_state
 import env_validation
 from core import context_tracker, video_engine
+from types import SimpleNamespace
 
 pytestmark = pytest.mark.skipif(
     not env_validation.check_audio_binaries(require=False),
@@ -60,3 +61,12 @@ def test_upscaled_output(monkeypatch):
     stream = video_engine.start_stream(scale=2)
     frame = next(stream)
     assert frame.shape[0] == 128 and frame.shape[1] == 128
+
+
+def test_camera_paths_highlight_pixel(monkeypatch):
+    """Camera paths from LWM should influence rendered frames."""
+    dummy = SimpleNamespace(inspect_scene=lambda: {"points": [{"index": 0}]})
+    monkeypatch.setattr(video_engine, "default_lwm", dummy)
+    stream = video_engine.generate_avatar_stream()
+    frame = next(stream)
+    assert np.array_equal(frame[0, 0], np.array([255, 0, 0], dtype=np.uint8))

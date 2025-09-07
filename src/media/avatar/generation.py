@@ -7,7 +7,7 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, List, Tuple
 
 from ...lwm import LargeWorldModel
 from ..audio import generate_waveform
@@ -19,7 +19,7 @@ def generate_avatar(
     images: Iterable[Path],
     video_output: Path,
     lwm_model: LargeWorldModel | None = None,
-) -> Any:
+) -> tuple[Any, List[Tuple[float, float, float]]]:
     """Generate avatar media.
 
     Parameters
@@ -36,9 +36,19 @@ def generate_avatar(
 
     Returns
     -------
-    Any
-        The generated audio segment returned by :func:`generate_waveform`.
+    tuple
+        A tuple ``(audio_segment, camera_paths)`` where ``audio_segment`` is
+        returned by :func:`generate_waveform` and ``camera_paths`` is a list of
+        ``(x, y, z)`` coordinates describing the camera trajectory. When no
+        ``lwm_model`` is supplied the list is empty.
     """
+
+    image_list = list(images)
+    camera_paths: List[Tuple[float, float, float]] = []
+    if lwm_model is not None:
+        lwm_model.from_frames(image_list)
+        camera_paths = [(float(i), 0.0, 0.0) for i in range(len(image_list))]
+
     audio_segment = generate_waveform(audio_duration_ms)
-    generate_video(list(images), video_output, lwm_model=lwm_model)
-    return audio_segment
+    generate_video(image_list, video_output, lwm_model=lwm_model)
+    return audio_segment, camera_paths
