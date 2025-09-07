@@ -1,9 +1,9 @@
 # Communication Interfaces
 
 This document outlines how external clients interact with the avatar through
-various communication channels. The current implementation exposes WebRTC and
-Telegram interfaces, with additional channels pluggable through the gateway
-layer.
+various communication channels. The current implementation exposes WebRTC,
+Discord, and Telegram interfaces, with additional channels pluggable through the
+gateway layer.
 
 Each connector includes a ``__version__`` field for traceability and is tracked
 in the [Connector Index](connectors/CONNECTOR_INDEX.md).
@@ -58,6 +58,23 @@ environment variables:
 
 Additional channels should expose a token and use ``verify_token`` prior to
 calling the ``Gateway``.
+
+## Chat Connectors
+
+Two reference chat connectors bridge external text platforms to the avatar:
+
+- ``tools/bot_discord.py`` – posts messages from Discord channels to the
+  ``/glm-command`` endpoint and returns both text and optional synthesized voice
+  clips. Configure a bot token via ``DISCORD_BOT_TOKEN`` and launch with
+  ``python tools/bot_discord.py``.
+- ``communication/telegram_bot.py`` – forwards Telegram chats through the
+  ``Gateway``. Set ``TELEGRAM_BOT_TOKEN`` and run
+  ``python communication/telegram_bot.py``.
+
+Both connectors expect the tokens to be defined in the environment (or
+``secrets.env``) before startup. When running alongside the avatar console they
+relay responses back to their respective channels, enabling remote control of
+the agent.
 
 ## Adding New Channels
 
