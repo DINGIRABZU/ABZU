@@ -164,6 +164,91 @@ def _skin_color(name: str) -> np.ndarray:
     )
 
 
+# ---------------------------------------------------------------------------
+# Frame rendering plug-ins
+
+
+def _default_render_2d_frame(
+    traits: AvatarTraits,
+    mesh: Optional[object],
+    predictor: Optional[object],
+    audio_wave: Optional[np.ndarray],
+    step: int,
+    idx: int,
+    sadtalker_frames: Optional[Iterator[np.ndarray]],
+) -> tuple[np.ndarray, int]:
+    """Return the next 2-D frame and updated audio index."""
+
+    if sadtalker_frames is not None:
+        frame = next(sadtalker_frames)
+        frame = np.asarray(frame, dtype=np.uint8)
+        return frame, idx
+
+    layer = emotional_state.get_current_layer() or ""
+    skin = traits.skins.get(layer)
+    frame = np.zeros((64, 64, 3), dtype=np.uint8)
+    color = np.array(traits.eye_color, dtype=np.uint8)
+    frame[:] = _skin_color(skin) if skin else color
+    if context_tracker.state.avatar_loaded:
+        emotion = emotional_state.get_last_emotion()
+        frame = apply_expression(frame, emotion)
+        if mesh is not None:
+            _ = mesh.process(frame)
+
+    if predictor is not None and audio_wave is not None:
+        seg = audio_wave[idx : idx + step]
+        idx += step
+        try:
+            frame = predictor.synthesize(frame, seg)
+        except Exception:  # pragma: no cover - optional
+            logger.exception("Wav2Lip synthesis failed")
+    return frame, idx
+
+
+def _default_render_3d_frame(
+    traits: AvatarTraits,
+    mesh: Optional[object],
+    predictor: Optional[object],
+    audio_wave: Optional[np.ndarray],
+    step: int,
+    idx: int,
+    sadtalker_frames: Optional[Iterator[np.ndarray]],
+    cam_iter: Optional[Iterator[tuple[float, float, float]]],
+) -> tuple[np.ndarray, int]:
+    """Return the next 3-D frame and updated audio index."""
+
+    frame, idx = _default_render_2d_frame(
+        traits, mesh, predictor, audio_wave, step, idx, sadtalker_frames
+    )
+    if cam_iter is not None:
+        try:
+            cx, cy, _ = next(cam_iter)
+            x = int(cx) % frame.shape[1]
+            y = int(cy) % frame.shape[0]
+            frame[y, x] = np.array([255, 0, 0], dtype=np.uint8)
+        except StopIteration:
+            pass
+    return frame, idx
+
+
+render_2d_frame = _default_render_2d_frame
+render_3d_frame = _default_render_3d_frame
+
+
+def set_frame_renderers(
+    *,
+    two_d: Optional[Callable[..., tuple[np.ndarray, int]]] = None,
+    three_d: Optional[Callable[..., tuple[np.ndarray, int]]] = None,
+) -> None:
+    """Replace default frame rendering functions."""
+
+    global render_2d_frame, render_3d_frame
+    if two_d is not None:
+        render_2d_frame = two_d
+    if three_d is not None:
+        render_3d_frame = three_d
+
+
 def generate_avatar_stream(
     scale: int = 1,
     lip_sync_audio: Optional[Path] = None,
@@ -171,7 +256,6 @@ def generate_avatar_stream(
 ) -> Iterator[np.ndarray]:
     """Yield RGB frames representing the configured avatar."""
     traits = _apply_trait_overrides(_load_traits())
-    color = np.array(traits.eye_color, dtype=np.uint8)
     mesh = _get_face_mesh()
 
     audio_wave = None
@@ -207,30 +291,30 @@ def generate_avatar_stream(
 
     try:
         while True:
-            if sadtalker_frames is not None:
-                try:
-                    frame = next(sadtalker_frames)
-                    frame = np.asarray(frame, dtype=np.uint8)
-                except StopIteration:
-                    break
-            else:
-                layer = emotional_state.get_current_layer() or ""
-                skin = traits.skins.get(layer)
-                frame = np.zeros((64, 64, 3), dtype=np.uint8)
-                frame[:] = _skin_color(skin) if skin else color
-                if context_tracker.state.avatar_loaded:
-                    emotion = emotional_state.get_last_emotion()
-                    frame = apply_expression(frame, emotion)
-                    if mesh is not None:
-                        _ = mesh.process(frame)
-
-                if predictor is not None and audio_wave is not None:
-                    seg = audio_wave[idx : idx + step]
-                    idx += step
-                    try:
-                        frame = predictor.synthesize(frame, seg)
-                    except Exception:  # pragma: no cover - optional
-                        logger.exception("Wav2Lip synthesis failed")
+            try:
+                if cam_iter is not None:
+                    frame, idx = render_3d_frame(
+                        traits,
+                        mesh,
+                        predictor,
+                        audio_wave,
+                        step,
+                        idx,
+                        sadtalker_frames,
+                        cam_iter,
+                    )
+                else:
+                    frame, idx = render_2d_frame(
+                        traits,
+                        mesh,
+                        predictor,
+                        audio_wave,
+                        step,
+                        idx,
+                        sadtalker_frames,
+                    )
+            except StopIteration:
+                break
 
             for pipe in FACE_PIPELINES:
                 try:
@@ -255,15 +339,6 @@ def generate_avatar_stream(
                 except Exception:  # pragma: no cover - plugin errors
                     logger.exception("gesture pipeline failed")
 
-            if cam_iter is not None:
-                try:
-                    cx, cy, _ = next(cam_iter)
-                    x = int(cx) % frame.shape[1]
-                    y = int(cy) % frame.shape[0]
-                    frame[y, x] = np.array([255, 0, 0], dtype=np.uint8)
-                except StopIteration:
-                    cam_iter = None
-
             frame = _upscale(frame, scale)
             yield frame
     finally:
@@ -285,4 +360,7 @@ __all__ = [
     "AvatarTraits",
     "register_face_pipeline",
     "register_gesture_pipeline",
+    "render_2d_frame",
+    "render_3d_frame",
+    "set_frame_renderers",
 ]

@@ -82,6 +82,20 @@ for _ in stream_avatar_audio(Path("qnl_hex_song.wav")):
     pass
 ```
 
+## 2-D vs 3-D
+
+Avatars can render with either a lightweight 2‑D placeholder or a simple 3‑D
+scene derived from ``LargeWorldModel``. Select the mode per agent via the API:
+
+```bash
+curl -X POST /agents/overlord/avatar-mode -d '{"mode": "3d"}'
+```
+
+When ``mode`` is ``"3d"`` the video engine expects meshes, camera paths and
+optional lip‑sync audio. These assets are loaded by
+``media.avatar.lwm_renderer`` before frames are generated. Omitting the mode or
+setting it to ``"2d"`` keeps the traditional flat rendering path.
+
 ## Object-aware avatar selection
 
 The video engine can adapt the visible avatar based on the current visual
