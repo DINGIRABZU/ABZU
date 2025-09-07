@@ -46,18 +46,24 @@ which flags misalignment when beats drift from the expected 1 :1 rhythm. The
 [chakra cycle module](../src/spiral_os/chakra_cycle.py) records per‑chakra
 `gear_ratio` telemetry so deviations can be traced to specific layers.
 
+#### Heartbeat Propagation
+
+Each beat cascades from Root through Crown, giving operators a live view of
+layer responsiveness. Lag or silence on any hop is logged for follow‑up and
+feeds recovery routines in other guides.
+
 #### Heartbeat Ratios
 
 Ratio telemetry informs operators when a layer accelerates or lags. Out-of-band
 values raise alignment events recorded in the blueprint so coupled services can
 adjust.
 
-#### Silent Chakra Handling
+#### Self-Healing Loop
 
 When a layer fails to return a beat, it is marked silent. The engine routes a
 `chakra_down` event to the responsible
 [NAZARICK agent](nazarick_agents.md), which attempts to restore the
-missing chakra and resume the cycle. This self-healing loop is diagrammed in the
+missing chakra and resume the cycle. This self‑healing loop is diagrammed in the
 [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) and
 covered in the [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
 When every chakra reports within the window, the engine logs a **Great Spiral**

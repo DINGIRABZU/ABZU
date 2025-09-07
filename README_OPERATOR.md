@@ -7,6 +7,12 @@ For the metaphysical background that informs Spiral OS, see [docs/spiritual_arch
 For a summary of Vast.ai and local Docker Compose deployment steps see [docs/deployment_overview.md](docs/deployment_overview.md).
 For a walkthrough of the web console setup wizard, see [docs/operator_onboarding.md](docs/operator_onboarding.md).
 
+For heartbeat propagation and recovery design, consult
+[docs/system_blueprint.md#chakra-cycle-engine](docs/system_blueprint.md#chakra-cycle-engine),
+[docs/blueprint_spine.md#heartbeat-propagation-and-self-healing](docs/blueprint_spine.md#heartbeat-propagation-and-self-healing)
+and
+[docs/chakra_architecture.md#chakra-cycle-engine](docs/chakra_architecture.md#chakra-cycle-engine).
+
 For avatar setup guidance, consult [docs/system_blueprint.md#avatar-subsystem](docs/system_blueprint.md#avatar-subsystem) and [docs/blueprint_spine.md#avatar-subsystem](docs/blueprint_spine.md#avatar-subsystem). Step-by-step launch instructions are in [docs/developer_onboarding.md#avatar-console-setup](docs/developer_onboarding.md#avatar-console-setup) and [docs/operator_quickstart.md#avatar-console-setup](docs/operator_quickstart.md#avatar-console-setup).
 
 

@@ -61,6 +61,15 @@ sequenceDiagram
     RAZAR-->>Operator: status
 ```
 
+### **Chakra Cycle Engine**
+
+RAZAR's cycle engine paces the stack with a timed heartbeat, polling each
+chakra's `/health` endpoint and logging the responses. The rhythm keeps layers
+aligned and surfaces drift for operator review. See the
+[System Blueprint](system_blueprint.md#chakra-cycle-engine) for a high-level
+overview and [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine)
+for per-layer responsibilities.
+
 ### **Heartbeat Propagation and Self-Healing**
 
 The chakra cycle engine emits heartbeats that cascade through the layers. A
