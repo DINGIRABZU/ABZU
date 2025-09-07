@@ -140,8 +140,6 @@ class AvatarVideoTrack(VideoStreamTrack):  # type: ignore[misc]
             self._frames: Iterator[np.ndarray] = video_engine.generate_avatar_stream()
         self._cues = cues
         self._style: str | None = None
-        global _active_track
-        _active_track = self
 
     def update_audio(self, audio_path: Path) -> None:
         self._frames = avatar_expression_engine.stream_avatar_audio(audio_path)
@@ -216,21 +214,22 @@ def get_video_track() -> AvatarVideoTrack | None:
 # ---------------------------------------------------------------------------
 
 _pcs: Set[RTCPeerConnection] = set()
-_active_track: "AvatarVideoTrack | None" = None
 
 
 class WebRTCGateway(VideoProcessor):  # type: ignore[misc]
     """Processor handling WebRTC offers and avatar audio updates."""
 
-    def __init__(self) -> None:
+    def __init__(self, session_manager: Any | None = None) -> None:
+        self.session_manager = session_manager
         self.router = APIRouter()
-        self.router.post("/offer")(self.offer)
-        self.router.post("/avatar-audio")(self.avatar_audio)
+        self.router.post("/{agent}/offer")(self.offer)
+        self.router.post("/{agent}/avatar-audio")(self.avatar_audio)
 
     async def process(self, request: Request) -> dict[str, str]:
-        return await self.offer(request)
+        # ``process`` retained for backwards compatibility
+        return await self.offer("default", request)
 
-    async def offer(self, request: Request) -> dict[str, str]:
+    async def offer(self, agent: str, request: Request) -> dict[str, str]:
         auth_header = request.headers.get("Authorization", "")
         token = None
         if auth_header.lower().startswith("bearer "):
@@ -244,10 +243,14 @@ class WebRTCGateway(VideoProcessor):  # type: ignore[misc]
 
         pc = RTCPeerConnection()
         _pcs.add(pc)
-        vtrack = get_video_track()
+        vtrack = atrack = None
+        if self.session_manager is not None:
+            vtrack, atrack = self.session_manager.get_tracks(agent)
+        else:
+            vtrack = get_video_track()
+            atrack = get_audio_track()
         if vtrack is not None:
             pc.addTrack(vtrack)
-        atrack = get_audio_track()
         if atrack is not None:
             pc.addTrack(atrack)
 
@@ -258,7 +261,7 @@ class WebRTCGateway(VideoProcessor):  # type: ignore[misc]
         logger.info("WebRTC peer connected")
         return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
 
-    async def avatar_audio(self, request: Request) -> dict[str, str]:
+    async def avatar_audio(self, agent: str, request: Request) -> dict[str, str]:
         auth_header = request.headers.get("Authorization", "")
         token = None
         if auth_header.lower().startswith("bearer "):
@@ -269,10 +272,13 @@ class WebRTCGateway(VideoProcessor):  # type: ignore[misc]
             raise HTTPException(status_code=401, detail="invalid token") from exc
         data = await request.json()
         path = Path(data["path"])
-        if _active_track is None:
+        if self.session_manager is None:
             raise HTTPException(status_code=404, detail="no active track")
-        _active_track.update_audio(path)
-        logger.info("Updated avatar audio: %s", path)
+        try:
+            self.session_manager.update_audio(agent, path)
+        except KeyError:
+            raise HTTPException(status_code=404, detail="no active track") from None
+        logger.info("Updated avatar audio for %s: %s", agent, path)
         return {"status": "ok"}
 
     async def close_peers(self) -> None:
@@ -280,6 +286,9 @@ class WebRTCGateway(VideoProcessor):  # type: ignore[misc]
         _pcs.clear()
         for coro in coros:
             await coro
+        if self.session_manager is not None:
+            for agent in list(self.session_manager.video.keys()):
+                self.session_manager.remove(agent)
 
 
 # ---------------------------------------------------------------------------

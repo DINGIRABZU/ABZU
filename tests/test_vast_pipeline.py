@@ -94,7 +94,7 @@ def test_offer_returns_json_answer(monkeypatch):
                 offer = await pc.createOffer()
                 await pc.setLocalDescription(offer)
                 resp = await client.post(
-                    "/offer",
+                    "/agent/offer",
                     json={
                         "sdp": pc.localDescription.sdp,
                         "type": pc.localDescription.type,

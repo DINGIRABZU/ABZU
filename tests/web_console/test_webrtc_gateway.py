@@ -20,7 +20,7 @@ from aiortc import RTCSessionDescription
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from communication import webrtc_gateway
+import video_stream
 
 
 def test_offer_and_avatar_audio(monkeypatch, tmp_path):
@@ -50,20 +50,19 @@ def test_offer_and_avatar_audio(monkeypatch, tmp_path):
         async def close(self):  # pragma: no cover - dummy close
             pass
 
-    monkeypatch.setattr(webrtc_gateway, "RTCPeerConnection", DummyPC)
+    monkeypatch.setattr(video_stream, "RTCPeerConnection", DummyPC)
 
     app = FastAPI()
-    app.include_router(webrtc_gateway.router)
+    app.include_router(video_stream.router)
 
     with TestClient(app) as client:
-        resp = client.post("/offer", json={"sdp": "v=0", "type": "offer"})
+        resp = client.post("/agent/offer", json={"sdp": "v=0", "type": "offer"})
         assert resp.status_code == 200
         pc = DummyPC.instances[0]
-        assert webrtc_gateway.AvatarVideoTrack in pc.tracks
-        assert webrtc_gateway.AvatarAudioTrack in pc.tracks
+        assert video_stream.AvatarVideoTrack in pc.tracks
+        assert video_stream.AvatarAudioTrack in pc.tracks
 
-        active = webrtc_gateway._active_track  # type: ignore[attr-defined]
-        assert active is not None
+        active = video_stream.session_manager.video["agent"]
         called: dict[str, Path] = {}
 
         def fake_update(path: Path) -> None:
@@ -71,8 +70,8 @@ def test_offer_and_avatar_audio(monkeypatch, tmp_path):
 
         active.update_audio = fake_update  # type: ignore[assignment]
         audio_path = tmp_path / "test.wav"
-        resp = client.post("/avatar-audio", json={"path": str(audio_path)})
+        resp = client.post("/agent/avatar-audio", json={"path": str(audio_path)})
         assert resp.status_code == 200
         assert called["path"] == audio_path
 
-    asyncio.run(webrtc_gateway.close_peers())
+    asyncio.run(video_stream.close_peers())

@@ -21,6 +21,19 @@ tracks that were requested. When bandwidth or configuration prohibits video or
 audio streaming the connector falls back to data-channel messages, ensuring that
 text or other payloads can still reach the client.
 
+## Per-Agent Sessions
+
+Multiple agents can negotiate their own WebRTC channels. Clients address the
+desired agent in the signalling endpoint paths:
+
+```text
+POST /{agent}/offer         # negotiate and receive an answer
+POST /{agent}/avatar-audio  # update the agent's lip-sync audio
+```
+
+The server's ``AvatarSessionManager`` keeps tracks isolated per agent so that
+video and audio updates do not interfere across sessions.
+
 ## Signaling Flow
 
 1. **Client connects** – A client creates a WebRTC offer and sends it to the

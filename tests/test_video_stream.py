@@ -79,7 +79,7 @@ def test_webrtc_offer(monkeypatch):
                 offer = await pc.createOffer()
                 await pc.setLocalDescription(offer)
                 resp = await client.post(
-                    "/offer",
+                    "/agent/offer",
                     json={
                         "sdp": pc.localDescription.sdp,
                         "type": pc.localDescription.type,
@@ -158,15 +158,13 @@ def test_avatar_audio_requires_soundfile(monkeypatch, tmp_path):
 def test_avatar_audio_endpoint_updates_track(monkeypatch, tmp_path):
     """The /avatar-audio endpoint should update the active track."""
 
-    track = server.video_stream.AvatarVideoTrack()
+    track, _ = server.video_stream.session_manager.get_tracks("agent")
     called: dict[str, Path] = {}
 
     def fake_update(path: Path) -> None:
         called["path"] = path
 
     monkeypatch.setattr(track, "update_audio", fake_update)
-    server.video_stream._active_track = track
-
     audio = tmp_path / "clip.wav"
     audio.write_text("hi", encoding="utf-8")
 
@@ -176,11 +174,12 @@ def test_avatar_audio_endpoint_updates_track(monkeypatch, tmp_path):
             async with httpx.AsyncClient(
                 transport=transport, base_url="http://testserver"
             ) as client:
-                resp = await client.post("/avatar-audio", json={"path": str(audio)})
+                resp = await client.post(
+                    "/agent/avatar-audio", json={"path": str(audio)}
+                )
                 return resp.json(), resp.status_code
 
     data, status = asyncio.run(run())
-    server.video_stream._active_track = None
 
     assert status == 200
     assert data == {"status": "ok"}

@@ -65,7 +65,7 @@ from memory.mental import record_task_flow
 import corpus_memory_logging
 import music_generation
 import vector_memory
-from communication import webrtc_gateway as video_stream
+import video_stream
 from connectors import webrtc_connector
 from core import feedback_logging, video_engine
 from crown_config import settings
