@@ -46,6 +46,19 @@ If RAZAR cannot restart components, rebuild the virtual environment and rerun
 the manager. Deleting the `.state` file next to the configuration forces a
 full restart cycle.
 
+## Chakra status board
+
+`monitoring/chakra_status_board.py` aggregates heartbeat frequencies and
+component versions. Query the JSON endpoint for a snapshot or scrape the
+metrics endpoint with Prometheus:
+
+```bash
+curl http://localhost:8000/chakra/status
+```
+
+A status of `out_of_sync` or a frequency near zero indicates a stalled chakra.
+Version fields reveal outdated components that may require redeployment.
+
 ## Boot history
 
 Component activity is written to `logs/razar.log` in JSON lines. Refer to the
