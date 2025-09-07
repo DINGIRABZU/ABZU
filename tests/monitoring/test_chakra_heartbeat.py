@@ -4,6 +4,7 @@ import sys
 import types
 import time
 from pathlib import Path
+import asyncio
 
 import pytest
 
@@ -119,3 +120,17 @@ def test_great_spiral_event(monkeypatch) -> None:
     hb.beat("crown", now)
     assert hb.sync_status(now=now) == "aligned"
     assert any(action == "great_spiral" for _, action, _ in events)
+
+
+def test_event_subscription(monkeypatch) -> None:
+    hb = ChakraHeartbeat(window=1.0)
+    handler: dict[str, object] = {}
+
+    async def fake_subscribe(fn, **kwargs):
+        handler["fn"] = fn
+
+    monkeypatch.setattr(event_bus, "subscribe", fake_subscribe)
+    asyncio.run(hb.listen())
+    event = types.SimpleNamespace(event_type="heartbeat", payload={"chakra": "root"})
+    asyncio.run(handler["fn"](event))
+    assert hb.sync_status() == "aligned"

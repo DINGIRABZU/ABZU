@@ -7,9 +7,10 @@ from typing import Dict, Iterable, List
 
 from distributed_memory import DistributedMemory
 
-from agents.event_bus import emit_event
+from agents.event_bus import emit_event, subscribe
+from citadel.event_producer import Event
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 try:  # pragma: no cover - metrics optional
     from prometheus_client import Counter, Gauge
@@ -66,6 +67,24 @@ class ChakraHeartbeat:
         self._confirm: Dict[str, float] = {}
         self._chakras = set(chakras or [])
         self._aligned = False
+
+    async def listen(self) -> None:
+        """Subscribe to global heartbeat events and update timestamps.
+
+        The call blocks while the underlying :func:`subscribe` yields events and
+        should typically be executed in a background task. It may be cancelled
+        by the caller to stop monitoring.
+        """
+
+        async def handler(event: Event) -> None:
+            if event.event_type != "heartbeat":
+                return
+            chakra = event.payload.get("chakra")
+            if chakra:
+                ts = float(event.payload.get("timestamp", time.time()))
+                self.beat(str(chakra), ts)
+
+        await subscribe(handler)
 
     def beat(self, chakra: str, timestamp: float | None = None) -> None:
         """Record a heartbeat for ``chakra`` at ``timestamp``."""
