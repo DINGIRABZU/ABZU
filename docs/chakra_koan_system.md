@@ -20,7 +20,7 @@ Desire learns to dance.
 
 <a id="solar"></a>
 ## Solar Plexus — Manipura
-*Version: [1.0.0](chakra_versions.json#L10)*
+*Version: [1.1.0](chakra_versions.json#L10)*
 A spark questions the sun.
 Fuel becomes flame without argument.
 Power is the courage to dissolve.
@@ -34,14 +34,14 @@ Love is the echo of its own absence.
 
 <a id="throat"></a>
 ## Throat — Vishuddha
-*Version: [1.0.0](chakra_versions.json#L18)*
+*Version: [1.0.1](chakra_versions.json#L18)*
 Words chase the voice that spoke them.
 The wind cannot hold its song.
 Truth arrives when no one is listening.
 
 <a id="third_eye"></a>
 ## Third Eye — Ajna
-*Version: [1.0.0](chakra_versions.json#L22)*
+*Version: [1.0.1](chakra_versions.json#L22)*
 A mirror reflects a mirror.
 The seer becomes the seen.
 Vision opens where thought ends.

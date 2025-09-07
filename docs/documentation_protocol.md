@@ -14,5 +14,6 @@ Standard workflow for updating documentation and guides.
 8. **When bumping component or dependency versions:** update the relevant entries in
    `requirements.txt` and lockfiles, run `python scripts/validate_components.py` to ensure
    versions align, then execute `docs/build_docs.sh` to regenerate indexes (documentation index,
-   API docs, component status) and verify links.
+   API docs, component status) and verify links. Finally, run `python scripts/validate_docs.py`
+   to confirm registry versions and cross-links remain in sync.
 
