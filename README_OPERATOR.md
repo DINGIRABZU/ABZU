@@ -9,7 +9,7 @@ For a walkthrough of the web console setup wizard, see [docs/operator_onboarding
 
 For heartbeat propagation and recovery design, consult
 [docs/system_blueprint.md#chakra-cycle-engine](docs/system_blueprint.md#chakra-cycle-engine),
-[docs/blueprint_spine.md#heartbeat-propagation-and-self-healing](docs/blueprint_spine.md#heartbeat-propagation-and-self-healing)
+[docs/blueprint_spine.md#agent-heartbeats-lifecycle-events-and-self-healing](docs/blueprint_spine.md#agent-heartbeats-lifecycle-events-and-self-healing)
 and
 [docs/chakra_architecture.md#chakra-cycle-engine](docs/chakra_architecture.md#chakra-cycle-engine).
 

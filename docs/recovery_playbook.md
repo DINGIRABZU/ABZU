@@ -35,7 +35,7 @@ tasks for Sacral, and other utilities live under `scripts/chakra_healing/`.
 The polling loop is driven by the
 [Chakra Cycle Engine](system_blueprint.md#chakra-cycle-engine), whose
 propagation path and self-healing flow are mapped in the
-[Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing)
+[Blueprint Spine](blueprint_spine.md#agent-heartbeats-lifecycle-events-and-self-healing)
 and detailed in the
 [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine).
 When errors persist beyond these hooks,

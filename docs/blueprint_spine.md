@@ -70,19 +70,23 @@ aligned and surfaces drift for operator review. See the
 overview and [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine)
 for per-layer responsibilities.
 
-### **Heartbeat Propagation and Self-Healing**
+### **Agent Heartbeats, Lifecycle Events, and Self-Healing**
 
-The chakra cycle engine emits heartbeats that cascade through the layers. A
-silent response triggers NAZARICK servants to mend the break and rejoin the
-cycle.
+The chakra cycle engine emits heartbeats that cascade through the layers. Each
+agent posts `agent_heartbeat` messages alongside lifecycle hooks—`agent_start`,
+`agent_stop`, `agent_error`, and `agent_recover`—which RAZAR logs on the
+lifecycle bus. Silent beats or terminal events trigger NAZARICK servants to
+mend the break and rejoin the cycle.
 
 ```mermaid
 {{#include figures/heartbeat_self_healing.mmd}}
 ```
 
 For layer-specific responsibilities, see
-[Chakra Architecture](chakra_architecture.md#chakra-cycle-engine) and
-[Nazarick Agents](nazarick_agents.md). The remediation philosophy follows the
+[Chakra Architecture](chakra_architecture.md#chakra-cycle-engine),
+[Nazarick Agents](nazarick_agents.md), and the
+[System Blueprint](system_blueprint.md#agent-heartbeats-lifecycle-events-and-self-healing).
+The remediation philosophy follows the
 [Self-Healing Manifesto](self_healing_manifesto.md).
 
 ### **Session Management**
