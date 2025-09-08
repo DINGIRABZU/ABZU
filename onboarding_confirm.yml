@@ -191,7 +191,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: db00507a4acdcbfd4b9200fb7f082e45862fd0fa4c71f1cba963210150cb213d
+    sha256: 4f2a4e49aa7f027a83620fe6ce64192fa177e98f96ed6179c52b2a4edc5f6983
     summary:
       purpose: Core contribution rules.
       scope: All contributors.

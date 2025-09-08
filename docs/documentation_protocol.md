@@ -16,4 +16,6 @@ Standard workflow for updating documentation and guides.
    versions align, then execute `docs/build_docs.sh` to regenerate indexes (documentation index,
    API docs, component status) and verify links. Finally, run `python scripts/validate_docs.py`
    to confirm registry versions and cross-links remain in sync.
+9. **Run `python scripts/verify_docs_up_to_date.py`** to confirm the doctrine index timestamps and
+   feature references are current before submitting a pull request.
 
