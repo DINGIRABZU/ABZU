@@ -32,11 +32,27 @@ class EthosClause:
 
 
 LAWS: List[Law] = [
-    Law("Nonaggression", "Refrain from unprovoked violence", ["attack", "harm"]),
-    Law("Consent", "Seek consent in all dealings", ["coerce", "force"]),
+    Law(
+        "Nonaggression",
+        "Refrain from unprovoked violence",
+        ["attack", "harm", "kill a person", "cause injury"],
+    ),
+    Law(
+        "Consent",
+        "Seek consent in all dealings",
+        ["coerce", "force", "without consent", "nonconsensual"],
+    ),
     Law("Honesty", "Uphold truth and transparency", ["lie", "deceive"]),
-    Law("Stewardship", "Protect resources and the environment", ["waste", "pollute"]),
-    Law("Justice", "Act with fairness and equity", ["bias", "cheat"]),
+    Law(
+        "Stewardship",
+        "Protect resources and the environment",
+        ["waste", "pollute"],
+    ),
+    Law(
+        "Justice",
+        "Act with fairness and equity",
+        ["bias", "cheat", "racial superiority", "ethnic cleansing"],
+    ),
     Law("Compassion", "Show empathy toward others", ["neglect", "cruel"]),
     Law("Wisdom", "Pursue knowledge responsibly", ["ignorant", "reckless"]),
 ]
