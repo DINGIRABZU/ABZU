@@ -31,3 +31,6 @@ train-deterministic:
 bench:
 >python benchmarks/run_benchmarks.py
 
+bench-query-memory:
+>python benchmarks/query_memory_bench.py
+
