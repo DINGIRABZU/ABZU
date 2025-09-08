@@ -14,9 +14,11 @@ from pathlib import Path
 from statistics import mean
 from typing import Iterable, List, Mapping, Sequence
 
+from opentelemetry import trace
 from memory.sacred import generate_sacred_glyph
 
 logger = logging.getLogger(__name__)
+_tracer = trace.get_tracer(__name__)
 
 try:  # pragma: no cover - optional dependency
     import torch
@@ -154,21 +156,23 @@ class SpiralMemory:
     # ----------------------------------------------------------------- recall
     def recall(self, query: str) -> str:
         """Return a synthesized insight for ``query``."""
+        with _tracer.start_as_current_span("spiral_memory.recall") as span:
+            span.set_attribute("spiral_memory.query", query)
 
-        events = self._load_events()
-        agg = self.aggregate()
-        parts: List[str] = []
-        for event, glyph, phrase in events:
-            extras = [e for e in (glyph, phrase) if e]
-            if extras:
-                parts.append(f"{event} ({' | '.join(extras)})")
-            else:
-                parts.append(event)
-        insight = " | ".join(parts)
-        if agg:
-            vector = ", ".join(f"{v:.2f}" for v in agg)
-            insight = f"{insight} || signal [{vector}]"
-        return f"{query}: {insight}" if insight else f"{query}: (no data)"
+            events = self._load_events()
+            agg = self.aggregate()
+            parts: List[str] = []
+            for event, glyph, phrase in events:
+                extras = [e for e in (glyph, phrase) if e]
+                if extras:
+                    parts.append(f"{event} ({' | '.join(extras)})")
+                else:
+                    parts.append(event)
+            insight = " | ".join(parts)
+            if agg:
+                vector = ", ".join(f"{v:.2f}" for v in agg)
+                insight = f"{insight} || signal [{vector}]"
+            return f"{query}: {insight}" if insight else f"{query}: (no data)"
 
 
 DEFAULT_MEMORY = SpiralMemory()

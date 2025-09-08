@@ -77,7 +77,7 @@ def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:
     returns.
     """
 
-    with _tracer.start_as_current_span("event_bus.publish") as span:
+    with _tracer.start_as_current_span("event_bus.emit_event") as span:
         span.set_attribute("agent.actor", actor)
         span.set_attribute("event_bus.action", action)
         for key, value in metadata.items():

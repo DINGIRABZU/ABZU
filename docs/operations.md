@@ -179,10 +179,24 @@ curl http://localhost:8000/healthz
 curl http://localhost:8000/metrics | head
 ```
 
+### Dashboard setup
+
 To explore dashboards:
 
-1. Start a Prometheus server scraping each service's `/metrics` endpoint.
-2. Launch Grafana and import `monitoring/grafana-dashboard.json` for default panels.
+1. Start a Prometheus server scraping each service's `/metrics` endpoint. A minimal container setup:
+
+   ```bash
+   docker run -d --name prometheus -p 9090:9090 \
+     -v $(pwd)/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+   ```
+
+2. Launch Grafana:
+
+   ```bash
+   docker run -d --name grafana -p 3000:3000 grafana/grafana
+   ```
+
+3. In Grafana, add Prometheus as a data source pointing at `http://prometheus:9090` and import `monitoring/grafana-dashboard.json` for default panels.
 
 Agent interactions emit OpenTelemetry spans. With the collector running and
 `OTEL_EXPORTER_OTLP_ENDPOINT` set, spans appear in the collector's UI for

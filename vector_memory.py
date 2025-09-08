@@ -16,6 +16,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, Optional, cast
 import sqlite3
+from opentelemetry import trace
 
 from crown_config import settings
 from MUSIC_FOUNDATION import qnl_utils
@@ -66,6 +67,7 @@ _DECAY_STRATEGY = "exponential"
 LOG_FILE = Path("data/vector_memory.log")
 NARRATIVE_LOG = Path("data/narrative.log")
 logger = logging.getLogger(__name__)
+_tracer = trace.get_tracer(__name__)
 
 
 @dataclass(frozen=True)
@@ -325,50 +327,53 @@ def search(
     scoring: str = "hybrid",
 ) -> List[Dict[str, Any]]:
     """Return ``k`` fuzzy matches for ``query`` ordered by ``scoring``."""
+    with _tracer.start_as_current_span("vector_memory.search") as span:
+        span.set_attribute("vector_memory.query", query)
+        span.set_attribute("vector_memory.k", k)
 
-    qvec = embed_text(query)
-    col = _get_collection()
-    k_search = max(k * 5, k)
-    results: List[Dict[str, Any]] = []
-    qvec_list = qvec.tolist() if hasattr(qvec, "tolist") else list(qvec)
-    if hasattr(col, "search"):
-        raw = col.search(qvec_list, k=k_search)
-        iterator: Iterable[tuple[Any, Any, Any]] = (
-            (mid, emb, meta) for mid, emb, meta in raw
-        )
-    else:
-        raw = col.query([qvec_list], n_results=k_search)
-        iterator = zip(
-            raw.get("ids", [[]])[0] if "ids" in raw else range(k_search),
-            raw["embeddings"][0],
-            raw["metadatas"][0],
-        )
-    for _id, emb_list, meta in iterator:
-        if filter is not None:
-            skip = False
-            for key, val in filter.items():
-                if meta.get(key) != val:
-                    skip = True
-                    break
-            if skip:
-                continue
-        if np is not None:
-            emb = np.asarray(emb_list, dtype=float)
+        qvec = embed_text(query)
+        col = _get_collection()
+        k_search = max(k * 5, k)
+        results: List[Dict[str, Any]] = []
+        qvec_list = qvec.tolist() if hasattr(qvec, "tolist") else list(qvec)
+        if hasattr(col, "search"):
+            raw = col.search(qvec_list, k=k_search)
+            iterator: Iterable[tuple[Any, Any, Any]] = (
+                (mid, emb, meta) for mid, emb, meta in raw
+            )
         else:
-            emb = [float(x) for x in emb_list]
-        sim = cosine_similarity(emb, qvec)
-        weight = _decay(meta.get("timestamp", ""))
-        if scoring == "similarity":
-            score = sim
-        elif scoring == "recency":
-            score = weight
-        else:
-            score = sim * weight
-        out = dict(meta)
-        out["score"] = score
-        results.append(out)
-    results.sort(key=lambda m: m.get("score", 0.0), reverse=True)
-    return results[:k]
+            raw = col.query([qvec_list], n_results=k_search)
+            iterator = zip(
+                raw.get("ids", [[]])[0] if "ids" in raw else range(k_search),
+                raw["embeddings"][0],
+                raw["metadatas"][0],
+            )
+        for _id, emb_list, meta in iterator:
+            if filter is not None:
+                skip = False
+                for key, val in filter.items():
+                    if meta.get(key) != val:
+                        skip = True
+                        break
+                if skip:
+                    continue
+            if np is not None:
+                emb = np.asarray(emb_list, dtype=float)
+            else:
+                emb = [float(x) for x in emb_list]
+            sim = cosine_similarity(emb, qvec)
+            weight = _decay(meta.get("timestamp", ""))
+            if scoring == "similarity":
+                score = sim
+            elif scoring == "recency":
+                score = weight
+            else:
+                score = sim * weight
+            out = dict(meta)
+            out["score"] = score
+            results.append(out)
+        results.sort(key=lambda m: m.get("score", 0.0), reverse=True)
+        return results[:k]
 
 
 def search_batch(
