@@ -103,6 +103,7 @@ Consult the [Code Index](code_index.md) for an overview of modules, classes, and
 
 See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidance on the repository layout.
 
+### Repository Blueprint
 The overarching narrative for reconstructing the repository lives in [ABZU_blueprint.md](ABZU_blueprint.md).
 
 ### Unified Memory Bundle
