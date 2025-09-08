@@ -43,14 +43,10 @@ sequenceDiagram
     RAZAR-->>Operator: report ready
 ```
 
-### Agent Ecosystem
-Chakra-aligned servants coordinate with RAZAR to maintain systemic balance, routing perception and action through the memory bundle and world services [project_mission_vision.md](project_mission_vision.md).
+### Agent Ecosystem & Relations
+Crown brokers operator directives to Nazarick servants, who relay telemetry back to both Crown and the operator for continuous oversight. The diagram below maps these bidirectional flows [project_mission_vision.md](project_mission_vision.md).
 ```mermaid
-flowchart LR
-    Operator --> RAZAR
-    RAZAR --> Nazarick[Nazarick Agents]
-    Nazarick --> MemoryBundle
-    Nazarick --> Worlds
+{{#include figures/agent_relations.mmd}}
 ```
 
 ### World Replication

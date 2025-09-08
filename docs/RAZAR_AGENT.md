@@ -2,6 +2,8 @@
 
 RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and operator oversight.
 
+See [Agent Ecosystem & Relations](ABZU_blueprint.md#agent-ecosystem--relations) for Crown ↔ Nazarick ↔ Operator flows.
+
 ## Vision
 RAZAR bootstraps ABZU services in a reproducible environment and negotiates startup handshakes with the Crown stack.
 

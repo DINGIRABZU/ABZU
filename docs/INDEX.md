@@ -327,6 +327,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [features/FEATURE_TEMPLATE.md](features/FEATURE_TEMPLATE.md) | Feature Specification Template | - | - |
 | [features/README.md](features/README.md) | Feature Specifications | Guidelines for authoring feature specification files. | - |
 | [features/example_feature.md](features/example_feature.md) | Example Feature | - | - |
+| [figures/agent_relations.mmd](figures/agent_relations.mmd) | Crown, Nazarick, and operator interaction diagram | Version: v1.0.0 Last updated: 2025-09-08 | - |
 | [figures/chakra_architecture.mmd](figures/chakra_architecture.mmd) | chakra_architecture.mmd | - | - |
 | [figures/heartbeat_self_healing.mmd](figures/heartbeat_self_healing.mmd) | heartbeat_self_healing.mmd | - | - |
 | [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
@@ -364,6 +365,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [music_generation_usage.md](music_generation_usage.md) | Music Generation Usage | Generate audio from text prompts or ritual invocations. | - |
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
 | [narrative_system.md](narrative_system.md) | Narrative System | The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition. | - |
+| [nazarick/README.md](nazarick/README.md) | Nazarick | Nazarick houses chakra-aligned servant agents. The triadic flow between Crown, Nazarick, and the operator is outlined... | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | The Nazarick Narrative System converts biosignals into narrative events and persistent memory records. | - |
