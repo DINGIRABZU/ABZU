@@ -51,14 +51,10 @@ When a command arrives, the orchestrator consults the current emotional state an
 
 ## Memory Bundle
 
-`MemoryBundle` unifies the Cortex, Emotional, Mental, Spiritual and Narrative layers. `bundle.initialize()` emits a single `layer_init` event on the `memory` bus so every layer reports readiness together. Subsequent `query_memory` calls fan out requests across the layers and merge their results. See [Memory Layers Guide](memory_layers_GUIDE.md) for implementation details and future enhancements.
+`MemoryBundle` unifies the Cortex, Emotional, Mental, Spiritual and Narrative layers. `bundle.initialize()` emits a single `layer_init` event on the `memory` bus so every layer reports readiness together. Subsequent `query_memory` calls fan out requests across the layers and merge their results into one payload. See [Memory Layers Guide](memory_layers_GUIDE.md) for implementation details and the unified diagram below.
 
 ```mermaid
-graph LR
-    A[bundle.initialize()] --> B(layer_init)
-    B --> C{Cortex / Emotional / Mental / Spiritual / Narrative}
-    D[query_memory()] --> C
-    C --> E[aggregated response]
+{{#include figures/memory_bundle.mmd}}
 ```
 
 ## Failure Modes & Recovery

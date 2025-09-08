@@ -49,10 +49,10 @@ Contributors must pair system enhancements with operator-facing improvements, up
 ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores through a unified memory bundle. `broadcast_layer_event("layer_init")` boots all layers in parallel, and `query_memory` fans out reads across them before combining results into a single response that an Operator Agent can relay to consoles.
 
 ```mermaid
-{{#include figures/layer_init_query_flow.mmd}}
+{{#include figures/memory_bundle.mmd}}
 ```
 
-The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd). Scripts under **`scripts/`** initialize and verify the layers, and RAZAR activates the Bana engine once the bundle reports readiness.
+The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd). Scripts under **`scripts/`** initialize and verify the layers, and RAZAR activates the Bana engine once the bundle reports readiness.
 
 ### **Memory Spine**
 
