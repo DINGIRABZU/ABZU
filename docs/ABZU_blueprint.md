@@ -49,6 +49,19 @@ Crown brokers operator directives to Nazarick servants, who relay telemetry back
 {{#include figures/agent_relations.mmd}}
 ```
 
+### Nazarick Interface
+Operator inputs travel through Crown to reach Nazarick agents, which pair spoken output and 3D avatars for operator-facing feedback.
+- 3D avatars stream via [video_stream.py](../video_stream.py) and the [avatar pipeline](avatar_pipeline.md).
+- Voice personas are routed by [crown_router.py](../crown_router.py); see the [voice setup guide](voice_setup.md).
+- Each agent loads a personality template such as [albedo_agent_template.md](../agents/nazarick/albedo_agent_template.md). The full hierarchy appears in [nazarick_core_architecture.md](../agents/nazarick/nazarick_core_architecture.md).
+
+```mermaid
+flowchart LR
+    Operator --> Crown --> NazarickAgent
+    NazarickAgent --> VoiceEngine
+    NazarickAgent --> AvatarPipeline
+```
+
 ### World Replication
 Narrative directives drive world engines that render immersive environments and feed telemetry back into the story loop [project_mission_vision.md](project_mission_vision.md).
 ```mermaid
