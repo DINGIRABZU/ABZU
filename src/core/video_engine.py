@@ -231,8 +231,32 @@ def _default_render_3d_frame(
     return frame, idx
 
 
-render_2d_frame = _default_render_2d_frame
-render_3d_frame = _default_render_3d_frame
+# expose defaults for plug-ins
+default_render_2d_frame = _default_render_2d_frame
+default_render_3d_frame = _default_render_3d_frame
+
+render_2d_frame = default_render_2d_frame
+render_3d_frame = default_render_3d_frame
+
+
+def register_render_2d(
+    func: Callable[..., tuple[np.ndarray, int]]
+) -> Callable[..., tuple[np.ndarray, int]]:
+    """Register ``func`` as the active 2-D frame renderer."""
+
+    global render_2d_frame
+    render_2d_frame = func
+    return func
+
+
+def register_render_3d(
+    func: Callable[..., tuple[np.ndarray, int]]
+) -> Callable[..., tuple[np.ndarray, int]]:
+    """Register ``func`` as the active 3-D frame renderer."""
+
+    global render_3d_frame
+    render_3d_frame = func
+    return func
 
 
 def set_frame_renderers(
@@ -242,11 +266,10 @@ def set_frame_renderers(
 ) -> None:
     """Replace default frame rendering functions."""
 
-    global render_2d_frame, render_3d_frame
     if two_d is not None:
-        render_2d_frame = two_d
+        register_render_2d(two_d)
     if three_d is not None:
-        render_3d_frame = three_d
+        register_render_3d(three_d)
 
 
 def generate_avatar_stream(
@@ -362,5 +385,9 @@ __all__ = [
     "register_gesture_pipeline",
     "render_2d_frame",
     "render_3d_frame",
+    "register_render_2d",
+    "register_render_3d",
     "set_frame_renderers",
+    "default_render_2d_frame",
+    "default_render_3d_frame",
 ]
