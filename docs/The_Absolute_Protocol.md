@@ -10,6 +10,14 @@ Align contributions with the overarching goals in [project_mission_vision.md](pr
 
 Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three times to internalize the project's structure and intent.
 
+### Recent Core Milestones
+
+- **Document registry** enumerates canonical files with SHA-256 tracking in [doctrine_index.md](doctrine_index.md).
+- **Chakra heartbeat** reports per-layer pulse metrics via [chakra_metrics.md](chakra_metrics.md).
+- **Per-agent avatars** stream through the [avatar pipeline](avatar_pipeline.md) to keep sessions visually aligned.
+- **Resuscitator flows** coordinate recovery steps; follow the [recovery_playbook.md](recovery_playbook.md).
+- **Signal bus** links connectors with publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
+
 ### Environment Preparation
 Set up the local environment before running tools or tests:
 
