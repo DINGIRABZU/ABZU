@@ -11,6 +11,7 @@ import MemoryPanel from './memory_panel/memory_panel.js';
 import ChakraStatusPanel from './chakra_status_panel/chakra_status_panel.js';
 import SelfHealingPanel from './self_healing_panel/self_healing_panel.js';
 import ConnectorsPanel from './connectors_panel/connectors_panel.js';
+import MissionMap from './mission_map.js';
 
 function GameDashboard() {
   const buttons = [
@@ -18,7 +19,6 @@ function GameDashboard() {
     { id: 'memory', label: 'Memory Query', action: () => fetch(`${BASE_URL}/memory/query`, { method: 'POST' }) },
     { id: 'handover', label: 'Handover', action: () => fetch(`${BASE_URL}/handover`, { method: 'POST' }) }
   ];
-  const [focusIndex, setFocusIndex] = React.useState(0);
   const [wizardDone, setWizardDone] = React.useState(() => localStorage.getItem('setupWizardCompleted') === 'true');
   const [missionDone, setMissionDone] = React.useState(() => localStorage.getItem('missionWizardCompleted') === 'true');
 
@@ -29,38 +29,6 @@ function GameDashboard() {
     }
   }, [wizardDone, missionDone]);
 
-  React.useEffect(() => {
-    if (!wizardDone || !missionDone) return;
-    const btn = document.getElementById(buttons[focusIndex].id + '-btn');
-    if (btn) btn.focus();
-  }, [focusIndex, wizardDone, missionDone]);
-
-  React.useEffect(() => {
-    if (!wizardDone || !missionDone) return;
-    const handleKey = (e) => {
-      if (e.key === 'ArrowRight') setFocusIndex((i) => (i + 1) % buttons.length);
-      if (e.key === 'ArrowLeft') setFocusIndex((i) => (i + buttons.length - 1) % buttons.length);
-      if (e.key === 'Enter' || e.key === ' ') buttons[focusIndex].action();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [focusIndex, wizardDone, missionDone]);
-
-  React.useEffect(() => {
-    if (!wizardDone || !missionDone) return;
-    let raf;
-    const poll = () => {
-      const [gp] = navigator.getGamepads ? navigator.getGamepads() : [];
-      if (gp) {
-        if (gp.buttons[14]?.pressed) setFocusIndex((i) => (i + buttons.length - 1) % buttons.length);
-        if (gp.buttons[15]?.pressed) setFocusIndex((i) => (i + 1) % buttons.length);
-        if (gp.buttons[0]?.pressed) buttons[focusIndex].action();
-      }
-      raf = requestAnimationFrame(poll);
-    };
-    window.addEventListener('gamepadconnected', () => poll());
-    return () => cancelAnimationFrame(raf);
-  }, [focusIndex, wizardDone, missionDone]);
 
   if (!wizardDone) {
     return React.createElement(SetupWizard, { onComplete: () => setWizardDone(true) });
@@ -71,15 +39,7 @@ function GameDashboard() {
 
   return (
     React.createElement('div', null,
-      React.createElement('div', { className: 'mission-map' },
-        buttons.map((btn) =>
-          React.createElement('button', {
-            id: btn.id + '-btn',
-            key: btn.id,
-            onClick: btn.action
-          }, btn.label)
-        )
-      ),
+      React.createElement(MissionMap, { buttons }),
       React.createElement(AvatarRoom, null),
       React.createElement('pre', { id: 'event-log', style: { marginTop: '1rem', textAlign: 'left' } }),
       React.createElement(ChakraPulse),

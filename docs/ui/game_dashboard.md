@@ -1,6 +1,6 @@
 # Game Dashboard
 
-The game dashboard wraps the avatar video feed and chakra telemetry in a simple mission map.
+The game dashboard is a React single-page application that presents the avatar video feed alongside live chakra telemetry.
 
 ## Launch
 
@@ -10,7 +10,7 @@ The game dashboard wraps the avatar video feed and chakra telemetry in a simple 
 
 ## Mission Map
 
-The home screen shows large buttons for common actions:
+The landing view renders a mission map with oversized controller-friendly buttons for common actions:
 
 - **Ignite** – boot the system.
 - **Memory Query** – request a memory scan.
