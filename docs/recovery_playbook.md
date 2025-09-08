@@ -13,9 +13,9 @@ propagation are documented in
 1. The boot orchestrator launches components in priority order.
 2. Each launch runs a service-specific probe from `agents.razar.health_checks`.
 3. On failure the orchestrator retries the component locally a limited number of times.
-4. If local retries fail, `ai_invoker.handover(component, error, use_opencode=True)` requests an automated patch. Each attempt is logged to `logs/razar_ai_invocations.json`.
-5. When run with `--long-task`, the orchestrator keeps invoking the handover until the component passes its health check or the operator aborts with `Ctrl+C`. Each attempt and resulting patch is appended to `logs/razar_long_task.json`.
-6. Without `--long-task`, returned patches are applied and the health check reruns until it succeeds or the remote attempt limit is reached.
+4. If local retries fail, `ai_invoker.handover(component, error, use_opencode=True)` requests an automated patch and then reruns the component's health check.
+5. The orchestrator repeats this handover/health‑check loop until the component recovers or the configured `--remote-attempts` limit is hit. Each attempt is logged to `logs/razar_ai_invocations.json`.
+6. When run with `--long-task`, the orchestrator keeps invoking the handover indefinitely until the component passes its health check or the operator aborts with `Ctrl+C`. Each attempt and resulting patch is appended to `logs/razar_long_task.json`.
 7. After exhausting remote attempts or an operator abort, the component's metadata is quarantined under `quarantine/` and an entry is appended to `docs/quarantine_log.md`.
 8. The last successful component is recorded in `logs/razar_state.json` so subsequent runs resume from that point.
 

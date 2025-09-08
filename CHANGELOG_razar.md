@@ -56,6 +56,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Bumped `crown_handshake` to 0.2.4 and recorded version in connector registry.
 - Boot orchestrator retries failed components with `ai_invoker.handover` and
   logs each attempt in `logs/razar_ai_invocations.json`.
+- AI handover retry loop reruns health checks after each patch and aborts after
+  a configurable attempt limit.
 
 ## [0.1.0] - 2025-08-30
 
