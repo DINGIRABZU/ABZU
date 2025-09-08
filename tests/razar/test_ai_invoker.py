@@ -47,19 +47,16 @@ def test_handover_uses_opencode_and_applies_patch(monkeypatch, tmp_path: Path) -
 def test_handover_snapshots_target_before_patch(monkeypatch, tmp_path: Path) -> None:
     module_path = tmp_path / "mod.py"
     module_path.write_text("original", encoding="utf-8")
+    suggestion = [{"module": str(module_path), "tests": [], "error": "boom"}]
 
-    diff = f"+++ b/{module_path}\n"
-
-    monkeypatch.setattr(
-        ai_invoker.subprocess,
-        "run",
-        lambda *a, **k: (_ for _ in ()).throw(FileNotFoundError()),
-    )
-    monkeypatch.setattr(ai_invoker.opencode_client, "complete", lambda ctx: diff)
+    def fake_run(cmd, input=None, capture_output=None, text=None, check=None):
+        assert cmd == ["opencode", "run", "--json"]
+        return SimpleNamespace(returncode=0, stdout=json.dumps(suggestion))
 
     backups = tmp_path / "backups"
     monkeypatch.setattr(ai_invoker, "PATCH_BACKUP_DIR", backups)
     monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", tmp_path / "patch.json")
+    monkeypatch.setattr(ai_invoker.subprocess, "run", fake_run)
 
     monkeypatch.setattr(
         code_repair_module,
@@ -78,19 +75,16 @@ def test_handover_snapshots_target_before_patch(monkeypatch, tmp_path: Path) -> 
 def test_handover_rolls_back_on_failed_check(monkeypatch, tmp_path: Path) -> None:
     module_path = tmp_path / "mod.py"
     module_path.write_text("original", encoding="utf-8")
+    suggestion = [{"module": str(module_path), "tests": [], "error": "boom"}]
 
-    diff = f"+++ b/{module_path}\n"
-
-    monkeypatch.setattr(
-        ai_invoker.subprocess,
-        "run",
-        lambda *a, **k: (_ for _ in ()).throw(FileNotFoundError()),
-    )
-    monkeypatch.setattr(ai_invoker.opencode_client, "complete", lambda ctx: diff)
+    def fake_run(cmd, input=None, capture_output=None, text=None, check=None):
+        assert cmd == ["opencode", "run", "--json"]
+        return SimpleNamespace(returncode=0, stdout=json.dumps(suggestion))
 
     backups = tmp_path / "backups"
     monkeypatch.setattr(ai_invoker, "PATCH_BACKUP_DIR", backups)
     monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", tmp_path / "patch.json")
+    monkeypatch.setattr(ai_invoker.subprocess, "run", fake_run)
 
     def fake_repair(module, tests, err):
         module.write_text("patched", encoding="utf-8")

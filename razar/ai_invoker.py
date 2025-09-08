@@ -101,7 +101,6 @@ def handover(
     if context:
         ctx.update(context)
     suggestion: Any | None = None
-    suggestion_from_diff = False
     if use_opencode:
         try:
             result = subprocess.run(
@@ -119,7 +118,6 @@ def handover(
                 LOGGER.exception("opencode client failed for %s", component)
                 return False
             suggestion = _diff_to_suggestions(diff, error)
-            suggestion_from_diff = True
         except Exception:  # pragma: no cover - defensive
             LOGGER.exception("opencode CLI failed for %s", component)
             return False
@@ -135,7 +133,6 @@ def handover(
                     LOGGER.exception("opencode client failed for %s", component)
                     return False
                 suggestion = _diff_to_suggestions(diff, error)
-                suggestion_from_diff = True
             else:
                 try:
                     suggestion = json.loads(result.stdout or "null")
@@ -162,15 +159,17 @@ def handover(
         tests = [Path(p) for p in patch.get("tests", [])]
         err = patch.get("error", error)
         backup_path: Path | None = None
-        if suggestion_from_diff:
-            try:
-                PATCH_BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-                ts = datetime.utcnow().strftime("%Y%m%dT%H%M%S%f")
-                backup_path = PATCH_BACKUP_DIR / f"{module_path.name}.{ts}"
+        try:
+            PATCH_BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+            ts = datetime.utcnow().strftime("%Y%m%dT%H%M%S%f")
+            backup_path = PATCH_BACKUP_DIR / f"{module_path.name}.{ts}"
+            if module_path.exists():
                 shutil.copy2(module_path, backup_path)
-            except Exception:  # pragma: no cover - defensive
-                LOGGER.exception("Failed to snapshot %s", module)
+            else:
                 backup_path = None
+        except Exception:  # pragma: no cover - defensive
+            LOGGER.exception("Failed to snapshot %s", module)
+            backup_path = None
         for attempt in range(1, 3):
             try:
                 success = code_repair.repair_module(module_path, tests, err)
