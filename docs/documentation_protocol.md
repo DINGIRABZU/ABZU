@@ -19,3 +19,5 @@ Standard workflow for updating documentation and guides.
 9. **Run `python scripts/verify_docs_up_to_date.py`** to confirm the doctrine index timestamps and
    feature references are current before submitting a pull request.
 
+10. **Run `python scripts/check_connectors.py`** when connectors or related modules change to ensure placeholder-free, MCP-compliant implementations. Document connector protocol and heartbeat metadata in the corresponding guides.
+
