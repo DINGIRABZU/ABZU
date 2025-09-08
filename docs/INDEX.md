@@ -198,7 +198,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
-| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../scripts/bootstrap_memory.py`, `../worlds/services.py` |
+| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | `../agents/event_bus.py`, `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../scripts/bootstrap_memory.py`, `../worlds/services.py` |
 | [ABZU_project_declaration.md](ABZU_project_declaration.md) | ABZU_project_declaration.md | - | - |
 | [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Layer | Albedo is a personality layer that shapes responses through a four-phase alchemical cycle. | - |
 | [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |
@@ -376,7 +376,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
 | [open_web_ui.md](open_web_ui.md) | Open Web UI Integration Guide | This guide describes how the Open Web UI front end connects to the ABZU server, the dependencies required, and the ev... | `../server.py` |
 | [opencode_client.md](opencode_client.md) | Opencode Client | - | - |
-| [operations.md](operations.md) | Operations | - | - |
+| [operations.md](operations.md) | Operations | - | `../agents/event_bus.py` |
 | [operator_console.md](operator_console.md) | Operator Console | Arcade-style web interface for issuing commands through the Operator API. | - |
 | [operator_interface_GUIDE.md](operator_interface_GUIDE.md) | Operator Interface Guide | Instructions for operator API usage, onboarding requirements, and Nazarick Web Console chat rooms. | - |
 | [operator_nazarick_bridge.md](operator_nazarick_bridge.md) | Operator-Nazarick Bridge | **Version:** v1.0.0 **Last updated:** 2025-09-05 | - |
