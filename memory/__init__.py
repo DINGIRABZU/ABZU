@@ -10,6 +10,7 @@ from typing import Dict
 from agents.event_bus import emit_event
 from worlds.config_registry import register_layer
 from .query_memory import query_memory
+
 try:  # pragma: no cover - optional dependency
     from .chakra_registry import ChakraRegistry
 except Exception:  # pragma: no cover - fallback when vector memory unavailable
@@ -31,20 +32,23 @@ _LAYER_STATUSES: Dict[str, str] = {}
 
 
 def _load_layer(layer: str) -> str:
-    """Import ``layer`` and load optional fallback on failure."""
+    """Import ``layer`` and load optional fallback on ``ModuleNotFoundError``."""
 
     module_path = _LAYER_IMPORTS[layer]
     try:  # pragma: no cover - import may fail
         module = importlib.import_module(module_path)
         status = "ready"
-    except Exception:  # pragma: no cover - logged elsewhere
+    except ModuleNotFoundError:  # pragma: no cover - logged elsewhere
         optional_path = f"memory.optional.{module_path.rsplit('.', 1)[-1]}"
         try:
             module = importlib.import_module(optional_path)
             status = "defaulted"
-        except Exception:
+        except ModuleNotFoundError:
             module = None
             status = "error"
+    except Exception:  # pragma: no cover - unexpected import error
+        module = None
+        status = "error"
     if module is not None:
         sys.modules[module_path] = module
     _LAYER_STATUSES[layer] = status
