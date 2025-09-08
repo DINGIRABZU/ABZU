@@ -10,6 +10,10 @@ from typing import Dict
 from agents.event_bus import emit_event
 from worlds.config_registry import register_layer
 from .query_memory import query_memory
+try:  # pragma: no cover - optional dependency
+    from .chakra_registry import ChakraRegistry
+except Exception:  # pragma: no cover - fallback when vector memory unavailable
+    ChakraRegistry = None  # type: ignore[assignment]
 
 __version__ = "0.1.4"
 
@@ -74,4 +78,10 @@ def broadcast_layer_event(statuses: Dict[str, str]) -> Dict[str, str]:
 
 LAYER_STATUSES = _LAYER_STATUSES
 
-__all__ = ["broadcast_layer_event", "query_memory", "LAYERS", "LAYER_STATUSES"]
+__all__ = [
+    "broadcast_layer_event",
+    "query_memory",
+    "LAYERS",
+    "LAYER_STATUSES",
+    "ChakraRegistry",
+]
