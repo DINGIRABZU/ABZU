@@ -14,10 +14,12 @@
 
 ## World Creation
 
-After installation, create and initialize a world with:
+After installation, bootstrap the default world:
 
 ```bash
 abzu-bootstrap-world
 ```
 
-The command prepares local file-backed memory stores under `data/`, starts Crown services, and launches required agent profiles. Set `WORLD_NAME` to select a specific world manifest; otherwise, the default manifest is used.
+The command wraps `scripts/bootstrap_world.py`, which prepares file-backed memory stores under `data/`, initializes mandatory layers, and prints the status for each. Set `WORLD_NAME` to select a specific manifest; otherwise, the default manifest is used.
+
+Run `abzu-bootstrap-world -h` for optional arguments and flags.

@@ -834,7 +834,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/bootstrap_world.py",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "dependencies": [
         "__future__",
         "agents",
@@ -3813,7 +3813,7 @@
       "chakra": "unknown",
       "type": "connector",
       "path": "connectors/mcp_gateway_example.py",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
         "httpx",
