@@ -13,6 +13,7 @@ from agents.nazarick.resuscitator import Resuscitator
 from agents.razar import lifecycle_bus
 from agents.razar.recovery_manager import RecoveryManager
 from agents.razar.lifecycle_bus import Issue
+import agents.razar.ai_invoker as ai_invoker
 
 
 def test_restart_attempt_emits_success() -> None:
@@ -34,6 +35,38 @@ def test_restart_attempt_emits_success() -> None:
     asyncio.run(resuscitator.handle_event({"event": "agent_down", "agent": "alpha"}))
 
     assert called
+    assert {"event": "agent_resuscitated", "agent": "alpha"} in events
+
+
+def test_restart_failure_triggers_ai_invoker(monkeypatch) -> None:
+    """Failed restart invokes ai_invoker and retries."""
+
+    events: List[Dict[str, object]] = []
+
+    def emitter(event: Dict[str, object]) -> None:
+        events.append(event)
+
+    attempts = 0
+
+    def restart() -> bool:
+        nonlocal attempts
+        attempts += 1
+        return attempts > 1
+
+    called = False
+
+    def fake_handover(*, context=None, config_path=None):  # type: ignore[no-untyped-def]
+        nonlocal called
+        called = True
+        return {"handover": True}
+
+    monkeypatch.setattr(ai_invoker, "handover", fake_handover)
+
+    resuscitator = Resuscitator({"alpha": restart}, emitter=emitter)
+    asyncio.run(resuscitator.handle_event({"event": "agent_down", "agent": "alpha"}))
+
+    assert called
+    assert attempts == 2
     assert {"event": "agent_resuscitated", "agent": "alpha"} in events
 
 
