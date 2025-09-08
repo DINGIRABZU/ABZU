@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -437,7 +438,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [voice_aura.md](voice_aura.md) | Voice Aura FX | `audio/voice_aura.py` applies subtle reverb and delay based on the current emotion. Each emotion maps to a simple pre... | - |
 | [voice_cloner.md](voice_cloner.md) | Voice Cloner | The `VoiceCloner` utility records a short sample of a speaker and synthesises new speech in the captured voice. It ex... | - |
 | [voice_setup.md](voice_setup.md) | Voice Model Setup | This guide explains how to install external text-to-speech models so ABZU can produce spoken output. | - |
-| [world_bootstrap.md](world_bootstrap.md) | World Bootstrap Workflow | This guide outlines how to initialise a world and verify its configuration. | - |
+| [world_bootstrap.md](world_bootstrap.md) | World Bootstrap | Guide to initializing a world and preserving its component configuration. | `../scripts/world_export.py`, `../worlds/config_registry.py` |
 | [../floor_client/README.md](../floor_client/README.md) | Floor Client | This folder contains the React interface for Floor channels. | - |
 | [../guides/visual_customization.md](../guides/visual_customization.md) | Avatar Visual Customization | This guide outlines how to turn a 2D concept image into the 3D model used by the video engine. | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
