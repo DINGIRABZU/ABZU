@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Sequence
+
 import pytest
 from pytest import MonkeyPatch
 
@@ -101,6 +102,66 @@ def test_remote_repair(tmp_path: Path, monkeypatch: MonkeyPatch, backend: str) -
     comp = history["history"][0]["components"][0]
     assert comp["success"] is True
     assert comp["attempts"] == 2
+
+
+def test_remote_repair_retries_until_health_ok(
+    tmp_path: Path, monkeypatch: MonkeyPatch
+) -> None:
+    """Boot orchestrator retries AI handover until health checks pass."""
+
+    calls = {"handover": 0}
+
+    def fake_handover(component: str, error: str, use_opencode: bool = True) -> bool:
+        calls["handover"] += 1
+        probe_state["patched"] += 1
+        return True
+
+    monkeypatch.setattr(ai_invoker, "handover", fake_handover)
+
+    probe_state = {"patched": 0}
+
+    monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "state.json")
+    monkeypatch.setattr(bo, "HISTORY_FILE", tmp_path / "history.json")
+    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", tmp_path / "invocations.json")
+    monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
+    monkeypatch.setattr(bo, "_perform_handshake", lambda comps: None)
+    monkeypatch.setattr(bo, "launch_required_agents", lambda: None)
+    monkeypatch.setattr(bo.doc_sync, "sync_docs", lambda: None)
+    monkeypatch.setattr(bo.time, "sleep", lambda *a, **k: None)
+
+    class DummyProc:
+        returncode = 0
+
+        def terminate(self) -> None:  # pragma: no cover - trivial
+            pass
+
+        def wait(self) -> None:  # pragma: no cover - trivial
+            pass
+
+    monkeypatch.setattr(bo.subprocess, "Popen", lambda *a, **k: DummyProc())
+
+    def fake_probe(name: str) -> bool:
+        return probe_state["patched"] >= 2
+
+    monkeypatch.setattr(bo.health_checks, "run", fake_probe)
+    monkeypatch.setitem(bo.health_checks.CHECKS, "demo", fake_probe)
+
+    config = {"components": [{"name": "demo", "command": ["echo", "hi"]}]}
+    cfg_path = tmp_path / "config.json"
+    cfg_path.write_text(json.dumps(config))
+
+    argv = ["bo", "--config", str(cfg_path), "--retries", "0", "--remote-attempts", "2"]
+    monkeypatch.setattr(sys, "argv", argv)
+    bo.main()
+
+    assert calls["handover"] == 2
+    log = json.loads((tmp_path / "invocations.json").read_text())
+    assert len(log) == 2 and log[1]["attempt"] == 2
+
+    history = json.loads((tmp_path / "history.json").read_text())
+    comp = history["history"][0]["components"][0]
+    assert comp["success"] is True
+    assert comp["attempts"] == 3
 
 
 def test_remote_repair_cli_absent(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
