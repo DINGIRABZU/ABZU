@@ -11,7 +11,7 @@ from typing import Any
 
 import requests
 
-from connectors.signal_bus import publish, subscribe
+import connectors.signal_bus as signal_bus
 from connectors.base import ConnectorHeartbeat
 from connectors.message_formatter import format_message
 
@@ -57,7 +57,7 @@ def create_client() -> Any:
     async def on_message(message: discord.Message) -> None:  # pragma: no cover
         if message.author.bot:
             return
-        publish(
+        signal_bus.publish(
             "discord:in",
             {
                 "channel": message.channel.id,
@@ -82,7 +82,7 @@ def create_client() -> Any:
         if channel:
             loop.create_task(channel.send(format_message("discord", text)))
 
-    subscribe("discord:out", _outbound)
+    signal_bus.subscribe("discord:out", _outbound)
 
     return client
 
