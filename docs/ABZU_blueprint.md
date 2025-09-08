@@ -68,6 +68,18 @@ The chakra cycle engine synchronizes core modules with a unified pulse so agents
 {{#include figures/chakra_architecture.mmd}}
 ```
 
+The HeartBeat service emits periodic health signals through the [event bus](../agents/event_bus.py), enabling each memory layer to report status changes and trigger self-healing routines in the [memory layer guide](memory_layers_GUIDE.md).
+
+```mermaid
+sequenceDiagram
+    participant HeartBeat
+    participant EventBus
+    participant Layer
+    HeartBeat->>EventBus: health ping
+    EventBus->>Layer: update status
+    Layer-->>EventBus: ack
+```
+
 ## Stepping Stones
 - Memory bundle implementation: [memory/bundle.py](../memory/bundle.py)
 - Memory bootstrap script: [scripts/bootstrap_memory.py](../scripts/bootstrap_memory.py)

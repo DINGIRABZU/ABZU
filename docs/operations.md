@@ -51,6 +51,18 @@ architectural overview.
 For protocol details of the lifecycle bus and automated recovery flow, see
 the [RAZAR Agent guide](RAZAR_AGENT.md#lifecycle-bus-and-recovery-protocol).
 
+The HeartBeat service drives these polls and publishes `health_check` results on the [event bus](../agents/event_bus.py), allowing each [memory layer](memory_layers_GUIDE.md) to update its status in real time and initiate healing routines if needed.
+
+```mermaid
+sequenceDiagram
+    participant HeartBeat
+    participant EventBus
+    participant Layer
+    HeartBeat->>EventBus: health ping
+    EventBus->>Layer: update status
+    Layer-->>EventBus: ack
+```
+
 If RAZAR cannot restart a component, rebuild the virtual environment and rerun
 the manager. Removing `logs/razar_state.json` forces a full restart sequence.
 
