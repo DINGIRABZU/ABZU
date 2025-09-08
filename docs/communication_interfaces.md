@@ -8,6 +8,19 @@ gateway layer.
 Each connector includes a ``__version__`` field for traceability and is tracked
 in the [Connector Index](connectors/CONNECTOR_INDEX.md).
 
+## Connector Matrix
+
+| Connector | Interface | Heartbeat (`chakra`, `cycle_count`) | Version |
+|-----------|-----------|-------------------------------------|---------|
+| WebRTC | API | Data channel pings carry the originating `chakra` and current `cycle_count` to remote clients. | 0.3.3 |
+| Discord Bot | API + MCP | Publishes `discord` heartbeats on the signal bus; forwarded beats include `chakra` and `cycle_count`. | 0.3.0 |
+| Telegram Bot | API + MCP | Emits `telegram` heartbeats and mirrors `cycle_count` when relayed to chats. | 0.1.0 |
+| Avatar Broadcast | API | Relays heartbeat events with both fields to social streams. | 0.1.0 |
+| Primordials API | API | Posts metrics tagged with `chakra` and `cycle_count`. | 0.1.1 |
+| MCP Gateway Example | MCP | Uses MCP handshake and propagates `chakra` and `cycle_count` in responses. | 0.1.0 |
+
+Architectural placement appears in the [System Blueprint](system_blueprint.md#connector-matrix) and narrative context in the [Blueprint Spine](blueprint_spine.md#connector-matrix). Code paths reside in [connectors/](../connectors/).
+
 ## Media Features and Fallbacks
 
 The WebRTC connector can stream three modalities to clients:
@@ -63,13 +76,15 @@ calling the ``Gateway``.
 
 Two reference chat connectors bridge external text platforms to the avatar:
 
-- ``tools/bot_discord.py`` – posts messages from Discord channels to the
-  ``/glm-command`` endpoint and returns both text and optional synthesized voice
-  clips. Configure a bot token via ``DISCORD_BOT_TOKEN`` and launch with
-  ``python tools/bot_discord.py``.
-- ``communication/telegram_bot.py`` – forwards Telegram chats through the
-  ``Gateway``. Set ``TELEGRAM_BOT_TOKEN`` and run
-  ``python communication/telegram_bot.py``.
+- ``tools/bot_discord.py`` (v0.3.0) – posts messages from Discord channels to
+  the ``/glm-command`` endpoint and returns both text and optional synthesized
+  voice clips. Configure a bot token via ``DISCORD_BOT_TOKEN`` and launch with
+  ``python tools/bot_discord.py``. When ``ABZU_USE_MCP=1`` it routes internal
+  commands through the MCP gateway.
+- ``communication/telegram_bot.py`` (v0.1.0) – forwards Telegram chats through
+  the ``Gateway``. Set ``TELEGRAM_BOT_TOKEN`` and run
+  ``python communication/telegram_bot.py``. It also honours
+  ``ABZU_USE_MCP=1`` for MCP-based command dispatch.
 
 Both connectors expect the tokens to be defined in the environment (or
 ``secrets.env``) before startup. When running alongside the avatar console they
@@ -78,16 +93,16 @@ the agent.
 
 ## Discord/Telegram Avatar Streaming
 
-The ``connectors/avatar_broadcast.py`` helper forwards rendered avatar frames
-to social platforms. It retrieves the active video track for an agent and sends
-each frame plus optional heartbeat metadata to:
+The ``connectors/avatar_broadcast.py`` helper (v0.1.0) forwards rendered avatar
+frames to social platforms. It retrieves the active video track for an agent
+and sends each frame plus optional heartbeat metadata to:
 
-- ``tools.bot_discord`` for delivery into a Discord channel
-- ``tools.bot_telegram`` for delivery into a Telegram chat
+- ``tools.bot_discord`` (v0.3.0) for delivery into a Discord channel
+- ``tools.bot_telegram`` (v0.3.0) for delivery into a Telegram chat
 
 Provide the channel or chat identifiers alongside the agent name when invoking
-``broadcast``. The function runs asynchronously and mirrors heartbeats so
-remote viewers can monitor stream health.
+``broadcast``. The function runs asynchronously and mirrors heartbeats so remote
+viewers see the current `chakra` and `cycle_count` in each ping.
 
 ## Adding New Channels
 
@@ -106,22 +121,22 @@ system to expand with minimal changes.
 
 ## Chakra-Tagged Signals
 
-All connectors attach a `chakra` field to outbound events. The tag identifies
-the originating layer and lets downstream services track signal flow through
-the stack. See
-[system_blueprint.md](system_blueprint.md#chakra-tagged-signals) and
-[blueprint_spine.md](blueprint_spine.md#chakra-tagged-signals) for the
-architectural context.
+All connectors attach a `chakra` field to outbound events so downstream
+services can track signal flow through the stack. See the connector matrices in
+[system_blueprint.md](system_blueprint.md#connector-matrix) and
+[blueprint_spine.md](blueprint_spine.md#connector-matrix) for architectural
+context.
 
 ## Heartbeat Propagation
 
 Connectors forward heartbeat pings from the chakra cycle engine to remote
 clients and log the return path. Each ping is wrapped by
 ``connectors.message_formatter.format_message``, which injects the `chakra`,
-`version`, and `recovery_url` fields so operators can trace problems and
-surface recovery instructions. Lagging or missing beats surface alignment
-issues early and are mirrored in the dashboards described in the system
-blueprint.
+`cycle_count`, `version`, and `recovery_url` fields so operators can trace
+problems and surface recovery instructions. Lagging or missing beats surface
+alignment issues early and are mirrored in the dashboards described in the
+[System Blueprint](system_blueprint.md#connector-matrix) and
+[Blueprint Spine](blueprint_spine.md#connector-matrix).
 
 ## Recovery Flows
 

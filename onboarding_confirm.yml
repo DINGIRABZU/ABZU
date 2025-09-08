@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: 04b32fb9d277c190d5d32eb2155c8bb2ad699b221ad070da45cdfaf738c3ab15
+    sha256: 71e6f686a891aebe17c1ad8b4b4180ee2e2cf0e2cd3e5803a5e384faf662d155
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -119,7 +119,7 @@ documents:
       key_rules: Use terminal commands as documented.
       insight: Reference when troubleshooting terminal actions.
   docs/communication_interfaces.md:
-    sha256: c9d210710b6e3f7bbf943c99d6a40443a8fa67f7c96e5fcdcd4881193923a17a
+    sha256: b788697d3e7bc1c7fdf609eb9abafd15af67afbcbe47162a0fbab77437efc660
     summary:
       purpose: Communication interfaces overview.
       scope: Internal and external interfaces.
@@ -169,7 +169,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 59c67828c311eb69c6d875e0df69f95cc3757821a385ab6e2344d2805283c8ac
+    sha256: 78a6a017c1b046551743780cdfe3b1bd20b4eef22fa29521b8f6d5b851760f50
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
