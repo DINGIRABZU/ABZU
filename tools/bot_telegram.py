@@ -1,4 +1,4 @@
-"""Telegram bot forwarding chat messages to the `/glm-command` endpoint."""
+"""Telegram bot forwarding messages and emitting heartbeats."""
 
 from __future__ import annotations
 

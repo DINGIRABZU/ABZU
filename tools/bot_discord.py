@@ -1,4 +1,4 @@
-"""Discord bot that forwards messages to the `/glm-command` endpoint."""
+"""Discord bot that forwards messages and emits heartbeats."""
 
 from __future__ import annotations
 
