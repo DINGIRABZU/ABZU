@@ -15,17 +15,26 @@ from telegram import Update
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
 
 import connectors.signal_bus as signal_bus
+from connectors.base import ConnectorHeartbeat
 from connectors.message_formatter import format_message
 from .gateway import Gateway, authentication
 
 logger = logging.getLogger(__name__)
 
 
-class TelegramBot:
-    """Telegram bot that routes messages through ``Gateway``."""
+class TelegramBot(ConnectorHeartbeat):
+    """Telegram bot that routes messages through ``Gateway`` with heartbeats."""
 
-    def __init__(self, token: str, gateway: Gateway) -> None:
+    def __init__(
+        self,
+        token: str,
+        gateway: Gateway,
+        *,
+        interval: float = 30.0,
+        miss_threshold: int = 3,
+    ) -> None:
         """Initialise bot with Telegram token and gateway."""
+        super().__init__("telegram", interval=interval, miss_threshold=miss_threshold)
         self._gateway = gateway
         self._token = token
         self._application = Application.builder().token(token).build()
@@ -49,6 +58,11 @@ class TelegramBot:
 
         signal_bus.subscribe("telegram:out", _outbound)
 
+        def _alert(payload: dict) -> None:
+            logger.warning("Heartbeat alert: %s", payload)
+
+        signal_bus.subscribe("telegram:alert", _alert)
+
     async def _handle_message(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> None:
@@ -62,6 +76,7 @@ class TelegramBot:
 
     def run(self) -> None:
         """Start polling for messages."""
+        self.start()
         logger.info("Starting Telegram bot")
         self._application.run_polling()
 

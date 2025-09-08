@@ -84,6 +84,11 @@ def create_client() -> Any:
 
     signal_bus.subscribe("discord:out", _outbound)
 
+    def _alert(payload: dict) -> None:
+        logger.warning("Heartbeat alert: %s", payload)
+
+    signal_bus.subscribe("discord:alert", _alert)
+
     return client
 
 
