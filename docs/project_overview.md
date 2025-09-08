@@ -61,6 +61,23 @@ graph LR
     C --> E[aggregated response]
 ```
 
+## Failure Modes & Recovery
+
+Spiral OS shields operators from component faults through layered defenses.
+Defensive querying returns partial results when a memory layer is missing, and
+each module automatically falls back to an optional stub instead of raising an
+error. RAZAR watches heartbeat telemetry and, upon detection of a silent
+component, invokes repair loops that patch or restart the failing service.
+
+```mermaid
+graph LR
+    Detect[Detection] --> Fallback
+    Fallback --> Recover[Recovery]
+```
+
+See the [Memory Layers Guide](memory_layers_GUIDE.md) for fallback mechanics
+and the [Recovery Playbook](recovery_playbook.md) for detailed repair flows.
+
 ## Ethics Corpus Update Flow
 
 ```mermaid
