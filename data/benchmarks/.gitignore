@@ -1,4 +1,6 @@
 # Ignore benchmark output files
 *
 !.gitignore
+!query_memory.csv
+!query_memory.json
 

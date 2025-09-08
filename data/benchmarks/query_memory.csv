@@ -1,6 +1,6 @@
 query,duration_s
-delta,0.0170
-alpha,0.0221
-gamma,0.0186
-beta,0.0221
-epsilon,0.0011
+alpha,0.0069
+beta,0.0064
+gamma,0.0055
+delta,0.0050
+epsilon,0.0010
