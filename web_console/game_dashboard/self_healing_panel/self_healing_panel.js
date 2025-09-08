@@ -1,10 +1,23 @@
 import React from 'https://esm.sh/react@18';
 import { BASE_URL } from '../main.js';
 
-export default function SelfHealingPanel() {
-  const [gaps, setGaps] = React.useState({});
-  const [agents, setAgents] = React.useState({});
-  const [results, setResults] = React.useState([]);
+export default function SelfHealingPanel({ initialLedger, initialActive }) {
+  const [ledger, setLedger] = React.useState(initialLedger || []);
+  const [active, setActive] = React.useState(initialActive || {});
+
+  React.useEffect(() => {
+    if (initialLedger || typeof fetch === 'undefined') return;
+    (async () => {
+      try {
+        const resp = await fetch(`${BASE_URL}/self-healing/ledger`);
+        const json = await resp.json();
+        setLedger(json.ledger || []);
+        setActive(json.active || {});
+      } catch (err) {
+        console.error('self-healing ledger', err);
+      }
+    })();
+  }, [initialLedger]);
 
   React.useEffect(() => {
     const url = `${BASE_URL.replace(/^http/, 'ws')}/self-healing/updates`;
@@ -12,14 +25,15 @@ export default function SelfHealingPanel() {
     ws.onmessage = (evt) => {
       try {
         const data = JSON.parse(evt.data);
-        if (data.gap !== undefined) {
-          setGaps((g) => ({ ...g, [data.component]: data.gap }));
-        }
-        if (data.agent) {
-          setAgents((a) => ({ ...a, [data.component || data.agent]: data.agent }));
-        }
-        if (data.result) {
-          setResults((r) => [{ component: data.component, result: data.result }, ...r].slice(0, 10));
+        setLedger((l) => [data, ...l].slice(0, 50));
+        if (data.event === 'final_status') {
+          setActive((a) => {
+            const n = { ...a };
+            delete n[data.component];
+            return n;
+          });
+        } else if (data.event && data.component) {
+          setActive((a) => ({ ...a, [data.component]: data.timestamp }));
         }
       } catch (err) {
         console.error('self-healing panel', err);
@@ -34,23 +48,16 @@ export default function SelfHealingPanel() {
     React.createElement('h3', null, 'Self Healing'),
     React.createElement(
       'div',
-      { className: 'heartbeat-gaps' },
-      Object.entries(gaps).map(([comp, gap]) =>
-        React.createElement('div', { key: comp }, `${comp}: ${gap}`)
-      )
-    ),
-    React.createElement(
-      'div',
-      { className: 'repair-agents' },
-      Object.entries(agents).map(([comp, agent]) =>
-        React.createElement('div', { key: comp }, `${comp}: ${agent}`)
+      { className: 'active-repairs' },
+      Object.entries(active).map(([comp, ts]) =>
+        React.createElement('div', { key: comp }, `${comp}: ${new Date(ts * 1000).toISOString()}`)
       )
     ),
     React.createElement(
       'ul',
-      { className: 'patch-results' },
-      results.map((r, idx) =>
-        React.createElement('li', { key: idx }, `${r.component}: ${r.result}`)
+      { className: 'ledger-events' },
+      ledger.map((e, idx) =>
+        React.createElement('li', { key: idx }, `${e.event}: ${e.component}`)
       )
     )
   );

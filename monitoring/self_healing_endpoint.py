@@ -1,7 +1,8 @@
-"""Stream self-healing ledger updates via WebSocket."""
+"""Expose self-healing ledger snapshots and stream updates."""
 
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any, Dict, Set
 
@@ -10,7 +11,6 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from .self_healing_ledger import SelfHealingLedger
 
 router = APIRouter()
-ledger = SelfHealingLedger()
 _clients: Set[WebSocket] = set()
 
 
@@ -22,6 +22,16 @@ async def broadcast_update(event: Dict[str, Any]) -> None:
             await ws.send_text(message)
         except Exception:
             _clients.discard(ws)
+
+
+ledger = SelfHealingLedger(on_event=lambda e: asyncio.create_task(broadcast_update(e)))
+
+
+@router.get("/self-healing/ledger")
+def get_ledger() -> Dict[str, Any]:
+    """Return full ledger and currently active repairs."""
+
+    return {"ledger": ledger.read_entries(), "active": ledger.active_repairs()}
 
 
 @router.websocket("/self-healing/updates")

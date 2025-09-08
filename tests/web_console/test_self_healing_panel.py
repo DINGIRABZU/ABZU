@@ -24,7 +24,10 @@ def test_self_healing_panel_renders_mock_events() -> None:
 const fs = require('fs');
 let code = fs.readFileSync('{js_path.as_posix()}', 'utf8');
 code = code.replace(/import[^\n]+\n/g, '');
-code = code.replace('export default function SelfHealingPanel', 'function SelfHealingPanel');
+ code = code.replace(
+     'export default function SelfHealingPanel',
+     'function SelfHealingPanel'
+ );
 code += '\nreturn SelfHealingPanel;';
 let state = [];
 let idx = 0;
@@ -44,10 +47,17 @@ class WS {{
   close() {{}}
 }}
 global.WebSocket = WS;
+global.fetch = undefined;
 const Comp = new Function('React', code)(React);
 idx = 0;
 let view = Comp();
-WS.instance.onmessage({{ data: JSON.stringify({{ component: 'root', gap: 3, agent: 'alpha', result: 'patched' }}) }});
+ WS.instance.onmessage({{
+   data: JSON.stringify({{
+     event: 'repair_attempt',
+     component: 'root',
+     timestamp: 1
+   }})
+ }});
 idx = 0;
 view = Comp();
 function render(n) {{
@@ -60,6 +70,5 @@ console.log(render(view));
         ["node", "-e", script], capture_output=True, text=True, check=True
     )
     output = result.stdout.strip()
-    assert "root: 3" in output
-    assert "root: alpha" in output
-    assert "root: patched" in output
+    assert "repair_attempt: root" in output
+    assert "1970-01-01T00:00:01.000Z" in output

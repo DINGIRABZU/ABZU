@@ -90,17 +90,20 @@ runtime.
 
 ## Self-healing panel
 
-`monitoring/self_healing_endpoint.py` streams ledger events over the
+`monitoring/self_healing_ledger.py` writes recovery events to
+`logs/self_healing.json`. `monitoring/self_healing_endpoint.py` exposes the
+current ledger via `/self-healing/ledger` and streams new entries over the
 `/self-healing/updates` WebSocket. The **Self Healing** panel in the
-[Game Dashboard](ui/game_dashboard.md) subscribes to this feed and displays
-heartbeat gaps, active repair agents, and patch results in real time.
+[Game Dashboard](ui/game_dashboard.md) lists recent ledger entries and highlights
+components with active repairs.
 
 ```bash
 websocat ws://localhost:8000/self-healing/updates
+curl http://localhost:8000/self-healing/ledger
 ```
 
-Use this stream to monitor recovery progress and verify patches restore the
-missing heartbeats.
+Use this telemetry to monitor recovery progress and confirm failed components
+are restored.
 
 ## Boot history
 
