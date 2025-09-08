@@ -58,8 +58,9 @@ which flags misalignment when beats drift from the expected 1 :1 rhythm. The
 
 Connectors label outbound messages with a `chakra` tag so downstream services
 can route events to the proper layer. These tags let operators trace signals
-through the stack and are detailed in
-[communication_interfaces.md](communication_interfaces.md#chakra-tagged-signals).
+through the stack; see
+[communication_interfaces.md](communication_interfaces.md#connector-matrix)
+for the connector map.
 
 #### Model Context Protocol Migration
 
@@ -76,13 +77,31 @@ layer so operators can audit service-to-service calls.
 See [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) for the
 current status of each connector.
 
+#### Connector Matrix
+
+ABZU bridges external and internal services through a mix of API and MCP
+connectors. The table summarises their interface type and heartbeat behaviour.
+See [communication_interfaces.md](communication_interfaces.md#connector-matrix)
+for setup steps and versions, and
+[blueprint_spine.md](blueprint_spine.md#connector-matrix) for narrative context.
+
+| Connector | Interface | Heartbeat (`chakra`, `cycle_count`) |
+|-----------|-----------|-------------------------------------|
+| WebRTC | API | Data channel pings include both fields. |
+| Discord Bot | API + MCP | Publishes `discord` beats and relays cycle counts to channels. |
+| Telegram Bot | API + MCP | Emits `telegram` beats with cycle counts. |
+| Avatar Broadcast | API | Relays heartbeat events with both fields to social streams. |
+| Primordials API | API | Posts metrics tagged with `chakra` and `cycle_count`. |
+| MCP Gateway Example | MCP | Uses MCP handshake with heartbeat metadata. |
+
 #### Heartbeat Propagation
 
 Each beat cascades from Root through Crown, giving operators a live view of
 layer responsiveness. Connectors emit these pings via
 ``connectors.message_formatter.format_message`` so every hop carries the
-``chakra``, ``version``, and ``recovery_url`` fields. Lag or silence on any hop
-is logged for follow‑up and feeds recovery routines in other guides.
+``chakra``, ``cycle_count``, ``version``, and ``recovery_url`` fields. Lag or
+silence on any hop is logged for follow‑up and feeds recovery routines in other
+guides.
 
 #### Heartbeat Ratios
 

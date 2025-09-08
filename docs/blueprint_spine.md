@@ -102,8 +102,27 @@ for per-layer responsibilities.
 Connectors stamp outbound messages with a `chakra` tag so the cycle engine and
 downstream services know which layer to engage. Operators can follow these tags
 through the stack; see
-[communication_interfaces.md](communication_interfaces.md#chakra-tagged-signals)
-for connector implementation notes.
+[communication_interfaces.md](communication_interfaces.md#connector-matrix)
+and [system_blueprint.md](system_blueprint.md#connector-matrix) for connector
+implementation notes.
+
+### **Connector Matrix**
+
+ABZU exposes multiple connectors, each tagged with a `chakra` and a
+`cycle_count` heartbeat. This matrix summarises their interface style. Detailed
+setup steps live in the
+[communication_interfaces](communication_interfaces.md#connector-matrix) guide,
+while architectural placement appears in the
+[System Blueprint](system_blueprint.md#connector-matrix).
+
+| Connector | Interface | Heartbeat (`chakra`, `cycle_count`) | Version |
+|-----------|-----------|-------------------------------------|---------|
+| WebRTC | API | Forwards beats with both fields over the data channel. | 0.3.3 |
+| Discord Bot | API + MCP | Emits `discord` beats and mirrors cycle counts to channels. | 0.3.0 |
+| Telegram Bot | API + MCP | Emits `telegram` beats with cycle counts. | 0.1.0 |
+| Avatar Broadcast | API | Relays heartbeat events to social streams. | 0.1.0 |
+| Primordials API | API | Posts metrics tagged with both fields. | 0.1.1 |
+| MCP Gateway Example | MCP | Uses MCP handshake with heartbeat metadata. | 0.1.0 |
 
 ### **Model Context Protocol Migration**
 
@@ -134,9 +153,9 @@ retro console provides diagnostics when the full dashboard is unavailable.
 
 ### **Heartbeat Propagation and Self-Healing**
 
-The chakra cycle engine emits heartbeats that cascade through the layers. A
-silent response triggers NAZARICK servants to mend the break and rejoin the
-cycle.
+The chakra cycle engine emits heartbeats that cascade through the layers, each
+carrying a `chakra` tag and `cycle_count`. A silent response triggers NAZARICK
+servants to mend the break and rejoin the cycle.
 
 ```mermaid
 {{#include figures/heartbeat_self_healing.mmd}}
@@ -144,7 +163,10 @@ cycle.
 
 For layer-specific responsibilities, see
 [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine) and
-[Nazarick Agents](nazarick_agents.md). The remediation philosophy follows the
+[Nazarick Agents](nazarick_agents.md). Connector heartbeat formats are detailed
+in [communication_interfaces.md](communication_interfaces.md#connector-matrix)
+and [system_blueprint.md](system_blueprint.md#connector-matrix). The remediation
+philosophy follows the
 [Self-Healing Manifesto](self_healing_manifesto.md).
 
 ### **Recovery Flows**
