@@ -68,7 +68,7 @@ def main() -> None:
         record_task_flow("taskA", {"step": 1})
         statuses["mental"] = "seeded"
     else:
-        statuses["mental"] = "defaulted"
+        statuses["mental"] = "skipped"
 
     spirit = spirit_conn()
     map_to_symbol(("eclipse", "\u263E"), conn=spirit)

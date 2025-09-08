@@ -248,6 +248,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced in-memory story log with SQLite-backed persistence and documented schema.
 
 ### Changed
+- Optional memory layers load no-op fallbacks and report status "skipped" when dependencies are missing.
 - Replaced Chat2DB ASCII pipeline with a Mermaid flowchart and linked storage layers.
 - Operator onboarding steps now use Mermaid diagrams for voice selection and agent roster review instead of screenshots in `docs/operator_interface_GUIDE.md`.
 - Assigned unique component IDs for avatar/audio generation modules and RAZAR health checks to avoid collisions, ensuring component lookups remain unambiguous.
