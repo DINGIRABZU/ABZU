@@ -1,19 +1,31 @@
 # World Bootstrap
 
-Guide to initializing a world and preserving its component configuration.
+Guidelines for seeding and cloning world configurations.
 
-## Registry
-- The [`worlds.config_registry` module](../worlds/config_registry.py) tracks per-world metadata.
-- Layers are registered when memory modules load; agent packages register during import.
-- Brokers, model paths, and other resources can be registered with dedicated helpers.
+## Initialize a world
 
-## Export and Import
-- Use `python -m worlds export <path>` or [`python scripts/world_export.py`](../scripts/world_export.py) to save configuration.
-- `python -m worlds import <path>` restores a previously exported JSON file.
-- The `WORLD_NAME` environment variable selects which world to target; defaults to `"default"`.
+Use `initialize_world` to record available layers and agents for a new world.
 
-## Workflow
-1. Import `memory` and `agents` to populate layers and agent names.
-2. Register brokers or model locations as needed using `register_broker` and `register_model_path`.
-3. Export the configuration to capture the world's state.
-4. Import the file on another system to reproduce the same setup.
+```python
+from worlds import initialize_world, export_config_file
+
+initialize_world(
+    layers=["cortex", "limbic"],
+    agents=["zeus", "hera"],
+    world="olympus",
+)
+export_config_file("olympus.json", world="olympus")
+```
+
+## Clone an existing world
+
+Configuration snapshots can be imported into a different world to clone its
+setup.
+
+```python
+from worlds import import_config_file
+
+import_config_file("olympus.json", world="asgard")
+```
+
+`asgard` now inherits the layers and agents defined for `olympus`.

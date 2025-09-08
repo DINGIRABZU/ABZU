@@ -15,6 +15,7 @@ from .config_registry import (
     register_patch,
     register_path,
     reset_registry,
+    initialize_world,
 )
 
 __all__ = [
@@ -32,4 +33,5 @@ __all__ = [
     "register_patch",
     "register_path",
     "reset_registry",
+    "initialize_world",
 ]
