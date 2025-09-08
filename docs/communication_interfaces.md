@@ -10,16 +10,20 @@ in the [Connector Index](connectors/CONNECTOR_INDEX.md).
 
 ## Connector Matrix
 
-| Connector | Interface | Heartbeat (`chakra`, `cycle_count`) | Version |
-|-----------|-----------|-------------------------------------|---------|
-| WebRTC | API | Data channel pings carry the originating `chakra` and current `cycle_count` to remote clients. | 0.3.3 |
-| Discord Bot | API + MCP | Publishes `discord` heartbeats on the signal bus; forwarded beats include `chakra` and `cycle_count`. | 0.3.0 |
-| Telegram Bot | API + MCP | Emits `telegram` heartbeats and mirrors `cycle_count` when relayed to chats. | 0.1.0 |
-| Avatar Broadcast | API | Relays heartbeat events with both fields to social streams. | 0.1.0 |
-| Primordials API | API | Posts metrics tagged with `chakra` and `cycle_count`. | 0.1.1 |
-| MCP Gateway Example | MCP | Uses MCP handshake and propagates `chakra` and `cycle_count` in responses. | 0.1.0 |
+ABZU bridges external and internal services through these connectors. The table
+lists their purpose, protocol choice, heartbeat behaviour, and version. See the
+[System Blueprint](system_blueprint.md#connector-matrix) for architectural
+placement and the [Blueprint Spine](blueprint_spine.md#connector-matrix) for
+narrative context. Code paths reside in [connectors/](../connectors/).
 
-Architectural placement appears in the [System Blueprint](system_blueprint.md#connector-matrix) and narrative context in the [Blueprint Spine](blueprint_spine.md#connector-matrix). Code paths reside in [connectors/](../connectors/).
+| Connector | Purpose | Protocol | Heartbeat (`chakra`, `cycle_count`) | Version |
+|-----------|---------|----------|-------------------------------------|---------|
+| WebRTC | Real-time browser media stream | API – browsers rely on WebRTC/HTTP | Data channel pings carry the originating `chakra` and current `cycle_count` to remote clients. | 0.3.3 |
+| Discord Bot | Community chat bridge | API + MCP – Discord API externally, MCP internally for logging | Publishes `discord` heartbeats on the signal bus and mirrors cycle counts to channels. | 0.3.0 |
+| Telegram Bot | Remote chat control | API + MCP – Telegram API externally, MCP internally to unify command dispatch | Emits `telegram` heartbeats and mirrors `cycle_count` when relayed to chats. | 0.1.0 |
+| Avatar Broadcast | Stream avatar frames to social platforms | API – social platforms expose HTTP endpoints only | Relays heartbeat events with both fields to social streams. | 0.1.0 |
+| Primordials API | Metric bridge to upstream Primordials service | API – external service lacks MCP | Posts metrics tagged with `chakra` and `cycle_count`. | 0.1.1 |
+| MCP Gateway Bridge | Demonstrates pure MCP requests for internal models | MCP – showcases full MCP handshake | Uses MCP handshake and propagates `chakra` and `cycle_count` in responses. | 0.1.0 |
 
 ## Media Features and Fallbacks
 
@@ -104,6 +108,21 @@ Provide the channel or chat identifiers alongside the agent name when invoking
 ``broadcast``. The function runs asynchronously and mirrors heartbeats so remote
 viewers see the current `chakra` and `cycle_count` in each ping.
 
+## Primordials API
+
+`connectors/primordials_api.py` (v0.1.1) posts metrics to the external
+Primordials service. Set `PRIMORDIALS_API_URL` to the service endpoint and call
+`send_metrics` with heartbeat fields. The connector remains HTTP-only because
+the Primordials service does not implement MCP.
+
+## MCP Gateway Bridge
+
+`connectors/mcp_gateway_example.py` (v0.1.0) demonstrates a pure MCP flow for
+internal models. Enable MCP with `ABZU_USE_MCP=1` and point `MCP_GATEWAY_URL`
+at the gateway. Use `invoke(model, text)` to reach models, and
+`publish_event`/`subscribe_events` to relay chakra-tagged heartbeats across the
+signal bus.
+
 ## Adding New Channels
 
 1. Implement an adapter that receives messages from the external service.
@@ -135,8 +154,8 @@ clients and log the return path. Each ping is wrapped by
 `cycle_count`, `version`, and `recovery_url` fields so operators can trace
 problems and surface recovery instructions. Lagging or missing beats surface
 alignment issues early and are mirrored in the dashboards described in the
-[System Blueprint](system_blueprint.md#connector-matrix) and
-[Blueprint Spine](blueprint_spine.md#connector-matrix).
+[System Blueprint](system_blueprint.md#heartbeat-propagation) and
+[Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing).
 
 ## Recovery Flows
 

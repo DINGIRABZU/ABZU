@@ -109,20 +109,20 @@ implementation notes.
 ### **Connector Matrix**
 
 ABZU exposes multiple connectors, each tagged with a `chakra` and a
-`cycle_count` heartbeat. This matrix summarises their interface style. Detailed
-setup steps live in the
-[communication_interfaces](communication_interfaces.md#connector-matrix) guide,
-while architectural placement appears in the
+`cycle_count` heartbeat. This matrix summarises each connector's purpose,
+protocol choice, heartbeat behaviour, and version. Detailed setup steps live in
+the [communication_interfaces](communication_interfaces.md#connector-matrix)
+guide, while architectural placement appears in the
 [System Blueprint](system_blueprint.md#connector-matrix).
 
-| Connector | Interface | Heartbeat (`chakra`, `cycle_count`) | Version |
-|-----------|-----------|-------------------------------------|---------|
-| WebRTC | API | Forwards beats with both fields over the data channel. | 0.3.3 |
-| Discord Bot | API + MCP | Emits `discord` beats and mirrors cycle counts to channels. | 0.3.0 |
-| Telegram Bot | API + MCP | Emits `telegram` beats with cycle counts. | 0.1.0 |
-| Avatar Broadcast | API | Relays heartbeat events to social streams. | 0.1.0 |
-| Primordials API | API | Posts metrics tagged with both fields. | 0.1.1 |
-| MCP Gateway Example | MCP | Uses MCP handshake with heartbeat metadata. | 0.1.0 |
+| Connector | Purpose | Protocol | Heartbeat (`chakra`, `cycle_count`) | Version |
+|-----------|---------|----------|-------------------------------------|---------|
+| WebRTC | Real-time browser media stream | API – browsers rely on WebRTC/HTTP | Forwards beats with both fields over the data channel. | 0.3.3 |
+| Discord Bot | Community chat bridge | API + MCP – Discord API externally, MCP internally for logging | Emits `discord` beats and mirrors cycle counts to channels. | 0.3.0 |
+| Telegram Bot | Remote chat control | API + MCP – Telegram API externally, MCP internally to unify command dispatch | Emits `telegram` beats with cycle counts. | 0.1.0 |
+| Avatar Broadcast | Stream avatar frames to social platforms | API – social platforms expose HTTP endpoints only | Relays heartbeat events to social streams. | 0.1.0 |
+| Primordials API | Metric bridge to upstream Primordials service | API – external service lacks MCP | Posts metrics tagged with both fields. | 0.1.1 |
+| MCP Gateway Bridge | Demonstrates pure MCP requests for internal models | MCP – showcases full MCP handshake | Uses MCP handshake with heartbeat metadata. | 0.1.0 |
 
 ### **Model Context Protocol Migration**
 
@@ -164,9 +164,9 @@ servants to mend the break and rejoin the cycle.
 For layer-specific responsibilities, see
 [Chakra Architecture](chakra_architecture.md#chakra-cycle-engine) and
 [Nazarick Agents](nazarick_agents.md). Connector heartbeat formats are detailed
-in [communication_interfaces.md](communication_interfaces.md#connector-matrix)
-and [system_blueprint.md](system_blueprint.md#connector-matrix). The remediation
-philosophy follows the
+in [communication_interfaces.md](communication_interfaces.md#heartbeat-propagation)
+and [system_blueprint.md](system_blueprint.md#heartbeat-propagation). The
+remediation philosophy follows the
 [Self-Healing Manifesto](self_healing_manifesto.md).
 
 ### **Recovery Flows**
