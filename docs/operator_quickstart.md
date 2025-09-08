@@ -35,7 +35,7 @@ Record explicit consent for every session. Log the operator, participants, times
 
 ## Memory Introspection
 
-Operators can inspect and manage the memory bundle through authenticated endpoints.
+Operators can inspect and manage the memory bundle through authenticated endpoints or the Game Dashboard's memory panel (`web_console/game_dashboard/index.html`).
 
 ### Query memory metrics
 

@@ -5,32 +5,54 @@ export default function MemoryPanel() {
   const [metrics, setMetrics] = React.useState({ chakras: {} });
   const [query, setQuery] = React.useState('');
   const [results, setResults] = React.useState([]);
+  const [chakra, setChakra] = React.useState('');
+  const [purged, setPurged] = React.useState('');
+
+  async function load() {
+    try {
+      const resp = await fetch(`${BASE_URL}/memory/query`, {
+        headers: { 'x-api-key': 'test' }
+      });
+      const json = await resp.json();
+      setMetrics(json);
+    } catch (err) {
+      console.error('memory metrics error', err);
+    }
+  }
 
   React.useEffect(() => {
-    async function load() {
-      try {
-        const resp = await fetch(`${BASE_URL}/memory/query`, {
-          headers: { 'x-api-key': 'test' }
-        });
-        const json = await resp.json();
-        setMetrics(json);
-      } catch (err) {
-        console.error('memory metrics error', err);
-      }
-    }
     load();
   }, []);
 
   async function search(e) {
     e.preventDefault();
     try {
-      const resp = await fetch(`${BASE_URL}/memory/query?q=${encodeURIComponent(query)}`, {
-        headers: { 'x-api-key': 'test' }
-      });
+      const resp = await fetch(
+        `${BASE_URL}/memory/query?q=${encodeURIComponent(query)}`,
+        { headers: { 'x-api-key': 'test' } }
+      );
       const json = await resp.json();
       setResults(json.results || []);
     } catch (err) {
       console.error('memory search error', err);
+    }
+  }
+
+  async function purge(e) {
+    e.preventDefault();
+    try {
+      const resp = await fetch(
+        `${BASE_URL}/memory/purge?chakra=${encodeURIComponent(chakra)}`,
+        {
+          method: 'POST',
+          headers: { 'x-api-key': 'test' }
+        }
+      );
+      const json = await resp.json();
+      setPurged(json.purged || '');
+      await load();
+    } catch (err) {
+      console.error('memory purge error', err);
     }
   }
 
@@ -54,6 +76,15 @@ export default function MemoryPanel() {
     ),
     React.createElement('ul', null,
       results.map((r, i) => React.createElement('li', { key: i }, r))
+    ),
+    React.createElement('form', { onSubmit: purge },
+      React.createElement('input', {
+        value: chakra,
+        onChange: (e) => setChakra(e.target.value),
+        placeholder: 'chakra'
+      }),
+      React.createElement('button', { type: 'submit' }, 'Purge'),
+      purged && React.createElement('span', { className: 'purge-result' }, ` Purged ${purged}`)
     )
   );
 }
