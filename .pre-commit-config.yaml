@@ -170,6 +170,12 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/INDEX\.md$
+  - id: verify-docs-up-to-date
+    name: Verify docs up to date
+    entry: python scripts/verify_docs_up_to_date.py
+    language: system
+    pass_filenames: false
+    files: ^docs/
   - id: verify-chakra-monitoring
     name: Verify chakra monitoring
     entry: python scripts/verify_chakra_monitoring.py
