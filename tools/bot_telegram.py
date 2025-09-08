@@ -60,7 +60,7 @@ def send_voice(chat_id: int, path: Path) -> None:
 
 def handle_message(chat_id: int, text: str) -> None:
     """Forward ``text`` to the GLM and return the reply."""
-    signal_bus.publish("telegram:in", {"chat_id": chat_id, "content": text})
+    signal_bus.publish("telegram:in", {"chat_id": chat_id, "content": text}, 0)
     reply = send_glm_command(text)
     send_message(chat_id, reply)
     try:

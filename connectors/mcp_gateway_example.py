@@ -11,7 +11,7 @@ leveraging the internal signal bus for publish/subscribe messaging.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import os
 from typing import Any, Callable, Dict
@@ -38,9 +38,9 @@ async def invoke(model: str, text: str) -> Dict[str, Any]:
         return resp.json()
 
 
-def publish_event(chakra: str, payload: Dict[str, Any]) -> None:
+def publish_event(chakra: str, payload: Dict[str, Any], cycle_count: int) -> None:
     """Publish ``payload`` tagged with ``chakra`` on the signal bus."""
-    publish(chakra, payload)
+    publish(chakra, payload, cycle_count)
 
 
 def subscribe_events(

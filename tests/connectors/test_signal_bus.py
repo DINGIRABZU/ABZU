@@ -14,6 +14,6 @@ import connectors.signal_bus as signal_bus
 def test_publish_subscribe() -> None:
     received: list[dict] = []
     unsub = signal_bus.subscribe("root", received.append)
-    signal_bus.publish("root", {"msg": "hi"})
+    signal_bus.publish("root", {"msg": "hi"}, 5)
     unsub()
-    assert received == [{"msg": "hi", "chakra": "root"}]
+    assert received == [{"msg": "hi", "chakra": "root", "cycle": 5}]
