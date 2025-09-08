@@ -224,6 +224,12 @@ def _retry_with_ai(
         LOGGER.info("Retrying %s after AI patch (remote attempt %s)", name, attempt)
         try:
             proc = launch_component(component)
+            # Re-run the health check after patch application to confirm recovery
+            if not health_checks.run(name):
+                proc.terminate()
+                proc.wait()
+                LOGGER.error("Post-patch health check failed for %s", name)
+                continue
             return proc, attempt, error_msg
         except Exception as exc:  # pragma: no cover - complex patch failure
             error_msg = str(exc)
@@ -508,6 +514,15 @@ def main() -> None:
                                 try:
                                     attempts += 1
                                     proc = launch_component(comp)
+                                    # run a second health check to verify recovery
+                                    if not health_checks.run(name):
+                                        proc.terminate()
+                                        proc.wait()
+                                        LOGGER.error(
+                                            "Post-patch health check failed for %s",
+                                            name,
+                                        )
+                                        continue
                                     processes.append(proc)
                                     success = True
                                     break

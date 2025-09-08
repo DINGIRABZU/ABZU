@@ -255,6 +255,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added mission brief and operator chat examples with connector checklist cross-links in Crown and operator docs.
 - Removed unused `boot_sequence` placeholder from `orchestration_master.py`.
 - Hardened Crown prompt orchestrator to target known exceptions and surface unexpected failures.
+- Boot orchestrator reruns health checks after AI-generated patches and stops
+  after the configurable `--remote-attempts` limit, logging each handover.
 
 ### Chakra Versions
 
