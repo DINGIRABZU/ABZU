@@ -9,7 +9,7 @@ from typing import Any, Dict
 from . import LAYERS, _LAYER_IMPORTS, broadcast_layer_event, query_memory
 from opentelemetry import trace
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 @dataclass
@@ -39,7 +39,7 @@ class MemoryBundle:
                     optional_path = f"memory.optional.{layer}"
                     try:
                         module = import_module(optional_path)
-                        status = "defaulted"
+                        status = "skipped"
                     except ModuleNotFoundError:
                         module = None
                         status = "error"

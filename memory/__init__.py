@@ -17,7 +17,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - fallback when vector memory unavailable
     ChakraRegistry = None  # type: ignore[assignment]
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 LAYERS = ("cortex", "emotional", "mental", "spiritual", "narrative")
 
@@ -46,7 +46,7 @@ def _load_layer(layer: str) -> str:
             optional_path = f"memory.optional.{module_path.rsplit('.', 1)[-1]}"
             try:
                 module = importlib.import_module(optional_path)
-                status = "defaulted"
+                status = "skipped"
             except ModuleNotFoundError:
                 module = None
                 status = "error"

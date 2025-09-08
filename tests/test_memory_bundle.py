@@ -43,7 +43,7 @@ def test_initialize_emits_event_and_sets_ready_statuses(monkeypatch):
     set_event_producer(None)
 
 
-def test_initialize_marks_defaulted_layer(monkeypatch):
+def test_initialize_marks_skipped_layer(monkeypatch):
     producer = DummyProducer()
     set_event_producer(producer)
 
@@ -58,13 +58,13 @@ def test_initialize_marks_defaulted_layer(monkeypatch):
         return real_import(name)
 
     monkeypatch.setattr("memory.bundle.import_module", fake_import)
-    monkeypatch.setitem(LAYER_STATUSES, "mental", "defaulted")
+    monkeypatch.setitem(LAYER_STATUSES, "mental", "skipped")
 
     bundle = MemoryBundle()
     statuses = bundle.initialize()
 
-    assert statuses["mental"] == "defaulted"
-    assert producer.events[0].payload["layers"]["mental"] == "defaulted"
+    assert statuses["mental"] == "skipped"
+    assert producer.events[0].payload["layers"]["mental"] == "skipped"
     set_event_producer(None)
 
 

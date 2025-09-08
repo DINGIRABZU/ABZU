@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-**Version:** v1.0.5
-**Last updated:** 2025-09-08
+**Version:** v1.0.6
+**Last updated:** 2025-09-09
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
@@ -64,7 +64,7 @@ records = bundle.query("omen")
 `broadcast_layer_event()` with the resulting status mapping. During package
 import every layer attempts to load its implementation and transparently
 falls back to the module in `memory.optional` if dependencies are missing.
-Substituted layers are marked as `defaulted`; initialization continues and
+Substituted layers are marked as `skipped`; initialization continues and
 emits a consolidated result regardless of missing components.
 
 ### Command-line bootstrap
@@ -141,7 +141,7 @@ no-op fallback in `memory/optional/`—including `cortex`, `emotional`, `mental`
 `search_api`, `music_memory`, and `sacred`. When a layer import raises
 `ModuleNotFoundError`, initialization automatically loads the matching
 fallback, which exposes the same public API but returns empty data structures.
-Fallback layers are reported as `defaulted`, and calls such as
+Fallback layers are reported as `skipped`, and calls such as
 `aggregate_search` simply yield empty results for them while logging any
 underlying errors. Queries still return data from the remaining active layers.
 
