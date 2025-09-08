@@ -34,6 +34,13 @@ documents:
       scope: Training data and workflow.
       key_rules: Configure narrative pipelines as specified.
       insight: Reference for narrative generation components.
+  docs/chakra_heartbeat.md:
+    sha256: a8e25c7afb3f05181c7842262a820c6caf28e568522698dfd5c5fc851a503b1f
+    summary:
+      purpose: Heartbeat subsystem overview and roadmap.
+      scope: Chakra and agent pulse coordination.
+      key_rules: Maintain canonical timing and self-healing triggers.
+      insight: Links heartbeat telemetry with recovery workflows.
   docs/documentation_protocol.md:
     sha256: ae84f16638303413f944fd3a2b0adf70679c3ee82c06eefa2ab18c1141468239
     summary:
@@ -42,7 +49,7 @@ documents:
       key_rules: Follow documentation workflow and sync blueprint.
       insight: Run pre-commit with modified docs before committing.
   docs/project_overview.md:
-    sha256: ecd6fa5f75b9cef7f4ef04f1616661957bd48e48f3fcf1b47fc78a21b47ca30d
+    sha256: 0966d1eb3e8377c0f1350b68ac6cada9f8b6066a59d374c7cc62730fb8c3e48a
     summary:
       purpose: Project goals and scope.
       scope: Entire project.
@@ -169,7 +176,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 78a6a017c1b046551743780cdfe3b1bd20b4eef22fa29521b8f6d5b851760f50
+    sha256: b00d4f5ccb29041545b0c0535f358a6a4f07a9a7c24aabb19b420b0d24e1fb83
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -233,7 +240,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 98947f93b8716476fdfbb6edd5f7d9c14e2a09020add5bbc3b67d3407cc54340
+    sha256: a037bba0ed148ec53d7528c85dc68b2308581140c0baf1bcf5af8bf0c309c756
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
