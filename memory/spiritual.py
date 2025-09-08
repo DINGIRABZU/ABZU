@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Optional
 
 from aspect_processor import analyze_phonetic, analyze_ritual, analyze_semantic
+from opentelemetry import trace
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DB_PATH = BASE_DIR / "data" / "ontology.db"
@@ -55,6 +56,9 @@ def get_connection(db_path: Path | str = DB_PATH) -> sqlite3.Connection:
     return conn
 
 
+_tracer = trace.get_tracer(__name__)
+
+
 def set_event_symbol(
     event: str, symbol: str, conn: Optional[sqlite3.Connection] = None
 ) -> None:
@@ -63,20 +67,23 @@ def set_event_symbol(
     The specification refers to this operation as :func:`map_to_symbol`.
     """
 
-    analyze_phonetic(event)
-    analyze_semantic(symbol)
-    analyze_ritual(f"{event}:{symbol}")
-    own_conn = conn is None
-    conn = conn or get_connection()
-    try:
-        with conn:
-            conn.execute(
-                "INSERT OR REPLACE INTO event_symbol (event, symbol) VALUES (?, ?)",
-                (event, symbol),
-            )
-    finally:
-        if own_conn:
-            conn.close()
+    with _tracer.start_as_current_span("memory.spiritual.set_event_symbol") as span:
+        span.set_attribute("memory.event", event)
+        span.set_attribute("memory.symbol", symbol)
+        analyze_phonetic(event)
+        analyze_semantic(symbol)
+        analyze_ritual(f"{event}:{symbol}")
+        own_conn = conn is None
+        conn = conn or get_connection()
+        try:
+            with conn:
+                conn.execute(
+                    "INSERT OR REPLACE INTO event_symbol (event, symbol) VALUES (?, ?)",
+                    (event, symbol),
+                )
+        finally:
+            if own_conn:
+                conn.close()
 
 
 def map_to_symbol(
@@ -94,12 +101,13 @@ def map_to_symbol(
         Optional SQLite connection to use.
     """
 
-    if isinstance(event_metadata, dict):
-        event = event_metadata["event"]
-        symbol = event_metadata["symbol"]
-    else:
-        event, symbol = event_metadata
-    set_event_symbol(event, symbol, conn=conn)
+    with _tracer.start_as_current_span("memory.spiritual.map_to_symbol"):
+        if isinstance(event_metadata, dict):
+            event = event_metadata["event"]
+            symbol = event_metadata["symbol"]
+        else:
+            event, symbol = event_metadata
+        set_event_symbol(event, symbol, conn=conn)
 
 
 def get_event_symbol(
@@ -111,18 +119,23 @@ def get_event_symbol(
     adds :func:`lookup_symbol_history` for reverse queries.
     """
 
-    analyze_phonetic(event)
-    analyze_semantic(event)
-    analyze_ritual(event)
-    own_conn = conn is None
-    conn = conn or get_connection()
-    try:
-        cur = conn.execute("SELECT symbol FROM event_symbol WHERE event = ?", (event,))
-        row = cur.fetchone()
-        return row[0] if row else None
-    finally:
-        if own_conn:
-            conn.close()
+    with _tracer.start_as_current_span("memory.spiritual.get_event_symbol") as span:
+        span.set_attribute("memory.event", event)
+        analyze_phonetic(event)
+        analyze_semantic(event)
+        analyze_ritual(event)
+        own_conn = conn is None
+        conn = conn or get_connection()
+        try:
+            cur = conn.execute(
+                "SELECT symbol FROM event_symbol WHERE event = ?",
+                (event,),
+            )
+            row = cur.fetchone()
+            return row[0] if row else None
+        finally:
+            if own_conn:
+                conn.close()
 
 
 def lookup_symbol_history(
@@ -133,17 +146,22 @@ def lookup_symbol_history(
     This is the specification-aligned inverse of :func:`get_event_symbol`.
     """
 
-    analyze_phonetic(symbol)
-    analyze_semantic(symbol)
-    analyze_ritual(symbol)
-    own_conn = conn is None
-    conn = conn or get_connection()
-    try:
-        cur = conn.execute("SELECT event FROM event_symbol WHERE symbol = ?", (symbol,))
-        return [row[0] for row in cur.fetchall()]
-    finally:
-        if own_conn:
-            conn.close()
+    with _tracer.start_as_current_span("memory.spiritual.lookup_history") as span:
+        span.set_attribute("memory.symbol", symbol)
+        analyze_phonetic(symbol)
+        analyze_semantic(symbol)
+        analyze_ritual(symbol)
+        own_conn = conn is None
+        conn = conn or get_connection()
+        try:
+            cur = conn.execute(
+                "SELECT event FROM event_symbol WHERE symbol = ?",
+                (symbol,),
+            )
+            return [row[0] for row in cur.fetchall()]
+        finally:
+            if own_conn:
+                conn.close()
 
 
 # Ensure DB exists when module is imported

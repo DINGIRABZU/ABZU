@@ -36,8 +36,12 @@ def set_event_producer(producer: EventProducer | None) -> None:
     primarily intended for tests where a mock producer is supplied.
     """
 
-    global _producer
-    _producer = producer
+    with _tracer.start_as_current_span("event_bus.set_producer") as span:
+        span.set_attribute(
+            "event_bus.producer", getattr(producer, "__class__", type(None)).__name__
+        )
+        global _producer
+        _producer = producer
 
 
 def _get_producer() -> Optional[EventProducer]:

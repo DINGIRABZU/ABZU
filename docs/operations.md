@@ -157,6 +157,19 @@ curl http://localhost:9100/metrics
 
 ### Viewing traces and metrics
 
+To enable observability during development:
+
+1. Ensure `prometheus_client` and
+   `prometheus_fastapi_instrumentator` are installed.
+2. Run an OTLP collector such as Jaeger:
+   ```bash
+   docker run --rm -p 4318:4318 jaegertracing/all-in-one
+   ```
+3. Set the collector endpoint before starting any services:
+   ```bash
+   export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
+   ```
+
 All FastAPI services expose `/healthz` and Prometheus metrics on `/metrics`.
 Verify a service is responding by curling its health endpoint and inspect raw
 metrics with the `/metrics` route:
@@ -166,12 +179,10 @@ curl http://localhost:8000/healthz
 curl http://localhost:8000/metrics | head
 ```
 
-Agent interactions emit OpenTelemetry spans. To view them, run an OTLP
-collector such as Jaeger and set the `OTEL_EXPORTER_OTLP_ENDPOINT` environment
-variable before starting the services. The spans then appear in the
-collector's UI for correlation with metrics. Memory queries also emit spans for
-each layer, enabling trace-based performance analysis alongside agent event
-emission.
+Agent interactions emit OpenTelemetry spans. With the collector running and
+`OTEL_EXPORTER_OTLP_ENDPOINT` set, spans appear in the collector's UI for
+correlation with metrics. Memory queries emit spans for each layer, enabling
+trace-based performance analysis alongside agent event emission.
 
 Message flow across agents is traceable as well. The `agents.event_bus`
 module now wraps publish and subscribe operations in spans, allowing you to

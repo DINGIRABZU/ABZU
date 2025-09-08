@@ -12,6 +12,7 @@ from datetime import datetime
 from typing import Any, Dict, List
 
 from core.utils.optional_deps import lazy_import
+from opentelemetry import trace
 
 neo4j = lazy_import("neo4j")
 if getattr(neo4j, "__stub__", False):
@@ -44,6 +45,7 @@ if getattr(sb3, "__stub__", False):
 
 
 logger = logging.getLogger(__name__)
+_tracer = trace.get_tracer(__name__)
 
 _DRIVER: Driver | None = None
 _RL_MODEL: DQN | None = None
@@ -80,14 +82,15 @@ REL_FOLLOWS = "FOLLOWS"
 def _get_driver() -> Driver:
     """Return a cached Neo4j driver."""
 
-    global _DRIVER
-    if _DRIVER is None:
-        if GraphDatabase is None:  # pragma: no cover - dependency missing
-            raise RuntimeError("neo4j driver not installed")
-        _DRIVER = GraphDatabase.driver(
-            settings.neo4j_uri, auth=(settings.neo4j_user, settings.neo4j_password)
-        )
-    return _DRIVER
+    with _tracer.start_as_current_span("memory.mental.driver"):
+        global _DRIVER
+        if _DRIVER is None:
+            if GraphDatabase is None:  # pragma: no cover - dependency missing
+                raise RuntimeError("neo4j driver not installed")
+            _DRIVER = GraphDatabase.driver(
+                settings.neo4j_uri, auth=(settings.neo4j_user, settings.neo4j_password)
+            )
+        return _DRIVER
 
 
 def init_rl_model() -> None:
@@ -125,40 +128,44 @@ def record_task_flow(
 ) -> None:
     """Record a task execution and optionally update the RL model."""
 
-    analyze_phonetic(task_id)
-    analyze_semantic(json.dumps(context))
-    analyze_geometric(context)
-    analyze_temporal(datetime.utcnow().isoformat())
-    ctx = json.dumps(context)
-    driver = _get_driver()
-    with driver.session() as session:
-        session.execute_write(
-            lambda tx: tx.run(
-                """
-                MERGE (t:Task {id: $task_id})
-                CREATE (c:Context {data: $ctx})
-                MERGE (t)-[:HAS_CONTEXT]->(c)
-                """,
-                task_id=task_id,
-                ctx=ctx,
+    with _tracer.start_as_current_span("memory.mental.record_task") as span:
+        span.set_attribute("memory.task_id", task_id)
+        analyze_phonetic(task_id)
+        analyze_semantic(json.dumps(context))
+        analyze_geometric(context)
+        analyze_temporal(datetime.utcnow().isoformat())
+        ctx = json.dumps(context)
+        driver = _get_driver()
+        with driver.session() as session:
+            session.execute_write(
+                lambda tx: tx.run(
+                    """
+                    MERGE (t:Task {id: $task_id})
+                    CREATE (c:Context {data: $ctx})
+                    MERGE (t)-[:HAS_CONTEXT]->(c)
+                    """,
+                    task_id=task_id,
+                    ctx=ctx,
+                )
             )
-        )
-    _update_rl(context, reward)
+        _update_rl(context, reward)
 
 
 def query_related_tasks(task_id: str) -> List[str]:
     """Return task IDs that share context with ``task_id``."""
 
-    driver = _get_driver()
-    with driver.session() as session:
-        result = session.run(
-            """
-            MATCH (t:Task {id: $task_id})-[:HAS_CONTEXT]->(c)<-[:HAS_CONTEXT]-(o:Task)
-            RETURN DISTINCT o.id AS id
-            """,
-            task_id=task_id,
-        )
-        return [r["id"] for r in result]
+    with _tracer.start_as_current_span("memory.mental.query_related") as span:
+        span.set_attribute("memory.task_id", task_id)
+        driver = _get_driver()
+        with driver.session() as session:
+            result = session.run(
+                (
+                    "MATCH (t:Task {id: $task_id})-[:HAS_CONTEXT]->(c) "
+                    "<-[:HAS_CONTEXT]-(o:Task) RETURN DISTINCT o.id AS id"
+                ),
+                task_id=task_id,
+            )
+            return [r["id"] for r in result]
 
 
 __all__ = [
