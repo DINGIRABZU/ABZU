@@ -71,6 +71,12 @@ def chakra_status() -> Dict[str, Dict[str, float] | str]:
     return _collect()
 
 
+@router.get("/healthz")
+def healthz() -> Dict[str, str]:
+    """Basic liveness probe for monitoring."""
+    return {"status": "ok"}
+
+
 @router.get("/metrics")
 def metrics() -> Response:
     """Expose Prometheus metrics."""

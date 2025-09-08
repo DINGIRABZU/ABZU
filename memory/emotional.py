@@ -27,6 +27,7 @@ from typing import List, Optional, Sequence
 from worlds.config_registry import register_path
 
 from aspect_processor import analyze_emotional
+from opentelemetry import trace
 
 try:  # Optional dependency
     from transformers import AutoFeatureExtractor  # type: ignore
@@ -66,6 +67,9 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
     )
 
 
+_tracer = trace.get_tracer(__name__)
+
+
 def get_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
     """Return a connection to the emotion database.
 
@@ -75,12 +79,14 @@ def get_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
     schema is ensured to exist.
     """
 
-    path = Path(db_path or os.getenv(DB_ENV_VAR, DB_PATH))
-    path.parent.mkdir(parents=True, exist_ok=True)
-    register_path("emotional", str(path))
-    conn = sqlite3.connect(path)
-    _ensure_schema(conn)
-    return conn
+    with _tracer.start_as_current_span("memory.emotional.connect") as span:
+        path = Path(db_path or os.getenv(DB_ENV_VAR, DB_PATH))
+        span.set_attribute("memory.db_path", str(path))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        register_path("emotional", str(path))
+        conn = sqlite3.connect(path)
+        _ensure_schema(conn)
+        return conn
 
 
 def _normalise(features: EmotionFeatures) -> List[float]:
@@ -123,22 +129,24 @@ def log_emotion(
 ) -> EmotionEntry:
     """Persist ``features`` and return the stored :class:`EmotionEntry`."""
 
-    vector = _normalise(features)
-    analyze_emotional(vector)
-    timestamp = time.time()
-    entry = EmotionEntry(timestamp=timestamp, vector=vector)
-    own_conn = conn is None
-    conn = conn or get_connection(db_path)
-    try:
-        with conn:
-            conn.execute(
-                "INSERT INTO emotion_log (timestamp, vector) VALUES (?, ?)",
-                (entry.timestamp, json.dumps(entry.vector)),
-            )
-    finally:
-        if own_conn:
-            conn.close()
-    return entry
+    with _tracer.start_as_current_span("memory.emotional.log") as span:
+        vector = _normalise(features)
+        span.set_attribute("memory.vector_length", len(vector))
+        analyze_emotional(vector)
+        timestamp = time.time()
+        entry = EmotionEntry(timestamp=timestamp, vector=vector)
+        own_conn = conn is None
+        conn = conn or get_connection(db_path)
+        try:
+            with conn:
+                conn.execute(
+                    "INSERT INTO emotion_log (timestamp, vector) VALUES (?, ?)",
+                    (entry.timestamp, json.dumps(entry.vector)),
+                )
+        finally:
+            if own_conn:
+                conn.close()
+        return entry
 
 
 def fetch_emotion_history(
@@ -148,22 +156,24 @@ def fetch_emotion_history(
 ) -> List[EmotionEntry]:
     """Return logged entries from the last ``window`` seconds."""
 
-    since = max(0.0, time.time() - float(window))
-    own_conn = conn is None
-    conn = conn or get_connection(db_path)
-    try:
-        cur = conn.execute(
-            (
-                "SELECT timestamp, vector FROM emotion_log WHERE timestamp >= ? "
-                "ORDER BY timestamp ASC"
-            ),
-            (since,),
-        )
-        rows = cur.fetchall()
-        return [EmotionEntry(ts, json.loads(vec)) for ts, vec in rows]
-    finally:
-        if own_conn:
-            conn.close()
+    with _tracer.start_as_current_span("memory.emotional.fetch_history") as span:
+        span.set_attribute("memory.window", int(window))
+        since = max(0.0, time.time() - float(window))
+        own_conn = conn is None
+        conn = conn or get_connection(db_path)
+        try:
+            cur = conn.execute(
+                (
+                    "SELECT timestamp, vector FROM emotion_log WHERE timestamp >= ? "
+                    "ORDER BY timestamp ASC"
+                ),
+                (since,),
+            )
+            rows = cur.fetchall()
+            return [EmotionEntry(ts, json.loads(vec)) for ts, vec in rows]
+        finally:
+            if own_conn:
+                conn.close()
 
 
 __all__ = [
