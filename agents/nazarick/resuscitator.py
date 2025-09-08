@@ -7,7 +7,7 @@ import logging
 from typing import Any, Callable, Dict
 
 from agents.event_bus import emit_event
-from agents.razar import lifecycle_bus
+from agents.razar import ai_invoker, lifecycle_bus
 
 LOGGER = logging.getLogger(__name__)
 
@@ -29,6 +29,13 @@ class Resuscitator:
 
         action = self.actions.get(agent)
         success = bool(action and action())
+        if not success:
+            try:
+                ai_invoker.handover(context={"component": agent})
+            except Exception:  # pragma: no cover - defensive safeguard
+                LOGGER.exception("ai_invoker handover failed for %s", agent)
+            else:
+                success = bool(action and action())
         event = "agent_resuscitated" if success else "agent_resuscitation_failed"
         payload = {"event": event, "agent": agent}
         self.emit(payload)
