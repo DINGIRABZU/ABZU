@@ -8,6 +8,10 @@ albedo_layer = "skins/alpha/albedo.png"
 rubedo_layer = "skins/alpha/rubedo.png"
 citrinitas_layer = "skins/alpha/citrinitas.png"
 
+[agents.alpha.broadcast]
+discord_channel = 1234567890
+telegram_chat = 111222333
+
 [agents.beta]
 eye_color = [255, 64, 64]
 sigil = "cube"
@@ -17,3 +21,7 @@ nigredo_layer = "skins/beta/nigredo.png"
 albedo_layer = "skins/beta/albedo.png"
 rubedo_layer = "skins/beta/rubedo.png"
 citrinitas_layer = "skins/beta/citrinitas.png"
+
+[agents.beta.broadcast]
+discord_channel = 987654321
+telegram_chat = 444555666

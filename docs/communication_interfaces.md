@@ -76,6 +76,19 @@ Both connectors expect the tokens to be defined in the environment (or
 relay responses back to their respective channels, enabling remote control of
 the agent.
 
+## Discord/Telegram Avatar Streaming
+
+The ``connectors/avatar_broadcast.py`` helper forwards rendered avatar frames
+to social platforms. It retrieves the active video track for an agent and sends
+each frame plus optional heartbeat metadata to:
+
+- ``tools.bot_discord`` for delivery into a Discord channel
+- ``tools.bot_telegram`` for delivery into a Telegram chat
+
+Provide the channel or chat identifiers alongside the agent name when invoking
+``broadcast``. The function runs asynchronously and mirrors heartbeats so
+remote viewers can monitor stream health.
+
 ## Adding New Channels
 
 1. Implement an adapter that receives messages from the external service.
