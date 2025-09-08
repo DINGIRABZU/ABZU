@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-**Version:** v1.0.4
-**Last updated:** 2025-09-07
+**Version:** v1.0.5
+**Last updated:** 2025-09-08
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
@@ -138,7 +138,7 @@ results = aggregate_search("omen", source_weights={"spiritual": 2.0})
 Some memory layers rely on external services and may be absent. Each has a
 no-op fallback in `memory/optional/`—including `cortex`, `emotional`, `mental`,
 `spiritual`, `narrative_engine`, `vector_memory`, `spiral_memory`, `search`,
-`search_api`, and `music_memory`. When a layer import raises
+`search_api`, `music_memory`, and `sacred`. When a layer import raises
 `ModuleNotFoundError`, initialization automatically loads the matching
 fallback, which exposes the same public API but returns empty data structures.
 Fallback layers are reported as `defaulted`, and calls such as

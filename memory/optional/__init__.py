@@ -11,4 +11,5 @@ __all__ = [
     "search",
     "search_api",
     "music_memory",
+    "sacred",
 ]
