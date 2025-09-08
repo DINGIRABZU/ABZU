@@ -5,11 +5,18 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 from pathlib import Path
-from typing import Iterable, List, Tuple
+from typing import Iterable, Iterator, List, Optional, Tuple
 
 import numpy as np
 
 from ...lwm import LargeWorldModel, default_lwm
+from core.video_engine import (
+    AvatarTraits,
+    default_render_2d_frame,
+    default_render_3d_frame,
+    register_render_2d,
+    register_render_3d,
+)
 
 try:  # pragma: no cover - optional dependency
     import librosa  # type: ignore[import-untyped]
@@ -65,4 +72,68 @@ class LWMRenderer:
             return np.empty((0, 3))
 
 
-__all__ = ["LWMRenderer"]
+# ---------------------------------------------------------------------------
+# Plug-in registration
+
+_renderer = LWMRenderer()
+
+
+def configure_renderer(
+    mesh_paths: Iterable[Path],
+    camera_paths: Iterable[Tuple[float, float, float]] | None = None,
+    lip_sync_audio: Path | None = None,
+) -> None:
+    """Load resources used by the plug-in renderers."""
+
+    _renderer.load_resources(mesh_paths, camera_paths, lip_sync_audio)
+
+
+def _render_2d_frame(
+    traits: AvatarTraits,
+    mesh: Optional[object],
+    predictor: Optional[object],
+    audio_wave: Optional[np.ndarray],
+    step: int,
+    idx: int,
+    sadtalker_frames: Optional[Iterator[np.ndarray]],
+) -> tuple[np.ndarray, int]:
+    if audio_wave is None and _renderer.audio_wave is not None:
+        audio_wave = _renderer.audio_wave
+        step = _renderer.step
+    return default_render_2d_frame(
+        traits, mesh, predictor, audio_wave, step, idx, sadtalker_frames
+    )
+
+
+def _render_3d_frame(
+    traits: AvatarTraits,
+    mesh: Optional[object],
+    predictor: Optional[object],
+    audio_wave: Optional[np.ndarray],
+    step: int,
+    idx: int,
+    sadtalker_frames: Optional[Iterator[np.ndarray]],
+    cam_iter: Optional[Iterator[Tuple[float, float, float]]],
+) -> tuple[np.ndarray, int]:
+    if cam_iter is None and _renderer.camera_paths:
+        cam_iter = iter(_renderer.camera_paths)
+    if audio_wave is None and _renderer.audio_wave is not None:
+        audio_wave = _renderer.audio_wave
+        step = _renderer.step
+    return default_render_3d_frame(
+        traits,
+        mesh,
+        predictor,
+        audio_wave,
+        step,
+        idx,
+        sadtalker_frames,
+        cam_iter,
+    )
+
+
+register_render_2d(_render_2d_frame)
+register_render_3d(_render_3d_frame)
+
+
+__all__ = ["LWMRenderer", "configure_renderer"]

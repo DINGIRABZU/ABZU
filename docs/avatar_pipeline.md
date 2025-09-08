@@ -106,6 +106,17 @@ optional lip‑sync audio. These assets are loaded by
 ``media.avatar.lwm_renderer`` before frames are generated. Omitting the mode or
 setting it to ``"2d"`` keeps the traditional flat rendering path.
 
+### Frame Rendering Plug-ins
+
+``core.video_engine`` exposes ``register_render_2d`` and ``register_render_3d``
+hooks so external modules can override the default frame builders. Plug‑ins
+provide callables with the same signature as the built‑in functions.
+
+The ``media.avatar.lwm_renderer`` module registers an LWM‑driven renderer using
+these hooks. Call ``configure_renderer()`` with mesh paths and optional
+lip‑sync audio to supply camera trajectories and audio data before starting the
+stream.
+
 ## Object-aware avatar selection
 
 The video engine can adapt the visible avatar based on the current visual
