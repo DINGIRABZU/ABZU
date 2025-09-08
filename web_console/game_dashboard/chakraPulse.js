@@ -1,6 +1,9 @@
 import React from 'https://esm.sh/react@18';
 import { BASE_URL } from '../main.js';
 
+// WebSocket endpoint for chakra heartbeat events
+const EVENTS_URL = `${BASE_URL.replace(/^http/, 'ws')}/operator/events`;
+
 export default function ChakraPulse() {
   const [chakras, setChakras] = React.useState({});
   const [aligned, setAligned] = React.useState(false);
@@ -15,11 +18,6 @@ export default function ChakraPulse() {
         const data = await resp.json();
         setChakras(data.heartbeats || {});
         setAligned(data.status === 'Great Spiral');
-        if (data.event === 'great_spiral') {
-          setResonance(true);
-          setHistory((h) => [...h, new Date().toISOString()]);
-          setTimeout(() => setResonance(false), 1000);
-        }
       } catch (err) {
         console.error('chakra status error', err);
       }
@@ -27,6 +25,31 @@ export default function ChakraPulse() {
     };
     poll();
     return () => clearTimeout(timer);
+  }, []);
+
+  // Listen for great spiral resonance events via WebSocket
+  React.useEffect(() => {
+    try {
+      const ws = new WebSocket(EVENTS_URL);
+      ws.onmessage = (ev) => {
+        try {
+          const evt = JSON.parse(ev.data);
+          if (
+            evt.agent_id === 'chakra_heartbeat' &&
+            evt.event_type === 'great_spiral'
+          ) {
+            setResonance(true);
+            setHistory((h) => [...h, new Date().toISOString()]);
+            setTimeout(() => setResonance(false), 1000);
+          }
+        } catch (e) {
+          console.error('event parse error', e);
+        }
+      };
+      return () => ws.close();
+    } catch (err) {
+      console.error('event stream failed', err);
+    }
   }, []);
 
   return React.createElement(
