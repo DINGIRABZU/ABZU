@@ -27,22 +27,36 @@ LOG_FILE = Path("logs") / "nazarick_startup.json"
 class AgentDirectory:
     """In-memory index of Nazarick agents."""
 
-    def __init__(self, agents: List[Dict]):
+    def __init__(
+        self,
+        agents: List[Dict],
+        capabilities: Optional[List[str]] = None,
+        triggers: Optional[List[str]] = None,
+    ):
         self.agents = agents
+        self.capabilities = capabilities or []
+        self.triggers = triggers or []
         self.by_id: Dict[str, Dict] = {a.get("id", ""): a for a in agents}
         self.by_chakra: Dict[str, List[Dict]] = {}
         self.by_capability: Dict[str, List[Dict]] = {}
+        self.by_trigger: Dict[str, List[Dict]] = {}
         for agent in agents:
             chakra = agent.get("chakra")
             if chakra:
                 self.by_chakra.setdefault(chakra, []).append(agent)
             for cap in agent.get("capabilities", []):
                 self.by_capability.setdefault(cap, []).append(agent)
+            for trig in agent.get("triggers", []):
+                self.by_trigger.setdefault(trig, []).append(agent)
 
     @classmethod
     def from_file(cls, path: Path) -> "AgentDirectory":
         data = json.loads(Path(path).read_text()) or {}
-        return cls(data.get("agents", []))
+        return cls(
+            data.get("agents", []),
+            capabilities=data.get("capabilities"),
+            triggers=data.get("triggers"),
+        )
 
     def get(self, agent_id: str) -> Optional[Dict]:
         return self.by_id.get(agent_id)
@@ -52,6 +66,9 @@ class AgentDirectory:
 
     def get_by_capability(self, capability: str) -> List[Dict]:
         return self.by_capability.get(capability, [])
+
+    def get_by_trigger(self, trigger: str) -> List[Dict]:
+        return self.by_trigger.get(trigger, [])
 
 
 AGENT_DIRECTORY: AgentDirectory | None = None

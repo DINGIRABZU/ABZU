@@ -44,5 +44,17 @@
       "code_path": "memory_scribe.py",
       "triggers": ["persist"]
     }
+  ],
+  "capabilities": [
+    "orchestration",
+    "prompt_routing",
+    "qnl_processing",
+    "memory_persistence"
+  ],
+  "triggers": [
+    "launch",
+    "prompt",
+    "insight",
+    "persist"
   ]
 }
