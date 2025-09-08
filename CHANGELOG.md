@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `world export`/`world import` utilities and automatic registration of
   model endpoints.
 - Expanded `bootstrap_world.py` to initialize memory layers, start Crown, and load agent profiles; exposed as `abzu-bootstrap-world`.
+- `bootstrap_world.py` now logs completion after mandatory layers and agent profiles initialize.
 - Enforced explicit health probes for RAZAR boot components and added boot
   sequence tests.
 - Memory introspection API with query, purge, and snapshot endpoints plus web console memory panel.

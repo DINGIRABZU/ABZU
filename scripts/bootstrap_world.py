@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize memory layers, start Crown, and load agent profiles."""
+"""Initialize mandatory layers, start Crown, and report readiness."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from init_crown_agent import initialize_crown
 from memory.bundle import MemoryBundle
 from worlds.services import load_manifest, warn_missing_services
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 
 def _prepare_file_backed_storage(root: Path) -> None:
@@ -58,6 +58,8 @@ def main() -> None:
     events = launch_required_agents()
     for event in events:
         logging.info("agent %s: %s", event.get("agent"), event.get("status"))
+
+    logging.info("World bootstrap complete")
 
 
 if __name__ == "__main__":
