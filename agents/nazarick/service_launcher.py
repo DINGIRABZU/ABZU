@@ -23,6 +23,9 @@ LOGGER = logging.getLogger(__name__)
 REGISTRY_FILE = Path(__file__).with_name("agent_registry.json")
 LOG_FILE = Path("logs") / "nazarick_startup.json"
 
+# How frequently to emit ``agent_beat`` heartbeats for launched agents.
+HEARTBEAT_INTERVAL = 5.0
+
 
 class AgentDirectory:
     """In-memory index of Nazarick agents."""
@@ -149,7 +152,7 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
                             "timestamp": time.time(),
                         }
                     )
-                    time.sleep(5.0)
+                    time.sleep(HEARTBEAT_INTERVAL)
                 lifecycle_bus.publish(
                     {
                         "event": "agent_stop",

@@ -7,7 +7,7 @@ from typing import Dict, Iterable, List
 
 from agents.razar import lifecycle_bus
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 class AgentHeartbeat:
@@ -21,7 +21,13 @@ class AgentHeartbeat:
         self._beats: Dict[str, float] = {}
 
     async def listen(self) -> None:
-        """Subscribe to lifecycle events and update timestamps."""
+        """Subscribe to lifecycle events and update timestamps.
+
+        After processing each beat the method invokes :meth:`check_alerts` to
+        publish ``agent_down`` events for agents that have missed their
+        heartbeat window.  Any resulting :class:`RuntimeError` is suppressed so
+        that monitoring can continue.
+        """
 
         async for event in lifecycle_bus.subscribe():
             if event.get("event") != "agent_beat":
@@ -30,6 +36,13 @@ class AgentHeartbeat:
             if agent:
                 ts = float(event.get("timestamp", time.time()))
                 self.beat(str(agent), ts)
+            try:
+                self.check_alerts()
+            except RuntimeError:
+                # ``check_alerts`` raises if any agents are missing.  When
+                # running as a background listener we simply emit the
+                # ``agent_down`` events and keep listening.
+                pass
 
     def beat(self, agent: str, timestamp: float | None = None) -> None:
         """Record a heartbeat for ``agent`` at ``timestamp``."""
