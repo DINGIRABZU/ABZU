@@ -1,9 +1,19 @@
-# World Bootstrap Workflow
+# World Bootstrap
 
-This guide outlines how to initialise a world and verify its configuration.
+Guide to initializing a world and preserving its component configuration.
 
-1. Run `python scripts/bootstrap_world.py` to set up memory layers, start Crown services and load required agents.
-2. Validate the configuration registry with `python scripts/validate_world_registry.py`. The script imports registered layers and agents and reports any entries that do not correspond to components in the repository.
-3. The validator is integrated with pre-commit, so it executes automatically when world components change. It can also be run manually when adjusting world settings.
+## Registry
+- The [`worlds.config_registry` module](../worlds/config_registry.py) tracks per-world metadata.
+- Layers are registered when memory modules load; agent packages register during import.
+- Brokers, model paths, and other resources can be registered with dedicated helpers.
 
-Keeping the registry accurate ensures world bootstrapping uses valid components and prevents missing dependencies at runtime.
+## Export and Import
+- Use `python -m worlds export <path>` or [`python scripts/world_export.py`](../scripts/world_export.py) to save configuration.
+- `python -m worlds import <path>` restores a previously exported JSON file.
+- The `WORLD_NAME` environment variable selects which world to target; defaults to `"default"`.
+
+## Workflow
+1. Import `memory` and `agents` to populate layers and agent names.
+2. Register brokers or model locations as needed using `register_broker` and `register_model_path`.
+3. Export the configuration to capture the world's state.
+4. Import the file on another system to reproduce the same setup.

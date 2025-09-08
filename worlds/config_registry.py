@@ -15,6 +15,7 @@ from typing import Any, Dict, DefaultDict
 #       "agents": set(),
 #       "brokers": {},
 #       "paths": {},
+#       "model_paths": {},
 #       "remote_attempts": {},
 #       "component_hashes": {},
 #       "patches": [],
@@ -27,6 +28,7 @@ _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
         "agents": set(),
         "brokers": {},
         "paths": {},
+        "model_paths": {},
         "remote_attempts": {},
         "component_hashes": {},
         "patches": [],
@@ -72,6 +74,12 @@ def register_path(name: str, path: str, world: str | None = None) -> None:
     _registry[_world_name(world)]["paths"][name] = path
 
 
+def register_model_path(model: str, path: str, world: str | None = None) -> None:
+    """Record filesystem ``path`` for ``model`` within ``world``."""
+
+    _registry[_world_name(world)]["model_paths"][model] = path
+
+
 def register_remote_attempt(component: str, world: str | None = None) -> None:
     """Increment remote repair attempt counter for ``component``."""
 
@@ -114,6 +122,7 @@ def export_config(world: str | None = None) -> Dict[str, Any]:
         "agents": sorted(data["agents"]),
         "brokers": dict(data["brokers"]),
         "paths": dict(data["paths"]),
+        "model_paths": dict(data["model_paths"]),
         "remote_attempts": dict(data["remote_attempts"]),
         "component_hashes": dict(data["component_hashes"]),
         "patches": list(data["patches"]),
@@ -129,6 +138,7 @@ def import_config(config: Dict[str, Any], world: str | None = None) -> None:
     data["agents"].update(config.get("agents", []))
     data["brokers"].update(config.get("brokers", {}))
     data["paths"].update(config.get("paths", {}))
+    data["model_paths"].update(config.get("model_paths", {}))
     data["remote_attempts"].update(config.get("remote_attempts", {}))
     data["component_hashes"].update(config.get("component_hashes", {}))
     data["patches"].extend(config.get("patches", []))
@@ -164,6 +174,7 @@ __all__ = [
     "register_agent",
     "register_broker",
     "register_path",
+    "register_model_path",
     "register_remote_attempt",
     "register_component_hash",
     "register_model_endpoint",
