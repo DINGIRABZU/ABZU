@@ -1,3 +1,5 @@
+"""Tests for the :class:`ConnectorHeartbeat` mixin."""
+
 import importlib
 import pathlib
 import sys

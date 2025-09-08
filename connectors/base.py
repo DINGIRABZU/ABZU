@@ -77,3 +77,6 @@ class ConnectorHeartbeat:
                 publish(f"{self._channel}:alert", {"channel": self._channel})
                 with self._lock:
                     self._last_seen = time.monotonic()
+
+
+__all__ = ["ConnectorHeartbeat"]
