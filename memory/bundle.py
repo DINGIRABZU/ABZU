@@ -30,16 +30,25 @@ class MemoryBundle:
             module_path = _LAYER_IMPORTS[layer]
             try:
                 module = import_module(module_path)
-            except Exception:  # pragma: no cover - import errors are mocked in tests
+                status = "ready"
+            except ModuleNotFoundError:  # pragma: no cover - dependency missing
+                optional_path = f"memory.optional.{layer}"
+                try:
+                    module = import_module(optional_path)
+                    status = "defaulted"
+                except ModuleNotFoundError:
+                    module = None
+                    status = "error"
+            except Exception:  # pragma: no cover - unexpected import error
                 module = None
+                status = "error"
+
             if module is None:
-                statuses[layer] = "error"
+                statuses[layer] = status
                 continue
+
             setattr(self, layer, module)
-            name = getattr(module, "__name__", "")
-            statuses[layer] = (
-                "defaulted" if name.startswith("memory.optional.") else "ready"
-            )
+            statuses[layer] = status
 
         broadcast_layer_event(statuses)
         self.statuses = statuses

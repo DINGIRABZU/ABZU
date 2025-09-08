@@ -9,4 +9,6 @@ __all__ = [
     "vector_memory",
     "spiral_memory",
     "search",
+    "search_api",
+    "music_memory",
 ]

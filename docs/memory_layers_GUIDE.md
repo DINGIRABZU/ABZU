@@ -135,10 +135,13 @@ results = aggregate_search("omen", source_weights={"spiritual": 2.0})
 
 ## Optional Layers
 
-Some memory layers rely on external services and may be absent. The package
-automatically substitutes the corresponding module from `memory/optional/`
-whenever an import fails, exposing the same public API but returning empty
-results. Fallback layers are reported as `defaulted`, and calls such as
+Some memory layers rely on external services and may be absent. Each has a
+no-op fallback in `memory/optional/`—including `cortex`, `emotional`, `mental`,
+`spiritual`, `narrative_engine`, `vector_memory`, `spiral_memory`, `search`,
+`search_api`, and `music_memory`. When a layer import raises
+`ModuleNotFoundError`, initialization automatically loads the matching
+fallback, which exposes the same public API but returns empty data structures.
+Fallback layers are reported as `defaulted`, and calls such as
 `aggregate_search` simply yield empty results for them while logging any
 underlying errors. Queries still return data from the remaining active layers.
 
