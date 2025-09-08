@@ -2,7 +2,13 @@ import React from 'https://esm.sh/react@18';
 import { BASE_URL } from '../main.js';
 
 export default function SetupWizard({ onComplete }) {
-  const [status, setStatus] = React.useState({ avatar: false, tokens: false });
+  const [status, setStatus] = React.useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('wizardStatus')) || { avatar: false, tokens: false };
+    } catch {
+      return { avatar: false, tokens: false };
+    }
+  });
   const [step, setStep] = React.useState(() => Number(localStorage.getItem('wizardStep') || 0));
 
   const steps = [
@@ -33,7 +39,9 @@ export default function SetupWizard({ onComplete }) {
     const tokens = await fetch(`${BASE_URL}/token-status`)
       .then((r) => r.ok)
       .catch(() => false);
-    setStatus({ avatar, tokens });
+    const nextStatus = { avatar, tokens };
+    setStatus(nextStatus);
+    localStorage.setItem('wizardStatus', JSON.stringify(nextStatus));
     if (avatar && tokens) {
       localStorage.setItem('setupWizardCompleted', 'true');
       onComplete();
