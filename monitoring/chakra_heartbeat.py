@@ -110,7 +110,7 @@ class ChakraHeartbeat:
     def beat(self, chakra: str, timestamp: float | None = None) -> None:
         """Record a heartbeat for ``chakra`` at ``timestamp``."""
 
-        ts = timestamp or time.time()
+        ts = time.time() if timestamp is None else timestamp
         self._chakras.add(chakra)
         self._cache[chakra] = ts
         if self._memory is not None:
@@ -134,7 +134,7 @@ class ChakraHeartbeat:
     def confirm(self, chakra: str, timestamp: float | None = None) -> None:
         """Record a pulse confirmation for ``chakra``."""
 
-        ts = timestamp or time.time()
+        ts = time.time() if timestamp is None else timestamp
         self._chakras.add(chakra)
         self._confirm[chakra] = ts
         if CONFIRM_COUNTER is not None:
@@ -157,7 +157,11 @@ class ChakraHeartbeat:
         for chakra in self._chakras:
             beat_ts = self._cache.get(chakra)
             confirm_ts = self._confirm.get(chakra, 0.0)
-            if beat_ts and confirm_ts < beat_ts and current - beat_ts > self.window:
+            if (
+                beat_ts is not None
+                and confirm_ts <= beat_ts
+                and current - beat_ts > self.window
+            ):
                 missing.append(chakra)
         return missing
 

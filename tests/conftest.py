@@ -171,6 +171,7 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "test_bootstrap.py"),
     str(ROOT / "tests" / "test_avatar_lipsync.py"),
     str(ROOT / "tests" / "agents" / "nazarick" / "test_resuscitator_flow.py"),
+    str(ROOT / "tests" / "agents" / "nazarick" / "test_chakra_resuscitator.py"),
     str(ROOT / "tests" / "test_boot_sequence.py"),
     str(ROOT / "tests" / "test_lip_sync.py"),
     str(ROOT / "tests" / "test_memory_search.py"),
