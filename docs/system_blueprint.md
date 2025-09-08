@@ -56,6 +56,8 @@ which flags misalignment when beats drift from the expected 1 :1 rhythm. The
 [chakra cycle module](../src/spiral_os/chakra_cycle.py) records per‑chakra
 `gear_ratio` telemetry so deviations can be traced to specific layers.
 
+The [Chakra Architecture & HeartBeat Pulse diagram](figures/chakra_architecture.mmd) illustrates these exchanges and shows which Nazarick agents align with each chakra.
+
 #### Chakra-Tagged Signals
 
 Connectors label outbound messages with a `chakra` tag so downstream services

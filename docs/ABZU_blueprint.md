@@ -65,6 +65,13 @@ sequenceDiagram
     ReplicaWorld-->>BANA: telemetry
 ```
 
+## Chakra Architecture & HeartBeat Pulse
+The chakra cycle engine synchronizes core modules with a unified pulse so agents can monitor and heal their aligned layers. The diagram maps primary modules to chakras and the returning heartbeat that keeps them in lockstep.
+
+```mermaid
+{{#include figures/chakra_architecture.mmd}}
+```
+
 ## Stepping Stones
 - Memory bundle implementation: [memory/bundle.py](../memory/bundle.py)
 - Memory bootstrap script: [scripts/bootstrap_memory.py](../scripts/bootstrap_memory.py)

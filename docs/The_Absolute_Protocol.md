@@ -651,6 +651,8 @@ Agents must uphold resilience across chakra layers:
 - Trigger self-diagnostic and recovery routines when chakra health degrades.
 - Log healing actions and unresolved anomalies in [error_registry.md](error_registry.md).
 
+The [Chakra Architecture & HeartBeat Pulse diagram](figures/chakra_architecture.mmd) maps each layer's core modules and the Nazarick agents that steward their pulses.
+
 ## Task Cycle Protocol
 
 The lifecycle for repository tasks is managed by `scripts/generate_protocol_task.py`:
