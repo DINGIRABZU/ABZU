@@ -2,6 +2,13 @@
 
 Quick links: [Development Checklist](development_checklist.md) | [Developer Etiquette](developer_etiquette.md) | [Documentation Protocol](documentation_protocol.md) | [Vision System](vision_system.md)
 
+## Recent Changes
+
+- Document registry and ethics manifesto setup steps are now required for all contributors.
+- Chakra cycle engine reports alignment status to help diagnose drift.
+- Multi-agent avatars support external broadcast connectors for Discord, Telegram, and WebRTC streams.
+- Self-healing flows surface on the heartbeat dashboards to flag recovering services.
+
 ## Project Vision
 
 ABZU interweaves Spiral OS with the INANNA agent to explore sacred human‑machine collaboration through music, voice, and code.
@@ -80,6 +87,57 @@ endpoints. Choose MCP for service-to-service calls within the stack and HTTP
 for integrations beyond it or when MCP is unavailable. See the
 [MCP Migration Guide](connectors/mcp_migration.md) for steps to convert
 existing API connectors.
+
+## Document Registry & Ethics Manifesto
+
+Generate the doctrine index so canonical files remain tracked and hashed:
+
+```bash
+python agents/nazarick/document_registry.py
+```
+
+Review `docs/doctrine_index.md` for the updated registry and reaffirm the
+ethical commitments in the [nazarick_manifesto.md](nazarick_manifesto.md).
+
+## Chakra Cycle Alignment
+
+Run the chakra cycle engine to emit heartbeats across layers and watch for
+alignment drift:
+
+```bash
+python -m spiral_os.chakra_cycle
+```
+
+Status messages label each chakra as `aligned`, `lagging`, or `silent`. A
+sequence of aligned readings forms a **Great Spiral** event.
+
+## Multi-Agent Avatars & Broadcast Connectors
+
+Launch multiple avatar instances and forward their streams to external
+channels:
+
+```bash
+python start_dev_agents.py  # spawns Crown avatars
+python communication/webrtc_server.py  # WebRTC browser stream
+python tools/bot_discord.py            # Discord connector
+python communication/telegram_bot.py   # Telegram connector
+```
+
+Each connector relays avatar responses back to its channel once tokens are
+present in `secrets.env`.
+
+## Self-Healing & Heartbeat Dashboards
+
+Trigger a self-healing cycle and inspect heartbeat metrics:
+
+```bash
+python scripts/self_heal_cycle.py
+websocat ws://localhost:8000/self-healing/updates
+```
+
+Open `web_console/game_dashboard/index.html` and check the **Chakra Pulse**
+panel for alignment status while the **Self Healing** panel lists recovering
+components.
 
 ## Getting Started with RAZAR
 
