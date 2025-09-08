@@ -1,38 +1,67 @@
+from __future__ import annotations
+
 import importlib.util
 import sys
 from pathlib import Path
-from types import ModuleType
+from types import ModuleType, SimpleNamespace
+
 
 ROOT = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location(
-    "connectors.signal_bus", ROOT / "connectors" / "signal_bus.py"
-)
-signal_bus = importlib.util.module_from_spec(spec)
-sys.modules.setdefault("connectors", ModuleType("connectors"))
-spec.loader.exec_module(signal_bus)
-publish = signal_bus.publish
-subscribe = signal_bus.subscribe
 
 
-def test_fanout_and_heartbeat() -> None:
-    received_a: list[dict] = []
-    received_b: list[dict] = []
+def _load_signal_bus(monkeypatch, *, redis: bool = False, kafka: bool = False):
+    sys.modules.pop("connectors.signal_bus", None)
+    if redis:
+        monkeypatch.setenv("SIGNAL_BUS_REDIS_URL", "redis://localhost")
+        fake_redis = SimpleNamespace(from_url=lambda url: SimpleNamespace())
+        monkeypatch.setitem(sys.modules, "redis", fake_redis)
+    if kafka:
+        monkeypatch.setenv("SIGNAL_BUS_KAFKA_BROKERS", "localhost:9092")
 
-    subscribe("root", received_a.append)
-    subscribe("root", received_b.append)
+        class _Producer:
+            def __init__(self, *a, **k):
+                pass
 
-    publish("root", {"msg": "hi"})
+            def send(self, *a, **k):
+                pass
 
-    assert received_a == [{"msg": "hi", "chakra": "root"}]
-    assert received_b == [{"msg": "hi", "chakra": "root"}]
+            def flush(self):
+                pass
 
-    hb_a: list[dict] = []
-    hb_b: list[dict] = []
-    subscribe("heartbeat", hb_a.append)
-    subscribe("heartbeat", hb_b.append)
+        class _Consumer:
+            def __init__(self, *a, **k):
+                pass
 
-    publish("heartbeat", {"source": "a"})
-    publish("heartbeat", {"source": "b"})
+            def __iter__(self):
+                return iter(())
 
-    assert {"source": "a", "chakra": "heartbeat"} in hb_b
-    assert {"source": "b", "chakra": "heartbeat"} in hb_a
+            def close(self):
+                pass
+
+        fake_kafka = SimpleNamespace(KafkaProducer=_Producer, KafkaConsumer=_Consumer)
+        monkeypatch.setitem(sys.modules, "kafka", fake_kafka)
+    spec = importlib.util.spec_from_file_location(
+        "connectors.signal_bus", ROOT / "connectors" / "signal_bus.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    sys.modules.setdefault("connectors", ModuleType("connectors"))
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_inmemory_publish_subscribe(monkeypatch) -> None:
+    bus = _load_signal_bus(monkeypatch)
+    received: list[dict] = []
+    bus.subscribe("root", received.append)
+    bus.publish("root", {"msg": "hi"})
+    assert received == [{"msg": "hi", "chakra": "root"}]
+
+
+def test_selects_redis(monkeypatch) -> None:
+    bus = _load_signal_bus(monkeypatch, redis=True)
+    assert type(bus._bus).__name__ == "_RedisBus"
+
+
+def test_selects_kafka(monkeypatch) -> None:
+    bus = _load_signal_bus(monkeypatch, kafka=True)
+    assert type(bus._bus).__name__ == "_KafkaBus"

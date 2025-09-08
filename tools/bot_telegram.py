@@ -11,7 +11,7 @@ from pathlib import Path
 
 import requests
 
-from connectors.signal_bus import publish, subscribe
+import connectors.signal_bus as signal_bus
 from connectors.base import ConnectorHeartbeat
 from connectors.message_formatter import format_message
 
@@ -60,7 +60,7 @@ def send_voice(chat_id: int, path: Path) -> None:
 
 def handle_message(chat_id: int, text: str) -> None:
     """Forward ``text`` to the GLM and return the reply."""
-    publish("telegram:in", {"chat_id": chat_id, "content": text})
+    signal_bus.publish("telegram:in", {"chat_id": chat_id, "content": text})
     reply = send_glm_command(text)
     send_message(chat_id, reply)
     try:
@@ -74,7 +74,7 @@ def handle_message(chat_id: int, text: str) -> None:
 
 
 if _API:
-    subscribe(
+    signal_bus.subscribe(
         "telegram:out",
         lambda payload: send_message(
             int(payload.get("chat_id", 0)), payload.get("content", "")

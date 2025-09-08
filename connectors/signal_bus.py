@@ -1,14 +1,14 @@
 """Simple signal bus for cross-connector messaging.
 
 The bus publishes and subscribes to chakra-tagged messages using either a
-Redis backend (if configured) or an in-memory fallback. Each published
-payload is automatically augmented with its chakra tag so listeners can
-route messages by their origin.
+Redis or Kafka backend (if configured) with an in-memory fallback. Each
+published payload is automatically augmented with its chakra tag so listeners
+can route messages by their origin.
 """
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from collections import defaultdict
 import json
@@ -20,6 +20,11 @@ try:  # pragma: no cover - optional dependency
     import redis  # type: ignore
 except Exception:  # pragma: no cover - optional dependency
     redis = None  # type: ignore
+
+try:  # pragma: no cover - optional dependency
+    from kafka import KafkaConsumer, KafkaProducer  # type: ignore
+except Exception:  # pragma: no cover - optional dependency
+    KafkaConsumer = KafkaProducer = None  # type: ignore
 
 
 class _InMemoryBus:
@@ -82,11 +87,59 @@ class _RedisBus:
         return _unsubscribe
 
 
+class _KafkaBus:
+    """Kafka based bus."""
+
+    def __init__(self, brokers: str) -> None:
+        if (
+            KafkaProducer is None or KafkaConsumer is None
+        ):  # pragma: no cover - optional dependency
+            raise RuntimeError("kafka library not installed")
+        self._producer = KafkaProducer(bootstrap_servers=brokers)  # type: ignore[call-arg]
+        self._brokers = brokers
+
+    def publish(self, chakra: str, payload: Dict[str, Any]) -> None:
+        self._producer.send(chakra, json.dumps(payload).encode("utf-8"))
+        try:
+            self._producer.flush()
+        except Exception:  # pragma: no cover - network errors
+            pass
+
+    def subscribe(
+        self, chakra: str, callback: Callable[[Dict[str, Any]], None]
+    ) -> Callable[[], None]:
+        consumer = KafkaConsumer(
+            chakra, bootstrap_servers=self._brokers, auto_offset_reset="latest"
+        )
+
+        def _listen() -> None:
+            for msg in consumer:
+                try:
+                    data = json.loads(msg.value.decode("utf-8"))
+                except Exception:  # pragma: no cover - malformed payload
+                    data = {}
+                callback(data)
+
+        thread = threading.Thread(target=_listen, daemon=True)
+        thread.start()
+
+        def _unsubscribe() -> None:
+            consumer.close()
+
+        return _unsubscribe
+
+
 def _get_bus() -> Any:
     url = os.getenv("SIGNAL_BUS_REDIS_URL")
     if url:
         try:
             return _RedisBus(url)
+        except Exception:  # pragma: no cover - fallback to other backends
+            pass
+    brokers = os.getenv("SIGNAL_BUS_KAFKA_BROKERS")
+    if brokers:
+        try:
+            return _KafkaBus(brokers)
         except Exception:  # pragma: no cover - fallback to memory
             pass
     return _InMemoryBus()
