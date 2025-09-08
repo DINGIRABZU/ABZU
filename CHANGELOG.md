@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Memory introspection API and dashboard panel for querying and purging chakra memories.
 - Documented chakra-tagged signals, heartbeat propagation, and recovery flows
   across connector and operator guides; added tests for connector links.
+- ``connectors.message_formatter`` wraps outbound messages with ``chakra``,
+  ``version``, and ``recovery_url`` metadata and now checks ``RECOVERY_URL`` at
+  call time.
 - MCP gateway exposes context registration and model invocation via MCP; added `config/mcp.toml` and `docs/mcp_overview.md`.
 - Mission builder with Ignite, Query Memory, and Dispatch Agent blocks plus server-side Save & Run routing through `agents/task_orchestrator`.
 - Game dashboard onboarding wizard guides operators through creating and running their first mission with progress stored in `localStorage`.
