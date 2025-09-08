@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: 71e6f686a891aebe17c1ad8b4b4180ee2e2cf0e2cd3e5803a5e384faf662d155
+    sha256: 048a93ef0cb3b5e5d6e6d8052eb49c2d97e345e862945136517597bd70647589
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -176,7 +176,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: b00d4f5ccb29041545b0c0535f358a6a4f07a9a7c24aabb19b420b0d24e1fb83
+    sha256: c1ff699d8eb28262bf66b8b4177ab3c5f449d31f9e48e2c959bc3b7342938883
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -198,7 +198,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 4f2a4e49aa7f027a83620fe6ce64192fa177e98f96ed6179c52b2a4edc5f6983
+    sha256: 51dd9d13cb1047badf59875f36d015d4e39d7d0829ea3ba2c4f20c9a4908191e
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -240,19 +240,19 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: a037bba0ed148ec53d7528c85dc68b2308581140c0baf1bcf5af8bf0c309c756
+    sha256: 085dba828951b4b0d687fbec3f3709d3f2d1d612d025d3aaf6425349ee3cad2e
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
       key_rules: Regenerate index after documentation updates.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
-    sha256: f78f5af6bcd77ec7634adccccf045a9d3924ce7111817f9649d72f63d7542897
+    sha256: 2bebadb178d21dad74f8805be1721fd3c01883fd4c69d656a53aa5503e362ad7
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
       key_rules: Maintain curated documentation entry points.
-      insight: Links to Nazarick architecture and memory blueprints.
+      insight: Links to Nazarick architecture, system blueprints, and repository blueprint.
   agents/nazarick/nazarick_core_architecture.md:
     sha256: d30ed1392ff91d4269e644da871f2ed5bb565e5d202a8abf683e10c80845f516
     summary:

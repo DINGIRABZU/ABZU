@@ -1,6 +1,6 @@
 # **ABZU Project: Deep-Dive Overview**
 
-See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history.
+See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. For structural layers review the [system_blueprint.md](system_blueprint.md); the [ABZU Blueprint](ABZU_blueprint.md) captures the high-level narrative for recreating the system.
 
 ## **Recent Core Milestones**
 

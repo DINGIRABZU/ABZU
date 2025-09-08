@@ -103,6 +103,8 @@ Consult the [Code Index](code_index.md) for an overview of modules, classes, and
 
 See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidance on the repository layout.
 
+The overarching narrative for reconstructing the repository lives in [ABZU_blueprint.md](ABZU_blueprint.md).
+
 ### Unified Memory Bundle
 
 `MemoryBundle` unifies the Cortex, Emotional, Mental, Spiritual, and Narrative layers. During startup `broadcast_layer_event("layer_init")` announces readiness over the `memory` bus, while `query_memory` fans out across all layers and aggregates responses into a single payload.
