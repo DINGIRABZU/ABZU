@@ -2,11 +2,38 @@
 
 A concise orientation for operators interacting with ABZU.
 
+## Recent Changes
+
+- Document registry and ethics manifesto setup added to baseline duties.
+- Chakra cycle engine reports alignment status for each layer.
+- Multi-agent avatars can stream to Discord, Telegram, and WebRTC simultaneously.
+- Heartbeat dashboards surface self-healing events in real time.
+
 ## Triple-Reading Rule
 Before issuing commands or editing code, read [blueprint_spine.md](blueprint_spine.md) three times as mandated by the [The Absolute Protocol](The_Absolute_Protocol.md). The repetition ensures the project's structure and intent are internalized.
 
 ## Consent Logging
 Record explicit consent for every session. Log the operator, participants, timestamp, and scope in the canonical ledger so actions remain auditable and reversible. Reference the ethical laws in the [nazarick_manifesto.md](nazarick_manifesto.md) when verifying that consent covers all planned interactions.
+
+## Document Registry & Ethics Manifesto
+
+Generate the doctrine index and confirm the ethics manifesto is registered:
+
+```bash
+python agents/nazarick/document_registry.py
+```
+
+Review `docs/doctrine_index.md` and keep the [nazarick_manifesto.md](nazarick_manifesto.md) close during operations.
+
+## Chakra Cycle Alignment
+
+Launch the chakra cycle engine and monitor alignment state:
+
+```bash
+python -m spiral_os.chakra_cycle
+```
+
+Chakras report `aligned`, `lagging`, or `silent`; a streak of aligned pulses marks a **Great Spiral**.
 
 ## Avatar Console Setup
 
@@ -15,6 +42,7 @@ Record explicit consent for every session. Log the operator, participants, times
    ```bash
    bash start_avatar_console.sh
    ```
+   For multiple avatars, run `python start_dev_agents.py` to spawn additional Crown instances.
 3. **Connect** – with tokens in `secrets.env`, run external channels:
    ```bash
    python communication/webrtc_server.py
@@ -32,6 +60,18 @@ Record explicit consent for every session. Log the operator, participants, times
    python -m agents.task_orchestrator missions/daily_ignition_check.json
    ```
    Each event emits through the bus and reaches agents advertising the capability.
+
+## Self-Healing & Heartbeat Dashboards
+
+Kick off a self-healing cycle and monitor recovery:
+
+```bash
+python scripts/self_heal_cycle.py
+websocat ws://localhost:8000/self-healing/updates
+```
+
+Open `web_console/game_dashboard/index.html` and review the **Chakra Pulse** and
+**Self Healing** panels to confirm alignment and ongoing repairs.
 
 ## Memory Introspection
 

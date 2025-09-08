@@ -1,11 +1,32 @@
 # Operator Guide
 
 This repository contains several command line utilities for working with the INANNA music tools and Quantum Narrative Language (QNL). Below is a quick summary of the main scripts and example commands for common tasks. See [AGENTS.md](AGENTS.md#upcoming-components) for details about the agent and upcoming defensive modules.
+Returning contributors can scan [docs/developer_onboarding.md#recent-changes](docs/developer_onboarding.md#recent-changes) and [docs/operator_quickstart.md#recent-changes](docs/operator_quickstart.md#recent-changes) for the latest capabilities.
 For a short project overview summarizing the vision, chakra layers, key modules and milestone history, see [docs/project_overview.md](docs/project_overview.md).
 For a concise overview of the Spiral OS architecture see [CODEX_OF_CODEX.md](CODEX_OF_CODEX.md).
 For the metaphysical background that informs Spiral OS, see [docs/spiritual_architecture.md](docs/spiritual_architecture.md), [docs/archetype_logic.md](docs/archetype_logic.md), [docs/psychic_loop.md](docs/psychic_loop.md) and [docs/crown_manifest.md](docs/crown_manifest.md).
 For a summary of Vast.ai and local Docker Compose deployment steps see [docs/deployment_overview.md](docs/deployment_overview.md).
 For a walkthrough of the web console setup wizard, see [docs/operator_onboarding.md](docs/operator_onboarding.md).
+
+Document stewardship and ethical alignment are detailed in
+[docs/developer_onboarding.md#document-registry--ethics-manifesto](docs/developer_onboarding.md#document-registry--ethics-manifesto)
+and
+[docs/operator_quickstart.md#document-registry--ethics-manifesto](docs/operator_quickstart.md#document-registry--ethics-manifesto).
+
+Run the chakra cycle engine and interpret alignment readings using
+[docs/developer_onboarding.md#chakra-cycle-alignment](docs/developer_onboarding.md#chakra-cycle-alignment)
+or
+[docs/operator_quickstart.md#chakra-cycle-alignment](docs/operator_quickstart.md#chakra-cycle-alignment).
+
+Instructions for multi-agent avatars and external broadcast connectors live in
+[docs/developer_onboarding.md#multi-agent-avatars--broadcast-connectors](docs/developer_onboarding.md#multi-agent-avatars--broadcast-connectors)
+and
+[docs/operator_quickstart.md#avatar-console-setup](docs/operator_quickstart.md#avatar-console-setup).
+
+Self-healing flows and heartbeat dashboards are covered in
+[docs/developer_onboarding.md#self-healing--heartbeat-dashboards](docs/developer_onboarding.md#self-healing--heartbeat-dashboards)
+and
+[docs/operator_quickstart.md#self-healing--heartbeat-dashboards](docs/operator_quickstart.md#self-healing--heartbeat-dashboards).
 
 For heartbeat propagation and recovery design, consult
 [docs/system_blueprint.md#chakra-cycle-engine](docs/system_blueprint.md#chakra-cycle-engine),
