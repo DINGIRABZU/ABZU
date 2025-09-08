@@ -21,6 +21,9 @@ import uuid
 import time
 from typing import Iterable, Iterator, Optional, Dict, Any, Callable
 from . import cortex
+from opentelemetry import trace
+
+_tracer = trace.get_tracer(__name__)
 
 try:  # pragma: no cover - optional dependency
     import chromadb
@@ -293,103 +296,110 @@ def stream_stories() -> Iterable[str]:
 
 def log_event(event: Dict[str, Any]) -> None:
     """Persist a structured ``event`` to SQLite and ChromaDB."""
-    start = time.perf_counter()
-    if THROUGHPUT_COUNTER is not None:
-        THROUGHPUT_COUNTER.labels("memory").inc()
-    try:
-        event_id = uuid.uuid4().hex
-        with _get_conn() as conn:
-            conn.execute(
-                "INSERT INTO events (id, time, agent_id, event_type, payload) "
-                "VALUES (?, ?, ?, ?, ?)",
-                (
-                    event_id,
-                    event["time"],
-                    event["agent_id"],
-                    event["event_type"],
-                    json.dumps(event["payload"]),
-                ),
-            )
-        if chromadb is not None:  # pragma: no cover - optional dependency
-            collection = _get_collection()
-            collection.add(
-                ids=[event_id],
-                documents=[
-                    json.dumps({"event_type": event["event_type"], **event["payload"]})
-                ],
-            )
-    except Exception:
-        if ERROR_COUNTER is not None:
-            ERROR_COUNTER.labels("memory").inc()
-        raise
-    finally:
-        duration = time.perf_counter() - start
-        if LATENCY_HIST is not None:
-            LATENCY_HIST.labels("memory").observe(duration)  # type: ignore[call-arg]
-        if psutil is not None and CPU_GAUGE is not None and MEMORY_GAUGE is not None:
-            CPU_GAUGE.labels("memory").set(psutil.cpu_percent())  # type: ignore[call-arg]
-            MEMORY_GAUGE.labels("memory").set(psutil.virtual_memory().used)  # type: ignore[call-arg]
-        if pynvml is not None and GPU_GAUGE is not None:
-            try:  # pragma: no cover - GPU optional
-                handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-                mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
-                GPU_GAUGE.labels("memory").set(mem_info.used)  # type: ignore[call-arg]
-            except Exception:
-                pass
+    with _tracer.start_as_current_span("memory.log_event"):
+        start = time.perf_counter()
+        if THROUGHPUT_COUNTER is not None:
+            THROUGHPUT_COUNTER.labels("memory").inc()
+        try:
+            event_id = uuid.uuid4().hex
+            with _get_conn() as conn:
+                conn.execute(
+                    "INSERT INTO events (id, time, agent_id, event_type, payload) "
+                    "VALUES (?, ?, ?, ?, ?)",
+                    (
+                        event_id,
+                        event["time"],
+                        event["agent_id"],
+                        event["event_type"],
+                        json.dumps(event["payload"]),
+                    ),
+                )
+            if chromadb is not None:  # pragma: no cover - optional dependency
+                collection = _get_collection()
+                collection.add(
+                    ids=[event_id],
+                    documents=[
+                        json.dumps(
+                            {"event_type": event["event_type"], **event["payload"]}
+                        )
+                    ],
+                )
+        except Exception:
+            if ERROR_COUNTER is not None:
+                ERROR_COUNTER.labels("memory").inc()
+            raise
+        finally:
+            duration = time.perf_counter() - start
+            if LATENCY_HIST is not None:
+                LATENCY_HIST.labels("memory").observe(duration)  # type: ignore[call-arg]
+            if (
+                psutil is not None
+                and CPU_GAUGE is not None
+                and MEMORY_GAUGE is not None
+            ):
+                CPU_GAUGE.labels("memory").set(psutil.cpu_percent())  # type: ignore[call-arg]
+                MEMORY_GAUGE.labels("memory").set(psutil.virtual_memory().used)  # type: ignore[call-arg]
+            if pynvml is not None and GPU_GAUGE is not None:
+                try:  # pragma: no cover - GPU optional
+                    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+                    mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+                    GPU_GAUGE.labels("memory").set(mem_info.used)  # type: ignore[call-arg]
+                except Exception:
+                    pass
 
 
 def query_events(
     *, agent_id: Optional[str] = None, event_type: Optional[str] = None
 ) -> Iterator[Dict[str, Any]]:
     """Yield events filtered by ``agent_id`` and/or ``event_type``."""
-
-    sql = "SELECT id, time, agent_id, event_type, payload FROM events"
-    clauses: list[str] = []
-    params: list[Any] = []
-    if agent_id:
-        clauses.append("agent_id = ?")
-        params.append(agent_id)
-    if event_type:
-        clauses.append("event_type = ?")
-        params.append(event_type)
-    if clauses:
-        sql += " WHERE " + " AND ".join(clauses)
-    sql += " ORDER BY time"
-    with _get_conn() as conn:
-        for _id, ts, ag, et, payload in conn.execute(sql, params):
-            yield {
-                "id": _id,
-                "time": ts,
-                "agent_id": ag,
-                "event_type": et,
-                "payload": json.loads(payload),
-            }
-
-
-def search_events(query_text: str, n_results: int = 5) -> Iterator[Dict[str, Any]]:
-    """Vector search ``query_text`` against stored events using ChromaDB."""
-
-    if chromadb is None:  # pragma: no cover - optional dependency
-        raise RuntimeError("chromadb library not installed")
-    collection = _get_collection()
-    results = collection.query(query_texts=[query_text], n_results=n_results)
-    ids = results.get("ids", [[]])[0]
-    with _get_conn() as conn:
-        for event_id in ids:
-            row = conn.execute(
-                "SELECT id, time, agent_id, event_type, payload FROM events "
-                "WHERE id = ?",
-                (event_id,),
-            ).fetchone()
-            if row:
-                _id, time, ag, et, payload = row
+    with _tracer.start_as_current_span("memory.query_events"):
+        sql = "SELECT id, time, agent_id, event_type, payload FROM events"
+        clauses: list[str] = []
+        params: list[Any] = []
+        if agent_id:
+            clauses.append("agent_id = ?")
+            params.append(agent_id)
+        if event_type:
+            clauses.append("event_type = ?")
+            params.append(event_type)
+        if clauses:
+            sql += " WHERE " + " AND ".join(clauses)
+        sql += " ORDER BY time"
+        with _get_conn() as conn:
+            for _id, ts, ag, et, payload in conn.execute(sql, params):
                 yield {
                     "id": _id,
-                    "time": time,
+                    "time": ts,
                     "agent_id": ag,
                     "event_type": et,
                     "payload": json.loads(payload),
                 }
+
+
+def search_events(query_text: str, n_results: int = 5) -> Iterator[Dict[str, Any]]:
+    """Vector search ``query_text`` against stored events using ChromaDB."""
+    with _tracer.start_as_current_span("memory.search_events"):
+        if chromadb is None:  # pragma: no cover - optional dependency
+            raise RuntimeError("chromadb library not installed")
+        collection = _get_collection()
+        results = collection.query(query_texts=[query_text], n_results=n_results)
+        ids = results.get("ids", [[]])[0]
+        with _get_conn() as conn:
+            for event_id in ids:
+                row = conn.execute(
+                    "SELECT id, time, agent_id, event_type, payload FROM events "
+                    "WHERE id = ?",
+                    (event_id,),
+                ).fetchone()
+                if row:
+                    _id, time, ag, et, payload = row
+                    yield {
+                        "id": _id,
+                        "time": time,
+                        "agent_id": ag,
+                        "event_type": et,
+                        "payload": json.loads(payload),
+                    }
 
 
 __all__ = [
