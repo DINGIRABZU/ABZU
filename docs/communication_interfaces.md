@@ -116,7 +116,10 @@ architectural context.
 ## Heartbeat Propagation
 
 Connectors forward heartbeat pings from the chakra cycle engine to remote
-clients and log the return path. Lagging or missing beats surface alignment
+clients and log the return path. Each ping is wrapped by
+``connectors.message_formatter.format_message``, which injects the `chakra`,
+`version`, and `recovery_url` fields so operators can trace problems and
+surface recovery instructions. Lagging or missing beats surface alignment
 issues early and are mirrored in the dashboards described in the system
 blueprint.
 

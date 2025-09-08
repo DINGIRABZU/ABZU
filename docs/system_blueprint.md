@@ -71,8 +71,10 @@ current status of each connector.
 #### Heartbeat Propagation
 
 Each beat cascades from Root through Crown, giving operators a live view of
-layer responsiveness. Lag or silence on any hop is logged for follow‑up and
-feeds recovery routines in other guides.
+layer responsiveness. Connectors emit these pings via
+``connectors.message_formatter.format_message`` so every hop carries the
+``chakra``, ``version``, and ``recovery_url`` fields. Lag or silence on any hop
+is logged for follow‑up and feeds recovery routines in other guides.
 
 #### Heartbeat Ratios
 

@@ -32,3 +32,10 @@ def test_format_message_defaults_present() -> None:
     assert data["chakra"] == "root"
     assert data["version"]
     assert data["recovery_url"]
+
+
+def test_format_message_env_override(monkeypatch) -> None:
+    monkeypatch.setenv("RECOVERY_URL", "env-url")
+    msg = format_message("root", "hi")
+    data = json.loads(msg)
+    assert data["recovery_url"] == "env-url"
