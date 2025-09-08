@@ -8,7 +8,7 @@ This checklist distills mandatory practices for ABZU contributors.
 ## Documentation Doctrine
 - Run `python scripts/audit_doctrine.py` to confirm key docs exist, required index entries are present, and doctrine rules remain intact. The pre-commit hook executes this automatically when documentation changes.
 - Review [chakra_metrics.md](chakra_metrics.md) to ensure monitoring aligns with chakra standards.
-- Document connector protocol and heartbeat metadata in relevant guides.
+- Document connector protocol and heartbeat metadata in relevant guides. Every connector change must update these docs and pass `python scripts/check_connectors.py`.
 
 ## Self-Healing Commitment
 - Affirm reading [self_healing_manifesto.md](self_healing_manifesto.md) before contributing.
