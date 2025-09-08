@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Memory introspection API and dashboard panel for querying and purging chakra memories.
 - Documented chakra-tagged signals, heartbeat propagation, and recovery flows
   across connector and operator guides; added tests for connector links.
 - MCP gateway exposes context registration and model invocation via MCP; added `config/mcp.toml` and `docs/mcp_overview.md`.
