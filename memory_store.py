@@ -16,6 +16,8 @@ from pathlib import Path
 from queue import Queue
 from typing import Any, Dict, Iterator, List, Sequence, Tuple, cast
 
+from opentelemetry import trace
+
 try:  # pragma: no cover - optional dependency
     import numpy as np
 except Exception:  # pragma: no cover - optional dependency
@@ -29,6 +31,7 @@ except Exception:  # pragma: no cover - optional dependency
 
 
 logger = logging.getLogger(__name__)
+_tracer = trace.get_tracer(__name__)
 
 
 class MemoryStore:
@@ -173,32 +176,35 @@ class MemoryStore:
     def search(
         self, vector: Sequence[float], k: int
     ) -> List[Tuple[str, List[float], Dict[str, Any]]]:
-        with self._lock:
-            if not self.ids:
-                return []
-            k = min(k, len(self.ids))
-            results: List[Tuple[str, List[float], Dict[str, Any]]] = []
-            if self._use_faiss and self.index is not None:
-                vec = np.asarray(vector, dtype="float32")[None, :]
-                distances, indices = self.index.search(vec, k)
-                for idx in indices[0]:
-                    if idx == -1:
-                        continue
-                    id_ = self.ids[int(idx)]
-                    emb = self.index.reconstruct(int(idx)).tolist()
+        with _tracer.start_as_current_span("memory_store.search"):
+            with self._lock:
+                if not self.ids:
+                    return []
+                k = min(k, len(self.ids))
+                results: List[Tuple[str, List[float], Dict[str, Any]]] = []
+                if self._use_faiss and self.index is not None:
+                    vec = np.asarray(vector, dtype="float32")[None, :]
+                    distances, indices = self.index.search(vec, k)
+                    for idx in indices[0]:
+                        if idx == -1:
+                            continue
+                        id_ = self.ids[int(idx)]
+                        emb = self.index.reconstruct(int(idx)).tolist()
+                        meta = dict(self.metadata.get(id_, {}))
+                        results.append((id_, emb, meta))
+                    return results
+                # fallback search
+                vec = [float(x) for x in vector]
+                dists = [
+                    sum((a - b) ** 2 for a, b in zip(v, vec)) for v in self._vectors
+                ]
+                idxs = sorted(range(len(dists)), key=lambda i: dists[i])[:k]
+                for idx in idxs:
+                    id_ = self.ids[idx]
+                    emb = list(self._vectors[idx])
                     meta = dict(self.metadata.get(id_, {}))
                     results.append((id_, emb, meta))
                 return results
-            # fallback search
-            vec = [float(x) for x in vector]
-            dists = [sum((a - b) ** 2 for a, b in zip(v, vec)) for v in self._vectors]
-            idxs = sorted(range(len(dists)), key=lambda i: dists[i])[:k]
-            for idx in idxs:
-                id_ = self.ids[idx]
-                emb = list(self._vectors[idx])
-                meta = dict(self.metadata.get(id_, {}))
-                results.append((id_, emb, meta))
-            return results
 
     # ------------------------------------------------------------------
     def rewrite(
@@ -328,12 +334,13 @@ class ShardedMemoryStore:
     def search(
         self, vector: Sequence[float], k: int
     ) -> List[Tuple[str, List[float], Dict[str, Any]]]:
-        results: List[Tuple[str, List[float], Dict[str, Any]]] = []
-        for store in self._stores:
-            results.extend(store.search(vector, k))
-        if len(results) <= k:
-            return results
-        return results[:k]
+        with _tracer.start_as_current_span("memory_store.sharded_search"):
+            results: List[Tuple[str, List[float], Dict[str, Any]]] = []
+            for store in self._stores:
+                results.extend(store.search(vector, k))
+            if len(results) <= k:
+                return results
+            return results[:k]
 
     # ------------------------------------------------------------------
     def rewrite(

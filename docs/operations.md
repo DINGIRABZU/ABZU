@@ -179,6 +179,11 @@ curl http://localhost:8000/healthz
 curl http://localhost:8000/metrics | head
 ```
 
+To explore dashboards:
+
+1. Start a Prometheus server scraping each service's `/metrics` endpoint.
+2. Launch Grafana and import `monitoring/grafana-dashboard.json` for default panels.
+
 Agent interactions emit OpenTelemetry spans. With the collector running and
 `OTEL_EXPORTER_OTLP_ENDPOINT` set, spans appear in the collector's UI for
 correlation with metrics. Memory queries emit spans for each layer, enabling

@@ -77,11 +77,11 @@ def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:
     returns.
     """
 
-    with _tracer.start_as_current_span("agent.event") as span:
+    with _tracer.start_as_current_span("event_bus.publish") as span:
         span.set_attribute("agent.actor", actor)
-        span.set_attribute("agent.action", action)
+        span.set_attribute("event_bus.action", action)
         for key, value in metadata.items():
-            span.set_attribute(f"agent.metadata.{key}", str(value))
+            span.set_attribute(f"event_bus.metadata.{key}", str(value))
 
         entry: Dict[str, Any] = {
             "source": actor,
@@ -109,12 +109,13 @@ def emit_event(actor: str, action: str, metadata: Dict[str, Any]) -> None:
             target_agent=metadata.get("target_agent"),
         )
 
-        try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            asyncio.run(producer.emit(event))
-        else:  # pragma: no cover - depends on event loop presence
-            loop.create_task(producer.emit(event))
+        with _tracer.start_as_current_span("event_bus.emit"):
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                asyncio.run(producer.emit(event))
+            else:  # pragma: no cover - depends on event loop presence
+                loop.create_task(producer.emit(event))
 
 
 async def subscribe(
@@ -148,10 +149,10 @@ async def subscribe(
                 if message["type"] != "message":
                     continue
                 event = Event.from_json(message["data"])
-                with _tracer.start_as_current_span("agent.event.consume") as evt_span:
+                with _tracer.start_as_current_span("event_bus.consume") as evt_span:
                     evt_span.set_attribute("agent.actor", event.agent_id)
                     evt_span.set_attribute("agent.action", event.event_type)
-                await handler(event)
+                    await handler(event)
         elif topic:
             servers = kafka_servers or os.getenv(
                 "CITADEL_KAFKA_SERVERS", "localhost:9092"
@@ -165,12 +166,10 @@ async def subscribe(
             try:
                 async for msg in consumer:
                     event = Event.from_json(msg.value.decode("utf-8"))
-                    with _tracer.start_as_current_span(
-                        "agent.event.consume"
-                    ) as evt_span:
+                    with _tracer.start_as_current_span("event_bus.consume") as evt_span:
                         evt_span.set_attribute("agent.actor", event.agent_id)
                         evt_span.set_attribute("agent.action", event.event_type)
-                    await handler(event)
+                        await handler(event)
             finally:
                 await consumer.stop()
 
