@@ -111,12 +111,13 @@ try:  # pragma: no cover - optional dependencies
 except Exception:  # pragma: no cover - optional dependency
     AIOKafkaProducer = AIOKafkaConsumer = None  # type: ignore
 
+Event = Dict[str, Any]
 _CHANNEL = os.getenv("RAZAR_LIFECYCLE_CHANNEL", "razar:lifecycle")
 _TOPIC = os.getenv("RAZAR_LIFECYCLE_TOPIC", "razar.lifecycle")
-_QUEUE: "asyncio.Queue[Dict[str, Any]]" = asyncio.Queue()
+_QUEUE: "asyncio.Queue[Event]" = asyncio.Queue()
 
 
-async def _publish_async(event: Dict[str, Any]) -> None:
+async def _publish_async(event: Event) -> None:
     """Internal helper to publish ``event`` to the configured broker."""
 
     data = json.dumps(event)
@@ -136,7 +137,7 @@ async def _publish_async(event: Dict[str, Any]) -> None:
         await _QUEUE.put(event)
 
 
-def publish(event: Dict[str, Any]) -> None:
+def publish(event: Event) -> None:
     """Publish an ``event`` to Redis, Kafka, or an in-memory queue."""
 
     try:
@@ -147,7 +148,7 @@ def publish(event: Dict[str, Any]) -> None:
         loop.create_task(_publish_async(event))
 
 
-async def subscribe() -> AsyncIterator[Dict[str, Any]]:
+async def subscribe() -> AsyncIterator[Event]:
     """Yield events published on the configured broker.
 
     Falls back to an in-memory queue when no broker dependencies are available.
@@ -161,14 +162,20 @@ async def subscribe() -> AsyncIterator[Dict[str, Any]]:
         async for message in pubsub.listen():
             if message.get("type") != "message":
                 continue
-            yield json.loads(message["data"])
+            try:
+                yield json.loads(message["data"])
+            except json.JSONDecodeError:  # pragma: no cover - ignore bad msgs
+                continue
     elif AIOKafkaConsumer is not None:  # pragma: no cover - requires kafka
         servers = os.getenv("RAZAR_LIFECYCLE_KAFKA_SERVERS", "localhost:9092")
         consumer = AIOKafkaConsumer(_TOPIC, bootstrap_servers=servers)
         await consumer.start()
         try:
             async for msg in consumer:
-                yield json.loads(msg.value.decode("utf-8"))
+                try:
+                    yield json.loads(msg.value.decode("utf-8"))
+                except json.JSONDecodeError:  # pragma: no cover - ignore bad msgs
+                    continue
         finally:
             await consumer.stop()
     else:
