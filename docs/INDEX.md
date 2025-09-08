@@ -426,7 +426,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ui/README.md](ui/README.md) | Floor Client UI | This React/Tailwind interface renders floors with channel tiles and streams messages over a WebSocket feed. | - |
 | [ui/arcade_mode.md](ui/arcade_mode.md) | Arcade Mode Widgets | The arcade console now surfaces minimal chakra telemetry. | - |
 | [ui/chakra_pulse.md](ui/chakra_pulse.md) | Chakra Pulse Panel | Visual panel for chakra heartbeat alignment inside the game dashboard. | - |
-| [ui/game_dashboard.md](ui/game_dashboard.md) | Game Dashboard | The game dashboard wraps the avatar video feed and chakra telemetry in a simple mission map. | - |
+| [ui/game_dashboard.md](ui/game_dashboard.md) | Game Dashboard | The game dashboard is a React single-page application that presents the avatar video feed alongside live chakra telem... | - |
 | [ui_service.md](ui_service.md) | UI Service | - | - |
 | [updates/2025-08.md](updates/2025-08.md) | August 2025 Roadmap | - | - |
 | [use_cases/ritual_demo.md](use_cases/ritual_demo.md) | Ritual Demo | This walkthrough demonstrates the small ritual sample included with the repository. The `examples/ritual_demo.py` scr... | - |
