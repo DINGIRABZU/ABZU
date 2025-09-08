@@ -64,6 +64,7 @@ def create_client() -> Any:
                 "user": str(message.author.id),
                 "content": message.content,
             },
+            0,
         )
         reply = send_glm_command(message.content)
         await message.channel.send(format_message("discord", reply))

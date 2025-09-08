@@ -14,13 +14,18 @@ from connectors.base import ConnectorHeartbeat
 
 
 def test_alert_emitted_on_missed_heartbeats() -> None:
-    events: list[dict] = []
-    unsub = signal_bus.subscribe("test:alert", lambda p: events.append(p))
+    heartbeats: list[dict] = []
+    alerts: list[dict] = []
+    unsub_hb = signal_bus.subscribe("test:heartbeat", heartbeats.append)
+    unsub_alert = signal_bus.subscribe("test:alert", alerts.append)
     hb = ConnectorHeartbeat("test", interval=0.01, miss_threshold=2)
     hb.start()
-    time.sleep(0.03)
+    time.sleep(0.035)
     hb.pause()
     time.sleep(0.05)
     hb.stop()
-    unsub()
-    assert events and events[0]["channel"] == "test"
+    unsub_hb()
+    unsub_alert()
+    cycles = [p["cycle"] for p in heartbeats]
+    assert len(cycles) >= 2 and cycles[0] == 1 and cycles[1] == 2
+    assert alerts and alerts[0]["channel"] == "test"

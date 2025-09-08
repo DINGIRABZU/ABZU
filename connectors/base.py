@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import threading
 import time
@@ -33,6 +33,7 @@ class ConnectorHeartbeat:
         self._stop = threading.Event()
         self._send_enabled = True
         self._last_seen = time.monotonic()
+        self._cycle = 0
         self._lock = threading.Lock()
         self._unsubscribe = subscribe(f"{self._channel}:heartbeat", self._on_heartbeat)
         self._sender = threading.Thread(target=self._send_loop, daemon=True)
@@ -67,14 +68,23 @@ class ConnectorHeartbeat:
     def _send_loop(self) -> None:
         while not self._stop.wait(self._interval):
             if self._send_enabled:
-                publish(f"{self._channel}:heartbeat", {"channel": self._channel})
+                self._cycle += 1
+                publish(
+                    f"{self._channel}:heartbeat",
+                    {"channel": self._channel},
+                    self._cycle,
+                )
 
     def _monitor_loop(self) -> None:
         while not self._stop.wait(self._interval):
             with self._lock:
                 elapsed = time.monotonic() - self._last_seen
             if elapsed > self._interval * self._miss_threshold:
-                publish(f"{self._channel}:alert", {"channel": self._channel})
+                publish(
+                    f"{self._channel}:alert",
+                    {"channel": self._channel},
+                    self._cycle,
+                )
                 with self._lock:
                     self._last_seen = time.monotonic()
 

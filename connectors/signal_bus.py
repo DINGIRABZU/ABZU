@@ -8,7 +8,7 @@ can route messages by their origin.
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from collections import defaultdict
 import json
@@ -148,10 +148,11 @@ def _get_bus() -> Any:
 _bus = _get_bus()
 
 
-def publish(chakra: str, payload: Dict[str, Any]) -> None:
-    """Publish ``payload`` tagged with ``chakra`` to all subscribers."""
+def publish(chakra: str, payload: Dict[str, Any], cycle_count: int) -> None:
+    """Publish ``payload`` tagged with ``chakra`` and ``cycle_count``."""
     data = dict(payload)
     data.setdefault("chakra", chakra)
+    data.setdefault("cycle", cycle_count)
     _bus.publish(chakra, data)
 
 

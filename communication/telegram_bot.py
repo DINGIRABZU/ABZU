@@ -71,7 +71,7 @@ class TelegramBot(ConnectorHeartbeat):
         authentication.verify_token("telegram", self._token)
         user_id = str(update.effective_user.id)
         content = update.message.text or ""
-        signal_bus.publish("telegram:in", {"user": user_id, "content": content})
+        signal_bus.publish("telegram:in", {"user": user_id, "content": content}, 0)
         await self._gateway.handle_incoming("telegram", user_id, content)
 
     def run(self) -> None:
