@@ -437,7 +437,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [voice_aura.md](voice_aura.md) | Voice Aura FX | `audio/voice_aura.py` applies subtle reverb and delay based on the current emotion. Each emotion maps to a simple pre... | - |
 | [voice_cloner.md](voice_cloner.md) | Voice Cloner | The `VoiceCloner` utility records a short sample of a speaker and synthesises new speech in the captured voice. It ex... | - |
 | [voice_setup.md](voice_setup.md) | Voice Model Setup | This guide explains how to install external text-to-speech models so ABZU can produce spoken output. | - |
-| [world_bootstrap.md](world_bootstrap.md) | World Bootstrap | Guide to initializing a world and preserving its component configuration. | `../scripts/world_export.py`, `../worlds/config_registry.py` |
+| [world_bootstrap.md](world_bootstrap.md) | World Bootstrap | Guidelines for seeding and cloning world configurations. | - |
 | [../floor_client/README.md](../floor_client/README.md) | Floor Client | This folder contains the React interface for Floor channels. | - |
 | [../guides/visual_customization.md](../guides/visual_customization.md) | Avatar Visual Customization | This guide outlines how to turn a 2D concept image into the 3D model used by the video engine. | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |

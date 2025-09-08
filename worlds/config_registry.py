@@ -48,6 +48,24 @@ def _world_name(world: str | None = None) -> str:
     return os.getenv("WORLD_NAME", "default")
 
 
+def initialize_world(
+    layers: list[str] | None = None,
+    agents: list[str] | None = None,
+    world: str | None = None,
+) -> None:
+    """Register ``layers`` and ``agents`` for ``world`` in a single step.
+
+    The function is a convenience for bootstrapping new worlds. Missing lists are
+    ignored, allowing either ``layers`` or ``agents`` to be provided
+    independently.
+    """
+
+    for layer in layers or []:
+        register_layer(layer, world)
+    for agent in agents or []:
+        register_agent(agent, world)
+
+
 def register_layer(layer: str, world: str | None = None) -> None:
     """Record availability of ``layer`` for ``world``."""
 
@@ -184,4 +202,5 @@ __all__ = [
     "export_config_file",
     "import_config_file",
     "reset_registry",
+    "initialize_world",
 ]
