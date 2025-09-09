@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.8"
+__version__ = "0.2.9"
 
 import argparse
 import asyncio
@@ -36,6 +36,9 @@ LOGGER = logging.getLogger("razar.boot_orchestrator")
 # Path for recording AI handover attempts
 INVOCATION_LOG_PATH = LOGS_DIR / "razar_ai_invocations.json"
 LONG_TASK_LOG_PATH = LOGS_DIR / "razar_long_task.json"
+AGENT_CONFIG_PATH = (
+    Path(__file__).resolve().parents[1] / "config" / "razar_ai_agents.json"
+)
 
 
 def load_history() -> Dict[str, Any]:
@@ -152,15 +155,26 @@ def _record_probe(name: str, ok: bool) -> None:
     _emit_event("probe", "ok" if ok else "fail", component=name)
 
 
-def _log_ai_invocation(component: str, attempt: int, error: str, patched: bool) -> None:
+def _log_ai_invocation(
+    component: str,
+    attempt: int,
+    error: str,
+    patched: bool,
+    *,
+    event: str = "attempt",
+    agent: str | None = None,
+) -> None:
     """Append AI handover attempt details to :data:`INVOCATION_LOG_PATH`."""
     entry = {
         "component": component,
         "attempt": attempt,
         "error": error,
         "patched": patched,
+        "event": event,
         "timestamp": time.time(),
     }
+    if agent is not None:
+        entry["agent"] = agent
     records: List[Dict[str, Any]] = []
     if INVOCATION_LOG_PATH.exists():
         try:
@@ -204,21 +218,58 @@ def _log_long_task(
     LONG_TASK_LOG_PATH.write_text(json.dumps(records, indent=2))
 
 
+def _set_active_agent(agent: str) -> None:
+    """Set the active remote agent in :data:`AGENT_CONFIG_PATH`."""
+    try:
+        data = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            data = {}
+    except Exception:
+        data = {}
+    data["active"] = agent
+    AGENT_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    AGENT_CONFIG_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
+def _handle_ai_result(
+    name: str,
+    error: str,
+    patched: bool,
+    attempt: int,
+    failure_tracker: Dict[str, int],
+) -> None:
+    """Update failure counter and escalate persistent issues."""
+    if patched:
+        failure_tracker[name] = 0
+        return
+    count = failure_tracker.get(name, 0) + 1
+    failure_tracker[name] = count
+    if count == 10:  # Escalate to rstar after ten consecutive failures
+        _set_active_agent("rstar")
+        _log_ai_invocation(
+            name, attempt, error, patched, event="escalation", agent="rstar"
+        )
+
+
 def _retry_with_ai(
     name: str,
     component: Dict[str, Any],
     error_msg: str,
     max_attempts: int,
+    failure_tracker: Dict[str, int],
 ) -> tuple[Optional[subprocess.Popen], int, str]:
     """Invoke AI handover until success or ``max_attempts`` is reached.
 
-    Returns a tuple of ``(process, attempts, error)`` where ``process`` is the
-    relaunched component on success, ``attempts`` is the number of AI retries
-    performed, and ``error`` is the last error message encountered.
+    ``failure_tracker`` records consecutive :mod:`ai_invoker` failures per
+    component.  Returns a tuple of ``(process, attempts, error)`` where
+    ``process`` is the relaunched component on success, ``attempts`` is the
+    number of AI retries performed, and ``error`` is the last error message
+    encountered.
     """
     for attempt in range(1, max_attempts + 1):
         patched = ai_invoker.handover(name, error_msg, use_opencode=True)
         _log_ai_invocation(name, attempt, error_msg, patched)
+        _handle_ai_result(name, error_msg, patched, attempt, failure_tracker)
         if not patched:
             continue
         LOGGER.info("Retrying %s after AI patch (remote attempt %s)", name, attempt)
@@ -451,6 +502,7 @@ def main() -> None:
 
     history = load_history()
     failure_counts: Dict[str, int] = history.get("component_failures", {})
+    ai_failure_counts: Dict[str, int] = {}
     run_start = time.time()
     run_metrics: Dict[str, Any] = {"timestamp": run_start, "components": []}
 
@@ -490,6 +542,13 @@ def main() -> None:
                                     )
                                     _log_ai_invocation(
                                         name, r_attempt, error_msg, patched
+                                    )
+                                    _handle_ai_result(
+                                        name,
+                                        error_msg,
+                                        patched,
+                                        r_attempt,
+                                        ai_failure_counts,
                                     )
                                     _log_long_task(name, r_attempt, error_msg, patched)
                                 except KeyboardInterrupt:
@@ -539,7 +598,11 @@ def main() -> None:
                                 break
                         else:
                             patched_proc, ai_attempts, error_msg = _retry_with_ai(
-                                name, comp, error_msg, args.remote_attempts
+                                name,
+                                comp,
+                                error_msg,
+                                args.remote_attempts,
+                                ai_failure_counts,
                             )
                             attempts += ai_attempts
                             if patched_proc is not None:
