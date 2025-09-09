@@ -371,9 +371,15 @@ Modules are organized by chakra (Root through Crown), with additional Nazarick a
 
 ## **4. Memory Bundle**
 
-ABZU layers five memory stores—Cortex, Emotional, Mental, Spiritual, and Narrative—each switchable between file-based JSON/SQLite and vector-DB back ends via environment variables. See [Memory Layers Guide](memory_layers_GUIDE.md) and diagrams like [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd) and [Memory Layer Flow](figures/memory_layer_flow.mmd) for event sequencing and query aggregation.
+The Cortex, Emotional, Mental, Spiritual, and Narrative stores converge in a unified bundle. `broadcast_layer_event("layer_init")` starts all layers in parallel, and the `query_memory` façade gathers their replies into a single recall stream for operator agents.
 
-Once these stores ignite, RAZAR activates the Bana engine to narrate state transitions across layers.
+```mermaid
+{{#include figures/layer_init_query_flow.mmd}}
+```
+
+The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd).
+
+Once the bundle reports readiness, RAZAR activates the Bana engine to narrate transitions across layers.
 
 ## **5. BANA Narrative Engine and INANNA Bridge**
 

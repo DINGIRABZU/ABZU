@@ -131,6 +131,16 @@ The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mm
 
 `MemoryBundle.initialize()` emits a single `broadcast_layer_event("layer_init")` so all five layers report readiness in parallel. Services wait on this broadcast before issuing `query_memory` requests, guaranteeing that startup completes before any memory queries occur.
 
+#### Initialization and Query Aggregation
+
+`broadcast_layer_event("layer_init")` primes every layer before the `query_memory` façade fans out reads and merges the replies into a unified recall.
+
+```mermaid
+{{#include figures/layer_init_query_flow.mmd}}
+```
+
+The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) and is shared across the repository to keep bundle diagrams aligned.
+
 ### Dynamic Ignition
 
 RAZAR evaluates ignition plans at runtime so services launch only when the operator authorizes them, keeping startup lightweight and responsive.

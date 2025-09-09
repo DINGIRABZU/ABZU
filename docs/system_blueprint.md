@@ -328,6 +328,10 @@ graph TD
     RAZAR --> Console
 ```
 
+### Memory Bundle Architecture
+
+`MemoryBundle` links the Cortex, Emotional, Mental, Spiritual, and Narrative layers behind a common bus. `broadcast_layer_event("layer_init")` announces readiness, while the `query_memory` façade fans out recalls and returns a merged view for Crown and operator agents.
+
 ### Document Map
 
 - **High‑level docs**
