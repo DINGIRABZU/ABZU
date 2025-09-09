@@ -98,6 +98,7 @@ abzu-memory-bootstrap
 - [Example Feature](features/example_feature.md)
 - [RAZAR Agent](RAZAR_AGENT.md)
 - [RAZAR Self-Healing Overview](RAZAR_AGENT.md#self-healing-overview)
+- [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation)
 - [Persona API Guide](persona_api_guide.md) – utilities for managing persona interactions
 
 ## Indices
