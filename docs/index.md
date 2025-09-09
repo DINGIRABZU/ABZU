@@ -7,6 +7,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [Blueprint Spine](blueprint_spine.md) – mission overview, memory bundle, and ignition map
 - [System Blueprint](system_blueprint.md) – chakra layers, dynamic ignition, and operator UI
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
+- [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview
 - [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight
 
 ## Quick Start

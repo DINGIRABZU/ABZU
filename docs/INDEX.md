@@ -407,6 +407,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
 | [release_process.md](release_process.md) | Release Process | This guide covers signing build artifacts and verifying their integrity. | - |
 | [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
+| [repository_blueprint.md](repository_blueprint.md) | Repository Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | - |
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
