@@ -64,6 +64,18 @@ ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores
 
 The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd). Scripts under **`scripts/`** initialize and verify the layers, and RAZAR activates the Bana engine once the bundle reports readiness.
 
+```mermaid
+{{#include figures/layer_init_broadcast.mmd}}
+```
+
+The Mermaid source lives at [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd).
+
+```mermaid
+{{#include figures/query_memory_aggregation.mmd}}
+```
+
+The Mermaid source lives at [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd).
+
 ### **Memory Spine**
 
 The blueprint spine indexes snapshot checkpoints across the memory bundle,

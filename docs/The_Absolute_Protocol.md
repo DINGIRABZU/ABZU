@@ -116,6 +116,10 @@ The overarching narrative for reconstructing the repository lives in [ABZU_bluep
 
 The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd). See [memory_layers_GUIDE.md](memory_layers_GUIDE.md) for implementation details. Any change to a memory layer must update this diagram and all related visuals across the repository to keep documentation synchronized.
 
+#### `layer_init` Event
+
+`MemoryBundle.initialize()` emits a single `broadcast_layer_event("layer_init")` so all five layers report readiness in parallel. Services wait on this broadcast before issuing `query_memory` requests, guaranteeing that startup completes before any memory queries occur.
+
 ### Dynamic Ignition
 
 RAZAR evaluates ignition plans at runtime so services launch only when the operator authorizes them, keeping startup lightweight and responsive.
