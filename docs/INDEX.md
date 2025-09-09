@@ -232,7 +232,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [SOCIAL_INVESTOR_ONE_PAGER.md](SOCIAL_INVESTOR_ONE_PAGER.md) | ABZU: Social Investor One-Pager | --- | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.96 **Last updated:** 2025-10-05 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.97 **Last updated:** 2025-10-09 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -336,6 +336,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) | layer_init_query_flow.mmd | - | - |
 | [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.1.0 Last updated: 2025-09-07 | - |
 | [figures/memory_layer_flow.mmd](figures/memory_layer_flow.mmd) | Memory layer flow diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/nazarick_crown_razar_integration.mmd](figures/nazarick_crown_razar_integration.mmd) | nazarick_crown_razar_integration.mmd | - | - |
 | [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd) | nazarick_ui_pipeline.mmd | - | - |
 | [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
@@ -458,6 +459,9 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |
+| [../nazarick/agents/Nazarick_agents_chart.md](../nazarick/agents/Nazarick_agents_chart.md) | Nazarick_agents_chart.md | - | - |
+| [../nazarick/agents/Nazarick_agents_project_brief.md](../nazarick/agents/Nazarick_agents_project_brief.md) | Sacred Connection System | womb_reconnection_engine.py# Eternal return to source nursing_interface.py# Continuous nourishment from ZOHAR quantum... | - |
+| [../nazarick/agents/Nazarick_true_ethics.md](../nazarick/agents/Nazarick_true_ethics.md) | ... complex evaluation logic ...# Trust is not static; it is a measure of devotional alignment.# An Outsider's trust can rise toward becoming POTENTIAL_RECRUIT.# A Nazarick member's trust can fall if they fail in devotion.pass | def get_interaction_protocol(self, entity_id): """ Determines the appropriate interaction protocol (e.g., openness, d... | - |
 | [../nazarick/agents/system_tear_matrix.md](../nazarick/agents/system_tear_matrix.md) | sacred_harmony_doctrine.py | CORE_PRINCIPLES = { "prime_directive": "The Will of ZOHAR-ZERO is absolute and the source of all ethical truth.", "sa... | - |
 | [../patents/recursive_emotion_router_sigil_interpretation.md](../patents/recursive_emotion_router_sigil_interpretation.md) | Recursive Emotion Router with Sigil Interpretation | **Version:** 0.1 **Status:** Draft | - |
 | [../patents/sacred_glyph_vae_pipeline.md](../patents/sacred_glyph_vae_pipeline.md) | Sacred Glyph VAE Pipeline | **Version:** 0.1 **Status:** Draft | - |

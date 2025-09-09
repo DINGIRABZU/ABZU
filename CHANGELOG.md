@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented Chakra Heartbeat Alignment for Nazarick agents with Mermaid mapping; cross-linked `chakra_metrics.md` and `ignition_blueprint.md`.
 - Wrapped `agents.event_bus.emit_event` and memory layer queries with OpenTelemetry spans.
 - Structured manual detailing chakra architecture, system components, memory bundle, and operator paths with Mermaid diagrams and doctrine cross-links.
+- Added Nazarick stewardship section and integration diagrams linking Crown and RAZAR in core blueprints.
 - Exposed `/healthz` and `/metrics` on the sidekick helper service.
 - Documented Prometheus/Grafana dashboard setup in `docs/operations.md`.
 - Query memory benchmark records throughput and latency with scheduled CI runs and a dedicated Makefile target.
