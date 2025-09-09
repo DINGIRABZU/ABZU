@@ -9,6 +9,16 @@ async function memoryScan() {
   renderMemoryResults(Array.isArray(data) ? data : []);
 }
 
+async function originMemoryCheck() {
+  const resp = await fetch('/memory/query', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: 'ORIGIN DECREE' })
+  });
+  const data = await resp.json();
+  renderMemoryResults(Array.isArray(data) ? data : []);
+}
+
 function renderMemoryResults(data) {
   const container = document.getElementById('memory-results');
   container.innerHTML = '';
@@ -43,3 +53,4 @@ function renderMemoryResults(data) {
 }
 
 document.getElementById('memory-scan-btn').addEventListener('click', memoryScan);
+document.getElementById('origin-memory-check').addEventListener('click', originMemoryCheck);

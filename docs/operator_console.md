@@ -8,6 +8,7 @@ Arcade-style web interface for issuing commands through the Operator API.
 - **Ignite** sends `/start_ignition`.
  - **Query Memory** posts to `/memory/query` with a text payload.
 - **Status** retrieves `/status` for component health summaries.
+- **Origin Memory Check** posts to `/memory/query` with the query `ORIGIN DECREE` and renders any snippets. If no results return, reindexing is required.
 - **Add Model** posts to `/operator/models` with a model name and builtin.
 - **Remove Model** deletes `/operator/models/{name}`.
 - **Update Ethics** posts to `/ingest-ethics` to reindex the ethics corpus.

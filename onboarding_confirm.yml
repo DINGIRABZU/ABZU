@@ -49,7 +49,7 @@ documents:
       key_rules: Follow documentation workflow and sync blueprint.
       insight: Run pre-commit with modified docs before committing.
   docs/project_overview.md:
-    sha256: 8d40c6c58155bbdd26ada7565e1a6b5ea322ef5386128265dd57ba4d0ccf4fd4
+    sha256: 45a29f2add5193a0192caa9f5946ee284cbc8d91df11218c09923bf4a9f01de8
     summary:
       purpose: Project goals and scope.
       scope: Entire project.
@@ -198,7 +198,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: f9a5d859d28053530a8b810cab10d8a32099fd3b7405e80a41a1d7b60ae3c0d7
+    sha256: fae0596be543820649ead1ebd24000745441379a553f03aca80a683893849e29
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
