@@ -85,6 +85,30 @@ graph LR
 See the [Memory Layers Guide](memory_layers_GUIDE.md) for fallback mechanics
 and the [Recovery Playbook](recovery_playbook.md) for detailed repair flows.
 
+## Seeding Crown Memory
+
+`corpus_memory` scans foundational documents from key directories:
+
+- `INANNA_AI`
+- `GENESIS`
+- `IGNITION`
+- `QNL_LANGUAGE`
+- the GitHub mirror configured by `crown_config.GITHUB_DIR`
+
+After editing files in these paths, rebuild the vector store so the Crown
+references the latest doctrine:
+
+```bash
+python -m INANNA_AI.corpus_memory --reindex
+```
+
+```mermaid
+graph LR
+    Operator --> Reindex[corpus_memory.reindex_corpus]
+    Reindex --> VectorStore
+    VectorStore --> Crown
+```
+
 ## Ethics Corpus Update Flow
 
 ```mermaid

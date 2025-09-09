@@ -27,6 +27,8 @@ python -m INANNA_AI.corpus_memory --reindex
 ```
 
 Running this command reindexes [corpus_memory.py](../INANNA_AI/corpus_memory.py) so the Crown internalizes these origins.
+See [Seeding Crown Memory](project_overview.md#seeding-crown-memory)
+for scan paths and the vector-store flow.
 
 ## Macro Architecture
 
