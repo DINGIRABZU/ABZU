@@ -6,7 +6,7 @@ Arcade-style web interface for issuing commands through the Operator API.
 - Start the Operator API and serve `web_operator/templates/arcade.html` with `arcade.css`.
 - A Sumerian greeting modal displays on load.
 - **Ignite** sends `/start_ignition`.
-- **Query Memory** posts to `/query` with a text payload.
+ - **Query Memory** posts to `/memory/query` with a text payload.
 - **Status** retrieves `/status` for component health summaries.
 - **Add Model** posts to `/operator/models` with a model name and builtin.
 - **Remove Model** deletes `/operator/models/{name}`.
@@ -16,6 +16,13 @@ Arcade-style web interface for issuing commands through the Operator API.
 - `OPERATOR_API_URL` – base URL of the Operator API (default `http://localhost:8000`).
 - `OPERATOR_TOKEN` – Bearer token for secured endpoints.
 - `CROWN_URL` – location of Crown/Kimi invoked by RAZAR.
+
+## API Contracts
+| Endpoint | Method | Request | Response |
+|----------|--------|---------|----------|
+| `/start_ignition` | POST | `-` | `{ "status": "started" }` |
+| `/memory/query` | POST | `{ "query": "<text>" }` | `{ "results": {...} }` |
+| `/handover` | POST | `{ "component": "<name>", "error": "<msg>" }` *(optional)* | `{ "handover": true }` |
 
 ## Integration Flow
 ```mermaid
@@ -52,6 +59,7 @@ flowchart TD
 ## Version History
 | Version | Date       | Notes                              |
 |---------|------------|------------------------------------|
+| 0.5.0   | 2025-11-09 | Document `/start_ignition`, `/memory/query`, and `/handover` API contracts |
 | 0.4.0   | 2025-11-08 | Add model, remove model, and ethics update controls |
 | 0.3.0   | 2025-11-07 | Document runtime model management  |
 | 0.2.0   | 2025-11-06 | Added query endpoint and greeting  |

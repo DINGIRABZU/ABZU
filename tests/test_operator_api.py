@@ -195,3 +195,32 @@ def test_register_and_unregister_servant_model(client: TestClient) -> None:
     resp = client.delete("/operator/models/echo")
     assert resp.status_code == 200
     assert "echo" not in resp.json()["models"]
+
+
+def test_start_ignition_endpoint(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    called: dict[str, bool] = {}
+    monkeypatch.setattr(
+        operator_api.boot_orchestrator, "start", lambda: called.setdefault("ok", True)
+    )
+    resp = client.post("/start_ignition")
+    assert resp.status_code == 200
+    assert resp.json() == {"status": "started"}
+    assert called["ok"]
+
+
+def test_memory_query_endpoint(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(operator_api, "query_memory", lambda q: {"res": q})
+    resp = client.post("/memory/query", json={"query": "demo"})
+    assert resp.status_code == 200
+    assert resp.json() == {"results": {"res": "demo"}}
+
+
+def test_handover_endpoint(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(operator_api.ai_invoker, "handover", lambda c, e: True)
+    resp = client.post("/handover", json={"component": "c", "error": "boom"})
+    assert resp.status_code == 200
+    assert resp.json() == {"handover": True}

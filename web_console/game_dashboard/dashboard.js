@@ -15,9 +15,34 @@ import MissionMap from './mission_map.js';
 
 function GameDashboard() {
   const buttons = [
-    { id: 'ignite', label: 'Ignite', action: () => fetch(`${BASE_URL}/ignite`, { method: 'POST' }) },
-    { id: 'memory', label: 'Memory Query', action: () => fetch(`${BASE_URL}/memory/query`, { method: 'POST' }) },
-    { id: 'handover', label: 'Handover', action: () => fetch(`${BASE_URL}/handover`, { method: 'POST' }) }
+    {
+      id: 'ignite',
+      label: 'Ignite',
+      action: () =>
+        fetch(`${BASE_URL}/start_ignition`, { method: 'POST' })
+          .then((r) => r.json())
+          .then((d) => console.log(d)),
+    },
+    {
+      id: 'memory',
+      label: 'Memory Query',
+      action: () =>
+        fetch(`${BASE_URL}/memory/query`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: 'demo' }),
+        })
+          .then((r) => r.json())
+          .then((d) => console.log(d)),
+    },
+    {
+      id: 'handover',
+      label: 'Handover',
+      action: () =>
+        fetch(`${BASE_URL}/handover`, { method: 'POST' })
+          .then((r) => r.json())
+          .then((d) => console.log(d)),
+    },
   ];
   const [wizardDone, setWizardDone] = React.useState(() => localStorage.getItem('setupWizardCompleted') === 'true');
   const [missionDone, setMissionDone] = React.useState(() => localStorage.getItem('missionWizardCompleted') === 'true');

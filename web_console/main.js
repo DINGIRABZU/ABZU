@@ -545,14 +545,34 @@ function initArcade() {
     const removeModel = document.getElementById('remove-model-btn');
     const updateEthics = document.getElementById('update-ethics-btn');
     const actionResult = document.getElementById('action-result');
-    ignite.addEventListener('click', () => {
-        fetch(`${BASE_URL}/ignite`, { method: 'POST' });
+    ignite.addEventListener('click', async () => {
+        try {
+            const resp = await fetch(`${BASE_URL}/start_ignition`, { method: 'POST' });
+            actionResult.textContent = await resp.text();
+        } catch (err) {
+            actionResult.textContent = 'Ignition error: ' + err;
+        }
     });
-    memory.addEventListener('click', () => {
-        fetch(`${BASE_URL}/memory/scan`, { method: 'POST' });
+    memory.addEventListener('click', async () => {
+        const prompt = document.getElementById('memory-query').value;
+        try {
+            const resp = await fetch(`${BASE_URL}/memory/query`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: prompt })
+            });
+            actionResult.textContent = await resp.text();
+        } catch (err) {
+            actionResult.textContent = 'Memory query error: ' + err;
+        }
     });
-    handover.addEventListener('click', () => {
-        fetch(`${BASE_URL}/handover`, { method: 'POST' });
+    handover.addEventListener('click', async () => {
+        try {
+            const resp = await fetch(`${BASE_URL}/handover`, { method: 'POST' });
+            actionResult.textContent = await resp.text();
+        } catch (err) {
+            actionResult.textContent = 'Handover error: ' + err;
+        }
     });
     addModel.addEventListener('click', async () => {
         const name = document.getElementById('add-model-name').value;
