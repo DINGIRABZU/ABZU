@@ -9,6 +9,9 @@ from citadel.event_producer import Event, EventProducer
 from agents.event_bus import set_event_producer
 from memory import LAYERS, LAYER_STATUSES
 from memory.bundle import MemoryBundle
+
+qm = importlib.import_module("memory.query_memory")
+import pytest
 import conftest as conftest_module
 from pathlib import Path
 
@@ -25,6 +28,25 @@ class DummyProducer(EventProducer):
 
     async def emit(self, event: Event) -> None:  # pragma: no cover - trivial
         self.events.append(event)
+
+
+@pytest.fixture
+def stub_layer_queries(monkeypatch):
+    """Stub individual layer query functions and record call order."""
+
+    calls: list[str] = []
+
+    def stub(name: str, value):
+        def _stub(prompt: str):
+            calls.append(name)
+            return value
+
+        return _stub
+
+    monkeypatch.setattr(qm, "query_cortex", stub("cortex", ["c"]))
+    monkeypatch.setattr(qm, "query_vector_store", stub("vector", ["v"]))
+    monkeypatch.setattr(qm, "spiral_recall", stub("spiral", "s"))
+    return calls
 
 
 def test_initialize_emits_event_and_sets_ready_statuses(monkeypatch):
@@ -87,4 +109,25 @@ def test_initialize_handles_import_error(monkeypatch):
 
     assert statuses["spiritual"] == "error"
     assert producer.events[0].payload["layers"]["spiritual"] == "error"
+    set_event_producer(None)
+
+
+def test_query_aggregates_results(stub_layer_queries):
+    producer = DummyProducer()
+    set_event_producer(producer)
+    bundle = MemoryBundle()
+
+    result = bundle.query("text")
+
+    assert result == {
+        "cortex": ["c"],
+        "vector": ["v"],
+        "spiral": "s",
+        "failed_layers": [],
+    }
+    assert stub_layer_queries == ["cortex", "vector", "spiral"]
+
+    assert len(producer.events) in (0, 1)
+    if producer.events:
+        assert producer.events[0].event_type == "query"
     set_event_producer(None)
