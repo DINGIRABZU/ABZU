@@ -1,0 +1,7 @@
+graph LR
+    Operator[Operator] -->|commands| UI[Nazarick UI]
+    UI -->|selects| Templates[Nazarick Personality Templates]
+    Templates --> Avatar[Avatar Renderer]
+    Templates --> Voice[Voice Synthesizer]
+    Avatar -->|frames| Display[Operator Display]
+    Voice -->|audio| Speakers[Operator Speakers]

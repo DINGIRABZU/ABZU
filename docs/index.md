@@ -31,6 +31,8 @@ abzu-memory-bootstrap
 - [Crown Guide](Crown_GUIDE.md) – routes operator commands to servant models
 - [INANNA Guide](INANNA_GUIDE.md) – core GLM interface and memory access
 ## Nazarick
+- [Avatar & Voice Stack](blueprint_spine.md#avatar--voice-stack) – servant templates and UI pipeline
+- [Nazarick UI Pipeline](system_blueprint.md#avatar--voice-stack) – avatar and voice flow overview
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
 - [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md)
 - [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md)
