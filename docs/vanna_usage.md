@@ -50,3 +50,18 @@ print(rows)
 ```
 
 The call stores the raw rows in Neo4j-backed mental memory and records a summary event in narrative memory for later storytelling.
+## Narrative Export
+
+Query results can be streamed into Bana's narrative engine to generate multitrack stories. Bana converts each row into a `StoryEvent` and emits prose, audio, visual, and USD operations. The `usd` track follows the schema described in [Narrative System](narrative_system.md).
+
+```python
+from agents.vanna_data import query_db
+from memory.narrative_engine import StoryEvent, compose_multitrack_story
+
+rows = query_db("SELECT hero, action FROM quests")
+
+events = [StoryEvent(actor=r["hero"], action=r["action"]) for r in rows]
+usd_track = compose_multitrack_story(events)["usd"]
+```
+
+`usd_track` contains the structured USD operations that downstream tools consume to build scenes.
