@@ -56,6 +56,7 @@ abzu-memory-bootstrap
 - [UI Service](ui_service.md) – lightweight FastAPI interface for memory queries
 - [Operator Console](operator_console.md) – Arcade UI for Operator API commands
 - [Arcade UI](arcade_ui.md) – features, env vars, quickstart, and memory scan sequence
+- [3D Avatar API](avatar_3d_api.md) – streaming configuration and dependencies
 - [Operator Interface Guide](operator_interface_GUIDE.md) – REST endpoints for Crown and RAZAR control
 - [Bootstrap World Script](../scripts/bootstrap_world.py) – initialize mandatory layers and report status
 

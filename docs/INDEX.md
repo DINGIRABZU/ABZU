@@ -266,6 +266,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [assets/razar_flow.mmd](assets/razar_flow.mmd) | razar_flow.mmd | - | - |
 | [assets/remote_assistance_sequence.mmd](assets/remote_assistance_sequence.mmd) | remote_assistance_sequence.mmd | - | - |
 | [audio_ingestion.md](audio_ingestion.md) | Audio Ingestion | This guide outlines how Spiral OS loads audio files and enriches them with optional features such as tempo and key de... | - |
+| [avatar_3d_api.md](avatar_3d_api.md) | 3D Avatar API | The 3D Avatar API streams animated meshes to viewers and exposes configuration hooks for the avatar pipeline. Crown r... | - |
 | [avatar_animation.md](avatar_animation.md) | Avatar Animation Modules | This document describes the lightweight avatar animation helpers found in `ai_core.avatar`. | - |
 | [avatar_ethics.md](avatar_ethics.md) | Avatar Ethics | The avatar and call features rely on audiovisual data that may reveal personal information. Operators must handle rec... | - |
 | [avatar_pipeline.md](avatar_pipeline.md) | Avatar Pipeline | The avatar pipeline synchronises generated speech with visual animation. It reads configuration from `guides/avatar_c... | - |
