@@ -17,12 +17,25 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - fallback when vector memory unavailable
     ChakraRegistry = None  # type: ignore[assignment]
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
-LAYERS = ("cortex", "emotional", "mental", "spiritual", "narrative")
+# Registered memory layers with optional fallbacks. Vector and spiral memory
+# live at the package root and are included in the broadcast payload alongside
+# the traditional emotional, mental, spiritual, and narrative stores.
+LAYERS = (
+    "cortex",
+    "vector",
+    "spiral",
+    "emotional",
+    "mental",
+    "spiritual",
+    "narrative",
+)
 
 _LAYER_IMPORTS = {
     "cortex": "memory.cortex",
+    "vector": "vector_memory",
+    "spiral": "spiral_memory",
     "emotional": "memory.emotional",
     "mental": "memory.mental",
     "spiritual": "memory.spiritual",
@@ -68,9 +81,10 @@ for _layer in LAYERS:
 def broadcast_layer_event(statuses: Dict[str, str]) -> Dict[str, str]:
     """Emit a single initialization event for all memory layers.
 
-    ``statuses`` maps layer names to their corresponding status strings.
-    Missing entries are filled using the current layer statuses. Fallbacks are
-    loaded automatically during module import.
+    ``statuses`` maps layer names to their corresponding status strings. The
+    mapping may omit entries; missing values are populated using the latest
+    import results so callers can submit only overrides. Fallback modules are
+    loaded automatically during import.
     """
 
     with _tracer.start_as_current_span("memory.broadcast_layer_event") as span:
@@ -85,6 +99,10 @@ def broadcast_layer_event(statuses: Dict[str, str]) -> Dict[str, str]:
             {"layers": {layer: statuses.get(layer, "unknown") for layer in LAYERS}},
         )
         return statuses
+
+
+# Emit a consolidated status event once all layers have been attempted.
+broadcast_layer_event(_LAYER_STATUSES)
 
 
 LAYER_STATUSES = _LAYER_STATUSES

@@ -9,7 +9,7 @@ from typing import Any, Dict
 from . import LAYERS, _LAYER_IMPORTS, broadcast_layer_event, query_memory
 from opentelemetry import trace
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 
 @dataclass
@@ -17,6 +17,8 @@ class MemoryBundle:
     """Bundle that instantiates memory layers and aggregates queries."""
 
     cortex: Any | None = None
+    vector: Any | None = None
+    spiral: Any | None = None
     emotional: Any | None = None
     mental: Any | None = None
     spiritual: Any | None = None
