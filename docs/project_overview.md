@@ -49,7 +49,7 @@ Each chakra layer corresponds to core modules that cooperate when Spiral OS is r
 * **Third Eye – Ajna** – `qnl_engine.py` interprets hexadecimal strings into musical glyphs and passes them back to the orchestrator; `scripts/data_validate.py` checks training data and `scripts/quality_score.py` evaluates component health.
 * **Crown – Sahasrara** – `start_spiral_os.py` and `init_crown_agent.py` initialise the entire ritual sequence.
 * **UI Service** – FastAPI front-end providing a browser gateway to memory queries. See [ui_service.md](ui_service.md).
-* **Operator Console** – Arcade interface driving the Operator API. See [operator_console.md](operator_console.md).
+* **Operator Console** – Arcade interface driving the Operator API. See [operator_console.md](operator_console.md) and its [roadmap](operator_console.md#roadmap) for planned features.
 * **Nazarick Web Console** – developer dashboard bridging Crown and Nazarick interfaces. See [Crown vs. Nazarick Modes](nazarick_web_console.md#crown-vs-nazarick-modes).
 * **Arcade UI** – features, quickstart, and memory scan sequence. See [arcade_ui.md](arcade_ui.md).
 * **DATPars** – unified parsing interfaces for ingesting external data. See [datpars_overview.md](datpars_overview.md).

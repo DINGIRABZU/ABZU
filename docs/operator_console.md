@@ -56,6 +56,22 @@ flowchart TD
     API --> Ethics[Ethics Store]
 ```
 
+## Roadmap
+
+### Planned Features
+- Agent profiles for personalized operator setups.
+- Theme customization for the arcade interface.
+- World switching to jump between active simulation worlds.
+
+### Dependencies
+- Updated memory bundle diagrams to capture cross-world flows.
+- Optional layer fallbacks when a world omits specific memory layers.
+
+### Open Questions
+- How should agent profiles persist across worlds?
+- Which default themes should ship with the console?
+- What safeguards are needed when switching worlds mid-session?
+
 ## Version History
 | Version | Date       | Notes                              |
 |---------|------------|------------------------------------|
