@@ -5,8 +5,9 @@
 The system blueprint maps ABZU’s chakra layers, core services, and agents. It
 acts as a starting compass for new contributors—consult the
 [ABZU Blueprint](ABZU_blueprint.md) for the high-level narrative to recreate the
-system, including chakra and heartbeat roles, and the [Blueprint Spine](blueprint_spine.md) for mission context. For
-curated entry points see the [Documentation Index](index.md) and the
+system, including chakra and heartbeat roles, and the [Blueprint Spine](blueprint_spine.md) for mission context. The chaptered
+[Blueprint Manual](blueprint_manual.md) offers operator-focused guidance across
+console, memory, and ignition flows. For curated entry points see the [Documentation Index](index.md) and the
 [auto-generated index](INDEX.md) for a complete catalog, including the
 [Blueprint Export](BLUEPRINT_EXPORT.md) and [Onboarding Guide](onboarding_guide.md).
 Read the [Project Overview](project_overview.md) to understand goals, review the
