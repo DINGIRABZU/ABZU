@@ -106,6 +106,8 @@ optional lip‑sync audio. These assets are loaded by
 ``media.avatar.lwm_renderer`` before frames are generated. Omitting the mode or
 setting it to ``"2d"`` keeps the traditional flat rendering path.
 
+For streaming and configuration details see the [3D Avatar API](avatar_3d_api.md).
+
 ### Frame Rendering Plug-ins
 
 ``core.video_engine`` exposes ``register_render_2d`` and ``register_render_3d``
