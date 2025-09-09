@@ -59,6 +59,10 @@ def main() -> int:
         candidates = [ROOT / "memory" / f"{layer}.py", ROOT / "memory" / layer]
         if layer == "narrative":
             candidates.append(ROOT / "memory" / "narrative_engine.py")
+        if layer == "vector":
+            candidates.append(ROOT / "vector_memory.py")
+        if layer == "spiral":
+            candidates.append(ROOT / "spiral_memory.py")
         if not any(p.exists() for p in candidates):
             errors.append(f"Unknown layer: {layer}")
 

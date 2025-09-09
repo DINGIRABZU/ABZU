@@ -2915,7 +2915,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "memory/__init__.py",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "dependencies": [
         "__future__",
         "agents",
