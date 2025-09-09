@@ -9,6 +9,7 @@ from worlds.config_registry import (
     import_config,
     import_config_file,
     reset_registry,
+    register_model,
     register_model_path,
     register_remote_attempt,
     register_patch,
@@ -46,6 +47,7 @@ def test_registration_and_roundtrip(
     register_remote_attempt("demo")
     register_patch("demo", "patch1", "abc123")
     register_model_path("demo-model", "/models/demo.bin")
+    register_model("extra-model")
 
     cfg = export_config()
 
@@ -56,6 +58,7 @@ def test_registration_and_roundtrip(
     assert cfg["remote_attempts"]["demo"] == 1
     assert cfg["component_hashes"]["demo"] == "abc123"
     assert cfg["model_paths"]["demo-model"] == "/models/demo.bin"
+    assert set(cfg["models"]) == {"demo-model", "extra-model"}
     assert cfg["patches"] == [
         {"component": "demo", "patch": "patch1", "hash": "abc123"}
     ]
