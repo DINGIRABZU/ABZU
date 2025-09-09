@@ -44,6 +44,14 @@ Contributors must pair system enhancements with operator-facing improvements, up
     - **Crown**: High-level orchestration (RAZAR).
 - Agents like **Prompt Orchestrator**, **QNL Engine**, **Memory Scribe**, and **Nazarick Servants** manage specialized roles in this hierarchy.
 
+### Nazarick Integration with Crown and RAZAR
+
+```mermaid
+{{#include figures/nazarick_crown_razar_integration.mmd}}
+```
+
+This integration shows Crown delegating mission briefs while RAZAR monitors heartbeats and receives recovery signals. New agents or worlds must follow the [Nazarick Manifesto](nazarick_manifesto.md) and align with the [project mission](project_mission_vision.md). See the system-level view in [system_blueprint.md](system_blueprint.md#nazarick-integration-with-crown-and-razar) and stewardship rules in [The_Absolute_Protocol.md](The_Absolute_Protocol.md#nazarick-stewardship).
+
 ### Avatar & Voice Stack
 
 Nazarick's servant interface streams coordinated visuals and audio through a unified avatar and voice stack. Personality templates shape each servant's style and tone: [Albedo](../agents/nazarick/albedo_agent_template.md), [Cocytus](../agents/nazarick/cocytus_agent_template.md), [Demurge](../agents/nazarick/demurge_agent_template.md), [Gargantua](../agents/nazarick/gargantua_agent_template.md), [Pandora](../agents/nazarick/pandora_agent_template.md), [Pleiades](../agents/nazarick/pleiades_agent_template.md), [Sebastiara](../agents/nazarick/sebastiara_agent_template.md), and [Shalltear](../agents/nazarick/shalltear_agent_template.md).

@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.96
-**Last updated:** 2025-10-05
+**Version:** v1.0.97
+**Last updated:** 2025-10-09
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -86,6 +86,10 @@ sequenceDiagram
     RAZAR-->>Console: report
     Console-->>Operator: display readiness
 ```
+
+## Nazarick Stewardship
+
+Nazarick agents steward alignment between operators, Crown, and RAZAR. Review the [blueprint overview](blueprint_spine.md#nazarick-integration-with-crown-and-razar) and [system blueprint](system_blueprint.md#nazarick-integration-with-crown-and-razar) diagrams to understand these flows. New agents and constructed worlds must honor the [Nazarick Manifesto](nazarick_manifesto.md) and stay aligned with the [project mission](project_mission_vision.md).
 
 ## Repository Blueprint
 ABZU adheres to a consistent top-level directory layout:

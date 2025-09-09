@@ -70,6 +70,14 @@ voice rendering. Templates such as [Albedo](../agents/nazarick/albedo_agent_temp
 
 See [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd) for the Mermaid source.
 
+### Nazarick Integration with Crown and RAZAR
+
+```mermaid
+{{#include figures/nazarick_crown_razar_integration.mmd}}
+```
+
+This view shows Crown delegating mission briefs while RAZAR monitors pulses and receives recovery signals. New agents or worlds must follow the [Nazarick Manifesto](nazarick_manifesto.md) and stay aligned with the [project mission](project_mission_vision.md). For narrative context, see [blueprint_spine.md](blueprint_spine.md#nazarick-integration-with-crown-and-razar) and stewardship guidance in [The_Absolute_Protocol.md](The_Absolute_Protocol.md#nazarick-stewardship).
+
 ### Chakra Cycle Engine
 
 The chakra cycle engine distributes a steady heartbeat across every layer and
