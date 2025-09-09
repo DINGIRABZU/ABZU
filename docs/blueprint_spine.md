@@ -624,6 +624,17 @@ The Nazarick Web Console exposes a browser-based interface for operators to issu
 3. **Multi‑Track Specialization** – **`compose_multitrack_story`** expands story beats into parallel tracks (prose, audio cues, visual directives, USD operations), enabling cinematic, audio, visual, and 3D composition layers
 4. **API Access** – **`bana/narrative_api`** exposes endpoints to fetch structured narrative events or stream them as JSON lines
 
+## **Vanna–Bana Narrative Pipeline**
+
+```mermaid
+flowchart LR
+    OP[Operator] --> V[Vanna]
+    V --> B[Bana (Mistral 7B)]
+    B --> U[USD Output]
+```
+
+Vanna converts operator prompts into SQL and feeds results to Bana, a fine‑tuned Mistral 7B model. Bana emits USD actions along with other tracks, and these artifacts are persisted under `memory/data/narrative_engine.db` for later retrieval.
+
 ## **Verification**
 
 - The multitrack output design is validated by tests ensuring all tracks (prose, audio, visual, USD) are present and correctly typed
