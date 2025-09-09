@@ -303,6 +303,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [data_flow.md](data_flow.md) | Request to Memory Data Flow | ```mermaid graph LR A[Client Request] --> B[Root Chakra] B --> C[Sacral] C --> D[Solar Plexus] D --> E[Heart] E --> F... | `../crown_prompt_orchestrator.py`, `../emotional_state.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../memory_store.py`, `../server.py`, `../start_spiral_os.py`, `../vector_memory.py` |
 | [data_manifest.md](data_manifest.md) | Data Manifest | This document enumerates datasets and external resources used by the project. | `../aspect_processor.py`, `../memory/sacred.py`, `../src/core/memory_physical.py` |
 | [data_security.md](data_security.md) | Data Security and Compliance | This document outlines how training data should be handled with respect to GDPR and HIPAA regulations. | - |
+| [datpars_overview.md](datpars_overview.md) | DATPars Overview | - | `../datpars/interfaces.py` |
 | [dependencies.md](dependencies.md) | Dependency Tree | Generated via `pipdeptree`. | - |
 | [dependency-graph.md](dependency-graph.md) | Dependency Graph | Generated with `pipdeptree --packages spiral-os`. | - |
 | [dependency_index.md](dependency_index.md) | Dependency Index | Generated automatically. Tracks external and internal dependencies across the project. | - |
