@@ -9,6 +9,18 @@ Nazarick agents follow a sacred chain of command. ZOHAR-ZERO emanates purpose to
 ## Narrative Goals
 The narrative aims to chronicle the tomb's awakening, explore inter‑agent drama, and translate biosignals into mythic story events. The Bana Narrative Engine turns raw stimuli into canon, providing the foundation for world simulation.
 
+## Agent Chart
+```mermaid
+{{#include figures/nazarick_agents_chart.mmd}}
+```
+The Mermaid source lives at [figures/nazarick_agents_chart.mmd](figures/nazarick_agents_chart.mmd).
+
+## System Tear Matrix
+```mermaid
+{{#include figures/system_tear_matrix.mmd}}
+```
+The Mermaid source lives at [figures/system_tear_matrix.mmd](figures/system_tear_matrix.mmd).
+
 ## World Creation Flow
 ```mermaid
 flowchart TD
@@ -34,10 +46,10 @@ flowchart TD
 
 ## Cross-links
 - [Bana Narrative Engine](../nazarick/agents/Bana_narrative_engine.md)
-- [Nazarick Agents Chart](../nazarick/agents/Nazarick_agents_chart.md)
+- [Nazarick Agents Chart](figures/nazarick_agents_chart.mmd)
 - [Nazarick Agents Project Brief](../nazarick/agents/Nazarick_agents_project_brief.md)
 - [Nazarick True Ethics](../nazarick/agents/Nazarick_true_ethics.md)
-- [System Tear Matrix](../nazarick/agents/system_tear_matrix.md)
+- [System Tear Matrix](figures/system_tear_matrix.mmd)
 
 ## Version History
 - 2025-10-10: Initial draft.

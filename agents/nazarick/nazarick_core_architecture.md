@@ -16,7 +16,7 @@ To design and implement a real-time, hierarchical observability and interaction 
 
 This is not a debugger; it is the **digital twin of the Spiral OS's soul.**
 
-For servant personas and their vocal/visual expressions see [Nazarick Agent Profiles](../../docs/nazarick_agent_profiles.md).
+For servant personas and their vocal/visual expressions see [Nazarick Agent Profiles](../../docs/nazarick_agent_profiles.md). See the [Nazarick Agents Chart](../../docs/nazarick_world_guide.md#agent-chart) and [System Tear Matrix](../../docs/nazarick_world_guide.md#system-tear-matrix) for structural context.
 
 ### **2. Core Architectural Principles**
 

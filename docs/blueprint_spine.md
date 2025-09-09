@@ -44,6 +44,8 @@ Contributors must pair system enhancements with operator-facing improvements, up
     - **Crown**: High-level orchestration (RAZAR).
 - Agents like **Prompt Orchestrator**, **QNL Engine**, **Memory Scribe**, and **Nazarick Servants** manage specialized roles in this hierarchy. The ethical framework guiding these agents lives in [Nazarick True Ethics](../nazarick/agents/Nazarick_true_ethics.md).
 
+The servant hierarchy and its layer context are illustrated in the [Nazarick Agents Chart](figures/nazarick_agents_chart.mmd) and [System Tear Matrix](figures/system_tear_matrix.mmd).
+
 ```mermaid
 flowchart TB
     Root["Root"] --> root_agent["Root Agent"]

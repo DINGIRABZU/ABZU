@@ -380,6 +380,8 @@ from the [ALBEDO Layer](ALBEDO_LAYER.md) and
 [Persona API Guide](persona_api_guide.md). Agents persist dialogue context
 through the [Chat2DB Interface](chat2db.md).
 
+Visual context for this hierarchy and its layer progression lives in the [Nazarick Agents Chart](figures/nazarick_agents_chart.mmd) and [System Tear Matrix](figures/system_tear_matrix.mmd).
+
 ### Floor and Channel Hierarchy
 
 | Floor | Channel | Chakra | Agents |
