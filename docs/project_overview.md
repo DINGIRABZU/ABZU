@@ -3,6 +3,8 @@
 For a consolidated reference covering mission, architecture and workflow,
 see [CRYSTAL_CODEX.md](../CRYSTAL_CODEX.md). Code-level details live in
 [README_CODE_FUNCTION.md](../README_CODE_FUNCTION.md).
+MCP connector options and the integration roadmap are in
+[mcp_connectors.md](mcp_connectors.md).
 
 ## Vision
 
