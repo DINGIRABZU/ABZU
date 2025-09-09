@@ -25,9 +25,11 @@ Set up the local environment before running tools or tests:
 2. Run `scripts/check_requirements.sh` to confirm required binaries, the Python 3.11+ runtime, and necessary Python modules are present.
 
 ### Operator Interface
-Operators supervise ignition and runtime behaviour. They issue boot commands,
-review handshake logs, and approve escalations before services become
-operator-facing.
+Operators supervise ignition and runtime behaviour. Consoles must meet the
+retro requirements in [operator_console.md](operator_console.md) and the
+[Arcade Theme Style Guide](style_guides/arcade_theme.md). They issue boot
+commands, review handshake logs, and approve escalations before services
+become operator-facing.
 
 **Responsibilities**
 

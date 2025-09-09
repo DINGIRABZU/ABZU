@@ -32,6 +32,23 @@ Contributors must pair system enhancements with operator-facing improvements, up
 3. **Primordials LLM (DeepSeek-V3)** – upstream language model guiding insights.
 4. **INANNA/Bana** – narrative engine and memory hub feeding back to Operator.
 
+### **Operator ↔ RAZAR/Crown Flow**
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant RAZAR
+    participant Crown
+    Operator->>RAZAR: mission brief
+    RAZAR->>Crown: delegate to servants
+    Crown-->>RAZAR: status
+    RAZAR-->>Operator: report
+```
+
+This sequence traces how directives travel from the operator through RAZAR to
+Crown and back, forming the basis for retro console diagnostics.
+
+
 ### **Chakra-aligned Agents (“Great Tomb of Nazarick” metaphor)**
 
 - Each agent aligns to a chakra layer (Root → Crown), ensuring system balance:

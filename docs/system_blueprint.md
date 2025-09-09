@@ -49,6 +49,22 @@ summary metrics are reported back to the Primordials service through
 `primordials_api`, ensuring upstream models receive continuous quality
 feedback.
 
+### Operator ↔ RAZAR/Crown Flow
+
+```mermaid
+sequenceDiagram
+    participant Operator
+    participant RAZAR
+    participant Crown
+    Operator->>RAZAR: mission brief
+    RAZAR->>Crown: delegate to servants
+    Crown-->>RAZAR: status
+    RAZAR-->>Operator: report
+```
+
+This loop illustrates how operator directives traverse RAZAR to Crown and
+return with execution status for console display.
+
 ### Vanna–Bana Narrative Pipeline
 
 ```mermaid

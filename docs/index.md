@@ -4,11 +4,11 @@ Curated starting points for understanding and operating the project. For an exha
 
 ## Orientation
 - [ABZU Project Declaration](project_mission_vision.md) – deployments must reach a living state
-- [Blueprint Spine](blueprint_spine.md) – mission overview, memory bundle, and ignition map
-- [System Blueprint](system_blueprint.md) – chakra layers, dynamic ignition, and operator UI
+- [Blueprint Spine](blueprint_spine.md) – mission overview, Operator ↔ RAZAR/Crown flow, memory bundle, and ignition map
+- [System Blueprint](system_blueprint.md) – chakra layers, Operator ↔ RAZAR/Crown flow, dynamic ignition, and operator UI
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
 - [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview
-- [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight
+- [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight with retro console requirements
 
 ## Quick Start
 
@@ -73,7 +73,7 @@ abzu-memory-bootstrap
 - [DATPars Overview](datpars_overview.md) – goals, architecture, and integration points
 
 ## Development
-- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.96, updated 2025-10-05)
+- [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.98, updated 2025-09-09) – operator interface and retro console requirements
 - [Developer Etiquette](developer_etiquette.md)
 - [Developer Onboarding](developer_onboarding.md)
 - [Development Checklist](development_checklist.md)
