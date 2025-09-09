@@ -1,6 +1,6 @@
 # Memory Layers Guide
 
-**Version:** v1.0.6
+**Version:** v1.0.7
 **Last updated:** 2025-09-09
 
 This guide describes the event bus protocol and query flow connecting the
@@ -97,6 +97,16 @@ records = bundle.query("omen")
 
 The Mermaid source lives at
 [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd).
+
+## Unified Broadcast & Query
+
+`broadcast_layer_event` announces layer readiness, while `query_memory` fans out across the same layers to collect results. The combined initialization and query flow looks like this:
+
+```mermaid
+{{#include figures/layer_init_query_flow.mmd}}
+```
+
+The Mermaid source lives at [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd).
 
 ## Operator Queries
 
