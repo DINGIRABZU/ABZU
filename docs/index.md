@@ -43,6 +43,11 @@ abzu-memory-bootstrap
 - [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md)
 - [Nazarick Agents](nazarick_agents.md)
 - [Nazarick Agent Profiles](nazarick_agent_profiles.md)
+- [Bana Narrative Engine](../nazarick/agents/Bana_narrative_engine.md) – biosignal-driven story generation
+- [Nazarick Agents Project Brief](../nazarick/agents/Nazarick_agents_project_brief.md) – agent relationships and narrative dynamics
+- [Nazarick Agents Chart](../nazarick/agents/Nazarick_agents_chart.md) – talents and personae of the pantheon
+- [System Tear Matrix](../nazarick/agents/system_tear_matrix.md) – hierarchical layer breakdown
+- [Nazarick True Ethics](../nazarick/agents/Nazarick_true_ethics.md) – covenant for INANNA_AI
 - [Nazarick Narrative System](nazarick_narrative_system.md) – maps story events to agents and memory layers
 - [Nazarick Manifesto](nazarick_manifesto.md)
 - [Nazarick Web Console](nazarick_web_console.md)
