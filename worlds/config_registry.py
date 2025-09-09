@@ -13,6 +13,7 @@ from typing import Any, Dict, DefaultDict
 #   _world: {
 #       "layers": set(),
 #       "agents": set(),
+#       "models": set(),
 #       "brokers": {},
 #       "paths": {},
 #       "model_paths": {},
@@ -26,6 +27,7 @@ _registry: DefaultDict[str, Dict[str, Any]] = defaultdict(
     lambda: {
         "layers": set(),
         "agents": set(),
+        "models": set(),
         "brokers": {},
         "paths": {},
         "model_paths": {},
@@ -51,19 +53,22 @@ def _world_name(world: str | None = None) -> str:
 def initialize_world(
     layers: list[str] | None = None,
     agents: list[str] | None = None,
+    models: list[str] | None = None,
     world: str | None = None,
 ) -> None:
-    """Register ``layers`` and ``agents`` for ``world`` in a single step.
+    """Register ``layers``, ``agents`` and ``models`` for ``world``.
 
     The function is a convenience for bootstrapping new worlds. Missing lists are
-    ignored, allowing either ``layers`` or ``agents`` to be provided
-    independently.
+    ignored, allowing any combination of ``layers``, ``agents`` or ``models`` to
+    be provided independently.
     """
 
     for layer in layers or []:
         register_layer(layer, world)
     for agent in agents or []:
         register_agent(agent, world)
+    for model in models or []:
+        register_model(model, world)
 
 
 def register_layer(layer: str, world: str | None = None) -> None:
@@ -76,6 +81,12 @@ def register_agent(agent: str, world: str | None = None) -> None:
     """Record availability of ``agent`` for ``world``."""
 
     _registry[_world_name(world)]["agents"].add(agent)
+
+
+def register_model(model: str, world: str | None = None) -> None:
+    """Record availability of ``model`` for ``world``."""
+
+    _registry[_world_name(world)]["models"].add(model)
 
 
 def register_broker(
@@ -95,6 +106,7 @@ def register_path(name: str, path: str, world: str | None = None) -> None:
 def register_model_path(model: str, path: str, world: str | None = None) -> None:
     """Record filesystem ``path`` for ``model`` within ``world``."""
 
+    register_model(model, world)
     _registry[_world_name(world)]["model_paths"][model] = path
 
 
@@ -110,6 +122,7 @@ def register_model_endpoint(
 ) -> None:
     """Record ``endpoint`` for ``model`` within ``world``."""
 
+    register_model(model, world)
     _registry[_world_name(world)]["model_endpoints"][model] = endpoint
 
 
@@ -138,6 +151,7 @@ def export_config(world: str | None = None) -> Dict[str, Any]:
     return {
         "layers": sorted(data["layers"]),
         "agents": sorted(data["agents"]),
+        "models": sorted(data["models"]),
         "brokers": dict(data["brokers"]),
         "paths": dict(data["paths"]),
         "model_paths": dict(data["model_paths"]),
@@ -154,6 +168,7 @@ def import_config(config: Dict[str, Any], world: str | None = None) -> None:
     data = _registry[_world_name(world)]
     data["layers"].update(config.get("layers", []))
     data["agents"].update(config.get("agents", []))
+    data["models"].update(config.get("models", []))
     data["brokers"].update(config.get("brokers", {}))
     data["paths"].update(config.get("paths", {}))
     data["model_paths"].update(config.get("model_paths", {}))
@@ -190,6 +205,7 @@ def reset_registry() -> None:
 __all__ = [
     "register_layer",
     "register_agent",
+    "register_model",
     "register_broker",
     "register_path",
     "register_model_path",
