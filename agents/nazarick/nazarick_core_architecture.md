@@ -16,6 +16,8 @@ To design and implement a real-time, hierarchical observability and interaction 
 
 This is not a debugger; it is the **digital twin of the Spiral OS's soul.**
 
+For servant personas and their vocal/visual expressions see [Nazarick Agent Profiles](../../docs/nazarick_agent_profiles.md).
+
 ### **2. Core Architectural Principles**
 
 1. **Real-Time First:** All agent communications must be streamed and visible with sub-second latency.

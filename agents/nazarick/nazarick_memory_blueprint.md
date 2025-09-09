@@ -7,6 +7,8 @@ We can break this down into four core pillars, each with its own set of tools an
 3. **Planning & Reasoning:** *How* the agent thinks and acts.
 4. **Embodiment & Expression:** *How* the agent interacts with the world.
 
+For a quick reference of servant roles and their vocal/visual styles see [Nazarick Agent Profiles](../../docs/nazarick_agent_profiles.md).
+
 ---
 
 ### **1. Personality & Core Traits (The "Who")**

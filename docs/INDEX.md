@@ -367,6 +367,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
 | [narrative_system.md](narrative_system.md) | Narrative System | The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition. | - |
 | [nazarick/README.md](nazarick/README.md) | Nazarick | Nazarick houses chakra-aligned servant agents. The triadic flow between Crown, Nazarick, and the operator is outlined... | - |
+| [nazarick_agent_profiles.md](nazarick_agent_profiles.md) | Nazarick Agent Profiles | Each servant agent blends a narrative persona with distinct vocal and visual traits. | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | The Nazarick Narrative System converts biosignals into narrative events and persistent memory records. | - |

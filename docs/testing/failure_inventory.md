@@ -58,3 +58,5 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-08: ERROR tests/test_voice_cloner_cli.py
 - 2025-09-08: ERROR tests/web_console/test_conversation_timeline.py - RuntimeError: Form data requires "python-multipart" to be installed.
 - 2025-09-08: ERROR tests/web_operator/test_api.py
+
+- 2025-09-09: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]

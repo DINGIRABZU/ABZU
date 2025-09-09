@@ -2,6 +2,8 @@
 
 Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown.
 
+See [Nazarick Agent Profiles](nazarick_agent_profiles.md) for personality and expression details.
+
 ## Agent Roster
 
 | Agent ID | Role | Chakra Layer | Launch Command | Channel | Chakracon Telemetry |
