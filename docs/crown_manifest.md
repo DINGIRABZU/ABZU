@@ -6,6 +6,8 @@ The **CROWN** agent runs the GLM-4.1V-9B model and acts as the root layer of Spi
 
 The archetypal layers described in [spiritual_architecture.md](spiritual_architecture.md) present personas such as Nigredo and Albedo. The CROWN coordinates these layers, dispatching prompts to each personality and receiving their responses. By updating the vector memory store the CROWN influences how future interactions surface across the layers.
 
+For the mission brief exchange and servant routing sequence see [Mission Brief Exchange & Servant Routing](mission_brief_exchange.md).
+
 ## Console connection
 
 Commands typed into the Crown Console reach the agent through `crown_prompt_orchestrator.py`. The CROWN interprets these requests, sends them to GLM-4.1V-9B and triggers ritual logic in `state_transition_engine.py` when specific phrases appear.

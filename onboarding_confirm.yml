@@ -240,14 +240,14 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 085dba828951b4b0d687fbec3f3709d3f2d1d612d025d3aaf6425349ee3cad2e
+    sha256: cd2b46a27f8c995d42ac40da806075fd9bdbeac926ccf8befaa41778840413ff
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
       key_rules: Regenerate index after documentation updates.
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
-    sha256: 2bebadb178d21dad74f8805be1721fd3c01883fd4c69d656a53aa5503e362ad7
+    sha256: 0d2f495589fa5ed997dea3e713da028476b77ce84445fdc275b3ea31b7a195ef
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
@@ -291,7 +291,7 @@ documents:
       key_rules: Visual reference for narrative engine routing.
       insight: Consult to understand event propagation to memory and operator.
   docs/RAZAR_AGENT.md:
-    sha256: 880bc26efd9eccc0c1886b529727a8acf25cc06776058acd035726f99655c030
+    sha256: bb9b8ae172a9bc370dddb2f5a3e2e9f37cc3f03f349f59e1452371dd0d5fb557
     summary:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.

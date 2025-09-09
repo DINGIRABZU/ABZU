@@ -6,6 +6,8 @@ See [Agent Ecosystem & Relations](ABZU_blueprint.md#agent-ecosystem--relations) 
 
 RAZAR ↔ Crown ↔ Kimi2Code handoffs and recovery loops are diagrammed in the [Ignition Blueprint](ignition_blueprint.md).
 
+Mission brief exchange and servant routing are summarized in [Mission Brief Exchange & Servant Routing](mission_brief_exchange.md).
+
 ## Vision
 RAZAR bootstraps ABZU services in a reproducible environment and negotiates startup handshakes with the Crown stack.
 
@@ -263,6 +265,7 @@ logs/mission_briefs/
 ## Version History
 | Version | Date | Notes |
 |---------|------|-------|
+| 0.2.4 | 2025-10-09 | Linked mission brief exchange and servant routing guide. |
 | 0.2.3 | 2025-09-21 | Added remote assistance section with flow diagram plus schema diagrams and ignition example. |
 | 0.2.2 | 2025-09-21 | Expanded remote assistance workflow and patch logging. |
 | 0.1.0 | 2025-08-30 | Initial release of RAZAR runtime orchestrator. |
