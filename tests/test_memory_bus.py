@@ -72,6 +72,19 @@ def test_broadcast_layer_event_emits():
     set_event_producer(None)
 
 
+def test_broadcast_layer_event_includes_all_layers():
+    producer = DummyProducer()
+    set_event_producer(producer)
+
+    # provide partial mapping to ensure the broadcast fills missing layers
+    broadcast_layer_event({"cortex": "ready"})
+
+    assert len(producer.events) == 1
+    layers = producer.events[0].payload["layers"]
+    assert set(layers.keys()) == set(memory.LAYERS)
+    set_event_producer(None)
+
+
 def test_query_memory_aggregates(monkeypatch):
     monkeypatch.setattr(qm, "query_spirals", lambda **kw: ["c"])
     monkeypatch.setattr(qm, "query_vectors", lambda **kw: ["v"])
@@ -84,6 +97,19 @@ def test_query_memory_aggregates(monkeypatch):
         "spiral": "s",
         "failed_layers": [],
     }
+
+
+def test_query_memory_includes_all_layers(monkeypatch):
+    monkeypatch.setattr(qm, "query_spirals", lambda **kw: ["c"])
+    monkeypatch.setattr(qm, "query_vectors", lambda **kw: ["v"])
+    monkeypatch.setattr(qm, "spiral_recall", lambda q: "s")
+
+    res = query_memory("demo")
+    assert set(res.keys()) == {"cortex", "vector", "spiral", "failed_layers"}
+    assert res["cortex"] == ["c"]
+    assert res["vector"] == ["v"]
+    assert res["spiral"] == "s"
+    assert res["failed_layers"] == []
 
 
 @pytest.mark.parametrize(
