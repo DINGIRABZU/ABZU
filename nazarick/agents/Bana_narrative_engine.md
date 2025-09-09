@@ -28,6 +28,16 @@
 - Tests verify ingestion and basic story generation, yet coverage is limited to small sample datasets.
 - Connectors enable operator commands and real‑time streaming, but there is no narrative‑specific API or connector entry, leaving the storytelling subsystem isolated from external interfaces.
 
+### Prompt to Memory Flow
+
+```mermaid
+flowchart LR
+    P[Agent prompt] --> B[Bana engine]
+    B --> M[Narrative memory]
+```
+
+The engine converts incoming agent prompts into story events preserved as Nazarick lore.
+
 # **PROJECT BRIEF: BANA NARRATIVE ENGINE**
 
 **Version:** 1.0
