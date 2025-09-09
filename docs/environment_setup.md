@@ -20,9 +20,19 @@ pip install -e .
 
 ## Tracing stack
 
-The tracing system uses the OpenTelemetry API with the OTLP exporter. These
-packages are included in the pinned requirements; configure your collector or
-export endpoint as needed to capture spans during development.
+The tracing system uses a factory that selects providers based on the
+``TRACE_PROVIDER`` environment variable. ``opentelemetry`` remains the default
+when the package is installed and yields spans via ``trace.get_tracer``. Set
+``TRACE_PROVIDER`` to switch providers:
+
+```bash
+export TRACE_PROVIDER=opentelemetry  # use OpenTelemetry
+export TRACE_PROVIDER=noop           # disable tracing
+export TRACE_PROVIDER=my_pkg.tracing:factory  # custom entry point
+```
+
+These packages are included in the pinned requirements; configure your
+collector or export endpoint as needed to capture spans during development.
 
 ## Conda environments
 

@@ -157,10 +157,11 @@ underlying errors. Queries still return data from the remaining active layers.
 
 ## Tracing
 
-`MemoryBundle` emits OpenTelemetry spans when the `opentelemetry` package is
-installed. If the module is absent, it falls back to an internal
-`NoOpTracer` that provides the minimal tracing interface so initialization and
-queries proceed without instrumentation.
+`MemoryBundle` obtains its tracer via ``memory.tracing.get_tracer``, which
+reads the ``TRACE_PROVIDER`` environment variable. Set
+``TRACE_PROVIDER=opentelemetry`` to emit OpenTelemetry spans, or
+``TRACE_PROVIDER=noop`` to disable tracing. Custom tracer factories can be
+referenced as ``module.path:function``.
 
 ## Installation Options
 
