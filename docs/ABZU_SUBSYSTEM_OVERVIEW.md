@@ -61,6 +61,8 @@ graph TD
 - **Query traversal** – `MemoryBundle.query()` fans requests across every layer and aggregates the responses before returning to the RAG Orchestrator.
 - See [Memory Layers Guide](memory_layers_GUIDE.md) for implementation specifics.
 
+Additional context is provided in [ABZU Blueprint – Unified Memory Bundle](ABZU_blueprint.md#unified-memory-bundle), [System Blueprint – Unified Memory Bundle](system_blueprint.md#memory-bundle), and [The Absolute Protocol – Unified Memory Bundle](The_Absolute_Protocol.md#unified-memory-bundle).
+
 ## Memory Bundle Layers
 
 ```mermaid

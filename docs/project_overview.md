@@ -64,6 +64,8 @@ The Crown can delegate requests to auxiliary servant models when specialized beh
 
 `MemoryBundle` unifies the Cortex, Emotional, Mental, Spiritual and Narrative layers. `bundle.initialize()` emits a single `layer_init` event on the `memory` bus so every layer reports readiness together. Subsequent `query_memory` calls fan out requests across the layers and merge their results into one payload. See [Memory Layers Guide](memory_layers_GUIDE.md) for implementation details and the unified diagram below.
 
+For architectural context, consult [ABZU Blueprint – Unified Memory Bundle](ABZU_blueprint.md#unified-memory-bundle), [System Blueprint – Unified Memory Bundle](system_blueprint.md#memory-bundle), and [The Absolute Protocol – Unified Memory Bundle](The_Absolute_Protocol.md#unified-memory-bundle).
+
 ```mermaid
 {{#include figures/memory_bundle.mmd}}
 ```
