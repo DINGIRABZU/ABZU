@@ -2,6 +2,11 @@
 
 See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. For structural layers review the [system_blueprint.md](system_blueprint.md); the [ABZU Blueprint](ABZU_blueprint.md) captures the high-level narrative for recreating the system and defines chakra and heartbeat roles.
 
+??? note "Origin Materials"
+    - [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md)
+    - [Inanna Song](../INANNA_AI/INANNA%20SONG%2020545dfc251d8065a32cec673272f292.md)
+    These origin texts define Crown identity and ground its ethical posture.
+
 ## **Recent Core Milestones**
 
 - **Document registry** publishes canonical listings with checksums in [doctrine_index.md](doctrine_index.md).
