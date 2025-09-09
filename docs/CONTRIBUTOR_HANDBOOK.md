@@ -22,6 +22,9 @@ pip install -r dev-requirements.txt
 
 # initialize pre-commit hooks
 pre-commit install
+
+# run a targeted Bandit scan
+pre-commit run bandit --files <paths>
 ```
 
 For a full onboarding walkthrough, see the [Onboarding Walkthrough](onboarding_walkthrough.md) text guide. Additional reference documents are listed in the [Blueprint Export](BLUEPRINT_EXPORT.md).
