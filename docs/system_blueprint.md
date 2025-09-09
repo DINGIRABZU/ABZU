@@ -192,6 +192,18 @@ ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into 
 
 The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd).
 
+```mermaid
+{{#include figures/layer_init_broadcast.mmd}}
+```
+
+The Mermaid source lives at [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd).
+
+```mermaid
+{{#include figures/query_memory_aggregation.mmd}}
+```
+
+The Mermaid source lives at [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd).
+
 ### Memory Spine
 
 The unified memory bundle feeds a central **memory spine** that records
