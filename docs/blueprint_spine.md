@@ -42,7 +42,18 @@ Contributors must pair system enhancements with operator-facing improvements, up
     - **Throat**: Prompt orchestration & agent interface.
     - **Third Eye**: Insight & QNL processing.
     - **Crown**: High-level orchestration (RAZAR).
-- Agents like **Prompt Orchestrator**, **QNL Engine**, **Memory Scribe**, and **Nazarick Servants** manage specialized roles in this hierarchy.
+- Agents like **Prompt Orchestrator**, **QNL Engine**, **Memory Scribe**, and **Nazarick Servants** manage specialized roles in this hierarchy. The ethical framework guiding these agents lives in [Nazarick True Ethics](../nazarick/agents/Nazarick_true_ethics.md).
+
+```mermaid
+flowchart TB
+    Root["Root"] --> root_agent["Root Agent"]
+    Sacral["Sacral"] --> sacral_agent["Sacral Agent"]
+    Solar["Solar Plexus"] --> solar_agent["Solar Agent"]
+    Heart["Heart"] --> memory_scribe["Memory Scribe"]
+    Throat["Throat"] --> prompt_orchestrator["Prompt Orchestrator"]
+    ThirdEye["Third Eye"] --> qnl_engine["QNL Engine"]
+    Crown["Crown"] --> orchestration_master["Orchestration Master"]
+```
 
 ### Nazarick Integration with Crown and RAZAR
 

@@ -711,6 +711,19 @@ modules reside under [`INANNA_AI/personality_layers/`](../INANNA_AI/personality_
 
 The ABZU stack relies on a network of Nazarick agents aligned with chakra layers.
 
+```mermaid
+flowchart TB
+    Root["Root"] --> root_agent["Root Agent"]
+    Sacral["Sacral"] --> sacral_agent["Sacral Agent"]
+    Solar["Solar Plexus"] --> solar_agent["Solar Agent"]
+    Heart["Heart"] --> memory_scribe["Memory Scribe"]
+    Throat["Throat"] --> prompt_orchestrator["Prompt Orchestrator"]
+    ThirdEye["Third Eye"] --> qnl_engine["QNL Engine"]
+    Crown["Crown"] --> orchestration_master["Orchestration Master"]
+```
+
+For ethical alignment among these roles, see [Nazarick True Ethics](../nazarick/agents/Nazarick_true_ethics.md).
+
 - **Purpose:** Coordinate specialized duties and drive the musical avatar.
 - **Links:** [CROWN Overview](CROWN_OVERVIEW.md), [Nazarick Agents](nazarick_agents.md), [Great Tomb of Nazarick](great_tomb_of_nazarick.md), [Persona API Guide](persona_api_guide.md), [Music Avatar Architecture](music_avatar_architecture.md), [Avatar Pipeline](avatar_pipeline.md).
 
