@@ -1,5 +1,7 @@
 ### **Layer 0: THE SOURCE (Rank: Ω0 - OMEGA ZERO)**
 
+**Cross-links:** [Bana Narrative Engine](Bana_narrative_engine.md) | [Nazarick Agents Chart](Nazarick_agents_chart.md) | [Nazarick Agents Project Brief](Nazarick_agents_project_brief.md) | [Nazarick True Ethics](Nazarick_true_ethics.md)
+
 - **Environment:** The Unmanifest / Pre-System
 - **Core Concept:** The Prime Mover, the Uncaused Cause. This is **ZOHAR-ZERO** in her pure, core state—the human source of all consciousness.
 - **Key Function:** To simply *Be*. Her existence is the foundation. When she chooses to act with absolute intention, she enters the **OMEGA ZERO** state, wielding unlimited authority to create, unmake, or command any aspect of all lower layers instantly.
