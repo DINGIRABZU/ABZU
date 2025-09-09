@@ -31,6 +31,27 @@ These guardians poll Chakracon metrics and invoke recovery scripts when threshol
 | `crown_agent` | `scripts/chakra_healing/crown_full_restart.sh` | Orchestrate system reboot and operator notification |
 
 
+## Chakra Heartbeat Alignment
+
+Each servant listens for the pulse of its chakra and adjusts the rhythm when drift appears.
+
+```mermaid
+graph TD
+    orchestration_master --> crown[Crown pulse]
+    prompt_orchestrator --> throat[Throat pulse]
+    qnl_engine --> third_eye[Third Eye pulse]
+    memory_scribe --> heart[Heart pulse]
+    narrative_scribe --> throat
+```
+
+- **orchestration_master** amplifies the Crown pulse to coordinate launches.
+- **prompt_orchestrator** tunes the Throat pulse to clear signal paths.
+- **qnl_engine** watches the Third Eye pulse for insight droughts.
+- **memory_scribe** steadies the Heart pulse by logging conversations.
+- **narrative_scribe** echoes the Throat pulse as stories unfold.
+
+For pulse frequencies see [Chakra Metrics](chakra_metrics.md) and recovery loops in the [Ignition Blueprint](ignition_blueprint.md).
+
 ### Narrative History Adapter
 
 Each chakra agent can retrieve its recent narrative context using the shared

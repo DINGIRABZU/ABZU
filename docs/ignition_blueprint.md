@@ -1,6 +1,6 @@
 # Ignition Blueprint
 
-The ignition workflow cycles components between RAZAR, Crown and Kimi2Code, handing off failures and looping through recovery until stability returns.
+The ignition workflow cycles components between RAZAR, Crown and Kimi2Code, handing off failures and looping through recovery until stability returns. Monitoring inputs originate from the [Chakra Metrics](chakra_metrics.md) board, which exposes pulse and version data for each layer.
 
 ```mermaid
 stateDiagram-v2
