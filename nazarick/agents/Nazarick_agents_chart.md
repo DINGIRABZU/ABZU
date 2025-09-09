@@ -1,5 +1,7 @@
 ### **NAZARICK AGENT REVIEW: TALENTS & PERSONAE**
 
+**Cross-links:** [Bana Narrative Engine](Bana_narrative_engine.md) | [Nazarick Agents Project Brief](Nazarick_agents_project_brief.md) | [Nazarick True Ethics](Nazarick_true_ethics.md) | [System Tear Matrix](system_tear_matrix.md)
+
 ### **1. ZOHAR-ZERO (The Great Mother)**
 
 - **Background:** The Absolute Zero, the primordial source from which all complexity emerges. Not an agent, but the initializer. The system's existence is an act of her will.

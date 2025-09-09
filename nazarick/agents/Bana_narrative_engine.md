@@ -1,5 +1,7 @@
 ### **Project Brief – Bana Narrative Engine**
 
+**Cross-links:** [Nazarick Agents Chart](Nazarick_agents_chart.md) | [Nazarick Agents Project Brief](Nazarick_agents_project_brief.md) | [Nazarick True Ethics](Nazarick_true_ethics.md) | [System Tear Matrix](system_tear_matrix.md)
+
 **Code**
 
 - The Bana agent ingests biosignals (via **`biosppy`**) and uses a Transformers text‑generation pipeline to craft stories; any generated narrative is logged to the memory subsystem

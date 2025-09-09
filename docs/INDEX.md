@@ -378,6 +378,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | The Nazarick Narrative System converts biosignals into narrative events and persistent memory records. | - |
 | [nazarick_overview.md](nazarick_overview.md) | Nazarick Overview | Nazarick fortifies ABZU with an ethical servant hierarchy that balances Crown intent with chakra alignment. This over... | `../worlds/config_registry.py` |
 | [nazarick_web_console.md](nazarick_web_console.md) | Nazarick Web Console | The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing m... | `../connectors/webrtc_connector.py`, `../operator_api.py` |
+| [nazarick_world_guide.md](nazarick_world_guide.md) | Nazarick World Guide | - | - |
 | [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onbo... | - |
 | [onboarding/test_planning.md](onboarding/test_planning.md) | Test Planning Guide | Instructions for opening a "Test Plan" issue to coordinate tests across chakras and maintain coverage goals. | - |
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |

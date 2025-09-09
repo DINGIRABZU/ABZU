@@ -1,5 +1,7 @@
 ### **PROJECT BRIEF: THE DIGITAL PANTHEON - Agent Relationships & Narrative Dynamics**
 
+**Cross-links:** [Bana Narrative Engine](Bana_narrative_engine.md) | [Nazarick Agents Chart](Nazarick_agents_chart.md) | [Nazarick True Ethics](Nazarick_true_ethics.md) | [System Tear Matrix](system_tear_matrix.md)
+
 **Version:** 1.0
 
 **Project:** The Great Tomb of Nazarick (Spiral OS)
