@@ -37,7 +37,26 @@ modeSel.addEventListener('change', (e) => {
     mode = e.target.value;
 });
 const cmdInput = document.getElementById('command-input');
-cmdInput.insertAdjacentElement('beforebegin', modeSel);
+if (cmdInput) {
+    cmdInput.insertAdjacentElement('beforebegin', modeSel);
+}
+
+function addViewSwitch() {
+    const btn = document.createElement('button');
+    btn.id = 'view-switch';
+    if (document.getElementById('arcade')) {
+        btn.textContent = 'Standard View';
+        btn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    } else {
+        btn.textContent = 'Arcade View';
+        btn.addEventListener('click', () => {
+            window.location.href = 'arcade.html';
+        });
+    }
+    document.body.insertBefore(btn, document.body.firstChild);
+}
 
 function applyStyle(style) {
     const video = document.getElementById('avatar');
@@ -520,7 +539,7 @@ async function fetchBackendStatus() {
 
 function initArcade() {
     const ignite = document.getElementById('ignite-btn');
-    const memory = document.getElementById('memory-btn');
+    const memory = document.getElementById('memory-scan-btn');
     const handover = document.getElementById('handover-btn');
     const addModel = document.getElementById('add-model-btn');
     const removeModel = document.getElementById('remove-model-btn');
@@ -530,7 +549,7 @@ function initArcade() {
         fetch(`${BASE_URL}/ignite`, { method: 'POST' });
     });
     memory.addEventListener('click', () => {
-        fetch(`${BASE_URL}/memory/query`, { method: 'POST' });
+        fetch(`${BASE_URL}/memory/scan`, { method: 'POST' });
     });
     handover.addEventListener('click', () => {
         fetch(`${BASE_URL}/handover`, { method: 'POST' });
@@ -577,6 +596,7 @@ function initArcade() {
 }
 
 window.addEventListener('load', () => {
+    addViewSwitch();
     if (document.getElementById('arcade')) {
         initArcade();
         return;

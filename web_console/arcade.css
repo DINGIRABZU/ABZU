@@ -13,6 +13,11 @@ body {
     image-rendering: pixelated;
 }
 
+.welcome {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
 .screen {
     position: relative;
     padding: 2rem;
