@@ -31,6 +31,19 @@ graph TD
 
 Nazarick agents relay Crown directives into actionable tasks while monitoring Chakracon telemetry for pulse irregularities. When a chakra drifts, the corresponding servant applies healing scripts or escalates to Crown, ensuring narrative continuity and energetic equilibrium across the system.
 
+## Extending Nazarick
+
+Nazarick can grow with new servants and realms. Follow this outline when expanding the hierarchy:
+
+### Add Agents
+- Start from an agent template such as [albedo_agent_template.md](../agents/nazarick/albedo_agent_template.md); future templates live in `agents/nazarick/`.
+- Register the agent in [agent_registry.json](../agents/nazarick/agent_registry.json).
+- Define its persona in a `<agent>_character.md` file and update [persona_profiles.yaml](../agents/nazarick/persona_profiles.yaml).
+
+### Seed Worlds
+- Create the world configuration and append it to the [world config registry](../worlds/config_registry.py).
+- Use the [World Bootstrap](world_bootstrap.md) guide to initialize layers, agents, and models.
+
 ## Cross-Links
 
 - [Nazarick Manifesto](nazarick_manifesto.md)
