@@ -1,7 +1,7 @@
 # ABZU Blueprint
 
 **Version:** v0.1.0
-**Last updated:** 2025-10-05
+**Last updated:** 2025-10-09
 
 ## Mission & Vision
 ABZU ignites inner narratives before external action, weaving memory bundles, dynamic ignition, and operator guidance into a living system that "knows itself" before engaging others [project_mission_vision.md](project_mission_vision.md).
@@ -31,24 +31,6 @@ See [Seeding Crown Memory](project_overview.md#seeding-crown-memory)
 for scan paths and the vector-store flow.
 
 ## Macro Architecture
-
-### Memory Bundle
-Unified memory layers exchange initialization signals through an event bus, allowing operators to query a consolidated memory spine [memory_layers_GUIDE.md](memory_layers_GUIDE.md).
-```mermaid
-flowchart TD
-    Operator -->|query| MemoryBundle
-    MemoryBundle --> Cortex
-    MemoryBundle --> Emotional
-    MemoryBundle --> Mental
-    MemoryBundle --> Spiritual
-    MemoryBundle --> Narrative
-    Cortex --> MemoryBundle
-    Emotional --> MemoryBundle
-    Mental --> MemoryBundle
-    Spiritual --> MemoryBundle
-    Narrative --> MemoryBundle
-    MemoryBundle -->|aggregated result| Operator
-```
 
 ### RAZAR Ignition
 RAZAR orchestrates multi-layer boot sequences, prepares environments, launches components, and records mission outcomes for operator oversight [RAZAR_AGENT.md](RAZAR_AGENT.md).
@@ -95,6 +77,15 @@ sequenceDiagram
     ReplicaWorld-->>BANA: telemetry
 ```
 
+## Unified Memory Bundle
+ABZU groups its Cortex, Emotional, Mental, Spiritual, and Narrative layers into a single bundle. `broadcast_layer_event("layer_init")` announces readiness across the stack, and `query_memory` fans out requests across all layers to return a unified answer. For deeper design notes, see the [Memory Layers Guide](memory_layers_GUIDE.md) and the [System Blueprint](system_blueprint.md#memory-bundle).
+
+```mermaid
+{{#include figures/memory_bundle.mmd}}
+```
+
+The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mmd).
+
 ## Chakra Architecture & HeartBeat Pulse
 The chakra cycle engine synchronizes core modules with a unified pulse so agents can monitor and heal their aligned layers. The diagram maps primary modules to chakras and the returning heartbeat that keeps them in lockstep.
 
@@ -121,3 +112,5 @@ sequenceDiagram
 - Agent roster and roles: [agents/nazarick/nazarick_core_architecture.md](../agents/nazarick/nazarick_core_architecture.md)
 - World services scaffold: [worlds/services.py](../worlds/services.py)
 - Additional guidance: [RAZAR_AGENT.md](RAZAR_AGENT.md), [memory_layers_GUIDE.md](memory_layers_GUIDE.md), [project_mission_vision.md](project_mission_vision.md)
+
+Backlinks: [System Blueprint](system_blueprint.md) | [The Absolute Protocol](The_Absolute_Protocol.md)
