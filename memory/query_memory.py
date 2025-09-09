@@ -1,112 +1,122 @@
-"""Aggregated memory queries across cortex, vector, and spiral stores.
+"""Aggregate memory queries across cortex, vector store and spiral layers.
 
-Each layer is queried independently so that failures in one layer do not
-prevent returning results from the others. Any exceptions are logged and the
-names of failing layers are collected in the ``failed_layers`` field.
+``query_memory`` queries each layer independently and merges the results into
+one dictionary. Errors in individual layers are captured so that partial
+results can still be returned alongside a list of failing layers.
 """
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
-
 import logging
 from typing import Any, Dict, List
 
-from opentelemetry import trace
+__version__ = "0.1.0"
 
-try:  # pragma: no cover - cortex may be unavailable
+
+try:  # pragma: no cover - cortex layer may be unavailable
     from .cortex import query_spirals
-except Exception:  # pragma: no cover - logged lazily
-    try:
-        from .optional.cortex import query_spirals
-    except Exception:
 
-        def query_spirals(*args: Any, **kwargs: Any) -> list[Any]:
-            """Fallback returning no cortex results."""
+    def query_cortex(prompt: str) -> List[Dict[str, Any]]:
+        return query_spirals(text=prompt)
+
+except Exception:  # pragma: no cover - dependency may be missing
+    try:  # optional fallback
+        from .optional.cortex import query_spirals  # type: ignore
+
+        def query_cortex(
+            prompt: str,
+        ) -> List[Dict[str, Any]]:  # pragma: no cover - passthrough
+            return query_spirals(text=prompt)
+
+    except Exception:  # pragma: no cover - final fallback
+
+        def query_spirals(*_: Any, **__: Any) -> List[Dict[str, Any]]:
+            return []
+
+        def query_cortex(
+            prompt: str,
+        ) -> List[Dict[str, Any]]:  # pragma: no cover - fallback
             return []
 
 
-try:  # pragma: no cover - optional dependency
-    from vector_memory import query_vectors as _query_vectors
+try:  # pragma: no cover - vector store may be unavailable
+    from vector_memory import query_vectors
+
+    def query_vector_store(prompt: str) -> List[Dict[str, Any]]:
+        return query_vectors(filter={"text": prompt})
+
 except Exception:  # pragma: no cover - dependency may be missing
-    try:
+    try:  # optional fallback
         from .optional import vector_memory as _vector_memory
 
-        def _query_vectors(*args: Any, **kwargs: Any) -> List[Dict[str, Any]]:
-            return _vector_memory.query_vectors(*args, **kwargs)
+        def query_vector_store(
+            prompt: str,
+        ) -> List[Dict[str, Any]]:  # pragma: no cover - passthrough
+            return _vector_memory.query_vectors(filter={"text": prompt})
 
-    except Exception:  # pragma: no cover - fallback missing
+        query_vectors = _vector_memory.query_vectors
 
-        def _query_vectors(*args: Any, **kwargs: Any) -> List[Dict[str, Any]]:
+    except Exception:  # pragma: no cover - final fallback
+
+        def query_vectors(*_: Any, **__: Any) -> List[Dict[str, Any]]:
+            return []
+
+        def query_vector_store(
+            prompt: str,
+        ) -> List[Dict[str, Any]]:  # pragma: no cover - fallback
             return []
 
 
-query_vectors = _query_vectors
-
-_tracer = trace.get_tracer(__name__)
-
-try:  # pragma: no cover - optional dependency
-    from spiral_memory import spiral_recall as _spiral_recall
+try:  # pragma: no cover - spiral memory may be unavailable
+    from spiral_memory import spiral_recall
 except Exception:  # pragma: no cover - dependency may be missing
     try:
         from .optional import spiral_memory as _spiral_memory
 
-        def _spiral_recall(*args: Any, **kwargs: Any) -> str:
-            return _spiral_memory.spiral_recall(*args, **kwargs)
+        def spiral_recall(query: str) -> str:  # pragma: no cover - passthrough
+            return _spiral_memory.spiral_recall(query)
 
-    except Exception:  # pragma: no cover - fallback missing
+    except Exception:  # pragma: no cover - final fallback
 
-        def _spiral_recall(*args: Any, **kwargs: Any) -> str:
+        def spiral_recall(query: str) -> str:  # pragma: no cover - fallback
             return ""
-
-
-spiral_recall = _spiral_recall
 
 
 logger = logging.getLogger(__name__)
 
 
-def query_memory(query: str) -> Dict[str, Any]:
-    """Return aggregated results across cortex, vector, and spiral memory."""
+def query_memory(prompt: str) -> Dict[str, Any]:
+    """Return aggregated results from cortex, vector and spiral memory layers."""
 
-    with _tracer.start_as_current_span("memory.query") as span:
-        span.set_attribute("memory.query", query)
-        failed_layers: List[str] = []
+    failed_layers: List[str] = []
 
-        try:
-            with _tracer.start_as_current_span("memory.cortex"):
-                cortex_res = query_spirals(text=query)
-        except Exception:  # pragma: no cover - logged
-            logger.exception("cortex query failed")
-            cortex_res = []
-            failed_layers.append("cortex")
+    try:
+        cortex_res = query_cortex(prompt)
+    except Exception:  # pragma: no cover - logged
+        logger.exception("cortex query failed")
+        cortex_res = []
+        failed_layers.append("cortex")
 
-        try:
-            with _tracer.start_as_current_span("memory.vector"):
-                vector_res = query_vectors(filter={"text": query})
-        except Exception:  # pragma: no cover - logged
-            logger.exception("vector query failed")
-            vector_res = []
-            failed_layers.append("vector")
+    try:
+        vector_res = query_vector_store(prompt)
+    except Exception:  # pragma: no cover - logged
+        logger.exception("vector query failed")
+        vector_res = []
+        failed_layers.append("vector")
 
-        try:
-            with _tracer.start_as_current_span("memory.spiral"):
-                spiral_res = spiral_recall(query)
-        except Exception:  # pragma: no cover - logged
-            logger.exception("spiral recall failed")
-            spiral_res = ""
-            failed_layers.append("spiral")
+    try:
+        spiral_res = spiral_recall(prompt)
+    except Exception:  # pragma: no cover - logged
+        logger.exception("spiral recall failed")
+        spiral_res = ""
+        failed_layers.append("spiral")
 
-        if failed_layers:
-            span.set_attribute("memory.failed_layers", ",".join(failed_layers))
-            logger.warning("query_memory partial failure: %s", ", ".join(failed_layers))
-
-        return {
-            "cortex": cortex_res,
-            "vector": vector_res,
-            "spiral": spiral_res,
-            "failed_layers": failed_layers,
-        }
+    return {
+        "cortex": cortex_res,
+        "vector": vector_res,
+        "spiral": spiral_res,
+        "failed_layers": failed_layers,
+    }
 
 
 __all__ = ["query_memory"]
