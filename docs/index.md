@@ -9,6 +9,11 @@ Curated starting points for understanding and operating the project. For an exha
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
 - [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview
 - [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight with retro console requirements
+- [RAZAR Guide](RAZAR_GUIDE.md) – boot orchestration and startup handshakes
+- [Crown Guide](Crown_GUIDE.md) – routes operator commands to servant models
+- [Nazarick Agents](nazarick_agents.md) – chakra stewards for layer health
+- [Narrative Engine Guide](narrative_engine_GUIDE.md) – transforms biosignals into structured StoryEvents
+- [Memory Layers Guide](memory_layers_GUIDE.md) – unified bundle and query flow
 - [Seeding Crown Memory](project_overview.md#seeding-crown-memory) – corpus scan paths and reindex command
 
 ## Quick Start
@@ -19,7 +24,9 @@ Initialize every memory layer with a single command:
 abzu-memory-bootstrap
 ```
 
-## Memory Bundle
+## Core Architecture
+
+### Memory Bundle
 - [ABZU Blueprint – Unified Memory Bundle](ABZU_blueprint.md#unified-memory-bundle) – single bundle gating initialization and unified query
 - [System Blueprint – Unified Memory Bundle](system_blueprint.md#memory-bundle) – cross-layer memory flow and spine integration
 - [The Absolute Protocol – Unified Memory Bundle](The_Absolute_Protocol.md#unified-memory-bundle) – `layer_init` broadcast and `query_memory` façade
@@ -27,7 +34,7 @@ abzu-memory-bootstrap
 - [Memory Layers Guide](memory_layers_GUIDE.md) – bus protocol with diagrams: [Memory Bundle](figures/memory_bundle.mmd), [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd), [Query Memory Aggregation](figures/query_memory_aggregation.mmd)
 - [Narrative Engine Guide](narrative_engine_GUIDE.md) – transforms biosignals into structured StoryEvents
 
-## Architecture
+### Architecture
 - [Architecture Overview](architecture_overview.md)
 - [Blueprint Export](BLUEPRINT_EXPORT.md) – versioned snapshot of key documents
 - [Detailed Architecture](architecture.md)
@@ -37,6 +44,7 @@ abzu-memory-bootstrap
 - [Mission Brief Exchange & Servant Routing](mission_brief_exchange.md) – RAZAR handoff, failure escalation, and servant responses
 - [INANNA Guide](INANNA_GUIDE.md) – core GLM interface and memory access
 - [Memory Bundle](memory_layers_GUIDE.md) – bus protocol connecting memory layers
+
 ## Nazarick
 - [Avatar & Voice Stack](blueprint_spine.md#avatar--voice-stack) – servant templates and UI pipeline
 - [Nazarick UI Pipeline](system_blueprint.md#avatar--voice-stack) – avatar and voice flow overview
