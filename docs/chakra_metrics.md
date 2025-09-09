@@ -4,7 +4,8 @@ The chakra status board aggregates heartbeat signals and component versions
 for operators. It combines data from `monitoring.chakra_heartbeat` and
 `agents.razar.state_validator` to show each chakra's pulse and the software
 release supervising it. Pulse timing and layer roles are described in
-[Chakra Heartbeat](chakra_heartbeat.md).
+[Chakra Heartbeat](chakra_heartbeat.md). Recovery flows triggered by misaligned
+pulses are detailed in the [Ignition Blueprint](ignition_blueprint.md).
 
 ## Viewing metrics
 
