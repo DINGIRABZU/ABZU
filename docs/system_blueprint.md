@@ -925,6 +925,10 @@ RAZAR tracks modules flagged as experimental in
 These components are not required for baseline operation and may change
 rapidly. During boot RAZAR:
 
+The new `datpars` module defines common interfaces for upcoming ingestion
+workflows. See [datpars_overview.md](datpars_overview.md) for goals and
+architecture.
+
 - Marks in‑development components with a warning and delays their startup
   until explicitly enabled.
 - Falls back to mock implementations if dependencies are missing.

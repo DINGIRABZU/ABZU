@@ -61,6 +61,7 @@ abzu-memory-bootstrap
 
 ## Data
 - [Data Manifest](data_manifest.md)
+- [DATPars Overview](datpars_overview.md) – goals, architecture, and integration points
 
 ## Development
 - [The Absolute Protocol](The_Absolute_Protocol.md) (v1.0.96, updated 2025-10-05)

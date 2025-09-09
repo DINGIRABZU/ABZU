@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mission builder with Ignite, Query Memory, and Dispatch Agent blocks plus server-side Save & Run routing through `agents/task_orchestrator`.
 - Game dashboard onboarding wizard guides operators through creating and running their first mission with progress stored in `localStorage`.
 - `docs/operator_onboarding.md` documents mission workflows with Mermaid diagrams and cross-links in `system_blueprint.md`.
+- `datpars` placeholder package with stub interfaces and `docs/datpars_overview.md`.
 - Wrapped `agents.event_bus.emit_event` and memory layer queries with OpenTelemetry spans.
 - Structured manual detailing chakra architecture, system components, memory bundle, and operator paths with Mermaid diagrams and doctrine cross-links.
 - Exposed `/healthz` and `/metrics` on the sidekick helper service.
