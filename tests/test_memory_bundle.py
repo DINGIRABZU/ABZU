@@ -133,3 +133,33 @@ def test_query_aggregates_results(stub_layer_queries):
     if producer.events:
         assert producer.events[0].event_type == "query"
     set_event_producer(None)
+
+
+@pytest.mark.parametrize("provider", ["noop", "opentelemetry"])
+def test_memory_bundle_traces(monkeypatch, stub_layer_queries, provider):
+    """MemoryBundle initializes and queries under different tracers."""
+
+    if provider == "opentelemetry":
+        pytest.importorskip("opentelemetry")
+
+    monkeypatch.setenv("TRACE_PROVIDER", provider)
+    import memory.bundle as bundle_module
+
+    importlib.reload(bundle_module)
+
+    producer = DummyProducer()
+    set_event_producer(producer)
+    bundle = bundle_module.MemoryBundle()
+
+    statuses = bundle.initialize()
+    assert set(statuses) == set(LAYERS)
+
+    result = bundle.query("text")
+    assert result == {
+        "cortex": ["c"],
+        "vector": ["v"],
+        "spiral": "s",
+        "failed_layers": [],
+    }
+
+    set_event_producer(None)
