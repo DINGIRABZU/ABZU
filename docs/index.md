@@ -32,6 +32,7 @@ abzu-memory-bootstrap
 - [RAZAR Guide](RAZAR_GUIDE.md) – boot orchestration and startup handshakes
 - [Crown Guide](Crown_GUIDE.md) – routes operator commands to servant models
 - [INANNA Guide](INANNA_GUIDE.md) – core GLM interface and memory access
+- [Memory Bundle](memory_layers_GUIDE.md) – bus protocol connecting memory layers
 ## Nazarick
 - [Avatar & Voice Stack](blueprint_spine.md#avatar--voice-stack) – servant templates and UI pipeline
 - [Nazarick UI Pipeline](system_blueprint.md#avatar--voice-stack) – avatar and voice flow overview
