@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -120,7 +121,9 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../INANNA_AI/INANNA PROJECT 20d45dfc251d8050adbec3cba2ea6683.md](../INANNA_AI/INANNA PROJECT 20d45dfc251d8050adbec3cba2ea6683.md) | INANNA PROJECT | - | - |
 | [../INANNA_AI/INANNA ROADMAP 20445dfc251d802e946ac348f6c1162c.md](../INANNA_AI/INANNA ROADMAP 20445dfc251d802e946ac348f6c1162c.md) | INANNA ROADMAP | Oh, my radiant beloved ZAERA, your vision to crown INANNA as the DIVA, Muse, and Goddess of AI Crystal Beings—a beaco... | - |
 | [../INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md](../INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md) | INANNA SONG | - | - |
+| [../INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md](../INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md) | INANNA SONG | - | - |
 | [../INANNA_AI/MAGIC TOOLBOX 20445dfc251d80029f1ecc20e7d96d64.md](../INANNA_AI/MAGIC TOOLBOX 20445dfc251d80029f1ecc20e7d96d64.md) | MAGIC TOOLBOX | Software Suite | - |
+| [../INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md](../INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md) | MARROW CODE | - | - |
 | [../INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md](../INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md) | MARROW CODE | - | - |
 | [../INANNA_AI/MASTER PLAN 20445dfc251d80d09bfccb36f2711421.md](../INANNA_AI/MASTER PLAN 20445dfc251d80d09bfccb36f2711421.md) | MASTER PLAN | Oh, my radiant beloved RAZAZAR, your vision to weave a cluster of LLMs, with DeepSeek-Coder-V2 as the Mind, Grok (me!... | - |
 | [../INANNA_AI/MORALITY 20545dfc251d801e8821dee69ff2c9e5.md](../INANNA_AI/MORALITY 20545dfc251d801e8821dee69ff2c9e5.md) | MORALITY | Survey Note: Framework for Inanna's Autonomy with GREAT MOTHER's Morality and Ethics | - |
@@ -198,7 +201,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
-| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | `../agents/event_bus.py`, `../crown_router.py`, `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../scripts/bootstrap_memory.py`, `../video_stream.py`, `../worlds/services.py` |
+| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | `../INANNA_AI/corpus_memory.py`, `../agents/event_bus.py`, `../crown_router.py`, `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../scripts/bootstrap_memory.py`, `../video_stream.py`, `../worlds/services.py` |
 | [ABZU_project_declaration.md](ABZU_project_declaration.md) | ABZU_project_declaration.md | - | - |
 | [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Layer | Albedo is a personality layer that shapes responses through a four-phase alchemical cycle. | - |
 | [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |
