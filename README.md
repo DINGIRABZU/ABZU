@@ -327,11 +327,18 @@ Optional dependency groups provide additional capabilities:
 - `web` – web APIs, streaming and scraping
 - `network` – packet capture utilities
 - `extras` – heavy or experimental packages
+- `tracing` – OpenTelemetry instrumentation and exporters
 
 Install any combination as needed, for example:
 
 ```bash
 pip install -e .[llm,audio]
+```
+
+Include `tracing` to enable distributed tracing support:
+
+```bash
+pip install -e .[tracing]
 ```
 
 Copy the secret template if required:

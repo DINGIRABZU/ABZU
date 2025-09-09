@@ -269,6 +269,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed unused `boot_sequence` placeholder from `orchestration_master.py`.
 - Hardened Crown prompt orchestrator to target known exceptions and surface unexpected failures.
 - Wrapped OpenTelemetry import in `memory.bundle` and defaulted to a no-op tracer when the package is absent.
+- Moved OpenTelemetry dependencies to optional `tracing` extras.
 - Boot orchestrator reruns health checks after AI-generated patches and stops
   after the configurable `--remote-attempts` limit, logging each handover.
 

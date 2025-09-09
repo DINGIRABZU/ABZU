@@ -20,6 +20,13 @@ pip install -e .
 
 ## Tracing stack
 
+Install the optional tracing dependencies to enable OpenTelemetry
+instrumentation:
+
+```bash
+pip install .[tracing]
+```
+
 The tracing system uses a factory that selects providers based on the
 ``TRACE_PROVIDER`` environment variable. ``opentelemetry`` remains the default
 when the package is installed and yields spans via ``trace.get_tracer``. Set
@@ -31,8 +38,8 @@ export TRACE_PROVIDER=noop           # disable tracing
 export TRACE_PROVIDER=my_pkg.tracing:factory  # custom entry point
 ```
 
-These packages are included in the pinned requirements; configure your
-collector or export endpoint as needed to capture spans during development.
+These packages are optional; configure your collector or export endpoint as
+needed to capture spans during development.
 
 ## Conda environments
 
