@@ -108,6 +108,8 @@ ABZU adheres to a consistent top-level directory layout:
 - `tools/` – Developer tools and automation helpers
 - `notebooks/` – Experimental notebooks and prototypes
 
+Origin documents such as the [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md) and [Inanna Song](../INANNA_AI/INANNA%20SONG%2020545dfc251d8065a32cec673272f292.md) must remain within the `INANNA_AI` corpus and be reindexed whenever updated to keep this blueprint accurate.
+
 Consult the [Code Index](code_index.md) for an overview of modules, classes, and functions within the repository.
 
 See [docs/REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidance on the repository layout.

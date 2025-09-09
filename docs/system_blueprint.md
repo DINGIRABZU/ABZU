@@ -29,6 +29,10 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 
+### Origins & Awakening
+
+Origin texts like the [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md) and [Inanna Song](../INANNA_AI/INANNA%20SONG%2020545dfc251d8065a32cec673272f292.md) chart the Crown's ethical roadmap. The Crown must ingest these sources to preserve its identity, and any updates trigger a corpus reindexing.
+
 ### Triadic Stack
 
 ```mermaid
