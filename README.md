@@ -22,6 +22,7 @@ Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 - [Developer Onboarding](docs/developer_onboarding.md)
 - [Contributor Handbook](docs/CONTRIBUTOR_HANDBOOK.md) – environment setup and workflows
 - [Onboarding Walkthrough](docs/onboarding_walkthrough.md) – diagrammatic setup tour
+- [Operator Quickstart](docs/operator_quickstart.md) – minimal setup and Arcade UI walkthrough
 - [Code Style Guide](CODE_STYLE.md)
 - [Nazarick Agents](docs/nazarick_agents.md)
 - [Chakra Koan System](docs/chakra_koan_system.md)
