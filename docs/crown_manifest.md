@@ -55,19 +55,65 @@ For a neutral summary of the router and related modules, see [architecture_overv
 
 ## Endpoint configuration
 
-The GLM endpoint and credentials are provided through environment variables:
+The GLM endpoint and optional servants are configured through environment variables:
 
-| Variable        | Purpose                                    |
-|-----------------|--------------------------------------------|
-| `GLM_API_URL`   | Base URL of the primary GLM endpoint       |
-| `GLM_API_KEY`   | Bearer token for authenticated GLM access  |
-| `SERVANT_MODELS`| Comma‑separated `name=url` pairs for servants |
+| Variable         | Purpose                                         |
+|------------------|-------------------------------------------------|
+| `GLM_API_URL`    | Base URL of the primary GLM endpoint            |
+| `GLM_API_KEY`    | Bearer token for authenticated GLM access       |
+| `DEEPSEEK_URL`   | Optional DeepSeek servant endpoint              |
+| `MISTRAL_URL`    | Optional Mistral servant endpoint               |
+| `KIMI_K2_URL`    | Optional Kimi‑K2 servant endpoint               |
+| `OPENCODE_URL`   | Optional OpenCode control endpoint              |
+| `SERVANT_MODELS` | Comma‑separated `name=url` pairs for servants   |
+
+### Runtime registration
+
+```mermaid
+flowchart LR
+    subgraph Env
+        G[GLM_API_URL]
+        D[DEEPSEEK_URL]
+        M[MISTRAL_URL]
+        K[KIMI_K2_URL]
+        O[OPENCODE_URL]
+        S[SERVANT_MODELS]
+    end
+    Env -->|initialize_crown()| R[Registry]
+    R --> GLM[GLM core]
+    R --> DS[DeepSeek]
+    R --> MS[Mistral]
+    R --> K2[Kimi K2]
+    R --> OC[OpenCode]
+```
 
 `init_crown_agent.initialize_crown()` reads these settings and registers any
 servant endpoints before performing startup checks. The Crown agent requires the
-`requests` package and aborts immediately if it is missing. During startup the
-GLM endpoint is contacted at `/health`; a failing response stops initialization
-so misconfiguration is detected early.
+`requests` package and aborts immediately if it is missing. During startup each
+registered endpoint is contacted at `/health`; a failing response stops
+initialization so misconfiguration is detected early.
+
+## Quickstart
+
+```python
+import os
+import requests
+from init_crown_agent import initialize_crown
+
+os.environ.update({
+    "GLM_API_URL": "http://localhost:8000",
+    "SERVANT_MODELS": (
+        "deepseek=http://localhost:8002,"
+        "mistral=http://localhost:8003,"
+        "kimi_k2=http://localhost:8010"
+    ),
+})
+
+crown = initialize_crown()
+
+for url in [os.environ["GLM_API_URL"], *crown.servants.values()]:
+    requests.get(f"{url}/health").raise_for_status()
+```
 
 ## Health check
 
@@ -82,3 +128,12 @@ curl http://localhost:8000/health
 
 The command returns `{"status": "alive"}` when the service is ready to accept
 requests.
+
+## Servant isolation
+
+Servant models run as independent HTTP services. The Crown calls each endpoint
+directly and never shares state between servants. To add a new servant, expose
+its URL via `SERVANT_MODELS` or a dedicated `<NAME>_URL` variable and ensure its
+`/health` check responds before letting operators interact with it. This
+registration flow keeps untrusted models sandboxed and prevents them from
+interfering with each other or the core GLM.
