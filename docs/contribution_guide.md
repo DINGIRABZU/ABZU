@@ -18,6 +18,7 @@ Add new modules to [component_priorities.yaml](component_priorities.yaml) with a
 - Follow the project's [coding style](coding_style.md).
 - Include tests for new functionality.
 - Run `pre-commit` on modified files.
+- Run targeted security scans with `pre-commit run bandit --files <paths>`.
 
 ## Communication
 
