@@ -14,6 +14,8 @@ Read the [Project Overview](project_overview.md) to understand goals, review the
 interlock, and browse the [Component Index](component_index.md) for an
 exhaustive module inventory.
 
+The [Crown Handover & Servant Models](project_overview.md#crown-handover--servant-models) section outlines how Crown delegates prompts to servant models and manages memory context.
+
 Module versions declared in code are verified against `component_index.json`.
 
 Contributors must propose operator-facing improvements alongside system enhancements to honor the operator-first principle.

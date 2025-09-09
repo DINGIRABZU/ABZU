@@ -684,6 +684,8 @@ A **`TrustMatrix`** class maintains social context. It classifies entities (Na
 
 # **Deep Dive: Crown LLM and “Servant” Model Downloading**
 
+For an operational summary of delegation and memory isolation, see [Project Overview – Crown Handover & Servant Models](project_overview.md#crown-handover--servant-models).
+
 ## **Can the Crown LLM download servant models?**
 
 Yes. The system is built so the Crown can pull and spin up auxiliary LLMs (“servants”) alongside its primary GLM‑4.1V‑9B model.
