@@ -81,3 +81,12 @@ docker build -f docker/Dockerfile.gpu -t abzu-gpu .
 - **GPU environment:** NVIDIA GPU with compute capability ≥7.0, CUDA 12.1‑compatible drivers, and 12 GB+ VRAM.
 
 Run `scripts/check_requirements.sh` after installation to verify the setup.
+
+## rStar service
+
+Expose the `rStar` patch API by setting its endpoint and access token:
+
+```bash
+export RSTAR_ENDPOINT=http://localhost:8000/patch
+export RSTAR_TOKEN=your_token
+```
