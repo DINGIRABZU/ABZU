@@ -31,6 +31,7 @@ abzu-memory-bootstrap
 - [Crown Agent Overview](CROWN_OVERVIEW.md)
 - [RAZAR Guide](RAZAR_GUIDE.md) – boot orchestration and startup handshakes
 - [Crown Guide](Crown_GUIDE.md) – routes operator commands to servant models
+- [Mission Brief Exchange & Servant Routing](mission_brief_exchange.md) – RAZAR handoff, failure escalation, and servant responses
 - [INANNA Guide](INANNA_GUIDE.md) – core GLM interface and memory access
 - [Memory Bundle](memory_layers_GUIDE.md) – bus protocol connecting memory layers
 ## Nazarick
