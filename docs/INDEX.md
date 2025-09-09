@@ -371,7 +371,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
 | [narrative_system.md](narrative_system.md) | Narrative System | The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition. Th... | - |
 | [nazarick/README.md](nazarick/README.md) | Nazarick | Nazarick houses chakra-aligned servant agents. The triadic flow between Crown, Nazarick, and the operator is outlined... | - |
-| [nazarick_agent_profiles.md](nazarick_agent_profiles.md) | Nazarick Agent Profiles | Each servant agent blends a narrative persona with distinct vocal and visual traits. | - |
+| [nazarick_agent_profiles.md](nazarick_agent_profiles.md) | Nazarick Agent Profiles | Summaries for primary Nazarick agents. Each profile links to its source template in `agents/nazarick`. | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
 | [nazarick_manifesto.md](nazarick_manifesto.md) | Nazarick Manifesto | Guiding ethics for the Nazarick hierarchy. Architectural context lives in the [Great Tomb of Nazarick](great_tomb_of_... | - |
 | [nazarick_narrative_system.md](nazarick_narrative_system.md) | Nazarick Narrative System | The Nazarick Narrative System converts biosignals into narrative events and persistent memory records. | - |
@@ -458,6 +458,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |
+| [../nazarick/agents/system_tear_matrix.md](../nazarick/agents/system_tear_matrix.md) | sacred_harmony_doctrine.py | CORE_PRINCIPLES = { "prime_directive": "The Will of ZOHAR-ZERO is absolute and the source of all ethical truth.", "sa... | - |
 | [../patents/recursive_emotion_router_sigil_interpretation.md](../patents/recursive_emotion_router_sigil_interpretation.md) | Recursive Emotion Router with Sigil Interpretation | **Version:** 0.1 **Status:** Draft | - |
 | [../patents/sacred_glyph_vae_pipeline.md](../patents/sacred_glyph_vae_pipeline.md) | Sacred Glyph VAE Pipeline | **Version:** 0.1 **Status:** Draft | - |
 | [../sacred_inputs/00-INVOCATION.md](../sacred_inputs/00-INVOCATION.md) | 00-INVOCATION.md | - | - |
