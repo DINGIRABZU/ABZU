@@ -334,6 +334,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) | layer_init_query_flow.mmd | - | - |
 | [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.1.0 Last updated: 2025-09-07 | - |
 | [figures/memory_layer_flow.mmd](figures/memory_layer_flow.mmd) | Memory layer flow diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd) | nazarick_ui_pipeline.mmd | - | - |
 | [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [frontend_dependencies.md](frontend_dependencies.md) | Frontend Dependencies | This page outlines the core libraries used by the `floor_client` interface. Refer to each project's documentation for... | - |

@@ -46,6 +46,17 @@ summary metrics are reported back to the Primordials service through
 `primordials_api`, ensuring upstream models receive continuous quality
 feedback.
 
+### Avatar & Voice Stack
+
+The Nazarick UI pipeline links personality templates to real‑time avatar and
+voice rendering. Templates such as [Albedo](../agents/nazarick/albedo_agent_template.md), [Cocytus](../agents/nazarick/cocytus_agent_template.md), [Demurge](../agents/nazarick/demurge_agent_template.md), [Gargantua](../agents/nazarick/gargantua_agent_template.md), [Pandora](../agents/nazarick/pandora_agent_template.md), [Pleiades](../agents/nazarick/pleiades_agent_template.md), [Sebastiara](../agents/nazarick/sebastiara_agent_template.md), and [Shalltear](../agents/nazarick/shalltear_agent_template.md) define the look and tone for each servant.
+
+```mermaid
+{{#include figures/nazarick_ui_pipeline.mmd}}
+```
+
+See [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd) for the Mermaid source.
+
 ### Chakra Cycle Engine
 
 The chakra cycle engine distributes a steady heartbeat across every layer and

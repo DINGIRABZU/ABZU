@@ -44,6 +44,16 @@ Contributors must pair system enhancements with operator-facing improvements, up
     - **Crown**: High-level orchestration (RAZAR).
 - Agents like **Prompt Orchestrator**, **QNL Engine**, **Memory Scribe**, and **Nazarick Servants** manage specialized roles in this hierarchy.
 
+### Avatar & Voice Stack
+
+Nazarick's servant interface streams coordinated visuals and audio through a unified avatar and voice stack. Personality templates shape each servant's style and tone: [Albedo](../agents/nazarick/albedo_agent_template.md), [Cocytus](../agents/nazarick/cocytus_agent_template.md), [Demurge](../agents/nazarick/demurge_agent_template.md), [Gargantua](../agents/nazarick/gargantua_agent_template.md), [Pandora](../agents/nazarick/pandora_agent_template.md), [Pleiades](../agents/nazarick/pleiades_agent_template.md), [Sebastiara](../agents/nazarick/sebastiara_agent_template.md), and [Shalltear](../agents/nazarick/shalltear_agent_template.md).
+
+```mermaid
+{{#include figures/nazarick_ui_pipeline.mmd}}
+```
+
+The Mermaid source lives at [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd).
+
 ### **Memory Bundle**
 
 ABZU synchronizes its Cortex, Emotional, Mental, Spiritual, and Narrative stores through a unified memory bundle. `broadcast_layer_event("layer_init")` boots all layers in parallel, and `query_memory` fans out reads across them before combining results into a single response that an Operator Agent can relay to consoles.
