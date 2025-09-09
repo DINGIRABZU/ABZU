@@ -62,7 +62,7 @@ Version fields reveal outdated components that may require redeployment.
 ## Chakra Pulse panel
 
 `monitoring/chakra_heartbeat.py` exports per-chakra cycle metrics that report
-how quickly each layer confirms its heartbeat:
+how quickly each layer confirms its heartbeat. See [Chakra Heartbeat](chakra_heartbeat.md) for pulse timing and chakra mapping details:
 
 - `chakra_cycles_total` – total completed heartbeat-confirmation cycles per chakra
 - `chakra_cycle_duration_seconds` – seconds between a heartbeat and its confirmation
