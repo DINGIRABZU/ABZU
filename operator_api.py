@@ -40,6 +40,8 @@ from servant_model_manager import (
 )
 from typing import cast
 
+from memory import query_memory
+from razar import ai_invoker, boot_orchestrator
 from scripts.ingest_ethics import ingest_ethics as run_ingest_ethics
 
 logger = logging.getLogger(__name__)
@@ -190,6 +192,33 @@ async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     )
 
     return {"command_id": command_id, "result": result}
+
+
+@router.post("/start_ignition")
+async def start_ignition() -> dict[str, str]:
+    """Kick off ignition via ``boot_orchestrator.start``."""
+
+    boot_orchestrator.start()  # type: ignore[attr-defined]
+    return {"status": "started"}
+
+
+@router.post("/memory/query")
+async def memory_query_endpoint(payload: dict[str, str]) -> dict[str, object]:
+    """Return aggregated memory search results via :func:`query_memory`."""
+
+    query = payload.get("query", "")
+    return {"results": query_memory(query)}
+
+
+@router.post("/handover")
+async def handover_endpoint(payload: dict[str, str] | None = None) -> dict[str, object]:
+    """Escalate failure context to AI handover."""
+
+    data = payload or {}
+    component = data.get("component", "unknown")
+    error = data.get("error", "operator initiated")
+    result = ai_invoker.handover(component, error)
+    return {"handover": result}
 
 
 @router.get("/operator/status")

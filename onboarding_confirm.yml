@@ -49,7 +49,7 @@ documents:
       key_rules: Follow documentation workflow and sync blueprint.
       insight: Run pre-commit with modified docs before committing.
   docs/project_overview.md:
-    sha256: 1097fc6dfcd0b32b03f8e42944baefb4e7e1e6b93329fc0f0317e46b9bb09d25
+    sha256: 8d40c6c58155bbdd26ada7565e1a6b5ea322ef5386128265dd57ba4d0ccf4fd4
     summary:
       purpose: Project goals and scope.
       scope: Entire project.
@@ -198,12 +198,15 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: ea9f08b052f39410c287b1574207f93efc3a506889e707ba2c9a71c632b29147
+    sha256: f9a5d859d28053530a8b810cab10d8a32099fd3b7405e80a41a1d7b60ae3c0d7
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
-      key_rules: Declare __version__ synced with component_index.json, include change justification, verify key-document summaries, apply the core PR checklist, maintain coverage thresholds, and forbid placeholder markers.
-      insight: Use the PR checklist to synchronize versions, connectors, and document summaries while keeping coverage high and removing placeholders before commit.
+      key_rules: Declare __version__ synced with component_index.json, include change
+        justification, verify key-document summaries, apply the core PR checklist,
+        maintain coverage thresholds, and forbid placeholder markers.
+      insight: Use the PR checklist to synchronize versions, connectors, and document
+        summaries while keeping coverage high and removing placeholders before commit.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
     summary:
@@ -256,16 +259,19 @@ documents:
   agents/nazarick/nazarick_core_architecture.md:
     sha256: d30ed1392ff91d4269e644da871f2ed5bb565e5d202a8abf683e10c80845f516
     summary:
-      purpose: Design real-time observability framework and channel hierarchy for Spiral OS.
+      purpose: Design real-time observability framework and channel hierarchy for
+        Spiral OS.
       scope: Nazarick monitoring architecture and operator interface.
-      key_rules: Stream agent events with narrative tags and archive critical logs immutably.
+      key_rules: Stream agent events with narrative tags and archive critical logs
+        immutably.
       insight: Operator commands supersede all agent actions.
   agents/nazarick/nazarick_memory_blueprint.md:
     sha256: 45bbde8a01a6531d169f537380e47c54b07a8a97641b611a4d833b1631f5f621
     summary:
       purpose: Blueprint for human-like agent personality, memory, planning, and expression.
       scope: Nazarick agent traits, memory stores, and communication protocols.
-      key_rules: Store memories in vectors, summarize long interactions, and coordinate via defined APIs.
+      key_rules: Store memories in vectors, summarize long interactions, and coordinate
+        via defined APIs.
       insight: Personality fragments from vectors adapt agents to current state.
   docs/nazarick_agents.md:
     sha256: 9cfdb5732c777137ca29fe3796729c7a2fd3af751dddf6dca9faedd435c0321f
@@ -286,7 +292,8 @@ documents:
   docs/assets/narrative_engine_flow.mmd:
     sha256: 9b418b5de9a790064dca91375f560d6378c8d111a0c563deafb637a8e65284d9
     summary:
-      purpose: Mermaid flow diagram of event→Mistral→multi-track outputs→memory/operator.
+      purpose: "Mermaid flow diagram of event\u2192Mistral\u2192multi-track outputs\u2192\
+        memory/operator."
       scope: Nazarick narrative system pipeline.
       key_rules: Visual reference for narrative engine routing.
       insight: Consult to understand event propagation to memory and operator.
@@ -312,5 +319,5 @@ documents:
       key_rules: Run to verify dependencies before committing.
       insight: Run before committing to catch missing dependencies.
 checklist:
-  - "Narrative document entries verified"
-  - "Reviewed core memory docs and protocol before implementing optional fallbacks"
+- Narrative document entries verified
+- Reviewed core memory docs and protocol before implementing optional fallbacks
