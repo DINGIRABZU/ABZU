@@ -18,6 +18,12 @@ pip install -r requirements.lock
 pip install -e .
 ```
 
+## Tracing stack
+
+The tracing system uses the OpenTelemetry API with the OTLP exporter. These
+packages are included in the pinned requirements; configure your collector or
+export endpoint as needed to capture spans during development.
+
 ## Conda environments
 
 ### CPU

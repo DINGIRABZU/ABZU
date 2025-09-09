@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Documented MCP connector compatibility matrix and integration roadmap; linked from project overview.
+- Added OpenTelemetry API and OTLP exporter dependencies and setup guidance.
 - Memory introspection API and dashboard panel for querying and purging chakra memories.
 - Documented chakra-tagged signals, heartbeat propagation, and recovery flows
   across connector and operator guides; added tests for connector links.

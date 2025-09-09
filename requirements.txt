@@ -7,6 +7,10 @@ prometheus-client==0.20.0
     # via spiral-os (pyproject.toml)
 prometheus-fastapi-instrumentator==6.1.0
     # via spiral-os (pyproject.toml)
+opentelemetry-api==1.36.0
+    # via spiral-os (pyproject.toml)
+opentelemetry-exporter-otlp==1.36.0
+    # via spiral-os (pyproject.toml)
 psutil==7.0.0
     # via spiral-os (pyproject.toml)
 python-json-logger==3.3.0

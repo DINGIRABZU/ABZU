@@ -24,7 +24,9 @@ dependencies = [
     "omegaconf==2.3.0",
     "pydantic==2.9.2",
     "uvicorn==0.35.0",
-    "prometheus-fastapi-instrumentator==6.1.0"
+    "prometheus-fastapi-instrumentator==6.1.0",
+    "opentelemetry-api==1.36.0",
+    "opentelemetry-exporter-otlp==1.36.0"
 ]
 
 [project.optional-dependencies]
@@ -106,6 +108,8 @@ dev = [
     "markdown==3.8.2",
     "requests==2.32.4",
     "fastapi==0.116.1",
+    "opentelemetry-api==1.36.0",
+    "opentelemetry-exporter-otlp==1.36.0",
     "beautifulsoup4==4.13.4",
     "pyopenssl==25.1.0",
     "streamlit==1.48.1",
