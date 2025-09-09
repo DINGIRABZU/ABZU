@@ -4,6 +4,8 @@ RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and o
 
 See [Agent Ecosystem & Relations](ABZU_blueprint.md#agent-ecosystem--relations) for Crown ↔ Nazarick ↔ Operator flows.
 
+RAZAR ↔ Crown ↔ Kimi2Code handoffs and recovery loops are diagrammed in the [Ignition Blueprint](ignition_blueprint.md).
+
 ## Vision
 RAZAR bootstraps ABZU services in a reproducible environment and negotiates startup handshakes with the Crown stack.
 
