@@ -6,6 +6,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [ABZU Project Declaration](project_mission_vision.md) – deployments must reach a living state
 - [Blueprint Spine](blueprint_spine.md) – mission overview, Operator ↔ RAZAR/Crown flow, memory bundle, and ignition map
 - [System Blueprint](system_blueprint.md) – chakra layers, Operator ↔ RAZAR/Crown flow, dynamic ignition, and operator UI
+- [System Overview](system_overview.md) – mission, triadic stack, chakra agents, memory bundle, and avatar stack
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
 - [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview
 - [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight with retro console requirements

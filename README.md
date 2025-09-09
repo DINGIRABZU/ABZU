@@ -9,13 +9,14 @@ Example applications include:
 - ethics-gated industrial automation
 - emotion-aware virtual assistants
 
-For deeper technical detail, visit the [Documentation Index](docs/index.md) and [Project Declaration](docs/project_mission_vision.md).
+For deeper technical detail, visit the [Documentation Index](docs/index.md), [System Overview](docs/system_overview.md), and [Project Declaration](docs/project_mission_vision.md).
 Welcome to the sacred structure of OMEGA ZERO ABSOLUTE PRIME AKA GREAT MOTHER.
 
 ## Index
 - [Project Declaration](docs/project_mission_vision.md) – mythic‑technical mission and vision
 - [Social Investor One Pager](docs/SOCIAL_INVESTOR_ONE_PAGER.md) – outreach overview
 - [Documentation Index](docs/index.md) – curated starting points
+- [System Overview](docs/system_overview.md) – mission, triadic stack, chakra agents, memory bundle, and avatar stack
 - [Full Documentation Inventory](docs/INDEX.md)
 - [Code Index](docs/code_index.md) – generated inventory of modules, classes, and functions
 - [Repository Structure](docs/REPOSITORY_STRUCTURE.md) – directory map
