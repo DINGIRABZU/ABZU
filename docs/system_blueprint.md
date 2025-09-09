@@ -46,6 +46,17 @@ summary metrics are reported back to the Primordials service through
 `primordials_api`, ensuring upstream models receive continuous quality
 feedback.
 
+### Vanna–Bana Narrative Pipeline
+
+```mermaid
+flowchart LR
+    OP[Operator] --> V[Vanna]
+    V --> B[Bana (Mistral 7B)]
+    B --> U[USD Output]
+```
+
+Vanna translates operator queries into SQL and hands results to Bana, a fine‑tuned Mistral 7B model. Bana returns USD actions, which are written to `memory/data/narrative_engine.db` alongside other narrative tracks.
+
 ### Avatar & Voice Stack
 
 The Nazarick UI pipeline links personality templates to real‑time avatar and
