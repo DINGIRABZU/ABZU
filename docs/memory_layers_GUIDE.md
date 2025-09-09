@@ -1,6 +1,6 @@
 # Memory Layers Guide
 
-**Version:** v1.0.7
+**Version:** v1.0.8
 **Last updated:** 2025-09-09
 
 This guide describes the event bus protocol and query flow connecting the
@@ -154,6 +154,12 @@ fallback, which exposes the same public API but returns empty data structures.
 Fallback layers are reported as `skipped`, and calls such as
 `aggregate_search` simply yield empty results for them while logging any
 underlying errors. Queries still return data from the remaining active layers.
+
+## Tracing
+
+`MemoryBundle` emits OpenTelemetry spans when the `opentelemetry` package is
+installed. If the module is absent, it falls back to a no-op tracer so
+initialization and queries proceed without tracing.
 
 ## Installation Options
 

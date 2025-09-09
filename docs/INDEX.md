@@ -365,7 +365,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_cortex.md](memory_cortex.md) | Cortex Memory Search | The `memory.cortex` module stores spiral decisions as JSON lines under `data/cortex_memory_spiral.jsonl`. Each entry... | - |
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
-| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.7 **Last updated:** 2025-09-09 | `../scripts/bootstrap_memory.py` |
+| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.8 **Last updated:** 2025-09-09 | `../scripts/bootstrap_memory.py` |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mission_brief_exchange.md](mission_brief_exchange.md) | Mission Brief Exchange & Servant Routing | This guide outlines how RAZAR hands mission briefs to Crown, how failures escalate through `ai_invoker.handover`, and... | - |
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |

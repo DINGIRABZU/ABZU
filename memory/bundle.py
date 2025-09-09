@@ -4,12 +4,24 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from importlib import import_module
+from contextlib import nullcontext
 from typing import Any, Dict
 
 from . import LAYERS, _LAYER_IMPORTS, broadcast_layer_event, query_memory
-from opentelemetry import trace
 
-__version__ = "0.1.3"
+try:  # pragma: no cover - optional dependency
+    from opentelemetry import trace
+
+    _TRACER = trace.get_tracer(__name__)
+except ImportError:  # pragma: no cover - dependency missing
+
+    class _NoOpTracer:
+        def start_as_current_span(self, *args: Any, **kwargs: Any):  # noqa: ANN001
+            return nullcontext()
+
+    _TRACER = _NoOpTracer()
+
+__version__ = "0.1.4"
 
 
 @dataclass
@@ -25,7 +37,7 @@ class MemoryBundle:
     narrative: Any | None = None
     statuses: Dict[str, str] = field(default_factory=dict)
 
-    _tracer = trace.get_tracer(__name__)
+    _tracer = _TRACER
 
     def initialize(self) -> Dict[str, str]:
         """Instantiate memory layers and emit a consolidated status event."""
