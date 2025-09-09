@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -201,7 +200,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
-| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | `../INANNA_AI/corpus_memory.py`, `../agents/event_bus.py`, `../crown_router.py`, `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../scripts/bootstrap_memory.py`, `../video_stream.py`, `../worlds/services.py` |
+| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-09 | `../INANNA_AI/corpus_memory.py`, `../agents/event_bus.py`, `../crown_router.py`, `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../scripts/bootstrap_memory.py`, `../video_stream.py`, `../worlds/services.py` |
 | [ABZU_project_declaration.md](ABZU_project_declaration.md) | ABZU_project_declaration.md | - | - |
 | [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Layer | Albedo is a personality layer that shapes responses through a four-phase alchemical cycle. | - |
 | [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |

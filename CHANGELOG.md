@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MCP gateway exposes context registration and model invocation via MCP; added `config/mcp.toml` and `docs/mcp_overview.md`.
 - Mission builder with Ignite, Query Memory, and Dispatch Agent blocks plus server-side Save & Run routing through `agents/task_orchestrator`.
 - Game dashboard onboarding wizard guides operators through creating and running their first mission with progress stored in `localStorage`.
+- Unified Memory Bundle chapter clarifies `layer_init` and `query_memory` flow in `docs/ABZU_blueprint.md`.
 - `docs/operator_onboarding.md` documents mission workflows with Mermaid diagrams and cross-links in `system_blueprint.md`.
 - `datpars` placeholder package with stub interfaces and `docs/datpars_overview.md`.
 - Documented Chakra Heartbeat Alignment for Nazarick agents with Mermaid mapping; cross-linked `chakra_metrics.md` and `ignition_blueprint.md`.
