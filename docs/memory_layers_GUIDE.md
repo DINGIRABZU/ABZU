@@ -21,6 +21,8 @@ The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mm
 The layers communicate via the `agents.event_bus` channel named `memory`.
 Initialization broadcasts use the `layer_init` event type.
 
+During ignition, [RAZAR Agent](RAZAR_AGENT.md) invokes `query_memory` once the chakra layers are seeded to verify readiness. At runtime the [Crown](CROWN_OVERVIEW.md) issues the same call before delegating prompts so active layers provide fresh context as outlined in the [Chakra System Manual](chakra_system_manual.md).
+
 ### Broadcasting layer initialization
 
 `MemoryBundle.initialize` wraps `broadcast_layer_event` and emits **one**
@@ -184,4 +186,4 @@ Extras can be combined, for example
 
 ---
 
-Backlinks: [Blueprint Spine](blueprint_spine.md) | [System Blueprint](system_blueprint.md)
+Backlinks: [Blueprint Spine](blueprint_spine.md) | [System Blueprint](system_blueprint.md) | [RAZAR Agent](RAZAR_AGENT.md) | [Crown Overview](CROWN_OVERVIEW.md) | [Chakra System Manual](chakra_system_manual.md)

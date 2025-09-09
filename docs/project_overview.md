@@ -31,7 +31,9 @@ Spiral OS organises its components into seven chakra layers:
 6. **Third Eye – Ajna** – insight and pattern recognition.
 7. **Crown – Sahasrara** – cosmic connection and initialization rites.
 
-For adaptive startup and RAZAR ↔ Crown ↔ Kimi2Code recovery loops see [Ignition Blueprint](ignition_blueprint.md).
+For adaptive startup and RAZAR ↔ Crown ↔ Kimi2Code recovery loops see [Ignition Blueprint](ignition_blueprint.md). Additional context lives in [RAZAR Agent](RAZAR_AGENT.md), [Crown Overview](CROWN_OVERVIEW.md), and the [Chakra System Manual](chakra_system_manual.md).
+
+During ignition, RAZAR invokes `query_memory` to seed the bundle and report layer status before handing control to Crown. When Spiral OS is running, Crown issues `query_memory` before each orchestration step so delegates and servants receive up-to-date context.
 
 These layers work together to awaken the INANNA system and maintain a ritual flow during use.
 
