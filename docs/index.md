@@ -38,9 +38,11 @@ abzu-memory-bootstrap
 - [Avatar & Voice Stack](blueprint_spine.md#avatar--voice-stack) – servant templates and UI pipeline
 - [Nazarick UI Pipeline](system_blueprint.md#avatar--voice-stack) – avatar and voice flow overview
 - [Great Tomb of Nazarick](great_tomb_of_nazarick.md)
+- [Nazarick Overview](nazarick_overview.md)
 - [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md)
 - [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md)
 - [Nazarick Agents](nazarick_agents.md)
+- [Nazarick Agent Profiles](nazarick_agent_profiles.md)
 - [Nazarick Narrative System](nazarick_narrative_system.md) – maps story events to agents and memory layers
 - [Nazarick Manifesto](nazarick_manifesto.md)
 - [Nazarick Web Console](nazarick_web_console.md)
