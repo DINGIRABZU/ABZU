@@ -52,6 +52,10 @@ Each chakra layer corresponds to core modules that cooperate when Spiral OS is r
 
 When a command arrives, the orchestrator consults the current emotional state and vector memory to select a model. If hex data or ritual text is present, it hands the payload to the QNL engine which returns symbolic notes. The Sonic Core turns those notes into audio and animates the avatar while new vectors are logged for future reference. This flow allows the layers to reinforce one another so the system speaks and remembers with continuity.
 
+## Crown Handover & Servant Models
+
+The Crown can delegate requests to auxiliary servant models when specialized behavior is needed. `crown_decider` chooses a servant and `crown_prompt_orchestrator` routes the prompt through `servant_model_manager`. Servants run as independent processes without direct access to Crown's vector or spiral memories. When context is required, Crown first calls `query_memory`, prepends the results, and then forwards the augmented prompt. The servant's reply flows back to Crown, which logs new vectors and updates emotional state for continuity. See [crown_servant_models.md](crown_servant_models.md) for deployment and health‑check details.
+
 ## Memory Bundle
 
 `MemoryBundle` unifies the Cortex, Emotional, Mental, Spiritual and Narrative layers. `bundle.initialize()` emits a single `layer_init` event on the `memory` bus so every layer reports readiness together. Subsequent `query_memory` calls fan out requests across the layers and merge their results into one payload. See [Memory Layers Guide](memory_layers_GUIDE.md) for implementation details and the unified diagram below.
