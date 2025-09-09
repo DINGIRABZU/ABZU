@@ -97,6 +97,19 @@ ai_invoker.handover("crown_router", "Health check failed", use_opencode=True)
 
 If Kimi supplies a patch, it is applied and the component relaunches.
 
+### rStar Escalation
+RAZAR tracks consecutive repair attempts for each component. After nine
+unsuccessful tries it escalates the failure context to the `rStar` patch
+service for external triage.
+
+Configuration knobs:
+
+- `RAZAR_RSTAR_THRESHOLD` – attempts before escalation (default `9`)
+- `RSTAR_ENDPOINT` – URL for the `rStar` patch API
+- `RSTAR_TOKEN` – access token for the API
+
+Set `RAZAR_RSTAR_THRESHOLD=0` to disable escalation entirely.
+
 ### Recovery Flow
 ```mermaid
 flowchart TD

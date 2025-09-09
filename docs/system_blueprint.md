@@ -211,6 +211,14 @@ When a generated patch destabilizes the system, operators can revert via
 `logs/patch_history.jsonl` and the boot orchestrator requeues the component for
 fresh health checks.
 
+#### rStar Escalation
+
+Repeated failures trigger an escalation path. After nine unsuccessful repair
+attempts RAZAR forwards the fault context to the external `rStar` patch
+service. Operators can tune escalation with `RAZAR_RSTAR_THRESHOLD` and set the
+service parameters via `RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
+[RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details.
+
 ### Game Dashboard & Retro Arcade Integration
 
 The React-based [Game Dashboard](ui/game_dashboard.md) wraps the avatar stream
