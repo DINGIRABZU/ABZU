@@ -1,6 +1,6 @@
 # Narrative System
 
-The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition.
+The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition. The upstream query flow is described in [Vanna–Bana Pipeline](vanna_bana_pipeline.md).
 
 ## Flow
 

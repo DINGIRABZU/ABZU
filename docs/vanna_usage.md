@@ -2,6 +2,8 @@
 
 The `vanna_data` agent translates natural language prompts into SQL queries using the [Vanna](https://github.com/vanna-ai/vanna) library. Query results are stored in mental memory while narrative summaries are appended to `data/narrative.log`.
 
+For the end-to-end storytelling flow, see [Vanna–Bana Pipeline](vanna_bana_pipeline.md).
+
 ## Setup
 
 1. `pip install vanna`

@@ -2,6 +2,8 @@
 
 This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sources, event processing, and where generated stories are saved.
 
+For how Bana consumes results from the Vanna data agent, see [Vanna–Bana Pipeline](vanna_bana_pipeline.md).
+
 See the corresponding entries in [component_index.json](../component_index.json) for metadata on the engine and its datasets.
 
 ## Architecture

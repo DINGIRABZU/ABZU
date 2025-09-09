@@ -368,7 +368,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
 | [music_generation_usage.md](music_generation_usage.md) | Music Generation Usage | Generate audio from text prompts or ritual invocations. | - |
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
-| [narrative_system.md](narrative_system.md) | Narrative System | The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition. | - |
+| [narrative_system.md](narrative_system.md) | Narrative System | The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition. Th... | - |
 | [nazarick/README.md](nazarick/README.md) | Nazarick | Nazarick houses chakra-aligned servant agents. The triadic flow between Crown, Nazarick, and the operator is outlined... | - |
 | [nazarick_agent_profiles.md](nazarick_agent_profiles.md) | Nazarick Agent Profiles | Each servant agent blends a narrative persona with distinct vocal and visual traits. | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
@@ -442,6 +442,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ui_service.md](ui_service.md) | UI Service | - | - |
 | [updates/2025-08.md](updates/2025-08.md) | August 2025 Roadmap | - | - |
 | [use_cases/ritual_demo.md](use_cases/ritual_demo.md) | Ritual Demo | This walkthrough demonstrates the small ritual sample included with the repository. The `examples/ritual_demo.py` scr... | - |
+| [vanna_bana_pipeline.md](vanna_bana_pipeline.md) | Vanna–Bana Pipeline | Vanna Data queries feed narrative generation by passing SQL results to the Bana engine, a fine-tuned Mistral 7B model... | - |
 | [vanna_usage.md](vanna_usage.md) | Vanna Data Agent Usage | The `vanna_data` agent translates natural language prompts into SQL queries using the [Vanna](https://github.com/vann... | - |
 | [vector_memory.md](vector_memory.md) | Vector Memory | Source: [`../vector_memory.py`](../vector_memory.py) Related Guides: [`rag_pipeline.md`](rag_pipeline.md), [`rag_musi... | `../vector_memory.py` |
 | [video_generation.md](video_generation.md) | Video Generation Pipeline | This document outlines the simplified video generation pipeline and how styles are configured. | - |
