@@ -7,30 +7,11 @@ from importlib import import_module
 from typing import Any, Dict
 
 from . import LAYERS, _LAYER_IMPORTS, broadcast_layer_event, query_memory
+from .tracing import get_tracer
 
-try:  # pragma: no cover - optional dependency
-    from opentelemetry import trace
+_TRACER = get_tracer("memory.bundle")
 
-    _TRACER = trace.get_tracer(__name__)
-except ImportError:  # pragma: no cover - dependency missing
-
-    class NoOpSpan:
-        def __enter__(self) -> "NoOpSpan":
-            return self
-
-        def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
-            return False
-
-        def set_attribute(self, *args: Any, **kwargs: Any) -> None:
-            pass
-
-    class NoOpTracer:
-        def start_as_current_span(self, *_: Any, **__: Any) -> NoOpSpan:
-            return NoOpSpan()
-
-    _TRACER = NoOpTracer()
-
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 
 @dataclass

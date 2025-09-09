@@ -9,6 +9,8 @@ Track CVE monitoring links to ensure timely vulnerability remediation. Update th
 | Node.js | 20 | 20 | [NVD](https://nvd.nist.gov/vuln/search/results?query=node.js) | Web asset pipeline |
 | numpy | 2.2.6 | 2.2.6 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=numpy) | Numerical computations |
 | opencv-python | 4.12.0.88 | 4.12.0.88 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=opencv-python) | Computer vision operations |
+| opentelemetry-api | 1.36.0 | 1.36.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=opentelemetry-api) | Tracing API |
+| opentelemetry-exporter-otlp | 1.36.0 | 1.36.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=opentelemetry-exporter-otlp) | OTLP exporter |
 | requests | 2.32.4 | 2.32.4 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=requests) | HTTP client |
 | prometheus-client | 0.20.0 | 0.20.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=prometheus-client) | Metrics export |
 | prometheus-fastapi-instrumentator | 6.1.0 | 6.1.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=prometheus-fastapi-instrumentator) | FastAPI metrics middleware |
