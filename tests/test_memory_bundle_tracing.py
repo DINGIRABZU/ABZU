@@ -3,7 +3,7 @@ import importlib
 import sys
 from pathlib import Path
 
-import conftest as conftest_module
+from tests import conftest as conftest_module
 
 conftest_module.ALLOWED_TESTS.update(
     {str(Path(__file__).resolve()), str(Path(__file__))}
@@ -29,4 +29,5 @@ def test_memory_bundle_without_opentelemetry(monkeypatch):
     bundle = module.MemoryBundle()
 
     with bundle._tracer.start_as_current_span("test") as span:
-        assert span is None
+        assert hasattr(span, "set_attribute")
+        span.set_attribute("foo", "bar")

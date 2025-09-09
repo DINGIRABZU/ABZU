@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-**Version:** v1.0.8
-**Last updated:** 2025-09-09
+**Version:** v1.0.9
+**Last updated:** 2025-09-30
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
@@ -158,8 +158,9 @@ underlying errors. Queries still return data from the remaining active layers.
 ## Tracing
 
 `MemoryBundle` emits OpenTelemetry spans when the `opentelemetry` package is
-installed. If the module is absent, it falls back to a no-op tracer so
-initialization and queries proceed without tracing.
+installed. If the module is absent, it falls back to an internal
+`NoOpTracer` that provides the minimal tracing interface so initialization and
+queries proceed without instrumentation.
 
 ## Installation Options
 
