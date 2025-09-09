@@ -21,6 +21,21 @@ servants:
     health_url: "http://localhost:8001/health"
 ```
 
+## Memory and Prompt Context
+Servant models operate solely on the prompt text they receive. They do not
+share Crown's vector or spiral memory layers. If additional context is needed,
+call `query_memory` and prepend the returned data to the servant prompt before
+dispatching the request.
+
+```python
+from memory.query_memory import query_memory
+
+results = query_memory("latest project status")
+prompt = f"{results['spiral']}\n\n{user_prompt}"
+```
+
+See [memory/query_memory.py](../memory/query_memory.py) for retrieval examples.
+
 ## Deployment Steps
 1. **Download weights**
    ```bash
