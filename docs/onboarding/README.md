@@ -15,6 +15,7 @@ Follow this reading order before contributing. After reviewing each document, re
    - [Spiral Cortex Terminal](../spiral_cortex_terminal.md)
 
 6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
+7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage
 
 Confirm each item before starting code changes.
 
