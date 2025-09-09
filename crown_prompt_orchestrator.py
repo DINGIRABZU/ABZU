@@ -45,6 +45,7 @@ from corpus_memory_logging import load_interactions, log_interaction, log_sugges
 from INANNA_AI import emotion_analysis, emotional_memory
 from INANNA_AI.glm_integration import GLMIntegration
 from memory.mental import record_task_flow
+from memory import query_memory
 from memory.sacred import generate_sacred_glyph
 from memory.spiritual import map_to_symbol
 from spiral_memory import REGISTRY_DB, spiral_recall
@@ -156,7 +157,9 @@ def review_test_outcomes(metrics_file: Path = TEST_METRICS_FILE) -> list[str]:
 
 
 async def crown_prompt_orchestrator_async(
-    message: str, glm: GLMIntegration
+    message: str,
+    glm: GLMIntegration,
+    include_memory: bool = True,
 ) -> Dict[str, Any]:
     """Return GLM or servant model reply with metadata."""
     emotion = _detect_emotion(message)
@@ -302,7 +305,28 @@ async def crown_prompt_orchestrator_async(
                 if model == "glm":
                     text = await _delegate(prompt, glm)
                 else:
-                    text = await smm.invoke(model, message)
+                    servant_prompt = message
+                    if include_memory:
+                        try:
+                            memory_res = query_memory(message)
+                            parts: list[str] = []
+                            spiral = memory_res.get("spiral")
+                            if spiral:
+                                parts.append(str(spiral))
+                            parts.extend(
+                                str(x) for x in memory_res.get("cortex", []) if x
+                            )
+                            for item in memory_res.get("vector", []):
+                                if isinstance(item, dict) and item.get("text"):
+                                    parts.append(str(item["text"]))
+                                elif item:
+                                    parts.append(str(item))
+                            snippet = "\n".join(parts).strip()
+                            if snippet:
+                                servant_prompt = f"{snippet}\n\n{message}"
+                        except Exception:
+                            logging.exception("memory retrieval failed")
+                    text = await smm.invoke(model, servant_prompt)
             except (KeyError, RuntimeError, OSError, ValueError) as exc:
                 success = False
                 invoke_error = str(exc)
@@ -356,10 +380,12 @@ async def crown_prompt_orchestrator_async(
 
 
 def crown_prompt_orchestrator(
-    message: str, glm: GLMIntegration
+    message: str,
+    glm: GLMIntegration,
+    include_memory: bool = True,
 ) -> Dict[str, Any] | Awaitable[Dict[str, Any]]:
     """Synchronously run or return async orchestrator based on event loop."""
-    coro = crown_prompt_orchestrator_async(message, glm)
+    coro = crown_prompt_orchestrator_async(message, glm, include_memory=include_memory)
     try:
         asyncio.get_running_loop()
     except RuntimeError:
@@ -378,6 +404,13 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
     parser.add_argument(
         "--temperature", type=float, default=0.8, help="Sampling temperature"
     )
+    parser.add_argument(
+        "--no-memory",
+        dest="include_memory",
+        action="store_false",
+        help="Disable memory context sharing",
+        default=True,
+    )
     args = parser.parse_args(argv)
 
     if args.model:
@@ -391,7 +424,9 @@ def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry
         api_key=args.api_key,
         temperature=args.temperature,
     )
-    result = crown_prompt_orchestrator(args.message, glm)
+    result = crown_prompt_orchestrator(
+        args.message, glm, include_memory=args.include_memory
+    )
     if asyncio.iscoroutine(result):
         result = asyncio.run(result)
     print(cast(Dict[str, Any], result).get("text", ""))

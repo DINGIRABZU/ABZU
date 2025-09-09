@@ -57,7 +57,6 @@ def test_basic_flow(monkeypatch):
 
 def test_servant_invocation(monkeypatch):
     glm = DummyGLM()
-    smm.register_model("deepseek", lambda p: f"ds:{p}")
     monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
     result = asyncio.run(
         cpo.crown_prompt_orchestrator_async("how do things work?", glm)
@@ -68,7 +67,6 @@ def test_servant_invocation(monkeypatch):
 
 def test_servant_failure_falls_back_to_glm(monkeypatch):
     glm = DummyGLM()
-    smm.register_model("deepseek", lambda p: f"ds:{p}")
     monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
     monkeypatch.setattr(
         smm, "invoke", lambda name, prompt: (_ for _ in ()).throw(RuntimeError("boom"))
@@ -76,6 +74,85 @@ def test_servant_failure_falls_back_to_glm(monkeypatch):
     result = asyncio.run(cpo.crown_prompt_orchestrator_async("oops", glm))
     assert result["model"] == "glm"
     assert result["text"].startswith("glm:")
+
+
+def test_servant_prompt_includes_memory(monkeypatch):
+    """Servants receive prompts augmented with memory snippets."""
+
+    glm = DummyGLM()
+    monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
+
+    received: dict[str, str] = {}
+
+    def handler(prompt: str) -> str:
+        received["prompt"] = prompt
+        return f"ds:{prompt}"
+
+    smm.register_model("deepseek", handler)
+    monkeypatch.setattr(
+        cpo, "query_memory", lambda q: {"spiral": "memory", "cortex": [], "vector": []}
+    )
+
+    result = asyncio.run(
+        cpo.crown_prompt_orchestrator_async("hello", glm, include_memory=True)
+    )
+    assert result["text"].startswith("ds:")
+    assert received["prompt"].startswith("memory\n\nhello")
+
+
+def test_servant_prompt_without_memory_when_disabled(monkeypatch):
+    """Memory retrieval is skipped when include_memory is False."""
+
+    glm = DummyGLM()
+    monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
+
+    called: dict[str, str] = {}
+
+    def handler(prompt: str) -> str:
+        called["prompt"] = prompt
+        return f"ds:{prompt}"
+
+    smm.register_model("deepseek", handler)
+
+    called_query = {"count": 0}
+
+    def fake_query(q):  # noqa: ANN001 - simple stub
+        called_query["count"] += 1
+        return {"spiral": "memory", "cortex": [], "vector": []}
+
+    monkeypatch.setattr(cpo, "query_memory", fake_query)
+
+    result = asyncio.run(
+        cpo.crown_prompt_orchestrator_async("hello", glm, include_memory=False)
+    )
+    assert result["text"].startswith("ds:")
+    assert called["prompt"] == "hello"
+    assert called_query["count"] == 0
+
+
+def test_query_memory_failure_falls_back(monkeypatch):
+    """If memory retrieval fails, servants get the original message."""
+
+    glm = DummyGLM()
+    monkeypatch.setattr(crown_decider, "recommend_llm", lambda t, e: "deepseek")
+
+    called: dict[str, str] = {}
+
+    def handler(prompt: str) -> str:
+        called["prompt"] = prompt
+        return f"ds:{prompt}"
+
+    def boom(q):  # noqa: ANN001 - simple stub
+        raise RuntimeError("boom")
+
+    smm.register_model("deepseek", handler)
+    monkeypatch.setattr(cpo, "query_memory", boom)
+
+    result = asyncio.run(
+        cpo.crown_prompt_orchestrator_async("hello", glm, include_memory=True)
+    )
+    assert result["text"].startswith("ds:")
+    assert called["prompt"] == "hello"
 
 
 def test_state_engine_integration(monkeypatch):
