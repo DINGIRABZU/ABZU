@@ -28,6 +28,10 @@ opencv-python==4.12.0.88
     # via spiral-os (pyproject.toml)
 omegaconf==2.3.0
     # via spiral-os (pyproject.toml)
+opentelemetry-api==1.36.0
+    # via spiral-os (pyproject.toml)
+opentelemetry-exporter-otlp==1.36.0
+    # via spiral-os (pyproject.toml)
 pre-commit==4.3.0
     # via spiral-os (pyproject.toml)
 psutil==7.0.0
