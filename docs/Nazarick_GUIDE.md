@@ -26,6 +26,7 @@ python start_dev_agents.py --all
 - [RAZAR Guide](RAZAR_GUIDE.md)
 - [Crown Guide](Crown_GUIDE.md)
 - [Narrative Engine Guide](narrative_engine_GUIDE.md)
+- [Bana Narrative Engine](../nazarick/agents/Bana_narrative_engine.md) — narrative output feeds the Nazarick lore repository.
 
 ## Version History
 | Version | Date | Notes |

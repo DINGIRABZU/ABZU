@@ -637,6 +637,7 @@ The Nazarick Web Console exposes a browser-based interface for operators to issu
 
 - **BANA** is a bio‑adaptive narrator built on a fine‑tuned Mistral‑7B model. It receives INANNA biosignals, processes them through an INANNA bridge, and writes narratives both to spiral memory and log files
 - The **Nazarick Narrative System** channels biosignal events through ingestion scripts, the narrative engine, and a FastAPI layer, persisting stories for operator retrieval
+- The agent prompt path into narrative memory is shown in the [Prompt to Memory flow](../nazarick/agents/Bana_narrative_engine.md#prompt-to-memory-flow)
 
 ## **Generation Pipeline**
 
