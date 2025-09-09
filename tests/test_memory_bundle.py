@@ -12,7 +12,7 @@ from memory.bundle import MemoryBundle
 
 qm = importlib.import_module("memory.query_memory")
 import pytest
-import conftest as conftest_module
+from tests import conftest as conftest_module
 from pathlib import Path
 
 conftest_module.ALLOWED_TESTS.update(
@@ -76,6 +76,8 @@ def test_initialize_marks_skipped_layer(monkeypatch):
 
     def fake_import(name: str):
         if name == "memory.mental":
+            raise ModuleNotFoundError(name)
+        if name == "memory.optional.mental":
             return OptionalModule()
         return real_import(name)
 

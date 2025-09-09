@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from importlib import import_module
-from contextlib import nullcontext
 from typing import Any, Dict
 
 from . import LAYERS, _LAYER_IMPORTS, broadcast_layer_event, query_memory
@@ -15,11 +14,21 @@ try:  # pragma: no cover - optional dependency
     _TRACER = trace.get_tracer(__name__)
 except ImportError:  # pragma: no cover - dependency missing
 
-    class _NoOpTracer:
-        def start_as_current_span(self, *args: Any, **kwargs: Any):  # noqa: ANN001
-            return nullcontext()
+    class NoOpSpan:
+        def __enter__(self) -> "NoOpSpan":
+            return self
 
-    _TRACER = _NoOpTracer()
+        def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
+            return False
+
+        def set_attribute(self, *args: Any, **kwargs: Any) -> None:
+            pass
+
+    class NoOpTracer:
+        def start_as_current_span(self, *_: Any, **__: Any) -> NoOpSpan:
+            return NoOpSpan()
+
+    _TRACER = NoOpTracer()
 
 __version__ = "0.1.4"
 
