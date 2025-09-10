@@ -103,6 +103,9 @@ coverage run -m pytest
 coverage report
 ```
 
+ABZU CI runs the test suite whenever shared files change. A pull request can
+only merge once both **ABZU CI** and **NEOABZU CI** report success.
+
 ## Component Version Mandate
 
 Every source module must define a `__version__` attribute. Bump this value for
@@ -150,6 +153,7 @@ Before submitting a pull request, confirm:
 - Prefix pull request titles with a category such as `Feature:`, `Fix:`, or `Chore:` (e.g., `Feature: Voice Cloning V2`).
 - Keep changes focused; submit separate PRs for unrelated fixes.
 - Ensure documentation is updated and tests pass.
+- Merging requires green status from both `ABZU CI` and `NEOABZU CI` workflows.
 - Pull requests that fail `pre-commit run --all-files` will not be merged.
 - Register new modules in [docs/component_priorities.yaml](docs/component_priorities.yaml) with a priority (P1–P5), criticality tag, and issue categories so RAZAR can orchestrate startup.
 - Record project-wide documentation or architectural changes in

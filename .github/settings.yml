@@ -1,0 +1,9 @@
+# Repository settings managed via configuration-as-code
+branches:
+  - name: main
+    protection:
+      required_status_checks:
+        strict: true
+        contexts:
+          - ABZU CI
+          - NEOABZU CI
