@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Documented PyO3 and gRPC interface contracts in `NEOABZU/Reignition.md` and
+  introduced a CI job that builds Rust crates and runs Python integration tests.
 - Initialized NEOABZU Rust workspace with core lambda-calculus interpreter and Python bindings.
 - Documented MCP connector compatibility matrix and integration roadmap; linked from project overview.
 - Added OpenTelemetry API and OTLP exporter dependencies and setup guidance.
