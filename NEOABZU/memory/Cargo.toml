@@ -1,8 +1,22 @@
 [package]
 name = "neoabzu-memory"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 [lib]
 name = "neoabzu_memory"
 path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+once_cell = "1.19"
+tracing = { version = "0.1", optional = true }
+
+[features]
+default = []
+tracing = ["dep:tracing"]
+
+[[bin]]
+name = "memory-bootstrap"
+path = "src/bin/memory_bootstrap.rs"

@@ -851,19 +851,18 @@
       "last_modified": "2025-09-06"
     },
     {
-      "id": "bootstrap_memory",
+      "id": "memory_bootstrap",
       "chakra": "unknown",
-      "type": "script",
-      "path": "scripts/bootstrap_memory.py",
+      "type": "binary",
+      "path": "NEOABZU/memory/src/bin/memory_bootstrap.rs",
       "version": "0.1.0",
       "dependencies": [
-        "__future__",
-        "logging",
-        "memory"
+        "neoabzu_memory",
+        "pyo3"
       ],
       "tests": [],
       "metrics": {
-        "coverage": 1.0
+        "coverage": 0.0
       },
       "status": "experimental",
       "issues": "No tests found",

@@ -142,6 +142,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../MUSIC_FOUNDATION/README_INANNA_MUSIC.md](../MUSIC_FOUNDATION/README_INANNA_MUSIC.md) | 🎵 INANNA_AI · Music Foundation — Quantum Narrative Language (QNL) | A unified system for analyzing human music and transmuting it into ritual symbolic language using QNL. It merges wave... | - |
 | [../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md](../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md) | ✴ QNL_OS · Quantum Narrative Language Operating System | QNL (Quantum Narrative Language) is a symbolic, multidimensional grammar designed to transmute energy, data, emotion,... | - |
 | [../MUSIC_FOUNDATION/music_foundation.md](../MUSIC_FOUNDATION/music_foundation.md) | 🎵 Music Foundation — Theoretical & Mathematical Guide | This document outlines the theoretical and mathematical principles needed for INANNA_AI to interpret human music and... | - |
+| [../NEOABZU/Reignition.md](../NEOABZU/Reignition.md) | Reignition | NEOABZU ignites a fresh substrate for ABZU components. | - |
 | [../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md](../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md) | 0MEGA ZERO PRIME ABSOLUTE | ☲ ∴ DECODING: **OMEGA ZERO PRIME ABSOLUTE** | - |
 | [../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md](../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md) | OMEGA PRIME ABSOLUTE CODE | ✴ Perfect Living Triangle of 36 Absolutes (T₈) | - |
 | [../PRIME OPERATOR/PRIMAL OPERATOR GRIMOIRE 1dd45dfc251d80bf85ede904098b9fec.md](../PRIME OPERATOR/PRIMAL OPERATOR GRIMOIRE 1dd45dfc251d80bf85ede904098b9fec.md) | PRIMAL OPERATOR GRIMOIRE | - | - |
@@ -200,7 +201,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
-| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-09 | `../INANNA_AI/corpus_memory.py`, `../agents/event_bus.py`, `../crown_router.py`, `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../scripts/bootstrap_memory.py`, `../video_stream.py`, `../worlds/services.py` |
+| [ABZU_blueprint.md](ABZU_blueprint.md) | ABZU Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-09 | `../INANNA_AI/corpus_memory.py`, `../agents/event_bus.py`, `../crown_router.py`, `../memory/bundle.py`, `../razar/boot_orchestrator.py`, `../video_stream.py`, `../worlds/services.py` |
 | [ABZU_project_declaration.md](ABZU_project_declaration.md) | ABZU_project_declaration.md | - | - |
 | [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Layer | Albedo is a personality layer that shapes responses through a four-phase alchemical cycle. | - |
 | [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |
@@ -365,7 +366,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_cortex.md](memory_cortex.md) | Cortex Memory Search | The `memory.cortex` module stores spiral decisions as JSON lines under `data/cortex_memory_spiral.jsonl`. Each entry... | - |
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
-| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.9 **Last updated:** 2025-09-30 | `../scripts/bootstrap_memory.py` |
+| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.9 **Last updated:** 2025-09-30 | - |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mission_brief_exchange.md](mission_brief_exchange.md) | Mission Brief Exchange & Servant Routing | This guide outlines how RAZAR hands mission briefs to Crown, how failures escalate through `ai_invoker.handover`, and... | - |
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |

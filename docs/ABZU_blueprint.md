@@ -106,8 +106,8 @@ sequenceDiagram
 ```
 
 ## Stepping Stones
-- Memory bundle implementation: [memory/bundle.py](../memory/bundle.py)
-- Memory bootstrap script: [scripts/bootstrap_memory.py](../scripts/bootstrap_memory.py)
+- Memory bundle wrapper: [memory/bundle.py](../memory/bundle.py) (Rust-backed)
+- Memory bootstrap CLI: `memory-bootstrap`
 - RAZAR orchestrator: [razar/boot_orchestrator.py](../razar/boot_orchestrator.py)
 - Agent roster and roles: [agents/nazarick/nazarick_core_architecture.md](../agents/nazarick/nazarick_core_architecture.md)
 - World services scaffold: [worlds/services.py](../worlds/services.py)

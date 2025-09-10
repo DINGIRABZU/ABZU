@@ -52,7 +52,9 @@ The Mermaid source lives at
 ## Bundle Initialization
 
 `MemoryBundle` wraps the layer modules behind a single interface and reports
-their startup state in one event.
+their startup state in one event. The Python class is now a thin wrapper over
+the Rust `neoabzu_memory` crate, which performs initialization and query
+aggregation.
 
 ```python
 from memory.bundle import MemoryBundle
@@ -71,11 +73,11 @@ emits a consolidated result regardless of missing components.
 
 ### Command-line bootstrap
 
-The script [`scripts/bootstrap_memory.py`](../scripts/bootstrap_memory.py)
-initializes the bundle from the command line and logs layer statuses:
+Use the `memory-bootstrap` CLI to initialize the bundle from the command line
+and log layer statuses:
 
 ```bash
-python scripts/bootstrap_memory.py
+memory-bootstrap
 ```
 
 Use this during development to verify all layers import correctly.

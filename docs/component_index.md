@@ -238,7 +238,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `logging_filters.py` | Enrich log records with emotional context. | None |
 | `mcp/gateway.py` | Model Context Protocol gateway. | mcp, starlette |
 | `memory/__init__.py` | Memory subsystem package. | agents, opentelemetry, worlds |
-| `memory/bundle.py` | Facade for coordinated memory layer initialization and querying. | opentelemetry |
+| `memory/bundle.py` | Thin wrapper around the Rust memory bundle. | neoabzu_memory |
 | `memory/chakra_registry.py` | Chakra-aware registry built on top of :mod:`vector_memory`. | None |
 | `memory/context_env.py` | No description | core |
 | `memory/cortex.py` | Lightweight spiral memory stored as JSON lines. | worlds |
@@ -338,7 +338,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/albedo_demo.py` | Command line demo for Albedo persona interactions. | agents |
 | `scripts/audit_doctrine.py` | No description | None |
 | `scripts/bootstrap.py` | Bootstrap the development environment. | torch |
-| `scripts/bootstrap_memory.py` | Initialize all memory layers and report readiness. | memory |
+| `NEOABZU/memory/src/bin/memory_bootstrap.rs` | CLI to initialize all memory layers and report readiness. | neoabzu_memory |
 | `scripts/bootstrap_world.py` | Initialize mandatory layers, start Crown, and report readiness. | agents, memory, worlds |
 | `scripts/build_component_index.py` | Generate the component index. | None |
 | `scripts/build_index.py` | Build a Markdown index of repository modules, classes, and functions. | None |
