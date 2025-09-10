@@ -1172,7 +1172,7 @@
       "last_update": "2025-09-09"
     },
     "memory/bundle.py": {
-      "version": "0.1.3",
+      "version": "0.2.0",
       "score": 2,
       "last_update": "2025-09-09"
     },
@@ -1671,10 +1671,10 @@
       "score": 3,
       "last_update": "2025-08-24"
     },
-    "scripts/bootstrap_memory.py": {
+    "NEOABZU/memory/src/bin/memory_bootstrap.rs": {
       "version": "0.1.0",
       "score": 2,
-      "last_update": "2025-09-05"
+      "last_update": "2025-09-09"
     },
     "scripts/bootstrap_world.py": {
       "version": "0.2.1",
