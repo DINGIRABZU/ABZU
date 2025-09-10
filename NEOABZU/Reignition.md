@@ -7,6 +7,7 @@ NEOABZU ignites a fresh substrate for ABZU components.
 - Prototype computation through a minimal lambda-calculus interpreter with Python bindings.
 - Maintain alignment with the architectural vision outlined in [docs/ABZU_blueprint.md](../docs/ABZU_blueprint.md) and
   the operational practices described in [docs/system_blueprint.md](../docs/system_blueprint.md).
+- Provide Python helper scaffolding via `pyproject.toml` and isolate testing through a dedicated CI workflow.
 
 This document tracks early milestones as we grow the workspace into a fully fledged system.
 

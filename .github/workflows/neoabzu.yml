@@ -1,0 +1,41 @@
+# CI pipeline dedicated to the NEOABZU workspace
+name: NEOABZU CI
+
+on:
+  push:
+    paths:
+      - 'NEOABZU/**'
+      - '.github/workflows/neoabzu.yml'
+  pull_request:
+    paths:
+      - 'NEOABZU/**'
+      - '.github/workflows/neoabzu.yml'
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      - name: Run NEOABZU tests
+        run: cargo test --manifest-path NEOABZU/Cargo.toml
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install helpers
+        run: |
+          cd NEOABZU
+          pip install -e .
+      - name: Run Python tests
+        run: |
+          cd NEOABZU
+          pytest
