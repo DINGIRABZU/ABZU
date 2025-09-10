@@ -17,6 +17,9 @@ Curated starting points for understanding and operating the project. For an exha
 - [Memory Layers Guide](memory_layers_GUIDE.md) – unified bundle and query flow
 - [Seeding Crown Memory](project_overview.md#seeding-crown-memory) – corpus scan paths and reindex command
 
+## NEOABZU
+NEOABZU explores a Rust-focused substrate while staying aligned with ABZU's core design. Visit [NEOABZU/](../NEOABZU/) for source and [documentation](../NEOABZU/docs/index.md).
+
 ## Quick Start
 
 Initialize every memory layer with a single command:
