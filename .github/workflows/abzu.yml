@@ -1,0 +1,29 @@
+name: ABZU CI
+
+on:
+  push:
+    paths-ignore:
+      - 'NEOABZU/**'
+      - '.github/workflows/neoabzu.yml'
+  pull_request:
+    paths-ignore:
+      - 'NEOABZU/**'
+      - '.github/workflows/neoabzu.yml'
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r dev-requirements.txt
+          pip install -e .
+      - name: Run tests
+        run: pytest
