@@ -56,12 +56,12 @@ impl MemoryBundle {
             let module_path = LAYER_IMPORTS
                 .get(layer)
                 .expect("layer import path missing");
-            let status = match PyModule::import(py, module_path) {
+            let status = match PyModule::import(py, *module_path) {
                 Ok(_) => "ready",
                 Err(err) => {
                     if err.is_instance_of::<PyModuleNotFoundError>(py) {
                         let optional_path = format!("memory.optional.{layer}");
-                        match PyModule::import(py, &optional_path) {
+                        match PyModule::import(py, optional_path.as_str()) {
                             Ok(_) => "skipped",
                             Err(_) => "error",
                         }
@@ -124,7 +124,7 @@ impl MemoryBundle {
 
 fn query_cortex(py: Python<'_>, text: &str) -> PyResult<PyObject> {
     for module_name in ["memory.cortex", "memory.optional.cortex"].iter() {
-        if let Ok(module) = PyModule::import(py, module_name) {
+        if let Ok(module) = PyModule::import(py, *module_name) {
             if let Ok(func) = module.getattr("query_spirals") {
                 let kwargs = PyDict::new(py);
                 kwargs.set_item("text", text)?;
@@ -137,7 +137,7 @@ fn query_cortex(py: Python<'_>, text: &str) -> PyResult<PyObject> {
 
 fn query_vector(py: Python<'_>, text: &str) -> PyResult<PyObject> {
     for module_name in ["vector_memory", "memory.optional.vector_memory"].iter() {
-        if let Ok(module) = PyModule::import(py, module_name) {
+        if let Ok(module) = PyModule::import(py, *module_name) {
             if let Ok(func) = module.getattr("query_vectors") {
                 let filter = PyDict::new(py);
                 filter.set_item("text", text)?;
@@ -152,7 +152,7 @@ fn query_vector(py: Python<'_>, text: &str) -> PyResult<PyObject> {
 
 fn query_spiral(py: Python<'_>, text: &str) -> PyResult<PyObject> {
     for module_name in ["spiral_memory", "memory.optional.spiral_memory"].iter() {
-        if let Ok(module) = PyModule::import(py, module_name) {
+        if let Ok(module) = PyModule::import(py, *module_name) {
             if let Ok(func) = module.getattr("spiral_recall") {
                 return func.call1((text,)).map(|o| o.into_py(py));
             }

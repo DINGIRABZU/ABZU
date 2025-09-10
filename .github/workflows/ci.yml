@@ -302,3 +302,33 @@ PY
 
       - name: Validate API schemas
         run: python scripts/validate_api_schemas.py
+
+  rust-python-integration:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Build Rust workspace
+        run: cargo build --manifest-path NEOABZU/Cargo.toml --workspace --lib
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run integration tests
+        run: pytest tests/integration
