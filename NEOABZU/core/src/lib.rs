@@ -94,16 +94,22 @@ fn eval(expr: Expr) -> Expr {
     }
 }
 
-#[pyfunction]
-fn eval_expr(src: &str) -> PyResult<String> {
+/// Evaluate a lambda-calculus expression and return the resulting term as a string.
+pub fn evaluate(src: &str) -> String {
     let mut chars: VecDeque<char> = src.chars().filter(|c| !c.is_whitespace()).collect();
     let expr = parse(&mut chars);
     let result = eval(expr);
-    Ok(result.to_string())
+    result.to_string()
+}
+
+#[pyfunction]
+#[pyo3(name = "evaluate")]
+fn evaluate_py(src: &str) -> PyResult<String> {
+    Ok(evaluate(src))
 }
 
 #[pymodule]
-fn neoabzu_core(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(eval_expr, m)?)?;
+fn neoabzu_core(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(evaluate_py, m)?)?;
     Ok(())
 }

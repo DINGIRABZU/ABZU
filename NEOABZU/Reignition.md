@@ -25,7 +25,7 @@ Rust crates through explicit FFI boundaries:
 
 All in-process calls use **PyO3** wrappers:
 
-- `neoabzu_core.eval_expr(src: str) -> str`
+- `core.evaluate(src: str) -> str`
 - `neoabzu_memory.MemoryBundle.initialize() -> Dict[str, str]`
 - `neoabzu_memory.MemoryBundle.query(text: str) -> Dict[str, Any]`
 
