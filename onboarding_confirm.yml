@@ -311,6 +311,20 @@ documents:
       scope: Test planning.
       key_rules: Open a test plan issue before major changes.
       insight: Open a test plan issue before major changes.
+  docs/ABZU_blueprint.md:
+    sha256: 9e231117fe0eb457e7c23335fac6bd57061b0c19ca4f278ec23f228e2fb37bf8
+    summary:
+      purpose: Architectural and narrative blueprint for ABZU.
+      scope: Entire system overview.
+      key_rules: Sync with system blueprint when components evolve.
+      insight: Defines mission, memory bundle, and agent flows.
+  docs/system_blueprint.md:
+    sha256: 2e0afff09b76c9204e4e34eaf80e42d9739b3b2099469409f2b8304c4084a543
+    summary:
+      purpose: Operational architecture and recovery flows.
+      scope: System components and lifecycle.
+      key_rules: Keep component changes reflected in blueprint.
+      insight: Describes heartbeat propagation and memory spine.
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
     summary:
