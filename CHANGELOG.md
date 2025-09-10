@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Initialized NEOABZU Rust workspace with core lambda-calculus interpreter and Python bindings.
 - Documented MCP connector compatibility matrix and integration roadmap; linked from project overview.
 - Added OpenTelemetry API and OTLP exporter dependencies and setup guidance.
 - Memory introspection API and dashboard panel for querying and purging chakra memories.

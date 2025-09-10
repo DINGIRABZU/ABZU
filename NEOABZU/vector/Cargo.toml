@@ -1,0 +1,8 @@
+[package]
+name = "neoabzu-vector"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "neoabzu_vector"
+path = "src/lib.rs"
