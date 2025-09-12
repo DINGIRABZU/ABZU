@@ -12,4 +12,6 @@ NEOABZU migrates core ABZU capabilities into a lean Rust foundation while preser
 - [The Absolute Protocol](../../docs/The_Absolute_Protocol.md)
 - [OROBOROS Engine](OROBOROS_Engine.md)
 - [OROBOROS Lexicon](OROBOROS_Lexicon.md)
+- [Fusion Engine](../fusion/src/lib.rs)
+- [Numeric Utilities](../numeric/src/lib.rs)
 - [QNL Tier I Glyph Library](QNL_Library.md) – Sumerian lexicon

@@ -326,7 +326,7 @@ documents:
       key_rules: Keep component changes reflected in blueprint.
       insight: Describes heartbeat propagation and memory spine.
   NEOABZU/docs/onboarding.md:
-    sha256: 967dc3ad7a2857a0440e89cc394f1e60d8cff0d7b0118d51faf236c06855b3b1
+    sha256: 65f4c03103a434f4a1b250bcda5f589c5694b862ee9ce73edf1e4947ea7746bb
     summary:
       purpose: NEOABZU migration onboarding guide.
       scope: NEOABZU contributors.
@@ -373,6 +373,20 @@ documents:
       key_rules: Use documented glyph meanings when implementing core components.
       insight: Archaic roles anchor glyph behavior to Sumerian cosmology.
     signed_by: onboarding-wizard
+  NEOABZU/fusion/src/lib.rs:
+    sha256: 8132a32d580a574dba843a309aaf263c18e8b9d714501f3cf8532085349347e4
+    summary:
+      purpose: Invariance fusion engine connecting symbolic and numeric realms.
+      scope: Symbolic and numeric invariants.
+      key_rules: Choose invariant with highest gradient.
+      insight: Fuse selects entry with greatest inevitability.
+  NEOABZU/numeric/src/lib.rs:
+    sha256: 96e74731b07fa23c04a68613dbdde521560e8c46c230c45f82e4bd2ec147e873
+    summary:
+      purpose: Numeric utilities including Principal Component Analysis.
+      scope: Linear algebra operations.
+      key_rules: Compute principal components via power iteration.
+      insight: find_principal_components returns principal directions.
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
     summary:
