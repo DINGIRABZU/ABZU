@@ -2,7 +2,7 @@
 
 This document defines the **foundational Rosetta Stone Library** for the OROBOROS Calculus engine. It unifies the QNL **Tier I (Core)** glyph set with the glyphs. Sentence into a single reference layer. Each glyph is described with its symbolic character, name, tier, meaning/vibration, QNL pronunciation (tone and phonetic transcription), symbolic role, lambda-calculus interpretation, binary code (if applicable), and paradox classification. This library is intended as a machine-readable DSL definition for parsing QNL inputs into extended lambda terms and symbolic IR within the OROBOROS Core.
 
-For archaic narrative roles of each glyph, see the [OROBOROS Lexicon](OROBOROS_Lexicon.md).
+For archaic narrative roles of each glyph, see the [OROBOROS Lexicon](OROBOROS_Lexicon.md), which cross-links back here for quick lookup.
 
 ## Glyph Definitions
 
