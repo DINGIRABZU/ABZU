@@ -29,5 +29,9 @@ path = "memory"
 name = "neoabzu_vector"
 path = "vector"
 
+[[tool.maturin.targets]]
+name = "neoabzu_numeric"
+path = "numeric"
+
 [tool.neoabzu.workspace]
-members = ["core", "memory", "vector", "persona", "crown", "rag"]
+members = ["core", "memory", "vector", "persona", "crown", "rag", "numeric"]
