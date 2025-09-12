@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable tracer factory via ``TRACE_PROVIDER`` with examples for switching providers.
 - Documented chakra-tagged signals, heartbeat propagation, and recovery flows
   across connector and operator guides; added tests for connector links.
+- Introduced glyph enums with elemental metadata in `NEOABZU/core` and documented reference constants.
 - ``connectors.message_formatter`` wraps outbound messages with ``chakra``,
   ``version``, and ``recovery_url`` metadata and now checks ``RECOVERY_URL`` at
   call time.
