@@ -8,6 +8,8 @@ Experimental substrate for ABZU components.
 - [The Absolute Protocol](../../docs/The_Absolute_Protocol.md)
 - [Doctrine Index](../../docs/doctrine_index.md) – canonical registry of foundational texts
 
+Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spine.md`, `docs/The_Absolute_Protocol.md`, and `NEOABZU/docs/Oroboros_Core.md`.
+
 ## Rust Components
 - [core](../core)
 - [memory](../memory)

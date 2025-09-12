@@ -8,6 +8,7 @@
 - For Neo-APSU contributions, review [NEOABZU/docs/onboarding.md](NEOABZU/docs/onboarding.md) before touching code.
 - Canonical doctrine is catalogued in [docs/doctrine_index.md](docs/doctrine_index.md); update it when altering foundational texts.
 - Run `pre-commit run --files <modified files>` on all changed files before committing.
+- Run `pre-commit run verify-onboarding-refs` to confirm `onboarding_confirm.yml` references core docs.
 - Preserve the files listed in [docs/KEY_DOCUMENTS.md](docs/KEY_DOCUMENTS.md); a pre-commit hook fails if any are missing.
 
 Deeper `AGENTS.md` files in subdirectories may override or extend these rules for files within their scope.
