@@ -48,6 +48,7 @@ graph LR
 | [Logging Guidelines](logging_guidelines.md) | Structured logging requirements | Quarterly |
 | [API Reference](api_reference.md) | API endpoints and schemas | Quarterly |
 | [Operator Protocol](operator_protocol.md) | Operator interaction rules | Quarterly |
+| [Neo-ABZU Onboarding](../NEOABZU/docs/onboarding.md) | Orientation for cross-project work | Quarterly |
 | [Test Planning Guide](onboarding/test_planning.md) | Filing "Test Plan" issues defining scope, chakra, and coverage goals | Quarterly |
 | [Bana Engine](bana_engine.md) | Mistral 7B fine-tuning, event processing, and output paths | Quarterly |
 | [Nazarick Narrative System](nazarick_narrative_system.md) | Biosignal→StoryEvent pipeline and memory hooks | Quarterly |
