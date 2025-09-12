@@ -289,6 +289,9 @@ full Hugging Face identifier.
 For an overview of available agents and defensive modules, see
 [AGENTS.md](AGENTS.md#upcoming-components).
 
+## Patents
+See [PATENTS.md](PATENTS.md) for summaries of patentable components and links to draft filings.
+
 ## Architect and Developer Guidance
 - [docs/developer_manual.md](docs/developer_manual.md) – repository layout, crown orchestration and sandbox workflow.
 - [docs/memory_architecture.md](docs/memory_architecture.md) – memory layers and their interaction.
