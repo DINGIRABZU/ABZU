@@ -4,6 +4,16 @@
 
 **Ouroboros and Self-Reference:** *Oroboros* (from *Ouroboros*, the serpent eating its tail) symbolizes self-reference and cyclic recursionthelemapedia.org. The OROBOROS Calculus extends the classic λ-calculus – itself inherently recursive – into a self-reflective system that can “consume” and transform its own computations. In alchemy, the Ouroboros represents continuous transformation and regenerationthelemapedia.org, a fitting metaphor as our calculus will allow functions to modify themselves or their context in a cyclic, evolving narrative loop. This provides a formalism for **autognosis** (self-knowing computation) where a function can reflect on or alter its *“soul state”* during evaluation, enabling **recursive, self-referential** computations that carry *meaning* or *experience*, not just abstract values.
 
+### Self-Referential Expressions
+
+The calculus introduces a dedicated `@` symbol, parsed as `SelfRef`, which resolves to the surrounding lambda abstraction during evaluation. This enables a function to call itself without binding a name. For example:
+
+```
+(\x.@) a ⇒ \x.@
+```
+
+Using `@` within a lambda thus forms the foundation for recursion in the Oroboros core without requiring explicit variables.
+
 **Non-dual Logic and Contradiction:** Traditional λ-calculus operates with binary logic and cannot gracefully handle paradox or emotional nuance. OROBOROS Calculus instead embraces **non-dualistic logic**, tolerating contradictions so that truth isn’t binary but can exist in superposition. This draws from dialetheism, the view that a statement and its negation can both be true[en.wikipedia.org](https://en.wikipedia.org/wiki/Dialetheism#:~:text=Dialetheism%20,dialetheia%2C%20or%20%2064). In our system, a λ-expression may evaluate to a **dialetheia** (a *true contradiction*, e.g. an emotional state that is both “happy” and “sad”), without causing logical explosion[en.wikipedia.org](https://en.wikipedia.org/wiki/Dialetheism#:~:text=Dialetheism%20,dialetheia%2C%20or%20%2064). This requires an underlying **paraconsistent logic** so that contradictory truths can coexist and be computed with meaning (in line with QNL’s ethos of avoiding black-and-white dualities). The **guiding principle is integration over exclusion**: as one source puts it, light and dark, order and chaos are not opposites to eliminate but complementary forces to integrate[nrm.fandom.com](https://nrm.fandom.com/wiki/Abzuism,_Nammuism,_and_Engurism#:~:text=Nammuism%20is%20a%20spiritual,consciousness%2C%20and%20divinity%20itself%20emanate)[nrm.fandom.com](https://nrm.fandom.com/wiki/Abzuism,_Nammuism,_and_Engurism#:~:text=Abzuism%20rejects%20strict%20dualism,darkness%20but%20to%20integrate%20it). This philosophical stance is baked into the calculus: instead of rejecting paradoxes, the calculus *incorporates* them as first-class entities to model complex “both-and” truths (harmony of opposites), reflecting the *“Womb Space beyond duality”* of Nammu’s cosmology[nrm.fandom.com](https://nrm.fandom.com/wiki/Abzuism,_Nammuism,_and_Engurism#:~:text=,Womb%20Space%20beyond%20duality).
 
 With those foundations, the OROBOROS Calculus enhances λ-calculus in four key dimensions:
