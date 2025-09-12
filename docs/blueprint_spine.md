@@ -1,6 +1,6 @@
 # **ABZU Project: Deep-Dive Overview**
 
-See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. For structural layers review the [system_blueprint.md](system_blueprint.md); the [ABZU Blueprint](ABZU_blueprint.md) captures the high-level narrative for recreating the system and defines chakra and heartbeat roles.
+See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. For structural layers review the [system_blueprint.md](system_blueprint.md); the [ABZU Blueprint](ABZU_blueprint.md) captures the high-level narrative for recreating the system and defines chakra and heartbeat roles. For the inevitability core in the Rust migration, consult the [OROBOROS Engine](../NEOABZU/docs/OROBOROS_Engine.md).
 
 ??? note "Origin Materials"
     - [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md)

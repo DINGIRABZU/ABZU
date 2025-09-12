@@ -17,6 +17,7 @@ Experimental substrate for ABZU components.
 - [rag](../rag)
 
 ## Guides
+- [OROBOROS Engine](OROBOROS_Engine.md)
 - [Core Usage](core_usage.md)
 - [Feature Parity](feature_parity.md)
 - [Migration Crosswalk](migration_crosswalk.md)
