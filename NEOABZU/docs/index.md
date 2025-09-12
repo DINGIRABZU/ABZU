@@ -19,4 +19,5 @@ Experimental substrate for ABZU components.
 ## Guides
 - [Core Usage](core_usage.md)
 - [Feature Parity](feature_parity.md)
+- [Migration Crosswalk](migration_crosswalk.md)
 - [Onboarding](onboarding.md)
