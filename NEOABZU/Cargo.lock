@@ -93,6 +93,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "neoabzu-crown"
+version = "0.1.0"
+dependencies = [
+ "pyo3",
+]
+
+[[package]]
 name = "neoabzu-memory"
 version = "0.2.0"
 dependencies = [
