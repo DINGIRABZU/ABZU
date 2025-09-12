@@ -63,6 +63,14 @@ graph TD
 
 Additional context is provided in [ABZU Blueprint – Unified Memory Bundle](ABZU_blueprint.md#unified-memory-bundle), [System Blueprint – Unified Memory Bundle](system_blueprint.md#memory-bundle), and [The Absolute Protocol – Unified Memory Bundle](The_Absolute_Protocol.md#unified-memory-bundle).
 
+## Ouroboros Core
+
+NEOABZU introduces a Rust-based Ouroboros core that drives recursive reasoning for upcoming subsystems. Python services call into this engine through PyO3 bindings, allowing the core calculus to evolve independently while remaining interoperable. See [NEOABZU docs](../NEOABZU/docs/index.md) for crate details.
+
+## Rust Migration
+
+Critical pathways are migrating from Python to Rust to improve determinism and performance. Current crates mirror the crown router, memory bundle, vector search, persona API, and RAG orchestrator, with interfaces tracked in the [Blueprint Spine](blueprint_spine.md).
+
 ## Memory Bundle Layers
 
 ```mermaid
