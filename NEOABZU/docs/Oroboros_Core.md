@@ -373,3 +373,7 @@ In conclusion, the OROBOROS Calculus architecture is an ambitious melding of for
 - Abzuism/Nammuism (Sumerian cosmology emphasis on integration, Nammu as infinite potential)[nrm.fandom.com](https://nrm.fandom.com/wiki/Abzuism,_Nammuism,_and_Engurism#:~:text=)[nrm.fandom.com](https://nrm.fandom.com/wiki/Abzuism,_Nammuism,_and_Engurism#:~:text=Abzuism%20rejects%20strict%20dualism,darkness%20but%20to%20integrate%20it).
 - Rust Lambda Calculus implementations (feasibility of λ-calculus in Rust)[github.com](https://github.com/ljedrz/lambda_calculus#:~:text=lambda_calculus%20is%20a%20simple%2C%20zero,lambda%20calculus%20in%20Safe%20Rust).
 - Narrative computation concept (symbolic AI with discrete narrative rules)[nx-research.com](https://www.nx-research.com/wp-content/uploads/2023/07/Introduction-to-Narrative-Computation-White-Paper-15.pdf#:~:text=1,while%20remaining%20efficient%20and%20performant).
+
+## Patent Status
+
+Covered in [PATENTS.md](../../PATENTS.md) under "OROBOROS Core." Draft filings, if any, reside in [patents/](../../patents/). Substantive edits require maintainer approval.

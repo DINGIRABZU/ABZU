@@ -12,3 +12,7 @@ The interpreter associates glyph tokens with elemental metadata that flows throu
 Applying a glyph to a term propagates its element to the result, enabling downstream processes to react to elemental tags.
 
 This reference serves as the canonical set of constants for engine implementations.
+
+## Patent Status
+
+Covered in [PATENTS.md](../PATENTS.md) under "OROBOROS Core." Draft filings, if any, reside in [patents/](../patents/). Substantive edits require maintainer approval.
