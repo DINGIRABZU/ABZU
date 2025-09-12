@@ -6,3 +6,7 @@ edition = "2021"
 [lib]
 name = "neoabzu_vector"
 path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }

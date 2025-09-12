@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61"]
-build-backend = "setuptools.build_meta"
+requires = ["maturin>=1.5,<2"]
+build-backend = "maturin"
 
 [project]
 name = "neoabzu"
@@ -13,6 +13,21 @@ dependencies = []
 [project.urls]
 "Blueprint Spine" = "../docs/blueprint_spine.md"
 "The Absolute Protocol" = "../docs/The_Absolute_Protocol.md"
+
+[tool.maturin]
+python-packages = ["neoabzu"]
+
+[[tool.maturin.targets]]
+name = "neoabzu_core"
+path = "core"
+
+[[tool.maturin.targets]]
+name = "neoabzu_memory"
+path = "memory"
+
+[[tool.maturin.targets]]
+name = "neoabzu_vector"
+path = "vector"
 
 [tool.neoabzu.workspace]
 members = ["core", "memory", "vector", "persona", "crown", "rag"]

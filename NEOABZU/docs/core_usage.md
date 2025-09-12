@@ -2,8 +2,16 @@
 
 Demonstrates evaluating lambda-calculus expressions via the Rust-backed `core` module.
 
+## Installation
+
+```bash
+pip install neoabzu
+```
+
+## Evaluating Expressions
+
 ```python
-import core
+from neoabzu import core
 
 # Identity function applied to value `y`
 print(core.evaluate("(\\x.x) y"))
@@ -13,7 +21,7 @@ print(core.evaluate("(\\x.x) y"))
 ## Initializing Memory Layers
 
 ```python
-import neoabzu_memory as memory
+from neoabzu import memory
 
 bundle = memory.MemoryBundle()
 bundle.initialize()
@@ -24,8 +32,8 @@ print(result["failed_layers"])  # [] when all layers respond
 ## Retrieving Related Vectors
 
 ```python
-import neoabzu_rag as rag
+from neoabzu import vector
 
-for item in rag.retrieve_top("hello world", top_n=3):
-    print(item["text"], round(item["score"], 3))
+for text, score in vector.search("hello world", top_n=3):
+    print(text, round(score, 3))
 ```
