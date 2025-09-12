@@ -1,5 +1,5 @@
 [workspace]
-members = ["core", "memory", "vector"]
+members = ["core", "memory", "vector", "persona"]
 resolver = "2"
 
 [workspace.package]
