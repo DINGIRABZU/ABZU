@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RAZAR boot scripts load Rust memory bundle and core engine via PyO3 with optional OpenTelemetry spans in the Crown router.
 - Memory introspection API and dashboard panel for querying and purging chakra memories.
 - Configurable tracer factory via ``TRACE_PROVIDER`` with examples for switching providers.
+- Expanded MCP overview with Neo-APSU connector build steps and template; enforced connector spec checklist.
 - Documented chakra-tagged signals, heartbeat propagation, and recovery flows
   across connector and operator guides; added tests for connector links.
 - Introduced glyph enums with elemental metadata in `NEOABZU/core` and documented reference constants.

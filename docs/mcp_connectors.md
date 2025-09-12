@@ -2,6 +2,11 @@
 
 Assessment of tools and services for Model Context Protocol integration.
 
+## Contribution Guidelines
+
+Any pull request adding a connector must append its specification here with
+heartbeat and health details.
+
 ## Decision Matrix
 
 | Tool/Service | MCP Ready | Integration Effort | Notes |
