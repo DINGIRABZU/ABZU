@@ -642,7 +642,7 @@ and leave the seven-dimensional structure.
 
 ## Ouroboros Core
 
-The NEOABZU workspace implements a Rust-based Ouroboros calculus that anchors the system's recursive reasoning. Python services invoke the core through PyO3 bindings, ensuring deterministic self-reference across languages. See [NEOABZU docs](../NEOABZU/docs/index.md) and the [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) for architectural placement.
+The NEOABZU workspace implements a Rust-based Ouroboros calculus that anchors the system's recursive reasoning. Python services invoke the core through PyO3 bindings, ensuring deterministic self-reference across languages. See [NEOABZU docs](../NEOABZU/docs/index.md), the [OROBOROS Engine](../NEOABZU/docs/OROBOROS_Engine.md), and the [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) for architectural placement.
 
 ## Rust Migration
 

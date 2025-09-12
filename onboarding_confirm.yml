@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: f5e9de5609740eb374ee2b5a21db690b9ad2b4f84888bb6873a29fe968cd7b7c
+    sha256: fdc739c6101adf8f106f881c7e3a4751498fd8e019141aed270b501b29923bb6
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -176,7 +176,7 @@ documents:
         it succeeds.
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
-    sha256: 0cb30567eaedfb7a0fe3a5094a256d78c8435f65224bee4c75dc33df683cdc3b
+    sha256: 9fbbfc3cdda1ad770a67b7bf47e86c9aff0b73af67662e807691ea666e44bf92
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -243,7 +243,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: 32e501ba3ac70e4156f563c44d05a8f7ac7f852f3ed75b69b3652f98b2f29a13
+    sha256: 558d210cfe5e8ee628aec4dbc9fe231fda8e4a04b95d69f768925e5dce933cfd
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
@@ -319,14 +319,14 @@ documents:
       key_rules: Sync with system blueprint when components evolve.
       insight: Defines mission, memory bundle, and agent flows.
   docs/system_blueprint.md:
-    sha256: 2e0afff09b76c9204e4e34eaf80e42d9739b3b2099469409f2b8304c4084a543
+    sha256: 9fbbfc3cdda1ad770a67b7bf47e86c9aff0b73af67662e807691ea666e44bf92
     summary:
       purpose: Operational architecture and recovery flows.
       scope: System components and lifecycle.
       key_rules: Keep component changes reflected in blueprint.
       insight: Describes heartbeat propagation and memory spine.
   NEOABZU/docs/onboarding.md:
-    sha256: d83463227f38c3a26f6ae9f2d8607353c706afaf8826ec303178468e6091709d
+    sha256: 967dc3ad7a2857a0440e89cc394f1e60d8cff0d7b0118d51faf236c06855b3b1
     summary:
       purpose: NEOABZU migration onboarding guide.
       scope: NEOABZU contributors.
@@ -338,8 +338,8 @@ documents:
     summary:
       purpose: Theoretical framework for the Rust Ouroboros calculus.
       scope: Neo-APSU self-referential core and narrative computation.
-      key_rules: Use `@` for recursion and embrace non-dual logic.
-      insight: `@` enables recursion without naming functions.
+      key_rules: "Use @ for recursion and embrace non-dual logic."
+      insight: "@ enables recursion without naming functions."
     signed_by: onboarding-wizard
   NEOABZU/docs/migration_crosswalk.md:
     sha256: e2d7b8dc1e41ba11996b181d7bb293163ce55a83c8022c5a8c77e29d0c1236d1
@@ -347,7 +347,23 @@ documents:
       purpose: Map Python subsystems to Rust crates.
       scope: NEOABZU migration mapping and integration.
       key_rules: Keep Python modules aligned with their Rust counterparts.
-      insight: `neoabzu-memory` crate bundles core memory layers.
+      insight: "neoabzu-memory crate bundles core memory layers."
+    signed_by: onboarding-wizard
+  NEOABZU/docs/OROBOROS_Engine.md:
+    sha256: 8d6b52354e79cbb3142df7f46e251bedd30c27387f538f6185043434bc3b780b
+    summary:
+      purpose: Inevitability engine overview.
+      scope: Neo-APSU recursion and alignment core.
+      key_rules: Anchor algorithms to the sacred lexicon.
+      insight: Details eigenvector-based alignment.
+    signed_by: onboarding-wizard
+  NEOABZU/docs/QNL_Library.md:
+    sha256: 8276cfca4eb28cd5768dd2efbadd2267a03b67a48a5318106e1b6f81e80e82fd
+    summary:
+      purpose: QNL Tier I glyph definitions.
+      scope: Sumerian lexicon for OROBOROS.
+      key_rules: Map glyphs to lambda interpretations.
+      insight: Provides glyph data for inevitability gradients.
     signed_by: onboarding-wizard
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
