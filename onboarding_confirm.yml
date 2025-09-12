@@ -63,7 +63,7 @@ documents:
       key_rules: Align major changes with documented mission and vision.
       insight: Review before proposing major shifts in scope.
   docs/onboarding/README.md:
-    sha256: 34f9af9b460e4e59da73545465cece4e5994ada1beb00fe7d91b549816872fac
+    sha256: 9707bd0cc35cf3f220498f667e6d91599834a644a62d42a50857ce7456fd2e10
     summary:
       purpose: Onboarding checklist.
       scope: New contributors.
@@ -243,7 +243,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: cd2b46a27f8c995d42ac40da806075fd9bdbeac926ccf8befaa41778840413ff
+    sha256: f1e1bde7a7f0f5650d65e7059cd8340ba0c73f416588491c109b2318001ecfe5
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
@@ -325,6 +325,13 @@ documents:
       scope: System components and lifecycle.
       key_rules: Keep component changes reflected in blueprint.
       insight: Describes heartbeat propagation and memory spine.
+  NEOABZU/docs/onboarding.md:
+    sha256: d83463227f38c3a26f6ae9f2d8607353c706afaf8826ec303178468e6091709d
+    summary:
+      purpose: NEOABZU migration onboarding guide.
+      scope: NEOABZU contributors.
+      key_rules: Align NEOABZU work with ABZU blueprints and referenced protocols.
+      insight: Cross-reference ABZU docs to maintain consistency.
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
     summary:
