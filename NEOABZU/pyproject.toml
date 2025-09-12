@@ -9,3 +9,10 @@ description = "Python helpers for the NEOABZU Rust workspace"
 requires-python = ">=3.10"
 authors = [{name = "NEOABZU Team"}]
 dependencies = []
+
+[project.urls]
+"Blueprint Spine" = "../docs/blueprint_spine.md"
+"The Absolute Protocol" = "../docs/The_Absolute_Protocol.md"
+
+[tool.neoabzu.workspace]
+members = ["core", "memory", "vector"]
