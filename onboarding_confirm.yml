@@ -63,7 +63,7 @@ documents:
       key_rules: Align major changes with documented mission and vision.
       insight: Review before proposing major shifts in scope.
   docs/onboarding/README.md:
-    sha256: 9707bd0cc35cf3f220498f667e6d91599834a644a62d42a50857ce7456fd2e10
+    sha256: de09b792f51a019202d29fef466dd1c6601c85124156bbec13f160c2521a4b0c
     summary:
       purpose: Onboarding checklist.
       scope: New contributors.
@@ -326,7 +326,7 @@ documents:
       key_rules: Keep component changes reflected in blueprint.
       insight: Describes heartbeat propagation and memory spine.
   NEOABZU/docs/onboarding.md:
-    sha256: 65f4c03103a434f4a1b250bcda5f589c5694b862ee9ce73edf1e4947ea7746bb
+    sha256: 095b1ef282df9ef52881318e8def49e30fd1b1e774807b6501fa0ecf52b5ecad
     summary:
       purpose: NEOABZU migration onboarding guide.
       scope: NEOABZU contributors.
@@ -372,6 +372,22 @@ documents:
       scope: Narrative roles and meanings for Neo-ABZU glyphs.
       key_rules: Use documented glyph meanings when implementing core components.
       insight: Archaic roles anchor glyph behavior to Sumerian cosmology.
+    signed_by: onboarding-wizard
+  NEOABZU/docs/herojourney_engine.md:
+    sha256: 3c21434aa4486999c6c319f99aa982e23043b3443645424651a6a2b7ab8b8f17
+    summary:
+      purpose: Maps reduction steps to a 12-stage heroic narrative.
+      scope: Neo-ABZU narrative engine.
+      key_rules: Trace reduction events through defined stages.
+      insight: Hero's Journey encodes the inevitability gradient.
+    signed_by: onboarding-wizard
+  NEOABZU/docs/SUMERIAN_33WORDS.md:
+    sha256: 734543539adf317a173fff3006b2535e999f66a1667ac177af6bd69c5e15ebb4
+    summary:
+      purpose: Sacred lexicon of 33 primordial Sumerian concepts.
+      scope: OROBOROS language and narrative primitives.
+      key_rules: Use these concepts as the core vocabulary.
+      insight: Terms align by embedding the 33 sacred words.
     signed_by: onboarding-wizard
   NEOABZU/fusion/src/lib.rs:
     sha256: 8132a32d580a574dba843a309aaf263c18e8b9d714501f3cf8532085349347e4

@@ -148,12 +148,14 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/Oroboros_Core.md](../NEOABZU/docs/Oroboros_Core.md) | OROBOROS Calculus: A Lambda-Calculus Expanded for QNL, Alchemy, and Archetypes | - | - |
 | [../NEOABZU/docs/Oroboros_Engine.md](../NEOABZU/docs/Oroboros_Engine.md) | Oroboros_Engine.md | - | - |
 | [../NEOABZU/docs/QNL_Library.md](../NEOABZU/docs/QNL_Library.md) | QNL Tier I Glyph Library Specification | This document defines the **foundational Rosetta Stone Library** for the OROBOROS Calculus engine. It unifies the QNL... | - |
+| [../NEOABZU/docs/SUMERIAN_33WORDS.md](../NEOABZU/docs/SUMERIAN_33WORDS.md) | Sumerian	Cuneiform	Transliteration	Pure Meaning & Narrative Role | 1	𒂼	𒂼	AMA	The Mother. The primal source of all. 2	𒂼𒃲	𒂼𒃲	AMA.GAL	The Great Mother. The totality of Nammu. 3	𒀭𒇉	𒀭𒇉	ENGU... | - |
 | [../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md](../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md) | SUMERIAN_SACRED_LEXICON.md | - | - |
 | [../NEOABZU/docs/core_usage.md](../NEOABZU/docs/core_usage.md) | Core Usage Guide | Demonstrates evaluating lambda-calculus expressions via the Rust-backed `core` module. | - |
 | [../NEOABZU/docs/feature_parity.md](../NEOABZU/docs/feature_parity.md) | Feature Parity Matrix | Track NEOABZU progress toward ABZU functionality. Update this table as milestones complete to keep contributors aligned. | - |
+| [../NEOABZU/docs/herojourney_engine.md](../NEOABZU/docs/herojourney_engine.md) | herojourney_engine.md | - | - |
 | [../NEOABZU/docs/index.md](../NEOABZU/docs/index.md) | NEOABZU | Experimental substrate for ABZU components. | - |
 | [../NEOABZU/docs/migration_crosswalk.md](../NEOABZU/docs/migration_crosswalk.md) | Migration Crosswalk | This guide maps legacy Python subsystems to their Rust implementations in NEOABZU. | - |
-| [../NEOABZU/docs/onboarding.md](../NEOABZU/docs/onboarding.md) | Onboarding | - | - |
+| [../NEOABZU/docs/onboarding.md](../NEOABZU/docs/onboarding.md) | Onboarding | This Neo‑ABZU guide complements the [ABZU Onboarding Checklist](../../docs/onboarding/README.md); review and confirm... | - |
 | [../NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md) | Rust Doctrine | This primer captures expectations for Rust code within NEOABZU. | - |
 | [../PATENTS.md](../PATENTS.md) | Patents | This repository maintains summaries of patentable components in ABZU. Drafts live under [patents/](patents/). | - |
 | [../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md](../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md) | 0MEGA ZERO PRIME ABSOLUTE | ☲ ∴ DECODING: **OMEGA ZERO PRIME ABSOLUTE** | - |
@@ -400,7 +402,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [nazarick_overview.md](nazarick_overview.md) | Nazarick Overview | Nazarick fortifies ABZU with an ethical servant hierarchy that balances Crown intent with chakra alignment. This over... | `../worlds/config_registry.py` |
 | [nazarick_web_console.md](nazarick_web_console.md) | Nazarick Web Console | The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing m... | `../connectors/webrtc_connector.py`, `../operator_api.py` |
 | [nazarick_world_guide.md](nazarick_world_guide.md) | Nazarick World Guide | - | - |
-| [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onbo... | - |
+| [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | This checklist pairs with the [Neo‑ABZU Onboarding guide](../../NEOABZU/docs/onboarding.md); confirm both documents i... | - |
 | [onboarding/test_planning.md](onboarding/test_planning.md) | Test Planning Guide | Instructions for opening a "Test Plan" issue to coordinate tests across chakras and maintain coverage goals. | - |
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |
