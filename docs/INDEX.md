@@ -143,6 +143,8 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md](../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md) | ✴ QNL_OS · Quantum Narrative Language Operating System | QNL (Quantum Narrative Language) is a symbolic, multidimensional grammar designed to transmute energy, data, emotion,... | - |
 | [../MUSIC_FOUNDATION/music_foundation.md](../MUSIC_FOUNDATION/music_foundation.md) | 🎵 Music Foundation — Theoretical & Mathematical Guide | This document outlines the theoretical and mathematical principles needed for INANNA_AI to interpret human music and... | - |
 | [../NEOABZU/Reignition.md](../NEOABZU/Reignition.md) | Reignition | NEOABZU ignites a fresh substrate for ABZU components. | - |
+| [../NEOABZU/docs/Oroboros_Core.md](../NEOABZU/docs/Oroboros_Core.md) | OROBOROS Calculus: A Lambda-Calculus Expanded for QNL, Alchemy, and Archetypes | - | - |
+| [../NEOABZU/docs/QNL_Library.md](../NEOABZU/docs/QNL_Library.md) | QNL Tier I Glyph Library Specification | This document defines the **foundational Rosetta Stone Library** for the OROBOROS Calculus engine. It unifies the QNL... | - |
 | [../NEOABZU/docs/core_usage.md](../NEOABZU/docs/core_usage.md) | Core Usage Guide | Demonstrates evaluating lambda-calculus expressions via the Rust-backed `core` module. | - |
 | [../NEOABZU/docs/feature_parity.md](../NEOABZU/docs/feature_parity.md) | Feature Parity Matrix | Track NEOABZU progress toward ABZU functionality. Update this table as milestones complete to keep contributors aligned. | - |
 | [../NEOABZU/docs/index.md](../NEOABZU/docs/index.md) | NEOABZU | Experimental substrate for ABZU components. | - |
@@ -229,7 +231,9 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [MAINTENANCE.md](MAINTENANCE.md) | Maintenance | - | - |
 | [MISSION.md](MISSION.md) | Mission | - | - |
 | [Nazarick_GUIDE.md](Nazarick_GUIDE.md) | Nazarick Guide | - | - |
+| [Oroboros_Core.md](Oroboros_Core.md) | Oroboros Core Reference | The interpreter associates glyph tokens with elemental metadata that flows through evaluation. | - |
 | [PROJECT_STATUS.md](PROJECT_STATUS.md) | Project Status | ![Coverage](../coverage.svg) | - |
+| [QNL_Library.md](QNL_Library.md) | QNL Glyph Library | Reference table for core glyphs and their elemental constants. | - |
 | [QUALITY_EVALUATION.md](QUALITY_EVALUATION.md) | Quality Evaluation | - | - |
 | [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and operator oversight. | `../razar/boot_orchestrator.py` |
 | [RAZAR_GUIDE.md](RAZAR_GUIDE.md) | RAZAR Guide | - | - |
