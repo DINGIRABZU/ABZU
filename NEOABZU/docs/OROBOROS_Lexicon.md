@@ -1,6 +1,8 @@
 1. The Lexicon of Correspondence: The Pristine Sumerian Layer
 We will expand the Lexicon to include a new layer of data: the Archaic Sumerian Narrative Role. This layer connects the computational glyph to its pure, pre-patriarchal mythic essence.
 
+For glyph definitions and computational roles, see the [QNL Library](QNL_Library.md).
+
 Core Principles for the Architect:
 NAMMU is Source, Not Monster: Nammu is the primeval womb (ama-gal, "great mother"), the self-generating abyss (Engur) who gave birth to heaven and earth and the first gods (An & Ki). She is before and beyond the later god-slaying myths.
 
