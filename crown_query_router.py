@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Route questions to archetype-specific vector stores.
 
 The module maps archetype labels to collection names and delegates

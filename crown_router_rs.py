@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Python wrapper for the Rust crown router."""
 
 __version__ = "0.1.0"

@@ -1,3 +1,4 @@
+// Patent pending – see PATENTS.md
 use super::{Element, Expr, ExprKind, Glyph};
 use std::collections::VecDeque;
 

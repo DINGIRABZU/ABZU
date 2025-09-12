@@ -1,4 +1,5 @@
 #!/bin/bash
+# Patent pending – see PATENTS.md
 # Launch GLM model with environment setup
 set -euo pipefail
 

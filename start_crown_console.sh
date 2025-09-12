@@ -1,4 +1,5 @@
 #!/bin/bash
+# Patent pending – see PATENTS.md
 # Launch Crown services, verify health endpoints, and start the console.
 # Each service is polled via its /health endpoint before the REPL begins.
 set -euo pipefail

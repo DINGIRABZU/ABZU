@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Heuristics for selecting a language model in the Crown agent."""
 
 from __future__ import annotations

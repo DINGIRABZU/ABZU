@@ -1,3 +1,4 @@
+// Patent pending – see PATENTS.md
 /// Sacred axioms anchoring all NeoABZU reductions.
 ///
 /// These are not mere constants; they represent the
