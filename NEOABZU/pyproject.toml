@@ -15,4 +15,4 @@ dependencies = []
 "The Absolute Protocol" = "../docs/The_Absolute_Protocol.md"
 
 [tool.neoabzu.workspace]
-members = ["core", "memory", "vector", "persona", "crown"]
+members = ["core", "memory", "vector", "persona", "crown", "rag"]
