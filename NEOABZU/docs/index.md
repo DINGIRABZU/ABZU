@@ -6,6 +6,7 @@ Experimental substrate for ABZU components.
 - [System Blueprint](../../docs/system_blueprint.md)
 - [Blueprint Spine](../../docs/blueprint_spine.md) – APSU architecture reference
 - [The Absolute Protocol](../../docs/The_Absolute_Protocol.md)
+- [Doctrine Index](../../docs/doctrine_index.md) – canonical registry of foundational texts
 
 ## Rust Components
 - [core](../core)
