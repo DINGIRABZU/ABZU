@@ -1,5 +1,7 @@
 //! Narrative reduction utilities with Sumerian phoneme embedding.
 
+pub mod journey;
+
 use std::collections::HashMap;
 
 #[cfg(feature = "tracing")]

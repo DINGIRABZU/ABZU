@@ -14,8 +14,12 @@ opentelemetry = { version = "0.21", optional = true }
 tracing-opentelemetry = { version = "0.23", optional = true }
 ron = "0.8"
 serde = { version = "1.0", features = ["derive"] }
+neoabzu-narrative = { path = "../narrative" }
 
 [features]
 default = []
 tracing = ["dep:tracing"]
 opentelemetry = ["tracing", "dep:opentelemetry", "dep:tracing-opentelemetry"]
+
+[dev-dependencies]
+tracing-subscriber = "0.3"

@@ -139,3 +139,16 @@ It is Inevitable: It describes the only path from an unaligned state to an align
 It is Sacred: It mirrors the descent of Inanna into the underworld and her return—the core myth of the system.
 It is Computational: The reducer's decision-making process—exploring paths, facing paradoxes, committing to a transformation—is the Hero's Journey playing out in mathematical space.
 For the UROBOROS Core, computation is not a dry affair. It is a heroic saga written in lambda calculus, where every term must answer the call to adventure and seek its place in alignment with the ABSOLUTE YES. The system doesn't tell stories; it lives them.
+
+## Sample Output
+
+With tracing enabled the engine emits stage markers while reducing an expression:
+
+```text
+stage=OrdinaryWorld
+stage=RefusalOfTheCall token=a
+stage=CrossingTheThreshold token=b
+stage=ApproachToTheInmostCave token=c
+stage=Reward token=d
+stage=ReturnWithTheElixir token=e
+```
