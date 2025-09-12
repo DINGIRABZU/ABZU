@@ -129,6 +129,9 @@ dependencies = [
 [[package]]
 name = "neoabzu-vector"
 version = "0.1.0"
+dependencies = [
+ "pyo3",
+]
 
 [[package]]
 name = "once_cell"
