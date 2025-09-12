@@ -13,7 +13,7 @@ use std::collections::VecDeque;
 mod evaluator;
 mod parser;
 pub mod sacred;
-pub use evaluator::reduce_inevitable;
+pub use evaluator::{reduce_inevitable, reduce_inevitable_with_journey};
 pub use parser::parse;
 pub use sacred::axioms::{PrimordialPrinciple, ABSOLUTE_YES};
 
