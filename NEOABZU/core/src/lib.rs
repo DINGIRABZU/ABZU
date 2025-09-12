@@ -10,7 +10,9 @@ use pyo3::prelude::*;
 use std::collections::VecDeque;
 
 pub mod sacred;
+mod evaluator;
 pub use sacred::axioms::{PrimordialPrinciple, ABSOLUTE_YES};
+pub use evaluator::reduce_inevitable;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Element {
@@ -236,6 +238,7 @@ fn evaluate_py(src: &str) -> PyResult<String> {
 #[pymodule]
 fn neoabzu_core(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(evaluate_py, m)?)?;
+    m.add_function(wrap_pyfunction!(evaluator::reduce_inevitable_py, m)?)?;
     Ok(())
 }
 
