@@ -1,5 +1,7 @@
 # Contributor Guide
 
+An overview of commit message conventions for contributors.
+
 ## Commit Message Format
 
 All commits must follow the pattern:
@@ -13,6 +15,8 @@ feat(scope): did X on Y to obtain Z, expecting behavior B
 - **Y** – target of the action.
 - **Z** – result produced.
 - **B** – expected behavior after the change.
+
+- Write **X** in present tense after "did".
 
 Example:
 
