@@ -1,3 +1,13 @@
 [workspace]
 members = ["core", "memory", "vector"]
 resolver = "2"
+
+[workspace.package]
+name = "neoabzu"
+version = "0.1.0"
+description = "Rust workspace for ABZU components"
+edition = "2021"
+
+[workspace.package.metadata.links]
+blueprint = "../docs/blueprint_spine.md"
+absolute-protocol = "../docs/The_Absolute_Protocol.md"

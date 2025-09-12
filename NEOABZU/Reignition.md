@@ -11,6 +11,26 @@ NEOABZU ignites a fresh substrate for ABZU components.
 
 This document tracks early milestones as we grow the workspace into a fully fledged system.
 
+## Rust Migration Plan
+
+The migration follows the canonical architecture laid out in the
+[Blueprint Spine – Triadic Stack](../docs/blueprint_spine.md#triadic-stack)
+and [Blueprint Spine – Memory Bundle](../docs/blueprint_spine.md#memory-bundle).
+
+1. Port deterministic orchestration logic into `neoabzu_core`, aligning with the
+   Triadic Stack flow to keep operator → RAZAR → Crown boundaries explicit.
+2. Consolidate state layers inside `neoabzu_memory` to mirror the Memory Bundle
+   ledger and snapshot cadence.
+3. Introduce a `neoabzu_vector` crate that adopts the
+   [Nazarick Integration](../docs/blueprint_spine.md#nazarick-integration-with-crown-and-razar)
+   scheme for cross-layer queries.
+4. Expand crate coverage in step with the
+   [Repository Blueprint](../docs/blueprint_spine.md#repository-blueprint) so
+   Rust modules remain consistent with documented topology.
+
+These stages keep Python orchestration while progressively shifting stable
+computation to Rust.
+
 ## Python Orchestration and Rust Dependencies
 
 The orchestration layer remains Python-first, delegating deterministic work to
@@ -35,3 +55,9 @@ query results.
 
 These boundaries keep orchestration logic in Python while Rust provides
 computational stability.
+
+## Contributor Guidelines
+
+Follow [The Absolute Protocol](../docs/The_Absolute_Protocol.md) when committing
+changes. Each commit message must state, "I did X on Y to obtain Z, expecting
+behavior B," and run `pre-commit run --files <changed files>` before pushing.
