@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Coordinate model and expression routing for the Crown agent.
 
 This module queries orchestrators and recent emotional context to choose an

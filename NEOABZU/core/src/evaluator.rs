@@ -1,3 +1,4 @@
+// Patent pending – see PATENTS.md
 use pyo3::prelude::*;
 use serde::Deserialize;
 
@@ -24,13 +25,10 @@ fn lookup_gradient(symbol: &str, lexicon: &Lexicon) -> Option<f32> {
 
 /// Reduce a ceremonial expression into its inevitability gradient.
 pub fn reduce_inevitable(expr: &str) -> f32 {
-    let lexicon: Lexicon = ron::from_str(include_str!("../resources/lexicon.ron"))
-        .expect("invalid lexicon");
+    let lexicon: Lexicon =
+        ron::from_str(include_str!("../resources/lexicon.ron")).expect("invalid lexicon");
     let cleaned = expr.replace(['(', ')', ' '], "");
-    let tokens: Vec<&str> = cleaned
-        .split("::")
-        .filter(|s| !s.is_empty())
-        .collect();
+    let tokens: Vec<&str> = cleaned.split("::").filter(|s| !s.is_empty()).collect();
     let mut current = 0.0;
     for token in tokens {
         if let Some(g) = lookup_gradient(token, &lexicon) {

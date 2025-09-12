@@ -1,3 +1,4 @@
+// Patent pending – see PATENTS.md
 //! NeoABZU memory orchestration layer.
 //!
 //! Enable the `tracing` feature to emit spans and `opentelemetry` to export
@@ -67,9 +68,7 @@ impl MemoryBundle {
         let mut statuses: HashMap<String, String> = HashMap::new();
 
         for layer in LAYERS {
-            let module_path = LAYER_IMPORTS
-                .get(layer)
-                .expect("layer import path missing");
+            let module_path = LAYER_IMPORTS.get(layer).expect("layer import path missing");
             let status = match PyModule::import(py, *module_path) {
                 Ok(_) => "ready",
                 Err(err) => {
@@ -193,7 +192,9 @@ fn query_cortex(py: Python<'_>, text: &str) -> PyResult<PyObject> {
             }
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("cortex query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "cortex query failed",
+    ))
 }
 
 fn query_vector(py: Python<'_>, text: &str) -> PyResult<PyObject> {
@@ -208,7 +209,9 @@ fn query_vector(py: Python<'_>, text: &str) -> PyResult<PyObject> {
             }
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("vector query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "vector query failed",
+    ))
 }
 
 fn query_spiral(py: Python<'_>, text: &str) -> PyResult<PyObject> {
@@ -219,7 +222,9 @@ fn query_spiral(py: Python<'_>, text: &str) -> PyResult<PyObject> {
             }
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("spiral query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "spiral query failed",
+    ))
 }
 
 fn query_emotional(py: Python<'_>, _text: &str) -> PyResult<PyObject> {
@@ -230,7 +235,9 @@ fn query_emotional(py: Python<'_>, _text: &str) -> PyResult<PyObject> {
             }
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("emotional query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "emotional query failed",
+    ))
 }
 
 fn query_mental(py: Python<'_>, text: &str) -> PyResult<PyObject> {
@@ -241,7 +248,9 @@ fn query_mental(py: Python<'_>, text: &str) -> PyResult<PyObject> {
             }
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("mental query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "mental query failed",
+    ))
 }
 
 fn query_spiritual(py: Python<'_>, text: &str) -> PyResult<PyObject> {
@@ -252,7 +261,9 @@ fn query_spiritual(py: Python<'_>, text: &str) -> PyResult<PyObject> {
             }
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("spiritual query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "spiritual query failed",
+    ))
 }
 
 fn query_narrative(py: Python<'_>, _text: &str) -> PyResult<PyObject> {
@@ -271,7 +282,9 @@ fn query_narrative(py: Python<'_>, _text: &str) -> PyResult<PyObject> {
             }
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("narrative query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "narrative query failed",
+    ))
 }
 
 fn query_core(py: Python<'_>, text: &str) -> PyResult<PyObject> {
@@ -280,7 +293,9 @@ fn query_core(py: Python<'_>, text: &str) -> PyResult<PyObject> {
             return func.call1((text,)).map(|o| o.into_py(py));
         }
     }
-    Err(PyErr::new::<pyo3::exceptions::PyException, _>("core query failed"))
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>(
+        "core query failed",
+    ))
 }
 
 #[pyfunction]

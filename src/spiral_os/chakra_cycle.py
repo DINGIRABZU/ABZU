@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Chakra gear ratios with persistent heartbeat scheduler."""
 
 from __future__ import annotations

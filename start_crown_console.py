@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Patent pending – see PATENTS.md
 """Run Crown services and video stream with graceful shutdown."""
 from __future__ import annotations
 

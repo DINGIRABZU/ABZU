@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Thin wrapper around the Rust memory bundle."""
 
 from __future__ import annotations

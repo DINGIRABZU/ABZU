@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Initialize the crown agent and optional vector memory subsystem."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+// Patent pending – see PATENTS.md
 //! Core lambda-calculus evaluation engine for NeoABZU.
 //!
 //! Enable the `tracing` feature to emit spans and `opentelemetry` to export
@@ -9,9 +10,9 @@
 use pyo3::prelude::*;
 use std::collections::VecDeque;
 
-pub mod sacred;
 mod evaluator;
 mod parser;
+pub mod sacred;
 pub use evaluator::reduce_inevitable;
 pub use parser::parse;
 pub use sacred::axioms::{PrimordialPrinciple, ABSOLUTE_YES};
@@ -232,5 +233,4 @@ mod tests {
         let expr = parse(&mut chars);
         assert_eq!(expr.momentum, 1);
     }
-
 }

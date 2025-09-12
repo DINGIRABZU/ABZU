@@ -1,3 +1,4 @@
+# Patent pending – see PATENTS.md
 """Lightweight prompt orchestrator for the Crown console.
 
 It detects emotion, logs interactions, and delegates prompts to language
