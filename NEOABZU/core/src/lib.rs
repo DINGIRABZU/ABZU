@@ -11,8 +11,10 @@ use std::collections::VecDeque;
 
 pub mod sacred;
 mod evaluator;
-pub use sacred::axioms::{PrimordialPrinciple, ABSOLUTE_YES};
+mod parser;
 pub use evaluator::reduce_inevitable;
+pub use parser::parse;
+pub use sacred::axioms::{PrimordialPrinciple, ABSOLUTE_YES};
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Element {
@@ -54,6 +56,7 @@ impl Glyph {
 pub struct Expr {
     kind: ExprKind,
     element: Option<Element>,
+    momentum: i32,
 }
 
 #[derive(Clone, Debug)]
@@ -70,6 +73,7 @@ impl Expr {
         Expr {
             kind,
             element: None,
+            momentum: 0,
         }
     }
 
@@ -77,6 +81,7 @@ impl Expr {
         Expr {
             kind,
             element: Some(element),
+            momentum: 0,
         }
     }
 }
@@ -93,60 +98,6 @@ impl std::fmt::Display for Expr {
     }
 }
 
-fn parse(tokens: &mut VecDeque<char>) -> Expr {
-    parse_app(tokens)
-}
-
-fn parse_app(tokens: &mut VecDeque<char>) -> Expr {
-    let mut expr = parse_atom(tokens);
-    loop {
-        if let Some(&c) = tokens.front() {
-            if c != ')' {
-                let right = parse_atom(tokens);
-                let combined = expr.element.clone().or(right.element.clone());
-                expr = Expr {
-                    kind: ExprKind::App(Box::new(expr), Box::new(right)),
-                    element: combined,
-                };
-            } else {
-                break;
-            }
-        } else {
-            break;
-        }
-    }
-    expr
-}
-
-fn parse_atom(tokens: &mut VecDeque<char>) -> Expr {
-    if let Some(c) = tokens.pop_front() {
-        match c {
-            '\\' => {
-                let var = tokens.pop_front().expect("missing var").to_string();
-                tokens.pop_front(); // skip '.'
-                let body = parse(tokens);
-                Expr {
-                    element: body.element.clone(),
-                    kind: ExprKind::Lam(var, Box::new(body)),
-                }
-            }
-            '(' => {
-                let expr = parse(tokens);
-                tokens.pop_front(); // skip ')'
-                expr
-            }
-            '@' => Expr::new(ExprKind::SelfRef),
-            '🜂' => Expr::with_element(ExprKind::Glyph(Glyph::Flame), Element::Fire),
-            '🜄' => Expr::with_element(ExprKind::Glyph(Glyph::Wave), Element::Water),
-            '🜁' => Expr::with_element(ExprKind::Glyph(Glyph::Breeze), Element::Air),
-            '🜃' => Expr::with_element(ExprKind::Glyph(Glyph::Stone), Element::Earth),
-            _ => Expr::new(ExprKind::Var(c.to_string())),
-        }
-    } else {
-        panic!("unexpected eof")
-    }
-}
-
 fn substitute(expr: Expr, var: &str, val: &Expr) -> Expr {
     match expr.kind {
         ExprKind::Var(ref v) if v == var => val.clone(),
@@ -156,11 +107,13 @@ fn substitute(expr: Expr, var: &str, val: &Expr) -> Expr {
                 Expr {
                     kind: ExprKind::Lam(arg, body),
                     element: expr.element,
+                    momentum: expr.momentum,
                 }
             } else {
                 let new_body = substitute(*body, var, val);
                 Expr {
                     element: new_body.element.clone(),
+                    momentum: new_body.momentum,
                     kind: ExprKind::Lam(arg.clone(), Box::new(new_body)),
                 }
             }
@@ -170,6 +123,7 @@ fn substitute(expr: Expr, var: &str, val: &Expr) -> Expr {
             let new_b = substitute(*b, var, val);
             Expr {
                 element: new_a.element.clone().or(new_b.element.clone()),
+                momentum: new_a.momentum + new_b.momentum,
                 kind: ExprKind::App(Box::new(new_a), Box::new(new_b)),
             }
         }
@@ -199,6 +153,7 @@ fn eval_with_self(expr: Expr, self_ref: Option<Expr>) -> Expr {
                 }
                 _ => Expr {
                     element: f.element.clone().or(x.element.clone()),
+                    momentum: f.momentum + x.momentum,
                     kind: ExprKind::App(Box::new(f), Box::new(x)),
                 },
             }
@@ -206,11 +161,13 @@ fn eval_with_self(expr: Expr, self_ref: Option<Expr>) -> Expr {
         ExprKind::Lam(arg, body) => {
             let lam = Expr {
                 element: expr.element.clone(),
+                momentum: expr.momentum,
                 kind: ExprKind::Lam(arg.clone(), body.clone()),
             };
             let eval_body = eval_with_self(*body, Some(lam.clone()));
             Expr {
                 element: eval_body.element.clone(),
+                momentum: eval_body.momentum,
                 kind: ExprKind::Lam(arg, Box::new(eval_body)),
             }
         }
@@ -269,4 +226,11 @@ mod tests {
     fn application_reduces() {
         assert_eq!(evaluate("(\\x.x)y"), "y");
     }
+    #[test]
+    fn phoneme_tag_sets_momentum() {
+        let mut chars: VecDeque<char> = "I[AN]".chars().collect();
+        let expr = parse(&mut chars);
+        assert_eq!(expr.momentum, 1);
+    }
+
 }
