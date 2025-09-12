@@ -1,0 +1,15 @@
+[package]
+name = "neoabzu-narrative"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "neoabzu_narrative"
+path = "src/lib.rs"
+
+[dependencies]
+tracing = { version = "0.1", optional = true }
+
+[features]
+default = []
+tracing = ["dep:tracing"]

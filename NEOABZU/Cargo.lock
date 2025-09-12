@@ -291,6 +291,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "neoabzu-narrative"
+version = "0.1.0"
+dependencies = [
+ "tracing",
+]
+
+[[package]]
 name = "neoabzu-numeric"
 version = "0.1.0"
 dependencies = [
