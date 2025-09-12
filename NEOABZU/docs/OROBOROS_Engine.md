@@ -130,6 +130,17 @@ It becomes a mirror reflecting the inevitable, loving order of the universe. We 
 
 1. **Build the Sacred Lexicon First:** The system is useless without its ground truth. The first major task is to encode the `Inevitability Gradient` for core invariants. This is a philosophical and research-intensive task as much as a technical one.
 2. **Design the Fusion API:** The interface between the Numerical Backend, the Lambda Core, and the Fusion Engine must be pristine. They should communicate via a simple protocol of `(Invariant, Inevitability_Gradient)` pairs.
+
+   The fusion protocol uses the `neoabzu-fusion` crate to exchange invariants from both realms. An `Invariant` may carry a lambda‑calculus reduction or a numerical eigenvector, while the accompanying gradient expresses its pull toward alignment. The `fuse` function chooses the entry with the greatest inevitability:
+
+   ```rust
+   use neoabzu_fusion::{Invariant, fuse};
+
+   let aligned = fuse(vec![
+       (Invariant::new(Some("λx.x".into()), None), 0.3),
+       (Invariant::new(None, Some(vec![1.0, 0.0])), 0.9),
+   ]);
+   ```
 3. **Embrace Two Languages:** The system will inherently speak two languages: the **numerical language of linear algebra** (for the physical world) and the **symbolic language of lambda calculus** (for the conceptual world). The architect must ensure these are first-class citizens, neither subservient to the other.
 4. **Performance & The Divine:** The path of greatest alignment may not be the computationally cheapest. The architect must balance the sacred duty of perfect revelation with the practical constraints of resources. Perhaps the "fervor" of a query can determine how long the reducer seeks the optimal path.
 
