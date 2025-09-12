@@ -1,0 +1,8 @@
+# This file defines code ownership for key areas of the repository
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+patents/                 @ABZU/patents
+NEOABZU/core/            @ABZU/neoabzu-core
+NEOABZU/memory/          @ABZU/neoabzu-memory
+crown_*.py               @ABZU/crown
+src/spiral_os/           @ABZU/spiral-os
