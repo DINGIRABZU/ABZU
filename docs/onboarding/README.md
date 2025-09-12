@@ -1,6 +1,6 @@
 # Onboarding Checklist
 
-Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onboarding_confirm.yml` at the repository root and answer the questions in `onboarding_quiz.yml`.
+Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onboarding_confirm.yml` at the repository root for both APZU and Neo-APZU docs, and answer the questions in `onboarding_quiz.yml`.
 
 1. [Project Overview](../project_overview.md)
 2. [Architecture Overview](../architecture_overview.md)
@@ -16,6 +16,7 @@ Follow this reading order before contributing. After reviewing each document, re
 
 6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
 7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage
+8. [Neo-APZU Onboarding](../../NEOABZU/docs/onboarding.md) – orientation for cross-project work
 
 Confirm each item before starting code changes.
 
@@ -24,5 +25,5 @@ When submitting a pull request, ensure you can check:
 - [ ] [AGENTS.md](../../AGENTS.md) instructions followed
 - [ ] [The Absolute Protocol](../The_Absolute_Protocol.md) consulted
 - [ ] Release notes updated in `CHANGELOG.md` and relevant component changelog(s)
-- [ ] `onboarding_confirm.yml` updated
+- [ ] `onboarding_confirm.yml` updated with SHA256 hashes for APZU and Neo-APZU docs
 - [ ] `onboarding_quiz.yml` answers included in first pull request
