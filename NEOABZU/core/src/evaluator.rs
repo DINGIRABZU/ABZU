@@ -2,6 +2,11 @@
 use pyo3::prelude::*;
 use serde::Deserialize;
 
+#[cfg(feature = "tracing")]
+use neoabzu_narrative::journey::{stage_for_step, HeroStage};
+#[cfg(feature = "tracing")]
+use tracing::info;
+
 #[derive(Deserialize)]
 struct Concept {
     symbol: Option<String>,
@@ -29,8 +34,12 @@ pub fn reduce_inevitable(expr: &str) -> f32 {
         ron::from_str(include_str!("../resources/lexicon.ron")).expect("invalid lexicon");
     let cleaned = expr.replace(['(', ')', ' '], "");
     let tokens: Vec<&str> = cleaned.split("::").filter(|s| !s.is_empty()).collect();
+    #[cfg(feature = "tracing")]
+    info!(stage = ?HeroStage::OrdinaryWorld, "hero_journey.stage");
     let mut current = 0.0;
-    for token in tokens {
+    for (_i, token) in tokens.iter().enumerate() {
+        #[cfg(feature = "tracing")]
+        info!(stage = ?stage_for_step(_i + 1, tokens.len()), token, "hero_journey.stage");
         if let Some(g) = lookup_gradient(token, &lexicon) {
             if g > current {
                 current = g;

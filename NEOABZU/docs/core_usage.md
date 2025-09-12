@@ -18,6 +18,19 @@ print(core.evaluate("(\\x.x) y"))
 # -> y
 ```
 
+## Hero Journey Stage Markers
+
+When tracing is enabled, evaluation reveals the Hero's Journey progression:
+
+```text
+stage=OrdinaryWorld
+stage=RefusalOfTheCall token=a
+stage=CrossingTheThreshold token=b
+stage=ApproachToTheInmostCave token=c
+stage=Reward token=d
+stage=ReturnWithTheElixir token=e
+```
+
 ## Initializing Memory Layers
 
 ```python
