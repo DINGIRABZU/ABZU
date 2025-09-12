@@ -2,6 +2,8 @@
 
 Track NEOABZU progress toward ABZU functionality. Update this table as milestones complete to keep contributors aligned.
 
+Refer to the [Rust Doctrine](rust_doctrine.md) for coding conventions.
+
 | ABZU Module | Status | NEOABZU Plan |
 | --- | --- | --- |
 | User Interface | Routes user intents through the Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L39-L40】 | drop |

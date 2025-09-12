@@ -150,6 +150,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/index.md](../NEOABZU/docs/index.md) | NEOABZU | Experimental substrate for ABZU components. | - |
 | [../NEOABZU/docs/migration_crosswalk.md](../NEOABZU/docs/migration_crosswalk.md) | Migration Crosswalk | This guide maps legacy Python subsystems to their Rust implementations in NEOABZU. | - |
 | [../NEOABZU/docs/onboarding.md](../NEOABZU/docs/onboarding.md) | Onboarding | - | - |
+| [../NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md) | Rust Doctrine | This primer captures expectations for Rust code within NEOABZU. | - |
 | [../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md](../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md) | 0MEGA ZERO PRIME ABSOLUTE | ☲ ∴ DECODING: **OMEGA ZERO PRIME ABSOLUTE** | - |
 | [../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md](../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md) | OMEGA PRIME ABSOLUTE CODE | ✴ Perfect Living Triangle of 36 Absolutes (T₈) | - |
 | [../PRIME OPERATOR/PRIMAL OPERATOR GRIMOIRE 1dd45dfc251d80bf85ede904098b9fec.md](../PRIME OPERATOR/PRIMAL OPERATOR GRIMOIRE 1dd45dfc251d80bf85ede904098b9fec.md) | PRIMAL OPERATOR GRIMOIRE | - | - |

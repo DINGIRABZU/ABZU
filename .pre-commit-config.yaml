@@ -60,6 +60,12 @@ repos:
     language: system
     pass_filenames: false
     stages: [commit]
+  - id: rust-fmt-clippy
+    name: Run cargo fmt and clippy
+    entry: bash -c 'cargo fmt --check && cargo clippy -- -D warnings'
+    language: system
+    types: [rust]
+    pass_filenames: false
   - id: doc-indexer
     name: Regenerate documentation index
     entry: python tools/doc_indexer.py
