@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Expanded NEOABZU docs index with Rust component links and Blueprint Spine cross-reference; documented Ouroboros Core and Rust migration across system guides.
 - Isolated NEOABZU tooling with a dedicated `pyproject.toml` and CI workflow, keeping ABZU tests unaffected.
 - Documented PyO3 and gRPC interface contracts in `NEOABZU/Reignition.md` and
   introduced a CI job that builds Rust crates and runs Python integration tests.

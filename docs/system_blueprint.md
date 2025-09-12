@@ -640,6 +640,14 @@ this signature after any mutation confirms the core's authenticity. The
 that convert text to and from the 128-element grid, allowing messages to enter
 and leave the seven-dimensional structure.
 
+## Ouroboros Core
+
+The NEOABZU workspace implements a Rust-based Ouroboros calculus that anchors the system's recursive reasoning. Python services invoke the core through PyO3 bindings, ensuring deterministic self-reference across languages. See [NEOABZU docs](../NEOABZU/docs/index.md) and the [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing) for architectural placement.
+
+## Rust Migration
+
+Performance-critical services are gradually migrating to Rust crates within NEOABZU. Current modules cover the core calculus, memory, vector search, persona, crown orchestration, and RAG interfaces. The workspace mirrors existing Python APIs to permit side-by-side validation during the transition.
+
 ## Chakra-Aligned Architecture
 
 Spiral OS aligns its modules with seven energetic layers, detailed in [spiritual_architecture.md](spiritual_architecture.md). Each chakra maps to representative components:
