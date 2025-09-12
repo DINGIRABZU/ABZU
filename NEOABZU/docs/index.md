@@ -14,6 +14,7 @@ Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spi
 - [core](../core)
 - [memory](../memory)
 - [vector](../vector)
+- [fusion](../fusion)
 - [persona](../persona)
 - [crown](../crown)
 - [rag](../rag)
