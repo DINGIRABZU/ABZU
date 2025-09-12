@@ -5,7 +5,7 @@ Track NEOABZU progress toward ABZU functionality. Update this table as milestone
 | ABZU Module | Status | NEOABZU Plan |
 | --- | --- | --- |
 | User Interface | Routes user intents through the Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L39-L40】 | drop |
-| Persona API | Normalizes user intents and forwards requests to the Crown Router【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L42-L43】 | rewrite in Rust |
+| Persona API | Normalizes user intents and forwards requests to the Crown Router【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L42-L43】 | migrated |
 | Crown Router | Coordinates system-level actions and delegates to RAG Orchestrator【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L45-L46】 | rewrite in Rust |
 | RAG Orchestrator | Dispatches queries to memory bundle and external sources【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L48-L52】 | rewrite in Rust |
 | Insight Engine | Performs higher-order reasoning and returns insights via Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L54-L58】 | rewrite in Rust |
