@@ -1,3 +1,11 @@
+//! NeoABZU memory orchestration layer.
+//!
+//! Enable the `tracing` feature to emit spans and `opentelemetry` to export
+//! them to observability backends:
+//!
+//! ```bash
+//! cargo test -p neoabzu-memory --features opentelemetry
+//! ```
 use std::collections::HashMap;
 use std::sync::Mutex;
 
@@ -305,4 +313,53 @@ fn neoabzu_memory(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(query_memory, m)?)?;
     m.add_function(wrap_pyfunction!(broadcast_layer_event, m)?)?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{broadcast_layer_event, MemoryBundle, LAYERS};
+    use pyo3::prelude::*;
+    use pyo3::types::{PyDict, PyModule};
+
+    fn setup(py: Python<'_>) {
+        let sys = py.import("sys").unwrap();
+        let modules: &PyDict = sys.getattr("modules").unwrap().downcast().unwrap();
+        let agents = PyModule::new(py, "agents").unwrap();
+        modules.set_item("agents", agents).unwrap();
+        let event_code = r#"
+events = []
+def emit_event(actor, action, metadata):
+    events.append((actor, action, metadata))
+"#;
+        let event_bus = PyModule::from_code(py, event_code, "", "event_bus").unwrap();
+        modules.set_item("agents.event_bus", event_bus).unwrap();
+        let vector_code = r#"
+def query_vectors(*a, **k):
+    return [{'text':'abc'}]
+"#;
+        let vector_mod = PyModule::from_code(py, vector_code, "", "vector_memory").unwrap();
+        modules.set_item("vector_memory", vector_mod).unwrap();
+    }
+
+    #[test]
+    fn initializes_layers() {
+        Python::with_gil(|py| {
+            setup(py);
+            let mut bundle = MemoryBundle::new();
+            let statuses = bundle.initialize(py).unwrap();
+            assert_eq!(statuses.get("vector").map(|s| s.as_str()), Some("ready"));
+            assert!(statuses.contains_key("cortex"));
+        });
+    }
+
+    #[test]
+    fn broadcast_fills_missing() {
+        Python::with_gil(|py| {
+            setup(py);
+            let mut initial = std::collections::HashMap::new();
+            initial.insert("vector".to_string(), "ready".to_string());
+            let updated = broadcast_layer_event(py, initial).unwrap();
+            assert!(LAYERS.iter().all(|l| updated.contains_key(*l)));
+        });
+    }
 }
