@@ -34,6 +34,15 @@ Covered modules:
 3. Ignite components sequentially, validating each with `health_checks.py`.
 4. Persist handshake and mission outcomes to `logs/razar_state.json` and mission‑brief archives.
 
+### Rust Memory Bundle Integration
+RAZAR initializes the Rust-backed memory bundle and core engine via
+[PyO3](https://pyo3.rs/) when booting. The boot orchestrator calls
+[`memory/bundle.py`](../memory/bundle.py) and `neoabzu_core.evaluate_py` to
+confirm the bindings. If available, the Crown router forwards text to the Rust
+memory bundle and evaluates expressions through the core engine. OpenTelemetry
+traces wrap these calls when the API is installed, providing cross-service
+diagnostics.
+
 ### Remote Assistance
 RAZAR can delegate missing or failing components to remote agents through
 `ai_invoker.handover`. When a component fails, `ai_invoker` forwards context to a
@@ -278,6 +287,7 @@ logs/mission_briefs/
 ## Version History
 | Version | Date | Notes |
 |---------|------|-------|
+| 0.2.5 | 2025-10-10 | Documented Rust memory bundle integration and tracing hooks. |
 | 0.2.4 | 2025-10-09 | Linked mission brief exchange and servant routing guide. |
 | 0.2.3 | 2025-09-21 | Added remote assistance section with flow diagram plus schema diagrams and ignition example. |
 | 0.2.2 | 2025-09-21 | Expanded remote assistance workflow and patch logging. |

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initialized NEOABZU Rust workspace with core lambda-calculus interpreter and Python bindings.
 - Documented MCP connector compatibility matrix and integration roadmap; linked from project overview.
 - Added OpenTelemetry API and OTLP exporter dependencies and setup guidance.
+- RAZAR boot scripts load Rust memory bundle and core engine via PyO3 with optional OpenTelemetry spans in the Crown router.
 - Memory introspection API and dashboard panel for querying and purging chakra memories.
 - Configurable tracer factory via ``TRACE_PROVIDER`` with examples for switching providers.
 - Documented chakra-tagged signals, heartbeat propagation, and recovery flows

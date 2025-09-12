@@ -235,7 +235,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [PROJECT_STATUS.md](PROJECT_STATUS.md) | Project Status | ![Coverage](../coverage.svg) | - |
 | [QNL_Library.md](QNL_Library.md) | QNL Glyph Library | Reference table for core glyphs and their elemental constants. | - |
 | [QUALITY_EVALUATION.md](QUALITY_EVALUATION.md) | Quality Evaluation | - | - |
-| [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and operator oversight. | `../razar/boot_orchestrator.py` |
+| [RAZAR_AGENT.md](RAZAR_AGENT.md) | RAZAR Agent | RAZAR orchestrates multi-layer ignition and tracks mission state for Crown and operator oversight. | `../memory/bundle.py`, `../razar/boot_orchestrator.py` |
 | [RAZAR_GUIDE.md](RAZAR_GUIDE.md) | RAZAR Guide | - | - |
 | [README.md](README.md) | Documentation Index | The `docs` directory contains reference material for Spiral OS. | - |
 | [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) | Repository Structure | The following table outlines the top-level layout of this repository. | - |

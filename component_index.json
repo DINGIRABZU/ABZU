@@ -754,7 +754,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "razar/boot_orchestrator.py",
-      "version": "0.2.9",
+      "version": "0.2.10",
       "dependencies": [
         "__future__",
         "agents",
@@ -1871,7 +1871,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "crown_router.py",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": [
         "__future__",
         "crown_decider",

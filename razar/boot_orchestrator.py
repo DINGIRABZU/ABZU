@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.9"
+__version__ = "0.2.10"
 
 import argparse
 import asyncio
@@ -19,6 +19,22 @@ import time
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+try:  # pragma: no cover - tracing optional
+    from opentelemetry import trace
+
+    _tracer = trace.get_tracer(__name__)
+except Exception:  # pragma: no cover - tracing optional
+    _tracer = None
+
+try:  # pragma: no cover - Rust crates optional
+    from memory.bundle import MemoryBundle
+    from neoabzu_core import evaluate_py as _core_eval
+
+    _memory_bundle = MemoryBundle()
+except Exception:  # pragma: no cover - Rust crates optional
+    _memory_bundle = None
+    _core_eval = None
 
 from . import ai_invoker, crown_handshake, doc_sync, health_checks, mission_logger
 from .bootstrap_utils import (
@@ -32,6 +48,21 @@ from .quarantine_manager import is_quarantined, quarantine_component
 from agents.nazarick.service_launcher import launch_required_agents
 
 LOGGER = logging.getLogger("razar.boot_orchestrator")
+
+
+def load_rust_components() -> None:
+    """Initialize Rust memory bundle and core engine if available."""
+    if _memory_bundle is None or _core_eval is None:
+        LOGGER.debug("Rust components unavailable")
+        return
+    if _tracer:
+        with _tracer.start_as_current_span("razar.rust_boot"):
+            _memory_bundle.initialize()
+            _core_eval("(\\x.x)")
+    else:
+        _memory_bundle.initialize()
+        _core_eval("(\\x.x)")
+
 
 # Path for recording AI handover attempts
 INVOCATION_LOG_PATH = LOGS_DIR / "razar_ai_invocations.json"
@@ -493,6 +524,8 @@ def main() -> None:
         format="%(asctime)s %(levelname)s %(message)s",
         handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
     )
+
+    load_rust_components()
 
     components = load_config(args.config)
     _emit_event("boot_sequence", "start")

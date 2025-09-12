@@ -7,13 +7,30 @@ services when available.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from typing import Any, Dict
 import time
 import os
 import json
 import asyncio
+
+try:  # pragma: no cover - tracing optional
+    from opentelemetry import trace
+
+    _tracer = trace.get_tracer(__name__)
+except Exception:  # pragma: no cover - tracing optional
+    _tracer = None
+
+try:  # pragma: no cover - Rust crates optional
+    from memory.bundle import MemoryBundle
+    from neoabzu_core import evaluate_py as _core_eval
+
+    _memory_bundle = MemoryBundle()
+    _memory_bundle.initialize()
+except Exception:  # pragma: no cover - Rust crates optional
+    _memory_bundle = None
+    _core_eval = None
 
 from agents.event_bus import emit_event
 
@@ -260,12 +277,31 @@ def route_decision(
     tts_backend = max(backend_weights, key=backend_weights.__getitem__)
     avatar_style = max(avatar_weights, key=avatar_weights.__getitem__)
 
+    rust_memory: Dict[str, Any] | None = None
+    core_output: str | None = None
+    if _memory_bundle is not None:
+        if _tracer:
+            with _tracer.start_as_current_span("crown.memory_query"):
+                rust_memory = _memory_bundle.query(text)
+        else:
+            rust_memory = _memory_bundle.query(text)
+    if _core_eval is not None:
+        if _tracer:
+            with _tracer.start_as_current_span("crown.core_eval"):
+                core_output = _core_eval(text)
+        else:
+            core_output = _core_eval(text)
+
     decision = {
         "model": result.get("model"),
         "tts_backend": tts_backend,
         "avatar_style": avatar_style,
         "aura": opts.get("aura"),
     }
+    if rust_memory is not None:
+        decision["memory"] = rust_memory
+    if core_output is not None:
+        decision["core"] = core_output
     if chakra_registry is not None:
         try:  # pragma: no cover - best effort
             chakra_registry.record(
