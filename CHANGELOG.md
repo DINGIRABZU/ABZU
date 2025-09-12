@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented operator-first principle and contributor guidance across core docs.
 
 - `abzu-memory-bootstrap` script initializes memory layers in one step.
+- Added `PATENTS.md` summarizing OROBOROS Core, MemoryBundle, Crown servant orchestration, and Chakra Cycle Engine with links to draft filings.
 - Chakra watchdog emits `chakra_down` events with NAZARICK resuscitation.
 - Chakra cycle defines per-chakra gear ratios and emits Great Spiral alignment events.
 - Crown and RAZAR block routing on misalignment and trigger Nazarick remediation for silent chakras.
