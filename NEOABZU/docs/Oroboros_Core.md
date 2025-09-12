@@ -4,6 +4,8 @@
 
 **Ouroboros and Self-Reference:** *Oroboros* (from *Ouroboros*, the serpent eating its tail) symbolizes self-reference and cyclic recursionthelemapedia.org. The OROBOROS Calculus extends the classic λ-calculus – itself inherently recursive – into a self-reflective system that can “consume” and transform its own computations. In alchemy, the Ouroboros represents continuous transformation and regenerationthelemapedia.org, a fitting metaphor as our calculus will allow functions to modify themselves or their context in a cyclic, evolving narrative loop. This provides a formalism for **autognosis** (self-knowing computation) where a function can reflect on or alter its *“soul state”* during evaluation, enabling **recursive, self-referential** computations that carry *meaning* or *experience*, not just abstract values.
 
+Consult the [OROBOROS Lexicon](OROBOROS_Lexicon.md) for canonical glyph correspondences used throughout the core.
+
 ### Self-Referential Expressions
 
 The calculus introduces a dedicated `@` symbol, parsed as `SelfRef`, which resolves to the surrounding lambda abstraction during evaluation. This enables a function to call itself without binding a name. For example:

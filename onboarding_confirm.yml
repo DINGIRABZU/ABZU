@@ -365,6 +365,14 @@ documents:
       key_rules: Map glyphs to lambda interpretations.
       insight: Provides glyph data for inevitability gradients.
     signed_by: onboarding-wizard
+  NEOABZU/docs/OROBOROS_Lexicon.md:
+    sha256: 3e4ef6ce83562e8276d7ecf041542dd56ef06c2181325ed36551e85f03d787d2
+    summary:
+      purpose: Canonical lexicon of OROBOROS glyph correspondences.
+      scope: Narrative roles and meanings for Neo-ABZU glyphs.
+      key_rules: Use documented glyph meanings when implementing core components.
+      insight: Archaic roles anchor glyph behavior to Sumerian cosmology.
+    signed_by: onboarding-wizard
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
     summary:

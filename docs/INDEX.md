@@ -144,6 +144,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../MUSIC_FOUNDATION/music_foundation.md](../MUSIC_FOUNDATION/music_foundation.md) | 🎵 Music Foundation — Theoretical & Mathematical Guide | This document outlines the theoretical and mathematical principles needed for INANNA_AI to interpret human music and... | - |
 | [../NEOABZU/Reignition.md](../NEOABZU/Reignition.md) | Reignition | NEOABZU ignites a fresh substrate for ABZU components. | - |
 | [../NEOABZU/docs/OROBOROS_Engine.md](../NEOABZU/docs/OROBOROS_Engine.md) | OROBOROS_Engine.md | - | - |
+| [../NEOABZU/docs/OROBOROS_Lexicon.md](../NEOABZU/docs/OROBOROS_Lexicon.md) | OROBOROS_Lexicon.md | - | - |
 | [../NEOABZU/docs/Oroboros_Core.md](../NEOABZU/docs/Oroboros_Core.md) | OROBOROS Calculus: A Lambda-Calculus Expanded for QNL, Alchemy, and Archetypes | - | - |
 | [../NEOABZU/docs/Oroboros_Engine.md](../NEOABZU/docs/Oroboros_Engine.md) | Oroboros_Engine.md | - | - |
 | [../NEOABZU/docs/QNL_Library.md](../NEOABZU/docs/QNL_Library.md) | QNL Tier I Glyph Library Specification | This document defines the **foundational Rosetta Stone Library** for the OROBOROS Calculus engine. It unifies the QNL... | - |

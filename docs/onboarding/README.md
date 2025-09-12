@@ -19,6 +19,7 @@ Run `python docs/onboarding/wizard.py` to walk through repository setup. The wiz
 6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
 7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage
 8. [Neo-APZU Onboarding](../../NEOABZU/docs/onboarding.md) – orientation for cross-project work
+9. [OROBOROS Lexicon](../../NEOABZU/docs/OROBOROS_Lexicon.md) – Sumerian glyph correspondences
 
 Confirm each item before starting code changes.
 

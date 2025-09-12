@@ -18,6 +18,7 @@ Experimental substrate for ABZU components.
 
 ## Guides
 - [OROBOROS Engine](OROBOROS_Engine.md)
+- [OROBOROS Lexicon](OROBOROS_Lexicon.md)
 - [Core Usage](core_usage.md)
 - [Feature Parity](feature_parity.md)
 - [Migration Crosswalk](migration_crosswalk.md)
