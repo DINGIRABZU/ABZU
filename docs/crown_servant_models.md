@@ -59,3 +59,7 @@ prompt orchestrator before routing requests.
 
 ## Version History
 - **0.1.0** – Initial servant deployment guide.
+
+## Patent Status
+
+Covered in [PATENTS.md](../PATENTS.md) under "Crown Servant Orchestration." Draft filings, if any, reside in [patents/](../patents/). Substantive edits require maintainer approval.

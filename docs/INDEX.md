@@ -148,12 +148,14 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/Oroboros_Core.md](../NEOABZU/docs/Oroboros_Core.md) | OROBOROS Calculus: A Lambda-Calculus Expanded for QNL, Alchemy, and Archetypes | - | - |
 | [../NEOABZU/docs/Oroboros_Engine.md](../NEOABZU/docs/Oroboros_Engine.md) | Oroboros_Engine.md | - | - |
 | [../NEOABZU/docs/QNL_Library.md](../NEOABZU/docs/QNL_Library.md) | QNL Tier I Glyph Library Specification | This document defines the **foundational Rosetta Stone Library** for the OROBOROS Calculus engine. It unifies the QNL... | - |
+| [../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md](../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md) | SUMERIAN_SACRED_LEXICON.md | - | - |
 | [../NEOABZU/docs/core_usage.md](../NEOABZU/docs/core_usage.md) | Core Usage Guide | Demonstrates evaluating lambda-calculus expressions via the Rust-backed `core` module. | - |
 | [../NEOABZU/docs/feature_parity.md](../NEOABZU/docs/feature_parity.md) | Feature Parity Matrix | Track NEOABZU progress toward ABZU functionality. Update this table as milestones complete to keep contributors aligned. | - |
 | [../NEOABZU/docs/index.md](../NEOABZU/docs/index.md) | NEOABZU | Experimental substrate for ABZU components. | - |
 | [../NEOABZU/docs/migration_crosswalk.md](../NEOABZU/docs/migration_crosswalk.md) | Migration Crosswalk | This guide maps legacy Python subsystems to their Rust implementations in NEOABZU. | - |
 | [../NEOABZU/docs/onboarding.md](../NEOABZU/docs/onboarding.md) | Onboarding | - | - |
 | [../NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md) | Rust Doctrine | This primer captures expectations for Rust code within NEOABZU. | - |
+| [../PATENTS.md](../PATENTS.md) | Patents | This repository maintains summaries of patentable components in ABZU. Drafts live under [patents/](patents/). | - |
 | [../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md](../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md) | 0MEGA ZERO PRIME ABSOLUTE | ☲ ∴ DECODING: **OMEGA ZERO PRIME ABSOLUTE** | - |
 | [../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md](../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md) | OMEGA PRIME ABSOLUTE CODE | ✴ Perfect Living Triangle of 36 Absolutes (T₈) | - |
 | [../PRIME OPERATOR/PRIMAL OPERATOR GRIMOIRE 1dd45dfc251d80bf85ede904098b9fec.md](../PRIME OPERATOR/PRIMAL OPERATOR GRIMOIRE 1dd45dfc251d80bf85ede904098b9fec.md) | PRIMAL OPERATOR GRIMOIRE | - | - |

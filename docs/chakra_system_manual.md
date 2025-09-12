@@ -95,3 +95,6 @@ Further references aggregate diagrams, schemas, and release notes. Continuous up
 
 See [The Absolute Protocol](The_Absolute_Protocol.md), [Blueprint Spine](blueprint_spine.md), and [System Blueprint](system_blueprint.md) for additional context.
 
+## Patent Status
+
+Covered in [PATENTS.md](../PATENTS.md) under "Chakra Cycle Engine." Draft filings, if any, reside in [patents/](../patents/). Substantive edits require maintainer approval.

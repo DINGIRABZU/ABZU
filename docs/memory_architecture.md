@@ -347,3 +347,7 @@ PY
 | Commit | Dataset |
 | --- | --- |
 | [eac758a](https://github.com/search?q=eac758a06df7a5e1db89b510d690d415a2536d46) | [biosignal samples](../data/biosignals/README.md) |
+
+## Patent Status
+
+Covered in [PATENTS.md](../PATENTS.md) under "MemoryBundle." Draft filings, if any, reside in [patents/](../patents/). Substantive edits require maintainer approval.
