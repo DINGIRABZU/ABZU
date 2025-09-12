@@ -21,8 +21,11 @@ REQUIRED_DOCS = [
     "docs/vision_system.md",
     "docs/persona_api_guide.md",
     "docs/spiral_cortex_terminal.md",
+    "NEOABZU/docs/onboarding.md",
+    "NEOABZU/docs/Oroboros_Core.md",
+    "NEOABZU/docs/migration_crosswalk.md",
 ]
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 def sha256(path: Path) -> str:

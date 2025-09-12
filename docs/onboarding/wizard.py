@@ -3,8 +3,21 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import subprocess
+from datetime import datetime
+from pathlib import Path
 from typing import List
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[2]
+CONFIRM = ROOT / "onboarding_confirm.yml"
+NEO_APSU_DOCS = [
+    "NEOABZU/docs/onboarding.md",
+    "NEOABZU/docs/Oroboros_Core.md",
+    "NEOABZU/docs/migration_crosswalk.md",
+]
 
 
 def run_command(cmd: List[str], dry_run: bool) -> None:
@@ -49,6 +62,39 @@ def run_smoke_tests(dry_run: bool = False) -> None:
     run_command(["bash", "scripts/smoke_console_interface.sh"], dry_run)
 
 
+def sha256(path: Path) -> str:
+    """Return the SHA256 hash of ``path``."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def confirm_docs(signer: str) -> None:
+    """Prompt for Neo-APSU document confirmations and record them."""
+    data = {}
+    if CONFIRM.exists():
+        data = yaml.safe_load(CONFIRM.read_text()) or {}
+    docs = data.setdefault("documents", {})
+    for rel in NEO_APSU_DOCS:
+        answer = input(f"Confirm you've read {rel}? [y]/n: ") or "y"
+        if answer.lower() not in {"y", "yes"}:
+            continue
+        purpose = input("  Purpose: ")
+        scope = input("  Scope: ")
+        key_rules = input("  Key rules: ")
+        insight = input("  Insight: ")
+        docs[rel] = {
+            "sha256": sha256(ROOT / rel),
+            "summary": {
+                "purpose": purpose,
+                "scope": scope,
+                "key_rules": key_rules,
+                "insight": insight,
+            },
+            "signed_by": signer,
+            "signed_at": datetime.utcnow().isoformat() + "Z",
+        }
+    CONFIRM.write_text(yaml.safe_dump(data, sort_keys=True))
+
+
 def main() -> None:
     """Launch the interactive quick-start wizard."""
     parser = argparse.ArgumentParser(description="Run ABZU setup steps interactively.")
@@ -79,6 +125,9 @@ def main() -> None:
     run_test = input("Run smoke console test? [y]/n: ") or "y"
     if run_test.lower() in {"y", "yes"}:
         run_smoke_tests(args.dry_run)
+
+    signer = input("Name to sign onboarding confirmations: ") or "anonymous"
+    confirm_docs(signer)
 
 
 if __name__ == "__main__":

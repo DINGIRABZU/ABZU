@@ -332,6 +332,23 @@ documents:
       scope: NEOABZU contributors.
       key_rules: Align NEOABZU work with ABZU blueprints and referenced protocols.
       insight: Cross-reference ABZU docs to maintain consistency.
+    signed_by: onboarding-wizard
+  NEOABZU/docs/Oroboros_Core.md:
+    sha256: 185d0a8154092d33cdef69f1efa1d1f625eabb66fd2761c5e4bc759946465ee3
+    summary:
+      purpose: Theoretical framework for the Rust Ouroboros calculus.
+      scope: Neo-APSU self-referential core and narrative computation.
+      key_rules: Use `@` for recursion and embrace non-dual logic.
+      insight: `@` enables recursion without naming functions.
+    signed_by: onboarding-wizard
+  NEOABZU/docs/migration_crosswalk.md:
+    sha256: e2d7b8dc1e41ba11996b181d7bb293163ce55a83c8022c5a8c77e29d0c1236d1
+    summary:
+      purpose: Map Python subsystems to Rust crates.
+      scope: NEOABZU migration mapping and integration.
+      key_rules: Keep Python modules aligned with their Rust counterparts.
+      insight: `neoabzu-memory` crate bundles core memory layers.
+    signed_by: onboarding-wizard
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
     summary:

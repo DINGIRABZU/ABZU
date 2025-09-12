@@ -23,3 +23,27 @@ questions:
       c: "scripts/check_env.py"
       d: "scripts/health_check_connectors.py"
     answer: "b"
+  - id: 4
+    prompt: "In the system blueprint, how do Python services interact with the Rust-based Ouroboros Core?"
+    options:
+      a: "Through CFFI bindings"
+      b: "Via PyO3 bindings"
+      c: "Over raw HTTP calls"
+      d: "Through WebSocket tunnels"
+    answer: "b"
+  - id: 5
+    prompt: "Which environment variable toggles connectors to communicate through the MCP gateway?"
+    options:
+      a: "ABZU_MCP_MODE"
+      b: "USE_MCP_GATEWAY"
+      c: "ABZU_USE_MCP"
+      d: "MCP_ENABLED"
+    answer: "c"
+  - id: 6
+    prompt: "docs/system_blueprint.md notes that what kind of services are migrating to Rust crates within NEOABZU?"
+    options:
+      a: "User interface templates"
+      b: "Performance-critical services"
+      c: "Unit test harnesses"
+      d: "Documentation build scripts"
+    answer: "b"
