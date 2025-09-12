@@ -60,6 +60,12 @@ repos:
     language: system
     pass_filenames: false
     stages: [commit]
+  - id: verify-onboarding-refs
+    name: Verify onboarding references
+    entry: python scripts/verify_onboarding_refs.py
+    language: system
+    pass_filenames: false
+    always_run: true
   - id: rust-fmt-clippy
     name: Run cargo fmt and clippy
     entry: bash -c 'cargo fmt --check && cargo clippy -- -D warnings'

@@ -3,6 +3,7 @@
 Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onboarding_confirm.yml` at the repository root for both APZU and Neo-APZU docs, and answer the questions in `onboarding_quiz.yml`.
 
 Run `python docs/onboarding/wizard.py` to walk through repository setup. The wizard prompts for Neo-APSU document confirmations and writes signed summaries to `onboarding_confirm.yml`. CI runs `scripts/confirm_reading.py` and fails if required confirmations are missing.
+A pre-commit hook also verifies that `onboarding_confirm.yml` references `docs/blueprint_spine.md`, `docs/The_Absolute_Protocol.md`, and `NEOABZU/docs/Oroboros_Core.md`.
 
 1. [Project Overview](../project_overview.md)
 2. [Architecture Overview](../architecture_overview.md)
