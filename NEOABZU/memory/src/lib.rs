@@ -25,6 +25,7 @@ static LAYERS: &[&str] = &[
     "mental",
     "spiritual",
     "narrative",
+    "core",
 ];
 
 static LAYER_IMPORTS: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
@@ -36,6 +37,7 @@ static LAYER_IMPORTS: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     m.insert("mental", "memory.mental");
     m.insert("spiritual", "memory.spiritual");
     m.insert("narrative", "memory.narrative_engine");
+    m.insert("core", "neoabzu_core");
     m
 });
 
@@ -159,6 +161,14 @@ impl MemoryBundle {
             }
         };
 
+        let core_res = match query_core(py, text) {
+            Ok(obj) => obj,
+            Err(_) => {
+                failed_layers.push("core");
+                py.None()
+            }
+        };
+
         let result = PyDict::new(py);
         result.set_item("cortex", cortex_res)?;
         result.set_item("vector", vector_res)?;
@@ -167,6 +177,7 @@ impl MemoryBundle {
         result.set_item("mental", mental_res)?;
         result.set_item("spiritual", spiritual_res)?;
         result.set_item("narrative", narrative_res)?;
+        result.set_item("core", core_res)?;
         result.set_item("failed_layers", PyList::new(py, failed_layers))?;
         Ok(result.into())
     }
@@ -263,6 +274,15 @@ fn query_narrative(py: Python<'_>, _text: &str) -> PyResult<PyObject> {
     Err(PyErr::new::<pyo3::exceptions::PyException, _>("narrative query failed"))
 }
 
+fn query_core(py: Python<'_>, text: &str) -> PyResult<PyObject> {
+    if let Ok(module) = PyModule::import(py, "neoabzu_core") {
+        if let Ok(func) = module.getattr("evaluate") {
+            return func.call1((text,)).map(|o| o.into_py(py));
+        }
+    }
+    Err(PyErr::new::<pyo3::exceptions::PyException, _>("core query failed"))
+}
+
 #[pyfunction]
 pub fn broadcast_layer_event(
     py: Python<'_>,
@@ -307,17 +327,33 @@ pub fn query_memory(py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {
     bundle.query(py, text)
 }
 
+#[pyfunction]
+pub fn eval_core(py: Python<'_>, src: &str) -> PyResult<String> {
+    let module = PyModule::import(py, "neoabzu_core")?;
+    let func = module.getattr("evaluate")?;
+    func.call1((src,))?.extract()
+}
+
+#[pyfunction]
+pub fn reduce_inevitable_core(py: Python<'_>, expr: &str) -> PyResult<f32> {
+    let module = PyModule::import(py, "neoabzu_core")?;
+    let func = module.getattr("reduce_inevitable")?;
+    func.call1((expr,))?.extract()
+}
+
 #[pymodule]
 fn neoabzu_memory(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_class::<MemoryBundle>()?;
     m.add_function(wrap_pyfunction!(query_memory, m)?)?;
     m.add_function(wrap_pyfunction!(broadcast_layer_event, m)?)?;
+    m.add_function(wrap_pyfunction!(eval_core, m)?)?;
+    m.add_function(wrap_pyfunction!(reduce_inevitable_core, m)?)?;
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{broadcast_layer_event, MemoryBundle, LAYERS};
+    use super::{broadcast_layer_event, eval_core, reduce_inevitable_core, MemoryBundle, LAYERS};
     use pyo3::prelude::*;
     use pyo3::types::{PyDict, PyModule};
 
@@ -339,6 +375,14 @@ def query_vectors(*a, **k):
 "#;
         let vector_mod = PyModule::from_code(py, vector_code, "", "vector_memory").unwrap();
         modules.set_item("vector_memory", vector_mod).unwrap();
+        let core_code = r#"
+def evaluate(expr):
+    return expr[::-1]
+def reduce_inevitable(expr):
+    return 0.1
+"#;
+        let core_mod = PyModule::from_code(py, core_code, "", "neoabzu_core").unwrap();
+        modules.set_item("neoabzu_core", core_mod).unwrap();
     }
 
     #[test]
@@ -349,6 +393,7 @@ def query_vectors(*a, **k):
             let statuses = bundle.initialize(py).unwrap();
             assert_eq!(statuses.get("vector").map(|s| s.as_str()), Some("ready"));
             assert!(statuses.contains_key("cortex"));
+            assert_eq!(statuses.get("core").map(|s| s.as_str()), Some("ready"));
         });
     }
 
@@ -360,6 +405,25 @@ def query_vectors(*a, **k):
             initial.insert("vector".to_string(), "ready".to_string());
             let updated = broadcast_layer_event(py, initial).unwrap();
             assert!(LAYERS.iter().all(|l| updated.contains_key(*l)));
+        });
+    }
+
+    #[test]
+    fn eval_core_invokes_module() {
+        Python::with_gil(|py| {
+            setup(py);
+            let input = "core";
+            let result = eval_core(py, input).unwrap();
+            assert_eq!(result, input.chars().rev().collect::<String>());
+        });
+    }
+
+    #[test]
+    fn reduce_core_invokes_module() {
+        Python::with_gil(|py| {
+            setup(py);
+            let val = reduce_inevitable_core(py, "foo").unwrap();
+            assert!((val - 0.1).abs() < f32::EPSILON);
         });
     }
 }
