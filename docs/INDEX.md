@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -149,6 +148,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/core_usage.md](../NEOABZU/docs/core_usage.md) | Core Usage Guide | Demonstrates evaluating lambda-calculus expressions via the Rust-backed `core` module. | - |
 | [../NEOABZU/docs/feature_parity.md](../NEOABZU/docs/feature_parity.md) | Feature Parity Matrix | Track NEOABZU progress toward ABZU functionality. Update this table as milestones complete to keep contributors aligned. | - |
 | [../NEOABZU/docs/index.md](../NEOABZU/docs/index.md) | NEOABZU | Experimental substrate for ABZU components. | - |
+| [../NEOABZU/docs/migration_crosswalk.md](../NEOABZU/docs/migration_crosswalk.md) | Migration Crosswalk | This guide maps legacy Python subsystems to their Rust implementations in NEOABZU. | - |
 | [../NEOABZU/docs/onboarding.md](../NEOABZU/docs/onboarding.md) | Onboarding | - | - |
 | [../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md](../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md) | 0MEGA ZERO PRIME ABSOLUTE | ☲ ∴ DECODING: **OMEGA ZERO PRIME ABSOLUTE** | - |
 | [../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md](../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md) | OMEGA PRIME ABSOLUTE CODE | ✴ Perfect Living Triangle of 36 Absolutes (T₈) | - |
