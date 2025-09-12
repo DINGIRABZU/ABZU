@@ -9,3 +9,14 @@ import core
 print(core.evaluate("(\\x.x) y"))
 # -> y
 ```
+
+## Initializing Memory Layers
+
+```python
+import neoabzu_memory as memory
+
+bundle = memory.MemoryBundle()
+bundle.initialize()
+result = bundle.query("demo")
+print(result["failed_layers"])  # [] when all layers respond
+```
