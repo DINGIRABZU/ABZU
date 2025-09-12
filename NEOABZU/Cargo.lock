@@ -119,6 +119,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "neoabzu-rag"
+version = "0.1.0"
+dependencies = [
+ "neoabzu-memory",
+ "pyo3",
+]
+
+[[package]]
 name = "neoabzu-vector"
 version = "0.1.0"
 
