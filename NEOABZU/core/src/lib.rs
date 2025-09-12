@@ -1,3 +1,11 @@
+//! Core lambda-calculus evaluation engine for NeoABZU.
+//!
+//! Enable the `tracing` feature to emit spans and `opentelemetry` to export
+//! them:
+//!
+//! ```bash
+//! cargo test -p neoabzu-core --features opentelemetry
+//! ```
 use pyo3::prelude::*;
 use std::collections::VecDeque;
 
@@ -208,6 +216,7 @@ fn eval_with_self(expr: Expr, self_ref: Option<Expr>) -> Expr {
 }
 
 /// Evaluate a lambda-calculus expression and return the resulting term as a string.
+#[cfg_attr(feature = "tracing", tracing::instrument)]
 pub fn evaluate(src: &str) -> String {
     let mut chars: VecDeque<char> = src.chars().filter(|c| !c.is_whitespace()).collect();
     let expr = parse(&mut chars);
@@ -248,6 +257,11 @@ mod tests {
         let expr = parse(&mut chars);
         let result = eval(expr);
         assert!(matches!(result.element, Some(Element::Fire)));
+    }
+
+    #[test]
+    fn application_reduces() {
+        assert_eq!(evaluate("(\\x.x)y"), "y");
     }
 }
 
