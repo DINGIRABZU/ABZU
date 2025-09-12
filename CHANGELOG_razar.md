@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 ## [Unreleased]
 
 ### Added
+- Boot scripts load the Rust memory bundle and core engine through PyO3 and emit OpenTelemetry spans when available.
 - Mission logger emits structured lifecycle events, including `resolved` and
   `shutdown` states for recovery tracking.
 - Documented remediation steps for placeholder violations in RAZAR agent
