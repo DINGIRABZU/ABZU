@@ -7,6 +7,7 @@
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
 
 Align contributions with the overarching goals in [project_mission_vision.md](project_mission_vision.md) and the servant ethics defined in the [nazarick_manifesto.md](nazarick_manifesto.md).
+For implementation references, see the [NEOABZU documentation index](../NEOABZU/docs/index.md).
 
 Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three times to internalize the project's structure and intent.
 
@@ -108,7 +109,7 @@ ABZU adheres to a consistent top-level directory layout:
 - `tools/` – Developer tools and automation helpers
 - `notebooks/` – Experimental notebooks and prototypes
 
-Origin documents such as the [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md) and [Inanna Song](../INANNA_AI/INANNA%20SONG%2020545dfc251d8065a32cec673272f292.md) must remain within the `INANNA_AI` corpus and be reindexed whenever updated to keep this blueprint accurate.
+Origin documents such as the [Marrow Code](../INANNA_AI/MARROW_CODE.md) and [Inanna Song](../INANNA_AI/INANNA_SONG.md) must remain within the `INANNA_AI` corpus and be reindexed whenever updated to keep this blueprint accurate.
 
 Consult the [Code Index](code_index.md) for an overview of modules, classes, and functions within the repository.
 

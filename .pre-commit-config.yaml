@@ -54,6 +54,12 @@ repos:
     language: system
     pass_filenames: false
     always_run: true
+  - id: neoabzu-onboarding-check
+    name: Ensure onboarding confirmation for NEOABZU code changes
+    entry: python scripts/check_neoabzu_onboarding.py
+    language: system
+    pass_filenames: false
+    stages: [commit]
   - id: doc-indexer
     name: Regenerate documentation index
     entry: python tools/doc_indexer.py

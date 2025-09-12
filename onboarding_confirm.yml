@@ -1,6 +1,6 @@
 documents:
   AGENTS.md:
-    sha256: 08aab5d3dabd13cc0937d5e6574bbed143346c5340c13578224336c1ecdc2671
+    sha256: 45991605338bf6f83d674a8f445d4a9d1a7da2c6138fd1720725ce38f719cd77
     summary:
       purpose: Repository-wide agent instructions.
       scope: Entire repository.
@@ -198,7 +198,7 @@ documents:
       key_rules: Apply listed security safeguards.
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
-    sha256: 22959d537562f6f820e8f3072775cb6ffad66f107478ceea20c605ed5399454a
+    sha256: a11127c5d8f46a5cf2f623c5c133d447829ecef771aabe49654be1e1b6a2b1de
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -243,7 +243,7 @@ documents:
       key_rules: Review before altering system protection code.
       insight: Review before modifying system protection code.
   docs/INDEX.md:
-    sha256: f1e1bde7a7f0f5650d65e7059cd8340ba0c73f416588491c109b2318001ecfe5
+    sha256: 32e501ba3ac70e4156f563c44d05a8f7ac7f852f3ed75b69b3652f98b2f29a13
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
