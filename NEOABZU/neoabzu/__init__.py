@@ -1,3 +1,3 @@
-from . import core, memory, vector
+from . import core, memory, vector, numeric
 
-__all__ = ["core", "memory", "vector"]
+__all__ = ["core", "memory", "vector", "numeric"]

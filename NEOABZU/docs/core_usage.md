@@ -37,3 +37,12 @@ from neoabzu import vector
 for text, score in vector.search("hello world", top_n=3):
     print(text, round(score, 3))
 ```
+
+## Computing Principal Components
+
+```python
+from neoabzu import numeric
+
+data = [[1.0, 2.0], [2.0, 4.0], [3.0, 6.0]]
+print(numeric.find_principal_components(data, n_components=1))
+```
