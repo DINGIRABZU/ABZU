@@ -1,5 +1,7 @@
 # Onboarding
 
+This Neo‑ABZU guide complements the [ABZU Onboarding Checklist](../../docs/onboarding/README.md); review and confirm both documents in `onboarding_confirm.yml`.
+
 ## Migration Goals
 
 NEOABZU migrates core ABZU capabilities into a lean Rust foundation while preserving operator-first principles and alignment with the original system blueprints.

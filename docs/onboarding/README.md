@@ -1,5 +1,7 @@
 # Onboarding Checklist
 
+This checklist pairs with the [Neo‑ABZU Onboarding guide](../../NEOABZU/docs/onboarding.md); confirm both documents in `onboarding_confirm.yml`.
+
 Follow this reading order before contributing. After reviewing each document, record its current SHA256 hash in `onboarding_confirm.yml` at the repository root for both APZU and Neo-APZU docs, and answer the questions in `onboarding_quiz.yml`.
 
 Run `python docs/onboarding/wizard.py` to walk through repository setup. The wizard prompts for Neo-APSU document confirmations and writes signed summaries to `onboarding_confirm.yml`. CI runs `scripts/confirm_reading.py` and fails if required confirmations are missing.

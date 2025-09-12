@@ -50,6 +50,8 @@ graph LR
 | [Operator Protocol](operator_protocol.md) | Operator interaction rules | Quarterly |
 | [Neo-ABZU Onboarding](../NEOABZU/docs/onboarding.md) | Orientation for cross-project work | Quarterly |
 | [OROBOROS Lexicon](../NEOABZU/docs/OROBOROS_Lexicon.md) | Canonical Sumerian glyph correspondences | Quarterly |
+| [Hero Journey Engine](../NEOABZU/docs/herojourney_engine.md) | Reduction stages mapped to mythic narrative | Quarterly |
+| [Sumerian 33‑Word Lexicon](../NEOABZU/docs/SUMERIAN_33WORDS.md) | Sacred vocabulary of 33 primordial concepts | Quarterly |
 | [Test Planning Guide](onboarding/test_planning.md) | Filing "Test Plan" issues defining scope, chakra, and coverage goals | Quarterly |
 | [Bana Engine](bana_engine.md) | Mistral 7B fine-tuning, event processing, and output paths | Quarterly |
 | [Nazarick Narrative System](nazarick_narrative_system.md) | Biosignal→StoryEvent pipeline and memory hooks | Quarterly |
