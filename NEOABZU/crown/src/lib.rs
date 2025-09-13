@@ -101,9 +101,29 @@ fn route_decision(
     Ok(decision.into_py(py))
 }
 
+#[pyfunction]
+fn route_inevitability(py: Python<'_>, expr: &str) -> PyResult<Py<PyDict>> {
+    let core = PyModule::import(py, "neoabzu_core")?;
+    let reduce = core.getattr("reduce_inevitable")?;
+    let (inevitability, journey): (f32, Vec<String>) = reduce.call1((expr,))?.extract()?;
+
+    let narrative = format!("{inevitability}:{journey:?}");
+    let statuses = PyDict::new(py);
+    statuses.set_item("narrative", narrative)?;
+    let memory = PyModule::import(py, "neoabzu_memory")?;
+    let broadcast = memory.getattr("broadcast_layer_event")?;
+    broadcast.call1((statuses,))?;
+
+    let result = PyDict::new(py);
+    result.set_item("inevitability", inevitability)?;
+    result.set_item("journey", journey)?;
+    Ok(result.into_py(py))
+}
+
 #[pymodule]
 fn neoabzu_crown(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(route_query, m)?)?;
     m.add_function(wrap_pyfunction!(route_decision, m)?)?;
+    m.add_function(wrap_pyfunction!(route_inevitability, m)?)?;
     Ok(())
 }
