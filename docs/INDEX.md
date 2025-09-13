@@ -157,6 +157,9 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/migration_crosswalk.md](../NEOABZU/docs/migration_crosswalk.md) | Migration Crosswalk | This guide maps legacy Python subsystems to their Rust implementations in NEOABZU. | - |
 | [../NEOABZU/docs/onboarding.md](../NEOABZU/docs/onboarding.md) | Onboarding | This Neo‑ABZU guide complements the [ABZU Onboarding Checklist](../../docs/onboarding/README.md); review and confirm... | - |
 | [../NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md) | Rust Doctrine | This primer captures expectations for Rust code within NEOABZU. | - |
+| [../NEOABZU/memory/README.md](../NEOABZU/memory/README.md) | neoabzu-memory | Neo-ABZU memory primitives. | - |
+| [../NEOABZU/rag/README.md](../NEOABZU/rag/README.md) | neoabzu-rag | Retrieval-augmented generation components for Neo-ABZU. | - |
+| [../NEOABZU/vector/README.md](../NEOABZU/vector/README.md) | neoabzu-vector | Rust vector operations for Neo-ABZU. | - |
 | [../PATENTS.md](../PATENTS.md) | Patents | This repository maintains summaries of patentable components in ABZU. Drafts live under [patents/](patents/). | - |
 | [../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md](../PRIME OPERATOR/0MEGA ZERO PRIME ABSOLUTE 1de45dfc251d80fd8b58f7ff3b52891e.md) | 0MEGA ZERO PRIME ABSOLUTE | ☲ ∴ DECODING: **OMEGA ZERO PRIME ABSOLUTE** | - |
 | [../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md](../PRIME OPERATOR/OMEGA PRIME ABSOLUTE CODE 1de45dfc251d80238a8cfa3cc7d4a162.md) | OMEGA PRIME ABSOLUTE CODE | ✴ Perfect Living Triangle of 36 Absolutes (T₈) | - |
@@ -445,7 +448,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
-| [roadmap.md](roadmap.md) | Roadmap | This roadmap tracks progress toward the Spiral OS vision. See [project_overview.md](project_overview.md) for context... | - |
+| [roadmap.md](roadmap.md) | Roadmap | This roadmap tracks progress toward the Spiral OS vision and outlines milestone stages with target dates. See [projec... | - |
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
 | [security_model.md](security_model.md) | Security Model | This guide highlights major threat surfaces in the project and the steps used to reduce risk. | - |
 | [self_healing_manifesto.md](self_healing_manifesto.md) | Self-Healing Manifesto | Spiral OS treats the codebase as a living organism.  Components behave like organs working in concert, and each chang... | - |

@@ -1,8 +1,18 @@
 # Roadmap
 
-This roadmap tracks progress toward the Spiral OS vision. See
+This roadmap tracks progress toward the Spiral OS vision and outlines
+milestone stages with target dates. See
 [project_overview.md](project_overview.md) for context and
 [developer_manual.md](developer_manual.md) for implementation notes.
+
+## Milestone Stages
+
+| Stage | Target Date |
+| --- | --- |
+| Prototype | 2024-07-01 |
+| Alpha Release | 2024-10-01 |
+| Beta Release | 2025-01-15 |
+| General Availability | 2025-07-01 |
 
 ## Quarterly Chakra Targets
 
@@ -25,13 +35,13 @@ delivery.
 
 | Chakra | Target Quarter | Milestone | Issue | Owner |
 | --- | --- | --- | --- | --- |
-| Root | Q3 2024 | [root-chakra-q3-2024](https://github.com/DINGIRABZU/ABZU/milestone/root-chakra-q3-2024) | [#101](https://github.com/DINGIRABZU/ABZU/issues/101) | Mia |
-| Sacral | Q4 2024 | [sacral-chakra-q4-2024](https://github.com/DINGIRABZU/ABZU/milestone/sacral-chakra-q4-2024) | [#102](https://github.com/DINGIRABZU/ABZU/issues/102) | Liam |
-| Solar Plexus | Q1 2025 | [solar-plexus-q1-2025](https://github.com/DINGIRABZU/ABZU/milestone/solar-plexus-q1-2025) | [#103](https://github.com/DINGIRABZU/ABZU/issues/103) | Ava |
-| Heart | Q2 2025 | [heart-chakra-q2-2025](https://github.com/DINGIRABZU/ABZU/milestone/heart-chakra-q2-2025) | [#104](https://github.com/DINGIRABZU/ABZU/issues/104) | Noah |
-| Throat | Q3 2025 | [throat-chakra-q3-2025](https://github.com/DINGIRABZU/ABZU/milestone/throat-chakra-q3-2025) | [#105](https://github.com/DINGIRABZU/ABZU/issues/105) | Zoe |
-| Third Eye | Q4 2025 | [third-eye-q4-2025](https://github.com/DINGIRABZU/ABZU/milestone/third-eye-q4-2025) | [#106](https://github.com/DINGIRABZU/ABZU/issues/106) | Ethan |
-| Crown | Q1 2026 | [crown-chakra-q1-2026](https://github.com/DINGIRABZU/ABZU/milestone/crown-chakra-q1-2026) | [#107](https://github.com/DINGIRABZU/ABZU/issues/107) | Sophia |
+| Root | Q3 2024 | root-chakra-q3-2024 | #101 | Mia |
+| Sacral | Q4 2024 | sacral-chakra-q4-2024 | #102 | Liam |
+| Solar Plexus | Q1 2025 | solar-plexus-q1-2025 | #103 | Ava |
+| Heart | Q2 2025 | heart-chakra-q2-2025 | #104 | Noah |
+| Throat | Q3 2025 | throat-chakra-q3-2025 | #105 | Zoe |
+| Third Eye | Q4 2025 | third-eye-q4-2025 | #106 | Ethan |
+| Crown | Q1 2026 | crown-chakra-q1-2026 | #107 | Sophia |
 
 ## Completed
 
@@ -75,4 +85,5 @@ quarter‑level goals and owners.
 
 Review and adjust this roadmap after each major release to update milestone
 links, issue references, owner assignments, and target quarters for remaining
-upgrades.
+upgrades. Record each completed milestone's date here and add a corresponding
+entry to `CHANGELOG.md`.
