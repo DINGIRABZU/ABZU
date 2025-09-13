@@ -1,6 +1,7 @@
 documents:
   AGENTS.md:
     sha256: 45991605338bf6f83d674a8f445d4a9d1a7da2c6138fd1720725ce38f719cd77
+    commit: 88f4756580e20789a1ad633a9394cad5eada2fe6
     summary:
       purpose: Repository-wide agent instructions.
       scope: Entire repository.
@@ -8,6 +9,7 @@ documents:
       insight: Check AGENTS.md before committing changes.
   docs/ABZU_SUBSYSTEM_OVERVIEW.md:
     sha256: 8168179d78a4af60a1186bf7a2b35db48f4404613000c47c24081d85d1ab4a8a
+    commit: f2afdf4c91a8b8286faea4d1f25511ab56fdd365
     summary:
       purpose: Overview of ABZU subsystems.
       scope: System architecture.
@@ -15,6 +17,7 @@ documents:
       insight: Review to understand component interactions.
   docs/architecture_overview.md:
     sha256: dcd829f05771560880d78a9639d0e90253fe76c57d38a17aae560cdcf95c4640
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: High-level system architecture.
       scope: Entire platform.
@@ -22,6 +25,7 @@ documents:
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
     sha256: 8d9d558de6e3dc97f26ecdb306209f485643e0d7eed43220cc4596d9dea6dfa8
+    commit: b3b80343640e18d6ff3ae9eabdee3b082400e9e9
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -29,6 +33,7 @@ documents:
       insight: Highlights triadic stack and operator-first design.
   docs/bana_engine.md:
     sha256: 878ab78976e9d7f39d9d96eabbbc9cb2442e412080fcdb1d62bab9a72a991518
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Bana narrative engine guide.
       scope: Training data and workflow.
@@ -36,6 +41,7 @@ documents:
       insight: Reference for narrative generation components.
   docs/chakra_heartbeat.md:
     sha256: a8e25c7afb3f05181c7842262a820c6caf28e568522698dfd5c5fc851a503b1f
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Heartbeat subsystem overview and roadmap.
       scope: Chakra and agent pulse coordination.
@@ -43,6 +49,7 @@ documents:
       insight: Links heartbeat telemetry with recovery workflows.
   docs/documentation_protocol.md:
     sha256: ae84f16638303413f944fd3a2b0adf70679c3ee82c06eefa2ab18c1141468239
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Workflow for updating documentation.
       scope: All documentation changes.
@@ -50,6 +57,7 @@ documents:
       insight: Run pre-commit with modified docs before committing.
   docs/project_overview.md:
     sha256: 548532448052efd7fe94b1127808be37a89c9bb14098cc504fae08cced6c65fd
+    commit: 943e87db07e6aa29aeb2c80e09de87b580eb00d1
     summary:
       purpose: Project goals and scope.
       scope: Entire project.
@@ -57,6 +65,7 @@ documents:
       insight: Confirm contributions align with project goals.
   docs/project_mission_vision.md:
     sha256: 93fbef74abd1b02affbe63700c276faf523de816e99b9cc44752f8b6aaf6d27e
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Unified mission and vision for ABZU.
       scope: Project direction and guiding principles.
@@ -64,6 +73,7 @@ documents:
       insight: Review before proposing major shifts in scope.
   docs/onboarding/README.md:
     sha256: c076d51890edea8aacc029e680ca356f1feeefb9a1266ec35da5c66f797787de
+    commit: b3b80343640e18d6ff3ae9eabdee3b082400e9e9
     summary:
       purpose: Onboarding checklist.
       scope: New contributors.
@@ -71,6 +81,7 @@ documents:
       insight: Use checklist to verify setup.
   docs/onboarding_walkthrough.md:
     sha256: b7d57d6fe6ee327301e134e36a959474431e7a0c511dd999a168ddad1485cdeb
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Step-by-step onboarding walkthrough.
       scope: Initial repository orientation.
@@ -78,6 +89,7 @@ documents:
       insight: Follow sequentially to avoid missing steps.
   docs/vector_memory.md:
     sha256: e4cd2186d833fd47c7a23034281e9f4e8ba5bc2e8265e4f4f9029b15d6967e28
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Guide to vector memory subsystem.
       scope: Vector memory component.
@@ -85,6 +97,7 @@ documents:
       insight: Review before modifying memory features.
   docs/rag_pipeline.md:
     sha256: ede89d0370b924a386236c48cde9b21f959f90c8518f805712c9539568099a20
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Retrieval-augmented generation pipeline.
       scope: RAG processes.
@@ -92,6 +105,7 @@ documents:
       insight: Ensure changes preserve pipeline flow.
   docs/rag_music_oracle.md:
     sha256: b506c9213c26af25dc0e295b11215dd19d6a1100cfb7902e64be47120784c7d6
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Music oracle RAG details.
       scope: Music-specific RAG.
@@ -99,6 +113,7 @@ documents:
       insight: Validate music queries against this spec.
   docs/vision_system.md:
     sha256: 8952a8e014ee24a9ee772f2598abdfccb7bf5abfd907973de5f7f8ee9474bfad
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Vision system documentation.
       scope: Vision modules.
@@ -106,6 +121,7 @@ documents:
       insight: Check before altering visual models.
   docs/persona_api_guide.md:
     sha256: 767d276cddcb865a844c3e730aa2affc9d57ab6ebb52f3c4c05040288c94121f
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Persona API usage instructions.
       scope: Persona endpoints.
@@ -113,6 +129,7 @@ documents:
       insight: Ensure persona calls match documented schema.
   docs/primordials_service.md:
     sha256: f78c0d426c2acafe7a00f2b322250c4d3f1a17646b0df152376fad1d55d545bb
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: DeepSeek-V3 orchestration service guide.
       scope: Primordials service.
@@ -120,6 +137,7 @@ documents:
       insight: Reference when integrating Primordials.
   docs/spiral_cortex_terminal.md:
     sha256: 863463fb3e7b92021d747b5f4bdc4cb20e608469d64ed69917bf8be7b8177724
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Spiral Cortex terminal guide.
       scope: Terminal interface.
@@ -127,6 +145,7 @@ documents:
       insight: Reference when troubleshooting terminal actions.
   docs/communication_interfaces.md:
     sha256: b788697d3e7bc1c7fdf609eb9abafd15af67afbcbe47162a0fbab77437efc660
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Communication interfaces overview.
       scope: Internal and external interfaces.
@@ -134,6 +153,7 @@ documents:
       insight: Maintain compatibility with listed interfaces.
   docs/component_index.md:
     sha256: 9b21067fb3dbb0b0390a68b7df325484db907eda6616f6c2c3068e3907e4f04d
+    commit: 2c610c1f4587079a4bb9a17c07573edf82194a10
     summary:
       purpose: Inventory of modules and services.
       scope: All components.
@@ -141,6 +161,7 @@ documents:
       insight: Add/update entries for component changes.
   component_index.json:
     sha256: 82203936da694e37f71c3a3105be0eb4a4a1f32258282476a4d5b3d0df1a2566
+    commit: 75a3bcbbc22cfe35a359c934c1900696b0c70967
     summary:
       purpose: Machine-readable registry of components and versions.
       scope: Entire system component inventory.
@@ -148,6 +169,7 @@ documents:
       insight: Review after component edits to keep versions aligned.
   docs/CROWN_OVERVIEW.md:
     sha256: 179c5a4f08996de8efe3d623a4ae9f38e302f7bdd73a6eb00770ccfd10b169a3
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Crown agent architecture and routing.
       scope: Crown-to-RAZAR interaction.
@@ -155,6 +177,7 @@ documents:
       insight: Documents operator relay and mission brief logging.
   docs/connectors/CONNECTOR_INDEX.md:
     sha256: 4d8a396b0543791b601711932f85133679d988f658b29b6d80510e7219dbb3c8
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Registry of connector details.
       scope: All connectors.
@@ -162,6 +185,7 @@ documents:
       insight: Ensure this registry entry is revised whenever a connector changes.
   docs/connectors/README.md:
     sha256: 4ddf766eb9f046673acbdc4a52f2a99111221f7b8fdeb7837abca93e7762f76b
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Connector subsystem guidelines.
       scope: Connector development.
@@ -169,6 +193,7 @@ documents:
       insight: Follow guidelines to ensure interoperability.
   docs/connector_health_protocol.md:
     sha256: 597b0e1eac92b1b6f7a3a1a97e2b403afaa12c3611da2b209357352971cefa60
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Ensure connectors respond to health checks before merge.
       scope: All connectors.
@@ -177,6 +202,7 @@ documents:
       insight: Run the health check to catch connector outages early.
   docs/system_blueprint.md:
     sha256: 9fbbfc3cdda1ad770a67b7bf47e86c9aff0b73af67662e807691ea666e44bf92
+    commit: 8ec24f3f8a44fce594575d7fe7a0fbc61e329756
     summary:
       purpose: Architectural blueprint overview.
       scope: System-wide architecture.
@@ -184,6 +210,7 @@ documents:
       insight: References Nazarick architecture and memory blueprints.
   docs/KEY_DOCUMENTS.md:
     sha256: 740cf6675a3180ebad0b83b3dd5ad63ad782149538ce1667ef5a9a1b9eeb002c
+    commit: 57b7dcb03679e8a415fef16ffc4b724689059c96
     summary:
       purpose: List of essential repository documents.
       scope: Key repository guides.
@@ -192,6 +219,7 @@ documents:
         and insight for each key document.
   docs/security_model.md:
     sha256: 9f317bf2c71c9a311245a5caef584320900456def4b218615f0838b216333b55
+    commit: c391103899511758ae5ea6b6ecfce2d1d0a27573
     summary:
       purpose: Threat model and protections.
       scope: Security considerations.
@@ -199,6 +227,7 @@ documents:
       insight: Apply recommended safeguards in code.
   docs/The_Absolute_Protocol.md:
     sha256: a11127c5d8f46a5cf2f623c5c133d447829ecef771aabe49654be1e1b6a2b1de
+    commit: 812b70e5d9f1dcb0ebfcfa0bf7c1932a7b7869f1
     summary:
       purpose: Core contribution rules.
       scope: All contributors.
@@ -209,6 +238,7 @@ documents:
         summaries while keeping coverage high and removing placeholders before commit.
   docs/dependency_registry.md:
     sha256: e5c7b4b2f8e2d9daf82d8dc9320245a5612e1fbdc230209a22eb0a397ed0f47a
+    commit: 6bcf0c0bda1e9b9ed15863044a7714df267d879f
     summary:
       purpose: Approved dependencies.
       scope: Project dependencies.
@@ -216,6 +246,7 @@ documents:
       insight: Verify dependencies against registry before adding.
   docs/logging_guidelines.md:
     sha256: e090bdc32a69a7f6b144967dd70f163f6fb8322a23671334caa6dbcbc4185cf3
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Structured logging requirements.
       scope: Logging across modules.
@@ -223,6 +254,7 @@ documents:
       insight: Use prescribed JSON format for logs.
   docs/api_reference.md:
     sha256: 6273ffa4258f9015f3e1b06d1dadbfd3f03f0585f0fee79bc1ba1c32e2f00721
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: API endpoints and schemas.
       scope: Public interfaces.
@@ -230,6 +262,7 @@ documents:
       insight: Keep implementations aligned with documented API.
   docs/operator_protocol.md:
     sha256: b0968dbce29fcfa2d073df89e790b2ca2d66099df5b0eaa718db6e1c564fa45e
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Operator interaction rules.
       scope: Operator channels.
@@ -237,6 +270,7 @@ documents:
       insight: Verify new channels conform to protocol.
   docs/os_guardian.md:
     sha256: 1b32ad1d78f3b19332b6dfc1c06c4ad8ea9578d0d850947712c33ec04e184eab
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: OS Guardian subsystem overview.
       scope: OS Guardian component.
@@ -244,6 +278,7 @@ documents:
       insight: Review before modifying system protection code.
   docs/INDEX.md:
     sha256: 558d210cfe5e8ee628aec4dbc9fe231fda8e4a04b95d69f768925e5dce933cfd
+    commit: 57b7dcb03679e8a415fef16ffc4b724689059c96
     summary:
       purpose: Generated documentation index.
       scope: Repository documentation.
@@ -251,6 +286,7 @@ documents:
       insight: Regenerate with tools/doc_indexer.py after updating docs.
   docs/index.md:
     sha256: 0d2f495589fa5ed997dea3e713da028476b77ce84445fdc275b3ea31b7a195ef
+    commit: 21c5ff99552e46ac598941530363336d1ba66a59
     summary:
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
@@ -258,6 +294,7 @@ documents:
       insight: Links to Nazarick architecture, system blueprints, and repository blueprint.
   agents/nazarick/nazarick_core_architecture.md:
     sha256: d30ed1392ff91d4269e644da871f2ed5bb565e5d202a8abf683e10c80845f516
+    commit: c2d9e40dd6602dfc1b210513ea666333ecefee80
     summary:
       purpose: Design real-time observability framework and channel hierarchy for
         Spiral OS.
@@ -267,6 +304,7 @@ documents:
       insight: Operator commands supersede all agent actions.
   agents/nazarick/nazarick_memory_blueprint.md:
     sha256: 45bbde8a01a6531d169f537380e47c54b07a8a97641b611a4d833b1631f5f621
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Blueprint for human-like agent personality, memory, planning, and expression.
       scope: Nazarick agent traits, memory stores, and communication protocols.
@@ -275,6 +313,7 @@ documents:
       insight: Personality fragments from vectors adapt agents to current state.
   docs/nazarick_agents.md:
     sha256: 9cfdb5732c777137ca29fe3796729c7a2fd3af751dddf6dca9faedd435c0321f
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Roster and launch guide for Nazarick servant agents.
       scope: Agent roles, channels, and Chakracon telemetry.
@@ -282,6 +321,7 @@ documents:
       insight: Chakracon telemetry signals energy anomalies to operators.
   docs/nazarick_narrative_system.md:
     sha256: aa86c1e0e1cf0b4a5a9cfe80b4e1e34af815482d357630827d72994404fd065b
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Describes architecture, dataset schema, and event flow for converting
         biosignals into narratives.
@@ -291,6 +331,7 @@ documents:
       insight: Reference for biosignal ingestion and narrative logging pipeline.
   docs/assets/narrative_engine_flow.mmd:
     sha256: 9b418b5de9a790064dca91375f560d6378c8d111a0c563deafb637a8e65284d9
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: "Mermaid flow diagram of event\u2192Mistral\u2192multi-track outputs\u2192\
         memory/operator."
@@ -299,6 +340,7 @@ documents:
       insight: Consult to understand event propagation to memory and operator.
   docs/RAZAR_AGENT.md:
     sha256: bb9b8ae172a9bc370dddb2f5a3e2e9f37cc3f03f349f59e1452371dd0d5fb557
+    commit: 75a3bcbbc22cfe35a359c934c1900696b0c70967
     summary:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
@@ -306,6 +348,7 @@ documents:
       insight: "Cross\u2011link to related guides and keep configuration schemas current."
   docs/onboarding/test_planning.md:
     sha256: dbacb76c8b866af82bf7531b5facf9ffb9de708c9a55cec042fba1c19e9dc7a0
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Guide for filing Test Plan issues.
       scope: Test planning.
@@ -313,6 +356,7 @@ documents:
       insight: Open a test plan issue before major changes.
   docs/ABZU_blueprint.md:
     sha256: 9e231117fe0eb457e7c23335fac6bd57061b0c19ca4f278ec23f228e2fb37bf8
+    commit: 2c610c1f4587079a4bb9a17c07573edf82194a10
     summary:
       purpose: Architectural and narrative blueprint for ABZU.
       scope: Entire system overview.
@@ -320,6 +364,7 @@ documents:
       insight: Defines mission, memory bundle, and agent flows.
   docs/system_blueprint.md:
     sha256: 9fbbfc3cdda1ad770a67b7bf47e86c9aff0b73af67662e807691ea666e44bf92
+    commit: 8ec24f3f8a44fce594575d7fe7a0fbc61e329756
     summary:
       purpose: Operational architecture and recovery flows.
       scope: System components and lifecycle.
@@ -327,6 +372,7 @@ documents:
       insight: Describes heartbeat propagation and memory spine.
   NEOABZU/docs/onboarding.md:
     sha256: 095b1ef282df9ef52881318e8def49e30fd1b1e774807b6501fa0ecf52b5ecad
+    commit: 57b7dcb03679e8a415fef16ffc4b724689059c96
     summary:
       purpose: NEOABZU migration onboarding guide.
       scope: NEOABZU contributors.
@@ -335,6 +381,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/docs/Oroboros_Core.md:
     sha256: 47bf13231e0fb20b9e18ada20fb3622b4517da372b14af202972424e34d352bb
+    commit: b3b80343640e18d6ff3ae9eabdee3b082400e9e9
     summary:
       purpose: Theoretical framework for the Rust Ouroboros calculus.
       scope: Neo-APSU self-referential core and narrative computation.
@@ -343,6 +390,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/docs/migration_crosswalk.md:
     sha256: e2d7b8dc1e41ba11996b181d7bb293163ce55a83c8022c5a8c77e29d0c1236d1
+    commit: 8ec24f3f8a44fce594575d7fe7a0fbc61e329756
     summary:
       purpose: Map Python subsystems to Rust crates.
       scope: NEOABZU migration mapping and integration.
@@ -351,6 +399,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/docs/OROBOROS_Engine.md:
     sha256: 8d6b52354e79cbb3142df7f46e251bedd30c27387f538f6185043434bc3b780b
+    commit: 3b1fc917ae1aef10d9ea48dd54fc8dd88a446188
     summary:
       purpose: Inevitability engine overview.
       scope: Neo-APSU recursion and alignment core.
@@ -359,6 +408,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/docs/QNL_Library.md:
     sha256: 8276cfca4eb28cd5768dd2efbadd2267a03b67a48a5318106e1b6f81e80e82fd
+    commit: bbcef1bc4df51ae9c29deec77042613ab8d53858
     summary:
       purpose: QNL Tier I glyph definitions.
       scope: Sumerian lexicon for OROBOROS.
@@ -367,6 +417,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/docs/OROBOROS_Lexicon.md:
     sha256: 3e4ef6ce83562e8276d7ecf041542dd56ef06c2181325ed36551e85f03d787d2
+    commit: bbcef1bc4df51ae9c29deec77042613ab8d53858
     summary:
       purpose: Canonical lexicon of OROBOROS glyph correspondences.
       scope: Narrative roles and meanings for Neo-ABZU glyphs.
@@ -375,6 +426,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/docs/herojourney_engine.md:
     sha256: 3c21434aa4486999c6c319f99aa982e23043b3443645424651a6a2b7ab8b8f17
+    commit: e01e6d9e3c6d080a079aa5cb721b3bd3dc6ca30b
     summary:
       purpose: Maps reduction steps to a 12-stage heroic narrative.
       scope: Neo-ABZU narrative engine.
@@ -383,6 +435,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/docs/SUMERIAN_33WORDS.md:
     sha256: 734543539adf317a173fff3006b2535e999f66a1667ac177af6bd69c5e15ebb4
+    commit: 24fc51fbdfdee2c60e4a29dbdd12c4f6ad3dc0d0
     summary:
       purpose: Sacred lexicon of 33 primordial Sumerian concepts.
       scope: OROBOROS language and narrative primitives.
@@ -391,6 +444,7 @@ documents:
     signed_by: onboarding-wizard
   NEOABZU/fusion/src/lib.rs:
     sha256: 8132a32d580a574dba843a309aaf263c18e8b9d714501f3cf8532085349347e4
+    commit: fff6b1b6a475d754c56325c26f4a774260a70d09
     summary:
       purpose: Invariance fusion engine connecting symbolic and numeric realms.
       scope: Symbolic and numeric invariants.
@@ -398,6 +452,7 @@ documents:
       insight: Fuse selects entry with greatest inevitability.
   NEOABZU/numeric/src/lib.rs:
     sha256: 96e74731b07fa23c04a68613dbdde521560e8c46c230c45f82e4bd2ec147e873
+    commit: 8d7d4d6ee16d3e3cd1d6fcab51ceef0589622ed5
     summary:
       purpose: Numeric utilities including Principal Component Analysis.
       scope: Linear algebra operations.
@@ -405,6 +460,7 @@ documents:
       insight: find_principal_components returns principal directions.
   scripts/check_env.py:
     sha256: 9139ea1892bad4c4374f862684285f56fbb17c293ca95c1a4132d9a1659f4632
+    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     summary:
       purpose: Pre-flight environment check for core tools.
       scope: All contributors.
