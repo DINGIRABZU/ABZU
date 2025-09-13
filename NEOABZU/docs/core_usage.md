@@ -59,3 +59,13 @@ from neoabzu import numeric
 data = [[1.0, 2.0], [2.0, 4.0], [3.0, 6.0]]
 print(numeric.find_principal_components(data, n_components=1))
 ```
+
+## Computing Cosine Similarity
+
+```python
+from neoabzu import numeric
+
+a = [1.0, 0.0, 1.0]
+b = [0.0, 1.0, 1.0]
+print(numeric.cosine_similarity(a, b))
+```

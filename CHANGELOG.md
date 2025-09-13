@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Documented Neo-ABZU `narrative` and `numeric` crates in the system blueprint and index, highlighting optional `tracing`/`opentelemetry` diagnostics.
 - `numeric` crate with PCA and PyO3 bindings
+- `numeric` crate exposes `cosine_similarity` mirroring `vector_memory.cosine_similarity`
 - `fusion` crate for merging symbolic and numeric invariants
 - Expanded NEOABZU docs index with Rust component links and Blueprint Spine cross-reference; documented Ouroboros Core and Rust migration across system guides.
 - Isolated NEOABZU tooling with a dedicated `pyproject.toml` and CI workflow, keeping ABZU tests unaffected.
