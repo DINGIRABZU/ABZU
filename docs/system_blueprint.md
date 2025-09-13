@@ -29,6 +29,18 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 
+### Long-Term Migration Milestones
+
+| Milestone | Outcome | Progress |
+| --- | --- | --- |
+| Sacred Baseline Hardening | green test suite and stable builds | 20% |
+| Pulse & Telemetry Expansion | unified diagnostics | 0% |
+| Operator & Retro Consoles | dashboards and mirrored arcade UI | 0% |
+| Nazarick World & BANA Narrative | rich narrative simulation | 0% |
+| Ouroboros Core Release & Governance | production-ready core | 0% |
+
+See [roadmap.md](roadmap.md) for overall scheduling.
+
 ### Origins & Awakening
 
 Origin texts like the [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md) and [Inanna Song](../INANNA_AI/INANNA%20SONG%2020545dfc251d8065a32cec673272f292.md) chart the Crown's ethical roadmap. The Crown must ingest these sources to preserve its identity, and any updates trigger a corpus reindexing.
@@ -1010,6 +1022,14 @@ rapidly. During boot RAZAR:
 The new `datpars` module defines common interfaces for upcoming ingestion
 workflows. See [datpars_overview.md](datpars_overview.md) for goals and
 architecture.
+
+Neo‑ABZU extends this surface with `narrative` and `numeric` crates. The
+`narrative` crate captures reduction steps and Sumerian phoneme embeddings,
+while `numeric` exposes PCA utilities through PyO3 bindings. Both crates offer
+optional `tracing` and `opentelemetry` features that emit spans for diagnostics
+when enabled.
+
+Vision and engine details are outlined in [Bana Narrator vision](../NEOABZU/docs/Bana%20Narrator%20vision.md) and [Scribe narrative engine](../NEOABZU/docs/Scribe_narrative_engine.md).
 
 - Marks in‑development components with a warning and delays their startup
   until explicitly enabled.

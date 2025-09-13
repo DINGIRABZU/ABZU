@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added long-term migration milestone table and narrative vision docs for Bana and Scribe.
+- Documented Neo-ABZU `narrative` and `numeric` crates in the system blueprint and index, highlighting optional `tracing`/`opentelemetry` diagnostics.
 - `numeric` crate with PCA and PyO3 bindings
 - `fusion` crate for merging symbolic and numeric invariants
 - Expanded NEOABZU docs index with Rust component links and Blueprint Spine cross-reference; documented Ouroboros Core and Rust migration across system guides.

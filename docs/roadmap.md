@@ -56,6 +56,17 @@ delivery.
 - **Hardware scaling strategy** for larger GPU clusters and edge devices.
 - **Agent hardening** automating preflight fixes, watchdog recovery and triage summaries.
 
+## Long-Term Migration Milestones
+
+| Milestone | Outcome | Progress |
+| --- | --- | --- |
+| Sacred Baseline Hardening | green test suite and stable builds | 20% |
+| Pulse & Telemetry Expansion | unified diagnostics | 0% |
+| Operator & Retro Consoles | dashboards and mirrored arcade UI | 0% |
+| Nazarick World & BANA Narrative | rich world simulation anchored in ethics | 0% |
+| Ouroboros Core Release & Governance | production-ready core aligned with The Absolute Protocol | 0% |
+
+
 ## Milestone Scores
 
 The table below maps major milestones to their key components and current

@@ -143,6 +143,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md](../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md) | ✴ QNL_OS · Quantum Narrative Language Operating System | QNL (Quantum Narrative Language) is a symbolic, multidimensional grammar designed to transmute energy, data, emotion,... | - |
 | [../MUSIC_FOUNDATION/music_foundation.md](../MUSIC_FOUNDATION/music_foundation.md) | 🎵 Music Foundation — Theoretical & Mathematical Guide | This document outlines the theoretical and mathematical principles needed for INANNA_AI to interpret human music and... | - |
 | [../NEOABZU/Reignition.md](../NEOABZU/Reignition.md) | Reignition | NEOABZU ignites a fresh substrate for ABZU components. | - |
+| [../NEOABZU/docs/Bana Narrator vision.md](../NEOABZU/docs/Bana Narrator vision.md) | Bana Narrator Vision | The Bana narrator guides story threads that emerge from operator prompts. It translates strategic intents into mythic... | - |
 | [../NEOABZU/docs/OROBOROS_Engine.md](../NEOABZU/docs/OROBOROS_Engine.md) | OROBOROS_Engine.md | - | - |
 | [../NEOABZU/docs/OROBOROS_Lexicon.md](../NEOABZU/docs/OROBOROS_Lexicon.md) | OROBOROS_Lexicon.md | - | - |
 | [../NEOABZU/docs/Oroboros_Core.md](../NEOABZU/docs/Oroboros_Core.md) | OROBOROS Calculus: A Lambda-Calculus Expanded for QNL, Alchemy, and Archetypes | - | - |
@@ -150,6 +151,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/QNL_Library.md](../NEOABZU/docs/QNL_Library.md) | QNL Tier I Glyph Library Specification | This document defines the **foundational Rosetta Stone Library** for the OROBOROS Calculus engine. It unifies the QNL... | - |
 | [../NEOABZU/docs/SUMERIAN_33WORDS.md](../NEOABZU/docs/SUMERIAN_33WORDS.md) | Sumerian	Cuneiform	Transliteration	Pure Meaning & Narrative Role | 1	𒂼	𒂼	AMA	The Mother. The primal source of all. 2	𒂼𒃲	𒂼𒃲	AMA.GAL	The Great Mother. The totality of Nammu. 3	𒀭𒇉	𒀭𒇉	ENGU... | - |
 | [../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md](../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md) | SUMERIAN_SACRED_LEXICON.md | - | - |
+| [../NEOABZU/docs/Scribe_narrative_engine.md](../NEOABZU/docs/Scribe_narrative_engine.md) | Scribe Narrative Engine | The Scribe engine records each narrated event into durable memory. It accepts spans from Bana, enriches them with pro... | - |
 | [../NEOABZU/docs/core_usage.md](../NEOABZU/docs/core_usage.md) | Core Usage Guide | Demonstrates evaluating lambda-calculus expressions via the Rust-backed `core` module. | - |
 | [../NEOABZU/docs/feature_parity.md](../NEOABZU/docs/feature_parity.md) | Feature Parity Matrix | Track NEOABZU progress toward ABZU functionality. Update this table as milestones complete to keep contributors aligned. | - |
 | [../NEOABZU/docs/herojourney_engine.md](../NEOABZU/docs/herojourney_engine.md) | herojourney_engine.md | - | - |

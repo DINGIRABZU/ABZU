@@ -18,6 +18,10 @@ Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spi
 - [persona](../persona)
 - [crown](../crown)
 - [rag](../rag)
+- [narrative](../narrative)
+- [numeric](../numeric)
+
+Enable the `tracing` and `opentelemetry` features on these crates to emit spans for diagnostics during development.
 
 ## Guides
 - [OROBOROS Engine](OROBOROS_Engine.md)
@@ -26,4 +30,6 @@ Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spi
 - [Feature Parity](feature_parity.md)
 - [Migration Crosswalk](migration_crosswalk.md)
 - [Onboarding](onboarding.md)
+- [Bana Narrator vision](Bana%20Narrator%20vision.md)
+- [Scribe narrative engine](Scribe_narrative_engine.md)
 - [First Consecrated Computation](Oroboros_Core.md#first-consecrated-computation) – inaugural narrative log
