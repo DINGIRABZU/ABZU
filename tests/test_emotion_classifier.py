@@ -29,7 +29,16 @@ class _DummyRandomForestClassifier:
     """Tiny drop-in replacement for :class:`RandomForestClassifier`."""
 
     def __init__(self, n_estimators: int = 50, random_state: object | None = None):
-        self.random_state = random_state or np.random.RandomState()
+        """Seed using a stub exposing ``RandomState`` like real sklearn.
+
+        The actual :class:`RandomForestClassifier` accepts either an integer
+        seed or something with a ``RandomState`` attribute (for example
+        ``np.random``).  Re-create that behaviour by instantiating a
+        ``RandomState`` from whichever stub is provided.
+        """
+
+        rng = random_state or np.random
+        self.random_state = rng.RandomState()
         self._mapping: dict[tuple[float, float], str] = {}
         self._default: str | None = None
 
