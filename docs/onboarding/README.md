@@ -23,6 +23,7 @@ A pre-commit hook also verifies that `onboarding_confirm.yml` references `docs/b
 7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage
 8. [Neo-APZU Onboarding](../../NEOABZU/docs/onboarding.md) – orientation for cross-project work
 9. [OROBOROS Lexicon](../../NEOABZU/docs/OROBOROS_Lexicon.md) – Sumerian glyph correspondences
+10. [First Consecrated Computation](../../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation) – narrative log of the inaugural ceremony
 
 Confirm each item before starting code changes.
 

@@ -26,3 +26,4 @@ Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spi
 - [Feature Parity](feature_parity.md)
 - [Migration Crosswalk](migration_crosswalk.md)
 - [Onboarding](onboarding.md)
+- [First Consecrated Computation](Oroboros_Core.md#first-consecrated-computation) – inaugural narrative log

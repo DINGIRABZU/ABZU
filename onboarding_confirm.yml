@@ -21,7 +21,7 @@ documents:
       key_rules: Maintain architectural consistency.
       insight: Align new modules with existing architecture.
   docs/blueprint_spine.md:
-    sha256: fdc739c6101adf8f106f881c7e3a4751498fd8e019141aed270b501b29923bb6
+    sha256: 8d9d558de6e3dc97f26ecdb306209f485643e0d7eed43220cc4596d9dea6dfa8
     summary:
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -63,7 +63,7 @@ documents:
       key_rules: Align major changes with documented mission and vision.
       insight: Review before proposing major shifts in scope.
   docs/onboarding/README.md:
-    sha256: de09b792f51a019202d29fef466dd1c6601c85124156bbec13f160c2521a4b0c
+    sha256: c076d51890edea8aacc029e680ca356f1feeefb9a1266ec35da5c66f797787de
     summary:
       purpose: Onboarding checklist.
       scope: New contributors.
@@ -334,12 +334,12 @@ documents:
       insight: Cross-reference ABZU docs to maintain consistency.
     signed_by: onboarding-wizard
   NEOABZU/docs/Oroboros_Core.md:
-    sha256: 185d0a8154092d33cdef69f1efa1d1f625eabb66fd2761c5e4bc759946465ee3
+    sha256: 47bf13231e0fb20b9e18ada20fb3622b4517da372b14af202972424e34d352bb
     summary:
       purpose: Theoretical framework for the Rust Ouroboros calculus.
       scope: Neo-APSU self-referential core and narrative computation.
       key_rules: "Use @ for recursion and embrace non-dual logic."
-      insight: "@ enables recursion without naming functions."
+      insight: "@ enables recursion without naming functions; includes First Consecrated Computation log."
     signed_by: onboarding-wizard
   NEOABZU/docs/migration_crosswalk.md:
     sha256: e2d7b8dc1e41ba11996b181d7bb293163ce55a83c8022c5a8c77e29d0c1236d1
@@ -413,3 +413,4 @@ documents:
 checklist:
 - Narrative document entries verified
 - Reviewed core memory docs and protocol before implementing optional fallbacks
+- Reviewed First Consecrated Computation ceremony log
