@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Roadmap outlining milestone stages with target dates and cross-links from the
+  index and system blueprint.
 - Documented Neo-ABZU `narrative` and `numeric` crates in the system blueprint and index, highlighting optional `tracing`/`opentelemetry` diagnostics.
 - `numeric` crate with PCA and PyO3 bindings
 - `numeric` crate exposes `cosine_similarity` mirroring `vector_memory.cosine_similarity`
