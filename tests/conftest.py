@@ -5,157 +5,16 @@ from __future__ import annotations
 # mypy: ignore-errors
 __version__ = "0.0.1"
 
-import importlib.util
-import json
 import os
-import shutil
 import sys
-import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-import corpus_memory_logging
-
-FAIL_LOG = ROOT / "logs" / "pytest.log"
-
-# Prometheus metrics for test observability
-try:  # pragma: no cover - optional dependency
-    from prometheus_client import (
-        CollectorRegistry,
-        Counter,
-        Gauge,
-        Histogram,
-        write_to_textfile,
-    )
-
-    _PROM_REGISTRY = CollectorRegistry()
-    _FAILURES = Counter(
-        "pytest_test_failures_total",
-        "Total test failures",
-        registry=_PROM_REGISTRY,
-    )
-    _PASSES = Counter(
-        "pytest_test_passes_total",
-        "Total test passes",
-        registry=_PROM_REGISTRY,
-    )
-    _DURATION = Histogram(
-        "pytest_test_duration_seconds",
-        "Test duration in seconds",
-        registry=_PROM_REGISTRY,
-    )
-    _SESSION_RUNTIME = Gauge(
-        "pytest_session_duration_seconds",
-        "Total pytest session runtime",
-        registry=_PROM_REGISTRY,
-    )
-    _COVERAGE = Gauge(
-        "pytest_coverage_percent",
-        "Overall coverage percentage",
-        registry=_PROM_REGISTRY,
-    )
-except Exception:  # pragma: no cover - metrics optional
-    _PROM_REGISTRY = None
-    _SESSION_RUNTIME = None
-    _COVERAGE = None
-
-# Ensure the real SciPy package is loaded before tests potentially stub it.
-try:  # pragma: no cover - optional dependency
-    import scipy  # noqa: F401
-except Exception:  # pragma: no cover - SciPy not installed
-    pass
-
-# Provide a minimal `huggingface_hub` stub for tests so that modules depending on
-# it can be imported without pulling in the real library. The stub implements the
-# small surface area used in the codebase and performs no network operations.
-import spiral_os._hf_stub as hf_stub  # noqa: E402
-
-sys.modules.setdefault("huggingface_hub", hf_stub)
-sys.modules.setdefault("huggingface_hub.utils", hf_stub)
-
-# Map tests to chakra and component metadata from component_index.json
-with open(ROOT / "component_index.json", encoding="utf-8") as f:
-    _TEST_META: dict[str, tuple[str, str]] = {}
-    for comp in json.load(f).get("components", []):
-        chakra = comp.get("chakra")
-        comp_id = comp.get("id")
-        for test_path in comp.get("tests", []):
-            _TEST_META[test_path] = (chakra, comp_id)
-
-spec = importlib.util.spec_from_file_location(
-    "seed", ROOT / "src" / "core" / "utils" / "seed.py"
-)
-seed_module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
-assert spec and spec.loader
-spec.loader.exec_module(seed_module)  # type: ignore[union-attr]
-seed_all = seed_module.seed_all
-
-import pytest  # noqa: E402
-
-# Default to NumPy audio backend unless pydub and ffmpeg are fully available
-if "AUDIO_BACKEND" not in os.environ:
-    try:  # pragma: no cover - optional dependency
-
-        if shutil.which("ffmpeg") is None:
-            raise RuntimeError("ffmpeg not found")
-    except Exception:  # pragma: no cover - missing deps
-        pass
-    else:  # pragma: no cover - deps present
-        os.environ["AUDIO_BACKEND"] = "pydub"
-
-
-import emotion_registry  # noqa: E402
-import emotional_state  # noqa: E402
-
-_SESSION_START: float | None = None
-
-
-@pytest.fixture()
-def mock_emotion_state(tmp_path, monkeypatch):
-    """Return a temporary emotion state file."""
-    state_file = tmp_path / "emotion_state.json"
-    monkeypatch.setattr(emotional_state, "STATE_FILE", state_file)
-    monkeypatch.setattr(emotion_registry, "STATE_FILE", state_file)
-    emotional_state._STATE.clear()
-    emotion_registry._STATE.clear()
-    emotional_state._save_state()
-    emotion_registry._load_state()
-    emotional_state.set_last_emotion("longing")
-    emotional_state.set_resonance_level(0.75)
-    return state_file
-
-
-@pytest.fixture(autouse=True)
-def _seed_all():
-    seed = int(os.getenv("PYTEST_SEED", "0"))
-    seed_all(seed)
-
-
-# ---------------------------------------------------------------------------
-# Test isolation helpers
-
-
-def pytest_collectstart(collector):
-    """Ensure stubbed ``rag`` modules from other tests do not leak."""
-    sys.modules.pop("rag", None)
-    sys.modules.pop("rag.orchestrator", None)
-    sys.modules.pop("SPIRAL_OS", None)
-    sys.modules.pop("SPIRAL_OS.qnl_engine", None)
-    sys.modules.pop("SPIRAL_OS.symbolic_parser", None)
-
-
-def pytest_sessionstart(session):  # pragma: no cover - timing varies
-    """Record the session start time for runtime metrics."""
-    if _PROM_REGISTRY is not None:
-        global _SESSION_START
-        _SESSION_START = time.perf_counter()
-
-
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
-ALLOWED_TESTS = {
+ALLOWED_TESTS: set[str] = {
     str(ROOT / "tests" / "connectors" / "test_connector_heartbeat.py"),
     str(ROOT / "tests" / "communication" / "test_mcp_fallback.py"),
     str(ROOT / "tests" / "test_adaptive_learning_stub.py"),
@@ -309,6 +168,157 @@ ALLOWED_TESTS = {
     str(ROOT / "tests" / "monitoring" / "test_heartbeat_logger.py"),
     str(ROOT / "tests" / "docs" / "test_connector_links.py"),
 }
+__all__ = ["ALLOWED_TESTS", "allow_test"]
+
+
+def allow_test(test_path: str | Path) -> None:
+    """Safely append a test path to the ALLOWED_TESTS set."""
+    path = Path(test_path)
+    if not path.is_absolute():
+        path = ROOT / path
+    ALLOWED_TESTS.add(str(path))
+
+
+import importlib.util
+import json
+import shutil
+import time
+
+import corpus_memory_logging
+
+FAIL_LOG = ROOT / "logs" / "pytest.log"
+
+# Prometheus metrics for test observability
+try:  # pragma: no cover - optional dependency
+    from prometheus_client import (
+        CollectorRegistry,
+        Counter,
+        Gauge,
+        Histogram,
+        write_to_textfile,
+    )
+
+    _PROM_REGISTRY = CollectorRegistry()
+    _FAILURES = Counter(
+        "pytest_test_failures_total",
+        "Total test failures",
+        registry=_PROM_REGISTRY,
+    )
+    _PASSES = Counter(
+        "pytest_test_passes_total",
+        "Total test passes",
+        registry=_PROM_REGISTRY,
+    )
+    _DURATION = Histogram(
+        "pytest_test_duration_seconds",
+        "Test duration in seconds",
+        registry=_PROM_REGISTRY,
+    )
+    _SESSION_RUNTIME = Gauge(
+        "pytest_session_duration_seconds",
+        "Total pytest session runtime",
+        registry=_PROM_REGISTRY,
+    )
+    _COVERAGE = Gauge(
+        "pytest_coverage_percent",
+        "Overall coverage percentage",
+        registry=_PROM_REGISTRY,
+    )
+except Exception:  # pragma: no cover - metrics optional
+    _PROM_REGISTRY = None
+    _SESSION_RUNTIME = None
+    _COVERAGE = None
+
+# Ensure the real SciPy package is loaded before tests potentially stub it.
+try:  # pragma: no cover - optional dependency
+    import scipy  # noqa: F401
+except Exception:  # pragma: no cover - SciPy not installed
+    pass
+
+# Provide a minimal `huggingface_hub` stub for tests so that modules depending on
+# it can be imported without pulling in the real library. The stub implements the
+# small surface area used in the codebase and performs no network operations.
+import spiral_os._hf_stub as hf_stub  # noqa: E402
+
+sys.modules.setdefault("huggingface_hub", hf_stub)
+sys.modules.setdefault("huggingface_hub.utils", hf_stub)
+
+# Map tests to chakra and component metadata from component_index.json
+with open(ROOT / "component_index.json", encoding="utf-8") as f:
+    _TEST_META: dict[str, tuple[str, str]] = {}
+    for comp in json.load(f).get("components", []):
+        chakra = comp.get("chakra")
+        comp_id = comp.get("id")
+        for test_path in comp.get("tests", []):
+            _TEST_META[test_path] = (chakra, comp_id)
+
+spec = importlib.util.spec_from_file_location(
+    "seed", ROOT / "src" / "core" / "utils" / "seed.py"
+)
+seed_module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+assert spec and spec.loader
+spec.loader.exec_module(seed_module)  # type: ignore[union-attr]
+seed_all = seed_module.seed_all
+
+import pytest  # noqa: E402
+
+# Default to NumPy audio backend unless pydub and ffmpeg are fully available
+if "AUDIO_BACKEND" not in os.environ:
+    try:  # pragma: no cover - optional dependency
+
+        if shutil.which("ffmpeg") is None:
+            raise RuntimeError("ffmpeg not found")
+    except Exception:  # pragma: no cover - missing deps
+        pass
+    else:  # pragma: no cover - deps present
+        os.environ["AUDIO_BACKEND"] = "pydub"
+
+
+import emotion_registry  # noqa: E402
+import emotional_state  # noqa: E402
+
+_SESSION_START: float | None = None
+
+
+@pytest.fixture()
+def mock_emotion_state(tmp_path, monkeypatch):
+    """Return a temporary emotion state file."""
+    state_file = tmp_path / "emotion_state.json"
+    monkeypatch.setattr(emotional_state, "STATE_FILE", state_file)
+    monkeypatch.setattr(emotion_registry, "STATE_FILE", state_file)
+    emotional_state._STATE.clear()
+    emotion_registry._STATE.clear()
+    emotional_state._save_state()
+    emotion_registry._load_state()
+    emotional_state.set_last_emotion("longing")
+    emotional_state.set_resonance_level(0.75)
+    return state_file
+
+
+@pytest.fixture(autouse=True)
+def _seed_all():
+    seed = int(os.getenv("PYTEST_SEED", "0"))
+    seed_all(seed)
+
+
+# ---------------------------------------------------------------------------
+# Test isolation helpers
+
+
+def pytest_collectstart(collector):
+    """Ensure stubbed ``rag`` modules from other tests do not leak."""
+    sys.modules.pop("rag", None)
+    sys.modules.pop("rag.orchestrator", None)
+    sys.modules.pop("SPIRAL_OS", None)
+    sys.modules.pop("SPIRAL_OS.qnl_engine", None)
+    sys.modules.pop("SPIRAL_OS.symbolic_parser", None)
+
+
+def pytest_sessionstart(session):  # pragma: no cover - timing varies
+    """Record the session start time for runtime metrics."""
+    if _PROM_REGISTRY is not None:
+        global _SESSION_START
+        _SESSION_START = time.perf_counter()
 
 
 def pytest_collection_modifyitems(config, items):
