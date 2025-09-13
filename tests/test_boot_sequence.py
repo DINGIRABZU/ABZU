@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from scripts.boot_sequence import boot_sequence
+from tests.helpers.boot_sequence import boot_sequence
 from razar import boot_orchestrator
 from razar.bootstrap_utils import STATE_FILE
 
