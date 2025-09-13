@@ -6,13 +6,13 @@ This roadmap tracks five core milestones on the path to a stable release. Each s
 
 ## Milestone Stages
 
-| Stage | Expected Outcome |
-| --- | --- |
-| Vision Alignment | Shared project vision documented and initial requirements agreed upon. |
-| Prototype | Minimal viable framework demonstrating end‑to‑end flow. |
-| Alpha Release | Core features implemented and internal testing underway. |
-| Beta Release | External feedback incorporated with performance and security hardening. |
-| General Availability | Stable release with complete documentation and long‑term support plan. |
+| Stage | Expected Outcome | Status |
+| --- | --- | --- |
+| Vision Alignment | Shared project vision documented and initial requirements agreed upon. | Complete |
+| Prototype | Minimal viable framework demonstrating end‑to‑end flow. | Complete |
+| Alpha Release | Core features implemented and internal testing underway. | In Progress |
+| Beta Release | External feedback incorporated with performance and security hardening. | Pending |
+| General Availability | Stable release with complete documentation and long‑term support plan. | Pending |
 
 ## Maintenance
 
