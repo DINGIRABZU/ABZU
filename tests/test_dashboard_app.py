@@ -17,8 +17,8 @@ def test_dashboard_app_renders_metrics(monkeypatch):
     fake_db = types.ModuleType("db_storage")
     fake_db.fetch_benchmarks = lambda: {
         "timestamp": pd.Series(["2024-01-01T00:00:00"]),
-        "response_time": np.array([0.1]),
-        "coherence": np.array([0.9]),
+        "response_time": pd.Series([0.1]),
+        "coherence": pd.Series([0.9]),
         "relevance": pd.Series([0.95]),
     }
 
@@ -66,8 +66,8 @@ def test_dashboard_app_multiple_metrics(monkeypatch):
     fake_db = types.ModuleType("db_storage")
     fake_db.fetch_benchmarks = lambda: {
         "timestamp": pd.Series(["2024-01-01T00:00:00", "2024-01-02T00:00:00"]),
-        "response_time": np.array([0.1, 0.2]),
-        "coherence": np.array([0.9, 0.85]),
+        "response_time": pd.Series([0.1, 0.2]),
+        "coherence": pd.Series([0.9, 0.85]),
         "relevance": pd.Series([0.95, 0.9]),
     }
 
@@ -165,8 +165,8 @@ def test_dashboard_app_large_metrics(monkeypatch):
     fake_db = types.ModuleType("db_storage")
     fake_db.fetch_benchmarks = lambda: {
         "timestamp": pd.Series([f"2024-01-{i:02d}T00:00:00" for i in range(1, 101)]),
-        "response_time": np.array([i * 0.1 for i in range(1, 101)]),
-        "coherence": np.full(100, 0.8),
+        "response_time": pd.Series([i * 0.1 for i in range(1, 101)]),
+        "coherence": pd.Series(np.full(100, 0.8)),
         "relevance": pd.Series([0.85] * 100),
     }
 

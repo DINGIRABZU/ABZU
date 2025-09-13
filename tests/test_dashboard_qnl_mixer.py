@@ -28,7 +28,7 @@ def test_qnl_mixer_processes_audio(monkeypatch):
     )
     fake_mix = types.SimpleNamespace(
         apply_audio_params=lambda data, sr, pitch, tempo, cutoff: data,
-        embedding_to_params=lambda emb: (0, 0, 0),
+        embedding_to_params=lambda emb: np.zeros(3),
     )
     fake_qnl = types.SimpleNamespace(quantum_embed=lambda text: np.zeros(3))
 
@@ -40,7 +40,7 @@ def test_qnl_mixer_processes_audio(monkeypatch):
 
     at = AppTest.from_file(_app_path())
     at.run()
-    at.file_uploader[0].upload(b"00", "test.wav")
+    at.file_uploader[0].upload(np.zeros(4, dtype=np.int16).tobytes(), "test.wav")
     at.text_input[0].set_value("qnl")
     at.run(timeout=10)
 
