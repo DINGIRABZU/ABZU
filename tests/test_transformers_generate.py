@@ -17,6 +17,12 @@ importlib.import_module("huggingface_hub")
 from transformers import AutoTokenizer, GPT2LMHeadModel
 
 
+def test_cv2_has_spec():
+    import cv2
+
+    assert cv2.__spec__ is not None
+
+
 @pytest.mark.parametrize("model_name", ["distilgpt2"])
 def test_generate_returns_text(model_name):
     device = "cuda" if torch.cuda.is_available() else "cpu"
