@@ -7,20 +7,20 @@ import sys
 import types
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
 from streamlit.testing.v1 import AppTest
 from streamlit.testing.v1.element_tree import UnknownElement
 
 
 def test_dashboard_app_renders_metrics(monkeypatch):
     fake_db = types.ModuleType("db_storage")
-    fake_db.fetch_benchmarks = lambda: [
-        {
-            "timestamp": "2024-01-01T00:00:00",
-            "response_time": 0.1,
-            "coherence": 0.9,
-            "relevance": 0.95,
-        }
-    ]
+    fake_db.fetch_benchmarks = lambda: {
+        "timestamp": pd.Series(["2024-01-01T00:00:00"]),
+        "response_time": np.array([0.1]),
+        "coherence": np.array([0.9]),
+        "relevance": pd.Series([0.95]),
+    }
 
     class DummyGO:
         def predict_best_llm(self):
@@ -64,20 +64,12 @@ def test_dashboard_app_handles_no_metrics(monkeypatch):
 
 def test_dashboard_app_multiple_metrics(monkeypatch):
     fake_db = types.ModuleType("db_storage")
-    fake_db.fetch_benchmarks = lambda: [
-        {
-            "timestamp": "2024-01-01T00:00:00",
-            "response_time": 0.1,
-            "coherence": 0.9,
-            "relevance": 0.95,
-        },
-        {
-            "timestamp": "2024-01-02T00:00:00",
-            "response_time": 0.2,
-            "coherence": 0.85,
-            "relevance": 0.9,
-        },
-    ]
+    fake_db.fetch_benchmarks = lambda: {
+        "timestamp": pd.Series(["2024-01-01T00:00:00", "2024-01-02T00:00:00"]),
+        "response_time": np.array([0.1, 0.2]),
+        "coherence": np.array([0.9, 0.85]),
+        "relevance": pd.Series([0.95, 0.9]),
+    }
 
     class DummyGO:
         def predict_best_llm(self):
@@ -171,15 +163,12 @@ def test_dashboard_app_prediction_none(monkeypatch):
 
 def test_dashboard_app_large_metrics(monkeypatch):
     fake_db = types.ModuleType("db_storage")
-    fake_db.fetch_benchmarks = lambda: [
-        {
-            "timestamp": f"2024-01-{i:02d}T00:00:00",
-            "response_time": i * 0.1,
-            "coherence": 0.8,
-            "relevance": 0.85,
-        }
-        for i in range(1, 101)
-    ]
+    fake_db.fetch_benchmarks = lambda: {
+        "timestamp": pd.Series([f"2024-01-{i:02d}T00:00:00" for i in range(1, 101)]),
+        "response_time": np.array([i * 0.1 for i in range(1, 101)]),
+        "coherence": np.full(100, 0.8),
+        "relevance": pd.Series([0.85] * 100),
+    }
 
     class DummyGO:
         def predict_best_llm(self):
