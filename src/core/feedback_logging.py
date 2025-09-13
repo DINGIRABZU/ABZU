@@ -12,7 +12,10 @@ from crown_config import settings
 
 LOG_FILE = Path("data/feedback.json")
 # Threshold for determining whether feedback is sufficiently novel to log.
-NOVELTY_THRESHOLD: float = settings.feedback_novelty_threshold
+#
+# ``settings`` is used as the primary source but we fall back to a
+# conservative default to keep the module usable in isolation.
+NOVELTY_THRESHOLD: float = getattr(settings, "feedback_novelty_threshold", 0.3)
 COHERENCE_THRESHOLD: float = settings.feedback_coherence_threshold
 
 logger = logging.getLogger(__name__)
