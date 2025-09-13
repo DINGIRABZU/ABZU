@@ -11,8 +11,9 @@ from typing import Any, List, cast
 from crown_config import settings
 
 LOG_FILE = Path("data/feedback.json")
-NOVELTY_THRESHOLD = settings.feedback_novelty_threshold
-COHERENCE_THRESHOLD = settings.feedback_coherence_threshold
+# Threshold for determining whether feedback is sufficiently novel to log.
+NOVELTY_THRESHOLD: float = settings.feedback_novelty_threshold
+COHERENCE_THRESHOLD: float = settings.feedback_coherence_threshold
 
 logger = logging.getLogger(__name__)
 
