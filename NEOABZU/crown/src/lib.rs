@@ -120,10 +120,19 @@ fn route_inevitability(py: Python<'_>, expr: &str) -> PyResult<Py<PyDict>> {
     Ok(result.into_py(py))
 }
 
+#[pyfunction]
+fn query_memory(py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {
+    let memory = PyModule::import(py, "neoabzu_memory")?;
+    let func = memory.getattr("query_memory")?;
+    func.call1((text,))?.extract()
+}
+
 #[pymodule]
-fn neoabzu_crown(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(route_query, m)?)?;
     m.add_function(wrap_pyfunction!(route_decision, m)?)?;
     m.add_function(wrap_pyfunction!(route_inevitability, m)?)?;
+    m.add_function(wrap_pyfunction!(query_memory, m)?)?;
+    PyModule::import(py, "neoabzu_memory")?;
     Ok(())
 }
