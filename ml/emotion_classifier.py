@@ -69,7 +69,7 @@ def train(limit: int = 50) -> ClassifierMixin:
     X, y = load_recent_samples(limit)
     if len(y) < 2:
         raise RuntimeError("not enough training data")
-    clf = RandomForestClassifier(n_estimators=50, random_state=0)
+    clf = RandomForestClassifier(n_estimators=50, random_state=np.random)
     clf.fit(X, y)
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(clf, MODEL_PATH)
@@ -80,7 +80,7 @@ def train(limit: int = 50) -> ClassifierMixin:
 
 def train_from_arrays(X: np.ndarray, y: Iterable[str]) -> ClassifierMixin:
     """Train a classifier from ``X`` and ``y`` arrays and save the model."""
-    clf = RandomForestClassifier(n_estimators=50, random_state=0)
+    clf = RandomForestClassifier(n_estimators=50, random_state=np.random)
     clf.fit(X, list(y))
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(clf, MODEL_PATH)
