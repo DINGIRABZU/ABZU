@@ -20,7 +20,7 @@ def boot_sequence(config_path: Path | None = None) -> dict[str, str]:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
-    cfg = config_path or ROOT / "razar" / "boot_config.json"
+    cfg = config_path or Path(__file__).with_name("boot_config.json")
     components = boot_orchestrator.load_config(cfg)
     procs = [boot_orchestrator.launch_component(c) for c in components]
     for proc in procs:
