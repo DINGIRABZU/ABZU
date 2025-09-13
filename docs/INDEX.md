@@ -296,6 +296,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [avatar_pipeline.md](avatar_pipeline.md) | Avatar Pipeline | The avatar pipeline synchronises generated speech with visual animation. It reads configuration from `guides/avatar_c... | - |
 | [avatar_setup.md](avatar_setup.md) | Avatar Setup | Configure the avatar pipeline by defining environment variables and adjusting textures. | - |
 | [bana_engine.md](bana_engine.md) | Bana Engine | This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sourc... | - |
+| [banana_rater.md](banana_rater.md) | Banana Rater | - | - |
 | [blueprint_manual.md](blueprint_manual.md) | Blueprint Manual | - | - |
 | [blueprint_spine.md](blueprint_spine.md) | **ABZU Project: Deep-Dive Overview** | See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. Fo... | `../connectors/signal_bus.py` |
 | [chakra_architecture.md](chakra_architecture.md) | Chakra Architecture | This document summarizes the major modules aligned with each chakra layer, their operational state, current quality l... | - |

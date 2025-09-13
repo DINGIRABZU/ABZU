@@ -16,4 +16,4 @@ This roadmap tracks five core milestones on the path to a stable release. Each s
 
 ## Maintenance
 
-Update this roadmap and `CHANGELOG.md` whenever a milestone is completed to record progress and guide future planning.
+Update this roadmap and `CHANGELOG.md` whenever a milestone is completed to record progress and guide future planning. Documentary additions such as [banana_rater.md](banana_rater.md) should be cross-linked when new evaluation flows launch.
