@@ -64,6 +64,8 @@ uvicorn==0.35.0
     # via spiral-os (pyproject.toml)
 python-socketio==5.13.0
     # optional: websocket support
+websockets==15.0.1
+    # optional: websocket support
 vanna==0.7.9
     # optional: NLQ queries
 
