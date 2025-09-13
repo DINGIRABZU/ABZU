@@ -4,6 +4,7 @@ Experimental substrate for ABZU components.
 
 - [ABZU Blueprint](../../docs/ABZU_blueprint.md)
 - [System Blueprint](../../docs/system_blueprint.md)
+- [Roadmap](../../docs/roadmap.md)
 - [Blueprint Spine](../../docs/blueprint_spine.md) – APSU architecture reference
 - [The Absolute Protocol](../../docs/The_Absolute_Protocol.md)
 - [Doctrine Index](../../docs/doctrine_index.md) – canonical registry of foundational texts
