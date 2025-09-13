@@ -24,6 +24,9 @@ Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spi
 
 Enable the `tracing` and `opentelemetry` features on these crates to emit spans for diagnostics during development.
 
+## Interfaces
+- [datpars](../../docs/datpars_overview.md) – ingestion interface definitions
+
 ## Guides
 - [OROBOROS Engine](OROBOROS_Engine.md)
 - [OROBOROS Lexicon](OROBOROS_Lexicon.md)
