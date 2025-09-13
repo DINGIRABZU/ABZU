@@ -1011,6 +1011,12 @@ The new `datpars` module defines common interfaces for upcoming ingestion
 workflows. See [datpars_overview.md](datpars_overview.md) for goals and
 architecture.
 
+Neo‑ABZU extends this surface with `narrative` and `numeric` crates. The
+`narrative` crate captures reduction steps and Sumerian phoneme embeddings,
+while `numeric` exposes PCA utilities through PyO3 bindings. Both crates offer
+optional `tracing` and `opentelemetry` features that emit spans for diagnostics
+when enabled.
+
 - Marks in‑development components with a warning and delays their startup
   until explicitly enabled.
 - Falls back to mock implementations if dependencies are missing.
