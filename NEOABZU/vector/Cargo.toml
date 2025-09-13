@@ -9,12 +9,13 @@ path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-pyo3 = { version = "0.21", features = ["extension-module"] }
+pyo3 = { version = "0.21", default-features = false, features = ["macros"] }
 tracing = { version = "0.1", optional = true }
 opentelemetry = { version = "0.21", optional = true }
 tracing-opentelemetry = { version = "0.23", optional = true }
 
 [features]
-default = []
+default = ["pyo3/auto-initialize"]
+python-extension = ["pyo3/extension-module"]
 tracing = ["dep:tracing"]
 opentelemetry = ["tracing", "dep:opentelemetry", "dep:tracing-opentelemetry"]

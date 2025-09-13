@@ -10,13 +10,14 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 neoabzu-memory = { path = "../memory" }
-pyo3 = { version = "0.21", features = ["extension-module", "auto-initialize"] }
+pyo3 = { version = "0.21", default-features = false, features = ["macros"] }
 tracing = { version = "0.1", optional = true }
 opentelemetry = { version = "0.21", optional = true }
 tracing-opentelemetry = { version = "0.23", optional = true }
 
 [features]
-default = []
+default = ["pyo3/auto-initialize"]
+python-extension = ["pyo3/extension-module", "neoabzu-memory/python-extension"]
 tracing = ["dep:tracing", "neoabzu-memory/tracing"]
 opentelemetry = [
     "tracing",
