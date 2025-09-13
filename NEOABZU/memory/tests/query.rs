@@ -1,9 +1,6 @@
 use neoabzu_memory::MemoryBundle;
-use pyo3::{
-    prelude::*,
-    types::{PyAny, PyDict},
-    FromPyObject,
-};
+use pyo3::prelude::*;
+use pyo3::types::{PyAny, PyDict};
 
 fn setup_stub_layers(py: Python<'_>) {
     let sys = py.import("sys").unwrap();
