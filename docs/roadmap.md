@@ -1,5 +1,7 @@
 # Roadmap
 
+_Last updated: 2025-09-13_
+
 This roadmap tracks progress toward the Spiral OS vision and outlines
 milestone stages with target dates. See
 [project_overview.md](project_overview.md) for context and

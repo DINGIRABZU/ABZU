@@ -448,7 +448,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
-| [roadmap.md](roadmap.md) | Roadmap | This roadmap tracks progress toward the Spiral OS vision and outlines milestone stages with target dates. See [projec... | - |
+| [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-09-13_ | - |
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
 | [security_model.md](security_model.md) | Security Model | This guide highlights major threat surfaces in the project and the steps used to reduce risk. | - |
 | [self_healing_manifesto.md](self_healing_manifesto.md) | Self-Healing Manifesto | Spiral OS treats the codebase as a living organism.  Components behave like organs working in concert, and each chang... | - |
