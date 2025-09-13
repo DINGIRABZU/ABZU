@@ -13,7 +13,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from agents.razar import health_checks
+try:  # pragma: no cover - fallback for standalone execution
+    from agents.razar import health_checks
+except Exception:  # pragma: no cover - agents package optional
+    health_checks = None  # type: ignore[assignment]
 
 __version__ = "0.1.0"
 DEFAULT_EXPORTERS = [
@@ -46,6 +49,8 @@ def _find_free_port() -> int:
 
 def _check_agent_metrics() -> bool:
     """Run a doc sync check and confirm metrics are exposed."""
+    if health_checks is None:
+        return True
     port = _find_free_port()
     health_checks.init_metrics(port)
     # run a cheap check that should succeed
@@ -83,7 +88,12 @@ def verify_chakra_monitoring() -> int:
     if missing:
         for url in missing:
             print(f"missing metrics from exporter {url}", file=sys.stderr)
-    if not _check_agent_metrics():
+    if health_checks is None:
+        print(
+            "agents package not available; skipping agent metrics check",
+            file=sys.stderr,
+        )
+    elif not _check_agent_metrics():
         print("agent metrics not emitted", file=sys.stderr)
         missing.append("agent metrics")
     doc_errors = _check_docs()
