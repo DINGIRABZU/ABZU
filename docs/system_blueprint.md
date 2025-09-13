@@ -9,7 +9,7 @@ system, including chakra and heartbeat roles, and the [Blueprint Spine](blueprin
 [Blueprint Manual](blueprint_manual.md) offers operator-focused guidance across
 console, memory, and ignition flows. For curated entry points see the [Documentation Index](index.md) and the
 [auto-generated index](INDEX.md) for a complete catalog, including the
-[Blueprint Export](BLUEPRINT_EXPORT.md) and [Onboarding Guide](onboarding_guide.md).
+[Blueprint Export](BLUEPRINT_EXPORT.md) and [Onboarding Guide](onboarding_guide.md). Consult the [roadmap](roadmap.md) for milestone stages and expected outcomes.
 Read the [Project Overview](project_overview.md) to understand goals, review the
 [Architecture Overview](architecture_overview.md) to see how components
 interlock, and browse the [Component Index](component_index.md) for an
