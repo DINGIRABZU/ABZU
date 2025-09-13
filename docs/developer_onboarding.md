@@ -211,11 +211,16 @@ startup sequence remains auditable.
 
 ### Boot Orchestrator and Prioritized Tests
 
-Run the lightweight boot orchestrator to execute the ignition sequence:
+Run the lightweight boot orchestrator to execute the ignition sequence using the
+bundled minimal configuration:
 
 ```bash
-python -m agents.razar.boot_orchestrator
+python -m razar.boot_orchestrator --config razar/boot_config.json
 ```
+
+The `scripts/boot_sequence.py` helper mirrors this command for tests by
+initializing required directories and launching the components defined in the
+configuration.
 
 After services start, execute the tiered test suites:
 
