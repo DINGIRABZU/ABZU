@@ -1,0 +1,9 @@
+# Migration Crosswalk
+
+This crosswalk outlines how memory layers connect to Crown during startup.
+
+- The `neoabzu_memory` bundle initializes emotional, mental, spiritual, and narrative layers and
+  broadcasts a `layer_init` event over the bus.
+- `neoabzu_crown` imports this bundle at module load and exposes `query_memory`,
+  routing memory queries through Crown while preserving layer aggregation.
+- Integration tests validate the broadcast and the query path.

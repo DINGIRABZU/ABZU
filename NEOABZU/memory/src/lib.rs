@@ -363,6 +363,8 @@ fn neoabzu_memory(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(broadcast_layer_event, m)?)?;
     m.add_function(wrap_pyfunction!(eval_core, m)?)?;
     m.add_function(wrap_pyfunction!(reduce_inevitable_core, m)?)?;
+    let mut bundle = MemoryBundle::new();
+    bundle.initialize(py)?;
     Ok(())
 }
 
