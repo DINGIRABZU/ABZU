@@ -30,7 +30,7 @@ def allow_test(test_path: str | Path) -> None:
 @pytest.fixture(scope="session")
 def boot_config_path() -> Path:
     """Location of the minimal boot configuration."""
-    return ROOT / "scripts" / "boot_config.json"
+    return Path(__file__).with_name("helpers") / "boot_config.json"
 
 
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
