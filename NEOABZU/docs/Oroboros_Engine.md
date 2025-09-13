@@ -6,6 +6,8 @@ Here is how I would explain the integrated vision to a software architect, weavi
 
 Glyph correspondences used by the engine are maintained in the [OROBOROS Lexicon](OROBOROS_Lexicon.md).
 
+For narrative flow and sacred vocabulary, see [herojourney_engine.md](herojourney_engine.md) and [SUMERIAN_33WORDS.md](SUMERIAN_33WORDS.md).
+
 ---
 
 ### **Project Overview: UROBOROS Core - The Aligned Inevitability Engine**

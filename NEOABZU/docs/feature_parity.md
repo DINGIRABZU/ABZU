@@ -4,6 +4,8 @@ Track NEOABZU progress toward ABZU functionality. Update this table as milestone
 
 Refer to the [Rust Doctrine](rust_doctrine.md) for coding conventions.
 
+For the narrative driver and lexicon grounding the engine, see [herojourney_engine.md](herojourney_engine.md) and [SUMERIAN_33WORDS.md](SUMERIAN_33WORDS.md).
+
 | ABZU Module | Status | NEOABZU Plan |
 | --- | --- | --- |
 | User Interface | Routes user intents through the Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L39-L40】 | drop |
