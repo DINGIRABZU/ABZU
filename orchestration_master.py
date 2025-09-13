@@ -8,6 +8,9 @@ from queue import Queue
 from typing import Any, Dict, List
 
 from memory import spiral_cortex
+from scripts import boot_sequence as _boot_sequence_module
+
+boot_sequence = _boot_sequence_module.boot_sequence
 
 
 AGENT_LOOKUP: Dict[str, str] = {
