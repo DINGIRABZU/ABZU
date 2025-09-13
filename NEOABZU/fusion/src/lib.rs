@@ -39,6 +39,7 @@ pub fn fuse(py: Python<'_>, pairs: Vec<(Invariant, f64)>) -> PyResult<Invariant>
     Ok(best)
 }
 
+#[cfg_attr(test, allow(dead_code))]
 #[pymodule]
 fn neoabzu_fusion(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_class::<Invariant>()?;
