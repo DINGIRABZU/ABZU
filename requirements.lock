@@ -1870,6 +1870,12 @@ python-json-logger==3.3.0 \
     #   -r dev-requirements.txt
     #   -r requirements.txt
     #   jupyter-events
+python-multipart==0.0.20 \
+    --hash=sha256:8a62d3a8335e06589fe01f2a3e178cdcc632f3fbe0d492ad9ee0ec35aab1f104 \
+    --hash=sha256:8dd0cab45b8e23064ae09147625994d090fa46f5b0d1e13af944c331a7fa9d13
+    # via
+    #   -r dev-requirements.txt
+    #   -r requirements.txt
 python-socketio==5.13.0 \
     --hash=sha256:51f68d6499f2df8524668c24bcec13ba1414117cfb3a90115c559b601ab10caf \
     --hash=sha256:ac4e19a0302ae812e23b712ec8b6427ca0521f7c582d6abb096e36e24a263029
