@@ -4,9 +4,10 @@
 //! `cargo test -p neoabzu-vector --features opentelemetry`
 use pyo3::prelude::*;
 
-#[cfg_attr(feature = "tracing", tracing::instrument)]
+#[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
 #[pyfunction]
-fn search(text: &str, top_n: usize) -> PyResult<Vec<(String, f32)>> {
+fn search(py: Python<'_>, text: &str, top_n: usize) -> PyResult<Vec<(String, f32)>> {
+    let _ = py;
     let results = (0..top_n)
         .map(|i| (format!("{text}{i}"), 1.0))
         .collect();
@@ -22,11 +23,14 @@ fn neoabzu_vector(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::search;
+    use pyo3::prelude::*;
 
     #[test]
     fn returns_requested_count() {
-        let res = search("a", 2).unwrap();
-        assert_eq!(res.len(), 2);
-        assert_eq!(res[0].0, "a0");
+        Python::with_gil(|py| {
+            let res = search(py, "a", 2).unwrap();
+            assert_eq!(res.len(), 2);
+            assert_eq!(res[0].0, "a0");
+        });
     }
 }

@@ -24,9 +24,10 @@ impl Invariant {
 }
 
 /// Selects the invariant with the highest inevitability gradient.
-#[cfg_attr(feature = "tracing", tracing::instrument)]
+#[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
 #[pyfunction]
-pub fn fuse(pairs: Vec<(Invariant, f64)>) -> PyResult<Invariant> {
+pub fn fuse(py: Python<'_>, pairs: Vec<(Invariant, f64)>) -> PyResult<Invariant> {
+    let _ = py;
     let best = pairs
         .into_iter()
         .max_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal))
@@ -48,6 +49,7 @@ fn neoabzu_fusion(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pyo3::prelude::*;
 
     #[test]
     fn chooses_highest_gradient() {
@@ -59,7 +61,9 @@ mod tests {
             lambda: None,
             eigenvector: Some(vec![1.0, 0.0]),
         };
-        let res = fuse(vec![(sym.clone(), 0.2), (num.clone(), 0.9)]).unwrap();
-        assert!(res.eigenvector.is_some());
+        Python::with_gil(|py| {
+            let res = fuse(py, vec![(sym.clone(), 0.2), (num.clone(), 0.9)]).unwrap();
+            assert!(res.eigenvector.is_some());
+        });
     }
 }

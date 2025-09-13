@@ -25,7 +25,7 @@ fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
     dot
 }
 
-#[cfg_attr(feature = "tracing", tracing::instrument)]
+#[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
 #[pyfunction]
 pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Vec<Py<PyDict>>> {
     let mut bundle = MemoryBundle::new();
