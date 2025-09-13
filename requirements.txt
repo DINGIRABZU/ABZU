@@ -44,4 +44,4 @@ vanna==0.7.9
     # optional: NLQ queries
 
 python-multipart>=0.0.5
-    # required for FastAPI multipart form data parsing (fixes file upload runtime error)
+    # required for FastAPI file uploads
