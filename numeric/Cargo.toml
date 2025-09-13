@@ -1,0 +1,13 @@
+[package]
+name = "numeric"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "numeric"
+crate-type = ["cdylib", "rlib"]
+path = "src/lib.rs"
+
+[dependencies]
+nalgebra = "0.32"
+pyo3 = { version = "0.21", features = ["extension-module", "abi3-py39"] }
