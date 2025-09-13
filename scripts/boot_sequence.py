@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from razar import boot_orchestrator
+from razar import BOOT_CONFIG_PATH, boot_orchestrator
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
@@ -20,7 +20,7 @@ def boot_sequence(config_path: Path | None = None) -> dict[str, str]:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
-    cfg = config_path or Path(__file__).with_name("boot_config.json")
+    cfg = config_path or BOOT_CONFIG_PATH
     components = boot_orchestrator.load_config(cfg)
     procs = [boot_orchestrator.launch_component(c) for c in components]
     for proc in procs:
