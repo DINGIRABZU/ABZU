@@ -15,7 +15,8 @@ if str(ROOT) not in sys.path:
 
 try:  # pragma: no cover - fallback for standalone execution
     from agents.razar import health_checks
-except ImportError:  # pragma: no cover - agents package optional
+except Exception:  # pragma: no cover - agents package optional or misconfigured
+    # Skip agent metrics checks when the agents package isn't available.
     health_checks = None  # type: ignore[assignment]
 
 __version__ = "0.1.0"
