@@ -22,7 +22,9 @@ def test_qnl_mixer_processes_audio(monkeypatch):
         display=types.SimpleNamespace(specshow=lambda *a, **k: None),
     )
     fake_sf = types.SimpleNamespace(
-        write=lambda buf, data, sr, format="WAV": buf.write(b"data")
+        write=lambda buf, data, sr, format="WAV": buf.write(
+            np.zeros(1, dtype=np.int16).tobytes()
+        )
     )
     fake_mix = types.SimpleNamespace(
         apply_audio_params=lambda data, sr, pitch, tempo, cutoff: data,
