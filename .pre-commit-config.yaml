@@ -199,6 +199,7 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/
+    always_run: true
   - id: verify-chakra-monitoring
     name: Verify chakra monitoring
     entry: python scripts/verify_chakra_monitoring.py

@@ -3,15 +3,17 @@ from __future__ import annotations
 """Ensure documentation registry timestamps and feature references are current."""
 
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
+import re
 import subprocess
 import sys
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX_PATH = ROOT / "docs" / "doctrine_index.md"
 FEATURES_DIR = ROOT / "docs" / "features"
+ROADMAP_PATH = ROOT / "docs" / "roadmap.md"
 CANONICAL_DOCS = [
     ROOT / "docs" / "INDEX.md",
     ROOT / "docs" / "index.md",
@@ -34,7 +36,10 @@ def _parse_index(path: Path) -> list[tuple[Path, datetime]]:
             ts = datetime.fromisoformat(updated)
         except ValueError:
             continue
-        entries.append((ROOT / file_rel, ts))
+        candidate = ROOT / file_rel
+        if not candidate.exists():
+            candidate = INDEX_PATH.parent / file_rel
+        entries.append((candidate, ts))
     return entries
 
 
@@ -97,9 +102,30 @@ def _check_feature_refs() -> list[str]:
     return errors
 
 
+def _check_roadmap_timestamp(max_age_days: int = 90) -> list[str]:
+    """Ensure ``docs/roadmap.md`` contains a recent ``Last updated`` timestamp."""
+    if not ROADMAP_PATH.exists():
+        return ["missing docs/roadmap.md"]
+    text = ROADMAP_PATH.read_text(encoding="utf-8")
+    match = re.search(r"Last updated:\s*(\d{4}-\d{2}-\d{2})", text)
+    if not match:
+        return ["docs/roadmap.md missing 'Last updated' timestamp"]
+    try:
+        ts = datetime.fromisoformat(match.group(1))
+    except ValueError:
+        return ["docs/roadmap.md has invalid timestamp"]
+    if datetime.utcnow() - ts > timedelta(days=max_age_days):
+        return [
+            "docs/roadmap.md timestamp older than"
+            f" {max_age_days} days ({match.group(1)})"
+        ]
+    return []
+
+
 def main() -> int:
     errors = _check_doctrine_index()
     errors.extend(_check_feature_refs())
+    errors.extend(_check_roadmap_timestamp())
     if errors:
         for err in errors:
             print(err, file=sys.stderr)
