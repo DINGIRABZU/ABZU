@@ -7,6 +7,7 @@ import socket
 import sys
 import time
 import urllib.request
+import warnings
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +17,10 @@ if str(ROOT) not in sys.path:
 try:  # pragma: no cover - fallback for standalone execution
     from agents.razar import health_checks
 except Exception:  # pragma: no cover - agents package optional or misconfigured
+    warnings.warn(
+        "agents package not available; skipping agent metrics check",
+        RuntimeWarning,
+    )
     # Skip agent metrics checks when the agents package isn't available.
     health_checks = None  # type: ignore[assignment]
 
