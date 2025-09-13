@@ -28,9 +28,11 @@ def test_qnl_mixer_processes_audio(monkeypatch):
     )
     fake_mix = types.SimpleNamespace(
         apply_audio_params=lambda data, sr, pitch, tempo, cutoff: data,
-        embedding_to_params=lambda emb: np.zeros(3),
+        embedding_to_params=lambda emb: np.array([0.0, 0.0, 0.0]),
     )
-    fake_qnl = types.SimpleNamespace(quantum_embed=lambda text: np.zeros(3))
+    fake_qnl = types.SimpleNamespace(
+        quantum_embed=lambda text: np.array([0.0, 0.0, 0.0])
+    )
 
     monkeypatch.setitem(sys.modules, "librosa", fake_librosa)
     monkeypatch.setitem(sys.modules, "librosa.display", fake_librosa.display)
