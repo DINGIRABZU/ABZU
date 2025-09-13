@@ -26,6 +26,10 @@ def test_boot_sequence_order_and_failure(tmp_path: Path, monkeypatch) -> None:
         return name != "beta"
 
     monkeypatch.setattr(bo.health_checks, "run", fake_run)
+    # Ensure load_config accepts components without explicit health checks
+    monkeypatch.setitem(bo.health_checks.CHECKS, "alpha", lambda: True)
+    monkeypatch.setitem(bo.health_checks.CHECKS, "beta", lambda: True)
+    monkeypatch.setitem(bo.health_checks.CHECKS, "gamma", lambda: True)
 
     class DummyProc:
         def __init__(self, name: str) -> None:

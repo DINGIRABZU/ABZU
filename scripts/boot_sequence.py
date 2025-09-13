@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from razar import BOOT_CONFIG_PATH, boot_orchestrator
+from razar import boot_orchestrator
+
+# Default configuration bundled with this script
+BOOT_CONFIG_PATH = Path(__file__).with_name("boot_config.json")
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"

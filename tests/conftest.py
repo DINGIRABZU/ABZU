@@ -13,7 +13,9 @@ import sys
 from pathlib import Path
 
 import pytest
-from razar import BOOT_CONFIG_PATH
+
+# Path to the minimal boot configuration used in tests
+from scripts.boot_sequence import BOOT_CONFIG_PATH
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
