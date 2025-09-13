@@ -2,6 +2,8 @@
 
 See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. For structural layers review the [system_blueprint.md](system_blueprint.md); the [ABZU Blueprint](ABZU_blueprint.md) captures the high-level narrative for recreating the system and defines chakra and heartbeat roles. For the inevitability core in the Rust migration, consult the [OROBOROS Engine](../NEOABZU/docs/OROBOROS_Engine.md). The hero's journey driver and Sumerian lexicon that orient the core reside in [herojourney_engine.md](../NEOABZU/docs/herojourney_engine.md) and [SUMERIAN_33WORDS.md](../NEOABZU/docs/SUMERIAN_33WORDS.md).
 
+The inaugural ceremony is recorded in the [First Consecrated Computation](../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation).
+
 ??? note "Origin Materials"
     - [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md)
     - [Inanna Song](../INANNA_AI/INANNA%20SONG%2020545dfc251d8065a32cec673272f292.md)
