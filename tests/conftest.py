@@ -9,9 +9,18 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
+
+
+@pytest.fixture(scope="session")
+def boot_config_path() -> Path:
+    """Location of the minimal boot configuration."""
+    return ROOT / "scripts" / "boot_config.json"
+
 
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
 ALLOWED_TESTS: set[str] = {
