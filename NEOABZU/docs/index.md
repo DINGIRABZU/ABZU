@@ -18,6 +18,10 @@ Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spi
 - [persona](../persona)
 - [crown](../crown)
 - [rag](../rag)
+- [narrative](../narrative)
+- [numeric](../numeric)
+
+Enable the `tracing` and `opentelemetry` features on these crates to emit spans for diagnostics during development.
 
 ## Guides
 - [OROBOROS Engine](OROBOROS_Engine.md)
