@@ -9,11 +9,13 @@ import time
 import urllib.request
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from agents.razar import health_checks
 
 __version__ = "0.1.0"
-
-ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EXPORTERS = [
     "http://localhost:9101/metrics",  # node exporter
     "http://localhost:8080/metrics",  # cadvisor
