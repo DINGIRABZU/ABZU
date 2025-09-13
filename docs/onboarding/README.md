@@ -22,7 +22,7 @@ A pre-commit hook also verifies that `onboarding_confirm.yml` references `docs/b
 6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
 7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage
 8. [Neo-APZU Onboarding](../../NEOABZU/docs/onboarding.md) – orientation for cross-project work
-9. [OROBOROS Lexicon](../../NEOABZU/docs/OROBOROS_Lexicon.md) – Sumerian glyph correspondences
+9. [OROBOROS Engine](../../NEOABZU/docs/OROBOROS_Engine.md), [OROBOROS Lexicon](../../NEOABZU/docs/OROBOROS_Lexicon.md), and [Migration Crosswalk](../../NEOABZU/docs/migration_crosswalk.md) – review engine mechanics, canonical glyphs, and Python↔Rust mapping
 10. [First Consecrated Computation](../../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation) – narrative log of the inaugural ceremony
 
 Confirm each item before starting code changes.
@@ -35,3 +35,4 @@ When submitting a pull request, ensure you can check:
 - [ ] For connector additions: spec documented in [mcp_connectors.md](../mcp_connectors.md)
 - [ ] `onboarding_confirm.yml` updated with SHA256 hashes for APZU and Neo-APZU docs
 - [ ] `onboarding_quiz.yml` answers included in first pull request
+- [ ] OROBOROS Engine, OROBOROS Lexicon, and migration_crosswalk acknowledged

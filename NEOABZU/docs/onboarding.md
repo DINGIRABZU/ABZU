@@ -2,6 +2,8 @@
 
 This Neo‑ABZU guide complements the [ABZU Onboarding Checklist](../../docs/onboarding/README.md); review and confirm both documents in `onboarding_confirm.yml`.
 
+Before diving into Neo‑ABZU specifics, study the core ABZU references: the [Blueprint Spine](../../docs/blueprint_spine.md), [System Blueprint](../../docs/system_blueprint.md), and [The Absolute Protocol](../../docs/The_Absolute_Protocol.md). These texts provide the architectural context and contribution rules assumed throughout this guide.
+
 ## Migration Goals
 
 NEOABZU migrates core ABZU capabilities into a lean Rust foundation while preserving operator-first principles and alignment with the original system blueprints.
