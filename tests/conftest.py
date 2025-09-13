@@ -60,6 +60,7 @@ ALLOWED_TESTS: set[str] = {
     str(ROOT / "tests" / "test_learning_mutator.py"),
     str(ROOT / "tests" / "crown" / "server" / "test_server.py"),
     str(ROOT / "tests" / "test_openwebui_state_updates.py"),
+    str(ROOT / "tests" / "test_opencv_import.py"),
     str(ROOT / "tests" / "test_server_endpoints.py"),
     str(ROOT / "tests" / "test_insight_compiler.py"),
     str(ROOT / "tests" / "test_glm_command.py"),
