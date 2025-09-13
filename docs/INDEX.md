@@ -241,6 +241,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [MAINTENANCE.md](MAINTENANCE.md) | Maintenance | - | - |
 | [MISSION.md](MISSION.md) | Mission | - | - |
 | [Nazarick_GUIDE.md](Nazarick_GUIDE.md) | Nazarick Guide | - | - |
+| [OROBOROS_Engine.md](OROBOROS_Engine.md) | OROBOROS Engine | The inaugural ceremony executed the expression `(♀ :: ∞) :: ∅`. | - |
 | [Oroboros_Core.md](Oroboros_Core.md) | Oroboros Core Reference | The interpreter associates glyph tokens with elemental metadata that flows through evaluation. | - |
 | [PROJECT_STATUS.md](PROJECT_STATUS.md) | Project Status | ![Coverage](../coverage.svg) | - |
 | [QNL_Library.md](QNL_Library.md) | QNL Glyph Library | Reference table for core glyphs and their elemental constants. | - |
