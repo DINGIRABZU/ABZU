@@ -33,5 +33,21 @@ path = "vector"
 name = "neoabzu_numeric"
 path = "numeric"
 
+[[tool.maturin.targets]]
+name = "neoabzu_fusion"
+path = "fusion"
+
+[[tool.maturin.targets]]
+name = "neoabzu_persona"
+path = "persona"
+
+[[tool.maturin.targets]]
+name = "neoabzu_crown"
+path = "crown"
+
+[[tool.maturin.targets]]
+name = "neoabzu_rag"
+path = "rag"
+
 [tool.neoabzu.workspace]
-members = ["core", "memory", "vector", "persona", "crown", "rag", "numeric"]
+members = ["core", "memory", "vector", "fusion", "persona", "crown", "rag", "numeric"]
