@@ -42,3 +42,6 @@ python-socketio==5.13.0
     # optional: websocket support
 vanna==0.7.9
     # optional: NLQ queries
+
+python-multipart>=0.0.5
+    # required for multipart form data parsing
