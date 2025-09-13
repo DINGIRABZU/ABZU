@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ``version``, and ``recovery_url`` metadata and now checks ``RECOVERY_URL`` at
   call time.
 - MCP gateway exposes context registration and model invocation via MCP; added `config/mcp.toml` and `docs/mcp_overview.md`.
+- Maturin targets and Python wrappers for `fusion`, `persona`, `crown`, and `rag` crates with usage shown in `docs/core_usage.md`.
 - Mission builder with Ignite, Query Memory, and Dispatch Agent blocks plus server-side Save & Run routing through `agents/task_orchestrator`.
 - Game dashboard onboarding wizard guides operators through creating and running their first mission with progress stored in `localStorage`.
 - Unified Memory Bundle chapter clarifies `layer_init` and `query_memory` flow in `docs/ABZU_blueprint.md`.
