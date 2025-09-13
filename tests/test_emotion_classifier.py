@@ -37,8 +37,11 @@ class _DummyRandomForestClassifier:
         ``RandomState`` from whichever stub is provided.
         """
 
-        rng = random_state or np.random
-        self.random_state = rng.RandomState()
+        if isinstance(random_state, int):
+            self.random_state = np.random.RandomState(random_state)
+        else:
+            rng = random_state or np.random
+            self.random_state = rng.RandomState()
         self._mapping: dict[tuple[float, float], str] = {}
         self._default: str | None = None
 
