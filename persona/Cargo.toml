@@ -1,0 +1,12 @@
+[package]
+name = "neoabzu-persona-layers"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "neoabzu_persona_layers"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }

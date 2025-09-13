@@ -348,6 +348,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |
 | [error_registry.md](error_registry.md) | Error Registry | This registry tracks recurring issues observed during component startup and operation. Each entry documents symptoms... | `../scripts/update_error_index.py` |
 | [essential_services.md](essential_services.md) | Essential Services | This guide highlights vital Spiral OS workflows, their fallback logic, and recovery steps. | - |
+| [feature_parity.md](feature_parity.md) | Feature Parity Matrix | Tracks Rust reimplementations of key Python subsystems. | - |
 | [features/FEATURE_TEMPLATE.md](features/FEATURE_TEMPLATE.md) | Feature Specification Template | - | - |
 | [features/README.md](features/README.md) | Feature Specifications | Guidelines for authoring feature specification files. | - |
 | [features/example_feature.md](features/example_feature.md) | Example Feature | - | - |

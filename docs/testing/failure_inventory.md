@@ -115,3 +115,5 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 
 - 2025-09-12: ERROR tests/test_avatar_stream_pipeline.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
 - 2025-09-12: ERROR tests/test_glm_command.py - RuntimeError: Form data requires "python-multipart" to be installed.
+
+- 2025-09-13: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]

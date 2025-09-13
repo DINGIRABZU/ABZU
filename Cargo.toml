@@ -2,4 +2,7 @@
 members = [
     "fusion",
     "numeric",
+    "persona",
+    "crown",
+    "rag",
 ]
