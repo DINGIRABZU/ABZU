@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from razar import BOOT_CONFIG_PATH
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -36,7 +37,7 @@ def allow_tests(*test_paths: str | Path) -> None:
 @pytest.fixture(scope="session")
 def boot_config_path() -> Path:
     """Location of the minimal boot configuration."""
-    return Path(__file__).resolve().parents[1] / "scripts" / "boot_config.json"
+    return BOOT_CONFIG_PATH
 
 
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
