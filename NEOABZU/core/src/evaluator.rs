@@ -12,6 +12,8 @@ struct Concept {
     symbol: String,
     #[serde(default)]
     glyph: String,
+    #[serde(default)]
+    phonetic: String,
     inevitability_gradient: f32,
 }
 
