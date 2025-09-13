@@ -179,8 +179,9 @@ fn eval_with_self(expr: Expr, self_ref: Option<Expr>) -> Expr {
 }
 
 /// Evaluate a lambda-calculus expression and return the resulting term as a string.
-#[cfg_attr(feature = "tracing", tracing::instrument)]
-pub fn evaluate(src: &str) -> String {
+#[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
+pub fn evaluate(py: Python<'_>, src: &str) -> String {
+    let _ = py;
     let mut chars: VecDeque<char> = src.chars().filter(|c| !c.is_whitespace()).collect();
     let expr = parse(&mut chars);
     let result = eval(expr);
@@ -189,8 +190,8 @@ pub fn evaluate(src: &str) -> String {
 
 #[pyfunction]
 #[pyo3(name = "evaluate")]
-fn evaluate_py(src: &str) -> PyResult<String> {
-    Ok(evaluate(src))
+fn evaluate_py(py: Python<'_>, src: &str) -> PyResult<String> {
+    Ok(evaluate(py, src))
 }
 
 #[pymodule]
@@ -203,16 +204,21 @@ fn neoabzu_core(_py: Python, m: &Bound<PyModule>) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::{eval, evaluate, parse, Element};
+    use pyo3::prelude::*;
     use std::collections::VecDeque;
 
     #[test]
     fn self_ref_returns_function() {
-        assert_eq!(evaluate("(\\x.@)a"), "\\x.\\x.@");
+        Python::with_gil(|py| {
+            assert_eq!(evaluate(py, "(\\x.@)a"), "\\x.\\x.@");
+        });
     }
 
     #[test]
     fn self_ref_expands_in_body() {
-        assert_eq!(evaluate("\\x.@"), "\\x.\\x.@");
+        Python::with_gil(|py| {
+            assert_eq!(evaluate(py, "\\x.@"), "\\x.\\x.@");
+        });
     }
 
     #[test]
@@ -225,7 +231,9 @@ mod tests {
 
     #[test]
     fn application_reduces() {
-        assert_eq!(evaluate("(\\x.x)y"), "y");
+        Python::with_gil(|py| {
+            assert_eq!(evaluate(py, "(\\x.x)y"), "y");
+        });
     }
     #[test]
     fn phoneme_tag_sets_momentum() {
