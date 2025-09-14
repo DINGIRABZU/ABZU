@@ -1,0 +1,11 @@
+flowchart TB
+    subgraph neoabzu_razor
+        R1[Orchestrator]
+    end
+    subgraph neoabzu_crown
+        C1[Router]
+    end
+    subgraph neoabzu_kimicho
+        K1[Fallback]
+    end
+    R1 --> C1 --> K1

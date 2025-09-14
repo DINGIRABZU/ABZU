@@ -1,0 +1,14 @@
+flowchart LR
+    subgraph Python
+        CrownPy[crown_router.py]
+        KimichoPy[kimicho.py]
+    end
+    subgraph PyO3
+        Bridge[(PyO3 Bindings)]
+    end
+    subgraph Rust
+        CrownRs[neoabzu_crown]
+        KimichoRs[neoabzu_kimicho]
+    end
+    CrownPy --> Bridge --> CrownRs
+    KimichoPy --> Bridge --> KimichoRs
