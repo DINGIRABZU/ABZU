@@ -353,7 +353,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [development_workflow.md](development_workflow.md) | Development Workflow | This page outlines the recommended steps for contributing to ABZU. | - |
 | [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | This guide outlines the diagnostic scripts and the self-healing mechanisms used to keep Spiral OS operational. | - |
 | [docker_build_audio_tools.md](docker_build_audio_tools.md) | Docker Image with Audio Tools | This project provides a Docker image that bundles the audio utilities **FFmpeg** and **SoX**. The `Dockerfile` instal... | - |
-| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc... | - |
+| [doctrine_index.md](doctrine_index.md) | Doctrine Index | Every canonical document now requires a `Doctrine References` section linking back to this index. Use these links to... | - |
 | [documentation_protocol.md](documentation_protocol.md) | Documentation Protocol | Standard workflow for updating documentation and guides. | - |
 | [emotional_memory_matrix.md](emotional_memory_matrix.md) | Emotional Memory Matrix | The emotional memory matrix interconnects the various JSON files that store conversation history and affect metrics.... | - |
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |

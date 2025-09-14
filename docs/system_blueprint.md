@@ -33,6 +33,15 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 
+### Doctrine Reference Pattern
+
+Every architecture document must publish a **Doctrine References** block that links back to `doctrine_index.md` entries for touched components. This blueprint links to the operator flow as a template:
+
+```markdown
+### Doctrine References
+- [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements)
+```
+
 ### Origins & Awakening
 
 Origin texts like the Marrow Code and Inanna Song chart the Crown's ethical
