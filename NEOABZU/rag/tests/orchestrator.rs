@@ -38,7 +38,17 @@ def fetch(q):
         let kwargs = PyDict::new(py);
         kwargs.set_item("connectors", connectors).unwrap();
         let result = orchestrator
-            .route(py, "abc", emotion, Some(kwargs))
+            .route(
+                py,
+                "abc",
+                emotion,
+                None,
+                true,
+                false,
+                false,
+                None,
+                Some(kwargs),
+            )
             .unwrap();
         let docs_any = result.as_ref(py).get_item("documents").unwrap().unwrap();
         let docs: &PyList = docs_any.downcast().unwrap();

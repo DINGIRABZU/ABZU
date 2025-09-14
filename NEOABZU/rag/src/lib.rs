@@ -27,6 +27,44 @@ fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
     dot
 }
 
+#[cfg_attr(feature = "tracing", tracing::instrument(skip(py, memory, connectors)))]
+#[pyfunction]
+#[pyo3(signature = (question, memory, connectors=None, top_n=5))]
+pub fn merge_documents(
+    py: Python<'_>,
+    question: &str,
+    memory: &PyList,
+    connectors: Option<&PyList>,
+    top_n: usize,
+) -> PyResult<Vec<Py<PyDict>>> {
+    let q_emb = embed(question);
+    let mut scored: Vec<(f32, Py<PyDict>)> = Vec::new();
+    let sources = [("memory", Some(memory)), ("connector", connectors)];
+    for (source, list_opt) in sources.iter() {
+        if let Some(list) = list_opt {
+            for item in list.iter() {
+                if let Ok(meta) = item.downcast::<PyDict>() {
+                    let text: String = meta
+                        .get_item("text")?
+                        .and_then(|o| o.extract().ok())
+                        .unwrap_or_default();
+                    let emb = embed(&text);
+                    let score = cosine(&q_emb, &emb);
+                    let out = PyDict::new(py);
+                    for (k, v) in meta {
+                        out.set_item(k, v)?;
+                    }
+                    out.set_item("score", score)?;
+                    out.set_item("source", source)?;
+                    scored.push((score, out.into()));
+                }
+            }
+        }
+    }
+    scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    Ok(scored.into_iter().take(top_n).map(|(_, d)| d).collect())
+}
+
 #[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
 #[pyfunction]
 #[pyo3(signature = (question, top_n=5, connectors=None))]
@@ -44,26 +82,9 @@ pub fn retrieve_top(
         .get_item("vector")?
         .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyKeyError, _>("vector"))?;
     let vector_list: &PyList = vector_any.downcast()?;
-    let q_emb = embed(question);
-    let mut scored: Vec<(f32, Py<PyDict>)> = Vec::new();
-    for item in vector_list.iter() {
-        if let Ok(meta) = item.downcast::<PyDict>() {
-            let text: String = meta
-                .get_item("text")?
-                .and_then(|o| o.extract().ok())
-                .unwrap_or_default();
-            let emb = embed(&text);
-            let score = cosine(&q_emb, &emb);
-            let out = PyDict::new(py);
-            for (k, v) in meta {
-                out.set_item(k, v)?;
-            }
-            out.set_item("score", score)?;
-            out.set_item("source", "memory")?;
-            scored.push((score, out.into()));
-        }
-    }
+    let memory_list = vector_list;
 
+    let mut connector_accum: Vec<Py<PyDict>> = Vec::new();
     if let Some(conn_list) = connectors {
         for conn in conn_list.iter() {
             let callable: &PyAny = if conn.hasattr("retrieve")? {
@@ -78,26 +99,14 @@ pub fn retrieve_top(
             let items: &PyList = fetched.downcast()?;
             for item in items.iter() {
                 if let Ok(meta) = item.downcast::<PyDict>() {
-                    let text: String = meta
-                        .get_item("text")?
-                        .and_then(|o| o.extract().ok())
-                        .unwrap_or_default();
-                    let emb = embed(&text);
-                    let score = cosine(&q_emb, &emb);
-                    let out = PyDict::new(py);
-                    for (k, v) in meta {
-                        out.set_item(k, v)?;
-                    }
-                    out.set_item("score", score)?;
-                    out.set_item("source", "connector")?;
-                    scored.push((score, out.into()));
+                    connector_accum.push(meta.into());
                 }
             }
         }
     }
 
-    scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
-    Ok(scored.into_iter().take(top_n).map(|(_, d)| d).collect())
+    let connector_list = PyList::new(py, connector_accum);
+    merge_documents(py, question, memory_list, Some(connector_list), top_n)
 }
 
 /// Minimal orchestrator that gathers documents from memory and optional connectors.
@@ -115,14 +124,27 @@ impl MoGEOrchestrator {
         Self
     }
 
-    #[pyo3(signature = (text, _emotion_data, **kwargs))]
+    #[pyo3(signature = (text, emotion_data, *, qnl_data=None, text_modality=true, voice_modality=false, music_modality=false, documents=None, **kwargs))]
     pub fn route(
         &self,
         py: Python<'_>,
         text: &str,
-        _emotion_data: &PyDict,
+        emotion_data: &PyDict,
+        qnl_data: Option<&PyDict>,
+        text_modality: bool,
+        voice_modality: bool,
+        music_modality: bool,
+        documents: Option<&PyAny>,
         kwargs: Option<&PyDict>,
     ) -> PyResult<Py<PyDict>> {
+        let _ = (
+            emotion_data,
+            qnl_data,
+            text_modality,
+            voice_modality,
+            music_modality,
+        );
+
         let top_n = kwargs
             .and_then(|k| k.get_item("top_n").ok().flatten())
             .and_then(|o| o.extract().ok())
@@ -132,16 +154,15 @@ impl MoGEOrchestrator {
             .and_then(|k| k.get_item("connectors").ok().flatten())
             .and_then(|v| v.downcast::<PyList>().ok());
 
-        let documents =
-            if let Some(doc_any) = kwargs.and_then(|k| k.get_item("documents").ok().flatten()) {
-                doc_any
-                    .downcast::<PyList>()
-                    .map(|l| l.to_object(py))
-                    .unwrap_or_else(|_| PyList::empty(py).to_object(py))
-            } else {
-                let docs = retrieve_top(py, text, top_n, connectors)?;
-                PyList::new(py, docs).to_object(py)
-            };
+        let documents = if let Some(doc_any) = documents {
+            doc_any
+                .downcast::<PyList>()
+                .map(|l| l.to_object(py))
+                .unwrap_or_else(|_| PyList::empty(py).to_object(py))
+        } else {
+            let docs = retrieve_top(py, text, top_n, connectors)?;
+            PyList::new(py, docs).to_object(py)
+        };
 
         let result = PyDict::new(py);
         result.set_item("model", "basic-rag")?;
@@ -152,6 +173,7 @@ impl MoGEOrchestrator {
 
 #[pymodule]
 fn neoabzu_rag(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(merge_documents, m)?)?;
     m.add_function(wrap_pyfunction!(retrieve_top, m)?)?;
     m.add_class::<MoGEOrchestrator>()?;
     Ok(())

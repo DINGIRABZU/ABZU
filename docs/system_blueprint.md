@@ -674,7 +674,7 @@ Performance-critical services are gradually migrating to Rust crates within NEOA
 - `neoabzu_rag` – retrieval helpers.
 - `neoabzu_insight` – reasoning engine wired into the crown router.
 
-The RAG orchestrator is feature-complete, blending internal memory with external connectors for retrieval. The workspace mirrors existing Python APIs to permit side-by-side validation during the transition.
+The RAG orchestrator is feature-complete, merging memory bundle and external connector results through a dedicated merge routine. The workspace mirrors existing Python APIs via PyO3 wrappers to permit side-by-side validation during the transition.
 See the [Migration Crosswalk](../NEOABZU/docs/migration_crosswalk.md) for mappings between Python subsystems and their Rust counterparts.
 
 ## Chakra-Aligned Architecture
