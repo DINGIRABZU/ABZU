@@ -7,7 +7,7 @@ For narrative alignment and sacred terminology, consult [herojourney_engine.md](
 | Python Subsystem | Rust Crate | Bridge |
 | --- | --- | --- |
 | `memory` layers (`memory/`, `vector_memory.py`) | `neoabzu-memory` | PyO3 module `neoabzu_memory` bundles cortex, vector, spiral, emotional, mental, spiritual, and narrative layers. |
-| `crown_router.py` | `neoabzu-crown` | Exposes routing functions via `crown_router_rs.py` wrapper. |
+| `crown_router.py` | `neoabzu-crown` | Fully ported; `crown_router_rs.py` provides compatibility bindings. |
 | `rag/orchestrator.py` | `neoabzu-rag` | `MoGEOrchestrator` aggregates memory and connector results via PyO3. |
 | `core` lambda engine (`core/`) | `neoabzu-core` | Accessible through `neoabzu_memory.eval_core` and `neoabzu_memory.reduce_inevitable_core` for Crown Router and RAZAR. |
 | `system coordination` (`metrics`, `tracing`, `caching`) | `neoabzu-crown` | Shared instrumentation and caches mirror ABZU coordination. |

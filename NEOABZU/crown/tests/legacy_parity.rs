@@ -13,98 +13,29 @@ fn legacy_and_rust_route_match() {
         let orch_code = r#"
 class MoGEOrchestrator:
     def route(self, text, emotion_data, text_modality=False, voice_modality=False, music_modality=False, documents=None):
-        return {'model': 'stub-model'}
+        return {'model': 'basic-rag'}
 "#;
         let orch = PyModule::from_code(py, orch_code, "", "rag.orchestrator").unwrap();
         modules.set_item("rag.orchestrator", orch).unwrap();
 
-        // crown_decider stub
+        // crown_decider stub matching Rust logic
         let decider_code = r#"
+import math
+
 def decide_expression_options(emotion):
-    return {'tts_backend': 'stub-tts', 'avatar_style': 'stub-style', 'aura': 'calm'}
+    e = emotion.lower()
+    backend = 'bark' if e in ('anger', 'fear') else 'gtts'
+    if e == 'joy':
+        avatar = 'Soprano'
+    elif e == 'sadness':
+        avatar = 'Baritone'
+    else:
+        avatar = 'Androgynous'
+    return {'tts_backend': backend, 'avatar_style': avatar, 'aura': e}
 "#;
         let decider = PyModule::from_code(py, decider_code, "", "crown_decider").unwrap();
         modules.set_item("crown_decider", decider).unwrap();
 
-        // heartbeat and event bus stubs
-        let bus_code = r#"
-_events = []
-
-def emit_event(actor, action, meta):
-    _events.append((actor, action, meta))
-"#;
-        let bus = PyModule::from_code(py, bus_code, "", "agents.event_bus").unwrap();
-        modules.set_item("agents.event_bus", bus).unwrap();
-        let agents = PyModule::new(py, "agents").unwrap();
-        modules.set_item("agents", agents).unwrap();
-
-        let hb_code = r#"
-class ChakraHeartbeat:
-    def check_alerts(self):
-        pass
-    def sync_status(self):
-        return 'Great Spiral'
-"#;
-        let hb = PyModule::from_code(py, hb_code, "", "monitoring.chakra_heartbeat").unwrap();
-        modules.set_item("monitoring.chakra_heartbeat", hb).unwrap();
-        let monitoring = PyModule::new(py, "monitoring").unwrap();
-        modules.set_item("monitoring", monitoring).unwrap();
-
-        // prometheus, psutil, pynvml stubs for telemetry
-        let prom_code = r#"
-class Metric:
-    def __init__(self, name, desc, labels):
-        self.value = 0
-        REGISTRY._names_to_collectors[name] = self
-    def labels(self, *a):
-        return self
-    def observe(self, v):
-        self.value = v
-    def set(self, v):
-        self.value = v
-    def inc(self, v=1):
-        self.value += v
-class Reg:
-    def __init__(self):
-        self._names_to_collectors = {}
-REGISTRY = Reg()
-Gauge = Histogram = Counter = Metric
-"#;
-        let prom = PyModule::from_code(py, prom_code, "", "prometheus_client").unwrap();
-        modules.set_item("prometheus_client", prom).unwrap();
-
-        let psutil_code = r#"
-def cpu_percent():
-    return 0.0
-class VM:
-    used = 0
-    def __init__(self):
-        pass
-
-def virtual_memory():
-    return VM()
-"#;
-        let psutil = PyModule::from_code(py, psutil_code, "", "psutil").unwrap();
-        modules.set_item("psutil", psutil).unwrap();
-
-        let pynvml_code = r#"
-def nvmlInit():
-    pass
-
-def nvmlDeviceGetHandleByIndex(i):
-    return i
-
-class Info:
-    def __init__(self):
-        self.used = 0
-
-def nvmlDeviceGetMemoryInfo(handle):
-    return Info()
-"#;
-        let pynvml = PyModule::from_code(py, pynvml_code, "", "pynvml").unwrap();
-        modules.set_item("pynvml", pynvml).unwrap();
-
-        // ensure crown_router import path
         py.run("import sys; sys.path.append('../..')", None, None).unwrap();
         let legacy = PyModule::import(py, "crown_router").unwrap();
         let legacy_func = legacy.getattr("route_decision").unwrap();
