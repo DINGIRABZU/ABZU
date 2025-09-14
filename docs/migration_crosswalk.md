@@ -1,5 +1,7 @@
 # Migration Crosswalk
 
+For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
+
 | Step | Rust crate | Remaining Python dependencies |
 |------|------------|--------------------------------|
 | Razor init | `neoabzu_memory` | `razar/boot_orchestrator.py` |
