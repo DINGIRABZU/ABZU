@@ -11,3 +11,5 @@ path = "src/lib.rs"
 [dependencies]
 nalgebra = "0.32"
 pyo3 = { version = "0.21", features = ["extension-module", "abi3-py39"] }
+tracing = "0.1"
+neoabzu-instrumentation = { path = "../instrumentation" }

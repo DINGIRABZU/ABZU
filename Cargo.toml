@@ -5,4 +5,5 @@ members = [
     "persona",
     "crown",
     "rag",
+    "instrumentation",
 ]

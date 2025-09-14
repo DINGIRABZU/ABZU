@@ -1,8 +1,10 @@
 use neoabzu_memory::MemoryBundle;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
+use tracing::instrument;
 
 #[pyfunction]
+#[instrument(skip(py))]
 fn route_query(py: Python<'_>, question: &str) -> PyResult<Py<PyDict>> {
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
@@ -11,6 +13,7 @@ fn route_query(py: Python<'_>, question: &str) -> PyResult<Py<PyDict>> {
 
 #[pyfunction]
 #[pyo3(signature = (text, emotion_data, documents=None))]
+#[instrument(skip(py, emotion_data, documents))]
 fn route_decision(
     py: Python<'_>,
     text: &str,
@@ -36,6 +39,7 @@ fn route_decision(
 
 #[pymodule]
 fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    let _ = neoabzu_instrumentation::init_tracing("crown");
     m.add_function(wrap_pyfunction!(route_query, m)?)?;
     m.add_function(wrap_pyfunction!(route_decision, m)?)?;
     PyModule::import(py, "neoabzu_memory")?;
