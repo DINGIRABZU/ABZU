@@ -401,6 +401,9 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
 | [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.9 **Last updated:** 2025-09-30 | - |
 | [migration_crosswalk.md](migration_crosswalk.md) | Migration Crosswalk | For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md). | - |
+| [migration_playbooks/crown.md](migration_playbooks/crown.md) | Crown Migration Playbook | - | - |
+| [migration_playbooks/razor.md](migration_playbooks/razor.md) | Razor Migration Playbook | - | - |
+| [migration_protocol.md](migration_protocol.md) | Migration Protocol | Guidelines for coordinating Python→Rust migrations across the codebase. | - |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mission_brief_exchange.md](mission_brief_exchange.md) | Mission Brief Exchange & Servant Routing | This guide outlines how RAZAR hands mission briefs to Crown, how failures escalate through `ai_invoker.handover`, and... | - |
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |
