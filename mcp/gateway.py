@@ -15,7 +15,6 @@ from mcp.server.fastmcp import FastMCP
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from invocation_engine import invoke
 
 __version__ = "0.1.0"
 
@@ -47,6 +46,8 @@ async def invoke_model(model: str, text: str) -> Dict[str, Any]:
     """Invoke ``model`` with ``text`` via the existing invocation engine."""
     if model not in models:
         raise ValueError("unknown model")
+    from invocation_engine import invoke  # lazy import to avoid heavy deps
+
     result = invoke(text)
     return {"model": model, "result": result}
 
@@ -57,6 +58,39 @@ async def invoke_model_route(request: Request) -> JSONResponse:
         return JSONResponse({"error": "unauthorized"}, status_code=401)
     payload = await request.json()
     result = await invoke_model(payload.get("model", ""), payload.get("text", ""))
+    return JSONResponse(result)
+
+
+@server.tool()
+async def log_primordials_metrics(metrics: Dict[str, Any]) -> Dict[str, str]:
+    """Forward ``metrics`` to the Primordials service via its HTTP connector."""
+    from connectors.primordials_api import send_metrics
+
+    if not send_metrics(metrics):
+        raise ValueError("failed to send metrics")
+    return {"status": "sent"}
+
+
+@server.custom_route("/primordials/metrics", methods=["POST"])
+async def log_primordials_metrics_route(request: Request) -> JSONResponse:
+    payload = await request.json()
+    result = await log_primordials_metrics(payload)
+    return JSONResponse(result)
+
+
+@server.tool()
+async def log_narrative(text: str) -> Dict[str, str]:
+    """Persist ``text`` via the narrative API."""
+    from narrative_api import Story, log_story
+
+    log_story(Story(text=text))
+    return {"status": "logged"}
+
+
+@server.custom_route("/narrative/story", methods=["POST"])
+async def log_narrative_route(request: Request) -> JSONResponse:
+    payload = await request.json()
+    result = await log_narrative(payload.get("text", ""))
     return JSONResponse(result)
 
 

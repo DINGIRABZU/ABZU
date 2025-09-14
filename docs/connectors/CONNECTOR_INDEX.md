@@ -17,6 +17,8 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 | `telegram_bot` | Telegram channel relay for chat | 0.3.0 | Bot token | Telegram Bot API | Nazarick Agents | experimental | [tools/bot_telegram.py](../../tools/bot_telegram.py) | [communication_interfaces.md](../communication_interfaces.md) | N/A |
 | `primordials_api` | metrics bridge to Primordials service | 0.1.1 | Bearer | `POST /metrics`, `GET /health` | Primordials | experimental | [connectors/primordials_api.py](../../connectors/primordials_api.py) | [primordials_service.md](../primordials_service.md) | [primordials_api.schema.json](../../schemas/primordials_api.schema.json) |
 | `narrative_api` | narrative logging and stream | 0.2.0 (`__version__`) | Bearer | `POST /story`, `GET /story/log`, `GET /story/stream` | vector_memory | experimental | [narrative_api.py](../../narrative_api.py) | [nazarick_narrative_system.md](../nazarick_narrative_system.md) | N/A |
+| `primordials_mcp` | MCP wrapper for Primordials metrics | 0.1.0 | Bearer | `POST /context/register`, `POST /primordials/metrics` | Primordials | experimental | [connectors/primordials_mcp.py](../../connectors/primordials_mcp.py) | [primordials_service.md](../primordials_service.md) | [primordials_api.schema.json](../../schemas/primordials_api.schema.json) |
+| `narrative_mcp` | MCP wrapper for narrative logging | 0.1.0 | Bearer | `POST /context/register`, `POST /narrative/story` | vector_memory | experimental | [connectors/narrative_mcp.py](../../connectors/narrative_mcp.py) | [nazarick_narrative_system.md](../nazarick_narrative_system.md) | N/A |
 
 ## MCP Migration Status
 
@@ -30,8 +32,10 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 | `open_web_ui` | API | candidate for MCP gateway |
 | `discord_bot` | MCP/API | uses MCP for GLM commands; Discord API remains |
 | `telegram_bot` | MCP/API | uses MCP for GLM commands; Telegram API remains |
-| `primordials_api` | API | external service requires REST |
-| `narrative_api` | API | migration pending |
+| `primordials_api` | API | external service requires REST; MCP wrapper `primordials_mcp` |
+| `narrative_api` | API | MCP wrapper `narrative_mcp` available |
+| `primordials_mcp` | MCP | wraps Primordials metrics over gateway |
+| `narrative_mcp` | MCP | wraps narrative logging over gateway |
 | `mcp_gateway_example` | MCP | reference implementation |
 
 Backlinks: [Component Index](../component_index.md) | [Dependency Index](../dependency_index.md) | [Test Index](../test_index.md)

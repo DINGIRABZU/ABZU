@@ -66,7 +66,8 @@ documents:
       purpose: Maps reduction steps to a 12-stage heroic narrative.
       scope: Neo-ABZU narrative engine.
   NEOABZU/docs/migration_crosswalk.md:
-    sha256: 74909bf8a019f4430957487f662354b983e1cf9e454e2f8d2ca8bbc702ee3482
+    commit: 757c452324fa8a380a8970175290cd03e8d78512
+    sha256: 45d21c44e765c2fcd5006c57ae40ff08741c42ff66ad9d028f0ef142a31c923a
     signed_by: onboarding-wizard
     summary:
       insight: neoabzu-memory crate bundles core memory layers.
@@ -175,8 +176,8 @@ documents:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
-    commit: 812b70e5d9f1dcb0ebfcfa0bf7c1932a7b7869f1
-    sha256: a11127c5d8f46a5cf2f623c5c133d447829ecef771aabe49654be1e1b6a2b1de
+    commit: 757c452324fa8a380a8970175290cd03e8d78512
+    sha256: c9ab80678f18c4f55239f5ea4cca8e102dee710c26fd2618b5cfde64271008df
     summary:
       insight: Use the PR checklist to synchronize versions, connectors, and document
         summaries while keeping coverage high and removing placeholders before commit.
@@ -194,8 +195,8 @@ documents:
       purpose: API endpoints and schemas.
       scope: Public interfaces.
   docs/architecture_overview.md:
-    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
-    sha256: dcd829f05771560880d78a9639d0e90253fe76c57d38a17aae560cdcf95c4640
+    commit: 757c452324fa8a380a8970175290cd03e8d78512
+    sha256: 8599df0a465b00f24704fc2fbe3015a7ef8d42338a179e954ab1e146a6f2cd4d
     summary:
       insight: Align new modules with existing architecture.
       key_rules: Maintain architectural consistency.
