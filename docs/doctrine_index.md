@@ -1,5 +1,7 @@
 # Doctrine Index
 
+Every canonical document now requires a `Doctrine References` section linking back to this index. Use these links to trace provenance for new architectural rules.
+
 | File | Version | Checksum | Last Updated |
 | --- | --- | --- | --- |
 | CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md |  | `d46a551d4e1fb1b3e056bf14f051793e6faaa6191b268f84e3a0e054fe432c60` | 2025-09-13T01:34:31+02:00 |

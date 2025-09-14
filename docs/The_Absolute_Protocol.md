@@ -27,6 +27,17 @@ Components ported from Python to Rust must:
 - Update [doctrine_index.md](doctrine_index.md) with the component's checksum and note its place in the APSU sequence.
 - Document where the component sits in the APSU sequence and link to relevant diagrams such as [blueprint_spine.md](blueprint_spine.md) or [system_blueprint.md](system_blueprint.md#razor–crown–kimi-cho-migration).
 
+### Doctrine Reference Requirements
+
+All architecture or protocol documents must include a **Doctrine References** section that links back to canonical doctrine paths. This ensures new material stays traceable to its source rules.
+
+**Example**
+
+```markdown
+### Doctrine References
+- [system_blueprint.md#operator-razar-crown-flow](system_blueprint.md#operator-razar-crown-flow) – illustrates the path for operator directives.
+```
+
 ### Environment Preparation
 Set up the local environment before running tools or tests:
 
