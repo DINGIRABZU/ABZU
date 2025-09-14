@@ -9,6 +9,7 @@ use axum::{
     Router,
 };
 use futures::{SinkExt, StreamExt};
+use neoabzu_chakrapulse::{emit_pulse, subscribe_chakra};
 use std::{collections::HashMap, net::SocketAddr, time::Duration};
 use tokio::sync::broadcast;
 
@@ -17,16 +18,21 @@ async fn main() {
     tracing_subscriber::fmt::init();
     let (tx, _) = broadcast::channel::<String>(100);
 
-    // periodic chakra pulse
-    tokio::spawn({
+    {
         let tx = tx.clone();
-        async move {
-            let mut freq: f32 = 1.0;
-            loop {
-                let _ = tx.send(format!("chakra:{freq}"));
-                freq += 0.1;
-                tokio::time::sleep(Duration::from_secs(1)).await;
+        std::thread::spawn(move || {
+            let rx = subscribe_chakra();
+            for pulse in rx.iter() {
+                let msg = format!("chakra:{}:{}", pulse.source, pulse.ok);
+                let _ = tx.send(msg);
             }
+        });
+    }
+
+    tokio::spawn(async move {
+        loop {
+            emit_pulse("backend", true);
+            tokio::time::sleep(Duration::from_secs(1)).await;
         }
     });
 
