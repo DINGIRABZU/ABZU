@@ -27,52 +27,78 @@ fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
     dot
 }
 
-#[cfg_attr(feature = "tracing", tracing::instrument(skip(py, memory, connectors)))]
+#[cfg_attr(
+    feature = "tracing",
+    tracing::instrument(skip(py, memory, connectors, ranker))
+)]
 #[pyfunction]
-#[pyo3(signature = (question, memory, connectors=None, top_n=5))]
+#[pyo3(signature = (question, memory, connectors=None, top_n=5, ranker=None))]
 pub fn merge_documents(
     py: Python<'_>,
     question: &str,
     memory: &PyList,
     connectors: Option<&PyList>,
     top_n: usize,
+    ranker: Option<&PyAny>,
 ) -> PyResult<Vec<Py<PyDict>>> {
-    let q_emb = embed(question);
-    let mut scored: Vec<(f32, Py<PyDict>)> = Vec::new();
+    let mut collected: Vec<Py<PyDict>> = Vec::new();
     let sources = [("memory", Some(memory)), ("connector", connectors)];
     for (source, list_opt) in sources.iter() {
         if let Some(list) = list_opt {
             for item in list.iter() {
                 if let Ok(meta) = item.downcast::<PyDict>() {
-                    let text: String = meta
-                        .get_item("text")?
-                        .and_then(|o| o.extract().ok())
-                        .unwrap_or_default();
-                    let emb = embed(&text);
-                    let score = cosine(&q_emb, &emb);
                     let out = PyDict::new(py);
                     for (k, v) in meta {
                         out.set_item(k, v)?;
                     }
-                    out.set_item("score", score)?;
                     out.set_item("source", source)?;
-                    scored.push((score, out.into()));
+                    collected.push(out.into());
                 }
             }
         }
+    }
+
+    let docs = PyList::new(py, collected);
+    if let Some(r) = ranker {
+        let ranked = r.call1((question, docs))?;
+        let ranked_list: &PyList = ranked.downcast()?;
+        return Ok(
+            ranked_list
+                .iter()
+                .take(top_n)
+                .filter_map(|d| d.downcast::<PyDict>().ok().map(|p| p.into()))
+                .collect(),
+        );
+    }
+
+    let q_emb = embed(question);
+    let mut scored: Vec<(f32, Py<PyDict>)> = Vec::new();
+    for doc in docs.iter() {
+        let meta: &PyDict = doc.downcast()?;
+        let text: String = meta
+            .get_item("text")?
+            .and_then(|o| o.extract().ok())
+            .unwrap_or_default();
+        let emb = embed(&text);
+        let score = cosine(&q_emb, &emb);
+        meta.set_item("score", score)?;
+        let obj = meta.to_object(py);
+        let dict: Py<PyDict> = obj.extract::<Py<PyDict>>(py)?;
+        scored.push((score, dict));
     }
     scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
     Ok(scored.into_iter().take(top_n).map(|(_, d)| d).collect())
 }
 
-#[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
+#[cfg_attr(feature = "tracing", tracing::instrument(skip(py, ranker)))]
 #[pyfunction]
-#[pyo3(signature = (question, top_n=5, connectors=None))]
+#[pyo3(signature = (question, top_n=5, connectors=None, ranker=None))]
 pub fn retrieve_top(
     py: Python<'_>,
     question: &str,
     top_n: usize,
     connectors: Option<&PyList>,
+    ranker: Option<&PyAny>,
 ) -> PyResult<Vec<Py<PyDict>>> {
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
@@ -106,7 +132,14 @@ pub fn retrieve_top(
     }
 
     let connector_list = PyList::new(py, connector_accum);
-    merge_documents(py, question, memory_list, Some(connector_list), top_n)
+    merge_documents(
+        py,
+        question,
+        memory_list,
+        Some(connector_list),
+        top_n,
+        ranker,
+    )
 }
 
 /// Minimal orchestrator that gathers documents from memory and optional connectors.
@@ -154,13 +187,16 @@ impl MoGEOrchestrator {
             .and_then(|k| k.get_item("connectors").ok().flatten())
             .and_then(|v| v.downcast::<PyList>().ok());
 
+        let ranker = kwargs
+            .and_then(|k| k.get_item("ranker").ok().flatten());
+
         let documents = if let Some(doc_any) = documents {
             doc_any
                 .downcast::<PyList>()
                 .map(|l| l.to_object(py))
                 .unwrap_or_else(|_| PyList::empty(py).to_object(py))
         } else {
-            let docs = retrieve_top(py, text, top_n, connectors)?;
+            let docs = retrieve_top(py, text, top_n, connectors, ranker)?;
             PyList::new(py, docs).to_object(py)
         };
 

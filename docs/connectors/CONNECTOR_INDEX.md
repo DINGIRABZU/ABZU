@@ -19,6 +19,10 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 | `narrative_api` | narrative logging and stream | 0.2.0 (`__version__`) | Bearer | `POST /story`, `GET /story/log`, `GET /story/stream` | vector_memory | experimental | [narrative_api.py](../../narrative_api.py) | [nazarick_narrative_system.md](../nazarick_narrative_system.md) | N/A |
 | `primordials_mcp` | MCP wrapper for Primordials metrics | 0.1.0 | Bearer | `POST /context/register`, `POST /primordials/metrics` | Primordials | experimental | [connectors/primordials_mcp.py](../../connectors/primordials_mcp.py) | [primordials_service.md](../primordials_service.md) | [primordials_api.schema.json](../../schemas/primordials_api.schema.json) |
 | `narrative_mcp` | MCP wrapper for narrative logging | 0.1.0 | Bearer | `POST /context/register`, `POST /narrative/story` | vector_memory | experimental | [connectors/narrative_mcp.py](../../connectors/narrative_mcp.py) | [nazarick_narrative_system.md](../nazarick_narrative_system.md) | N/A |
+| `avatar_broadcast` | broadcast avatar frames to Discord and Telegram | 0.1.0 | Bot token | Discord API, Telegram API | Discord, Telegram | experimental | [connectors/avatar_broadcast.py](../../connectors/avatar_broadcast.py) | N/A | N/A |
+| `signal_bus` | cross-connector publish/subscribe bus | 0.3.0 | N/A | Redis/Kafka | all connectors | experimental | [connectors/signal_bus.py](../../connectors/signal_bus.py) | [README.md](README.md) | N/A |
+| `mcp_gateway_example` | example MCP gateway connector | 0.2.0 | Configured | `POST /model/invoke` | internal models | experimental | [connectors/mcp_gateway_example.py](../../connectors/mcp_gateway_example.py) | [README.md](README.md) | N/A |
+| `neo_apsu_connector_template` | template for new connectors | 0.1.0 | N/A | N/A | N/A | template | [connectors/neo_apsu_connector_template.py](../../connectors/neo_apsu_connector_template.py) | N/A | N/A |
 
 ## MCP Migration Status
 
