@@ -15,7 +15,9 @@ fn embed(text: &str) -> [f32; EMBED_DIM] {
     }
     let norm: f32 = v.iter().map(|x| x * x).sum::<f32>().sqrt();
     if norm > 0.0 {
-        for x in &mut v { *x /= norm; }
+        for x in &mut v {
+            *x /= norm;
+        }
     }
     v
 }
@@ -27,7 +29,13 @@ fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
 
 #[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
 #[pyfunction]
-pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Vec<Py<PyDict>>> {
+#[pyo3(signature = (question, top_n=5, connectors=None))]
+pub fn retrieve_top(
+    py: Python<'_>,
+    question: &str,
+    top_n: usize,
+    connectors: Option<&PyList>,
+) -> PyResult<Vec<Py<PyDict>>> {
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
     let q_dict = bundle.query(py, question)?;
@@ -47,11 +55,47 @@ pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Ve
             let emb = embed(&text);
             let score = cosine(&q_emb, &emb);
             let out = PyDict::new(py);
-            for (k, v) in meta { out.set_item(k, v)?; }
+            for (k, v) in meta {
+                out.set_item(k, v)?;
+            }
             out.set_item("score", score)?;
+            out.set_item("source", "memory")?;
             scored.push((score, out.into()));
         }
     }
+
+    if let Some(conn_list) = connectors {
+        for conn in conn_list.iter() {
+            let callable: &PyAny = if conn.hasattr("retrieve")? {
+                conn.getattr("retrieve")?
+            } else {
+                conn
+            };
+            if !callable.is_callable() {
+                continue;
+            }
+            let fetched = callable.call1((question,))?;
+            let items: &PyList = fetched.downcast()?;
+            for item in items.iter() {
+                if let Ok(meta) = item.downcast::<PyDict>() {
+                    let text: String = meta
+                        .get_item("text")?
+                        .and_then(|o| o.extract().ok())
+                        .unwrap_or_default();
+                    let emb = embed(&text);
+                    let score = cosine(&q_emb, &emb);
+                    let out = PyDict::new(py);
+                    for (k, v) in meta {
+                        out.set_item(k, v)?;
+                    }
+                    out.set_item("score", score)?;
+                    out.set_item("source", "connector")?;
+                    scored.push((score, out.into()));
+                }
+            }
+        }
+    }
+
     scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
     Ok(scored.into_iter().take(top_n).map(|(_, d)| d).collect())
 }
@@ -98,11 +142,10 @@ def query_vectors(*a, **k):
     fn retrieve_top_returns_expected() {
         Python::with_gil(|py| {
             setup(py);
-            let res = retrieve_top(py, "abc", 1).unwrap();
+            let res = retrieve_top(py, "abc", 1, None).unwrap();
             let first: &PyDict = res[0].as_ref(py);
             let text: String = first.get_item("text").unwrap().unwrap().extract().unwrap();
             assert_eq!(text, "abc");
         });
     }
 }
-
