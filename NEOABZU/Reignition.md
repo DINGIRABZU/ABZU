@@ -56,6 +56,24 @@ query results.
 These boundaries keep orchestration logic in Python while Rust provides
 computational stability.
 
+## Vector Service Deployment
+
+Run the gRPC service with:
+
+```bash
+cargo run -p neoabzu-vector --bin server
+```
+
+Python callers may connect using `neoabzu.vector.VectorClient`:
+
+```python
+from neoabzu.vector import VectorClient
+
+client = VectorClient("http://localhost:50051")
+client.init()
+results = client.search("hello", 2)
+```
+
 ## Contributor Guidelines
 
 Follow [The Absolute Protocol](../docs/The_Absolute_Protocol.md) when committing

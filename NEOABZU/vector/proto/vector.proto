@@ -1,0 +1,28 @@
+syntax = "proto3";
+package neoabzu.vector;
+
+message InitRequest {}
+
+message InitResponse {
+  string message = 1;
+}
+
+message SearchRequest {
+  string text = 1;
+  uint32 top_n = 2;
+}
+
+message SearchResult {
+  string text = 1;
+  float score = 2;
+  repeated float embedding = 3;
+}
+
+message SearchResponse {
+  repeated SearchResult results = 1;
+}
+
+service VectorService {
+  rpc Init(InitRequest) returns (InitResponse);
+  rpc Search(SearchRequest) returns (SearchResponse);
+}
