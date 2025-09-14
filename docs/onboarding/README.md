@@ -20,6 +20,8 @@ The Crown router, RAG orchestrator, and Kimicho fallback now use Rust crates (`n
    - [Vision System](../vision_system.md)
    - [Persona API Guide](../persona_api_guide.md)
    - [Spiral Cortex Terminal](../spiral_cortex_terminal.md)
+   - [Narrative Framework](../narrative_framework.md)
+   - [Narrative Engine Guide](../narrative_engine_GUIDE.md)
 
 6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
 7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage

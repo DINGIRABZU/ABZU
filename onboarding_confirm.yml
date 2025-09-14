@@ -308,6 +308,22 @@ documents:
       key_rules: Use prescribed JSON logging format.
       purpose: Structured logging requirements.
       scope: Logging across modules.
+  docs/narrative_engine_GUIDE.md:
+    commit: 3c4f81b51eff75d5d5ccd63d732f954524296773
+    sha256: 3714db9071090d4c430ab986bd0e7b0bece10051277688d9bf0a8eb99fc69be7
+    summary:
+      insight: Provides setup and architecture for biosignal-driven narrative engine.
+      key_rules: Use documented ingestion and event structures.
+      purpose: Guide for deploying and extending narrative engine.
+      scope: Biosignal ingestion to memory persistence.
+  docs/narrative_framework.md:
+    commit: 3c4f81b51eff75d5d5ccd63d732f954524296773
+    sha256: 3774d01dff11be3df543c625cbd3e3c93fe1c23b880f1f6ee2189be87ef1ef4b
+    summary:
+      insight: Biosignals transform into narratives via defined stages.
+      key_rules: Align orchestration with framework stages.
+      purpose: Maps biosignal streams to narrative pipeline.
+      scope: Narrative orchestration across the stack.
   docs/nazarick_agents.md:
     commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     sha256: 9cfdb5732c777137ca29fe3796729c7a2fd3af751dddf6dca9faedd435c0321f
