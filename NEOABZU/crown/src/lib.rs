@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
+use std::time::Instant;
 
 fn select_store(archetype: &str) -> &str {
     match archetype.to_lowercase().as_str() {
@@ -30,6 +31,7 @@ fn route_decision(
     validator: Option<PyObject>,
     documents: Option<PyObject>,
 ) -> PyResult<Py<PyDict>> {
+    let start = Instant::now();
     if let Some(val) = validator {
         let res = val
             .as_ref(py)
@@ -97,6 +99,112 @@ fn route_decision(
     }
     if let Some(aura) = opts.get_item("aura")? {
         decision.set_item("aura", aura)?;
+    }
+    let duration = start.elapsed().as_secs_f64();
+    if let Ok(prometheus) = PyModule::import(py, "prometheus_client") {
+        if let (Ok(registry), Ok(hist_cls), Ok(gauge_cls)) = (
+            prometheus.getattr("REGISTRY"),
+            prometheus.getattr("Histogram"),
+            prometheus.getattr("Gauge"),
+        ) {
+            if let Ok(collectors) = registry.getattr("_names_to_collectors") {
+                let latency_hist = match collectors.get_item("service_request_latency_seconds") {
+                    Ok(o) => o.to_object(py),
+                    Err(_) => hist_cls
+                        .call(
+                            (
+                                "service_request_latency_seconds",
+                                "Request latency in seconds",
+                                vec!["service"],
+                            ),
+                            None,
+                        )
+                        .unwrap(),
+                };
+                let _ = latency_hist
+                    .as_ref(py)
+                    .call_method("labels", ("crown",), None)
+                    .and_then(|l| l.call_method("observe", (duration,), None));
+
+                let cpu_gauge = match collectors.get_item("service_cpu_usage_percent") {
+                    Ok(o) => o.to_object(py),
+                    Err(_) => gauge_cls
+                        .call(
+                            (
+                                "service_cpu_usage_percent",
+                                "CPU usage percent",
+                                vec!["service"],
+                            ),
+                            None,
+                        )
+                        .unwrap(),
+                };
+                let memory_gauge = match collectors.get_item("service_memory_usage_bytes") {
+                    Ok(o) => o.to_object(py),
+                    Err(_) => gauge_cls
+                        .call(
+                            (
+                                "service_memory_usage_bytes",
+                                "Memory usage in bytes",
+                                vec!["service"],
+                            ),
+                            None,
+                        )
+                        .unwrap(),
+                };
+                let gpu_gauge = match collectors.get_item("service_gpu_memory_usage_bytes") {
+                    Ok(o) => o.to_object(py),
+                    Err(_) => gauge_cls
+                        .call(
+                            (
+                                "service_gpu_memory_usage_bytes",
+                                "GPU memory usage in bytes",
+                                vec!["service"],
+                            ),
+                            None,
+                        )
+                        .unwrap(),
+                };
+
+                if let Ok(psutil) = PyModule::import(py, "psutil") {
+                    if let (Ok(cpu_percent), Ok(mem_used)) = (
+                        psutil.call_method0("cpu_percent").and_then(|v| v.extract::<f64>()),
+                        psutil
+                            .getattr("virtual_memory")
+                            .and_then(|f| f.call0())
+                            .and_then(|v| v.getattr("used"))
+                            .and_then(|v| v.extract::<u64>()),
+                    ) {
+                        let _ = cpu_gauge
+                            .as_ref(py)
+                            .call_method("labels", ("crown",), None)
+                            .and_then(|l| l.call_method("set", (cpu_percent,), None));
+                        let _ = memory_gauge
+                            .as_ref(py)
+                            .call_method("labels", ("crown",), None)
+                            .and_then(|l| l.call_method("set", (mem_used,), None));
+                    }
+                }
+
+                if let Ok(pynvml) = PyModule::import(py, "pynvml") {
+                    let _ = pynvml.call_method0("nvmlInit");
+                    if let Ok(handle) = pynvml.call_method1("nvmlDeviceGetHandleByIndex", (0,)) {
+                        if let Ok(mem_info) =
+                            pynvml.call_method1("nvmlDeviceGetMemoryInfo", (handle.clone(),))
+                        {
+                            if let Ok(used) =
+                                mem_info.getattr("used").and_then(|v| v.extract::<u64>())
+                            {
+                                let _ = gpu_gauge
+                                    .as_ref(py)
+                                    .call_method("labels", ("crown",), None)
+                                    .and_then(|l| l.call_method("set", (used,), None));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     Ok(decision.into_py(py))
 }
