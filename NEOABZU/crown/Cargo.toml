@@ -16,3 +16,7 @@ neoabzu-insight = { path = "../insight" }
 
 [features]
 default = []
+
+[dev-dependencies]
+httpmock = "0.6"
+neoabzu-kimicho = { path = "../kimicho" }

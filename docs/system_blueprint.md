@@ -315,6 +315,8 @@ for runtime details.
 
 *Figure: Events travel from the Python-based Razor orchestrator through the Rust Crown router to the Kimi-cho fallback, showing the current migration path.*
 
+Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`) confirm that Razor falls back to Kimicho transparently when Crown routing fails.
+
 ```mermaid
 {{#include figures/rust_crate_boundaries.mmd}}
 ```
