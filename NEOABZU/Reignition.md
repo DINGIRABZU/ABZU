@@ -58,24 +58,19 @@ computational stability.
 
 ## Vector Service Deployment
 
-Run the gRPC service with:
-
-```bash
-cargo run -p neoabzu-vector --bin server
-```
-
-The server expects a JSON list of texts referenced by
-`NEOABZU_VECTOR_STORE`:
+Run the gRPC service (binding to `0.0.0.0:50051`) with:
 
 ```bash
 export NEOABZU_VECTOR_STORE=tests/data/store.json
 cargo run -p neoabzu-vector --bin server
 ```
 
-Each entry is embedded at startup and stored in memory. Metrics counters
-`neoabzu_vector_init_total` and `neoabzu_vector_search_total` track RPC
-usage, and invalid requests surface gRPC errors (e.g. missing store,
-zero `top_n`, or searches before initialization).
+The `NEOABZU_VECTOR_STORE` environment variable should point to a JSON
+array of strings. Each entry is embedded at startup and stored in
+memory. Metrics counters `neoabzu_vector_init_total` and
+`neoabzu_vector_search_total` track RPC usage, and invalid requests
+surface gRPC errors (e.g. missing store, zero `top_n`, or searches
+before initialization).
 
 Python callers may connect using `neoabzu.vector.VectorClient`:
 
