@@ -29,6 +29,6 @@ fn crown_failure_switches_to_k2_coder() {
 #[test]
 fn crown_failure_reports_error_when_k2_unreachable() {
     init_kimicho(Some("http://127.0.0.1:1".to_string()));
-    let result = fallback_k2("fn main() {}");
-    assert!(result.is_err());
+    let err = fallback_k2("fn main() {}").expect_err("request should fail");
+    assert!(err.to_string().contains("K2 request failed"));
 }
