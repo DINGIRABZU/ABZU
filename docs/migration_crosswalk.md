@@ -1,18 +1,47 @@
 # Migration Crosswalk
 
-This crosswalk outlines how memory layers connect to Crown during startup.
+| Step | Rust crate | Remaining Python dependencies |
+|------|------------|--------------------------------|
+| Razor init | `neoabzu_memory` | `razar/boot_orchestrator.py` |
+| Crown routing | `neoabzu_crown` | `crown_router.py` |
+| Fusion invariants | `neoabzu_fusion` | `NEOABZU/neoabzu/fusion.py` |
+| Numeric embeddings | `neoabzu_numeric` | `NEOABZU/neoabzu/numeric.py` |
+| Persona context | `neoabzu_persona_layers` | `NEOABZU/neoabzu/persona.py` |
+| RAG retrieval | `neoabzu_rag` | `rag/orchestrator.py` |
+| Kimicho fallback | `neoabzu_kimicho` | `kimicho.py` |
 
-- The `neoabzu_memory` bundle initializes emotional, mental, spiritual, and narrative layers and
-  broadcasts a `layer_init` event over the bus.
-- `neoabzu_crown` imports this bundle at module load and exposes `query_memory`,
-  routing memory queries through Crown while preserving layer aggregation.
-- `fusion` merges invariants from symbolic and numeric streams before broadcast.
-- `numeric` refines memory embeddings via principal component analysis.
-- `neoabzu_persona_layers` injects persona context that Crown uses during routing.
-- `neoabzu_rag` queries the bundle to retrieve supporting documents for prompts.
-- Integration tests validate the broadcast and the query path.
-- The Rust module also handles Crown routing formerly in `crown_router.py`, adding validation, orchestrator delegation, and telemetry hooks.
-- `neoabzu_kimicho` replaces the legacy `kimicho.py` fallback with a Rust client exposing `init_kimicho` and `fallback_k2`.
-- Both `neoabzu_crown` and `neoabzu_kimicho` expose an optional `tracing` feature
-  to emit spans through `neoabzu_instrumentation`.
-- Integration tests cover Razor→Crown and Razor→Kimicho paths.
+### Razor init
+- [ ] Port complete
+- [ ] Required tests: `tests/agents/razar/test_crown_handshake.py`
+- [ ] Documentation references: `docs/RAZAR_AGENT.md`
+
+### Crown routing
+- [ ] Port complete
+- [ ] Required tests: `NEOABZU/crown/tests/route_query.rs`
+- [ ] Documentation references: `docs/CROWN_OVERVIEW.md`
+
+### Fusion invariants
+- [ ] Port complete
+- [ ] Required tests: `NEOABZU/fusion/tests/invariants.rs`
+- [ ] Documentation references: `docs/system_blueprint.md`
+
+### Numeric embeddings
+- [ ] Port complete
+- [ ] Required tests: `tests/test_numeric_cosine_similarity.py`
+- [ ] Documentation references: `docs/vector_memory.md`
+
+### Persona context
+- [ ] Port complete
+- [ ] Required tests: `tests/test_personality_layers.py`
+- [ ] Documentation references: `docs/persona_api_guide.md`
+
+### RAG retrieval
+- [ ] Port complete
+- [ ] Required tests: `NEOABZU/rag/tests/orchestrator.rs`
+- [ ] Documentation references: `docs/rag_pipeline.md`
+
+### Kimicho fallback
+- [ ] Port complete
+- [ ] Required tests: `NEOABZU/kimicho/tests/razor_integration.rs`
+- [ ] Documentation references: `docs/system_blueprint.md`
+
