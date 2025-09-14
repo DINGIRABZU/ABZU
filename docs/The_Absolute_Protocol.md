@@ -1,6 +1,6 @@
 # The Absolute Protocol
 
-**Version:** v1.0.99
+**Version:** v1.0.100
 **Last updated:** 2025-09-14
 
 ## How to Use This Protocol
@@ -668,6 +668,7 @@ Any component launched by Crown or RAZAR must document its activation lifecycle:
 
 Narrative modules must maintain traceability by:
 
+- Aligning narrative pathways with [narrative_framework.md](narrative_framework.md); contributors must consult this framework when modifying narrative pathways.
 - Declaring a `__version__` field in every narrative module.
 - Registering and hashing all datasets in [data_manifest.md](data_manifest.md).
 - Registering related connectors in [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
