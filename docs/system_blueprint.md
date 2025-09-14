@@ -662,17 +662,13 @@ The NEOABZU workspace implements a Rust-based Ouroboros calculus that anchors th
 
 ## Rust Migration
 
-Performance-critical services are gradually migrating to Rust crates within NEOABZU. Current modules cover:
+Performance-critical services are gradually migrating to Rust crates within NEOABZU. Current workspace crates include:
 
-- `neoabzu_core` – Ouroboros calculus.
-- `neoabzu_memory` – bundled cortex, emotional, mental, spiritual, and narrative layers.
-- `neoabzu_vector` – vector search.
-- `neoabzu_numeric` – numeric utilities.
-- `neoabzu_fusion` – invariant fusion engine.
-- `neoabzu_persona` – intent normalization layers.
+- `fusion` – merges invariants from symbolic and numeric layers.
+- `numeric` – exposes principal component analysis kernels via PyO3.
+- `neoabzu_persona_layers` – intent and persona modeling layers.
 - `neoabzu_crown` – crown orchestration bindings.
 - `neoabzu_rag` – retrieval helpers.
-- `neoabzu_insight` – counts word and bigram frequencies for the crown router.
 
 The RAG orchestrator is feature-complete, merging memory bundle and external connector results through a dedicated merge routine. The workspace mirrors existing Python APIs via PyO3 wrappers to permit side-by-side validation during the transition.
 See the [Migration Crosswalk](../NEOABZU/docs/migration_crosswalk.md) for mappings between Python subsystems and their Rust counterparts.

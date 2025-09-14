@@ -203,6 +203,11 @@ repos:
     entry: python scripts/verify_blueprint_refs.py
     language: system
     pass_filenames: false
+  - id: verify-doc-refs
+    name: Verify crate references in parity and crosswalk docs
+    entry: python scripts/verify_doc_refs.py
+    language: system
+    pass_filenames: false
   - id: verify-docs-up-to-date
     name: Verify docs up to date
     entry: python scripts/verify_docs_up_to_date.py

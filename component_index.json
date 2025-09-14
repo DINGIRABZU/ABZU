@@ -11,6 +11,8 @@
         "__future__"
       ],
       "tests": [
+        "tests/INANNA_AI/test_origin_ingestion.py",
+        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
         "tests/agents/razar/test_ignition_sequence.py",
         "tests/crown/server/test_server.py",
         "tests/crown/test_console_startup.py",
@@ -115,11 +117,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "INANNA_AI_AGENT",
@@ -150,11 +148,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "__main__",
@@ -174,11 +168,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "adaptive_orchestrator",
@@ -203,11 +193,29 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "agent_heartbeat",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "monitoring/agent_heartbeat.py",
+      "version": "0.1.1",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "time",
+        "typing"
+      ],
+      "tests": [
+        "tests/agents/razar/test_agent_heartbeat.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "ai_invoker",
@@ -223,26 +231,28 @@
         "json",
         "logging",
         "pathlib",
+        "shutil",
         "subprocess",
+        "tools",
         "typing"
       ],
       "tests": [
+        "tests/agents/nazarick/test_resuscitator_flow.py",
         "tests/agents/razar/test_ai_invoker.py",
         "tests/integration/test_full_flows.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_long_task.py",
-        "tests/razar/test_remote_repair.py"
+        "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
+        "tests/test_operator_api.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ai_invoker",
@@ -259,22 +269,22 @@
         "typing"
       ],
       "tests": [
+        "tests/agents/nazarick/test_resuscitator_flow.py",
         "tests/agents/razar/test_ai_invoker.py",
         "tests/integration/test_full_flows.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_long_task.py",
-        "tests/razar/test_remote_repair.py"
+        "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
+        "tests/test_operator_api.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "albedo",
@@ -314,11 +324,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "asian_gen",
@@ -339,11 +345,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "audio",
@@ -358,6 +360,7 @@
         "playback"
       ],
       "tests": [
+        "tests/agents/nazarick/test_document_registry.py",
         "tests/audio/test_mix_tracks.py",
         "tests/conftest.py",
         "tests/core/test_memory_physical.py",
@@ -408,18 +411,15 @@
         "tests/test_video_stream_audio.py",
         "tests/test_voice_aura.py",
         "tests/test_voice_cloner_cli.py",
-        "tests/test_webrtc_connector.py"
+        "tests/test_webrtc_connector.py",
+        "tests/web_console/test_webrtc_gateway.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "aura_capture",
@@ -439,11 +439,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "avatar",
@@ -473,18 +469,90 @@
         "tests/test_start_avatar_console.py",
         "tests/test_video_stream.py",
         "tests/test_video_stream_audio.py",
-        "tests/test_voice_avatar_pipeline.py"
+        "tests/test_voice_avatar_pipeline.py",
+        "tests/web_console/test_multi_avatar_stream.py",
+        "tests/web_console/test_webrtc_gateway.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "avatar_broadcast",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/avatar_broadcast.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "asyncio",
+        "contextlib",
+        "logging",
+        "tools",
+        "typing",
+        "video_stream"
+      ],
+      "tests": [
+        "tests/connectors/test_avatar_broadcast.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "avatar_resuscitator",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/nazarick/avatar_resuscitator.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "asyncio",
+        "citadel",
+        "logging",
+        "time",
+        "typing"
+      ],
+      "tests": [
+        "tests/monitoring/test_avatar_watchdog.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "avatar_watchdog",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "monitoring/avatar_watchdog.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "logging",
+        "time",
+        "typing"
+      ],
+      "tests": [
+        "tests/monitoring/test_avatar_watchdog.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "backends",
@@ -510,11 +578,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "bana",
@@ -539,11 +603,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "bana",
@@ -574,45 +634,43 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "base",
       "chakra": "unknown",
-      "type": "module",
-      "path": "src/media/avatar/base.py",
-      "version": "0.1.0",
+      "type": "connector",
+      "path": "connectors/base.py",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
-        "abc",
-        "base"
+        "signal_bus",
+        "threading",
+        "time",
+        "typing"
       ],
       "tests": [
         "tests/agents/test_razar_cli.py",
         "tests/chakra_healing/common.py",
+        "tests/connectors/test_connector_heartbeat.py",
+        "tests/crown/server/test_openwebui_bridge.py",
         "tests/fixtures/razar_base_module.py",
         "tests/integration/test_full_flows.py",
         "tests/memory/test_sharded_memory_store.py",
         "tests/test_audio_video_sync_profile.py",
+        "tests/test_emotion_classifier.py",
         "tests/test_qnl_engine.py",
         "tests/test_rag_parser.py",
         "tests/test_spiral_rag.py",
-        "tests/test_synthetic_stego.py"
+        "tests/test_synthetic_stego.py",
+        "tests/tools/test_bot_mcp.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "base",
@@ -628,25 +686,59 @@
       "tests": [
         "tests/agents/test_razar_cli.py",
         "tests/chakra_healing/common.py",
+        "tests/connectors/test_connector_heartbeat.py",
+        "tests/crown/server/test_openwebui_bridge.py",
         "tests/fixtures/razar_base_module.py",
         "tests/integration/test_full_flows.py",
         "tests/memory/test_sharded_memory_store.py",
         "tests/test_audio_video_sync_profile.py",
+        "tests/test_emotion_classifier.py",
         "tests/test_qnl_engine.py",
         "tests/test_rag_parser.py",
         "tests/test_spiral_rag.py",
-        "tests/test_synthetic_stego.py"
+        "tests/test_synthetic_stego.py",
+        "tests/tools/test_bot_mcp.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "base",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/media/avatar/base.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "abc",
+        "base"
+      ],
+      "tests": [
+        "tests/agents/test_razar_cli.py",
+        "tests/chakra_healing/common.py",
+        "tests/connectors/test_connector_heartbeat.py",
+        "tests/crown/server/test_openwebui_bridge.py",
+        "tests/fixtures/razar_base_module.py",
+        "tests/integration/test_full_flows.py",
+        "tests/memory/test_sharded_memory_store.py",
+        "tests/test_audio_video_sync_profile.py",
+        "tests/test_emotion_classifier.py",
+        "tests/test_qnl_engine.py",
+        "tests/test_rag_parser.py",
+        "tests/test_spiral_rag.py",
+        "tests/test_synthetic_stego.py",
+        "tests/tools/test_bot_mcp.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "bio_adaptive_narrator",
@@ -681,11 +773,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "biosignals",
@@ -715,11 +803,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "blueprint_synthesizer",
@@ -743,11 +827,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "boot_orchestrator",
@@ -765,6 +845,9 @@
         "dataclasses",
         "json",
         "logging",
+        "memory",
+        "neoabzu_core",
+        "opentelemetry",
         "pathlib",
         "quarantine_manager",
         "subprocess",
@@ -780,9 +863,13 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
+        "tests/test_operator_api.py",
         "tests/web_operator/test_api.py",
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_operator/test_ignition_e2e.py"
@@ -792,11 +879,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "boot_orchestrator",
@@ -806,6 +889,7 @@
       "version": "0.2.2",
       "dependencies": [
         "__future__",
+        "agents",
         "argparse",
         "asyncio",
         "collections",
@@ -813,10 +897,12 @@
         "ignition_builder",
         "json",
         "logging",
+        "monitoring",
         "os",
         "pathlib",
         "razar",
         "shlex",
+        "src",
         "subprocess",
         "time",
         "typing",
@@ -832,9 +918,13 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
+        "tests/test_operator_api.py",
         "tests/web_operator/test_api.py",
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_operator/test_ignition_e2e.py"
@@ -844,33 +934,26 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
-      "id": "memory_bootstrap",
+      "id": "bootstrap_memory",
       "chakra": "unknown",
-      "type": "binary",
-      "path": "NEOABZU/memory/src/bin/memory_bootstrap.rs",
+      "type": "script",
+      "path": "scripts/bootstrap_memory.py",
       "version": "0.1.0",
       "dependencies": [
-        "neoabzu_memory",
-        "pyo3"
+        "__future__",
+        "logging",
+        "memory"
       ],
       "tests": [],
       "metrics": {
-        "coverage": 0.0
+        "coverage": 1.0
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "bootstrap_world",
@@ -894,11 +977,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "bot_discord",
@@ -908,6 +987,8 @@
       "version": "0.3.0",
       "dependencies": [
         "__future__",
+        "asyncio",
+        "connectors",
         "core",
         "discord",
         "logging",
@@ -916,18 +997,16 @@
         "typing"
       ],
       "tests": [
-        "tests/test_bots.py"
+        "tests/connectors/test_avatar_broadcast.py",
+        "tests/test_bots.py",
+        "tests/tools/test_bot_mcp.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "bot_telegram",
@@ -937,6 +1016,7 @@
       "version": "0.3.0",
       "dependencies": [
         "__future__",
+        "connectors",
         "core",
         "logging",
         "os",
@@ -945,18 +1025,16 @@
         "time"
       ],
       "tests": [
-        "tests/test_bots.py"
+        "tests/connectors/test_avatar_broadcast.py",
+        "tests/test_bots.py",
+        "tests/tools/test_bot_mcp.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "build_index",
@@ -977,11 +1055,81 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "bundle",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/bundle.py",
+      "version": "0.2.0",
+      "dependencies": [
+        "__future__",
+        "neoabzu_memory",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_memory_bundle.py",
+        "tests/test_memory_bundle_tracing.py",
+        "tests/test_neoabzu_bindings.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "chakra_cycle",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/spiral_os/chakra_cycle.py",
+      "version": "0.1.2",
+      "dependencies": [
+        "__future__",
+        "asyncio",
+        "dataclasses",
+        "distributed_memory",
+        "time",
+        "typing"
+      ],
+      "tests": [
+        "tests/spiral_os/test_chakra_cycle.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "chakra_heartbeat",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "monitoring/chakra_heartbeat.py",
+      "version": "0.3.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "citadel",
+        "distributed_memory",
+        "prometheus_client",
+        "time",
+        "typing"
+      ],
+      "tests": [
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
+        "tests/monitoring/test_chakra_status_board.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "check_component_index_json",
@@ -999,11 +1147,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "check_connector_index",
@@ -1024,11 +1168,27 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "check_connectors",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/check_connectors.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "pathlib",
+        "re",
+        "sys"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "check_dependency_registry",
@@ -1046,11 +1206,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "check_env",
@@ -1071,11 +1227,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "check_memory_layers",
@@ -1096,11 +1248,26 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "check_neoabzu_onboarding",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/check_neoabzu_onboarding.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "subprocess",
+        "sys"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "check_no_binaries",
@@ -1120,11 +1287,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "check_placeholders",
@@ -1144,11 +1307,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "checkpoint_manager",
@@ -1169,11 +1328,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "checkpoint_manager",
@@ -1194,11 +1349,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "cli",
@@ -1236,11 +1387,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "cocreation_planner",
@@ -1263,11 +1410,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "cocytus",
@@ -1290,11 +1433,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "code_repair",
@@ -1328,11 +1467,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "compassion_module",
@@ -1352,11 +1487,29 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "component_fields_updater",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "tools/component_fields_updater.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "datetime",
+        "json",
+        "pathlib",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "component_inventory",
@@ -1382,11 +1535,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "confirm_reading",
@@ -1407,11 +1556,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "connectors",
@@ -1421,11 +1566,19 @@
       "version": "0.3.0",
       "dependencies": [
         "__future__",
+        "base",
         "narrative_api",
+        "os",
         "primordials_api",
         "webrtc_connector"
       ],
       "tests": [
+        "tests/communication/test_mcp_fallback.py",
+        "tests/conftest.py",
+        "tests/connectors/test_avatar_broadcast.py",
+        "tests/connectors/test_connector_heartbeat.py",
+        "tests/connectors/test_message_formatter.py",
+        "tests/connectors/test_signal_bus.py",
         "tests/crown/server/test_server.py",
         "tests/root/test_metrics_logging.py",
         "tests/test_inanna_voice.py",
@@ -1434,18 +1587,16 @@
         "tests/test_server_endpoints.py",
         "tests/test_start_spiral_os.py",
         "tests/test_vast_pipeline.py",
-        "tests/test_webrtc_connector.py"
+        "tests/test_webrtc_connector.py",
+        "tests/tools/test_bot_mcp.py",
+        "tests/web_console/test_connector_panel.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "corpus_memory_logging",
@@ -1483,11 +1634,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "cortex",
@@ -1512,15 +1659,18 @@
         "worlds"
       ],
       "tests": [
+        "tests/crown/test_prompt_orchestrator.py",
         "tests/memory/test_cortex_concurrency.py",
         "tests/narrative/test_self_heal_logging.py",
         "tests/test_archetype_feedback_loop.py",
         "tests/test_cortex_memory.py",
         "tests/test_cortex_sigil_logic.py",
+        "tests/test_memory_bundle.py",
         "tests/test_memory_bus.py",
         "tests/test_memory_search.py",
         "tests/test_spiral_cortex_integration.py",
         "tests/test_spiral_cortex_memory.py",
+        "tests/web_operator/test_api.py",
         "tests/web_ui/test_memory_query.py"
       ],
       "metrics": {
@@ -1528,11 +1678,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "cortex",
@@ -1542,18 +1688,23 @@
       "version": "0.2.0",
       "dependencies": [
         "__future__",
+        "hashlib",
+        "pathlib",
         "typing"
       ],
       "tests": [
+        "tests/crown/test_prompt_orchestrator.py",
         "tests/memory/test_cortex_concurrency.py",
         "tests/narrative/test_self_heal_logging.py",
         "tests/test_archetype_feedback_loop.py",
         "tests/test_cortex_memory.py",
         "tests/test_cortex_sigil_logic.py",
+        "tests/test_memory_bundle.py",
         "tests/test_memory_bus.py",
         "tests/test_memory_search.py",
         "tests/test_spiral_cortex_integration.py",
         "tests/test_spiral_cortex_memory.py",
+        "tests/web_operator/test_api.py",
         "tests/web_ui/test_memory_query.py"
       ],
       "metrics": {
@@ -1561,11 +1712,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "cortex_cli",
@@ -1585,11 +1732,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "creative_engine",
@@ -1616,11 +1759,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_agent",
@@ -1642,11 +1781,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_decider",
@@ -1673,6 +1808,7 @@
         "tests/crown/test_decider_rotation.py",
         "tests/crown/test_prompt_orchestrator.py",
         "tests/crown/test_servant_routing.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
         "tests/test_avatar_state_logging.py",
         "tests/test_avatar_stream_pipeline.py",
         "tests/test_orchestrator.py",
@@ -1685,11 +1821,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_handshake",
@@ -1721,11 +1853,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_link",
@@ -1749,11 +1877,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_link",
@@ -1779,11 +1903,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_prompt_orchestrator",
@@ -1819,6 +1939,7 @@
         "typing"
       ],
       "tests": [
+        "tests/crown/server/test_openwebui_bridge.py",
         "tests/crown/server/test_server.py",
         "tests/crown/test_console_streaming.py",
         "tests/crown/test_initialization.py",
@@ -1833,11 +1954,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_query_router",
@@ -1860,11 +1977,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "crown_router",
@@ -1873,19 +1986,32 @@
       "path": "crown_router.py",
       "version": "0.1.1",
       "dependencies": [
+        "INANNA_AI",
         "__future__",
+        "agents",
+        "asyncio",
         "crown_decider",
         "emotional_state",
+        "json",
+        "mcp",
+        "memory",
+        "monitoring",
+        "neoabzu_core",
+        "neoabzu_insight",
+        "opentelemetry",
+        "os",
         "prometheus_client",
         "psutil",
         "pynvml",
         "rag",
         "time",
-        "typing",
-        "vector_memory"
+        "typing"
       ],
       "tests": [
+        "tests/agents/nazarick/test_document_registry.py",
+        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
         "tests/crown/test_router_memory.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
         "tests/test_metrics_endpoints.py"
       ],
       "metrics": {
@@ -1893,11 +2019,42 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "crown_router_rs",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "crown_router_rs.py",
+      "version": "0.1.1",
+      "dependencies": [
+        "neoabzu_crown"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "datpars",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "datpars/__init__.py",
+      "version": "0.0.0",
+      "dependencies": [
+        "__future__",
+        "interfaces"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "demiurge",
@@ -1915,11 +2072,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "dependency_audit",
@@ -1942,11 +2095,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "dependency_installer",
@@ -1967,11 +2116,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "dev_orchestrator",
@@ -2004,11 +2149,35 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "distributed_memory",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "distributed_memory.py",
+      "version": "0.3.0",
+      "dependencies": [
+        "__future__",
+        "boto3",
+        "json",
+        "pathlib",
+        "redis",
+        "tomllib",
+        "typing"
+      ],
+      "tests": [
+        "tests/memory/test_replication.py",
+        "tests/monitoring/test_heartbeat_logger.py",
+        "tests/monitoring/test_self_healing_ledger.py",
+        "tests/spiral_os/test_chakra_cycle.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "doc_indexer",
@@ -2030,11 +2199,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "doc_sync",
@@ -2066,11 +2231,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "doc_sync",
@@ -2097,11 +2258,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ecosystem",
@@ -2116,11 +2273,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "emotional",
@@ -2134,6 +2287,7 @@
         "dataclasses",
         "dlib",
         "json",
+        "opentelemetry",
         "os",
         "pathlib",
         "sqlite3",
@@ -2161,11 +2315,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "emotional",
@@ -2196,11 +2346,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ensure_blueprint_sync",
@@ -2219,11 +2365,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "environment_builder",
@@ -2248,11 +2390,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "escalation_notifier",
@@ -2278,11 +2416,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "escalation_notifier",
@@ -2309,11 +2443,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ethics_manifesto",
@@ -2328,6 +2458,7 @@
       ],
       "tests": [
         "tests/agents/nazarick/test_ethics_manifesto.py",
+        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
         "tests/agents/test_razar_cli.py"
       ],
       "metrics": {
@@ -2335,11 +2466,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "event_structurizer",
@@ -2361,11 +2488,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "export_coverage",
@@ -2386,11 +2509,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "fast_inference_agent",
@@ -2410,11 +2529,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "fine_tune_mistral",
@@ -2433,11 +2548,38 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "gateway",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "mcp/gateway.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "invocation_engine",
+        "mcp",
+        "pathlib",
+        "starlette",
+        "tomllib",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_gateway.py",
+        "tests/test_orchestrator_routing.py",
+        "tests/test_symbolic_parser.py",
+        "tests/test_training_feedback.py",
+        "tests/test_training_guide_logger.py",
+        "tests/test_training_guide_trigger.py",
+        "tests/web_console/test_webrtc_gateway.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "generate_protocol_task",
@@ -2460,11 +2602,36 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "generation",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/media/audio/generation.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "pydub",
+        "typing"
+      ],
+      "tests": [
+        "tests/agents/test_bana.py",
+        "tests/crown/server/test_server.py",
+        "tests/test_media_avatar.py",
+        "tests/test_music_generation.py",
+        "tests/test_music_generation_emotion.py",
+        "tests/test_music_generation_invocation.py",
+        "tests/test_music_generation_streaming.py",
+        "tests/test_transformers_generate.py",
+        "tests/test_voice_avatar_pipeline.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "generation",
@@ -2496,44 +2663,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
-    },
-    {
-      "id": "generation",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "src/media/audio/generation.py",
-      "version": "0.1.0",
-      "dependencies": [
-        "__future__",
-        "pydub",
-        "typing"
-      ],
-      "tests": [
-        "tests/agents/test_bana.py",
-        "tests/crown/server/test_server.py",
-        "tests/test_media_avatar.py",
-        "tests/test_music_generation.py",
-        "tests/test_music_generation_emotion.py",
-        "tests/test_music_generation_invocation.py",
-        "tests/test_music_generation_streaming.py",
-        "tests/test_transformers_generate.py",
-        "tests/test_voice_avatar_pipeline.py"
-      ],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "active",
-      "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "geo_knowledge",
@@ -2557,11 +2687,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "guardian",
@@ -2591,11 +2717,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "health_check_connectors",
@@ -2616,11 +2738,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "health_checks",
@@ -2644,7 +2762,10 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/razar/test_ai_invoker.py",
         "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_razar_health_checks.py"
       ],
       "metrics": {
@@ -2652,11 +2773,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "health_checks",
@@ -2685,7 +2802,10 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/razar/test_ai_invoker.py",
         "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_razar_health_checks.py"
       ],
       "metrics": {
@@ -2693,11 +2813,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "heart_agent",
@@ -2719,11 +2835,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ignition_builder",
@@ -2748,11 +2860,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "inanna_bridge",
@@ -2772,11 +2880,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ingest_biosignal_events",
@@ -2799,11 +2903,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ingest_biosignals",
@@ -2830,11 +2930,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ingest_biosignals_jsonl",
@@ -2857,11 +2953,29 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "ingest_ethics",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/ingest_ethics.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "INANNA_AI",
+        "__future__",
+        "argparse",
+        "logging",
+        "pathlib",
+        "sys"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "init_crown_agent",
@@ -2895,11 +3009,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "init_memory_layers",
@@ -2921,11 +3031,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "issue_analyzer",
@@ -2945,11 +3051,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "kimi_k2_client",
@@ -2972,11 +3074,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "land_graph",
@@ -2995,11 +3093,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "lifecycle_bus",
@@ -3009,22 +3103,27 @@
       "version": "0.3.0",
       "dependencies": [
         "__future__",
+        "aiokafka",
+        "asyncio",
         "dataclasses",
         "json",
+        "os",
         "redis",
         "typing"
       ],
-      "tests": [],
+      "tests": [
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/agents/nazarick/test_resuscitator_flow.py",
+        "tests/agents/razar/test_agent_heartbeat.py",
+        "tests/agents/razar/test_lifecycle_bus.py",
+        "tests/agents/razar/test_recovery_integration.py"
+      ],
       "metrics": {
         "coverage": 1.0
       },
-      "status": "experimental",
-      "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "log_intent",
@@ -3046,11 +3145,30 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "lwm_renderer",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/media/avatar/lwm_renderer.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "core",
+        "librosa",
+        "lwm",
+        "numpy",
+        "pathlib",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "manage_servants",
@@ -3075,11 +3193,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "mare_gardener",
@@ -3099,11 +3213,28 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "mcp_gateway_example",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/mcp_gateway_example.py",
+      "version": "0.2.0",
+      "dependencies": [
+        "__future__",
+        "httpx",
+        "os",
+        "signal_bus",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "memory",
@@ -3114,12 +3245,19 @@
       "dependencies": [
         "__future__",
         "agents",
+        "chakra_registry",
         "importlib",
+        "opentelemetry",
         "query_memory",
+        "sys",
         "typing",
         "worlds"
       ],
       "tests": [
+        "tests/INANNA_AI/test_origin_ingestion.py",
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/agents/nazarick/test_resuscitator_flow.py",
+        "tests/agents/razar/test_recovery_integration.py",
         "tests/agents/test_bana.py",
         "tests/agents/test_bana_narrator.py",
         "tests/agents/test_narrative_scribe.py",
@@ -3129,17 +3267,21 @@
         "tests/crown/server/test_server.py",
         "tests/crown/test_console_streaming.py",
         "tests/crown/test_initialization.py",
+        "tests/crown/test_prompt_orchestrator.py",
         "tests/crown/test_router_memory.py",
         "tests/heart/memory_emotional/test_memory_emotional.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_context_rl.py",
         "tests/integration/test_full_flows.py",
+        "tests/memory/test_chakra_registry.py",
         "tests/memory/test_cortex_concurrency.py",
         "tests/memory/test_memory_store_fallback.py",
+        "tests/memory/test_replication.py",
         "tests/memory/test_sharded_memory_store.py",
         "tests/memory/test_vector_memory.py",
         "tests/memory/test_vector_persistence.py",
+        "tests/monitoring/test_chakra_status_board.py",
         "tests/narrative/test_self_heal_logging.py",
         "tests/narrative/test_story_lookup.py",
         "tests/narrative_engine/test_biosignal_pipeline.py",
@@ -3161,6 +3303,8 @@
         "tests/test_emotional_memory.py",
         "tests/test_full_audio_pipeline.py",
         "tests/test_invocation_engine.py",
+        "tests/test_memory_bundle.py",
+        "tests/test_memory_bundle_tracing.py",
         "tests/test_memory_bus.py",
         "tests/test_memory_persistence.py",
         "tests/test_memory_search.py",
@@ -3169,6 +3313,7 @@
         "tests/test_memory_store.py",
         "tests/test_metrics_endpoints.py",
         "tests/test_music_memory.py",
+        "tests/test_neoabzu_bindings.py",
         "tests/test_operator_api.py",
         "tests/test_orchestrator_memory.py",
         "tests/test_os_guardian.py",
@@ -3185,7 +3330,10 @@
         "tests/test_vector_memory_persistence.py",
         "tests/test_voice_evolution_memory.py",
         "tests/web_console/test_arcade_ui.py",
+        "tests/web_console/test_memory_panel.py",
+        "tests/web_operator/test_api.py",
         "tests/web_operator/test_arcade_flow.py",
+        "tests/web_operator/test_arcade_ui.py",
         "tests/web_ui/test_memory_query.py"
       ],
       "metrics": {
@@ -3193,11 +3341,27 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "memory_introspect",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/api/memory_introspect.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "fastapi",
+        "os",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "memory_physical",
@@ -3226,11 +3390,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "mental",
@@ -3248,11 +3408,13 @@
         "datetime",
         "json",
         "logging",
+        "opentelemetry",
         "typing"
       ],
       "tests": [
         "tests/crown/server/test_server.py",
         "tests/integration/test_context_rl.py",
+        "tests/test_memory_bundle.py",
         "tests/test_memory_bus.py",
         "tests/test_seven_dimensional_music.py",
         "tests/test_seven_plane_analyzer.py"
@@ -3262,11 +3424,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "mental",
@@ -3281,6 +3439,7 @@
       "tests": [
         "tests/crown/server/test_server.py",
         "tests/integration/test_context_rl.py",
+        "tests/test_memory_bundle.py",
         "tests/test_memory_bus.py",
         "tests/test_seven_dimensional_music.py",
         "tests/test_seven_plane_analyzer.py"
@@ -3290,11 +3449,30 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "message_formatter",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/message_formatter.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "json",
+        "os",
+        "typing"
+      ],
+      "tests": [
+        "tests/connectors/test_message_formatter.py",
+        "tests/tools/test_bot_mcp.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "messaging",
@@ -3319,11 +3497,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "mission_logger",
@@ -3340,6 +3514,7 @@
       "tests": [
         "tests/agents/razar/test_boot_orchestrator.py",
         "tests/agents/razar/test_boot_orchestrator_logging.py",
+        "tests/agents/razar/test_mission_logging.py",
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/test_razar_cli.py",
         "tests/integration/test_full_flows.py",
@@ -3350,11 +3525,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "mission_logger",
@@ -3367,6 +3538,7 @@
         "argparse",
         "dataclasses",
         "datetime",
+        "enum",
         "json",
         "pathlib",
         "typing"
@@ -3374,6 +3546,7 @@
       "tests": [
         "tests/agents/razar/test_boot_orchestrator.py",
         "tests/agents/razar/test_boot_orchestrator_logging.py",
+        "tests/agents/razar/test_mission_logging.py",
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/test_razar_cli.py",
         "tests/integration/test_full_flows.py",
@@ -3384,11 +3557,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "mix_tracks",
@@ -3422,11 +3591,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "module_builder",
@@ -3451,11 +3616,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "module_sandbox",
@@ -3478,11 +3639,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "music_memory",
@@ -3507,11 +3664,27 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "music_memory",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/music_memory.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_music_memory.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "narrative_api",
@@ -3539,11 +3712,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "narrative_api",
@@ -3569,11 +3738,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "narrative_engine",
@@ -3587,6 +3752,7 @@
         "core",
         "dataclasses",
         "json",
+        "opentelemetry",
         "pathlib",
         "prometheus_client",
         "psutil",
@@ -3623,11 +3789,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "narrative_engine",
@@ -3638,6 +3800,7 @@
       "dependencies": [
         "__future__",
         "dataclasses",
+        "pathlib",
         "typing"
       ],
       "tests": [
@@ -3667,33 +3830,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
-    },
-    {
-      "id": "search_optional",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "memory/optional/search.py",
-      "version": "0.1.0",
-      "dependencies": [
-        "__future__",
-        "typing"
-      ],
-      "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "active",
-      "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "narrative_scribe",
@@ -3703,6 +3840,7 @@
       "version": "0.1.3",
       "dependencies": [
         "__future__",
+        "agents",
         "aiokafka",
         "asyncio",
         "citadel",
@@ -3723,11 +3861,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "nazarick",
@@ -3739,17 +3873,32 @@
         "__future__"
       ],
       "tests": [
+        "tests/agents/nazarick/test_agent_directory.py",
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/agents/nazarick/test_doctrine_index.py",
+        "tests/agents/nazarick/test_document_registry.py",
         "tests/agents/nazarick/test_ethics_manifesto.py",
+        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
+        "tests/agents/nazarick/test_resuscitator_flow.py",
         "tests/agents/nazarick/test_trust_matrix.py",
         "tests/agents/razar/test_ignition_sequence.py",
+        "tests/agents/razar/test_recovery_integration.py",
         "tests/agents/test_narrative_scribe.py",
         "tests/agents/test_razar_cli.py",
         "tests/conftest.py",
+        "tests/crown/server/test_openwebui_bridge.py",
+        "tests/crown/server/test_server.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/monitoring/test_avatar_watchdog.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
+        "tests/monitoring/test_chakra_watchdog.py",
+        "tests/monitoring/test_heartbeat_logger.py",
         "tests/narrative/test_self_heal_logging.py",
+        "tests/nazarick/test_chakra_observer.py",
         "tests/test_nazarick_messaging.py",
+        "tests/test_openwebui_state_updates.py",
         "tests/test_trust_registry.py"
       ],
       "metrics": {
@@ -3757,11 +3906,27 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "neo_apsu_connector_template",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/neo_apsu_connector_template.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "httpx",
+        "os",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "opencode_client",
@@ -3785,11 +3950,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "operator_api",
@@ -3804,9 +3965,13 @@
         "fastapi",
         "json",
         "logging",
+        "memory",
         "pathlib",
         "razar",
+        "scripts",
+        "servant_model_manager",
         "shutil",
+        "typing",
         "uuid"
       ],
       "tests": [
@@ -3821,11 +3986,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "optional_deps",
@@ -3851,11 +4012,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "pandora",
@@ -3873,11 +4030,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "persona_emulator",
@@ -3897,11 +4050,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "planning_engine",
@@ -3927,11 +4076,29 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "playback",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/media/audio/playback.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "ffmpeg",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/test_media_avatar.py",
+        "tests/test_play_ritual_music_smoke.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "playback",
@@ -3954,37 +4121,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
-    },
-    {
-      "id": "playback",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "src/media/audio/playback.py",
-      "version": "0.1.0",
-      "dependencies": [
-        "__future__",
-        "ffmpeg",
-        "pathlib"
-      ],
-      "tests": [
-        "tests/test_media_avatar.py",
-        "tests/test_play_ritual_music_smoke.py"
-      ],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "active",
-      "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "pleiades",
@@ -4002,11 +4139,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "preflight",
@@ -4029,11 +4162,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "primordials_api",
@@ -4049,41 +4178,15 @@
         "typing",
         "urllib"
       ],
-      "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "experimental",
-      "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
-    },
-    {
-      "id": "mcp_gateway_example",
-      "chakra": "unknown",
-      "type": "connector",
-      "path": "connectors/mcp_gateway_example.py",
-      "version": "0.2.0",
-      "dependencies": [
-        "__future__",
-        "httpx",
-        "os",
-        "typing"
+      "tests": [
+        "tests/communication/test_mcp_fallback.py"
       ],
-      "tests": [],
       "metrics": {
         "coverage": 1.0
       },
-      "status": "experimental",
-      "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "project_audit",
@@ -4106,11 +4209,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "prompt_arbiter",
@@ -4135,11 +4234,27 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "pulse_emitter",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/spiral_os/pulse_emitter.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "asyncio",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "pytest_runner",
@@ -4166,11 +4281,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "quarantine_manager",
@@ -4201,11 +4312,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "quarantine_manager",
@@ -4236,11 +4343,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "query_memory",
@@ -4252,14 +4355,16 @@
         "__future__",
         "cortex",
         "logging",
-        "opentelemetry",
         "optional",
         "spiral_memory",
         "typing",
         "vector_memory"
       ],
       "tests": [
+        "tests/crown/test_prompt_orchestrator.py",
+        "tests/test_memory_bundle.py",
         "tests/test_memory_bus.py",
+        "tests/test_operator_api.py",
         "tests/web_operator/test_api.py",
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_ui/test_memory_query.py"
@@ -4269,11 +4374,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "razar",
@@ -4281,9 +4382,14 @@
       "type": "module",
       "path": "razar/__init__.py",
       "version": "0.2.3",
-      "dependencies": [],
+      "dependencies": [
+        "pathlib"
+      ],
       "tests": [
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/agents/nazarick/test_resuscitator_flow.py",
         "tests/agents/razar/conftest.py",
+        "tests/agents/razar/test_agent_heartbeat.py",
         "tests/agents/razar/test_ai_invoker.py",
         "tests/agents/razar/test_boot_orchestrator.py",
         "tests/agents/razar/test_boot_orchestrator_logging.py",
@@ -4294,12 +4400,16 @@
         "tests/agents/razar/test_crown_link.py",
         "tests/agents/razar/test_ignition_builder.py",
         "tests/agents/razar/test_ignition_sequence.py",
+        "tests/agents/razar/test_lifecycle_bus.py",
         "tests/agents/razar/test_mission_brief_rotation.py",
+        "tests/agents/razar/test_mission_logging.py",
         "tests/agents/razar/test_module_builder.py",
         "tests/agents/razar/test_planning_engine.py",
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/razar/test_quarantine_manager.py",
+        "tests/agents/razar/test_recovery_integration.py",
         "tests/agents/razar/test_runtime_manager.py",
+        "tests/agents/razar/test_state_validator.py",
         "tests/agents/razar/test_vision_adapter.py",
         "tests/agents/test_razar_blueprint_synthesizer.py",
         "tests/agents/test_razar_cli.py",
@@ -4308,10 +4418,14 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
+        "tests/monitoring/test_chakra_status_board.py",
         "tests/monitoring/test_escalation_notifier.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
         "tests/test_mission_logger.py",
         "tests/test_operator_api.py",
@@ -4328,11 +4442,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "razar",
@@ -4347,7 +4457,10 @@
         "remote_loader"
       ],
       "tests": [
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/agents/nazarick/test_resuscitator_flow.py",
         "tests/agents/razar/conftest.py",
+        "tests/agents/razar/test_agent_heartbeat.py",
         "tests/agents/razar/test_ai_invoker.py",
         "tests/agents/razar/test_boot_orchestrator.py",
         "tests/agents/razar/test_boot_orchestrator_logging.py",
@@ -4358,12 +4471,16 @@
         "tests/agents/razar/test_crown_link.py",
         "tests/agents/razar/test_ignition_builder.py",
         "tests/agents/razar/test_ignition_sequence.py",
+        "tests/agents/razar/test_lifecycle_bus.py",
         "tests/agents/razar/test_mission_brief_rotation.py",
+        "tests/agents/razar/test_mission_logging.py",
         "tests/agents/razar/test_module_builder.py",
         "tests/agents/razar/test_planning_engine.py",
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/razar/test_quarantine_manager.py",
+        "tests/agents/razar/test_recovery_integration.py",
         "tests/agents/razar/test_runtime_manager.py",
+        "tests/agents/razar/test_state_validator.py",
         "tests/agents/razar/test_vision_adapter.py",
         "tests/agents/test_razar_blueprint_synthesizer.py",
         "tests/agents/test_razar_cli.py",
@@ -4372,10 +4489,14 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/monitoring/test_chakra_heartbeat.py",
+        "tests/monitoring/test_chakra_status_board.py",
         "tests/monitoring/test_escalation_notifier.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
         "tests/test_mission_logger.py",
         "tests/test_operator_api.py",
@@ -4392,11 +4513,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "recovery_daemon",
@@ -4418,11 +4535,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "recovery_manager",
@@ -4432,6 +4545,7 @@
       "version": "0.2.2",
       "dependencies": [
         "__future__",
+        "agents",
         "dataclasses",
         "json",
         "logging",
@@ -4439,18 +4553,17 @@
         "typing"
       ],
       "tests": [
-        "tests/agents/razar/test_crown_handshake.py"
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/agents/nazarick/test_resuscitator_flow.py",
+        "tests/agents/razar/test_crown_handshake.py",
+        "tests/agents/razar/test_recovery_integration.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "recovery_manager",
@@ -4460,6 +4573,7 @@
       "version": "0.2.2",
       "dependencies": [
         "__future__",
+        "asyncio",
         "code_repair",
         "json",
         "lifecycle_bus",
@@ -4469,18 +4583,17 @@
         "zmq"
       ],
       "tests": [
-        "tests/agents/razar/test_crown_handshake.py"
+        "tests/agents/nazarick/test_chakra_resuscitator.py",
+        "tests/agents/nazarick/test_resuscitator_flow.py",
+        "tests/agents/razar/test_crown_handshake.py",
+        "tests/agents/razar/test_recovery_integration.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "reflection_loop",
@@ -4531,11 +4644,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "register_task",
@@ -4556,11 +4665,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "release",
@@ -4585,11 +4690,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "remote_loader",
@@ -4623,11 +4724,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "require_connector_registry_update",
@@ -4648,11 +4745,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "require_module_docs",
@@ -4671,11 +4764,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "require_onboarding_update",
@@ -4696,11 +4785,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "retro_bootstrap",
@@ -4724,11 +4809,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "root_agent",
@@ -4751,11 +4832,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "runtime_manager",
@@ -4785,11 +4862,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "sacral_agent",
@@ -4811,11 +4884,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "sacred",
@@ -4844,11 +4913,32 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "sacred",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/sacred.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "pathlib",
+        "typing"
+      ],
+      "tests": [
+        "tests/performance/test_task_parser_performance.py",
+        "tests/test_interconnectivity.py",
+        "tests/test_synthetic_stego_engine.py",
+        "tests/test_task_parser.py",
+        "tests/test_vast_pipeline.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "sandbox_session",
@@ -4872,11 +4962,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "scan_todo_fixme",
@@ -4896,11 +4982,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "schedule_doc_audit",
@@ -4921,11 +5003,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "search",
@@ -4945,8 +5023,12 @@
         "vector_memory"
       ],
       "tests": [
+        "tests/agents/nazarick/test_document_registry.py",
+        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
+        "tests/agents/nazarick/test_experience_replay.py",
         "tests/crown/test_router_memory.py",
         "tests/ignition/test_full_stack.py",
+        "tests/memory/test_chakra_registry.py",
         "tests/memory/test_memory_store_fallback.py",
         "tests/memory/test_sharded_memory_store.py",
         "tests/memory/test_vector_persistence.py",
@@ -4959,6 +5041,7 @@
         "tests/test_memory_bus.py",
         "tests/test_memory_search.py",
         "tests/test_memory_store.py",
+        "tests/test_neoabzu_bindings.py",
         "tests/test_project_gutenberg.py",
         "tests/test_prometheus_metrics.py",
         "tests/test_vector_memory.py",
@@ -4969,11 +5052,49 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "search",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/search.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/agents/nazarick/test_document_registry.py",
+        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
+        "tests/agents/nazarick/test_experience_replay.py",
+        "tests/crown/test_router_memory.py",
+        "tests/ignition/test_full_stack.py",
+        "tests/memory/test_chakra_registry.py",
+        "tests/memory/test_memory_store_fallback.py",
+        "tests/memory/test_sharded_memory_store.py",
+        "tests/memory/test_vector_persistence.py",
+        "tests/performance/test_vector_memory_performance.py",
+        "tests/test_corpus_memory.py",
+        "tests/test_corpus_memory_extended.py",
+        "tests/test_cortex_memory.py",
+        "tests/test_dev_orchestrator.py",
+        "tests/test_invocation_engine.py",
+        "tests/test_memory_bus.py",
+        "tests/test_memory_search.py",
+        "tests/test_memory_store.py",
+        "tests/test_neoabzu_bindings.py",
+        "tests/test_project_gutenberg.py",
+        "tests/test_prometheus_metrics.py",
+        "tests/test_vector_memory.py",
+        "tests/test_vector_memory_extensions.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "search_api",
@@ -4997,11 +5118,27 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "search_api",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/optional/search_api.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_memory_bus.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "sebas",
@@ -5019,11 +5156,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "security_canary",
@@ -5051,11 +5184,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "seed",
@@ -5072,6 +5201,7 @@
       "tests": [
         "tests/conftest.py",
         "tests/test_albedo_trust.py",
+        "tests/test_emotion_classifier.py",
         "tests/test_insight_compiler.py",
         "tests/test_music_generation_streaming.py",
         "tests/test_orchestration_master.py",
@@ -5083,11 +5213,31 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "self_healing_ledger",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "monitoring/self_healing_ledger.py",
+      "version": "0.2.0",
+      "dependencies": [
+        "__future__",
+        "distributed_memory",
+        "json",
+        "pathlib",
+        "time",
+        "typing"
+      ],
+      "tests": [
+        "tests/monitoring/test_self_healing_ledger.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "server",
@@ -5114,6 +5264,7 @@
         "json",
         "logging",
         "memory",
+        "monitoring",
         "music_generation",
         "nlq_api",
         "numpy",
@@ -5133,7 +5284,9 @@
         "tests/agents/razar/test_crown_link.py",
         "tests/agents/razar/test_runtime_manager.py",
         "tests/agents/razar/test_servant_launch.py",
+        "tests/communication/test_mcp_fallback.py",
         "tests/conftest.py",
+        "tests/crown/server/test_openwebui_bridge.py",
         "tests/crown/server/test_server.py",
         "tests/root/test_metrics_logging.py",
         "tests/scripts/test_verify_chakra_monitoring.py",
@@ -5160,11 +5313,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "service_launcher",
@@ -5174,14 +5323,20 @@
       "version": "0.1.3",
       "dependencies": [
         "__future__",
+        "agents",
+        "asyncio",
+        "chakra_observer",
         "json",
         "logging",
         "pathlib",
         "shlex",
         "subprocess",
-        "time"
+        "threading",
+        "time",
+        "typing"
       ],
       "tests": [
+        "tests/agents/nazarick/test_agent_directory.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/integration/test_full_flows.py"
       ],
@@ -5190,11 +5345,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "session_logger",
@@ -5223,11 +5374,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "shalltear",
@@ -5249,11 +5396,35 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "signal_bus",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/signal_bus.py",
+      "version": "0.3.0",
+      "dependencies": [
+        "__future__",
+        "collections",
+        "json",
+        "kafka",
+        "os",
+        "redis",
+        "threading",
+        "typing"
+      ],
+      "tests": [
+        "tests/connectors/test_connector_heartbeat.py",
+        "tests/connectors/test_signal_bus.py",
+        "tests/tools/test_bot_mcp.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "signal_router",
@@ -5273,11 +5444,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "solar_agent",
@@ -5299,11 +5466,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "spiral_cortex",
@@ -5326,11 +5489,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "spiral_memory",
@@ -5340,6 +5499,7 @@
       "version": "0.1.0",
       "dependencies": [
         "__future__",
+        "pathlib",
         "typing"
       ],
       "tests": [
@@ -5351,11 +5511,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "spiritual",
@@ -5366,11 +5522,13 @@
       "dependencies": [
         "__future__",
         "aspect_processor",
+        "opentelemetry",
         "pathlib",
         "sqlite3",
         "typing"
       ],
       "tests": [
+        "tests/test_memory_bundle.py",
         "tests/test_memory_bus.py",
         "tests/test_memory_spiritual.py"
       ],
@@ -5379,11 +5537,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "spiritual",
@@ -5396,6 +5550,7 @@
         "typing"
       ],
       "tests": [
+        "tests/test_memory_bundle.py",
         "tests/test_memory_bus.py",
         "tests/test_memory_spiritual.py"
       ],
@@ -5404,11 +5559,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "star_map",
@@ -5428,11 +5579,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "start_crown_console",
@@ -5463,11 +5610,31 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "state_validator",
+      "chakra": "unknown",
+      "type": "agent",
+      "path": "agents/razar/state_validator.py",
+      "version": "0.2.2",
+      "dependencies": [
+        "__future__",
+        "json",
+        "jsonschema",
+        "pathlib"
+      ],
+      "tests": [
+        "tests/agents/razar/test_state_validator.py",
+        "tests/monitoring/test_chakra_status_board.py",
+        "tests/web_console/test_chakra_status_panel.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
     },
     {
       "id": "status_dashboard",
@@ -5494,11 +5661,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "story_adapter",
@@ -5519,11 +5682,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "story_lookup",
@@ -5544,11 +5703,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "strategic_simulator",
@@ -5568,11 +5723,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "telegram_bot",
@@ -5582,6 +5733,7 @@
       "version": "0.1.0",
       "dependencies": [
         "__future__",
+        "connectors",
         "gateway",
         "logging",
         "telegram"
@@ -5592,11 +5744,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "third_eye_agent",
@@ -5618,11 +5766,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "throat_agent",
@@ -5644,11 +5788,28 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "tracing",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory/tracing.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "importlib",
+        "opentelemetry",
+        "os",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "training_guide",
@@ -5682,11 +5843,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "transformers",
@@ -5712,11 +5869,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "trust",
@@ -5752,11 +5905,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "trust_matrix",
@@ -5781,11 +5930,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "trust_registry",
@@ -5807,11 +5952,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "ui_service",
@@ -5823,6 +5964,7 @@
         "__future__",
         "fastapi",
         "memory",
+        "prometheus_fastapi_instrumentator",
         "typing"
       ],
       "tests": [
@@ -5834,11 +5976,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "utils",
@@ -5883,11 +6021,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "validate_api_schemas",
@@ -5911,11 +6045,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "validate_change_justification",
@@ -5936,11 +6066,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "validate_component_index_json",
@@ -5960,11 +6086,29 @@
       },
       "status": "deprecated",
       "issues": "Marked deprecated in source",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "validate_components",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/validate_components.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "json",
+        "pathlib",
+        "re",
+        "sys",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "validate_configs",
@@ -5986,11 +6130,28 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "validate_docs",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/validate_docs.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "json",
+        "pathlib",
+        "re",
+        "sys"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "validate_ignition",
@@ -6014,11 +6175,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "validate_links",
@@ -6039,11 +6196,31 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "validate_world_registry",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/validate_world_registry.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "memory",
+        "pathlib",
+        "sys",
+        "types",
+        "typing",
+        "worlds"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "vector_memory",
@@ -6056,6 +6233,8 @@
         "typing"
       ],
       "tests": [
+        "tests/agents/nazarick/test_document_registry.py",
+        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
         "tests/crown/server/test_server.py",
         "tests/crown/test_initialization.py",
         "tests/crown/test_orchestrator_music.py",
@@ -6063,6 +6242,7 @@
         "tests/crown/test_servant_registration.py",
         "tests/integration/test_core_regressions.py",
         "tests/integration/test_full_flows.py",
+        "tests/memory/test_chakra_registry.py",
         "tests/memory/test_vector_memory.py",
         "tests/performance/test_vector_memory_performance.py",
         "tests/root/test_metrics_logging.py",
@@ -6085,6 +6265,8 @@
         "tests/test_memory_search.py",
         "tests/test_memory_snapshot.py",
         "tests/test_model_benchmarking.py",
+        "tests/test_neoabzu_bindings.py",
+        "tests/test_numeric_cosine_similarity.py",
         "tests/test_orchestrator.py",
         "tests/test_orchestrator_integration.py",
         "tests/test_orchestrator_memory.py",
@@ -6111,11 +6293,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "verify_chakra_monitoring",
@@ -6131,7 +6309,8 @@
         "socket",
         "sys",
         "time",
-        "urllib"
+        "urllib",
+        "warnings"
       ],
       "tests": [
         "tests/scripts/test_verify_chakra_monitoring.py"
@@ -6141,11 +6320,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "verify_dependencies",
@@ -6166,11 +6341,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "verify_doc_hashes",
@@ -6192,11 +6363,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "verify_doc_summaries",
@@ -6217,11 +6384,29 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "verify_docs_up_to_date",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/verify_docs_up_to_date.py",
+      "version": "0.2.0",
+      "dependencies": [
+        "__future__",
+        "datetime",
+        "pathlib",
+        "re",
+        "subprocess",
+        "sys"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "verify_milestone_operator_copresence",
@@ -6243,11 +6428,27 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "verify_onboarding_refs",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/verify_onboarding_refs.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "pathlib",
+        "sys",
+        "yaml"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "verify_self_healing",
@@ -6271,11 +6472,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "verify_versions",
@@ -6297,11 +6494,7 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "victim",
@@ -6322,11 +6515,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "video_stream",
@@ -6335,24 +6524,10 @@
       "path": "video_stream.py",
       "version": "0.1.0",
       "dependencies": [
-        "__future__",
-        "aiortc",
-        "asyncio",
-        "communication",
-        "core",
-        "fastapi",
-        "fractions",
-        "hashlib",
-        "importlib",
-        "logging",
-        "numpy",
-        "pathlib",
-        "soundfile",
-        "src",
-        "time",
-        "typing"
+        "video_stream"
       ],
       "tests": [
+        "tests/connectors/test_avatar_broadcast.py",
         "tests/crown/server/test_server.py",
         "tests/crown/test_start_console_py.py",
         "tests/test_audio_video_sync_profile.py",
@@ -6365,18 +6540,16 @@
         "tests/test_vast_pipeline.py",
         "tests/test_video_stream.py",
         "tests/test_video_stream_audio.py",
-        "tests/test_video_stream_helpers.py"
+        "tests/test_video_stream_helpers.py",
+        "tests/web_console/test_multi_avatar_stream.py",
+        "tests/web_console/test_webrtc_gateway.py"
       ],
       "metrics": {
         "coverage": 1.0
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "virtual_env_manager",
@@ -6403,11 +6576,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "vision",
@@ -6426,11 +6595,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "vision",
@@ -6454,11 +6619,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "vision_adapter",
@@ -6481,11 +6642,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "vocal_isolation",
@@ -6509,11 +6666,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "voice_conversion",
@@ -6536,11 +6689,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
       "id": "webrtc_connector",
@@ -6575,30 +6724,30 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     },
     {
-      "id": "webrtc_server",
+      "id": "webrtc_gateway",
       "chakra": "unknown",
       "type": "module",
-      "path": "communication/webrtc_server.py",
-      "version": "0.2.0",
+      "path": "communication/webrtc_gateway.py",
+      "version": "0.3.0",
       "dependencies": [
         "__future__",
         "aiortc",
         "asyncio",
+        "communication",
         "core",
+        "fastapi",
         "fractions",
+        "hashlib",
         "importlib",
         "logging",
         "mediasoup",
         "numpy",
         "pathlib",
         "soundfile",
+        "src",
         "time",
         "typing"
       ],
@@ -6608,11 +6757,24 @@
       },
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
+    },
+    {
+      "id": "webrtc_server",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "communication/webrtc_server.py",
+      "version": "0.2.0",
+      "dependencies": [
+        "webrtc_gateway"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
     },
     {
       "id": "yoloe_adapter",
@@ -6638,11 +6800,7 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null,
-      "usage": "unknown",
-      "function": "unknown",
-      "date_created": "2025-09-06",
-      "last_modified": "2025-09-06"
+      "adr": null
     }
   ]
 }
