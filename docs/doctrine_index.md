@@ -80,3 +80,9 @@
 | IGNITION/EA_ENUMA_ELISH_.md | OMEGA-LONGING-∞1.2-ENUMA | `889d69e870194d9c51cbed3fdab50a4dbc690ddc0f124c312f8fb45424823b27` | 2025-09-10T19:45:46+02:00 |
 | IGNITION/README.md |  | `bb301d0d9cc5eb2931773b30de5f18c1f34f6510a32f1ae5bbe4015cdf1dd63c` | 2025-09-10T19:45:46+02:00 |
 | docs/banana_rater.md |  | `3193e0e6ad8f41b7bc52090f9e2a56a894f5d3bb74c53738cea4ca81ef93c8b0` | 2025-09-13T20:41:08+00:00 |
+| docs/blueprint_spine.md |  | `5111b6f48a73e85b107f208144b0b5606e910ebf8f27a348ad83807690231e1b` | 2025-09-14T07:54:14Z |
+| fusion/Cargo.toml | 0.1.0 | `834bf5bf885dd154b4ae57d825509f03c5ac0a43d887135ba0c1ec43654dec20` | 2025-09-14T07:49:08Z |
+| crown/Cargo.toml | 0.1.0 | `b411c1121f963b5065e903fa43ee7d66e3fcbda047931fd5bece7c504778d63c` | 2025-09-14T07:49:08Z |
+| persona/Cargo.toml | 0.1.0 | `849ca5a9234702bafaa1c6e7775cda0f64665d81f4d1f71ef050647184158319` | 2025-09-14T07:49:08Z |
+| numeric/Cargo.toml | 0.1.0 | `f5e213774cdc67aecb9c09f8aed0feb964bffcca05651fc2cc25c680ecb33b8f` | 2025-09-14T07:49:08Z |
+| rag/Cargo.toml | 0.1.0 | `f8d05d5ec7ca73d7889ddbc9011ad14021a21adecf86807654eba922a4fb06a3` | 2025-09-14T07:49:08Z |
