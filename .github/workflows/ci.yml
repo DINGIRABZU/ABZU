@@ -103,6 +103,18 @@ jobs:
       - name: Verify system blueprint references
         run: python scripts/verify_blueprint_refs.py
 
+  crate-docs-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Ensure blueprint docs and tests updated
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: python scripts/check_blueprints_and_tests.py
+
   validate-components:
     runs-on: ubuntu-latest
     steps:
@@ -382,6 +394,8 @@ PY
           override: true
       - name: Build Rust workspace
         run: cargo build --manifest-path NEOABZU/Cargo.toml --workspace --lib
+      - name: Run NEOABZU tests
+        run: cargo test --manifest-path NEOABZU/Cargo.toml --workspace
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

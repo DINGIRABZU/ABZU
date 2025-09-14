@@ -27,6 +27,14 @@ Each crate calls `init_tracing` in its Python module initializer so spans are
 emitted when the module loads. Apply the `#[instrument]` attribute to functions
 to capture arguments and emit spans.
 
+Razor, Crown, and Kimicho expose a `tracing` feature flag. Enable it at build
+time to wire in the hooks and emit spans:
+
+```bash
+cargo test -p neoabzu-crown --features tracing
+cargo test -p neoabzu-kimicho --features tracing
+```
+
 ## Exporting
 
 The default configuration exports spans to stdout. Configure the standard
