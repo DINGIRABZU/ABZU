@@ -17,3 +17,7 @@ stack.
 
 This flow provides a reproducible path from physiological signals to the
 stories and scenes operators observe.
+
+## Doctrine References
+- [Doctrine Index](doctrine_index.md)
+- [The Absolute Protocol](The_Absolute_Protocol.md)
