@@ -16,6 +16,10 @@ class VectorClient:
     """Simple gRPC client for the VectorService."""
 
     def __init__(self, target: str):
+        if target.startswith("http://"):
+            target = target[7:]
+        elif target.startswith("https://"):
+            target = target[8:]
         self._channel = grpc.insecure_channel(target)
         self._stub = vector_pb2_grpc.VectorServiceStub(self._channel)
 
@@ -25,6 +29,15 @@ class VectorClient:
     def search(self, text: str, top_n: int) -> vector_pb2.SearchResponse:
         req = vector_pb2.SearchRequest(text=text, top_n=top_n)
         return self._stub.Search(req)
+
+    def close(self) -> None:
+        self._channel.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
 
 
 __all__ = ["search", "VectorClient"]

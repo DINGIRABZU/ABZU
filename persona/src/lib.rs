@@ -14,7 +14,9 @@ fn generate_response(layer: &str, text: &str) -> PyResult<String> {
     if PERSONALITIES.contains(&layer) {
         Ok(format!("[{layer}] {text}"))
     } else {
-        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>("unknown layer"))
+        Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
+            "unknown layer",
+        ))
     }
 }
 

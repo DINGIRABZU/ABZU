@@ -15,7 +15,7 @@ For the narrative driver and lexicon grounding the engine, see [herojourney_engi
 | Insight Engine | Performs higher-order reasoning and returns insights via Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L54-L58】 | `neoabzu-insight` counts word frequencies and integrates with Crown Router |
 | Memory Bundle | Cortex, Emotional, Mental, Spiritual, and Narrative layers for unified storage【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L48-L49】【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L72-L76】 | reuse |
 | System Coordination | Metrics, tracing, and caching align cross-subsystem orchestration | parity achieved |
-| Vector Search | Accelerates similarity lookups across memory layers【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L72-L76】 | Rust crate `neoabzu_vector` exposed via gRPC |
+| Vector Search | Accelerates similarity lookups across memory layers【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L72-L76】 | Rust crate `neoabzu_vector` exposes gRPC with in-memory embeddings, metrics, and Python client helpers |
 | Numeric Utilities | Provides fast math primitives | initial Rust crate `neoabzu_numeric` |
 | Fusion Engine | Merges symbolic and numeric invariants | initial Rust crate `neoabzu_fusion` |
 
