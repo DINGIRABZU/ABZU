@@ -44,6 +44,6 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 
 ### Kimicho fallback
 - [ ] Port complete
-- [ ] Required tests: `NEOABZU/kimicho/tests/razor_integration.rs`
+- [x] Required tests: `NEOABZU/kimicho/tests/razor_integration.rs`, `NEOABZU/crown/tests/kimicho_fallback.rs`
 - [ ] Documentation references: `docs/system_blueprint.md`
 
