@@ -4,12 +4,14 @@ __version__ = "0.1.1"
 
 import json
 import time
-from typing import Iterable
+from typing import Iterable, Any
 
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 
 from memory import narrative_engine
+from . import narrative
 
 try:  # pragma: no cover - optional dependency
     from prometheus_client import Gauge, REGISTRY
@@ -36,6 +38,30 @@ router = APIRouter()
 
 if BOOT_DURATION_GAUGE is not None:
     BOOT_DURATION_GAUGE.labels("bana").set(time.perf_counter() - _START_TIME)
+
+
+class StoryEvent(BaseModel):
+    """Input model for ``POST /story``."""
+
+    agent_id: str
+    event_type: str
+    payload: dict[str, Any]
+    time: str | None = None
+    target_agent: str | None = None
+
+
+@router.post("/story")
+def log_story(event: StoryEvent) -> dict[str, str]:
+    """Validate and dispatch a narrative event."""
+
+    narrative.emit(
+        event.agent_id,
+        event.event_type,
+        event.payload,
+        timestamp=event.time,
+        target_agent=event.target_agent,
+    )
+    return {"status": "ok"}
 
 
 @router.get("/story/log")

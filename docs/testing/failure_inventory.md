@@ -228,3 +228,5 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-14: ERROR tests/test_voice_cloner_cli.py
 
 - 2025-09-14: ERROR tests/crown/server/test_server.py - ValueError: Duplicated timeseries in CollectorRegistry: {'http_request_duration_seconds_count', 'http_request_duration_seconds_bucket', 'http_request_duration_seconds_created', 'http_request_duration_seconds_sum', 'http_request_duration_seconds'}
+
+- 2025-09-14: No failures detected.
