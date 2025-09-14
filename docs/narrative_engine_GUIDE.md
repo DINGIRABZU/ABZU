@@ -6,7 +6,9 @@ Transforms biosignal streams into structured StoryEvents and stores them for lat
 ## Architecture
 - `scripts/ingest_biosignals.py` normalizes sensor data.
 - `bana/event_structurizer.py` validates events.
+- `bana/narrative.py` emits events to `agents.event_bus` and `memory.narrative_engine`.
 - `memory/narrative_engine.py` persists events to SQLite and Chroma.
+- `agents/bana/inanna_bridge.py` forwards Bana stories into the Albedo persona.
 
 ## Deployment
 ```bash
@@ -30,4 +32,5 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py
 ## Version History
 | Version | Date | Notes |
 |---------|------|-------|
+| 0.7.0 | 2025-09-20 | Added Bana narrative emission and Inanna bridge flow. |
 | 0.6.0 | 2025-09-16 | Clarified architecture and dataset schema. |

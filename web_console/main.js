@@ -13,6 +13,7 @@ const OFFER_URL = `${BASE_URL}/${AGENT}/offer`;
 const STARTUP_LOG_URL = 'logs/nazarick_startup.json';
 const REGISTRY_URL = 'agents/nazarick/agent_registry.json';
 const EVENTS_URL = `${BASE_URL.replace(/^http/, 'ws')}/operator/events`;
+const STORY_STREAM_URL = `${BASE_URL}/story/stream`;
 const CONVO_LOG_URL = `${BASE_URL}/conversation/logs`;
 const NLQ_LOGS_URL = `${BASE_URL}/nlq/logs`;
 
@@ -192,6 +193,43 @@ function connectEvents() {
         };
     } catch (err) {
         console.error('event stream failed', err);
+    }
+}
+
+function connectNarrativeStream() {
+    try {
+        fetch(STORY_STREAM_URL).then((resp) => {
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder();
+            let buf = '';
+            function pump() {
+                return reader.read().then(({ value, done }) => {
+                    if (done) {
+                        return;
+                    }
+                    buf += decoder.decode(value, { stream: true });
+                    const lines = buf.split('\n');
+                    buf = lines.pop();
+                    const el = document.getElementById('narrative');
+                    for (const line of lines) {
+                        if (!line.trim()) {
+                            continue;
+                        }
+                        try {
+                            const evt = JSON.parse(line);
+                            el.textContent += `[${evt.time}] ${evt.agent_id} ${evt.event_type} ` +
+                                `${JSON.stringify(evt.payload)}\n`;
+                        } catch {
+                            el.textContent += line + '\n';
+                        }
+                    }
+                    return pump();
+                });
+            }
+            return pump();
+        });
+    } catch (err) {
+        console.error('narrative stream failed', err);
     }
 }
 
@@ -626,8 +664,9 @@ window.addEventListener('load', () => {
     loadAgents().then((agents) => loadConversationLogs(agents.map((a) => a.id)));
     loadMetrics();
     connectEvents();
+    connectNarrativeStream();
     loadStatus();
     setInterval(loadStatus, 5000);
 });
 
-export { BASE_URL, startStream, connectEvents };
+export { BASE_URL, startStream, connectEvents, connectNarrativeStream };

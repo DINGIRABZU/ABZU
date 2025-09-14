@@ -6,8 +6,7 @@ from typing import Mapping, Any
 
 __version__ = "0.0.2"
 
-from agents.event_bus import emit_event
-
+from bana import narrative
 from .bio_adaptive_narrator import generate_story
 
 
@@ -22,7 +21,8 @@ def process_interaction(interaction: Mapping[str, Any]) -> str:
 
     bio_stream = interaction.get("bio_stream", [])
     story = generate_story(bio_stream)
-    emit_event("inanna", "bana_narrative", {"length": len(story)})
+    payload = {"story": story, "length": len(story)}
+    narrative.emit("bana", "bio_story", payload, target_agent="albedo")
     return story
 
 

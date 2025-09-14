@@ -8,6 +8,7 @@ const AGENT =
     'agent';
 const OFFER_URL = `${BASE_URL}/${AGENT}/offer`;
 const UPLOAD_URL = `${BASE_URL}/operator/upload`;
+const STORY_STREAM_URL = `${BASE_URL}/story/stream`;
 
 function sendCommand(cmd) {
     return fetch(API_URL, {
@@ -65,6 +66,34 @@ async function startStream(videoElem, audioElem, narrativeElem) {
     return pc;
 }
 
+function connectNarrativeStream(narrativeElem) {
+    fetch(STORY_STREAM_URL)
+        .then((resp) => {
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder();
+            let buf = '';
+            function pump() {
+                return reader.read().then(({ value, done }) => {
+                    if (done) {
+                        return;
+                    }
+                    buf += decoder.decode(value, { stream: true });
+                    const lines = buf.split('\n');
+                    buf = lines.pop();
+                    for (const line of lines) {
+                        if (!line.trim()) {
+                            continue;
+                        }
+                        narrativeElem.textContent += line + '\n';
+                    }
+                    return pump();
+                });
+            }
+            return pump();
+        })
+        .catch((err) => console.error('narrative stream failed', err));
+}
+
 function uploadFiles(files = [], metadata = {}, operator = 'overlord') {
     const formData = new FormData();
     for (const file of files) {
@@ -96,8 +125,10 @@ export {
     BASE_URL,
     OFFER_URL,
     UPLOAD_URL,
+    STORY_STREAM_URL,
     sendCommand,
     startStream,
+    connectNarrativeStream,
     uploadFiles,
     uploadFile,
     uploadMedia

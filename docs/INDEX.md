@@ -410,6 +410,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
 | [music_generation_usage.md](music_generation_usage.md) | Music Generation Usage | Generate audio from text prompts or ritual invocations. | - |
 | [narrative_engine_GUIDE.md](narrative_engine_GUIDE.md) | Narrative Engine Guide | - | - |
+| [narrative_framework.md](narrative_framework.md) | Narrative Framework | This framework links raw biosignals to high‑level orchestration across the stack. | - |
 | [narrative_system.md](narrative_system.md) | Narrative System | The narrative system transforms physiological CSV data into cohesive multitrack stories through event composition. Th... | - |
 | [nazarick/README.md](nazarick/README.md) | Nazarick | Nazarick houses chakra-aligned servant agents. The triadic flow between Crown, Nazarick, and the operator is outlined... | - |
 | [nazarick_agents.md](nazarick_agents.md) | Nazarick Agents | Nazarick hosts specialized servant agents aligned to chakra layers and coordinated by RAZAR and Crown. | - |
