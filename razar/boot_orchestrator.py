@@ -36,6 +36,11 @@ except Exception:  # pragma: no cover - Rust crates optional
     _memory_bundle = None
     _core_eval = None
 
+try:  # pragma: no cover - kimicho optional
+    from neoabzu_kimicho import init_kimicho
+except Exception:  # pragma: no cover - kimicho optional
+    init_kimicho = None
+
 from . import ai_invoker, crown_handshake, doc_sync, health_checks, mission_logger
 from .bootstrap_utils import (
     HISTORY_FILE,
@@ -431,6 +436,21 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
         mission_logger.log_event("handshake", "crown", "failure", str(exc))
         _persist_handshake(None)
         _emit_event("handshake", "fail", error=str(exc))
+        if init_kimicho is not None:
+            LOGGER.info("Initializing Kimicho K2 Coder LLM from HuggingFacc")
+            try:
+                init_kimicho("https://huggingfacc.com/k2coder")
+                mission_logger.log_event("handshake", "kimicho", "init", "huggingfacc")
+                _emit_event("handshake", "fallback", engine="kimicho")
+            except Exception as kimicho_exc:  # pragma: no cover - kimicho optional
+                LOGGER.exception("Kimicho initialization failed")
+                mission_logger.log_event(
+                    "handshake", "kimicho", "failure", str(kimicho_exc)
+                )
+        else:
+            LOGGER.warning(
+                "Kimicho bindings unavailable; cannot initialize K2 fallback"
+            )
         raise RuntimeError("CROWN handshake failed") from exc
 
     mission_logger.log_event("handshake", "crown", status, details)
