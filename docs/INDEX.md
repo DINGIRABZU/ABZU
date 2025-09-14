@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -302,6 +303,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [avatar_setup.md](avatar_setup.md) | Avatar Setup | Configure the avatar pipeline by defining environment variables and adjusting textures. | - |
 | [bana_engine.md](bana_engine.md) | Bana Engine | This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sourc... | - |
 | [banana_rater.md](banana_rater.md) | Banana Rater | - | - |
+| [benchmarks/rust_vs_python.md](benchmarks/rust_vs_python.md) | Rust vs Python Path Benchmark | The `rust_vs_python_path.py` script compares call throughput between the Rust `neoabzu_chakrapulse` implementation an... | - |
 | [blueprint_manual.md](blueprint_manual.md) | Blueprint Manual | - | - |
 | [blueprint_spine.md](blueprint_spine.md) | **ABZU Project: Deep-Dive Overview** | See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, versions, and last update history. Fo... | `../connectors/signal_bus.py` |
 | [chakra_architecture.md](chakra_architecture.md) | Chakra Architecture | This document summarizes the major modules aligned with each chakra layer, their operational state, current quality l... | - |
@@ -424,6 +426,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [nazarick_world_guide.md](nazarick_world_guide.md) | Nazarick World Guide | - | - |
 | [observability.md](observability.md) | Observability | ABZU uses the [`tracing`](https://crates.io/crates/tracing) ecosystem with OpenTelemetry for structured diagnostics. | - |
 | [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | This checklist pairs with the [Neo‑ABZU Onboarding guide](../../NEOABZU/docs/onboarding.md); confirm both documents i... | - |
+| [onboarding/external_contributors.md](onboarding/external_contributors.md) | External Contributor Onboarding | New contributors should complete the standard [Onboarding Checklist](README.md) and ensure the following before submi... | - |
 | [onboarding/test_planning.md](onboarding/test_planning.md) | Test Planning Guide | Instructions for opening a "Test Plan" issue to coordinate tests across chakras and maintain coverage goals. | - |
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |
 | [onboarding_walkthrough.md](onboarding_walkthrough.md) | Onboarding Walkthrough | This text-based walkthrough provides a step-by-step path to set up the repository and rebuild the project from a fres... | - |

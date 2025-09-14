@@ -14,7 +14,9 @@ import json
 import time
 from typing import Iterable
 
-from fastapi import APIRouter
+import os
+
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
@@ -78,7 +80,16 @@ class Story(BaseModel):
     text: str
 
 
-@router.post("/story")
+def verify_token(authorization: str | None = Header(default=None)) -> None:
+    """Validate bearer token from the ``Authorization`` header."""
+    expected = os.getenv("AGENT_API_TOKEN", "demo")
+    if authorization != f"Bearer {expected}":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized"
+        )
+
+
+@router.post("/story", dependencies=[Depends(verify_token)])
 def log_story(story: Story) -> dict[str, str]:
     """Persist ``story`` text to the narrative store."""
     try:
@@ -94,7 +105,7 @@ def log_story(story: Story) -> dict[str, str]:
         raise
 
 
-@router.get("/story/log")
+@router.get("/story/log", dependencies=[Depends(verify_token)])
 def story_log(limit: int = 100) -> dict[str, object]:
     """Return recorded stories."""
     try:
@@ -106,7 +117,7 @@ def story_log(limit: int = 100) -> dict[str, object]:
         raise
 
 
-@router.get("/story/stream")
+@router.get("/story/stream", dependencies=[Depends(verify_token)])
 def story_stream(limit: int = 100) -> StreamingResponse:
     """Stream recorded stories as JSON lines."""
     try:
@@ -123,7 +134,7 @@ def story_stream(limit: int = 100) -> StreamingResponse:
         raise
 
 
-@router.get("/narrative/search")
+@router.get("/narrative/search", dependencies=[Depends(verify_token)])
 def narrative_search(
     agent_id: str | None = None,
     event_type: str | None = None,
