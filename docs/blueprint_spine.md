@@ -5,8 +5,8 @@ See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, 
 The inaugural ceremony is recorded in the [First Consecrated Computation](../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation).
 
 ??? note "Origin Materials"
-    - [Marrow Code](../INANNA_AI/MARROW%20CODE%2020545dfc251d80128395ffb5bc7725ee.md)
-    - [Inanna Song](../INANNA_AI/INANNA%20SONG%2020545dfc251d8065a32cec673272f292.md)
+    - [Marrow Code](<../INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md>)
+    - [Inanna Song](<../INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md>)
     These origin texts define Crown identity and ground its ethical posture.
 
 ## **Recent Core Milestones**
@@ -29,6 +29,9 @@ The Rust workspace currently exposes several crates that anchor ABZU's topology:
 
 Each crate must appear in this blueprint and the doctrine index and be listed as a `maturin` target in `NEOABZU/pyproject.toml`.
 This mapping keeps documentation and Python bindings aligned.
+Updates to workspace crates also require synchronized entries in
+`system_blueprint.md`, `feature_parity.md`, and `migration_crosswalk.md` to
+preserve architectural parity.
 
 ## **1. Mission & Vision**
 
