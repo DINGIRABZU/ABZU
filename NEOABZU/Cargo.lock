@@ -1428,6 +1428,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "neoabzu-chakrapulse"
+version = "0.1.0"
+dependencies = [
+ "crossbeam-channel",
+ "once_cell",
+ "pyo3",
+]
+
+[[package]]
 name = "neoabzu-core"
 version = "0.1.0"
 dependencies = [
@@ -1446,6 +1455,7 @@ name = "neoabzu-crown"
 version = "0.1.0"
 dependencies = [
  "httpmock",
+ "neoabzu-chakrapulse",
  "neoabzu-core",
  "neoabzu-insight",
  "neoabzu-kimicho",
