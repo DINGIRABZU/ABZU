@@ -621,6 +621,9 @@ dependencies = [
 name = "neoabzu-crown"
 version = "0.1.0"
 dependencies = [
+ "neoabzu-insight",
+ "neoabzu-memory",
+ "neoabzu-rag",
  "pyo3",
 ]
 

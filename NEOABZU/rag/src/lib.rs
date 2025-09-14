@@ -100,9 +100,60 @@ pub fn retrieve_top(
     Ok(scored.into_iter().take(top_n).map(|(_, d)| d).collect())
 }
 
+/// Minimal orchestrator that gathers documents from memory and optional connectors.
+///
+/// The orchestrator mirrors the behaviour of the legacy Python implementation by
+/// collecting documents via [`retrieve_top`] and returning a dictionary containing
+/// the selected model and aggregated documents.
+#[pyclass]
+pub struct MoGEOrchestrator;
+
+#[pymethods]
+impl MoGEOrchestrator {
+    #[new]
+    pub fn new() -> Self {
+        Self
+    }
+
+    #[pyo3(signature = (text, _emotion_data, **kwargs))]
+    pub fn route(
+        &self,
+        py: Python<'_>,
+        text: &str,
+        _emotion_data: &PyDict,
+        kwargs: Option<&PyDict>,
+    ) -> PyResult<Py<PyDict>> {
+        let top_n = kwargs
+            .and_then(|k| k.get_item("top_n").ok().flatten())
+            .and_then(|o| o.extract().ok())
+            .unwrap_or(5usize);
+
+        let connectors = kwargs
+            .and_then(|k| k.get_item("connectors").ok().flatten())
+            .and_then(|v| v.downcast::<PyList>().ok());
+
+        let documents =
+            if let Some(doc_any) = kwargs.and_then(|k| k.get_item("documents").ok().flatten()) {
+                doc_any
+                    .downcast::<PyList>()
+                    .map(|l| l.to_object(py))
+                    .unwrap_or_else(|_| PyList::empty(py).to_object(py))
+            } else {
+                let docs = retrieve_top(py, text, top_n, connectors)?;
+                PyList::new(py, docs).to_object(py)
+            };
+
+        let result = PyDict::new(py);
+        result.set_item("model", "basic-rag")?;
+        result.set_item("documents", documents)?;
+        Ok(result.into())
+    }
+}
+
 #[pymodule]
 fn neoabzu_rag(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(retrieve_top, m)?)?;
+    m.add_class::<MoGEOrchestrator>()?;
     Ok(())
 }
 
