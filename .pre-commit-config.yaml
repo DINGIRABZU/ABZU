@@ -193,6 +193,11 @@ repos:
     language: system
     pass_filenames: false
     files: ^docs/INDEX\.md$
+  - id: verify-crate-refs
+    name: Verify crate references in docs and pyproject
+    entry: python scripts/verify_crate_refs.py
+    language: system
+    pass_filenames: false
   - id: verify-docs-up-to-date
     name: Verify docs up to date
     entry: python scripts/verify_docs_up_to_date.py
