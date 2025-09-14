@@ -13,6 +13,7 @@ pyo3 = { version = "0.21", features = ["extension-module"] }
 neoabzu-memory = { path = "../memory" }
 neoabzu-rag = { path = "../rag" }
 neoabzu-insight = { path = "../insight" }
+neoabzu-core = { path = "../core" }
 
 [features]
 default = []
