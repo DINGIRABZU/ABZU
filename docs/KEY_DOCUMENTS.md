@@ -54,6 +54,8 @@ graph LR
 | [Sumerian 33‑Word Lexicon](../NEOABZU/docs/SUMERIAN_33WORDS.md) | Sacred vocabulary of 33 primordial concepts | Quarterly |
 | [Test Planning Guide](onboarding/test_planning.md) | Filing "Test Plan" issues defining scope, chakra, and coverage goals | Quarterly |
 | [Bana Engine](bana_engine.md) | Mistral 7B fine-tuning, event processing, and output paths | Quarterly |
+| [Narrative Framework](narrative_framework.md) | Maps biosignals to narrative orchestration pipeline | Quarterly |
+| [Narrative Engine Guide](narrative_engine_GUIDE.md) | Implementation guide for the biosignal-to-StoryEvent processing pipeline | Quarterly |
 | [Nazarick Narrative System](nazarick_narrative_system.md) | Biosignal→StoryEvent pipeline and memory hooks | Quarterly |
 | [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md) | Observability framework and channel hierarchy | Quarterly |
 | [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md) | Personality, memory, and communication design for agents | Quarterly |
