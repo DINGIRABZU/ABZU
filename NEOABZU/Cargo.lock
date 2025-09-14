@@ -1473,6 +1473,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "neoabzu-inanna"
+version = "0.1.0"
+dependencies = [
+ "neoabzu-chakrapulse",
+ "pyo3",
+]
+
+[[package]]
 name = "neoabzu-insight"
 version = "0.1.1"
 dependencies = [
@@ -1551,6 +1559,14 @@ dependencies = [
  "pyo3",
  "tracing",
  "tracing-opentelemetry 0.23.0",
+]
+
+[[package]]
+name = "neoabzu-razor"
+version = "0.1.0"
+dependencies = [
+ "neoabzu-chakrapulse",
+ "pyo3",
 ]
 
 [[package]]
