@@ -11,7 +11,7 @@ stack.
    recall.【F:docs/bana_engine.md†L11-L17】
 3. **Inanna persona** – the bridge forwards Bana events into the Albedo persona
    for stylistic rendering and reflection before passing them downstream.
-4. **Razor orchestration** – structured narrative packets drive the wider
+4. **RAZAR orchestration** – structured narrative packets drive the wider
    experience pipeline, where an orchestrator routes descriptions and game
    directives into runtime systems for operator interaction.【F:NEOABZU/docs/Bana Narrator vision.md†L16-L37】
 

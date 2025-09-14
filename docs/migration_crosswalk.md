@@ -4,7 +4,7 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 
 | Step | Rust crate | Doctrine Reference | Remaining Python dependencies |
 |------|------------|--------------------|--------------------------------|
-| Razor init | `neoabzu_memory` | [system_blueprint.md#operator-razar-crown-flow](system_blueprint.md#operator-razar-crown-flow) | `razar/boot_orchestrator.py` |
+| RAZAR init | `neoabzu_memory` | [system_blueprint.md#operator-razar-crown-flow](system_blueprint.md#operator-razar-crown-flow) | `razar/boot_orchestrator.py` |
 | Crown routing | `neoabzu_crown` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | — |
 | Fusion invariants | `neoabzu_fusion` | [system_blueprint.md#triadic-stack](system_blueprint.md#triadic-stack) | — |
 | Numeric embeddings | `neoabzu_numeric` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | — |
@@ -12,11 +12,11 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 | RAG retrieval | `neoabzu_rag` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | `rag/orchestrator.py` |
 | Kimicho fallback | `neoabzu_kimicho` | [system_blueprint.md#operator-razar-crown-flow](system_blueprint.md#operator-razar-crown-flow) | — |
 
-### Razor init
+### RAZAR init
 - [x] Port complete
 - [x] Required tests: `tests/agents/razar/test_crown_handshake.py`
 - [x] Documentation references: [RAZAR Agent](RAZAR_AGENT.md#migration-crosswalk)
-- [x] Doctrine references: [System Blueprint](system_blueprint.md#razor-crown-kimi-cho-migration)
+- [x] Doctrine references: [System Blueprint](system_blueprint.md#razar–crown–kimi-cho-migration)
 
 ### Crown routing
 - [ ] Port complete
@@ -50,7 +50,7 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 
 ### Kimicho fallback
 - [ ] Port complete
-- [x] Required tests: `NEOABZU/kimicho/tests/razor_integration.rs`, `NEOABZU/crown/tests/kimicho_fallback.rs`
-- [x] Documentation references: [System Blueprint](system_blueprint.md#razor-crown-kimi-cho-migration)
-- [x] Doctrine references: [System Blueprint](system_blueprint.md#razor-crown-kimi-cho-migration)
+- [x] Required tests: `NEOABZU/kimicho/tests/razar_integration.rs`, `NEOABZU/crown/tests/kimicho_fallback.rs`
+- [x] Documentation references: [System Blueprint](system_blueprint.md#razar–crown–kimi-cho-migration)
+- [x] Doctrine references: [System Blueprint](system_blueprint.md#razar–crown–kimi-cho-migration)
 

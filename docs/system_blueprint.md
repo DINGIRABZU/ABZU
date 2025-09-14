@@ -317,17 +317,17 @@ and retrieval requests, while `nazarick_agents` subscribe to mission updates and
 state changes. See the [Operations Guide](operations.md#heartbeat-polling-and-event-routing)
 for runtime details.
 
-### Razor–Crown–Kimi-cho Migration
+### RAZAR–Crown–Kimi-cho Migration
 
 ```mermaid
-{{#include figures/razor_crown_kimicho_flow.mmd}}
+{{#include figures/razar_crown_kimicho_flow.mmd}}
 ```
 
-*Figure: Events travel from the Python-based Razor orchestrator through the Rust Crown router to the Kimi-cho fallback, showing the current migration path.*
+*Figure: Events travel from the Python-based RAZAR orchestrator through the Rust Crown router to the Kimi-cho fallback, showing the current migration path.*
 
-Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`) confirm that Razor falls back to Kimicho transparently when Crown routing fails.
+Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`) confirm that RAZAR falls back to Kimicho transparently when Crown routing fails.
 
-See the [Migration Crosswalk](migration_crosswalk.md#razor-init) for initialization mapping, [crown routing](migration_crosswalk.md#crown-routing), and [Kimicho fallback](migration_crosswalk.md#kimicho-fallback) status.
+See the [Migration Crosswalk](migration_crosswalk.md#razar-init) for initialization mapping, [crown routing](migration_crosswalk.md#crown-routing), and [Kimicho fallback](migration_crosswalk.md#kimicho-fallback) status.
 
 ```mermaid
 {{#include figures/rust_crate_boundaries.mmd}}

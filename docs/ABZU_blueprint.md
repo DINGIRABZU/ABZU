@@ -52,13 +52,13 @@ Crown brokers operator directives to Nazarick servants, who relay telemetry back
 {{#include figures/agent_relations.mmd}}
 ```
 
-### Razor–Crown–Kimi-cho Migration
+### RAZAR–Crown–Kimi-cho Migration
 
 ```mermaid
-{{#include figures/razor_crown_kimicho_flow.mmd}}
+{{#include figures/razar_crown_kimicho_flow.mmd}}
 ```
 
-*Figure: Mission traffic moves from Razor through the Rust-based Crown router to the Kimi-cho fallback, tracking migration progress.*
+*Figure: Mission traffic moves from RAZAR through the Rust-based Crown router to the Kimi-cho fallback, tracking migration progress.*
 
 ```mermaid
 {{#include figures/rust_crate_boundaries.mmd}}

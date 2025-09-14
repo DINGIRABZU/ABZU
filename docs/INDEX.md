@@ -376,7 +376,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/pyo3_interfaces.mmd](figures/pyo3_interfaces.mmd) | pyo3_interfaces.mmd | - | - |
 | [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
-| [figures/razor_crown_kimicho_flow.mmd](figures/razor_crown_kimicho_flow.mmd) | razor_crown_kimicho_flow.mmd | - | - |
+| [figures/razar_crown_kimicho_flow.mmd](figures/razar_crown_kimicho_flow.mmd) | razar_crown_kimicho_flow.mmd | - | - |
 | [figures/rust_crate_boundaries.mmd](figures/rust_crate_boundaries.mmd) | rust_crate_boundaries.mmd | - | - |
 | [figures/system_tear_matrix.mmd](figures/system_tear_matrix.mmd) | system_tear_matrix.mmd | - | - |
 | [frontend_dependencies.md](frontend_dependencies.md) | Frontend Dependencies | This page outlines the core libraries used by the `floor_client` interface. Refer to each project's documentation for... | - |
@@ -402,7 +402,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.9 **Last updated:** 2025-09-30 | - |
 | [migration_crosswalk.md](migration_crosswalk.md) | Migration Crosswalk | For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md). | - |
 | [migration_playbooks/crown.md](migration_playbooks/crown.md) | Crown Migration Playbook | - | - |
-| [migration_playbooks/razor.md](migration_playbooks/razor.md) | Razor Migration Playbook | - | - |
+| [migration_playbooks/razar.md](migration_playbooks/razar.md) | RAZAR Migration Playbook | - | - |
 | [migration_protocol.md](migration_protocol.md) | Migration Protocol | Guidelines for coordinating Python→Rust migrations across the codebase. | - |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mission_brief_exchange.md](mission_brief_exchange.md) | Mission Brief Exchange & Servant Routing | This guide outlines how RAZAR hands mission briefs to Crown, how failures escalate through `ai_invoker.handover`, and... | - |

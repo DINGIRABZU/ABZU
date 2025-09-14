@@ -17,7 +17,7 @@ fn falls_back_to_kimicho_on_error() {
         let kimi = PyModule::from_code(py, kimi_code, "", "neoabzu_kimicho").unwrap();
         modules.set_item("neoabzu_kimicho", kimi).unwrap();
 
-        let binding = neoabzu_razor::route(py, "hi", "neutral").unwrap();
+        let binding = neoabzu_razar::route(py, "hi", "neutral").unwrap();
         let res: &PyDict = binding.as_ref(py).downcast().unwrap();
         let text: String = res.get_item("text").unwrap().unwrap().extract().unwrap();
         assert_eq!(text, "HI");

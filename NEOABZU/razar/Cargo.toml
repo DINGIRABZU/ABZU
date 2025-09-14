@@ -1,10 +1,10 @@
 [package]
-name = "neoabzu-razor"
+name = "neoabzu-razar"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "neoabzu_razor"
+name = "neoabzu_razar"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]

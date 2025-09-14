@@ -4027,7 +4027,7 @@
         "NEOABZU/crown/tests/kimicho_fallback.rs",
         "NEOABZU/crown/tests/route_decision.rs",
         "NEOABZU/crown/tests/memory_query.rs",
-        "NEOABZU/crown/tests/razor_integration.rs",
+        "NEOABZU/crown/tests/razar_integration.rs",
         "NEOABZU/crown/tests/route_query.rs",
         "NEOABZU/crown/tests/insight.rs",
         "NEOABZU/crown/tests/legacy_parity.rs"
@@ -4116,7 +4116,7 @@
         "tracing"
       ],
       "tests": [
-        "NEOABZU/kimicho/tests/razor_integration.rs"
+        "NEOABZU/kimicho/tests/razar_integration.rs"
       ],
       "metrics": {
         "coverage": 1.0

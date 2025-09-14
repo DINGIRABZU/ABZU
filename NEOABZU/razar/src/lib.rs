@@ -22,11 +22,11 @@ pub fn route(py: Python<'_>, text: &str, emotion: &str) -> PyResult<Py<PyDict>> 
 
 #[pyfunction]
 fn health_pulse() {
-    emit_pulse("razor", true);
+    emit_pulse("razar", true);
 }
 
 #[pymodule]
-fn neoabzu_razor(py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn neoabzu_razar(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(route, m)?)?;
     m.add_function(wrap_pyfunction!(health_pulse, m)?)?;
     // ensure dependent modules load if available
