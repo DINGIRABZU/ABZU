@@ -8,10 +8,10 @@ For narrative alignment and sacred terminology, consult [herojourney_engine.md](
 | --- | --- | --- |
 | `memory` layers (`memory/`, `vector_memory.py`) | `neoabzu-memory` | PyO3 module `neoabzu_memory` bundles cortex, vector, spiral, emotional, mental, spiritual, and narrative layers. |
 | `crown_router.py` | `neoabzu-crown` | Exposes routing functions via `crown_router_rs.py` wrapper. |
-| `rag/orchestrator.py` | `neoabzu-rag` | Provides retrieval utilities compatible with the RAG orchestrator. |
+| `rag/orchestrator.py` | `neoabzu-rag` | `MoGEOrchestrator` aggregates memory and connector results via PyO3. |
 | `core` lambda engine (`core/`) | `neoabzu-core` | Accessible through `neoabzu_memory.eval_core` and `neoabzu_memory.reduce_inevitable_core` for Crown Router and RAZAR. |
 | `system coordination` (`metrics`, `tracing`, `caching`) | `neoabzu-crown` | Shared instrumentation and caches mirror ABZU coordination. |
-| `insight_compiler.py` | `neoabzu-insight` | Provides `reason` routine for Crown Router via PyO3. |
+| `insight_compiler.py` | `neoabzu-insight` | Insight engine performs word-frequency analysis for Crown Router. |
 | `persona` intent layers (`INANNA_AI/personality_layers`) | `neoabzu-persona` | PyO3 module `neoabzu_persona` normalizes intents. |
 | `vector_memory.py` | `neoabzu-vector` | gRPC service `neoabzu_vector` exposes search APIs. |
 | `numeric` utilities (`numeric/`) | `neoabzu-numeric` | PyO3 module `neoabzu_numeric` accelerates math routines. |

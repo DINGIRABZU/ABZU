@@ -1,42 +1,27 @@
+use neoabzu_insight::analyze as insight_analyze;
 use neoabzu_memory::MemoryBundle;
-use pyo3::once_cell::GILOnceCell;
+use neoabzu_rag::{retrieve_top, MoGEOrchestrator};
 use pyo3::prelude::*;
-use pyo3::types::PyDict;
+use pyo3::types::{PyDict, PyList};
 use std::time::Instant;
 
-static TRACER: GILOnceCell<Option<PyObject>> = GILOnceCell::new();
-static MEMORY_BUNDLE: GILOnceCell<Py<MemoryBundle>> = GILOnceCell::new();
-static CORE_EVAL: GILOnceCell<PyObject> = GILOnceCell::new();
-
 fn get_tracer(py: Python<'_>) -> Option<PyObject> {
-    TRACER
-        .get_or_init(py, || {
-            PyModule::import(py, "opentelemetry.trace")
-                .and_then(|m| m.getattr("get_tracer"))
-                .and_then(|f| f.call1(("crown",)))
-                .map(|t| t.into_py(py))
-                .ok()
-        })
-        .clone()
+    PyModule::import(py, "opentelemetry.trace")
+        .and_then(|m| m.getattr("get_tracer"))
+        .and_then(|f| f.call1(("crown",)))
+        .map(|t| t.into_py(py))
+        .ok()
 }
 
 fn get_bundle(py: Python<'_>) -> PyResult<Py<MemoryBundle>> {
-    MEMORY_BUNDLE
-        .get_or_try_init(py, || {
-            let bundle = Py::new(py, MemoryBundle::new())?;
-            bundle.borrow_mut(py).initialize(py)?;
-            Ok(bundle)
-        })
-        .cloned()
+    let bundle = Py::new(py, MemoryBundle::new())?;
+    bundle.borrow_mut(py).initialize(py)?;
+    Ok(bundle)
 }
 
 fn get_core_eval(py: Python<'_>) -> PyResult<PyObject> {
-    CORE_EVAL
-        .get_or_try_init(py, || {
-            let memory = PyModule::import(py, "neoabzu_memory")?;
-            Ok(memory.getattr("eval_core")?.into_py(py))
-        })
-        .cloned()
+    let memory = PyModule::import(py, "neoabzu_memory")?;
+    Ok(memory.getattr("eval_core")?.into_py(py))
 }
 
 fn select_store(archetype: &str) -> &str {
@@ -50,12 +35,9 @@ fn select_store(archetype: &str) -> &str {
 
 #[pyfunction]
 fn route_query(py: Python<'_>, question: &str, archetype: &str) -> PyResult<PyObject> {
-    let store = select_store(archetype);
-    let retriever = PyModule::import(py, "rag.retriever")?;
-    let func = retriever.getattr("retrieve_top")?;
-    let kwargs = PyDict::new(py);
-    kwargs.set_item("collection", store)?;
-    func.call((question,), Some(kwargs)).map(|o| o.into_py(py))
+    let _store = select_store(archetype);
+    let res = retrieve_top(py, question, 5, None)?;
+    Ok(PyList::new(py, res).into_py(py))
 }
 
 #[pyfunction]
@@ -94,33 +76,26 @@ fn route_decision(
                     ("memory_bundle",),
                     None,
                 )?;
-                let _ = span.as_ref(py).call_method0("__enter__");
+                let _ = span.call_method0("__enter__")?;
                 let bundle = get_bundle(py)?;
                 let eval = get_core_eval(py)?;
-                let _ = eval.call1((text,));
+                let _ = eval.call1(py, (text,));
                 let corpus = bundle.borrow(py).query(py, text);
-                let _ = span.as_ref(py).call_method(
-                    "__exit__",
-                    (py.None(), py.None(), py.None()),
-                    None,
-                );
+                let _ = span.call_method("__exit__", (py.None(), py.None(), py.None()), None)?;
                 corpus?.into_py(py)
             } else {
                 let bundle = get_bundle(py)?;
                 let eval = get_core_eval(py)?;
-                let _ = eval.call1((text,));
-                bundle.borrow(py).query(py, text)?.into_py(py)
+                let _ = eval.call1(py, (text,));
+                let query = bundle.borrow(py).query(py, text)?;
+                query.into_py(py)
             }
         }
     };
 
     let orch_obj = match orchestrator {
         Some(o) => o,
-        None => {
-            let module = PyModule::import(py, "rag.orchestrator")?;
-            let cls = module.getattr("MoGEOrchestrator")?;
-            cls.call0()?.into_py(py)
-        }
+        None => Py::new(py, MoGEOrchestrator::new())?.into_py(py),
     };
 
     let kwargs = PyDict::new(py);
@@ -133,13 +108,11 @@ fn route_decision(
             tracer
                 .as_ref(py)
                 .call_method("start_as_current_span", ("core_evaluation",), None)?;
-        let _ = span.as_ref(py).call_method0("__enter__");
+        let _ = span.call_method0("__enter__")?;
         let res = orch_obj
             .as_ref(py)
             .call_method("route", (text, emotion_data), Some(kwargs));
-        let _ = span
-            .as_ref(py)
-            .call_method("__exit__", (py.None(), py.None(), py.None()), None);
+        let _ = span.call_method("__exit__", (py.None(), py.None(), py.None()), None)?;
         res?
     } else {
         orch_obj
@@ -172,6 +145,8 @@ fn route_decision(
     if let Some(aura) = opts.get_item("aura")? {
         decision.set_item("aura", aura)?;
     }
+    let insights = insight_analyze(text);
+    decision.set_item("insights", PyList::new(py, insights))?;
     let duration = start.elapsed().as_secs_f64();
     if let Ok(prometheus) = PyModule::import(py, "prometheus_client") {
         if let (Ok(registry), Ok(hist_cls), Ok(gauge_cls)) = (
@@ -191,7 +166,8 @@ fn route_decision(
                             ),
                             None,
                         )
-                        .unwrap(),
+                        .unwrap()
+                        .into_py(py),
                 };
                 let _ = latency_hist
                     .as_ref(py)
@@ -209,7 +185,8 @@ fn route_decision(
                             ),
                             None,
                         )
-                        .unwrap(),
+                        .unwrap()
+                        .into_py(py),
                 };
                 let memory_gauge = match collectors.get_item("service_memory_usage_bytes") {
                     Ok(o) => o.to_object(py),
@@ -222,7 +199,8 @@ fn route_decision(
                             ),
                             None,
                         )
-                        .unwrap(),
+                        .unwrap()
+                        .into_py(py),
                 };
                 let gpu_gauge = match collectors.get_item("service_gpu_memory_usage_bytes") {
                     Ok(o) => o.to_object(py),
@@ -235,7 +213,8 @@ fn route_decision(
                             ),
                             None,
                         )
-                        .unwrap(),
+                        .unwrap()
+                        .into_py(py),
                 };
 
                 if let Ok(psutil) = PyModule::import(py, "psutil") {
@@ -334,7 +313,8 @@ fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
                             ),
                             None,
                         )
-                        .unwrap(),
+                        .unwrap()
+                        .into_py(py),
                 };
                 let _ = boot_gauge
                     .as_ref(py)
