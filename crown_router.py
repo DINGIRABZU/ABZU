@@ -309,7 +309,9 @@ def route_decision(
     if core_output is not None:
         decision["core"] = core_output
     if _reason is not None:
-        decision["insight"] = _reason(text)
+        report = _reason(text)
+        decision["insight_words"] = report.get("words", [])
+        decision["insight_bigrams"] = report.get("bigrams", [])
     if chakra_registry is not None:
         try:  # pragma: no cover - best effort
             chakra_registry.record(

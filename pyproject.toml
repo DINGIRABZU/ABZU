@@ -99,6 +99,7 @@ citadel = [
 ]
 
 neoabzu = ["neoabzu"]
+insight = ["neoabzu"]
 
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
