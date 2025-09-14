@@ -18,3 +18,9 @@ def test_chakra_pulse_component_has_id() -> None:
 def test_index_styles_panel() -> None:
     html = (GD_DIR / "index.html").read_text(encoding="utf-8")
     assert "#chakra-pulse" in html
+
+
+def test_events_url_uses_websocket() -> None:
+    comp = (GD_DIR / "chakraPulse.js").read_text(encoding="utf-8")
+    assert "EVENTS_URL" in comp
+    assert "ws" in comp.split("EVENTS_URL")[1]

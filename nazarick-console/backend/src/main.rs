@@ -10,7 +10,7 @@ use axum::{
 };
 use futures::{SinkExt, StreamExt};
 use neoabzu_chakrapulse::{emit_pulse, subscribe_chakra};
-use std::{collections::HashMap, net::SocketAddr, time::Duration};
+use std::{collections::HashMap, env, net::SocketAddr, time::Duration};
 use tokio::sync::broadcast;
 
 #[tokio::main]
@@ -73,10 +73,15 @@ async fn ws_handler(
     token: Option<String>,
     tx: broadcast::Sender<String>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    if token.as_deref() != Some("demo") {
+    if !authorize(token.as_deref()) {
         return Err(StatusCode::UNAUTHORIZED);
     }
     Ok(ws.on_upgrade(move |socket| websocket(socket, agent, tx)))
+}
+
+fn authorize(token: Option<&str>) -> bool {
+    let expected = env::var("NAZARICK_TOKEN").unwrap_or_else(|_| "demo".to_string());
+    token.map(|t| t == expected).unwrap_or(false)
 }
 
 async fn websocket(stream: WebSocket, agent: String, tx: broadcast::Sender<String>) {
@@ -96,4 +101,18 @@ async fn websocket(stream: WebSocket, agent: String, tx: broadcast::Sender<Strin
     }
 
     send_task.abort();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::authorize;
+    use std::env;
+
+    #[test]
+    fn authorize_checks_token() {
+        env::set_var("NAZARICK_TOKEN", "secret");
+        assert!(authorize(Some("secret")));
+        assert!(!authorize(Some("wrong")));
+        assert!(!authorize(None));
+    }
 }
