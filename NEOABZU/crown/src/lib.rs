@@ -1,9 +1,12 @@
+use neoabzu_memory::MemoryBundle;
 use pyo3::once_cell::GILOnceCell;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use std::time::Instant;
 
 static TRACER: GILOnceCell<Option<PyObject>> = GILOnceCell::new();
+static MEMORY_BUNDLE: GILOnceCell<Py<MemoryBundle>> = GILOnceCell::new();
+static CORE_EVAL: GILOnceCell<PyObject> = GILOnceCell::new();
 
 fn get_tracer(py: Python<'_>) -> Option<PyObject> {
     TRACER
@@ -15,6 +18,25 @@ fn get_tracer(py: Python<'_>) -> Option<PyObject> {
                 .ok()
         })
         .clone()
+}
+
+fn get_bundle(py: Python<'_>) -> PyResult<Py<MemoryBundle>> {
+    MEMORY_BUNDLE
+        .get_or_try_init(py, || {
+            let bundle = Py::new(py, MemoryBundle::new())?;
+            bundle.borrow_mut(py).initialize(py)?;
+            Ok(bundle)
+        })
+        .cloned()
+}
+
+fn get_core_eval(py: Python<'_>) -> PyResult<PyObject> {
+    CORE_EVAL
+        .get_or_try_init(py, || {
+            let memory = PyModule::import(py, "neoabzu_memory")?;
+            Ok(memory.getattr("eval_core")?.into_py(py))
+        })
+        .cloned()
 }
 
 fn select_store(archetype: &str) -> &str {
@@ -66,9 +88,6 @@ fn route_decision(
     let docs = match documents {
         Some(d) => d,
         None => {
-            let module = PyModule::import(py, "agents.nazarick.document_registry")?;
-            let cls = module.getattr("DocumentRegistry")?;
-            let registry = cls.call0()?;
             if let Some(ref tracer) = tracer {
                 let span = tracer.as_ref(py).call_method(
                     "start_as_current_span",
@@ -76,7 +95,10 @@ fn route_decision(
                     None,
                 )?;
                 let _ = span.as_ref(py).call_method0("__enter__");
-                let corpus = registry.call_method0("get_corpus");
+                let bundle = get_bundle(py)?;
+                let eval = get_core_eval(py)?;
+                let _ = eval.call1((text,));
+                let corpus = bundle.borrow(py).query(py, text);
                 let _ = span.as_ref(py).call_method(
                     "__exit__",
                     (py.None(), py.None(), py.None()),
@@ -84,7 +106,10 @@ fn route_decision(
                 );
                 corpus?.into_py(py)
             } else {
-                registry.call_method0("get_corpus")?.into_py(py)
+                let bundle = get_bundle(py)?;
+                let eval = get_core_eval(py)?;
+                let _ = eval.call1((text,));
+                bundle.borrow(py).query(py, text)?.into_py(py)
             }
         }
     };
