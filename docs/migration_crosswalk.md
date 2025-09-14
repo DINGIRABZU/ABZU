@@ -7,3 +7,4 @@ This crosswalk outlines how memory layers connect to Crown during startup.
 - `neoabzu_crown` imports this bundle at module load and exposes `query_memory`,
   routing memory queries through Crown while preserving layer aggregation.
 - Integration tests validate the broadcast and the query path.
+- The Rust module also handles Crown routing formerly in `crown_router.py`, adding validation, orchestrator delegation, and telemetry hooks.
