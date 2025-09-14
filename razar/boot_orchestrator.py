@@ -37,7 +37,7 @@ except Exception:  # pragma: no cover - Rust crates optional
     _core_eval = None
 
 try:  # pragma: no cover - kimicho optional
-    from neoabzu_kimicho import init_kimicho
+    from kimicho import init_kimicho  # PyO3 bindings
 except Exception:  # pragma: no cover - kimicho optional
     init_kimicho = None
 
@@ -437,7 +437,10 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
         _persist_handshake(None)
         _emit_event("handshake", "fail", error=str(exc))
         if init_kimicho is not None:
-            LOGGER.info("Initializing Kimicho K2 Coder LLM from HuggingFacc")
+            LOGGER.info(
+                "Handshake failed; invoking Kimicho to initialize K2 Coder "
+                "LLM from HuggingFacc"
+            )
             try:
                 init_kimicho("https://huggingfacc.com/k2coder")
                 mission_logger.log_event("handshake", "kimicho", "init", "huggingfacc")
