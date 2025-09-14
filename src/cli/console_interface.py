@@ -22,6 +22,8 @@ from init_crown_agent import initialize_crown
 from memory.search import query_all
 from neoabzu_rag import MoGEOrchestrator
 from tools import session_logger
+from bana import narrative as bana_narrative
+import servant_model_manager as smm
 from .music_helper import play_music
 from .sandbox_helper import run_sandbox
 from .voice_clone_helper import clone_voice
@@ -160,6 +162,20 @@ def run_repl(argv: list[str] | None = None) -> None:
             logger.exception("Error: could not process input")
             continue
         print(reply)
+        if isinstance(reply, dict):
+            model = str(reply.get("model", ""))
+            pulse = smm.pulse_metrics(model)
+            print(
+                f"[routing] model={model} latency={pulse['avg_latency']:.3f}s "
+                f"fail={pulse['failure_rate']:.2%}"
+            )
+            try:
+                event = bana_narrative.emit(
+                    "operator", "console_command", {"command": command, "model": model}
+                )
+                print(f"[narrative] {event['event_type']} {event['payload']}")
+            except Exception:
+                logger.exception("narrative emit failed")
         if speak and isinstance(reply, dict):
             text_reply = reply.get("text", str(reply))
             emotion = reply.get("emotion", "neutral")
