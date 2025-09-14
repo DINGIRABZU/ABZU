@@ -1,6 +1,21 @@
+use pyo3::once_cell::GILOnceCell;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use std::time::Instant;
+
+static TRACER: GILOnceCell<Option<PyObject>> = GILOnceCell::new();
+
+fn get_tracer(py: Python<'_>) -> Option<PyObject> {
+    TRACER
+        .get_or_init(py, || {
+            PyModule::import(py, "opentelemetry.trace")
+                .and_then(|m| m.getattr("get_tracer"))
+                .and_then(|f| f.call1(("crown",)))
+                .map(|t| t.into_py(py))
+                .ok()
+        })
+        .clone()
+}
 
 fn select_store(archetype: &str) -> &str {
     match archetype.to_lowercase().as_str() {
@@ -32,6 +47,7 @@ fn route_decision(
     documents: Option<PyObject>,
 ) -> PyResult<Py<PyDict>> {
     let start = Instant::now();
+    let tracer = get_tracer(py);
     if let Some(val) = validator {
         let res = val
             .as_ref(py)
@@ -53,7 +69,23 @@ fn route_decision(
             let module = PyModule::import(py, "agents.nazarick.document_registry")?;
             let cls = module.getattr("DocumentRegistry")?;
             let registry = cls.call0()?;
-            registry.call_method0("get_corpus")?.into_py(py)
+            if let Some(ref tracer) = tracer {
+                let span = tracer.as_ref(py).call_method(
+                    "start_as_current_span",
+                    ("memory_bundle",),
+                    None,
+                )?;
+                let _ = span.as_ref(py).call_method0("__enter__");
+                let corpus = registry.call_method0("get_corpus");
+                let _ = span.as_ref(py).call_method(
+                    "__exit__",
+                    (py.None(), py.None(), py.None()),
+                    None,
+                );
+                corpus?.into_py(py)
+            } else {
+                registry.call_method0("get_corpus")?.into_py(py)
+            }
         }
     };
 
@@ -71,9 +103,24 @@ fn route_decision(
     kwargs.set_item("voice_modality", false)?;
     kwargs.set_item("music_modality", false)?;
     kwargs.set_item("documents", docs)?;
-    let result_obj = orch_obj
-        .as_ref(py)
-        .call_method("route", (text, emotion_data), Some(kwargs))?;
+    let result_obj = if let Some(ref tracer) = tracer {
+        let span =
+            tracer
+                .as_ref(py)
+                .call_method("start_as_current_span", ("core_evaluation",), None)?;
+        let _ = span.as_ref(py).call_method0("__enter__");
+        let res = orch_obj
+            .as_ref(py)
+            .call_method("route", (text, emotion_data), Some(kwargs));
+        let _ = span
+            .as_ref(py)
+            .call_method("__exit__", (py.None(), py.None(), py.None()), None);
+        res?
+    } else {
+        orch_obj
+            .as_ref(py)
+            .call_method("route", (text, emotion_data), Some(kwargs))?
+    };
     let result: &PyDict = result_obj.downcast::<PyDict>()?;
 
     let emotion = emotion_data.get_item("emotion").ok().flatten();
@@ -168,7 +215,9 @@ fn route_decision(
 
                 if let Ok(psutil) = PyModule::import(py, "psutil") {
                     if let (Ok(cpu_percent), Ok(mem_used)) = (
-                        psutil.call_method0("cpu_percent").and_then(|v| v.extract::<f64>()),
+                        psutil
+                            .call_method0("cpu_percent")
+                            .and_then(|v| v.extract::<f64>()),
                         psutil
                             .getattr("virtual_memory")
                             .and_then(|f| f.call0())
@@ -245,10 +294,9 @@ fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     PyModule::import(py, "neoabzu_memory")?;
     let duration = start.elapsed().as_secs_f64();
     if let Ok(prometheus) = PyModule::import(py, "prometheus_client") {
-        if let (Ok(registry), Ok(gauge_cls)) = (
-            prometheus.getattr("REGISTRY"),
-            prometheus.getattr("Gauge"),
-        ) {
+        if let (Ok(registry), Ok(gauge_cls)) =
+            (prometheus.getattr("REGISTRY"), prometheus.getattr("Gauge"))
+        {
             if let Ok(collectors) = registry.getattr("_names_to_collectors") {
                 let boot_gauge = match collectors.get_item("service_boot_duration_seconds") {
                     Ok(o) => o.to_object(py),
