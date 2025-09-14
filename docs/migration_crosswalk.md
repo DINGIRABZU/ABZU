@@ -5,12 +5,12 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 | Step | Rust crate | Remaining Python dependencies |
 |------|------------|--------------------------------|
 | Razor init | `neoabzu_memory` | `razar/boot_orchestrator.py` |
-| Crown routing | `neoabzu_crown` | `crown_router.py` |
-| Fusion invariants | `neoabzu_fusion` | `NEOABZU/neoabzu/fusion.py` |
-| Numeric embeddings | `neoabzu_numeric` | `NEOABZU/neoabzu/numeric.py` |
-| Persona context | `neoabzu_persona` | `NEOABZU/neoabzu/persona.py` |
+| Crown routing | `neoabzu_crown` | — |
+| Fusion invariants | `neoabzu_fusion` | — |
+| Numeric embeddings | `neoabzu_numeric` | — |
+| Persona context | `neoabzu_persona` | — |
 | RAG retrieval | `neoabzu_rag` | `rag/orchestrator.py` |
-| Kimicho fallback | `neoabzu_kimicho` | `kimicho.py` |
+| Kimicho fallback | `neoabzu_kimicho` | — |
 
 ### Razor init
 - [x] Port complete

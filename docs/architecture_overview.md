@@ -21,7 +21,7 @@ flowchart LR
     R --> ML[Memory Logger]
 ```
 
-- [crown_router.py](../crown_router.py)
+- [`neoabzu_crown`](../NEOABZU/crown/src/lib.rs)
 - Tests: [tests/crown/test_crown_router_memory.py](../tests/crown/test_crown_router_memory.py)
 
 **Design Evolution:** Score 2; depends on `rag`.
