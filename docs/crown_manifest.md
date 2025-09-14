@@ -50,7 +50,7 @@ For a neutral summary of the router and related modules, see [architecture_overv
 
 - `start_spiral_os.py` launches the Spiral OS initialization sequence and checks required environment configuration.
 - `init_crown_agent.py` prepares the Crown agent, servants and optional vector memory.
-- `crown_router.py` routes model and expression decisions using recent emotional context.
+- Rust crate [`neoabzu_crown`](../NEOABZU/crown/src/lib.rs) routes model and expression decisions using recent emotional context.
 - `crown_decider.py` selects language models and expressive options based on heuristic rules.
 
 ## Endpoint configuration

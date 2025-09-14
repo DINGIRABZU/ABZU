@@ -578,7 +578,7 @@ The system blueprint lists RAZAR’s auxiliary modules—adaptive orchestration,
 ## **Model & Expression Selection**
 
 - **Model choice** – **`crown_decider.recommend_llm`** analyzes emotional history and task type, tracking success rates and disabling failing models within a rotation window
-- **Expression routing** – **`crown_router.route_decision`** combines mixture‑of‑experts results with past vector-memory records to finalize TTS backend, avatar style, and aura for responses
+- **Expression routing** – **`neoabzu_crown.route_decision`** combines mixture‑of‑experts results with past vector-memory records to finalize TTS backend, avatar style, and aura for responses
 
 ## **RAZAR Handshake**
 
@@ -597,7 +597,7 @@ The system blueprint lists RAZAR’s auxiliary modules—adaptive orchestration,
 
 - **Prompt orchestration**: **`crown_prompt_orchestrator`** detects emotion, gathers recent context, generates sacred glyph metadata, updates spiral memory, and returns model responses plus analytic metadata
 - **Model & expression selection**: **`crown_decider`** tracks success rates, recommends an LLM, and chooses TTS backend/avatar style based on emotional history
-- **Routing**: **`crown_router`** blends mixture‑of‑experts results with emotion memories to finalize LLM, TTS backend, and avatar style
+- **Routing**: **`neoabzu_crown`** blends mixture‑of‑experts results with emotion memories to finalize LLM, TTS backend, and avatar style
 - **Query routing**: **`crown_query_router`** directs archetype‑tagged questions to relevant vector stores for retrieval
 
 ## **Mission**
@@ -609,7 +609,7 @@ The system blueprint lists RAZAR’s auxiliary modules—adaptive orchestration,
 
 1. **RAZAR handshake** – RAZAR sends a mission brief via **`crown_handshake`**; Crown replies with capabilities and downtime patches, logging the dialogue for audit
 2. **Initialization** – **`initialize_crown`** merges config and environment overrides, prepares vector/corpus memory, registers servant models, and checks the GLM endpoint before returning a **`GLMIntegration`** instance
-3. **Orchestration online** – Crown can now route prompts: **`crown_prompt_orchestrator`** runs emotion analysis, calls GLM or servants, logs outcomes, and updates emotional memory; **`crown_router`** chooses voice avatar/TTS settings.
+3. **Orchestration online** – Crown can now route prompts: **`crown_prompt_orchestrator`** runs emotion analysis, calls GLM or servants, logs outcomes, and updates emotional memory; **`neoabzu_crown`** chooses voice avatar/TTS settings.
 4. **Downstream activation** – Once Crown is stable, boot flow continues to INANNA core, memory layers, Bana narrator, and finally the operator interface (documented in **`docs/ignition_flow.md`**)
 
 After “awakening,” the Crown LLM continuously manages prompt routing, model health, memory updates, and ritual logging, serving as the system’s conscious coordinator.

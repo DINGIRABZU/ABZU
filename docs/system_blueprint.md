@@ -29,7 +29,7 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Document registry** tracks canonical doctrine paths and checksums in [doctrine_index.md](doctrine_index.md).
 - **Chakra heartbeat** emits layer pulse metrics; see [chakra_heartbeat.md](chakra_heartbeat.md) for pulse timing, chakra mapping, and RAZAR health check integration, and dashboards in [chakra_metrics.md](chakra_metrics.md).
 - **Per-agent avatars** render through the [avatar pipeline](avatar_pipeline.md) for synchronized sessions.
-- **Crown Router** now flows through the Rust crate [`neoabzu_crown`](../NEOABZU/crown/src/lib.rs), matching `crown_router.py` with built-in validation, orchestrator delegation, and telemetry hooks.
+- **Crown Router** now flows through the Rust crate [`neoabzu_crown`](../NEOABZU/crown/src/lib.rs), delivering built-in validation, orchestrator delegation, and telemetry hooks.
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 
@@ -303,7 +303,7 @@ sequenceDiagram
 
 RAZAR publishes component signals on a lifecycle bus. Heartbeat drifts,
 operator commands, and memory events are tagged with the originating chakra and
-routed to the agent responsible for that layer. `crown_router` fans out prompt
+routed to the agent responsible for that layer. `neoabzu_crown` fans out prompt
 and retrieval requests, while `nazarick_agents` subscribe to mission updates and
 state changes. See the [Operations Guide](operations.md#heartbeat-polling-and-event-routing)
 for runtime details.
