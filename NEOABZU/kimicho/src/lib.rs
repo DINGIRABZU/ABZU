@@ -5,6 +5,7 @@ use once_cell::sync::Lazy;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
 use std::sync::Mutex;
+use std::time::Duration;
 #[cfg(feature = "tracing")]
 use tracing::instrument;
 
@@ -28,11 +29,15 @@ pub fn init_kimicho(endpoint: Option<String>) {
 #[cfg_attr(feature = "tracing", instrument)]
 pub fn fallback_k2(prompt: &str) -> PyResult<String> {
     let endpoint = ENDPOINT.lock().expect("lock poisoned").clone();
-    let client = reqwest::blocking::Client::new();
+    let client = reqwest::blocking::Client::builder()
+        .timeout(Duration::from_secs(10))
+        .build()
+        .map_err(|e| PyRuntimeError::new_err(format!("K2 client init failed: {e}")))?;
     let resp = client
         .post(&endpoint)
         .json(&serde_json::json!({ "prompt": prompt }))
         .send()
+        .and_then(|r| r.error_for_status())
         .map_err(|e| PyRuntimeError::new_err(format!("K2 request failed: {e}")))?;
     let text = resp
         .text()
