@@ -52,6 +52,26 @@ Crown brokers operator directives to Nazarick servants, who relay telemetry back
 {{#include figures/agent_relations.mmd}}
 ```
 
+### Razor–Crown–Kimi-cho Migration
+
+```mermaid
+{{#include figures/razor_crown_kimicho_flow.mmd}}
+```
+
+*Figure: Mission traffic moves from Razor through the Rust-based Crown router to the Kimi-cho fallback, tracking migration progress.*
+
+```mermaid
+{{#include figures/rust_crate_boundaries.mmd}}
+```
+
+*Figure: Rust crate boundaries highlight how orchestration, routing, and fallback components are being isolated during the transition.*
+
+```mermaid
+{{#include figures/pyo3_interfaces.mmd}}
+```
+
+*Figure: PyO3 bridges existing Python modules to the new Rust crates, documenting the interface migration.*
+
 ### Nazarick Interface
 Operator inputs travel through Crown to reach Nazarick agents, which pair spoken output and 3D avatars for operator-facing feedback.
 - 3D avatars stream via [video_stream.py](../video_stream.py) and the [avatar pipeline](avatar_pipeline.md).

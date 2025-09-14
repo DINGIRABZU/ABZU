@@ -308,6 +308,26 @@ and retrieval requests, while `nazarick_agents` subscribe to mission updates and
 state changes. See the [Operations Guide](operations.md#heartbeat-polling-and-event-routing)
 for runtime details.
 
+### Razor–Crown–Kimi-cho Migration
+
+```mermaid
+{{#include figures/razor_crown_kimicho_flow.mmd}}
+```
+
+*Figure: Events travel from the Python-based Razor orchestrator through the Rust Crown router to the Kimi-cho fallback, showing the current migration path.*
+
+```mermaid
+{{#include figures/rust_crate_boundaries.mmd}}
+```
+
+*Figure: Rust crate boundaries delineate orchestration, routing, and fallback modules as pieces migrate from Python.*
+
+```mermaid
+{{#include figures/pyo3_interfaces.mmd}}
+```
+
+*Figure: PyO3 bindings bridge Python entry points to the new Rust crates, marking interface migration progress.*
+
 ### Session Management
 
 RAZAR tracks every operator session and binds it to the heartbeat stream. The

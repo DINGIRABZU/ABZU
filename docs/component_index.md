@@ -226,7 +226,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `crown_decider.py` | Heuristics for selecting a language model in the Crown agent. | INANNA_AI, audio, crown_config |
 | `crown_prompt_orchestrator.py` | Lightweight prompt orchestrator for the Crown console. | INANNA_AI, audio |
 | `crown_query_router.py` | Route questions to archetype-specific vector stores. | None |
-| `crown_router.py` | Thin wrapper around the Rust crown router. | neoabzu_crown |
+| `crown_router.py` | Python stub for the Rust crown router. | neoabzu_crown |
 | `data/biosignals/__init__.py` | Biosignal dataset hashes and helpers. | None |
 | `datpars/__init__.py` | Placeholder package for DATPars utilities. | None |
 | `datpars/interfaces.py` | Stub interfaces for DATPars parsers. | None |
@@ -245,6 +245,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `insight_compiler.py` | Aggregate interaction logs into an insight matrix. | jsonschema, requests |
 | `introspection_api.py` | FastAPI service exposing an endpoint to return the AST of a module. | fastapi, prometheus_fastapi_instrumentator, pydantic, src |
 | `invocation_engine.py` | Pattern-based invocation engine. | prometheus_client |
+| `kimicho.py` | Python stub for the Rust Kimicho fallback. | neoabzu_kimicho |
 | `labs/__init__.py` | Experimental modules and demonstrations. | None |
 | `labs/cortex_sigil.py` | Map sigils to actions or emotion modifiers. | None |
 | `language_model_layer.py` | Helpers for preparing language model insights for spoken summaries. | None |
@@ -331,7 +332,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `razar/__main__.py` | Command line utilities for operating the RAZAR lifecycle bus. | agents |
 | `razar/adaptive_orchestrator.py` | Adaptive orchestrator that searches for efficient boot sequences. | yaml |
 | `razar/ai_invoker.py` | High level wrapper for remote RAZAR agents. | agents, tools |
-| `razar/boot_orchestrator.py` | Simple boot orchestrator reading a JSON component configuration. | agents, neoabzu_core, opentelemetry |
+| `razar/boot_orchestrator.py` | Simple boot orchestrator reading a JSON component configuration. | agents, neoabzu_core, neoabzu_kimicho, opentelemetry |
 | `razar/bootstrap_utils.py` | Utility constants shared across RAZAR bootstrap modules. | None |
 | `razar/checkpoint_manager.py` | Checkpoint utilities for the adaptive orchestrator. | None |
 | `razar/cocreation_planner.py` | Planner that consolidates blueprints, failures, and Crown suggestions. | yaml |
@@ -365,6 +366,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `scripts/chakra_healing/sacral_gpu_recover.py` | Reset GPU VRAM or pause GPU tasks. | None |
 | `scripts/chakra_healing/solar_cpu_throttle.py` | Cap runaway CPU processes via cgroups. | None |
 | `scripts/chakra_healing/third_eye_inference_flush.py` | Clear model queue and hot-reload model. | None |
+| `scripts/check_blueprints_and_tests.py` | Fail CI when crates change without doc or test updates. | None |
 | `scripts/check_component_index_json.py` | Wrapper to validate component_index.json. | None |
 | `scripts/check_connector_index.py` | Ensure touched connectors have registry entries. | None |
 | `scripts/check_connectors.py` | Scan connectors for placeholder markers and missing MCP adoption. | None |

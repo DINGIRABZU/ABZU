@@ -371,7 +371,10 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [figures/nazarick_crown_razar_integration.mmd](figures/nazarick_crown_razar_integration.mmd) | nazarick_crown_razar_integration.mmd | - | - |
 | [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd) | nazarick_ui_pipeline.mmd | - | - |
 | [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/pyo3_interfaces.mmd](figures/pyo3_interfaces.mmd) | pyo3_interfaces.mmd | - | - |
 | [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/razor_crown_kimicho_flow.mmd](figures/razor_crown_kimicho_flow.mmd) | razor_crown_kimicho_flow.mmd | - | - |
+| [figures/rust_crate_boundaries.mmd](figures/rust_crate_boundaries.mmd) | rust_crate_boundaries.mmd | - | - |
 | [figures/system_tear_matrix.mmd](figures/system_tear_matrix.mmd) | system_tear_matrix.mmd | - | - |
 | [frontend_dependencies.md](frontend_dependencies.md) | Frontend Dependencies | This page outlines the core libraries used by the `floor_client` interface. Refer to each project's documentation for... | - |
 | [great_tomb_of_nazarick.md](great_tomb_of_nazarick.md) | Great Tomb of Nazarick | The foundational design for ABZU's servant hierarchy. For guiding principles see the [Nazarick Manifesto](nazarick_ma... | - |
