@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.98
-**Last updated:** 2025-09-09
+**Version:** v1.0.99
+**Last updated:** 2025-09-14
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -18,6 +18,14 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Per-agent avatars** stream through the [avatar pipeline](avatar_pipeline.md) to keep sessions visually aligned.
 - **Resuscitator flows** coordinate recovery steps; follow the [recovery_playbook.md](recovery_playbook.md).
 - **Signal bus** links connectors with publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
+
+### Rust Migration Rules
+
+Components ported from Python to Rust must:
+
+- Follow the [documentation protocol](documentation_protocol.md) to keep canonical references synchronized.
+- Update [doctrine_index.md](doctrine_index.md) with the component's checksum and note its place in the APSU sequence.
+- Document where the component sits in the APSU sequence and link to relevant diagrams such as [blueprint_spine.md](blueprint_spine.md) or [system_blueprint.md](system_blueprint.md#razor–crown–kimi-cho-migration).
 
 ### Environment Preparation
 Set up the local environment before running tools or tests:
