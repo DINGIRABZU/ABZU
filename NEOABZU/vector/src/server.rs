@@ -17,18 +17,34 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
     dot / (mag_a * mag_b + f32::EPSILON)
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct VectorServer {
-    store: Arc<RwLock<Vec<(String, Vec<f32>)>>>,
+    shards: Vec<Arc<RwLock<Vec<(String, Vec<f32>)>>>>,
+}
+
+impl Default for VectorServer {
+    fn default() -> Self {
+        let shard_count = std::env::var("NEOABZU_VECTOR_SHARDS")
+            .ok()
+            .and_then(|s| s.parse::<usize>().ok())
+            .filter(|n| *n > 0)
+            .unwrap_or(1);
+        let shards = (0..shard_count)
+            .map(|_| Arc::new(RwLock::new(Vec::new())))
+            .collect();
+        Self { shards }
+    }
 }
 
 impl VectorServer {
     fn load_store(&self, texts: Vec<String>) {
-        let mut store = self.store.write().unwrap();
-        for t in texts {
+        for (i, t) in texts.into_iter().enumerate() {
+            let shard = &self.shards[i % self.shards.len()];
+            let mut store = shard.write().unwrap();
             store.push((t.clone(), embed(&t)));
         }
-        gauge!("neoabzu_vector_store_size", store.len() as f64);
+        let total: usize = self.shards.iter().map(|s| s.read().unwrap().len()).sum();
+        gauge!("neoabzu_vector_store_size", total as f64);
     }
 }
 
@@ -43,31 +59,34 @@ impl VectorService for VectorServer {
         let texts: Vec<String> = serde_json::from_str(&data)
             .map_err(|e| Status::internal(format!("invalid store: {e}")))?;
         self.load_store(texts);
-        let count = self.store.read().unwrap().len();
+        let count: usize = self.shards.iter().map(|s| s.read().unwrap().len()).sum();
         Ok(Response::new(InitResponse {
             message: format!("loaded {count}"),
         }))
     }
 
-    async fn search(&self, request: Request<SearchRequest>) -> Result<Response<SearchResponse>, Status> {
+    async fn search(
+        &self,
+        request: Request<SearchRequest>,
+    ) -> Result<Response<SearchResponse>, Status> {
         counter!("neoabzu_vector_search_total", 1);
         let req = request.into_inner();
         if req.top_n == 0 {
             return Err(Status::invalid_argument("top_n must be > 0"));
         }
-        let store = self.store.read().unwrap();
-        if store.is_empty() {
+        if self.shards.iter().all(|s| s.read().unwrap().is_empty()) {
             return Err(Status::failed_precondition("store not initialized"));
         }
         let query_emb = embed(&req.text);
-        let mut results: Vec<SearchResult> = store
-            .iter()
-            .map(|(text, emb)| SearchResult {
+        let mut results: Vec<SearchResult> = Vec::new();
+        for shard in &self.shards {
+            let store = shard.read().unwrap();
+            results.extend(store.iter().map(|(text, emb)| SearchResult {
                 text: text.clone(),
                 score: cosine_similarity(&query_emb, emb),
                 embedding: emb.clone(),
-            })
-            .collect();
+            }));
+        }
         results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap());
         let top = results.into_iter().take(req.top_n as usize).collect();
         Ok(Response::new(SearchResponse { results: top }))
