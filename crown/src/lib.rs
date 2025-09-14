@@ -1,15 +1,24 @@
+use metrics::{counter, histogram};
 use neoabzu_memory::MemoryBundle;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
+use std::time::Instant;
 #[cfg(feature = "tracing")]
 use tracing::instrument;
 
 #[pyfunction]
 #[cfg_attr(feature = "tracing", instrument(skip(py)))]
 fn route_query(py: Python<'_>, question: &str) -> PyResult<Py<PyDict>> {
+    let start = Instant::now();
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
-    bundle.query(py, question)
+    let out = bundle.query(py, question);
+    counter!("neoabzu_crown_route_query_total", 1);
+    histogram!(
+        "neoabzu_crown_route_query_latency_seconds",
+        start.elapsed().as_secs_f64()
+    );
+    out
 }
 
 #[pyfunction]
@@ -21,6 +30,7 @@ fn route_decision(
     emotion_data: &PyDict,
     documents: Option<Py<PyDict>>,
 ) -> PyResult<Py<PyDict>> {
+    let start = Instant::now();
     let memory = route_query(py, text)?;
     let emotion = emotion_data
         .get_item("emotion")?
@@ -35,6 +45,11 @@ fn route_decision(
     if let Some(d) = documents {
         decision.set_item("documents", d)?;
     }
+    counter!("neoabzu_crown_route_decision_total", 1);
+    histogram!(
+        "neoabzu_crown_route_decision_latency_seconds",
+        start.elapsed().as_secs_f64()
+    );
     Ok(decision.into())
 }
 

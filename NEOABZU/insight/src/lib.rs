@@ -2,8 +2,12 @@
 //! Insight reasoning routines for NeoABZU.
 
 use std::collections::HashMap;
+use std::time::Instant;
 
+use metrics::{counter, histogram};
 use pyo3::prelude::*;
+#[cfg(feature = "tracing")]
+use tracing::instrument;
 
 /// Simple character-based embedding for a single word.
 fn word_embedding(word: &str) -> Vec<f32> {
@@ -21,7 +25,9 @@ fn word_embedding(word: &str) -> Vec<f32> {
 }
 
 /// Generate simple embeddings for words and bigrams within `text`.
+#[cfg_attr(feature = "tracing", instrument)]
 pub fn analyze(text: &str) -> HashMap<String, Vec<(String, Vec<f32>)>> {
+    let start = Instant::now();
     let words: Vec<&str> = text.split_whitespace().collect();
     let mut word_embeddings: Vec<(String, Vec<f32>)> = Vec::new();
     let mut bigram_embeddings: Vec<(String, Vec<f32>)> = Vec::new();
@@ -34,18 +40,29 @@ pub fn analyze(text: &str) -> HashMap<String, Vec<(String, Vec<f32>)>> {
         let bigram = format!("{} {}", window[0], window[1]);
         let e1 = word_embedding(window[0]);
         let e2 = word_embedding(window[1]);
-        let avg: Vec<f32> = e1.iter().zip(e2.iter()).map(|(a, b)| (a + b) / 2.0).collect();
+        let avg: Vec<f32> = e1
+            .iter()
+            .zip(e2.iter())
+            .map(|(a, b)| (a + b) / 2.0)
+            .collect();
         bigram_embeddings.push((bigram, avg));
     }
 
     let mut report = HashMap::new();
     report.insert("words".to_string(), word_embeddings);
     report.insert("bigrams".to_string(), bigram_embeddings);
+    counter!("neoabzu_insight_analyze_total", 1);
+    histogram!(
+        "neoabzu_insight_analyze_latency_seconds",
+        start.elapsed().as_secs_f64()
+    );
     report
 }
 
 /// Average embedding for the entire `text`.
+#[cfg_attr(feature = "tracing", instrument)]
 pub fn embedding(text: &str) -> Vec<f32> {
+    let start = Instant::now();
     let report = analyze(text);
     let words = report.get("words").cloned().unwrap_or_default();
     if words.is_empty() {
@@ -58,7 +75,13 @@ pub fn embedding(text: &str) -> Vec<f32> {
             sum[i] += v;
         }
     }
-    sum.iter().map(|v| v / count).collect()
+    let emb: Vec<f32> = sum.iter().map(|v| v / count).collect();
+    counter!("neoabzu_insight_embedding_total", 1);
+    histogram!(
+        "neoabzu_insight_embedding_latency_seconds",
+        start.elapsed().as_secs_f64()
+    );
+    emb
 }
 
 #[pyfunction]

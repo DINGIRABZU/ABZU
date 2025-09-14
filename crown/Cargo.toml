@@ -14,6 +14,7 @@ neoabzu-memory = { path = "../NEOABZU/memory" }
 
 tracing = { version = "0.1", optional = true }
 neoabzu-instrumentation = { path = "../instrumentation", optional = true }
+metrics = "0.21"
 
 [features]
 default = []
