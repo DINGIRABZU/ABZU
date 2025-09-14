@@ -46,3 +46,8 @@ crown> {"upload": "ack"}
 ```
 
 For connector registration requirements, consult the [Connector Registry Protocol](The_Absolute_Protocol.md#connector-registry-protocol) and the [Connector Index](connectors/CONNECTOR_INDEX.md).
+
+### Migration Crosswalk
+
+Routing migration details are maintained in the [Migration Crosswalk](migration_crosswalk.md#crown-routing).
+

@@ -75,3 +75,8 @@ from crown_query_router import route_query
 for rec in route_query("explain the ritual", "Sage"):
     print(rec["text"], rec.get("source_path"))
 ```
+
+### Migration Crosswalk
+
+RAG retrieval migration progress is tracked in the [Migration Crosswalk](migration_crosswalk.md#rag-retrieval).
+

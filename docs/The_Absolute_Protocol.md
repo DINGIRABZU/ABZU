@@ -720,6 +720,12 @@ Capture learning at the end of each milestone:
 - **Action items:** 
 ```
 
+### Migration Crosswalk References
+
+- Crown routing: [Migration Crosswalk](migration_crosswalk.md#crown-routing)
+- Numeric embeddings: [Migration Crosswalk](migration_crosswalk.md#numeric-embeddings)
+- RAG retrieval: [Migration Crosswalk](migration_crosswalk.md#rag-retrieval)
+
 ## Protocol Change Process
 Updates to this protocol follow a lightweight governance model:
 

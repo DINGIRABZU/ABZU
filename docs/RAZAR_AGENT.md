@@ -275,6 +275,10 @@ logs/mission_briefs/
 | basic_service   | `http://localhost:8000/healthz`       | `Health check failed for basic_service`   | Validate dependencies and restart the service.               |
 | complex_service | `/var/log/complex_service.log`        | `Health check failed for complex_service` | Inspect configuration or escalate repair to a remote agent. |
 
+### Migration Crosswalk
+
+Port status and legacy mappings for Razor initialization are tracked in the [Migration Crosswalk](migration_crosswalk.md#razor-init).
+
 ## Cross-links
 - [System Blueprint](system_blueprint.md)
 - [RAZAR Guide](RAZAR_GUIDE.md)

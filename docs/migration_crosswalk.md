@@ -15,42 +15,42 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 ### Razor init
 - [x] Port complete
 - [x] Required tests: `tests/agents/razar/test_crown_handshake.py`
-- [ ] Documentation references: `docs/RAZAR_AGENT.md`
-- [ ] Doctrine references: `docs/system_blueprint.md`
+- [x] Documentation references: [RAZAR Agent](RAZAR_AGENT.md#migration-crosswalk)
+- [x] Doctrine references: [System Blueprint](system_blueprint.md#razor-crown-kimi-cho-migration)
 
 ### Crown routing
 - [ ] Port complete
 - [ ] Required tests: `NEOABZU/crown/tests/route_query.rs`
-- [ ] Documentation references: `docs/CROWN_OVERVIEW.md`
-- [ ] Doctrine references: `docs/The_Absolute_Protocol.md`
+- [x] Documentation references: [CROWN Overview](CROWN_OVERVIEW.md#migration-crosswalk)
+- [x] Doctrine references: [The Absolute Protocol](The_Absolute_Protocol.md#migration-crosswalk-references)
 
 ### Fusion invariants
 - [x] Port complete
 - [x] Required tests: `NEOABZU/fusion/tests/invariants.rs`
-- [ ] Documentation references: `docs/system_blueprint.md`
-- [ ] Doctrine references: `docs/system_blueprint.md`
+- [x] Documentation references: [System Blueprint](system_blueprint.md#fusion-invariants)
+- [x] Doctrine references: [System Blueprint](system_blueprint.md#fusion-invariants)
 
 ### Numeric embeddings
 - [x] Port complete
 - [x] Required tests: `tests/test_numeric_cosine_similarity.py`
-- [ ] Documentation references: `docs/vector_memory.md`
-- [ ] Doctrine references: `docs/The_Absolute_Protocol.md`
+- [x] Documentation references: [Vector Memory](vector_memory.md#migration-crosswalk)
+- [x] Doctrine references: [The Absolute Protocol](The_Absolute_Protocol.md#migration-crosswalk-references)
 
 ### Persona context
 - [x] Port complete
 - [x] Required tests: `tests/test_personality_layers.py`
-- [ ] Documentation references: `docs/persona_api_guide.md`
-- [ ] Doctrine references: `docs/system_blueprint.md`
+- [x] Documentation references: [Persona API Guide](persona_api_guide.md#migration-crosswalk)
+- [x] Doctrine references: [System Blueprint](system_blueprint.md)
 
 ### RAG retrieval
 - [ ] Port complete
 - [ ] Required tests: `NEOABZU/rag/tests/orchestrator.rs`
-- [ ] Documentation references: `docs/rag_pipeline.md`
-- [ ] Doctrine references: `docs/The_Absolute_Protocol.md`
+- [x] Documentation references: [Spiral RAG Pipeline](rag_pipeline.md#migration-crosswalk)
+- [x] Doctrine references: [The Absolute Protocol](The_Absolute_Protocol.md#migration-crosswalk-references)
 
 ### Kimicho fallback
 - [ ] Port complete
 - [x] Required tests: `NEOABZU/kimicho/tests/razor_integration.rs`, `NEOABZU/crown/tests/kimicho_fallback.rs`
-- [ ] Documentation references: `docs/system_blueprint.md`
-- [ ] Doctrine references: `docs/system_blueprint.md`
+- [x] Documentation references: [System Blueprint](system_blueprint.md#razor-crown-kimi-cho-migration)
+- [x] Doctrine references: [System Blueprint](system_blueprint.md#razor-crown-kimi-cho-migration)
 

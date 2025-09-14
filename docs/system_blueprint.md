@@ -327,6 +327,8 @@ for runtime details.
 
 Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`) confirm that Razor falls back to Kimicho transparently when Crown routing fails.
 
+See the [Migration Crosswalk](migration_crosswalk.md#razor-init) for initialization mapping, [crown routing](migration_crosswalk.md#crown-routing), and [Kimicho fallback](migration_crosswalk.md#kimicho-fallback) status.
+
 ```mermaid
 {{#include figures/rust_crate_boundaries.mmd}}
 ```
@@ -404,6 +406,7 @@ graph TD
   - [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md) – memory layers and flows
   - [ALBEDO Layer](ALBEDO_LAYER.md) – persona modules and archetypal behavior hooks
   - [Persona API Guide](persona_api_guide.md) – conventions for persona profiles and hooks
+    - [Migration Crosswalk](migration_crosswalk.md#persona-context) – persona context porting status
   - [Nazarick Manifesto](nazarick_manifesto.md) – narrative charter governing personas
   - [Chat2DB Interface](chat2db.md) – bridge between the relational log and vector store
   - [Operator-Nazarick Bridge](operator_nazarick_bridge.md) – Vanna workflow, channel personas, and web console chat
@@ -704,8 +707,12 @@ Performance-critical services are gradually migrating to Rust crates within NEOA
 - `neoabzu_crown` – crown orchestration bindings.
 - `neoabzu_rag` – retrieval helpers.
 
+### Fusion Invariants
+
+The `neoabzu_fusion` crate merges invariants from symbolic and numeric layers to maintain triadic stack coherence. See the [Migration Crosswalk](migration_crosswalk.md#fusion-invariants) for migration details and legacy Python references.
+
 The RAG orchestrator is feature-complete, merging memory bundle and external connector results through a dedicated merge routine. The workspace mirrors existing Python APIs via PyO3 wrappers to permit side-by-side validation during the transition.
-See the [Migration Crosswalk](../NEOABZU/docs/migration_crosswalk.md) for mappings between Python subsystems and their Rust counterparts.
+See the [Migration Crosswalk](migration_crosswalk.md) for mappings between Python subsystems and their Rust counterparts.
 
 ## Chakra-Aligned Architecture
 
