@@ -112,8 +112,15 @@ viewers see the current `chakra` and `cycle_count` in each ping.
 
 `connectors/primordials_api.py` (v0.1.1) posts metrics to the external
 Primordials service. Set `PRIMORDIALS_API_URL` to the service endpoint and call
-`send_metrics` with heartbeat fields. The connector remains HTTP-only because
-the Primordials service does not implement MCP.
+`send_metrics` with heartbeat fields. When `ABZU_USE_MCP=1`,
+`connectors/primordials_mcp.py` (v0.1.0) registers context and forwards metrics
+through the MCP gateway using `/primordials/metrics`.
+
+## Narrative API
+
+`connectors/narrative_mcp.py` (v0.1.0) logs stories to the narrative service via
+the MCP gateway. Use `handshake` to register context and `log_story` to persist
+text through `/narrative/story`.
 
 ## MCP Gateway Bridge
 

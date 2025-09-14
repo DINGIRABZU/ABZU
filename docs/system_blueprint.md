@@ -60,8 +60,8 @@ closing the loop and keeping the operator at the center of guidance.
 
 Narratives emitted by Bana are stored in the spiral multi‑layer memory and
 summary metrics are reported back to the Primordials service through
-`primordials_api`, ensuring upstream models receive continuous quality
-feedback.
+`primordials_api` or its MCP wrapper `primordials_mcp`, ensuring upstream
+models receive continuous quality feedback.
 
 ### Operator ↔ RAZAR/Crown Flow
 
@@ -135,9 +135,8 @@ Internal service connectors are being refactored to use the **Model Context
 Protocol (MCP)**. MCP provides a shared handshake, authentication, and logging
 layer so operators can audit service-to-service calls.
 
-- **MCP connectors** – `operator_api`, `operator_upload`, and `crown_handshake`
-  already support MCP. `primordials_api` and `narrative_api` are queued for
-  migration.
+- **MCP connectors** – `operator_api`, `operator_upload`, `crown_handshake`,
+  `primordials_mcp`, and `narrative_mcp` expose unified MCP surfaces.
 - **External APIs** – `telegram_bot`, `open_web_ui`, and the browser-oriented
   `webrtc` bridge depend on standard HTTP and will remain outside MCP.
 
