@@ -25,6 +25,7 @@ import ast
 import json
 import re
 from pathlib import Path
+import tomllib
 
 
 RE_VERSION = re.compile(r"__version__\s*=\s*['\"]([^'\"]+)['\"]")
@@ -146,6 +147,54 @@ def main() -> None:
                 "chakra": chakra,
                 "type": comp_type,
                 "path": rel.as_posix(),
+                "version": version,
+                "dependencies": dependencies,
+                "tests": tests,
+                "metrics": {},
+                "status": status,
+                "issues": issues,
+                "adr": None,
+            }
+        )
+
+    for cargo_file in repo_root.rglob("Cargo.toml"):
+        try:
+            cargo_data = tomllib.loads(cargo_file.read_text())
+        except Exception:  # pragma: no cover - unreadable file
+            continue
+        package = cargo_data.get("package")
+        if not package:
+            continue
+        rel_dir = cargo_file.parent.relative_to(repo_root)
+        if any(part.startswith(".") for part in rel_dir.parts):
+            continue
+        if "target" in rel_dir.parts or "node_modules" in rel_dir.parts:
+            continue
+        crate_id = package.get("name", rel_dir.name)
+        version = package.get("version", "0.0.0")
+        src_file = cargo_file.parent / "src" / "lib.rs"
+        try:
+            text = src_file.read_text()
+        except Exception:
+            text = ""
+        dependencies = sorted(cargo_data.get("dependencies", {}).keys())
+        tests_dir = cargo_file.parent / "tests"
+        tests = (
+            [p.relative_to(repo_root).as_posix() for p in tests_dir.rglob("*.rs")]
+            if tests_dir.exists()
+            else []
+        )
+        status, issues = determine_status(src_file, text, tests)
+        components.append(
+            {
+                "id": crate_id,
+                "chakra": detect_chakra(rel_dir),
+                "type": "rust",
+                "path": (
+                    src_file.relative_to(repo_root).as_posix()
+                    if src_file.exists()
+                    else rel_dir.as_posix()
+                ),
                 "version": version,
                 "dependencies": dependencies,
                 "tests": tests,
