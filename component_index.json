@@ -661,41 +661,6 @@
         "tests/test_emotion_classifier.py",
         "tests/test_qnl_engine.py",
         "tests/test_rag_parser.py",
-        "tests/test_spiral_rag.py",
-        "tests/test_synthetic_stego.py",
-        "tests/tools/test_bot_mcp.py"
-      ],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "active",
-      "issues": "No known issues",
-      "adr": null
-    },
-    {
-      "id": "base",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "src/media/audio/base.py",
-      "version": "0.1.0",
-      "dependencies": [
-        "__future__",
-        "abc",
-        "base"
-      ],
-      "tests": [
-        "tests/agents/test_razar_cli.py",
-        "tests/chakra_healing/common.py",
-        "tests/connectors/test_connector_heartbeat.py",
-        "tests/crown/server/test_openwebui_bridge.py",
-        "tests/fixtures/razar_base_module.py",
-        "tests/integration/test_full_flows.py",
-        "tests/memory/test_sharded_memory_store.py",
-        "tests/test_audio_video_sync_profile.py",
-        "tests/test_emotion_classifier.py",
-        "tests/test_qnl_engine.py",
-        "tests/test_rag_parser.py",
-        "tests/test_spiral_rag.py",
         "tests/test_synthetic_stego.py",
         "tests/tools/test_bot_mcp.py"
       ],
@@ -729,7 +694,39 @@
         "tests/test_emotion_classifier.py",
         "tests/test_qnl_engine.py",
         "tests/test_rag_parser.py",
-        "tests/test_spiral_rag.py",
+        "tests/test_synthetic_stego.py",
+        "tests/tools/test_bot_mcp.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "base",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "src/media/audio/base.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "abc",
+        "base"
+      ],
+      "tests": [
+        "tests/agents/test_razar_cli.py",
+        "tests/chakra_healing/common.py",
+        "tests/connectors/test_connector_heartbeat.py",
+        "tests/crown/server/test_openwebui_bridge.py",
+        "tests/fixtures/razar_base_module.py",
+        "tests/integration/test_full_flows.py",
+        "tests/memory/test_sharded_memory_store.py",
+        "tests/test_audio_video_sync_profile.py",
+        "tests/test_emotion_classifier.py",
+        "tests/test_qnl_engine.py",
+        "tests/test_rag_parser.py",
         "tests/test_synthetic_stego.py",
         "tests/tools/test_bot_mcp.py"
       ],
@@ -844,6 +841,7 @@
         "crown_handshake",
         "dataclasses",
         "json",
+        "kimicho",
         "logging",
         "memory",
         "neoabzu_core",
@@ -1527,6 +1525,7 @@
         "re",
         "subprocess",
         "sys",
+        "tomllib",
         "typing"
       ],
       "tests": [],
@@ -1574,6 +1573,7 @@
       ],
       "tests": [
         "tests/communication/test_mcp_fallback.py",
+        "tests/communication/test_mcp_wrappers.py",
         "tests/conftest.py",
         "tests/connectors/test_avatar_broadcast.py",
         "tests/connectors/test_connector_heartbeat.py",
@@ -1954,46 +1954,6 @@
       },
       "status": "active",
       "issues": "No known issues",
-      "adr": null
-    },
-    {
-      "id": "crown_query_router",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "crown_query_router.py",
-      "version": "0.1.0",
-      "dependencies": [
-        "__future__",
-        "rag",
-        "typing"
-      ],
-      "tests": [
-        "tests/crown/test_query_router.py",
-        "tests/integration/test_full_flows.py",
-        "tests/test_spiral_rag.py"
-      ],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "active",
-      "issues": "No known issues",
-      "adr": null
-    },
-    {
-      "id": "crown_router",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "crown_router.py",
-      "version": "0.1.1",
-      "dependencies": [
-        "neoabzu_crown"
-      ],
-      "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "experimental",
-      "issues": "No tests found",
       "adr": null
     },
     {
@@ -2509,6 +2469,24 @@
       "adr": null
     },
     {
+      "id": "fusion",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "fusion/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-instrumentation",
+        "tracing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
       "id": "gateway",
       "chakra": "unknown",
       "type": "module",
@@ -2516,14 +2494,17 @@
       "version": "0.1.0",
       "dependencies": [
         "__future__",
+        "connectors",
         "invocation_engine",
         "mcp",
+        "narrative_api",
         "pathlib",
         "starlette",
         "tomllib",
         "typing"
       ],
       "tests": [
+        "tests/communication/test_mcp_wrappers.py",
         "tests/test_gateway.py",
         "tests/test_orchestrator_routing.py",
         "tests/test_symbolic_parser.py",
@@ -2566,12 +2547,15 @@
       "id": "generation",
       "chakra": "unknown",
       "type": "module",
-      "path": "src/media/audio/generation.py",
+      "path": "src/media/avatar/generation.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
-        "pydub",
-        "typing"
+        "audio",
+        "lwm",
+        "pathlib",
+        "typing",
+        "video"
       ],
       "tests": [
         "tests/agents/test_bana.py",
@@ -2595,15 +2579,12 @@
       "id": "generation",
       "chakra": "unknown",
       "type": "module",
-      "path": "src/media/avatar/generation.py",
+      "path": "src/media/audio/generation.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
-        "audio",
-        "lwm",
-        "pathlib",
-        "typing",
-        "video"
+        "pydub",
+        "typing"
       ],
       "tests": [
         "tests/agents/test_bana.py",
@@ -2708,6 +2689,7 @@
         "__future__",
         "json",
         "logging",
+        "neoabzu_chakrapulse",
         "pathlib",
         "subprocess",
         "time",
@@ -2828,7 +2810,7 @@
       "version": "0.0.2",
       "dependencies": [
         "__future__",
-        "agents",
+        "bana",
         "bio_adaptive_narrator",
         "typing"
       ],
@@ -3009,6 +2991,23 @@
       },
       "status": "experimental",
       "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "k2coder",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/k2coder/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [],
+      "tests": [
+        "NEOABZU/k2coder/tests/fallback.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
       "adr": null
     },
     {
@@ -3645,6 +3644,39 @@
       "adr": null
     },
     {
+      "id": "narrative",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "bana/narrative.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "agents",
+        "event_structurizer",
+        "memory",
+        "typing"
+      ],
+      "tests": [
+        "tests/agents/test_bana_narrator.py",
+        "tests/agents/test_narrative_scribe.py",
+        "tests/agents/test_story_adapter.py",
+        "tests/conftest.py",
+        "tests/integration/test_full_flows.py",
+        "tests/narrative/test_self_heal_logging.py",
+        "tests/narrative/test_story_lookup.py",
+        "tests/narrative_engine/test_ingestion_to_mistral_output.py",
+        "tests/test_bana_narrative_engine.py",
+        "tests/test_memory_bus.py",
+        "tests/test_memory_snapshot.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "narrative_api",
       "chakra": "unknown",
       "type": "module",
@@ -3661,6 +3693,7 @@
         "typing"
       ],
       "tests": [
+        "tests/communication/test_mcp_wrappers.py",
         "tests/narrative_engine/test_ingest_persist_retrieve.py",
         "tests/test_metrics_endpoints.py",
         "tests/test_prometheus_metrics.py"
@@ -3683,10 +3716,12 @@
         "json",
         "memory",
         "prometheus_client",
+        "pydantic",
         "time",
         "typing"
       ],
       "tests": [
+        "tests/communication/test_mcp_wrappers.py",
         "tests/narrative_engine/test_ingest_persist_retrieve.py",
         "tests/test_metrics_endpoints.py",
         "tests/test_prometheus_metrics.py"
@@ -3791,6 +3826,28 @@
       "adr": null
     },
     {
+      "id": "narrative_mcp",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/narrative_mcp.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "httpx",
+        "os",
+        "typing"
+      ],
+      "tests": [
+        "tests/communication/test_mcp_wrappers.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "narrative_scribe",
       "chakra": "unknown",
       "type": "agent",
@@ -3877,6 +3934,379 @@
         "httpx",
         "os",
         "typing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-chakrapulse",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/chakrapulse/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "crossbeam-channel",
+        "once_cell",
+        "pyo3"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-core",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/core/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-narrative",
+        "opentelemetry",
+        "pyo3",
+        "ron",
+        "serde",
+        "tracing",
+        "tracing-opentelemetry"
+      ],
+      "tests": [
+        "NEOABZU/core/tests/hero_journey.rs",
+        "NEOABZU/core/tests/ceremony.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-crown",
+      "chakra": "crown",
+      "type": "rust",
+      "path": "crown/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "metrics",
+        "neoabzu-instrumentation",
+        "neoabzu-memory",
+        "pyo3",
+        "tracing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-crown",
+      "chakra": "crown",
+      "type": "rust",
+      "path": "NEOABZU/crown/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-chakrapulse",
+        "neoabzu-core",
+        "neoabzu-insight",
+        "neoabzu-memory",
+        "neoabzu-rag",
+        "pyo3"
+      ],
+      "tests": [
+        "NEOABZU/crown/tests/kimicho_fallback.rs",
+        "NEOABZU/crown/tests/route_decision.rs",
+        "NEOABZU/crown/tests/memory_query.rs",
+        "NEOABZU/crown/tests/razor_integration.rs",
+        "NEOABZU/crown/tests/route_query.rs",
+        "NEOABZU/crown/tests/insight.rs",
+        "NEOABZU/crown/tests/legacy_parity.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-fusion",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/fusion/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "pyo3",
+        "tracing"
+      ],
+      "tests": [
+        "NEOABZU/fusion/tests/invariants.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-insight",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/insight/src/lib.rs",
+      "version": "0.1.1",
+      "dependencies": [
+        "metrics",
+        "pyo3",
+        "tracing"
+      ],
+      "tests": [
+        "NEOABZU/insight/tests/integration.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-instrumentation",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "instrumentation/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "opentelemetry",
+        "opentelemetry_sdk",
+        "tracing",
+        "tracing-opentelemetry",
+        "tracing-subscriber"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-kimicho",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/kimicho/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-instrumentation",
+        "once_cell",
+        "pyo3",
+        "reqwest",
+        "serde_json",
+        "tracing"
+      ],
+      "tests": [
+        "NEOABZU/kimicho/tests/razor_integration.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-memory",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/memory/src/lib.rs",
+      "version": "0.2.0",
+      "dependencies": [
+        "once_cell",
+        "opentelemetry",
+        "pyo3",
+        "tracing",
+        "tracing-opentelemetry"
+      ],
+      "tests": [
+        "NEOABZU/memory/tests/query.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-narrative",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/narrative/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "tracing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-numeric",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/numeric/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "ndarray",
+        "numpy",
+        "pyo3"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-persona",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/persona/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "once_cell",
+        "pyo3",
+        "serde",
+        "serde_yaml"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-persona-layers",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "persona/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-instrumentation",
+        "pyo3",
+        "tracing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-rag",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "rag/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "metrics",
+        "neoabzu-instrumentation",
+        "neoabzu-memory",
+        "pyo3",
+        "tracing"
+      ],
+      "tests": [],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "experimental",
+      "issues": "No tests found",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-rag",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/rag/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-memory",
+        "opentelemetry",
+        "pyo3",
+        "tracing",
+        "tracing-opentelemetry"
+      ],
+      "tests": [
+        "NEOABZU/rag/tests/orchestrator.rs",
+        "NEOABZU/rag/tests/merge.rs",
+        "NEOABZU/rag/tests/retrieval.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-vector",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/vector/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "metrics",
+        "opentelemetry",
+        "prost",
+        "pyo3",
+        "serde_json",
+        "tokio",
+        "tonic",
+        "tracing",
+        "tracing-opentelemetry"
+      ],
+      "tests": [
+        "NEOABZU/vector/tests/grpc.rs"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "numeric",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "numeric/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "nalgebra",
+        "neoabzu-instrumentation",
+        "pyo3",
+        "tracing"
       ],
       "tests": [],
       "metrics": {
@@ -4040,12 +4470,13 @@
       "id": "playback",
       "chakra": "unknown",
       "type": "module",
-      "path": "src/media/audio/playback.py",
+      "path": "src/media/avatar/playback.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
-        "ffmpeg",
-        "pathlib"
+        "audio",
+        "pathlib",
+        "video"
       ],
       "tests": [
         "tests/test_media_avatar.py",
@@ -4062,13 +4493,12 @@
       "id": "playback",
       "chakra": "unknown",
       "type": "module",
-      "path": "src/media/avatar/playback.py",
+      "path": "src/media/audio/playback.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
-        "audio",
-        "pathlib",
-        "video"
+        "ffmpeg",
+        "pathlib"
       ],
       "tests": [
         "tests/test_media_avatar.py",
@@ -4137,7 +4567,30 @@
         "urllib"
       ],
       "tests": [
-        "tests/communication/test_mcp_fallback.py"
+        "tests/communication/test_mcp_fallback.py",
+        "tests/communication/test_mcp_wrappers.py"
+      ],
+      "metrics": {
+        "coverage": 1.0
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "primordials_mcp",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/primordials_mcp.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "httpx",
+        "os",
+        "typing"
+      ],
+      "tests": [
+        "tests/communication/test_mcp_wrappers.py"
       ],
       "metrics": {
         "coverage": 1.0
@@ -5243,6 +5696,7 @@
         "tests/agents/razar/test_runtime_manager.py",
         "tests/agents/razar/test_servant_launch.py",
         "tests/communication/test_mcp_fallback.py",
+        "tests/communication/test_mcp_wrappers.py",
         "tests/conftest.py",
         "tests/crown/server/test_openwebui_bridge.py",
         "tests/crown/server/test_server.py",

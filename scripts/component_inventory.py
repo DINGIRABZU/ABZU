@@ -27,6 +27,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import Iterator
+import tomllib
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STATUS_MD = REPO_ROOT / "docs" / "component_status.md"
@@ -39,7 +40,7 @@ CONNECTOR_INDEX = REPO_ROOT / "docs" / "connectors" / "CONNECTOR_INDEX.md"
 
 @dataclass
 class ComponentInfo:
-    """Basic metadata for a Python component."""
+    """Basic metadata for a source component."""
 
     path: Path
     description: str
@@ -49,6 +50,7 @@ class ComponentInfo:
     has_tests: bool
     version: str
     last_update: str
+    language: str
 
     @property
     def score(self) -> int:
@@ -56,7 +58,7 @@ class ComponentInfo:
         score = 0
         if self.description:
             score += 1
-        if self.has_type_hints:
+        if self.language == "Python" and self.has_type_hints:
             score += 1
         if self.has_tests:
             score += 1
@@ -69,6 +71,20 @@ def iter_py_files() -> Iterator[Path]:
     """Yield all Python files in the repository."""
     for path in REPO_ROOT.rglob("*.py"):
         if ".git" in path.parts:
+            continue
+        yield path
+
+
+def iter_cargo_files() -> Iterator[Path]:
+    """Yield Cargo manifests for Rust crates."""
+    for path in REPO_ROOT.rglob("Cargo.toml"):
+        if ".git" in path.parts:
+            continue
+        try:
+            data = tomllib.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if "package" not in data:
             continue
         yield path
 
@@ -146,7 +162,7 @@ def analyse_file(
     internal: set[str],
     stdlib: set[str],
 ) -> ComponentInfo:
-    """Analyze ``path`` and return component metadata."""
+    """Analyze a Python file and return component metadata."""
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
     except Exception:
@@ -168,6 +184,32 @@ def analyse_file(
         has_tests=has_tests_for(path, test_files),
         version=version,
         last_update=git_last_update(path),
+        language="Python",
+    )
+    return info
+
+
+def analyse_rust_crate(path: Path) -> ComponentInfo:
+    """Analyze a Rust crate and return component metadata."""
+    data = tomllib.loads(path.read_text(encoding="utf-8"))
+    package = data.get("package", {})
+    version = package.get("version", "0.0.0")
+    description = package.get("description", "")
+    deps = set(data.get("dependencies", {}).keys())
+    crate_dir = path.parent
+    tests_dir = crate_dir / "tests"
+    has_tests = any(tests_dir.glob("*.rs"))
+    src_path = crate_dir / "src" / "lib.rs"
+    info = ComponentInfo(
+        path=src_path if src_path.exists() else crate_dir,
+        description=description,
+        dependencies=deps,
+        optional_dependencies=set(),
+        has_type_hints=False,
+        has_tests=has_tests,
+        version=version,
+        last_update=git_last_update(src_path if src_path.exists() else path),
+        language="Rust",
     )
     return info
 
@@ -205,17 +247,19 @@ def write_status_markdown(rows: list[ComponentInfo]) -> None:
 def write_index_markdown(rows: list[ComponentInfo]) -> None:
     """Write an index of components and their dependencies."""
     header = (
-        "# Component Index\n\nGenerated automatically. Lists each Python "
+        "# Component Index\n\nGenerated automatically. Lists each Python and Rust "
         "file with its description and external dependencies.\n\n"
     )
-    table_header = "| File | Description | Dependencies |\n| --- | --- | --- |\n"
+    table_header = (
+        "| File | Language | Description | Dependencies |\n| --- | --- | --- | --- |\n"
+    )
     lines = [header, table_header]
     for row in rows:
         rel = row.path.relative_to(REPO_ROOT).as_posix()
         desc = row.description or "No description"
         deps = sorted(row.dependencies | row.optional_dependencies)
         dep_str = ", ".join(deps) if deps else "None"
-        lines.append(f"| `{rel}` | {desc} | {dep_str} |\n")
+        lines.append(f"| `{rel}` | {row.language} | {desc} | {dep_str} |\n")
     INDEX_MD.write_text("".join(lines), encoding="utf-8")
 
 
@@ -353,11 +397,13 @@ def verify_connector_registry(index_path: Path) -> None:
 def main() -> None:
     """Generate component inventory artifacts."""
     py_files = list(iter_py_files())
+    cargo_files = list(iter_cargo_files())
     test_dir = REPO_ROOT / "tests"
     test_files = list(test_dir.rglob("test_*.py")) if test_dir.exists() else []
     internal = {p.stem for p in py_files}
     stdlib = set(getattr(sys, "stdlib_module_names", set()))
     rows = [analyse_file(p, test_files, internal, stdlib) for p in py_files]
+    rows.extend(analyse_rust_crate(p) for p in cargo_files)
     rows.sort(key=lambda r: r.path.relative_to(REPO_ROOT).as_posix())
     write_status_markdown(rows)
     write_index_markdown(rows)
