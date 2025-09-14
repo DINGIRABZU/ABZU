@@ -2,6 +2,10 @@
 
 Retrieval-augmented generation components for Neo-ABZU.
 
+The Rust module mirrors the Python `rag.orchestrator` API.  `retrieve_top`
+performs hybrid retrieval across in-memory context and any external
+connectors, yielding a ranked set of results.
+
 ## Usage
 
 - **Run tests** with default features (links against `libpython` and enables `pyo3/auto-initialize`):

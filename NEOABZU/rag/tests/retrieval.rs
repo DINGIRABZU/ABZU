@@ -1,6 +1,6 @@
 use neoabzu_rag::retrieve_top;
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyModule};
+use pyo3::types::{PyDict, PyList, PyModule};
 
 fn setup(py: Python<'_>) {
     let sys = py.import("sys").unwrap();
@@ -27,15 +27,37 @@ def query_vectors(*a, **k):
 fn ranks_vectors() {
     Python::with_gil(|py| {
         setup(py);
-        let res = retrieve_top(py, "abc", 1).unwrap();
+        let res = retrieve_top(py, "abc", 1, None).unwrap();
         let first: &PyDict = res[0].as_ref(py);
-        let text: String = first
-            .get_item("text")
-            .unwrap()
-            .unwrap()
-            .extract()
-            .unwrap();
+        let text: String = first.get_item("text").unwrap().unwrap().extract().unwrap();
         assert_eq!(text, "abc");
     });
 }
 
+#[test]
+fn merges_connector_results() {
+    Python::with_gil(|py| {
+        setup(py);
+        let conn_code = r#"
+def fetch(q):
+    return [{'text': 'external'}]
+"#;
+        let conn_mod = PyModule::from_code(py, conn_code, "", "connector").unwrap();
+        let fetch = conn_mod.getattr("fetch").unwrap();
+        let connectors = PyList::new(py, [fetch]);
+        let res = retrieve_top(py, "abc", 3, Some(connectors)).unwrap();
+        let texts: Vec<String> = res
+            .iter()
+            .map(|d| {
+                d.as_ref(py)
+                    .get_item("text")
+                    .unwrap()
+                    .unwrap()
+                    .extract()
+                    .unwrap()
+            })
+            .collect();
+        assert!(texts.contains(&"external".to_string()));
+        assert!(texts.contains(&"abc".to_string()));
+    });
+}
