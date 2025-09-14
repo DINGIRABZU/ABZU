@@ -237,10 +237,38 @@ fn query_memory(py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {
 
 #[pymodule]
 fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    let start = Instant::now();
     m.add_function(wrap_pyfunction!(route_query, m)?)?;
     m.add_function(wrap_pyfunction!(route_decision, m)?)?;
     m.add_function(wrap_pyfunction!(route_inevitability, m)?)?;
     m.add_function(wrap_pyfunction!(query_memory, m)?)?;
     PyModule::import(py, "neoabzu_memory")?;
+    let duration = start.elapsed().as_secs_f64();
+    if let Ok(prometheus) = PyModule::import(py, "prometheus_client") {
+        if let (Ok(registry), Ok(gauge_cls)) = (
+            prometheus.getattr("REGISTRY"),
+            prometheus.getattr("Gauge"),
+        ) {
+            if let Ok(collectors) = registry.getattr("_names_to_collectors") {
+                let boot_gauge = match collectors.get_item("service_boot_duration_seconds") {
+                    Ok(o) => o.to_object(py),
+                    Err(_) => gauge_cls
+                        .call(
+                            (
+                                "service_boot_duration_seconds",
+                                "Service boot duration in seconds",
+                                vec!["service"],
+                            ),
+                            None,
+                        )
+                        .unwrap(),
+                };
+                let _ = boot_gauge
+                    .as_ref(py)
+                    .call_method("labels", ("crown",), None)
+                    .and_then(|l| l.call_method("set", (duration,), None));
+            }
+        }
+    }
     Ok(())
 }
