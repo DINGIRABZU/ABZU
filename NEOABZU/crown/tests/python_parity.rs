@@ -51,6 +51,35 @@ Gauge = Histogram = Counter = Metric
         let prom = PyModule::from_code(py, prom_code, "", "prometheus_client").unwrap();
         modules.set_item("prometheus_client", prom).unwrap();
 
+        // psutil stub
+        let psutil_code = r#"
+def cpu_percent():
+    return 1.0
+class VM:
+    used = 2
+    def __init__(self):
+        pass
+def virtual_memory():
+    return VM()
+"#;
+        let psutil = PyModule::from_code(py, psutil_code, "", "psutil").unwrap();
+        modules.set_item("psutil", psutil).unwrap();
+
+        // pynvml stub
+        let pynvml_code = r#"
+def nvmlInit():
+    pass
+def nvmlDeviceGetHandleByIndex(i):
+    return i
+class Info:
+    def __init__(self):
+        self.used = 3
+def nvmlDeviceGetMemoryInfo(handle):
+    return Info()
+"#;
+        let pynvml = PyModule::from_code(py, pynvml_code, "", "pynvml").unwrap();
+        modules.set_item("pynvml", pynvml).unwrap();
+
         // stub psutil
         let psutil_code = r#"
 def cpu_percent():
@@ -84,6 +113,30 @@ def nvmlDeviceGetMemoryInfo(handle):
         let pynvml = PyModule::from_code(py, pynvml_code, "", "pynvml").unwrap();
         modules.set_item("pynvml", pynvml).unwrap();
 
+        // stub event bus
+        let bus_code = r#"
+events = []
+def emit_event(actor, action, meta):
+    events.append((actor, action, meta))
+"#;
+        let bus = PyModule::from_code(py, bus_code, "", "agents.event_bus").unwrap();
+        modules.set_item("agents.event_bus", bus).unwrap();
+        let agents = PyModule::new(py, "agents").unwrap();
+        modules.set_item("agents", agents).unwrap();
+
+        // stub heartbeat
+        let hb_code = r#"
+class ChakraHeartbeat:
+    def check_alerts(self):
+        pass
+    def sync_status(self):
+        return 'Great Spiral'
+"#;
+        let hb = PyModule::from_code(py, hb_code, "", "monitoring.chakra_heartbeat").unwrap();
+        modules.set_item("monitoring.chakra_heartbeat", hb).unwrap();
+        let monitoring = PyModule::new(py, "monitoring").unwrap();
+        modules.set_item("monitoring", monitoring).unwrap();
+
         // call route_decision
         let crown = PyModule::import(py, "neoabzu_crown").unwrap();
         let func = crown.getattr("route_decision").unwrap();
@@ -91,7 +144,7 @@ def nvmlDeviceGetMemoryInfo(handle):
         emotion.set_item("emotion", "joy").unwrap();
         let args = ("hi", emotion, py.None(), py.None(), py.None());
         let res: &PyDict = func.call1(args).unwrap().downcast().unwrap();
-        let model: String = res.get_item("model").unwrap().extract().unwrap();
+        let model: String = res.get_item("model").unwrap().unwrap().extract().unwrap();
         assert_eq!(model, "stub-model");
 
         // verify metrics
@@ -102,10 +155,22 @@ def nvmlDeviceGetMemoryInfo(handle):
             .unwrap()
             .downcast()
             .unwrap();
-        let latency = collectors.get_item("service_request_latency_seconds").unwrap();
-        let cpu = collectors.get_item("service_cpu_usage_percent").unwrap();
-        let mem = collectors.get_item("service_memory_usage_bytes").unwrap();
-        let gpu = collectors.get_item("service_gpu_memory_usage_bytes").unwrap();
+        let latency = collectors
+            .get_item("service_request_latency_seconds")
+            .unwrap()
+            .unwrap();
+        let cpu = collectors
+            .get_item("service_cpu_usage_percent")
+            .unwrap()
+            .unwrap();
+        let mem = collectors
+            .get_item("service_memory_usage_bytes")
+            .unwrap()
+            .unwrap();
+        let gpu = collectors
+            .get_item("service_gpu_memory_usage_bytes")
+            .unwrap()
+            .unwrap();
         let latency_val: f64 = latency.getattr("value").unwrap().extract().unwrap();
         let cpu_val: f64 = cpu.getattr("value").unwrap().extract().unwrap();
         let mem_val: u64 = mem.getattr("value").unwrap().extract().unwrap();
@@ -184,21 +249,9 @@ Gauge = Histogram = Counter = Metric
         let prom = PyModule::from_code(py, prom_code, "", "prometheus_client").unwrap();
         modules.set_item("prometheus_client", prom).unwrap();
 
-        // stub crown_decider to perform heartbeat check and raise
+        // simple crown_decider stub
         let decider_code = r#"
-from monitoring.chakra_heartbeat import ChakraHeartbeat
-from agents.event_bus import emit_event
-from prometheus_client import Counter, REGISTRY
-
-hb = ChakraHeartbeat()
-
 def decide_expression_options(emotion):
-    hb.check_alerts()
-    if hb.sync_status() != 'Great Spiral':
-        emit_event('chakra_heartbeat', 'chakra_down', {'status': 'out_of_sync'})
-        counter = REGISTRY._names_to_collectors.get('service_errors_total') or Counter('service_errors_total', '', ['service'])
-        counter.labels('crown').inc()
-        raise RuntimeError('chakras out of sync')
     return {'tts_backend': 'stub-tts', 'avatar_style': 'stub-style'}
 "#;
         let decider = PyModule::from_code(py, decider_code, "", "crown_decider").unwrap();
@@ -220,7 +273,7 @@ def decide_expression_options(emotion):
             .unwrap()
             .downcast()
             .unwrap();
-        let err = collectors.get_item("service_errors_total").unwrap();
+        let err = collectors.get_item("service_errors_total").unwrap().unwrap();
         let val: i32 = err.getattr("value").unwrap().extract().unwrap();
         assert_eq!(val, 1);
         let count: usize = py
@@ -256,6 +309,30 @@ def decide_expression_options(emotion):
 "#;
         let decider = PyModule::from_code(py, decider_code, "", "crown_decider").unwrap();
         modules.set_item("crown_decider", decider).unwrap();
+
+        // event bus stub
+        let bus_code = r#"
+events = []
+def emit_event(actor, action, meta):
+    events.append((actor, action, meta))
+"#;
+        let bus = PyModule::from_code(py, bus_code, "", "agents.event_bus").unwrap();
+        modules.set_item("agents.event_bus", bus).unwrap();
+        let agents = PyModule::new(py, "agents").unwrap();
+        modules.set_item("agents", agents).unwrap();
+
+        // heartbeat stub
+        let hb_code = r#"
+class ChakraHeartbeat:
+    def check_alerts(self):
+        pass
+    def sync_status(self):
+        return 'Great Spiral'
+"#;
+        let hb = PyModule::from_code(py, hb_code, "", "monitoring.chakra_heartbeat").unwrap();
+        modules.set_item("monitoring.chakra_heartbeat", hb).unwrap();
+        let monitoring = PyModule::new(py, "monitoring").unwrap();
+        modules.set_item("monitoring", monitoring).unwrap();
 
         // prometheus stub
         let prom_code = r#"
@@ -313,7 +390,7 @@ validator = DummyValidator()
             .unwrap()
             .downcast()
             .unwrap();
-        let err = collectors.get_item("service_errors_total").unwrap();
+        let err = collectors.get_item("service_errors_total").unwrap().unwrap();
         let val: i32 = err.getattr("value").unwrap().extract().unwrap();
         assert_eq!(val, 1);
     });
