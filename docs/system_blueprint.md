@@ -1040,8 +1040,9 @@ Emerging modules include:
   [Scribe Narrative Engine](../NEOABZU/docs/Scribe_narrative_engine.md).
 - `numeric` – exposes PCA utilities through PyO3 bindings.
 
-`narrative` and `numeric` offer optional `tracing` and `opentelemetry`
-features that emit spans for diagnostics when enabled.
+`narrative`, `numeric`, `crown`, and `kimicho` expose optional `tracing`
+features that emit spans for diagnostics when enabled. `narrative` and
+`numeric` also integrate `opentelemetry` for external collectors.
 
 - Marks in‑development components with a warning and delays their startup
   until explicitly enabled.

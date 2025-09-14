@@ -13,3 +13,6 @@ This crosswalk outlines how memory layers connect to Crown during startup.
 - Integration tests validate the broadcast and the query path.
 - The Rust module also handles Crown routing formerly in `crown_router.py`, adding validation, orchestrator delegation, and telemetry hooks.
 - `neoabzu_kimicho` replaces the legacy `kimicho.py` fallback with a Rust client exposing `init_kimicho` and `fallback_k2`.
+- Both `neoabzu_crown` and `neoabzu_kimicho` expose an optional `tracing` feature
+  to emit spans through `neoabzu_instrumentation`.
+- Integration tests cover Razor→Crown and Razor→Kimicho paths.

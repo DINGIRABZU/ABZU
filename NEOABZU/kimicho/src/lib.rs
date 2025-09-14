@@ -5,6 +5,8 @@ use once_cell::sync::Lazy;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
 use std::sync::Mutex;
+#[cfg(feature = "tracing")]
+use tracing::instrument;
 
 static ENDPOINT: Lazy<Mutex<String>> = Lazy::new(|| {
     Mutex::new(
@@ -14,6 +16,7 @@ static ENDPOINT: Lazy<Mutex<String>> = Lazy::new(|| {
 
 /// Initialize Kimicho with an optional endpoint override.
 #[pyfunction]
+#[cfg_attr(feature = "tracing", instrument(skip(endpoint)))]
 pub fn init_kimicho(endpoint: Option<String>) {
     if let Some(ep) = endpoint {
         *ENDPOINT.lock().expect("lock poisoned") = ep;
@@ -22,6 +25,7 @@ pub fn init_kimicho(endpoint: Option<String>) {
 
 /// Call the K2 Coder service and return its response text.
 #[pyfunction]
+#[cfg_attr(feature = "tracing", instrument)]
 pub fn fallback_k2(prompt: &str) -> PyResult<String> {
     let endpoint = ENDPOINT.lock().expect("lock poisoned").clone();
     let client = reqwest::blocking::Client::new();
@@ -42,6 +46,8 @@ pub fn fallback_k2(prompt: &str) -> PyResult<String> {
 
 #[pymodule]
 fn neoabzu_kimicho(_py: Python<'_>, m: &Bound<PyModule>) -> PyResult<()> {
+    #[cfg(feature = "tracing")]
+    let _ = neoabzu_instrumentation::init_tracing("kimicho");
     m.add_function(wrap_pyfunction!(init_kimicho, m)?)?;
     m.add_function(wrap_pyfunction!(fallback_k2, m)?)?;
     Ok(())
