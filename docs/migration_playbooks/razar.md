@@ -1,7 +1,7 @@
-# Razor Migration Playbook
+# RAZAR Migration Playbook
 
 ## Python→Rust Parity Checklist
-- Audit existing Python features and map each to the `neoabzu_razor` crate.
+- Audit existing Python features and map each to the `neoabzu_razar` crate.
 - Align public APIs and configuration files.
 - Document APSU sequence placement referencing [blueprint_spine.md](../blueprint_spine.md) and [system_blueprint.md](../system_blueprint.md).
 

@@ -2,7 +2,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
 #[test]
-fn razor_can_call_rust_router() {
+fn razar_can_call_rust_router() {
     Python::with_gil(|py| {
         let sys = py.import("sys").unwrap();
         let modules: &PyDict = sys.getattr("modules").unwrap().downcast().unwrap();
@@ -35,17 +35,17 @@ def decide_expression_options(emotion):
         modules.set_item("crown_decider", decider).unwrap();
 
         py.run("import sys; sys.path.append('../..')", None, None).unwrap();
-        let razor_code = r#"
+        let razar_code = r#"
 import crown_router
 
 def route(text, emotion):
     return crown_router.route_decision(text, {'emotion': emotion})
 "#;
-        let razor_mod = PyModule::from_code(py, razor_code, "", "razor_agent").unwrap();
-        modules.set_item("razor_agent", razor_mod).unwrap();
+        let razar_mod = PyModule::from_code(py, razar_code, "", "razar_agent").unwrap();
+        modules.set_item("razar_agent", razar_mod).unwrap();
 
         let res: &PyDict = py
-            .eval("razor_agent.route('hi', 'joy')", None, None)
+            .eval("razar_agent.route('hi', 'joy')", None, None)
             .unwrap()
             .downcast()
             .unwrap();

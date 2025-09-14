@@ -2,7 +2,7 @@ use httpmock::prelude::*;
 use pyo3::prelude::*;
 
 #[test]
-fn razor_can_call_kimicho_fallback() {
+fn razar_can_call_kimicho_fallback() {
     Python::with_gil(|py| {
         let server = MockServer::start();
         let _m = server.mock(|when, then| {
@@ -19,8 +19,8 @@ fn razor_can_call_kimicho_fallback() {
             "    return k.fallback_k2('ping')\n",
             url = server.url("/")
         );
-        let razor = PyModule::from_code(py, &code, "", "razor_agent").unwrap();
-        let res: String = razor
+        let razar = PyModule::from_code(py, &code, "", "razar_agent").unwrap();
+        let res: String = razar
             .getattr("invoke")
             .unwrap()
             .call0()

@@ -3,7 +3,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
 #[test]
-fn razor_falls_back_to_kimicho_on_crown_error() {
+fn razar_falls_back_to_kimicho_on_crown_error() {
     Python::with_gil(|py| {
         let server = MockServer::start();
         let _m = server.mock(|when, then| {
@@ -14,21 +14,23 @@ fn razor_falls_back_to_kimicho_on_crown_error() {
         });
 
         let code = format!(
-            "import neoabzu_crown as crown\n" \
-            "import neoabzu_kimicho as k\n" \
-            "k.init_kimicho('{url}')\n" \
-            "crown.route_decision = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('down'))\n" \
-            "def route():\n" \
-            "    try:\n" \
-            "        return crown.route_decision('ping', {'emotion':'joy'})\n" \
-            "    except Exception:\n" \
-            "        text = k.fallback_k2('ping')\n" \
-            "        return {'model':'kimicho', 'text': text}\n",
+            r#"
+import neoabzu_crown as crown
+import neoabzu_kimicho as k
+k.init_kimicho('{url}')
+crown.route_decision = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('down'))
+def route():
+    try:
+        return crown.route_decision('ping', {'emotion':'joy'})
+    except Exception:
+        text = k.fallback_k2('ping')
+        return {{'model':'kimicho', 'text': text}}
+"#,
             url = server.url("/")
         );
 
-        let razor = PyModule::from_code(py, &code, "", "razor_agent").unwrap();
-        let res: &PyDict = razor
+        let razar = PyModule::from_code(py, &code, "", "razar_agent").unwrap();
+        let res: &PyDict = razar
             .getattr("route")
             .unwrap()
             .call0()
@@ -43,7 +45,7 @@ fn razor_falls_back_to_kimicho_on_crown_error() {
 }
 
 #[test]
-fn razor_falls_back_to_kimicho_when_crown_missing() {
+fn razar_falls_back_to_kimicho_when_crown_missing() {
     Python::with_gil(|py| {
         let server = MockServer::start();
         let _m = server.mock(|when, then| {
@@ -54,22 +56,24 @@ fn razor_falls_back_to_kimicho_when_crown_missing() {
         });
 
         let code = format!(
-            "import sys\n" \
-            "import neoabzu_kimicho as k\n" \
-            "k.init_kimicho('{url}')\n" \
-            "def route():\n" \
-            "    sys.modules.pop('neoabzu_crown', None)\n" \
-            "    try:\n" \
-            "        import neoabzu_crown as crown\n" \
-            "        return crown.route_decision('ping', {'emotion':'joy'})\n" \
-            "    except Exception:\n" \
-            "        text = k.fallback_k2('ping')\n" \
-            "        return {'model':'kimicho', 'text': text}\n",
+            r#"
+import sys
+import neoabzu_kimicho as k
+k.init_kimicho('{url}')
+def route():
+    sys.modules.pop('neoabzu_crown', None)
+    try:
+        import neoabzu_crown as crown
+        return crown.route_decision('ping', {'emotion':'joy'})
+    except Exception:
+        text = k.fallback_k2('ping')
+        return {{'model':'kimicho', 'text': text}}
+"#,
             url = server.url("/")
         );
 
-        let razor = PyModule::from_code(py, &code, "", "razor_agent").unwrap();
-        let res: &PyDict = razor
+        let razar = PyModule::from_code(py, &code, "", "razar_agent").unwrap();
+        let res: &PyDict = razar
             .getattr("route")
             .unwrap()
             .call0()
