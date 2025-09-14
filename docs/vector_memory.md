@@ -57,3 +57,8 @@ restore_latest_snapshot()           # restore most recent snapshot
 `cluster_vectors(k)` groups stored embeddings into `k` clusters using FAISS when
 available, falling back to scikit-learn's `KMeans`. Each cluster summary contains
 the cluster index and number of members.
+
+### Migration Crosswalk
+
+Numeric embedding migration notes live in the [Migration Crosswalk](migration_crosswalk.md#numeric-embeddings).
+

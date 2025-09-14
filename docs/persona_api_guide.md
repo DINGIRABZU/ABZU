@@ -65,3 +65,8 @@ export PYTHONPATH=.
 
 The persona APIs only depend on ``PyYAML`` and ``jsonschema`` which are included
 in the base development requirements.
+
+### Migration Crosswalk
+
+Persona context porting is documented in the [Migration Crosswalk](migration_crosswalk.md#persona-context).
+
