@@ -83,6 +83,16 @@ jobs:
       - name: Verify crate references
         run: python scripts/verify_crate_refs.py
 
+  doc-refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify documentation references
+        run: python scripts/verify_doc_refs.py
+
   blueprint-refs:
     runs-on: ubuntu-latest
     steps:
@@ -326,6 +336,36 @@ PY
 
       - name: Validate API schemas
         run: python scripts/validate_api_schemas.py
+
+  rust-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+      - name: cargo clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: cargo test
+        run: cargo test --workspace --all-features
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pre-commit
+        run: |
+          python -m pip install --upgrade pip
+          pip install pre-commit
+      - name: Run targeted pre-commit
+        run: |
+          files=$(git diff --name-only origin/$GITHUB_BASE_REF...HEAD -- '*.rs' 'Cargo.toml' 'Cargo.lock')
+          if [ -n "$files" ]; then
+            pre-commit run --files $files
+          fi
 
   rust-python-integration:
     runs-on: ubuntu-latest

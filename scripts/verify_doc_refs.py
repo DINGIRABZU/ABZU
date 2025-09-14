@@ -1,39 +1,31 @@
 from __future__ import annotations
-from __future__ import annotations
-from __future__ import annotations
 
-"""Ensure feature parity and migration crosswalk reference all workspace crates."""
+"""Ensure docs/INDEX.md lists all documentation files."""
 
 import sys
 from pathlib import Path
-import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-CARGO_TOML = ROOT / "Cargo.toml"
-FEATURE_PARITY = ROOT / "docs" / "feature_parity.md"
-MIGRATION_CROSSWALK = ROOT / "docs" / "migration_crosswalk.md"
+DOCS = ROOT / "docs"
+INDEX = DOCS / "INDEX.md"
 
 
-def load_crates() -> list[str]:
-    cargo = tomllib.loads(CARGO_TOML.read_text(encoding="utf-8"))
-    return cargo.get("workspace", {}).get("members", [])
-
-
-def check_doc(path: Path, crates: list[str]) -> list[str]:
-    text = path.read_text(encoding="utf-8")
-    return [c for c in crates if c not in text]
+def iter_docs() -> list[Path]:
+    paths: list[Path] = []
+    for path in DOCS.rglob("*.md"):
+        if path.name == "INDEX.md":
+            continue
+        if any(part in {"node_modules", "dist", "build"} for part in path.parts):
+            continue
+        paths.append(path.relative_to(DOCS))
+    return paths
 
 
 def main() -> int:
-    crates = load_crates()
-    missing = {
-        "feature_parity.md": check_doc(FEATURE_PARITY, crates),
-        "migration_crosswalk.md": check_doc(MIGRATION_CROSSWALK, crates),
-    }
-    failures = {k: v for k, v in missing.items() if v}
-    if failures:
-        for doc, names in failures.items():
-            print(f"missing {', '.join(names)} in {doc}", file=sys.stderr)
+    index_text = INDEX.read_text(encoding="utf-8")
+    missing = [str(p) for p in iter_docs() if str(p) not in index_text]
+    if missing:
+        print("missing docs in INDEX.md: " + ", ".join(missing), file=sys.stderr)
         return 1
     print("verify_doc_refs: all checks passed")
     return 0
