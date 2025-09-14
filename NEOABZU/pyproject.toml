@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Python helpers for the NEOABZU Rust workspace"
 requires-python = ">=3.10"
 authors = [{name = "NEOABZU Team"}]
-dependencies = []
+dependencies = ["grpcio>=1.62"]
 
 [project.urls]
 "Blueprint Spine" = "../docs/blueprint_spine.md"

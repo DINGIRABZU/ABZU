@@ -4,6 +4,14 @@
 //! `cargo test -p neoabzu-vector --features opentelemetry`
 use pyo3::prelude::*;
 
+pub mod proto {
+    tonic::include_proto!("neoabzu.vector");
+}
+
+pub mod server;
+
+pub use server::serve;
+
 #[cfg_attr(feature = "tracing", tracing::instrument(skip(py)))]
 #[pyfunction]
 fn search(py: Python<'_>, text: &str, top_n: usize) -> PyResult<Vec<(String, f32)>> {
