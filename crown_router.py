@@ -33,6 +33,11 @@ except Exception:  # pragma: no cover - Rust crates optional
     _memory_bundle = None
     _core_eval = None
 
+try:  # pragma: no cover - optional Rust crate
+    from neoabzu_insight import reason as _reason
+except Exception:  # pragma: no cover - optional Rust crate
+    _reason = None
+
 from agents.event_bus import emit_event
 
 import emotional_state
@@ -303,6 +308,8 @@ def route_decision(
         decision["memory"] = rust_memory
     if core_output is not None:
         decision["core"] = core_output
+    if _reason is not None:
+        decision["insight"] = _reason(text)
     if chakra_registry is not None:
         try:  # pragma: no cover - best effort
             chakra_registry.record(

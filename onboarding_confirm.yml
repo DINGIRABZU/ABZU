@@ -66,8 +66,8 @@ documents:
       purpose: Maps reduction steps to a 12-stage heroic narrative.
       scope: Neo-ABZU narrative engine.
   NEOABZU/docs/migration_crosswalk.md:
-    commit: 8ec24f3f8a44fce594575d7fe7a0fbc61e329756
-    sha256: a6359578256feaf5101c548595e243a19987c70a497c36f12109108568cc9f85
+    commit: 657d6d2c0a517dd437290a0d3ee7a48cf26cf8cb
+    sha256: bac582717ab8a55f8adab730a958c7717bc795843a2da0e2fe70a4a319288176
     signed_by: onboarding-wizard
     summary:
       insight: neoabzu-memory crate bundles core memory layers.
