@@ -1,5 +1,6 @@
 use nalgebra::{DMatrix, SymmetricEigen};
 use pyo3::prelude::*;
+use tracing::instrument;
 
 /// Find principal components of the provided data matrix.
 ///
@@ -7,6 +8,7 @@ use pyo3::prelude::*;
 /// number of features. `components` specifies how many principal
 /// components to return. The function is exposed to Python via PyO3.
 #[pyfunction]
+#[instrument]
 pub fn find_principal_components(
     data: Vec<Vec<f64>>,
     components: usize,
@@ -37,6 +39,7 @@ pub fn find_principal_components(
 /// PyO3 module initializer.
 #[pymodule]
 fn numeric(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    let _ = neoabzu_instrumentation::init_tracing("numeric");
     m.add_function(wrap_pyfunction!(find_principal_components, m)?)?;
     Ok(())
 }

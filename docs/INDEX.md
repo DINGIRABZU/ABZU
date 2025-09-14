@@ -413,6 +413,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [nazarick_overview.md](nazarick_overview.md) | Nazarick Overview | Nazarick fortifies ABZU with an ethical servant hierarchy that balances Crown intent with chakra alignment. This over... | `../worlds/config_registry.py` |
 | [nazarick_web_console.md](nazarick_web_console.md) | Nazarick Web Console | The Nazarick Web Console provides a browser-based interface for issuing commands, streaming the avatar, and testing m... | `../connectors/webrtc_connector.py`, `../operator_api.py` |
 | [nazarick_world_guide.md](nazarick_world_guide.md) | Nazarick World Guide | - | - |
+| [observability.md](observability.md) | Observability | ABZU uses the [`tracing`](https://crates.io/crates/tracing) ecosystem with OpenTelemetry for structured diagnostics. | - |
 | [onboarding/README.md](onboarding/README.md) | Onboarding Checklist | This checklist pairs with the [Neo‑ABZU Onboarding guide](../../NEOABZU/docs/onboarding.md); confirm both documents i... | - |
 | [onboarding/test_planning.md](onboarding/test_planning.md) | Test Planning Guide | Instructions for opening a "Test Plan" issue to coordinate tests across chakras and maintain coverage goals. | - |
 | [onboarding_guide.md](onboarding_guide.md) | Onboarding Guide | **Version:** v1.0.0 **Last updated:** 2025-08-28 Diagram: [Onboarding Walkthrough](onboarding_walkthrough.md) – visua... | - |

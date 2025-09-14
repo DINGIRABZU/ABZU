@@ -1,6 +1,7 @@
 use neoabzu_memory::MemoryBundle;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
+use tracing::instrument;
 
 const EMBED_DIM: usize = 16;
 
@@ -22,6 +23,7 @@ fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
 
 #[pyfunction]
 #[pyo3(signature = (question, top_n=5))]
+#[instrument(skip(py))]
 pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Vec<Py<PyDict>>> {
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
@@ -52,6 +54,7 @@ pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Ve
 
 #[pymodule]
 fn neoabzu_rag(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    let _ = neoabzu_instrumentation::init_tracing("rag");
     m.add_function(wrap_pyfunction!(retrieve_top, m)?)?;
     Ok(())
 }
