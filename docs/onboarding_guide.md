@@ -21,6 +21,8 @@ Study the system design materials to grasp component responsibilities and data f
 - [Architecture Overview](architecture_overview.md)
 - [Data Flow](data_flow.md)
 - [Operator-Nazarick Bridge](operator_nazarick_bridge.md)
+- [Narrative Framework](narrative_framework.md)
+- [Narrative Engine Guide](narrative_engine_GUIDE.md)
 
 ## 4. Follow the Development Workflow
 Use the process documents to build and modify modules:
