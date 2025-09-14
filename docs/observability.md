@@ -39,3 +39,23 @@ cargo test -p neoabzu-kimicho --features tracing
 
 The default configuration exports spans to stdout. Configure the standard
 OpenTelemetry environment variables to route data to an OTLP collector.
+
+## Shared configuration
+
+All crates share the same tracing and metrics setup. Initialize both telemetry
+systems during startup:
+
+```rust
+use neoabzu_instrumentation::init_tracing;
+use metrics_exporter_prometheus::PrometheusBuilder;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    init_tracing("demo-service")?;
+    PrometheusBuilder::new().install_recorder()?;
+    Ok(())
+}
+```
+
+With the recorder installed, counters and histograms emitted from Crown, RAG,
+Insight, and Vector become available at `http://localhost:9000/metrics`. Set
+`OTEL_EXPORTER_OTLP_ENDPOINT` to route spans to an external collector.

@@ -2,7 +2,9 @@
 //!
 //! Enable telemetry with:
 //! `cargo test -p neoabzu-vector --features opentelemetry`
+use metrics::{counter, histogram};
 use pyo3::prelude::*;
+use std::time::Instant;
 
 pub mod proto {
     tonic::include_proto!("neoabzu.vector");
@@ -16,9 +18,13 @@ pub use server::serve;
 #[pyfunction]
 fn search(py: Python<'_>, text: &str, top_n: usize) -> PyResult<Vec<(String, f32)>> {
     let _ = py;
-    let results = (0..top_n)
-        .map(|i| (format!("{text}{i}"), 1.0))
-        .collect();
+    let start = Instant::now();
+    let results = (0..top_n).map(|i| (format!("{text}{i}"), 1.0)).collect();
+    counter!("neoabzu_vector_search_total", 1);
+    histogram!(
+        "neoabzu_vector_search_latency_seconds",
+        start.elapsed().as_secs_f64()
+    );
     Ok(results)
 }
 

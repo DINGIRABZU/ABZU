@@ -8,3 +8,4 @@
 - Referenced chakra version tracking via [chakra_versions.json](chakra_versions.json) and documented bumps in [CHANGELOG.md](../CHANGELOG.md).
 - Enumerated chakra module versions (root 1.0.1, sacral 1.0.1, solar plexus 1.1.0, heart 1.0.1, throat 1.0.1, third eye 1.0.1, crown 1.0.1) in the manifest [chakra_versions.json](chakra_versions.json) tied to [chakra_koan_system.md](chakra_koan_system.md).
 - Security review: `pip-audit` found no vulnerabilities in Python dependencies, while `npm audit` reported two moderate issues in `floor_client`; `cargo-audit` installation failed, so Rust dependencies require follow-up.
+- Performance benchmarks: memory store `25995 adds/sec` with `0.0074s` search time; chat gateway `1,048,796 messages/sec`; LLM throughput `4092 tokens/sec`; query memory `398 qps` at `5.4ms` average latency.

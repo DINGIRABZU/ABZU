@@ -13,3 +13,4 @@ pyo3 = { version = "0.21", features = ["extension-module"] }
 neoabzu-memory = { path = "../NEOABZU/memory" }
 tracing = "0.1"
 neoabzu-instrumentation = { path = "../instrumentation" }
+metrics = "0.21"

@@ -1,6 +1,8 @@
+use metrics::{counter, histogram};
 use neoabzu_memory::MemoryBundle;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
+use std::time::Instant;
 use tracing::instrument;
 
 const EMBED_DIM: usize = 16;
@@ -27,6 +29,7 @@ fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
 #[pyo3(signature = (question, top_n=5))]
 #[instrument(skip(py))]
 pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Vec<Py<PyDict>>> {
+    let start = Instant::now();
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
     let q_dict = bundle.query(py, question)?;
@@ -54,6 +57,11 @@ pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Ve
         }
     }
     scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    counter!("neoabzu_rag_retrieve_top_total", 1);
+    histogram!(
+        "neoabzu_rag_retrieve_top_latency_seconds",
+        start.elapsed().as_secs_f64()
+    );
     Ok(scored.into_iter().take(top_n).map(|(_, d)| d).collect())
 }
 
