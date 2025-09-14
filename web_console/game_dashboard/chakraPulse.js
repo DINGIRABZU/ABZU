@@ -78,6 +78,13 @@ export default function ChakraPulse() {
     ),
     React.createElement(
       'ul',
+      { className: 'metrics' },
+      Object.entries(chakras).map(([name, freq]) =>
+        React.createElement('li', { key: name }, `${name}: ${freq.toFixed(2)}Hz`)
+      )
+    ),
+    React.createElement(
+      'ul',
       { className: 'history' },
       history.map((t, i) => React.createElement('li', { key: i }, t))
     )

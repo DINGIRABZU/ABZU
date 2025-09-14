@@ -14,6 +14,10 @@ from typing import Any, Dict, Optional
 from .event_structurizer import from_interaction
 from agents.event_bus import emit_event as bus_emit
 from memory import narrative_engine
+from albedo import Magnitude
+from albedo.state_machine import AlbedoStateMachine, EntityCategory
+
+_ALBEDO = AlbedoStateMachine()
 
 
 def emit(
@@ -35,6 +39,17 @@ def emit(
     metadata = dict(payload)
     if target_agent:
         metadata["target_agent"] = target_agent
+
+    # Integrate with Inanna's Albedo persona state machine
+    try:
+        trust = payload.get("trust")
+        category = payload.get("category")
+        if trust is not None and category is not None:
+            state = _ALBEDO.transition(Magnitude(int(trust)), EntityCategory(category))
+            metadata["albedo_state"] = state.value
+    except Exception:  # pragma: no cover - defensive
+        pass
+
     bus_emit(agent_id, event_type, metadata)
     return event
 
