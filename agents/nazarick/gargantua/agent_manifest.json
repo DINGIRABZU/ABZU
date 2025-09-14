@@ -1,0 +1,9 @@
+{
+  "id": "gargantua",
+  "chakra": ["root", "sacral", "solar_plexus", "heart", "throat", "third_eye", "crown"],
+  "capabilities": ["raw_generation"],
+  "dependencies": [
+    "base_model_api.py"
+  ],
+  "escalation_contacts": ["#earth-foundry"]
+}

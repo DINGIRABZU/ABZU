@@ -1,0 +1,11 @@
+{
+  "id": "shalltear",
+  "chakra": ["root"],
+  "capabilities": ["execution"],
+  "dependencies": [
+    "k6",
+    "Locust",
+    "Redis"
+  ],
+  "escalation_contacts": ["#blood-forge"]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "cocytus",
+  "chakra": ["solar_plexus"],
+  "capabilities": ["policy_enforcement"],
+  "dependencies": [
+    "OPA",
+    "Cedar",
+    "oso"
+  ],
+  "escalation_contacts": ["#frozen-lake"]
+}

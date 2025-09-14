@@ -27,6 +27,42 @@ LOG_FILE = Path("logs") / "nazarick_startup.json"
 HEARTBEAT_INTERVAL = 5.0
 
 
+def _load_manifest_registry(registry_path: Path) -> None:
+    """Merge manifest files into the agent registry.
+
+    Parameters
+    ----------
+    registry_path:
+        Location of the consolidated agent registry.
+    """
+    if registry_path.exists():
+        registry = json.loads(registry_path.read_text())
+    else:  # pragma: no cover - first run
+        registry = {"agents": [], "capabilities": [], "triggers": []}
+
+    manifest_paths = registry_path.parent.glob("*/agent_manifest.json")
+    for manifest in manifest_paths:
+        try:
+            data = json.loads(manifest.read_text())
+        except Exception:  # pragma: no cover - malformed manifest
+            LOGGER.exception("Invalid manifest: %s", manifest)
+            continue
+
+        existing = next(
+            (a for a in registry["agents"] if a.get("id") == data.get("id")), None
+        )
+        if existing:
+            existing.update(data)
+        else:
+            registry["agents"].append(data)
+
+        for cap in data.get("capabilities", []):
+            if cap not in registry.setdefault("capabilities", []):
+                registry["capabilities"].append(cap)
+
+    registry_path.write_text(json.dumps(registry, indent=2))
+
+
 class AgentDirectory:
     """In-memory index of Nazarick agents."""
 
@@ -45,7 +81,10 @@ class AgentDirectory:
         self.by_trigger: Dict[str, List[Dict]] = {}
         for agent in agents:
             chakra = agent.get("chakra")
-            if chakra:
+            if isinstance(chakra, list):
+                for c in chakra:
+                    self.by_chakra.setdefault(c, []).append(agent)
+            elif chakra:
                 self.by_chakra.setdefault(chakra, []).append(agent)
             for cap in agent.get("capabilities", []):
                 self.by_capability.setdefault(cap, []).append(agent)
@@ -100,6 +139,7 @@ def launch_required_agents(registry_path: Path | None = None) -> list[dict[str, 
         existing = []
 
     registry_file = Path(registry_path) if registry_path else REGISTRY_FILE
+    _load_manifest_registry(registry_file)
     global AGENT_DIRECTORY
     try:
         AGENT_DIRECTORY = AgentDirectory.from_file(registry_file)

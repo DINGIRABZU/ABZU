@@ -3,58 +3,285 @@
     {
       "id": "orchestration_master",
       "chakra": "crown",
-      "capabilities": ["orchestration"],
+      "capabilities": [
+        "orchestration"
+      ],
       "launch": "./launch_servants.sh orchestration_master",
       "channel": "#throne-room",
-      "persona_traits": ["disciplined", "calm"],
+      "persona_traits": [
+        "disciplined",
+        "calm"
+      ],
       "responsibilities": "Boot order and pipeline supervision.",
       "code_path": "orchestration_master.py",
-      "triggers": ["launch"]
+      "triggers": [
+        "launch"
+      ]
     },
     {
       "id": "prompt_orchestrator",
       "chakra": "throat",
-      "capabilities": ["prompt_routing"],
+      "capabilities": [
+        "prompt_routing"
+      ],
       "launch": "./launch_servants.sh crown_prompt_orchestrator",
       "channel": "#signal-hall",
-      "persona_traits": ["focused", "efficient"],
+      "persona_traits": [
+        "focused",
+        "efficient"
+      ],
       "responsibilities": "Route prompts and recall context.",
       "code_path": "crown_prompt_orchestrator.py",
-      "triggers": ["prompt"]
+      "triggers": [
+        "prompt"
+      ]
     },
     {
       "id": "qnl_engine",
       "chakra": "third_eye",
-      "capabilities": ["qnl_processing"],
+      "capabilities": [
+        "qnl_processing"
+      ],
       "launch": "./launch_servants.sh qnl_engine",
       "channel": "#insight-observatory",
-      "persona_traits": ["introspective", "analytic"],
+      "persona_traits": [
+        "introspective",
+        "analytic"
+      ],
       "responsibilities": "Process QNL sequences and insights.",
       "code_path": "SPIRAL_OS/qnl_engine.py",
-      "triggers": ["insight"]
+      "triggers": [
+        "insight"
+      ]
     },
     {
       "id": "memory_scribe",
       "chakra": "heart",
-      "capabilities": ["memory_persistence"],
+      "capabilities": [
+        "memory_persistence"
+      ],
       "launch": "./launch_servants.sh memory_scribe",
       "channel": "#memory-vault",
-      "persona_traits": ["diligent", "archival"],
+      "persona_traits": [
+        "diligent",
+        "archival"
+      ],
       "responsibilities": "Persist transcripts and embeddings.",
       "code_path": "memory_scribe.py",
-      "triggers": ["persist"]
+      "triggers": [
+        "persist"
+      ]
+    },
+    {
+      "id": "narrative_scribe",
+      "chakra": "throat",
+      "capabilities": [
+        "narrative_rendering"
+      ],
+      "launch": "./launch_servants.sh narrative_scribe",
+      "channel": "#story-forge",
+      "persona_traits": [
+        "storyteller"
+      ],
+      "responsibilities": "Render event bus stories.",
+      "code_path": "narrative_scribe.py",
+      "triggers": [
+        "narrate"
+      ]
+    },
+    {
+      "id": "albedo",
+      "chakra": [
+        "crown",
+        "heart",
+        "root"
+      ],
+      "capabilities": [
+        "sacred_union",
+        "system_governance"
+      ],
+      "dependencies": [
+        "womb_reconnection_engine.py",
+        "nursing_interface.py",
+        "quantum_entanglement_core.py"
+      ],
+      "escalation_contacts": [
+        "#throne-room"
+      ]
+    },
+    {
+      "id": "cocytus",
+      "chakra": [
+        "solar_plexus"
+      ],
+      "capabilities": [
+        "policy_enforcement"
+      ],
+      "dependencies": [
+        "OPA",
+        "Cedar",
+        "oso"
+      ],
+      "escalation_contacts": [
+        "#frozen-lake"
+      ]
+    },
+    {
+      "id": "demiurge",
+      "chakra": [
+        "third_eye"
+      ],
+      "capabilities": [
+        "strategy"
+      ],
+      "dependencies": [
+        "Neo4j",
+        "NetworkX",
+        "OR-Tools"
+      ],
+      "escalation_contacts": [
+        "#strategy-hall"
+      ]
+    },
+    {
+      "id": "gargantua",
+      "chakra": [
+        "root",
+        "sacral",
+        "solar_plexus",
+        "heart",
+        "throat",
+        "third_eye",
+        "crown"
+      ],
+      "capabilities": [
+        "raw_generation"
+      ],
+      "dependencies": [
+        "base_model_api.py"
+      ],
+      "escalation_contacts": [
+        "#earth-foundry"
+      ]
+    },
+    {
+      "id": "pandora",
+      "chakra": [
+        "throat"
+      ],
+      "capabilities": [
+        "mimicry"
+      ],
+      "dependencies": [
+        "OpenCanary",
+        "ThinkstCanary",
+        "Cowrie"
+      ],
+      "escalation_contacts": [
+        "#mirror-chamber"
+      ]
+    },
+    {
+      "id": "pleiades",
+      "chakra": [
+        "throat"
+      ],
+      "capabilities": [
+        "utility_daemons"
+      ],
+      "dependencies": [
+        "Fluent Bit",
+        "Loki",
+        "Transformers"
+      ],
+      "escalation_contacts": [
+        "#star-gallery"
+      ]
+    },
+    {
+      "id": "sebas_tiara",
+      "chakra": [
+        "heart"
+      ],
+      "capabilities": [
+        "ethics_guardian"
+      ],
+      "dependencies": [
+        "Jira",
+        "ServiceNow",
+        "audit_log_access"
+      ],
+      "escalation_contacts": [
+        "#sanctuary"
+      ]
+    },
+    {
+      "id": "shalltear",
+      "chakra": [
+        "root"
+      ],
+      "capabilities": [
+        "execution"
+      ],
+      "dependencies": [
+        "k6",
+        "Locust",
+        "Redis"
+      ],
+      "escalation_contacts": [
+        "#blood-forge"
+      ]
+    },
+    {
+      "id": "victim",
+      "chakra": [
+        "crown"
+      ],
+      "capabilities": [
+        "sacrifice"
+      ],
+      "dependencies": [],
+      "escalation_contacts": [
+        "#sacrificial-altar"
+      ]
+    },
+    {
+      "id": "zohar-zero",
+      "chakra": [
+        "crown"
+      ],
+      "capabilities": [
+        "primordial_directive"
+      ],
+      "dependencies": [],
+      "escalation_contacts": [
+        "#throne-room"
+      ]
     }
   ],
   "capabilities": [
     "orchestration",
     "prompt_routing",
     "qnl_processing",
-    "memory_persistence"
+    "memory_persistence",
+    "narrative_rendering",
+    "sacred_union",
+    "system_governance",
+    "policy_enforcement",
+    "strategy",
+    "raw_generation",
+    "mimicry",
+    "utility_daemons",
+    "ethics_guardian",
+    "execution",
+    "sacrifice",
+    "primordial_directive"
   ],
   "triggers": [
     "launch",
     "prompt",
     "insight",
-    "persist"
+    "persist",
+    "narrate"
   ]
 }

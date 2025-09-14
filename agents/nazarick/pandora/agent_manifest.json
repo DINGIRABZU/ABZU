@@ -1,0 +1,11 @@
+{
+  "id": "pandora",
+  "chakra": ["throat"],
+  "capabilities": ["mimicry"],
+  "dependencies": [
+    "OpenCanary",
+    "ThinkstCanary",
+    "Cowrie"
+  ],
+  "escalation_contacts": ["#mirror-chamber"]
+}
