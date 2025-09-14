@@ -27,6 +27,7 @@ dependencies = [
     "prometheus-fastapi-instrumentator==6.1.0",
     "neoabzu-crown==0.1.1",
     "neoabzu-kimicho==0.1.1",
+    "neoabzu-rag==0.1.1",
 ]
 
 [project.optional-dependencies]

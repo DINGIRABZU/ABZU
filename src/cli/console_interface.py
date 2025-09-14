@@ -20,7 +20,7 @@ from INANNA_AI import speaking_engine
 from INANNA_AI.glm_integration import GLMIntegration
 from init_crown_agent import initialize_crown
 from memory.search import query_all
-from rag.orchestrator import MoGEOrchestrator
+from neoabzu_rag import MoGEOrchestrator
 from tools import session_logger
 from .music_helper import play_music
 from .sandbox_helper import run_sandbox

@@ -27,7 +27,7 @@ from INANNA_AI import glm_analyze, glm_init, listening_engine
 from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI.personality_layers import REGISTRY, list_personalities
 from INANNA_AI_AGENT import inanna_ai
-from rag.orchestrator import MoGEOrchestrator
+from neoabzu_rag import MoGEOrchestrator
 from tools import reflection_loop
 
 check_required(["GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"])

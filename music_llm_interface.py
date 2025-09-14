@@ -1,7 +1,7 @@
 """Interface between the music analysis pipeline and LLM CROWN.
 
 This module exposes a small utility that analyses an audio or MIDI file and
-feeds the resulting features to the :class:`rag.orchestrator.MoGEOrchestrator`.
+feeds the resulting features to the :class:`neoabzu_rag.MoGEOrchestrator`.
 Results from the music pipeline and the language model are combined into a
 single JSON structure printed to ``stdout``.  The entry point can be invoked
 from the command line via ``python music_llm_interface.py <audio_or_midi>``.
@@ -26,7 +26,7 @@ from pipeline.music_analysis import (
     analyze_music,
     extract_high_level_features,
 )
-from rag.orchestrator import MoGEOrchestrator
+from neoabzu_rag import MoGEOrchestrator
 
 
 def _analyze_midi(path: Path) -> MusicAnalysisResult:

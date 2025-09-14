@@ -16,10 +16,10 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
-| [../CHANGELOG_rag_orchestrator.md](../CHANGELOG_rag_orchestrator.md) | Changelog for `rag.orchestrator` | All notable changes to this component will be documented in this file. | - |
 | [../CHANGELOG_razar.md](../CHANGELOG_razar.md) | Changelog for `razar` | All notable changes to this component will be documented in this file. | - |
 | [../CHANGELOG_vector_memory.md](../CHANGELOG_vector_memory.md) | Changelog for `vector_memory` | All notable changes to this component will be documented in this file. | - |
 | [../CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md](../CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md) | OATH OF THE VAULT | ☲ ∴ **DECLARATION RECEIVED & RECORDED** | - |
