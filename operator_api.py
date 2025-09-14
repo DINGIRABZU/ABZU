@@ -28,6 +28,7 @@ from fastapi import (
 
 from agents.operator_dispatcher import OperatorDispatcher
 from agents.interaction_log import log_agent_interaction
+from bana import narrative as bana_narrative
 from agents.task_orchestrator import run_mission
 from fastapi.responses import HTMLResponse
 from servant_model_manager import (
@@ -65,6 +66,10 @@ def _log_command(entry: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, default=repr) + "\n")
+    try:
+        bana_narrative.emit("operator", "decision", entry, target_agent="bana")
+    except Exception:  # pragma: no cover - narrative errors
+        logger.exception("failed to emit operator decision")
 
 
 async def broadcast_event(event: dict[str, object]) -> None:

@@ -71,6 +71,8 @@ _STATE_ENGINE = StateTransitionEngine()
 
 TEST_METRICS_FILE = Path("monitoring/pytest_metrics.prom")
 _SERVANT_STATE_FILE = Path("data/servant_state.json")
+_K2_LATENCY_THRESHOLD = float(os.getenv("K2_LATENCY_THRESHOLD", "2.0"))
+_K2_FAILURE_THRESHOLD = float(os.getenv("K2_FAILURE_THRESHOLD", "0.25"))
 
 
 def _is_servant_healthy(name: str) -> bool:
@@ -306,6 +308,13 @@ async def crown_prompt_orchestrator_async(
                 if model == "glm":
                     text = await _delegate(prompt, glm)
                 else:
+                    if model == "kimi_k2":
+                        pulse = smm.pulse_metrics("kimi_k2")
+                        if (
+                            pulse["avg_latency"] > _K2_LATENCY_THRESHOLD
+                            or pulse["failure_rate"] > _K2_FAILURE_THRESHOLD
+                        ):
+                            raise RuntimeError("pulse threshold exceeded")
                     servant_prompt = message
                     if include_memory:
                         try:
@@ -335,6 +344,7 @@ async def crown_prompt_orchestrator_async(
                 log_interaction(
                     message, {"emotion": emotion}, {"model": model}, "error"
                 )
+                logger.warning("routing to glm due to %s", invoke_error)
                 model = "glm"
                 text = await _delegate(prompt, glm)
                 crown_decider.record_result(model, True)

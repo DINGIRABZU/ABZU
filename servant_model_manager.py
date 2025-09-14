@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import threading
+import time
+from collections import defaultdict, deque
+from dataclasses import dataclass, field
 from typing import Awaitable, Callable, Dict, List, cast
 
 from tools import kimi_k2_client, opencode_client
@@ -11,6 +14,18 @@ from tools import kimi_k2_client, opencode_client
 _Handler = Callable[[str], Awaitable[str] | str]
 _REGISTRY: Dict[str, _Handler] = {}
 _LOCK = threading.Lock()
+
+
+@dataclass
+class _Pulse:
+    """Simple pulse metrics for servant models."""
+
+    latencies: deque[float] = field(default_factory=lambda: deque(maxlen=10))
+    calls: int = 0
+    failures: int = 0
+
+
+_PULSES: Dict[str, _Pulse] = defaultdict(_Pulse)
 
 
 def register_model(name: str, handler: _Handler) -> None:
@@ -76,15 +91,36 @@ async def invoke(name: str, prompt: str) -> str:
         handler = _REGISTRY.get(name)
     if handler is None:
         raise KeyError(name)
-    result = handler(prompt)
-    if asyncio.iscoroutine(result):
-        return await result
-    return cast(str, result)
+    start = time.perf_counter()
+    success = False
+    try:
+        result = handler(prompt)
+        if asyncio.iscoroutine(result):
+            result = await result
+        success = True
+        return cast(str, result)
+    finally:
+        elapsed = time.perf_counter() - start
+        pulse = _PULSES[name]
+        pulse.calls += 1
+        pulse.latencies.append(elapsed)
+        if not success:
+            pulse.failures += 1
 
 
 def invoke_sync(name: str, prompt: str) -> str:
     """Invoke ``name`` with ``prompt`` synchronously."""
     return asyncio.run(invoke(name, prompt))
+
+
+def pulse_metrics(name: str) -> Dict[str, float]:
+    """Return average latency and failure rate for ``name``."""
+    pulse = _PULSES.get(name)
+    if not pulse or pulse.calls == 0:
+        return {"avg_latency": 0.0, "failure_rate": 0.0}
+    avg_latency = sum(pulse.latencies) / len(pulse.latencies)
+    failure_rate = pulse.failures / pulse.calls
+    return {"avg_latency": avg_latency, "failure_rate": failure_rate}
 
 
 __all__ = [
@@ -98,4 +134,5 @@ __all__ = [
     "has_model",
     "register_kimi_k2",
     "register_opencode",
+    "pulse_metrics",
 ]
