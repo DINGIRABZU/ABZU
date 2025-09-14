@@ -64,14 +64,27 @@ Run the gRPC service with:
 cargo run -p neoabzu-vector --bin server
 ```
 
+The server expects a JSON list of texts referenced by
+`NEOABZU_VECTOR_STORE`:
+
+```bash
+export NEOABZU_VECTOR_STORE=tests/data/store.json
+cargo run -p neoabzu-vector --bin server
+```
+
+Each entry is embedded at startup and stored in memory. Metrics counters
+`neoabzu_vector_init_total` and `neoabzu_vector_search_total` track RPC
+usage, and invalid requests surface gRPC errors (e.g. missing store,
+zero `top_n`, or searches before initialization).
+
 Python callers may connect using `neoabzu.vector.VectorClient`:
 
 ```python
 from neoabzu.vector import VectorClient
 
-client = VectorClient("http://localhost:50051")
-client.init()
-results = client.search("hello", 2)
+with VectorClient("http://localhost:50051") as client:
+    client.init()
+    results = client.search("hello", 2)
 ```
 
 ## Contributor Guidelines

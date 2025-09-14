@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/operator_onboarding.md` documents mission workflows with Mermaid diagrams and cross-links in `system_blueprint.md`.
 - `datpars` placeholder package with stub interfaces and `docs/datpars_overview.md`.
 - Documented Chakra Heartbeat Alignment for Nazarick agents with Mermaid mapping; cross-linked `chakra_metrics.md` and `ignition_blueprint.md`.
+- gRPC vector service loads embeddings from `NEOABZU_VECTOR_STORE`, tracks basic metrics, and exposes Python `VectorClient` helpers with end-to-end tests for `init` and `search`.
 - Wrapped `agents.event_bus.emit_event` and memory layer queries with OpenTelemetry spans.
 - Structured manual detailing chakra architecture, system components, memory bundle, and operator paths with Mermaid diagrams and doctrine cross-links.
 - Blueprint manual capturing vision, chakra architecture, operator console routes, memory bundle initialization, and dynamic ignition.
