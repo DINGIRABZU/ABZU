@@ -1,10 +1,10 @@
 use std::time::Instant;
 
 use neoabzu_core::{evaluate, reduce_inevitable_with_journey};
-use neoabzu_insight::analyze as insight_analyze;
+use neoabzu_insight::{analyze as insight_analyze, embedding as insight_embed};
 use neoabzu_memory::MemoryBundle;
 use neoabzu_rag::{retrieve_top, MoGEOrchestrator};
-use pyo3::prelude::*;
+use pyo3::{prelude::*, wrap_pyfunction};
 use pyo3::types::{PyDict, PyList};
 
 fn select_store(archetype: &str) -> &str {
@@ -53,27 +53,27 @@ fn decide_expression_options(emotion: &str) -> ExpressionOptions {
 
 #[pyfunction]
 #[pyo3(signature = (text, emotion_data, orchestrator=None, validator=None, documents=None))]
-fn route_decision(
+pub fn route_decision(
     py: Python<'_>,
     text: &str,
     emotion_data: &PyDict,
     orchestrator: Option<&PyAny>,
-    _validator: Option<&PyAny>,
+    validator: Option<&PyAny>,
     documents: Option<&PyAny>,
 ) -> PyResult<Py<PyDict>> {
-    let _ = orchestrator; // legacy param for compatibility
+    let _ = (orchestrator, validator); // legacy params for compatibility
     let start = Instant::now();
 
     let docs_obj = if let Some(d) = documents {
         d.to_object(py)
     } else {
         let orch = MoGEOrchestrator::new();
-        let routed = orch.route(py, text, emotion_data, None, false, false, false, None)?;
+        let routed = orch.route(py, text, emotion_data, None, false, false, false, None, None)?;
         routed
             .as_ref(py)
             .get_item("documents")?
-            .unwrap_or(py.None())
-            .to_object(py)
+            .map(|o| o.to_object(py))
+            .unwrap_or_else(|| py.None())
     };
 
     let mut bundle = MemoryBundle::new();
@@ -90,6 +90,7 @@ fn route_decision(
         .get("bigrams")
         .map(|v| v.iter().map(|(b, _)| b.clone()).collect())
         .unwrap_or_default();
+    let embedding = insight_embed(text);
 
     let emotion: String = emotion_data
         .get_item("emotion")?
@@ -107,24 +108,31 @@ fn route_decision(
     result.set_item("core", core_output)?;
     result.set_item("insight_words", words)?;
     result.set_item("insight_bigrams", bigrams)?;
+    result.set_item("insight_embedding", embedding)?;
     result.set_item("latency_seconds", start.elapsed().as_secs_f64())?;
     Ok(result.into())
 }
 
 #[pyfunction]
-fn route_inevitability(py: Python<'_>, expr: &str) -> PyResult<Py<PyDict>> {
+pub fn route_inevitability(py: Python<'_>, expr: &str) -> PyResult<Py<PyDict>> {
     let (inevitability, journey) = reduce_inevitable_with_journey(expr);
     let result = PyDict::new(py);
     result.set_item("inevitability", inevitability)?;
-    result.set_item("journey", journey)?;
+    let journey_py: Vec<String> = journey.iter().map(|s| format!("{:?}", s)).collect();
+    result.set_item("journey", journey_py)?;
     Ok(result.into())
 }
 
 #[pyfunction]
-fn query_memory(py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {
+pub fn query_memory(py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
     bundle.query(py, text)
+}
+
+#[pyfunction]
+pub fn insight_embedding(text: &str) -> PyResult<Vec<f32>> {
+    Ok(insight_embed(text))
 }
 
 #[pymodule]
@@ -133,6 +141,7 @@ fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(route_decision, m)?)?;
     m.add_function(wrap_pyfunction!(route_inevitability, m)?)?;
     m.add_function(wrap_pyfunction!(query_memory, m)?)?;
+    m.add_function(wrap_pyfunction!(insight_embedding, m)?)?;
     let _ = py; // reserve for future use
     Ok(())
 }
