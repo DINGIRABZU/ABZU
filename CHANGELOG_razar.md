@@ -59,6 +59,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
   logs each attempt in `logs/razar_ai_invocations.json`.
 - AI handover retry loop reruns health checks after each patch and aborts after
   a configurable attempt limit.
+- Delegated crown routing and Kimicho fallback to Rust crates.
 
 ## [0.1.0] - 2025-08-30
 

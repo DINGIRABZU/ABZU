@@ -12,7 +12,9 @@ fn embed(text: &str) -> [f32; EMBED_DIM] {
     }
     let norm: f32 = v.iter().map(|x| x * x).sum::<f32>().sqrt();
     if norm > 0.0 {
-        for x in &mut v { *x /= norm; }
+        for x in &mut v {
+            *x /= norm;
+        }
     }
     v
 }
@@ -29,7 +31,8 @@ pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Ve
     bundle.initialize(py)?;
     let q_dict = bundle.query(py, question)?;
     let data = q_dict.as_ref(py);
-    let vector_any = data.get_item("vector")?
+    let vector_any = data
+        .get_item("vector")?
         .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyKeyError, _>("vector"))?;
     let vector_list: &PyList = vector_any.downcast()?;
     let q_emb = embed(question);
@@ -43,7 +46,9 @@ pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Ve
             let emb = embed(&text);
             let score = cosine(&q_emb, &emb);
             let out = PyDict::new(py);
-            for (k, v) in meta { out.set_item(k, v)?; }
+            for (k, v) in meta {
+                out.set_item(k, v)?;
+            }
             out.set_item("score", score)?;
             scored.push((score, out.into()));
         }

@@ -7,7 +7,7 @@ For narrative alignment and sacred terminology, consult [herojourney_engine.md](
 | Python Subsystem | Rust Crate | Bridge |
 | --- | --- | --- |
 | `memory` layers (`memory/`, `vector_memory.py`) | `neoabzu-memory` | PyO3 module `neoabzu_memory` bundles cortex, vector, spiral, emotional, mental, spiritual, and narrative layers. |
-| `crown_router.py` | `neoabzu-crown` | Fully ported; `crown_router_rs.py` provides compatibility bindings. |
+| `crown_router.py` | `neoabzu-crown` | Fully ported; Python module is a thin stub over the Rust crate. |
 | legacy fallback subsystem (`razar/boot_orchestrator.py`) | `neoabzu-kimicho` | PyO3 module `neoabzu_kimicho` exposes `init_kimicho` and `fallback_k2` for Crown routing failover. |
 | `rag/orchestrator.py` | `neoabzu-rag` | `MoGEOrchestrator` aggregates memory and connector results via PyO3. |
 | `core` lambda engine (`core/`) | `neoabzu-core` | Accessible through `neoabzu_memory.eval_core` and `neoabzu_memory.reduce_inevitable_core` for Crown Router and RAZAR. |
@@ -23,7 +23,7 @@ For narrative alignment and sacred terminology, consult [herojourney_engine.md](
 Legacy modules can import Rust crates compiled with PyO3 directly:
 
 ```python
-from crown_router_rs import route_decision
+from crown_router import route_decision
 
 from neoabzu_memory import eval_core
 

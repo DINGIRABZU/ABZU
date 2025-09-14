@@ -6,6 +6,8 @@ See [Agent Ecosystem & Relations](ABZU_blueprint.md#agent-ecosystem--relations) 
 
 RAZAR ↔ Crown ↔ Kimi2Code handoffs and recovery loops are diagrammed in the [Ignition Blueprint](ignition_blueprint.md).
 
+Razor now delegates crown routing and Kimicho fallback to the Rust crates `neoabzu_crown` and `neoabzu_kimicho`; the corresponding Python modules are stubs.
+
 Mission brief exchange and servant routing are summarized in [Mission Brief Exchange & Servant Routing](mission_brief_exchange.md).
 
 ## Vision

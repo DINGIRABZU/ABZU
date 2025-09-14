@@ -1986,48 +1986,6 @@
       "path": "crown_router.py",
       "version": "0.1.1",
       "dependencies": [
-        "INANNA_AI",
-        "__future__",
-        "agents",
-        "asyncio",
-        "crown_decider",
-        "emotional_state",
-        "json",
-        "mcp",
-        "memory",
-        "monitoring",
-        "neoabzu_core",
-        "neoabzu_insight",
-        "opentelemetry",
-        "os",
-        "prometheus_client",
-        "psutil",
-        "pynvml",
-        "rag",
-        "time",
-        "typing"
-      ],
-      "tests": [
-        "tests/agents/nazarick/test_document_registry.py",
-        "tests/agents/nazarick/test_ethics_manifesto_integration.py",
-        "tests/crown/test_router_memory.py",
-        "tests/monitoring/test_chakra_heartbeat.py",
-        "tests/test_metrics_endpoints.py"
-      ],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "active",
-      "issues": "No known issues",
-      "adr": null
-    },
-    {
-      "id": "crown_router_rs",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "crown_router_rs.py",
-      "version": "0.1.1",
-      "dependencies": [
         "neoabzu_crown"
       ],
       "tests": [],
