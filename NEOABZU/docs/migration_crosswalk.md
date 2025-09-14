@@ -4,6 +4,8 @@ This guide maps legacy Python subsystems to their Rust implementations in NEOABZ
 
 For narrative alignment and sacred terminology, consult [herojourney_engine.md](herojourney_engine.md) and [SUMERIAN_33WORDS.md](SUMERIAN_33WORDS.md).
 
+For module-specific quirks and bugs, see the [Python legacy audit](../../docs/python_legacy_audit.md).
+
 | Python Subsystem | Rust Crate | Bridge |
 | --- | --- | --- |
 | `memory` layers (`memory/`, `vector_memory.py`) | `neoabzu-memory` | PyO3 module `neoabzu_memory` bundles cortex, vector, spiral, emotional, mental, spiritual, and narrative layers. |

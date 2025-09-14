@@ -143,6 +143,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md](../MUSIC_FOUNDATION/README_MUSIC_QNL_OS.md) | ✴ QNL_OS · Quantum Narrative Language Operating System | QNL (Quantum Narrative Language) is a symbolic, multidimensional grammar designed to transmute energy, data, emotion,... | - |
 | [../MUSIC_FOUNDATION/music_foundation.md](../MUSIC_FOUNDATION/music_foundation.md) | 🎵 Music Foundation — Theoretical & Mathematical Guide | This document outlines the theoretical and mathematical principles needed for INANNA_AI to interpret human music and... | - |
 | [../NEOABZU/Reignition.md](../NEOABZU/Reignition.md) | Reignition | NEOABZU ignites a fresh substrate for ABZU components. | - |
+| [../NEOABZU/crown/README.md](../NEOABZU/crown/README.md) | neoabzu-crown | Rust implementation of the Crown router. | - |
 | [../NEOABZU/docs/Bana Narrator vision.md](../NEOABZU/docs/Bana Narrator vision.md) | Bana Narrator vision.md | - | - |
 | [../NEOABZU/docs/OROBOROS_Engine.md](../NEOABZU/docs/OROBOROS_Engine.md) | OROBOROS_Engine.md | - | - |
 | [../NEOABZU/docs/OROBOROS_Lexicon.md](../NEOABZU/docs/OROBOROS_Lexicon.md) | OROBOROS_Lexicon.md | - | - |
@@ -159,6 +160,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/migration_crosswalk.md](../NEOABZU/docs/migration_crosswalk.md) | Migration Crosswalk | This guide maps legacy Python subsystems to their Rust implementations in NEOABZU. | - |
 | [../NEOABZU/docs/onboarding.md](../NEOABZU/docs/onboarding.md) | Onboarding | This Neo‑ABZU guide complements the [ABZU Onboarding Checklist](../../docs/onboarding/README.md); review and confirm... | - |
 | [../NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md) | Rust Doctrine | This primer captures expectations for Rust code within NEOABZU. | - |
+| [../NEOABZU/kimicho/README.md](../NEOABZU/kimicho/README.md) | neoabzu-kimicho | Rust crate providing Kimicho fallback logic. | - |
 | [../NEOABZU/memory/README.md](../NEOABZU/memory/README.md) | neoabzu-memory | Neo-ABZU memory primitives. | - |
 | [../NEOABZU/rag/README.md](../NEOABZU/rag/README.md) | neoabzu-rag | Retrieval-augmented generation components for Neo-ABZU. | - |
 | [../NEOABZU/vector/README.md](../NEOABZU/vector/README.md) | neoabzu-vector | Rust vector operations for Neo-ABZU. | - |
@@ -397,7 +399,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
 | [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.9 **Last updated:** 2025-09-30 | - |
-| [migration_crosswalk.md](migration_crosswalk.md) | Migration Crosswalk | \| Step \| Rust crate \| Remaining Python dependencies \| \|------\|------------\|--------------------------------\| \| Razor... | - |
+| [migration_crosswalk.md](migration_crosswalk.md) | Migration Crosswalk | For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md). | - |
 | [milestone_viii_plan.md](milestone_viii_plan.md) | Milestone VIII – Sonic Core & Avatar Expression Harmonics | This milestone strengthens the emotional flow between text, music and the on-screen avatar. It expands the Sonic Core... | - |
 | [mission_brief_exchange.md](mission_brief_exchange.md) | Mission Brief Exchange & Servant Routing | This guide outlines how RAZAR hands mission briefs to Crown, how failures escalate through `ai_invoker.handover`, and... | - |
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |
@@ -443,6 +445,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [project_plan.md](project_plan.md) | Project Plan | This project plan outlines quarter-level goals and owners for components currently scoring below 7. Refer to [roadmap... | - |
 | [protocol_compliance.md](protocol_compliance.md) | Protocol Compliance | This dashboard provides a high-level view of how major components align with repository protocols. | - |
 | [psychic_loop.md](psychic_loop.md) | Psychic Loop | `mirror_thresholds.json` and `insight_matrix.json` feed the self-reflection cycle that keeps the avatar aligned with... | - |
+| [python_legacy_audit.md](python_legacy_audit.md) | Python Legacy Audit | This audit lists known bugs and quirks in Python modules superseded by Rust crates. Each Rust implementation should v... | - |
 | [quarantine_log.md](quarantine_log.md) | Quarantine Log | Failed components are moved to the `quarantine/` directory and recorded below. | - |
 | [quick_start_non_technical.md](quick_start_non_technical.md) | Quick Start Guide (Non-Technical) | Follow these steps to get the system running with minimal setup. | - |
 | [rag_music_oracle.md](rag_music_oracle.md) | RAG Music Oracle | `rag_music_oracle.py` answers questions about songs by combining Retrieval Augmented Generation with basic audio emot... | - |
