@@ -13,9 +13,13 @@ fn setup_stub_layers(py: Python<'_>) {
         };
     }
 
-    // memory package and agents package placeholders
+    // memory and agents package placeholders
     let agents = PyModule::new(py, "agents").unwrap();
     modules.set_item("agents", agents).unwrap();
+    let memory_pkg = PyModule::new(py, "memory").unwrap();
+    modules.set_item("memory", memory_pkg).unwrap();
+    let optional_pkg = PyModule::new(py, "memory.optional").unwrap();
+    modules.set_item("memory.optional", optional_pkg).unwrap();
     stub!(
         "agents.event_bus",
         "events = []\n\ndef emit_event(actor, action, metadata):\n    events.append((actor, action, metadata))\n"
@@ -45,6 +49,10 @@ fn setup_stub_layers(py: Python<'_>) {
     stub!(
         "memory.narrative_engine",
         "def stream_stories():\n    return ['n']\n"
+    );
+    stub!(
+        "neoabzu_core",
+        "def evaluate(expr):\n    return expr\n"
     );
 }
 

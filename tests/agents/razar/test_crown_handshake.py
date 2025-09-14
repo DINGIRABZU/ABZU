@@ -73,3 +73,17 @@ def test_handshake_records_and_recovers(tmp_path: Path, mock_ws, monkeypatch) ->
     ]
     log = json.loads(transcript.read_text())
     assert [entry["role"] for entry in log] == ["razar", "crown"]
+
+
+def test_patch_action_archives_files(tmp_path: Path, mock_ws) -> None:
+    transcript = tmp_path / "dialogues.json"
+    brief = tmp_path / "brief.json"
+    brief.write_text(
+        json.dumps({"priority_map": {"a": 0}, "current_status": {}, "open_issues": []})
+    )
+    handshake = ch.CrownHandshake("ws://dummy", transcript)
+    asyncio.run(handshake.perform(str(brief)))
+    files = list(tmp_path.glob("*_alpha_patch.json"))
+    assert files, "expected patch archive"
+    data = json.loads(files[0].read_text())
+    assert data["component"] == "alpha"
