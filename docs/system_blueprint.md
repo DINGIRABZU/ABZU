@@ -672,7 +672,7 @@ Performance-critical services are gradually migrating to Rust crates within NEOA
 - `neoabzu_persona` – intent normalization layers.
 - `neoabzu_crown` – crown orchestration bindings.
 - `neoabzu_rag` – retrieval helpers.
-- `neoabzu_insight` – reasoning engine wired into the crown router.
+- `neoabzu_insight` – counts word and bigram frequencies for the crown router.
 
 The RAG orchestrator is feature-complete, merging memory bundle and external connector results through a dedicated merge routine. The workspace mirrors existing Python APIs via PyO3 wrappers to permit side-by-side validation during the transition.
 See the [Migration Crosswalk](../NEOABZU/docs/migration_crosswalk.md) for mappings between Python subsystems and their Rust counterparts.
