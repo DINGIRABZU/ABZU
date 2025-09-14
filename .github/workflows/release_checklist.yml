@@ -22,10 +22,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r dev-requirements.txt
           pip install -e .
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+      - name: cargo clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: cargo test
+        run: cargo test --workspace --all-features
       - name: Verify docs index
         run: |
           python tools/doc_indexer.py
           git diff --exit-code docs/INDEX.md
+      - name: Validate docs
+        run: python scripts/validate_docs.py
       - name: Run tests with coverage
         run: pytest --cov --cov-fail-under=80
       - name: Verify environment specs unchanged
