@@ -12,6 +12,10 @@ For narrative alignment and sacred terminology, consult [herojourney_engine.md](
 | `core` lambda engine (`core/`) | `neoabzu-core` | Accessible through `neoabzu_memory.eval_core` and `neoabzu_memory.reduce_inevitable_core` for Crown Router and RAZAR. |
 | `system coordination` (`metrics`, `tracing`, `caching`) | `neoabzu-crown` | Shared instrumentation and caches mirror ABZU coordination. |
 | `insight_compiler.py` | `neoabzu-insight` | Provides `reason` routine for Crown Router via PyO3. |
+| `persona` intent layers (`INANNA_AI/personality_layers`) | `neoabzu-persona` | PyO3 module `neoabzu_persona` normalizes intents. |
+| `vector_memory.py` | `neoabzu-vector` | gRPC service `neoabzu_vector` exposes search APIs. |
+| `numeric` utilities (`numeric/`) | `neoabzu-numeric` | PyO3 module `neoabzu_numeric` accelerates math routines. |
+| `fusion` engine (`fusion/`) | `neoabzu-fusion` | PyO3 module `neoabzu_fusion` merges symbolic and numeric invariants. |
 
 ## PyO3 Integration Example
 

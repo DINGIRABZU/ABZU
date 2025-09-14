@@ -98,6 +98,8 @@ citadel = [
     "neo4j==5.23.1",
 ]
 
+neoabzu = ["neoabzu"]
+
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
 dev = [

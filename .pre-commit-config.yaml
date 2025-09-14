@@ -198,6 +198,11 @@ repos:
     entry: python scripts/verify_crate_refs.py
     language: system
     pass_filenames: false
+  - id: verify-blueprint-refs
+    name: Verify system blueprint crate references
+    entry: python scripts/verify_blueprint_refs.py
+    language: system
+    pass_filenames: false
   - id: verify-docs-up-to-date
     name: Verify docs up to date
     entry: python scripts/verify_docs_up_to_date.py

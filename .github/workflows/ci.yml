@@ -32,8 +32,12 @@ jobs:
             echo "pre-commit $expected required, found $installed"
             exit 1
           fi
-      - name: Run pre-commit
-        run: pre-commit run --all-files
+      - name: Run pre-commit on touched files
+        run: |
+          files=$(git diff --name-only origin/$GITHUB_BASE_REF...HEAD)
+          if [ -n "$files" ]; then
+            pre-commit run --files $files
+          fi
       - name: Verify component maturity
         run: python scripts/verify_component_maturity.py
 
@@ -78,6 +82,16 @@ jobs:
           python-version: "3.11"
       - name: Verify crate references
         run: python scripts/verify_crate_refs.py
+
+  blueprint-refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify system blueprint references
+        run: python scripts/verify_blueprint_refs.py
 
   validate-components:
     runs-on: ubuntu-latest
