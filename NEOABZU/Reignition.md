@@ -67,10 +67,13 @@ cargo run -p neoabzu-vector --bin server
 
 The `NEOABZU_VECTOR_STORE` environment variable should point to a JSON
 array of strings. Each entry is embedded at startup and stored in
-memory. Metrics counters `neoabzu_vector_init_total` and
+memory. Set `NEOABZU_VECTOR_SHARDS` to split the store across multiple
+shards for concurrent queries; omit or set to `1` for a single shard.
+Metrics counters `neoabzu_vector_init_total` and
 `neoabzu_vector_search_total` track RPC usage, and invalid requests
 surface gRPC errors (e.g. missing store, zero `top_n`, or searches
-before initialization).
+before initialization). A small command-line client is available at
+`src/bin/vector_client.py` for ad-hoc queries.
 
 Python callers may connect using `neoabzu.vector.VectorClient`:
 
