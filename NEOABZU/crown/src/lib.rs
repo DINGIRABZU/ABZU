@@ -4,6 +4,7 @@ use neoabzu_core::{evaluate, reduce_inevitable_with_journey};
 use neoabzu_insight::{analyze as insight_analyze, embedding as insight_embed};
 use neoabzu_memory::MemoryBundle;
 use neoabzu_rag::{retrieve_top, MoGEOrchestrator};
+use neoabzu_chakrapulse::emit_pulse;
 use pyo3::{prelude::*, wrap_pyfunction};
 use pyo3::types::{PyDict, PyList};
 
@@ -19,7 +20,7 @@ fn select_store(archetype: &str) -> &str {
 #[pyfunction]
 fn route_query(py: Python<'_>, question: &str, archetype: &str) -> PyResult<PyObject> {
     let _ = select_store(archetype);
-    let res = retrieve_top(py, question, 5, None)?;
+    let res = retrieve_top(py, question, 5, None, None)?;
     Ok(PyList::new(py, res).into_py(py))
 }
 
@@ -135,6 +136,11 @@ pub fn insight_embedding(text: &str) -> PyResult<Vec<f32>> {
     Ok(insight_embed(text))
 }
 
+#[pyfunction]
+pub fn health_pulse() {
+    emit_pulse("crown", true);
+}
+
 #[pymodule]
 fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(route_query, m)?)?;
@@ -142,6 +148,7 @@ fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(route_inevitability, m)?)?;
     m.add_function(wrap_pyfunction!(query_memory, m)?)?;
     m.add_function(wrap_pyfunction!(insight_embedding, m)?)?;
+    m.add_function(wrap_pyfunction!(health_pulse, m)?)?;
     let _ = py; // reserve for future use
     Ok(())
 }

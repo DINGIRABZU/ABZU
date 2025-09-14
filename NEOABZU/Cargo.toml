@@ -1,3 +1,17 @@
 [workspace]
-members = ["core", "memory", "vector", "fusion", "persona", "crown", "rag", "numeric", "narrative", "insight", "kimicho", "k2coder"]
+members = [
+    "core",
+    "memory",
+    "vector",
+    "fusion",
+    "persona",
+    "crown",
+    "rag",
+    "numeric",
+    "narrative",
+    "insight",
+    "kimicho",
+    "k2coder",
+    "chakrapulse",
+]
 resolver = "2"

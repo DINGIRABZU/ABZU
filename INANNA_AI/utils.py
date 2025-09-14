@@ -7,6 +7,8 @@ import os
 import re
 from typing import Iterable, Tuple
 
+from neoabzu_chakrapulse import emit_pulse, subscribe_chakra
+
 import numpy as np
 
 from core.utils.optional_deps import lazy_import
@@ -66,6 +68,17 @@ def sentiment_score(text: str) -> float:
         return 0.0
     score = sum(SENTIMENT_LEXICON.get(tok, 0.0) for tok in tokens)
     return float(np.clip(score / len(tokens), -1.0, 1.0))
+
+
+def health_pulse(ok: bool = True) -> None:
+    """Emit a Chakrapulse heartbeat for Inanna."""
+    emit_pulse("inanna", ok)
+
+
+def consume_pulses(n: int = 1):
+    """Receive ``n`` pulses from the Chakrapulse bus."""
+    rx = subscribe_chakra()
+    return [rx.recv() for _ in range(n)]
 
 
 def verify_insight_matrix(

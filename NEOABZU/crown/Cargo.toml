@@ -14,6 +14,7 @@ neoabzu-memory = { path = "../memory" }
 neoabzu-rag = { path = "../rag" }
 neoabzu-insight = { path = "../insight" }
 neoabzu-core = { path = "../core" }
+neoabzu-chakrapulse = { path = "../chakrapulse" }
 
 [features]
 default = []

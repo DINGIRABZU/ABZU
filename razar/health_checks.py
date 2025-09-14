@@ -12,6 +12,8 @@ import urllib.request
 from pathlib import Path
 from typing import Callable, Dict, List
 
+from neoabzu_chakrapulse import emit_pulse
+
 LOGGER = logging.getLogger("razar.health_checks")
 
 
@@ -115,8 +117,11 @@ def run(name: str) -> bool:
     func = CHECKS.get(name)
     if not func:
         LOGGER.info("No health check defined for %s", name)
+        emit_pulse(name, True)
         return True
-    if func():
+    result = func()
+    emit_pulse(name, result)
+    if result:
         return True
     LOGGER.warning("Health check failed for %s", name)
     cmd = RESTART_COMMANDS.get(name)
@@ -126,5 +131,8 @@ def run(name: str) -> bool:
         subprocess.run(cmd, check=True)
     except Exception as exc:  # pragma: no cover - system dependent
         LOGGER.error("Restart command failed for %s: %s", name, exc)
+        emit_pulse(name, False)
         return False
-    return func()
+    final = func()
+    emit_pulse(name, final)
+    return final
