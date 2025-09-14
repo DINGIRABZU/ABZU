@@ -270,6 +270,7 @@ dependencies = [
 name = "neoabzu-crown"
 version = "0.1.0"
 dependencies = [
+ "neoabzu-insight",
  "pyo3",
 ]
 
@@ -279,6 +280,13 @@ version = "0.1.0"
 dependencies = [
  "pyo3",
  "tracing",
+]
+
+[[package]]
+name = "neoabzu-insight"
+version = "0.1.0"
+dependencies = [
+ "pyo3",
 ]
 
 [[package]]
