@@ -1,3 +1,4 @@
+chakra: crown
 glm:
   endpoint: https://glm.example.com/glm41v_9b
   api_key: ${GLM_API_KEY}

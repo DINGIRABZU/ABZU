@@ -7,6 +7,7 @@ import ChakraPulse from './chakraPulse.js';
 import AvatarRoom from './avatar_room/avatar_room.js';
 import ChakraStatusBoard from './chakraStatusBoard.js';
 import AgentStatusPanel from './agent_status_panel.js';
+import ChatThreads from './chatThreads.js';
 import MemoryPanel from './memory_panel/memory_panel.js';
 import ChakraStatusPanel from './chakra_status_panel/chakra_status_panel.js';
 import SelfHealingPanel from './self_healing_panel/self_healing_panel.js';
@@ -71,6 +72,7 @@ function GameDashboard() {
       React.createElement(ChakraStatusBoard),
       React.createElement(ChakraStatusPanel),
       React.createElement(AgentStatusPanel),
+      React.createElement(ChatThreads),
       React.createElement(ConnectorsPanel),
       React.createElement(MemoryPanel),
       React.createElement(SelfHealingPanel)
