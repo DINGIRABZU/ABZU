@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -227,6 +226,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ALBEDO_LAYER.md](ALBEDO_LAYER.md) | Albedo Layer | Albedo is a personality layer that shapes responses through a four-phase alchemical cycle. | - |
 | [Albedo_GUIDE.md](Albedo_GUIDE.md) | Albedo Guide | - | - |
 | [BLUEPRINT_EXPORT.md](BLUEPRINT_EXPORT.md) | Blueprint Export | This snapshot lists major documentation assets with links that can be pinned to a specific commit. For general contri... | - |
+| [CI_GUIDE.md](CI_GUIDE.md) | CI Guide | This guide outlines how ABZU's continuous integration checks run and how to replicate them locally. | - |
 | [CI_OVERVIEW.md](CI_OVERVIEW.md) | CI Overview | This guide summarizes the repository's continuous integration workflow. | - |
 | [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) | Contributor Guide | An overview of commit message conventions for contributors. | - |
 | [CONTRIBUTOR_HANDBOOK.md](CONTRIBUTOR_HANDBOOK.md) | Contributor Handbook | This handbook helps new contributors get set up, understand the repository layout, and work through common developmen... | - |
