@@ -1,0 +1,11 @@
+{
+  "id": "sebas_tiara",
+  "chakra": ["heart"],
+  "capabilities": ["ethics_guardian"],
+  "dependencies": [
+    "Jira",
+    "ServiceNow",
+    "audit_log_access"
+  ],
+  "escalation_contacts": ["#sanctuary"]
+}

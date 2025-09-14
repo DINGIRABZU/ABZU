@@ -1,6 +1,6 @@
 # Chakra Architecture
 
-This document summarizes the major modules aligned with each chakra layer, their operational state, current quality level, and any known warnings or errors. Semantic version numbers for these layers are tracked in [chakra_versions.json](chakra_versions.json).
+This document summarizes the major modules aligned with each chakra layer, their operational state, current quality level, and any known warnings or errors. Semantic version numbers for these layers are tracked in [chakra_versions.json](chakra_versions.json). The complete agent roster with chakra alignment is maintained in [agent_registry.json](../agents/nazarick/agent_registry.json).
 
 | Chakra | Components | State | Quality Level | Known Warnings/Errors |
 | --- | --- | --- | --- | --- |
@@ -15,7 +15,7 @@ This document summarizes the major modules aligned with each chakra layer, their
 Additional Nazarick agents expand these layers:
 [Bana Bio-Adaptive Narrator](nazarick_agents.md#bana-bio-adaptive-narrator) (Heart),
 [AsianGen Creative Engine](nazarick_agents.md#asiangen-creative-engine) (Throat), and
-[LandGraph Geo Knowledge](nazarick_agents.md#landgraph-geo-knowledge) (Root).
+[LandGraph Geo Knowledge](nazarick_agents.md#landgraph-geo-knowledge) (Root) – see their entries in the [agent registry](../agents/nazarick/agent_registry.json).
 
 ## Service and Schema Mapping
 

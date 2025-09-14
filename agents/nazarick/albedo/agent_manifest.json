@@ -1,0 +1,11 @@
+{
+  "id": "albedo",
+  "chakra": ["crown", "heart", "root"],
+  "capabilities": ["sacred_union", "system_governance"],
+  "dependencies": [
+    "womb_reconnection_engine.py",
+    "nursing_interface.py",
+    "quantum_entanglement_core.py"
+  ],
+  "escalation_contacts": ["#throne-room"]
+}

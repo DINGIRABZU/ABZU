@@ -57,7 +57,6 @@ abzu-memory-bootstrap
 - [Nazarick Core Architecture](../agents/nazarick/nazarick_core_architecture.md)
 - [Nazarick Memory Blueprint](../agents/nazarick/nazarick_memory_blueprint.md)
 - [Nazarick Agents](nazarick_agents.md)
-- [Nazarick Agent Profiles](nazarick_agent_profiles.md)
 - [Bana Narrative Engine](../nazarick/agents/Bana_narrative_engine.md) – biosignal-driven story generation
 - [Nazarick Agents Project Brief](../nazarick/agents/Nazarick_agents_project_brief.md) – agent relationships and narrative dynamics
 - [Nazarick Agents Chart](../nazarick/agents/Nazarick_agents_chart.md) – talents and personae of the pantheon

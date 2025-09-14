@@ -1,0 +1,11 @@
+{
+  "id": "demiurge",
+  "chakra": ["third_eye"],
+  "capabilities": ["strategy"],
+  "dependencies": [
+    "Neo4j",
+    "NetworkX",
+    "OR-Tools"
+  ],
+  "escalation_contacts": ["#strategy-hall"]
+}

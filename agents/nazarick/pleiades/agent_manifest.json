@@ -1,0 +1,11 @@
+{
+  "id": "pleiades",
+  "chakra": ["throat"],
+  "capabilities": ["utility_daemons"],
+  "dependencies": [
+    "Fluent Bit",
+    "Loki",
+    "Transformers"
+  ],
+  "escalation_contacts": ["#star-gallery"]
+}
