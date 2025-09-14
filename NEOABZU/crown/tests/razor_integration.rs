@@ -37,33 +37,21 @@ def decide_expression_options(emotion):
         py.run("import sys; sys.path.append('../..')", None, None).unwrap();
         let razor_code = r#"
 import crown_router
-import crown_router_rs
 
-def legacy(text, emotion):
+def route(text, emotion):
     return crown_router.route_decision(text, {'emotion': emotion})
-
-def rust(text, emotion):
-    return crown_router_rs.route_decision(text, {'emotion': emotion})
 "#;
         let razor_mod = PyModule::from_code(py, razor_code, "", "razor_agent").unwrap();
         modules.set_item("razor_agent", razor_mod).unwrap();
 
-        let legacy_res: &PyDict = py
-            .eval("razor_agent.legacy('hi', 'joy')", None, None)
+        let res: &PyDict = py
+            .eval("razor_agent.route('hi', 'joy')", None, None)
             .unwrap()
             .downcast()
             .unwrap();
-        let rust_res: &PyDict = py
-            .eval("razor_agent.rust('hi', 'joy')", None, None)
-            .unwrap()
-            .downcast()
-            .unwrap();
-
-        let m1: String = legacy_res.get_item("model").unwrap().unwrap().extract().unwrap();
-        let m2: String = rust_res.get_item("model").unwrap().unwrap().extract().unwrap();
-        assert_eq!(m1, m2);
-        let t1: String = legacy_res.get_item("tts_backend").unwrap().unwrap().extract().unwrap();
-        let t2: String = rust_res.get_item("tts_backend").unwrap().unwrap().extract().unwrap();
-        assert_eq!(t1, t2);
+        let model: String = res.get_item("model").unwrap().unwrap().extract().unwrap();
+        assert_eq!(model, "basic-rag");
+        let tts: String = res.get_item("tts_backend").unwrap().unwrap().extract().unwrap();
+        assert_eq!(tts, "gtts");
     });
 }

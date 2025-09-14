@@ -226,8 +226,7 @@ Generated automatically. Lists each Python file with its description and externa
 | `crown_decider.py` | Heuristics for selecting a language model in the Crown agent. | INANNA_AI, audio, crown_config |
 | `crown_prompt_orchestrator.py` | Lightweight prompt orchestrator for the Crown console. | INANNA_AI, audio |
 | `crown_query_router.py` | Route questions to archetype-specific vector stores. | None |
-| `crown_router.py` | Coordinate model and expression routing for the Crown agent. | INANNA_AI, agents, mcp, monitoring, neoabzu_core, neoabzu_insight, opentelemetry, prometheus_client, psutil, pynvml |
-| `crown_router_rs.py` | Python wrapper for the Rust crown router. | neoabzu_crown |
+| `crown_router.py` | Thin wrapper around the Rust crown router. | neoabzu_crown |
 | `data/biosignals/__init__.py` | Biosignal dataset hashes and helpers. | None |
 | `datpars/__init__.py` | Placeholder package for DATPars utilities. | None |
 | `datpars/interfaces.py` | Stub interfaces for DATPars parsers. | None |
