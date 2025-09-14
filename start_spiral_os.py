@@ -17,7 +17,6 @@ import yaml
 
 import emotion_registry
 import emotional_state
-import server
 from archetype_shift_engine import maybe_shift_archetype
 from connectors import webrtc_connector
 from core import language_engine, self_correction_engine
@@ -29,7 +28,7 @@ from INANNA_AI import glm_analyze, glm_init, listening_engine
 from INANNA_AI.ethical_validator import EthicalValidator
 from INANNA_AI.personality_layers import REGISTRY, list_personalities
 from INANNA_AI_AGENT import inanna_ai
-from rag.orchestrator import MoGEOrchestrator
+from neoabzu_rag import MoGEOrchestrator
 from tools import reflection_loop
 
 try:  # pragma: no cover - optional dependency

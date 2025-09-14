@@ -22,7 +22,7 @@ vector_memory = _vector_memory
 """Optional vector memory subsystem; ``None`` if unavailable."""
 
 if TYPE_CHECKING:  # pragma: no cover - avoid circular import at runtime
-    from rag.orchestrator import MoGEOrchestrator
+    from neoabzu_rag import MoGEOrchestrator
 
 
 logger = logging.getLogger(__name__)

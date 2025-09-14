@@ -7,7 +7,7 @@ Follow this reading order before contributing. After reviewing each document, re
 Run `python docs/onboarding/wizard.py` to walk through repository setup. The wizard prompts for Neo-APSU document confirmations and writes signed summaries to `onboarding_confirm.yml`. CI runs `scripts/confirm_reading.py` and fails if required confirmations are missing.
 A pre-commit hook also verifies that `onboarding_confirm.yml` references `docs/blueprint_spine.md`, `docs/The_Absolute_Protocol.md`, and `NEOABZU/docs/Oroboros_Core.md`.
 
-The Crown router and Kimicho fallback now use Rust crates (`neoabzu_crown`, `neoabzu_kimicho`); ensure these packages are installed as part of your environment setup.
+The Crown router, RAG orchestrator, and Kimicho fallback now use Rust crates (`neoabzu_crown`, `neoabzu_rag`, `neoabzu_kimicho`); ensure these packages are installed as part of your environment setup.
 
 1. [Project Overview](../project_overview.md)
 2. [Architecture Overview](../architecture_overview.md)

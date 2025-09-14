@@ -13,7 +13,7 @@ import argparse
 import numpy as np
 
 from crown_router import route_decision
-from rag.orchestrator import MoGEOrchestrator
+from neoabzu_rag import MoGEOrchestrator
 
 from . import db_storage, listening_engine, speaking_engine, stt_whisper, utils
 from .gate_orchestrator import GateOrchestrator
