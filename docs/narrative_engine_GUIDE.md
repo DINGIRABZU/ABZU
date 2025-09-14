@@ -34,3 +34,7 @@ pytest tests/narrative_engine/test_biosignal_pipeline.py
 |---------|------|-------|
 | 0.7.0 | 2025-09-20 | Added Bana narrative emission and Inanna bridge flow. |
 | 0.6.0 | 2025-09-16 | Clarified architecture and dataset schema. |
+
+## Doctrine References
+- [Doctrine Index](doctrine_index.md)
+- [The Absolute Protocol](The_Absolute_Protocol.md)
