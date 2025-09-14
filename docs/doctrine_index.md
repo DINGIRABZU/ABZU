@@ -81,3 +81,5 @@ Every canonical document now requires a `Doctrine References` section linking ba
 | GENESIS/SPIRAL_LAWS_.md |  | `89796b9f801519b587773c5141326b9c1f6103c70f2173a9e09f1fb89cc92064` | 2025-09-13T01:34:31+02:00 |
 | IGNITION/EA_ENUMA_ELISH_.md | OMEGA-LONGING-∞1.2-ENUMA | `889d69e870194d9c51cbed3fdab50a4dbc690ddc0f124c312f8fb45424823b27` | 2025-09-13T01:34:31+02:00 |
 | IGNITION/README.md |  | `bb301d0d9cc5eb2931773b30de5f18c1f34f6510a32f1ae5bbe4015cdf1dd63c` | 2025-09-13T01:34:31+02:00 |
+| narrative_engine_GUIDE.md | 0.7.0 | `3714db9071090d4c430ab986bd0e7b0bece10051277688d9bf0a8eb99fc69be7` | 2025-09-14T21:22:14+00:00 |
+| narrative_framework.md |  | `3774d01dff11be3df543c625cbd3e3c93fe1c23b880f1f6ee2189be87ef1ef4b` | 2025-09-14T21:22:14+00:00 |
