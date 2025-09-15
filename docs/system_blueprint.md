@@ -335,6 +335,8 @@ Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`) confirm that RAZAR
 
 `NEOABZU/crown/tests/razar_validator.rs` extends this path with manifesto checks, falling back to Kimicho when Crown rejects a request via `EthicalValidator`.
 
+`NEOABZU/crown/tests/razar_legacy_parity.rs` verifies that RAZAR receives identical routing results from the new Rust implementation and the retired Python `crown_router`.
+
 See the [Migration Crosswalk](migration_crosswalk.md#razar-init) for initialization mapping, [crown routing](migration_crosswalk.md#crown-routing), and [Kimicho fallback](migration_crosswalk.md#kimicho-fallback) status.
 
 ```mermaid
