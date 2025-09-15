@@ -6,9 +6,15 @@ use neoabzu_memory::MemoryBundle;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 
-const EMBED_DIM: usize = 16;
+mod connector;
+mod ranker;
 
-fn embed(text: &str) -> [f32; EMBED_DIM] {
+pub use connector::FuncConnector;
+pub use ranker::CosineRanker;
+
+pub(crate) const EMBED_DIM: usize = 16;
+
+pub(crate) fn embed(text: &str) -> [f32; EMBED_DIM] {
     let mut v = [0f32; EMBED_DIM];
     for (i, b) in text.bytes().enumerate() {
         v[i % EMBED_DIM] += b as f32 / 255.0;
@@ -22,7 +28,7 @@ fn embed(text: &str) -> [f32; EMBED_DIM] {
     v
 }
 
-fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
+pub(crate) fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
     let dot: f32 = a.iter().zip(b.iter()).map(|(x, y)| x * y).sum();
     dot
 }
@@ -60,15 +66,18 @@ pub fn merge_documents(
 
     let docs = PyList::new(py, collected);
     if let Some(r) = ranker {
-        let ranked = r.call1((question, docs))?;
+        let callable: &PyAny = if r.hasattr("rank")? {
+            r.getattr("rank")?
+        } else {
+            r
+        };
+        let ranked = callable.call1((question, docs))?;
         let ranked_list: &PyList = ranked.downcast()?;
-        return Ok(
-            ranked_list
-                .iter()
-                .take(top_n)
-                .filter_map(|d| d.downcast::<PyDict>().ok().map(|p| p.into()))
-                .collect(),
-        );
+        return Ok(ranked_list
+            .iter()
+            .take(top_n)
+            .filter_map(|d| d.downcast::<PyDict>().ok().map(|p| p.into()))
+            .collect());
     }
 
     let q_emb = embed(question);
@@ -187,8 +196,7 @@ impl MoGEOrchestrator {
             .and_then(|k| k.get_item("connectors").ok().flatten())
             .and_then(|v| v.downcast::<PyList>().ok());
 
-        let ranker = kwargs
-            .and_then(|k| k.get_item("ranker").ok().flatten());
+        let ranker = kwargs.and_then(|k| k.get_item("ranker").ok().flatten());
 
         let documents = if let Some(doc_any) = documents {
             doc_any
@@ -212,6 +220,8 @@ fn neoabzu_rag(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(merge_documents, m)?)?;
     m.add_function(wrap_pyfunction!(retrieve_top, m)?)?;
     m.add_class::<MoGEOrchestrator>()?;
+    m.add_class::<FuncConnector>()?;
+    m.add_class::<CosineRanker>()?;
     Ok(())
 }
 
@@ -251,7 +261,7 @@ def query_vectors(*a, **k):
     fn retrieve_top_returns_expected() {
         Python::with_gil(|py| {
             setup(py);
-            let res = retrieve_top(py, "abc", 1, None).unwrap();
+            let res = retrieve_top(py, "abc", 1, None, None).unwrap();
             let first: &PyDict = res[0].as_ref(py);
             let text: String = first.get_item("text").unwrap().unwrap().extract().unwrap();
             assert_eq!(text, "abc");
