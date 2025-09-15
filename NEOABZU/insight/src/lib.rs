@@ -9,6 +9,10 @@ use pyo3::prelude::*;
 #[cfg(feature = "tracing")]
 use tracing::instrument;
 
+mod crown_bridge;
+
+pub use crown_bridge::crown_semantic;
+
 type Report = HashMap<String, Vec<(String, Vec<f32>)>>;
 
 /// Simple character-based embedding for a single word.
@@ -145,6 +149,7 @@ fn neoabzu_insight(_py: Python<'_>, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(reason, m)?)?;
     m.add_function(wrap_pyfunction!(embed, m)?)?;
     m.add_function(wrap_pyfunction!(semantic, m)?)?;
+    m.add_function(wrap_pyfunction!(crown_semantic, m)?)?;
     Ok(())
 }
 
