@@ -248,6 +248,54 @@ context to rStar. Operators can tune escalation with
 `RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
 [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details.
 
+#### Remote Agent Failover Configuration
+
+`config/razar_ai_agents.json` stores both the currently active handover agent
+and the full failover sequence. The boot orchestrator parses this file on each
+handover attempt, normalizing every `name` entry to lowercase so that `kimi2`,
+`Kimi2`, or `KIMI2` all resolve to the same agent slot. This normalization keeps
+escalations predictable even when operators edit the roster by hand. When the
+`active` field is present it selects the starting agent; otherwise the first
+entry in the `agents` array becomes the default. The array order establishes the
+retry path, and entries may be expressed as either full objects with connection
+details or as simple strings—the orchestrator lowercases them all while
+preserving the original casing for audit logs.
+
+Case-insensitive names allow operators to keep environment secrets readable
+without disrupting escalation:
+
+```json
+{
+  "active": "Kimi2",
+  "agents": [
+    {"name": "KIMI2", "endpoint": "${KIMI2_ENDPOINT}"},
+    {"name": "AirStar", "endpoint": "${AIRSTAR_ENDPOINT}"},
+    "RStar"
+  ]
+}
+```
+
+The orchestrator treats the above configuration as the chain `kimi2 → airstar →
+rstar`. Custom sequences follow the same pattern—reorder the array to introduce
+local specialists or sandboxes ahead of cloud services:
+
+```json
+{
+  "active": "demo_agent",
+  "agents": [
+    "demo_agent",
+    {"name": "backup_agent", "endpoint": "https://backup.example.com/api"},
+    "kimi2",
+    "airstar",
+    "rstar"
+  ]
+}
+```
+
+With this configuration RAZAR exhausts the on-premise `demo_agent` and
+`backup_agent` responders before escalating to the external providers, keeping
+operator-controlled surfaces at the front of the recovery loop.
+
 ### Game Dashboard & Retro Arcade Integration
 
 The React-based [Game Dashboard](ui/game_dashboard.md) wraps the avatar stream
