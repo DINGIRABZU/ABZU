@@ -10,7 +10,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 neoabzu-memory = { path = "../memory" }
-pyo3 = { version = "0.21", default-features = false, features = ["macros"] }
+pyo3 = { version = "0.21.2", default-features = false, features = ["macros"] }
 tracing = { version = "0.1", optional = true }
 opentelemetry = { version = "0.21", optional = true }
 tracing-opentelemetry = { version = "0.23", optional = true }

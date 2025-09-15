@@ -79,6 +79,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `NEOABZU/core/src/lib.rs` | Rust | No description | neoabzu-narrative, opentelemetry, pyo3, ron, serde, tracing, tracing-opentelemetry |
 | `NEOABZU/crown/src/lib.rs` | Rust | No description | neoabzu-chakrapulse, neoabzu-core, neoabzu-insight, neoabzu-memory, neoabzu-rag, pyo3 |
 | `NEOABZU/fusion/src/lib.rs` | Rust | No description | pyo3, tracing |
+| `NEOABZU/inanna/src/lib.rs` | Rust | No description | neoabzu-chakrapulse, pyo3 |
 | `NEOABZU/insight/src/lib.rs` | Rust | No description | metrics, pyo3, tracing |
 | `NEOABZU/k2coder/src/lib.rs` | Rust | No description | None |
 | `NEOABZU/kimicho/src/lib.rs` | Rust | No description | neoabzu-instrumentation, once_cell, pyo3, reqwest, serde_json, tracing |
@@ -91,6 +92,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `NEOABZU/numeric/src/lib.rs` | Rust | No description | ndarray, numpy, pyo3 |
 | `NEOABZU/persona/src/lib.rs` | Rust | No description | once_cell, pyo3, serde, serde_yaml |
 | `NEOABZU/rag/src/lib.rs` | Rust | No description | neoabzu-memory, opentelemetry, pyo3, tracing, tracing-opentelemetry |
+| `NEOABZU/razar/src/lib.rs` | Rust | No description | neoabzu-chakrapulse, pyo3 |
 | `NEOABZU/vector/src/lib.rs` | Rust | No description | metrics, opentelemetry, prost, pyo3, serde_json, tokio, tonic, tracing, tracing-opentelemetry |
 | `NEOABZU/vector/tests/load_test.py` | Python | Simple load test for the vector gRPC service. | neoabzu |
 | `NEOABZU/vector/tests/test_grpc_python.py` | Python | No description | grpc, pytest |
@@ -199,7 +201,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `auto_retrain.py` | Python | Automatically trigger fine-tuning based on feedback metrics. | INANNA_AI, core, llm_api, mlflow, yaml |
 | `bana/__init__.py` | Python | Bana utilities. | None |
 | `bana/event_structurizer.py` | Python | Translate Bana interactions into schema-validated events. | jsonschema |
-| `bana/narrative.py` | Python | Emit structured Bana narrative events. | agents, memory |
+| `bana/narrative.py` | Python | Emit structured Bana narrative events. | agents, albedo, memory |
 | `bana/narrative_api.py` | Python | HTTP API for retrieving Bana narratives and memory metadata. | fastapi, memory, prometheus_client, pydantic |
 | `benchmarks/chat_gateway_benchmark.py` | Python | Benchmark message routing through the chat gateway. | communication |
 | `benchmarks/llm_throughput_benchmark.py` | Python | Benchmark transformer throughput in tokens per second. | torch |
@@ -207,6 +209,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `benchmarks/pyo3_call_latency.py` | Python | No description | None |
 | `benchmarks/query_memory_bench.py` | Python | Benchmark concurrent memory queries. | memory |
 | `benchmarks/run_benchmarks.py` | Python | Run all benchmark scripts and report their metrics. | None |
+| `benchmarks/rust_vs_python_path.py` | Python | No description | neoabzu_chakrapulse |
 | `benchmarks/train_infer.py` | Python | Benchmark a minimal training and inference step. | torch |
 | `chakracon/__init__.py` | Python | Chakra consultation utilities. | None |
 | `chakracon/api.py` | Python | API for chakra metrics and advice logging. | fastapi, pydantic, requests |
@@ -222,6 +225,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `connectors/__init__.py` | Python | Communication connectors for Spiral OS. | None |
 | `connectors/avatar_broadcast.py` | Python | Broadcast avatar frames to Discord and Telegram. | agents, tools |
 | `connectors/base.py` | Python | Connector mixins and base classes. | None |
+| `connectors/heart_mediator.py` | Python | Heart mediator routing Head↔Base communications. | None |
 | `connectors/mcp_gateway_example.py` | Python | Minimal MCP-based connector example. | httpx |
 | `connectors/message_formatter.py` | Python | No description | None |
 | `connectors/narrative_mcp.py` | Python | MCP wrapper for narrative logging. | httpx |
@@ -317,9 +321,11 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `music_generation.py` | Python | Generate music from a text prompt using various models. | src, transformers |
 | `music_llm_interface.py` | Python | Interface between the music analysis pipeline and LLM CROWN. | INANNA_AI, neoabzu_rag, numpy, src |
 | `narrative_api.py` | Python | HTTP API for logging and retrieving persistent stories. | fastapi, memory, prometheus_client, pydantic |
+| `nazarick-console/backend` | Rust | No description | axum, futures, neoabzu-chakrapulse, tokio, tracing, tracing-subscriber |
+| `neoabzu_chakrapulse/__init__.py` | Python | Test stub for neoabzu_chakrapulse crate. | None |
 | `nlq_api.py` | Python | NLQ API powered by Vanna AI. | agents, core, fastapi |
 | `numeric/src/lib.rs` | Rust | No description | nalgebra, neoabzu-instrumentation, pyo3, tracing |
-| `operator_api.py` | Python | Operator command API exposing the :class:`OperatorDispatcher`. | agents, fastapi, memory, razar, scripts |
+| `operator_api.py` | Python | Operator command API exposing the :class:`OperatorDispatcher`. | agents, bana, fastapi, memory, razar, scripts |
 | `operator_service/__init__.py` | Python | Operator service exposing ignition, query, and status APIs. | None |
 | `operator_service/api.py` | Python | FastAPI app exposing ignition, query, and status controls. | fastapi, memory, prometheus_fastapi_instrumentator, razar |
 | `orchestration_master.py` | Python | High-level orchestrator selecting agents and wiring memory stores. | memory, scripts, tools, yaml |
@@ -343,7 +349,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `razar/__main__.py` | Python | Command line utilities for operating the RAZAR lifecycle bus. | agents |
 | `razar/adaptive_orchestrator.py` | Python | Adaptive orchestrator that searches for efficient boot sequences. | yaml |
 | `razar/ai_invoker.py` | Python | High level wrapper for remote RAZAR agents. | agents, tools |
-| `razar/boot_orchestrator.py` | Python | Simple boot orchestrator reading a JSON component configuration. | agents, kimicho, memory, neoabzu_core, opentelemetry |
+| `razar/boot_orchestrator.py` | Python | Simple boot orchestrator reading a JSON component configuration. | agents, memory, neoabzu_core, neoabzu_kimicho, opentelemetry |
 | `razar/bootstrap_utils.py` | Python | Utility constants shared across RAZAR bootstrap modules. | None |
 | `razar/checkpoint_manager.py` | Python | Checkpoint utilities for the adaptive orchestrator. | None |
 | `razar/cocreation_planner.py` | Python | Planner that consolidates blueprints, failures, and Crown suggestions. | yaml |
@@ -486,7 +492,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `src/bin/vector_client.py` | Python | Command-line client for the NeoABZU vector service. | neoabzu |
 | `src/cli.py` | Python | Unified command line interface for Spiral OS tools. | pytest, requests |
 | `src/cli/__init__.py` | Python | Command-line interface utilities. | None |
-| `src/cli/console_interface.py` | Python | Interactive REPL for the Crown agent. | INANNA_AI, audio, core, memory, neoabzu_rag, prompt_toolkit, requests, tools |
+| `src/cli/console_interface.py` | Python | Interactive REPL for the Crown agent. | INANNA_AI, audio, bana, core, memory, neoabzu_rag, prompt_toolkit, requests, tools |
 | `src/cli/music_helper.py` | Python | Utility functions for handling music generation commands. | INANNA_AI, tools |
 | `src/cli/sandbox_helper.py` | Python | Run code patches in an isolated sandbox and execute tests. | tools |
 | `src/cli/spiral_cortex_terminal.py` | Python | Command line tool for exploring ``cortex_memory_spiral.jsonl``. | memory |
@@ -672,6 +678,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `tests/monitoring/test_escalation_notifier.py` | Python | No description | monitoring, pytest |
 | `tests/monitoring/test_heartbeat_logger.py` | Python | No description | monitoring, pytest, scripts |
 | `tests/monitoring/test_self_healing_ledger.py` | Python | No description | monitoring |
+| `tests/narrative/test_narrative_api.py` | Python | No description | fastapi |
 | `tests/narrative/test_self_heal_logging.py` | Python | Tests for self-heal narrative logging. | agents, citadel, memory |
 | `tests/narrative/test_story_lookup.py` | Python | Verify joining of stories and events with filtering. | memory, pytest |
 | `tests/narrative_engine/test_biosignal_pipeline.py` | Python | Tests for biosignal pipeline. | memory, pytest, src |

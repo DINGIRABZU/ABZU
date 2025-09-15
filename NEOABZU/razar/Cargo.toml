@@ -8,5 +8,5 @@ name = "neoabzu_razar"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-pyo3 = { version = "0.21", features = ["extension-module"] }
+pyo3 = { version = "0.21.2", features = ["extension-module"] }
 neoabzu-chakrapulse = { path = "../chakrapulse" }

@@ -21,7 +21,7 @@ k.init_kimicho('{url}')
 crown.route_decision = lambda *a, **k: (_ for _ in ()).throw(RuntimeError('down'))
 def route():
     try:
-        return crown.route_decision('ping', {'emotion':'joy'})
+        return crown.route_decision('ping', {{'emotion':'joy'}})
     except Exception:
         text = k.fallback_k2('ping')
         return {{'model':'kimicho', 'text': text}}
@@ -64,7 +64,7 @@ def route():
     sys.modules.pop('neoabzu_crown', None)
     try:
         import neoabzu_crown as crown
-        return crown.route_decision('ping', {'emotion':'joy'})
+        return crown.route_decision('ping', {{'emotion':'joy'}})
     except Exception:
         text = k.fallback_k2('ping')
         return {{'model':'kimicho', 'text': text}}
