@@ -234,10 +234,14 @@ fresh health checks.
 
 #### rStar Escalation
 
-Repeated failures trigger an escalation path. After nine unsuccessful repair
-attempts RAZAR forwards the fault context to the external `rStar` patch
-service. Operators can tune escalation with `RAZAR_RSTAR_THRESHOLD` and set the
-service parameters via `RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
+Repeated failures trigger an escalation chain: Crown first retries locally, then
+defers to Kimicho. If faults persist, requests escalate to
+[K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2), followed by Air Star,
+and finally the external [rStar](https://github.com/microsoft/rStar) patch
+service. After nine unsuccessful repair attempts RAZAR forwards the fault
+context to rStar. Operators can tune escalation with
+`RAZAR_RSTAR_THRESHOLD` and set the service parameters via
+`RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
 [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details.
 
 ### Game Dashboard & Retro Arcade Integration
@@ -801,7 +805,7 @@ High‑level orchestration coordinating modules and startup rituals. See [Chakra
 The Crown hosts the primary GLM-4.1V-9B model, obtained with
 `download_models.py glm41v_9b` or through `crown_model_launcher.sh`.
 It expects `GLM_API_URL` and `GLM_API_KEY` to reach the serving
-endpoint. Supporting DeepSeek-V3, Mistral-8x22B and Kimi-K2 servants
+endpoint. Supporting DeepSeek-V3, Mistral-8x22B and [K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2) servants
 are registered via `init_crown_agent.py` and booted with
 `launch_servants.sh`, which reads `DEEPSEEK_URL`, `MISTRAL_URL`,
 `KIMI_K2_URL` or the aggregate `SERVANT_MODELS` variable. Routing is
@@ -1189,6 +1193,7 @@ deployments with user accounts and persistent chats.
 
 ## Version History
 
+- 2025-09-19: Noted Crown → Kimicho → K2 Coder (Kimi 2) → Air Star → rStar escalation path.
 - 2025-09-18: Documented memory spine, snapshot cadence, and recovery flow.
 - 2025-09-08: Noted chakra cycle gear ratios and Great Spiral alignment events.
 - 2025-08-28: Added blueprint synchronization check to ensure the blueprint is updated when core services change.
