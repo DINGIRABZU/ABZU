@@ -22,6 +22,8 @@ Pre-commit enforces that `onboarding_confirm.yml` references `docs/blueprint_spi
 - [narrative](../narrative)
 - [numeric](../numeric)
 - [insight](../insight)
+- [kimicho](../kimicho)
+- [razar](../razar)
 
 Enable the `tracing` and `opentelemetry` features on these crates to emit spans for diagnostics during development.
 

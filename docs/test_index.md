@@ -8,5 +8,6 @@ Generated automatically. Catalog of test modules and scenarios.
 | `tests/razar/test_ai_invoker.py` | Verify opencode CLI patch flow in `ai_invoker.handover`. | `razar.ai_invoker` |
 | `tests/monitoring/test_escalation_notifier.py` | Validate operator escalation when log conditions met. | `monitoring.escalation_notifier` |
 | `tests/agents/test_story_adapter.py` | Validate narrative story retrieval and streaming. | `agents.utils.story_adapter`, `memory.narrative_engine` |
+| `tests/agents/razar/test_crown_kimicho.py` | Ensure RAZAR falls back to Kimicho when Crown import fails. | `neoabzu_razar`, `neoabzu_kimicho`, `neoabzu_crown` |
 
 Backlinks: [Component Index](component_index.md) | [Connector Index](connectors/CONNECTOR_INDEX.md) | [Dependency Index](dependency_index.md)

@@ -30,6 +30,7 @@ The Rust workspace currently exposes several crates that anchor ABZU's topology:
 - `neoabzu-rag` (path `rag`, **v0.1.2**) – retrieval-augmented generation helpers.
 - `neoabzu-insight` (path `insight`, **v0.1.2**) – higher‑order reasoning primitives.
 - `kimicho` (path `kimicho`, **v0.1.2**) – fallback code generation via PyO3 bridge.
+- `razar` (path `razar`, **v0.1.2**) – routes through Crown and falls back to Kimicho when Crown is unavailable.
 
 Each crate must appear in this blueprint and the doctrine index and be listed as a `maturin` target in `NEOABZU/pyproject.toml`.
 This mapping keeps documentation and Python bindings aligned.
