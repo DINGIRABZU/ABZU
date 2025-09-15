@@ -333,7 +333,7 @@ for runtime details.
 
 *Figure: Events travel from the Python-based RAZAR orchestrator through the Rust Crown router to the Kimi-cho fallback, showing the current migration path.*
 
-Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`) confirm that RAZAR falls back to Kimicho transparently when Crown routing fails.
+RAZAR first attempts to load the `neoabzu_crown` router; if the module cannot initialize or routing fails, it invokes the `neoabzu_kimicho` PyO3 bridge to initialize the K2 Coder fallback. Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`, `tests/agents/razar/test_crown_kimicho.py`) confirm that RAZAR falls back to Kimicho transparently when Crown routing fails.
 
 `NEOABZU/crown/tests/razar_validator.rs` extends this path with manifesto checks, falling back to Kimicho when Crown rejects a request via `EthicalValidator`.
 

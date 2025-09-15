@@ -2,21 +2,25 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use neoabzu_chakrapulse::emit_pulse;
 
+fn kimicho_fallback(py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {
+    let kimi = PyModule::import(py, "neoabzu_kimicho")?;
+    let txt: String = kimi.call_method1("fallback_k2", (text,))?.extract()?;
+    let out = PyDict::new(py);
+    out.set_item("text", txt)?;
+    Ok(out.into())
+}
+
 #[pyfunction]
 pub fn route(py: Python<'_>, text: &str, emotion: &str) -> PyResult<Py<PyDict>> {
-    let crown = PyModule::import(py, "neoabzu_crown")?;
+    let crown = match PyModule::import(py, "neoabzu_crown") {
+        Ok(m) => m,
+        Err(_) => return kimicho_fallback(py, text),
+    };
     let emo = PyDict::new(py);
     emo.set_item("emotion", emotion)?;
-    let result = crown.call_method("route_decision", (text, emo), None);
-    match result {
+    match crown.call_method("route_decision", (text, emo), None) {
         Ok(obj) => obj.extract(),
-        Err(_) => {
-            let kimi = PyModule::import(py, "neoabzu_kimicho")?;
-            let txt: String = kimi.call_method1("fallback_k2", (text,))?.extract()?;
-            let out = PyDict::new(py);
-            out.set_item("text", txt)?;
-            Ok(out.into())
-        }
+        Err(_) => kimicho_fallback(py, text),
     }
 }
 

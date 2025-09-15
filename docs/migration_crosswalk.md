@@ -57,7 +57,7 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 
 ### Kimicho fallback
 - [ ] Port complete
-- [x] Required tests: `NEOABZU/kimicho/tests/razar_integration.rs`, `NEOABZU/crown/tests/kimicho_fallback.rs`
+- [x] Required tests: `NEOABZU/kimicho/tests/razar_integration.rs`, `NEOABZU/crown/tests/kimicho_fallback.rs`, `tests/agents/razar/test_crown_kimicho.py`
 - [x] Documentation references: [System Blueprint](system_blueprint.md#razar–crown–kimi-cho-migration)
 - [x] Doctrine references: [System Blueprint](system_blueprint.md#razar–crown–kimi-cho-migration)
 
