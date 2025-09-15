@@ -110,6 +110,8 @@ def _active_agent(path: Path = AGENT_CONFIG_PATH) -> str | None:
     """Return the normalized name of the active remote agent."""
 
     active, _definitions = load_agent_definitions(path)
+    if isinstance(active, str):
+        return active.lower()
     return active
 
 
