@@ -15,7 +15,7 @@ import servant_model_manager as smm
 from env_validation import parse_servant_models
 from INANNA_AI import corpus_memory
 from INANNA_AI.glm_integration import GLMIntegration
-from identity_loader import load_identity
+from neoabzu_crown import load_identity
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory

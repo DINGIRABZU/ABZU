@@ -21,4 +21,5 @@ For the narrative driver and lexicon grounding the engine, see [herojourney_engi
 | Vector Search | Accelerates similarity lookups across memory layers【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L72-L76】 | Rust crate `neoabzu_vector` (**v0.1.2**) exposes gRPC with in-memory embeddings, metrics, tracing, and Python client helpers |
 | Numeric Utilities | Provides fast math primitives | initial Rust crate `neoabzu_numeric` (**v0.1.2**) |
 | Fusion Engine | Merges symbolic and numeric invariants | initial Rust crate `neoabzu_fusion` |
+| Identity Loader | Summarizes mission and persona docs into persisted identity file | `neoabzu_crown.load_identity` replaces Python loader and runs at Crown boot |
 

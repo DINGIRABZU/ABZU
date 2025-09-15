@@ -10,6 +10,8 @@ use neoabzu_rag::{retrieve_top, MoGEOrchestrator};
 use pyo3::exceptions::PyValueError;
 use pyo3::types::{PyDict, PyList};
 use pyo3::{prelude::*, wrap_pyfunction};
+use std::fs;
+use std::path::PathBuf;
 
 fn select_store(archetype: &str) -> &str {
     match archetype.to_lowercase().as_str() {
@@ -20,8 +22,15 @@ fn select_store(archetype: &str) -> &str {
     }
 }
 
+const IDENTITY_FILE: &str = "data/identity.json";
+const MISSION_DOC: &str = "docs/project_mission_vision.md";
+const PERSONA_DOC: &str = "docs/persona_api_guide.md";
+
 #[pyfunction]
 fn route_query(py: Python<'_>, question: &str, archetype: &str) -> PyResult<PyObject> {
+    if question.trim().is_empty() {
+        return Err(PyValueError::new_err("question cannot be empty"));
+    }
     let _ = select_store(archetype);
     let res = retrieve_top(py, question, 5, None, None)?;
     Ok(PyList::new(py, res).into_py(py))
@@ -67,6 +76,10 @@ pub fn route_decision(
 ) -> PyResult<Py<PyDict>> {
     let start = Instant::now();
 
+    if text.trim().is_empty() {
+        return Err(PyValueError::new_err("text cannot be empty"));
+    }
+
     // determine model and documents via orchestrator or direct input
     let (model, docs_obj) = if let Some(d) = documents {
         ("basic-rag".to_string(), d.to_object(py))
@@ -100,13 +113,13 @@ pub fn route_decision(
             .map_err(|_| PyValueError::new_err("orchestrator must return a dict"))?;
 
         let model: String = routed_dict
-            .get_item("model")
+            .get_item("model")?
             .ok_or_else(|| PyValueError::new_err("missing model from orchestrator"))?
             .extract()
             .map_err(|_| PyValueError::new_err("model must be a string"))?;
 
         let docs_obj = routed_dict
-            .get_item("documents")
+            .get_item("documents")?
             .map_or(py.None(), |o| o.to_object(py));
 
         (model, docs_obj)
@@ -167,6 +180,9 @@ pub fn route_decision(
 
 #[pyfunction]
 pub fn route_inevitability(py: Python<'_>, expr: &str) -> PyResult<Py<PyDict>> {
+    if expr.trim().is_empty() {
+        return Err(PyValueError::new_err("expression cannot be empty"));
+    }
     let (inevitability, journey) = reduce_inevitable_with_journey(expr);
     let result = PyDict::new(py);
     result.set_item("inevitability", inevitability)?;
@@ -177,6 +193,9 @@ pub fn route_inevitability(py: Python<'_>, expr: &str) -> PyResult<Py<PyDict>> {
 
 #[pyfunction]
 pub fn query_memory(py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {
+    if text.trim().is_empty() {
+        return Err(PyValueError::new_err("text cannot be empty"));
+    }
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
     bundle.query(py, text)
@@ -193,6 +212,34 @@ pub fn insight_semantic(text: &str) -> PyResult<Vec<(String, f32)>> {
 }
 
 #[pyfunction]
+#[pyo3(signature = (integration, mission_path=None, persona_path=None, identity_path=None))]
+pub fn load_identity(
+    integration: &PyAny,
+    mission_path: Option<&str>,
+    persona_path: Option<&str>,
+    identity_path: Option<&str>,
+) -> PyResult<String> {
+    let mission = mission_path.unwrap_or(MISSION_DOC);
+    let persona = persona_path.unwrap_or(PERSONA_DOC);
+    let identity = identity_path.unwrap_or(IDENTITY_FILE);
+    let identity = PathBuf::from(identity);
+    if identity.exists() {
+        return Ok(fs::read_to_string(identity).map_err(|e| PyValueError::new_err(e.to_string()))?);
+    }
+    let mission_text = fs::read_to_string(mission).unwrap_or_default();
+    let persona_text = fs::read_to_string(persona).unwrap_or_default();
+    let combined = format!("{mission_text}\n{persona_text}");
+    let prompt = format!("Summarize the mission, vision, and persona: \n{combined}");
+    let summary: String = integration.call_method1("complete", (prompt,))?.extract()?;
+    if let Some(parent) = identity.parent() {
+        fs::create_dir_all(parent).map_err(|e| PyValueError::new_err(e.to_string()))?;
+    }
+    fs::write(&identity, &summary).map_err(|e| PyValueError::new_err(e.to_string()))?;
+    let _ = insight_analyze(&summary);
+    Ok(summary)
+}
+
+#[pyfunction]
 pub fn health_pulse() {
     emit_pulse("crown", true);
 }
@@ -205,6 +252,7 @@ fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(query_memory, m)?)?;
     m.add_function(wrap_pyfunction!(insight_embedding, m)?)?;
     m.add_function(wrap_pyfunction!(insight_semantic, m)?)?;
+    m.add_function(wrap_pyfunction!(load_identity, m)?)?;
     m.add_function(wrap_pyfunction!(health_pulse, m)?)?;
     let _ = py; // reserve for future use
     Ok(())

@@ -4,7 +4,7 @@
 **Last updated:** 2025-10-05
 
 ## RAG + Insight Pipeline
-After Crown's LLM boots, `identity_loader.load_identity` runs a retrieval and
+After Crown's LLM boots, `neoabzu_crown.load_identity` runs a retrieval and
 insight pass over mission, vision, and persona documents. Chunks are embedded
 into vector memory, summarized by the GLM, and the resulting identity is
 persisted at `data/identity.json` so subsequent invocations reuse the cached
