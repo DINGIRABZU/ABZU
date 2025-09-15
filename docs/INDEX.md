@@ -275,6 +275,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [adr/ADR_TEMPLATE.md](adr/ADR_TEMPLATE.md) | ADR XXXX: Title | - **Status:** Draft - **Date:** YYYY-MM-DD - **ADR ID:** XXXX | - |
 | [ai_ethics_framework.md](ai_ethics_framework.md) | AI Ethics Framework | Principles guiding the development and operation of INANNA_AI. | - |
 | [api_reference.md](api_reference.md) | API Reference | This document describes the FastAPI endpoints provided by `api.server`. | `../tests/test_server_endpoints.py` |
+| [apsu_resource_index.md](apsu_resource_index.md) | APSU Resource Index | Catalog of APSU and Neo-APSU resources across the repository. Each entry notes the file location, its role, and how i... | `../connectors/neo_apsu_connector_template.py`, `onboarding/wizard.py` |
 | [arcade_ui.md](arcade_ui.md) | Arcade UI | Operator-facing arcade interface that bridges the Operator API and RAZAR. | - |
 | [archetype_logic.md](archetype_logic.md) | Archetype Logic | This document outlines how Spiral OS interprets alchemical states to shape its responses. The progression through **N... | - |
 | [architecture.md](architecture.md) | Architecture | This guide maps the core packages that shape the ABZU system and how they cooperate. The diagram below highlights the... | `../INANNA_AI/ethical_validator.py`, `../INANNA_AI_AGENT/inanna_ai.py`, `../core/emotion_analyzer.py`, `../core/memory_logger.py`, `../core/model_selector.py`, `../dashboard/app.py` |
