@@ -3,9 +3,7 @@ use std::time::Instant;
 use neoabzu_chakrapulse::emit_pulse;
 use neoabzu_core::{evaluate, reduce_inevitable_with_journey};
 use neoabzu_insight::{
-    analyze as insight_analyze,
-    embedding as insight_embed,
-    semantics as insight_semantics,
+    analyze as insight_analyze, embedding as insight_embed, semantics as insight_semantics,
 };
 use neoabzu_memory::MemoryBundle;
 use neoabzu_rag::{retrieve_top, MoGEOrchestrator};
@@ -69,9 +67,9 @@ pub fn route_decision(
 ) -> PyResult<Py<PyDict>> {
     let start = Instant::now();
 
-    // allow external orchestrator or documents
-    let docs_obj = if let Some(d) = documents {
-        d.to_object(py)
+    // determine model and documents via orchestrator or direct input
+    let (model, docs_obj) = if let Some(d) = documents {
+        ("basic-rag".to_string(), d.to_object(py))
     } else {
         let routed_obj: PyObject = if let Some(o) = orchestrator {
             let kwargs = PyDict::new(py);
@@ -96,10 +94,22 @@ pub fn route_decision(
             )?;
             routed.into_py(py)
         };
-        let routed_dict: &PyDict = routed_obj.downcast(py)?;
-        routed_dict
+
+        let routed_dict: &PyDict = routed_obj
+            .downcast(py)
+            .map_err(|_| PyValueError::new_err("orchestrator must return a dict"))?;
+
+        let model: String = routed_dict
+            .get_item("model")
+            .ok_or_else(|| PyValueError::new_err("missing model from orchestrator"))?
+            .extract()
+            .map_err(|_| PyValueError::new_err("model must be a string"))?;
+
+        let docs_obj = routed_dict
             .get_item("documents")
-            .map_or(py.None(), |o| o.to_object(py))
+            .map_or(py.None(), |o| o.to_object(py));
+
+        (model, docs_obj)
     };
 
     // optional validator check
@@ -140,7 +150,7 @@ pub fn route_decision(
     let opts = decide_expression_options(&emotion);
 
     let result = PyDict::new(py);
-    result.set_item("model", "basic-rag")?;
+    result.set_item("model", model)?;
     result.set_item("tts_backend", opts.tts_backend)?;
     result.set_item("avatar_style", opts.avatar_style)?;
     result.set_item("aura", opts.aura)?;
