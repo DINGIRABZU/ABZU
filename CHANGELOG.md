@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Razar integration tests cover Kimicho error propagation
 - Expanded NEOABZU docs index with Rust component links and Blueprint Spine cross-reference; documented Ouroboros Core and Rust migration across system guides.
 - Isolated NEOABZU tooling with a dedicated `pyproject.toml` and CI workflow, keeping ABZU tests unaffected.
+- Neoabzu crates bumped to `v0.1.2` with PyO3 exposure checks and automated `cargo check` in pre-commit and CI; blueprint and migration docs refreshed.
 - Documented PyO3 and gRPC interface contracts in `NEOABZU/Reignition.md` and
   introduced a CI job that builds Rust crates and runs Python integration tests.
 - Initialized NEOABZU Rust workspace with core lambda-calculus interpreter and Python bindings.

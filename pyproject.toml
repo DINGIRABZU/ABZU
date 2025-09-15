@@ -25,10 +25,10 @@ dependencies = [
     "pydantic==2.9.2",
     "uvicorn==0.35.0",
     "prometheus-fastapi-instrumentator==6.1.0",
-    "neoabzu-crown==0.1.1",
-    "neoabzu-kimicho==0.1.1",
-    "neoabzu-rag==0.1.1",
-    "neoabzu-insight==0.1.1",
+    "neoabzu-crown==0.1.2",
+    "neoabzu-kimicho==0.1.2",
+    "neoabzu-rag==0.1.2",
+    "neoabzu-insight==0.1.2",
 ]
 
 [project.optional-dependencies]
@@ -102,7 +102,7 @@ citadel = [
     "neo4j==5.23.1",
 ]
 
-neoabzu = ["neoabzu", "neoabzu-crown", "neoabzu-kimicho", "neoabzu-insight"]
+neoabzu = ["neoabzu==0.1.2", "neoabzu-crown==0.1.2", "neoabzu-kimicho==0.1.2", "neoabzu-insight==0.1.2"]
 insight = ["neoabzu-insight"]
 
 # Development extras mirror dev-requirements.txt

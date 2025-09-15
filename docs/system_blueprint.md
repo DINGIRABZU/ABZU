@@ -33,6 +33,7 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Crown Router** now flows through the Rust crate [`neoabzu_crown`](../NEOABZU/crown/src/lib.rs), delivering built-in validation, orchestrator delegation, and telemetry hooks.
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
+- **Neoabzu crates** released at **v0.1.2**; CI now enforces PyO3 exposure and `cargo check` on workspace crates.
 
 ### Doctrine Reference Pattern
 

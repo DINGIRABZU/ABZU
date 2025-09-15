@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "neoabzu"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python helpers for the NEOABZU Rust workspace"
 requires-python = ">=3.10"
 authors = [{name = "NEOABZU Team"}]
@@ -16,6 +16,7 @@ dependencies = ["grpcio>=1.62"]
 
 [tool.maturin]
 python-packages = ["neoabzu"]
+bindings = "pyo3"
 
 [[tool.maturin.targets]]
 name = "neoabzu_core"
