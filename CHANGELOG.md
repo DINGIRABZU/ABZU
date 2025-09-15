@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `numeric` crate with PCA and PyO3 bindings
 - `numeric` crate exposes `cosine_similarity` mirroring `vector_memory.cosine_similarity`
 - `fusion` crate for merging symbolic and numeric invariants
+- Razar integration tests cover Kimicho error propagation
 - Expanded NEOABZU docs index with Rust component links and Blueprint Spine cross-reference; documented Ouroboros Core and Rust migration across system guides.
 - Isolated NEOABZU tooling with a dedicated `pyproject.toml` and CI workflow, keeping ABZU tests unaffected.
 - Documented PyO3 and gRPC interface contracts in `NEOABZU/Reignition.md` and
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Removed legacy `crown_router.py` and `kimicho.py` in favor of Rust crate stubs.
+- Boot orchestrator imports PyO3 `neoabzu_kimicho`, completing retirement of `kimicho.py`.
 - Documented MCP connector compatibility matrix and integration roadmap; linked from project overview.
 - Added OpenTelemetry API and OTLP exporter dependencies and setup guidance.
 - RAZAR boot scripts load Rust memory bundle and core engine via PyO3 with optional OpenTelemetry spans in the Crown router.
