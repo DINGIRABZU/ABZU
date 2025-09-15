@@ -266,13 +266,26 @@ fresh health checks.
 #### rStar Escalation
 
 Repeated failures trigger an escalation chain defined in
-`config/razar_ai_agents.json`: Crown first retries locally, then
-defers to Kimicho. If faults persist, requests escalate to
-[K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2), followed by Air Star,
-and finally the external [rStar](https://github.com/microsoft/rStar) patch
-service. After nine unsuccessful repair attempts RAZAR forwards the fault
-context to rStar. Operators can tune escalation with
-`RAZAR_RSTAR_THRESHOLD`, edit the failover order via
+`config/razar_ai_agents.json`. The recovery path executes in order, forming the
+explicit handover sequence **Crown → Kimicho → K2 Coder → Air Star → rStar**:
+
+1. **Crown** – retries locally with the current servant roster and cached
+   mission context.
+2. **Kimicho** – receives the failing brief when Crown cannot self-heal and
+   applies the Kimicho-specific repair heuristics.
+3. **[K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2)** – performs
+   code-first fixes through the PyO3 bridge when Kimicho reports persistent
+   faults.
+4. **Air Star** – executes lightweight regeneration routines and prep work
+   before invoking the external patcher.
+5. **[rStar](https://github.com/microsoft/rStar)** – final escalation target for
+   automated patch synthesis.
+
+`RAZAR_RSTAR_THRESHOLD` controls how many cumulative attempts RAZAR makes across
+the preceding agents before handing control to rStar. The default value (`9`)
+allows three full rounds through the local stack; lowering the number accelerates
+external escalation, and setting it to `0` disables the rStar hand-off entirely.
+Operators can adjust the threshold alongside the failover order in
 `config/razar_ai_agents.json`, and set the service parameters through
 `RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
 [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details.
