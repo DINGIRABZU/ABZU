@@ -17,6 +17,7 @@ For module-specific quirks and bugs, see the [Python legacy audit](../../docs/py
 | `core` lambda engine (`core/`) | `neoabzu-core` (**v0.1.2**) | Accessible through `neoabzu_memory.eval_core` and `neoabzu_memory.reduce_inevitable_core` for Crown Router and RAZAR. |
 | `system coordination` (`metrics`, `tracing`, `caching`) | `neoabzu-crown` (**v0.1.2**) | Shared instrumentation and caches mirror ABZU coordination. |
 | `insight_compiler.py` | `neoabzu-insight` (**v0.1.2**) | Computes word and bigram embeddings with semantic similarity scores for Crown Router consumption. |
+| `identity_loader.py` | `neoabzu-crown` (**v0.1.2**) | `load_identity` summarizes mission and persona docs and persists `data/identity.json` at boot. |
 | `persona` intent layers (`INANNA_AI/personality_layers`) | `neoabzu-persona` (**v0.1.2**) | PyO3 module `neoabzu_persona` normalizes intents. |
 | `vector_memory.py` | `neoabzu-vector` (**v0.1.2**) | gRPC service `neoabzu_vector` exposes search APIs. |
 | `numeric` utilities (`numeric/`) | `neoabzu-numeric` (**v0.1.2**) | PyO3 module `neoabzu_numeric` accelerates math routines. |

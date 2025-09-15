@@ -1462,6 +1462,7 @@ dependencies = [
  "neoabzu-memory",
  "neoabzu-rag",
  "pyo3",
+ "tempfile",
 ]
 
 [[package]]
@@ -1485,6 +1486,7 @@ name = "neoabzu-insight"
 version = "0.1.1"
 dependencies = [
  "metrics",
+ "neoabzu-instrumentation",
  "pyo3",
  "tracing",
 ]
@@ -1505,6 +1507,7 @@ name = "neoabzu-kimicho"
 version = "0.1.0"
 dependencies = [
  "httpmock",
+ "metrics",
  "neoabzu-instrumentation",
  "once_cell",
  "pyo3",

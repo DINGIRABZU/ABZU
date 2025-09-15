@@ -17,6 +17,7 @@ The inaugural ceremony is recorded in the [First Consecrated Computation](../NEO
 - **Resuscitator flows** guide failure recovery; consult the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **Neoabzu crates** bumped to **v0.1.2** with verified PyO3 bindings via `NEOABZU/pyproject.toml`.
+- **Identity loader** reimplemented in Rust; Crown initialization writes mission and persona summary to `data/identity.json`.
 
 ### **Rust Workspace Crates**
 
