@@ -34,6 +34,7 @@ Enable the `tracing` and `opentelemetry` features on these crates to emit spans 
 - [Core Usage](core_usage.md)
 - [Feature Parity](feature_parity.md)
 - [Migration Crosswalk](migration_crosswalk.md)
+- [Connector Plugin API](connector_api.md)
 - [Onboarding](onboarding.md)
 - [First Consecrated Computation](Oroboros_Core.md#first-consecrated-computation) – inaugural narrative log
 - [Nazarick Convex PoC](nazarick_convex_poc.md) – Convex agent/log prototype
