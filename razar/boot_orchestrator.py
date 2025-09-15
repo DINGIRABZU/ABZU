@@ -304,6 +304,41 @@ def _set_active_agent(agent: str) -> None:
     AGENT_CONFIG_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
+def _load_agent_state() -> tuple[Optional[str], list[str], dict[str, str]]:
+    """Return the active agent and ordered failover chain from configuration."""
+
+    active_agent: Optional[str] = None
+    sequence: list[str] = []
+    lookup: dict[str, str] = {}
+    try:
+        data = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            data = {}
+    except Exception:
+        data = {}
+
+    raw_active = data.get("active") if isinstance(data, dict) else None
+    if isinstance(raw_active, str):
+        active_agent = raw_active.lower()
+
+    agents = data.get("agents") if isinstance(data, dict) else None
+    if isinstance(agents, list):
+        for entry in agents:
+            if isinstance(entry, dict):
+                name = entry.get("name")
+            elif isinstance(entry, str):
+                name = entry
+            else:
+                continue
+            if not isinstance(name, str):
+                continue
+            normalized = name.lower()
+            sequence.append(normalized)
+            lookup.setdefault(normalized, name)
+
+    return active_agent, sequence, lookup
+
+
 def _handle_ai_result(
     name: str,
     error: str,
@@ -319,22 +354,18 @@ def _handle_ai_result(
     failure_tracker[name] = count
     if count % RSTAR_THRESHOLD != 0:
         return
-    try:
-        data = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
-        if not isinstance(data, dict):
-            data = {}
-    except Exception:
-        data = {}
-    active_raw = data.get("active") if isinstance(data, dict) else None
-    active = active_raw.lower() if isinstance(active_raw, str) else None
-    sequence = ["kimi2", "airstar", "rstar"]
-    if active not in sequence:
-        next_agent = sequence[0]
-    else:
-        idx = sequence.index(active)
+    active_agent, sequence, lookup = _load_agent_state()
+    if not sequence:
+        return
+
+    if active_agent in sequence:
+        idx = sequence.index(active_agent)
         next_agent = sequence[idx + 1] if idx + 1 < len(sequence) else None
+    else:
+        next_agent = sequence[0]
+
     if next_agent:
-        _set_active_agent(next_agent)
+        _set_active_agent(lookup.get(next_agent, next_agent))
         _log_ai_invocation(
             name, attempt, error, patched, event="escalation", agent=next_agent
         )
@@ -357,14 +388,10 @@ def _retry_with_ai(
     """
     for attempt in range(1, max_attempts + 1):
         try:
-            cfg = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
-            if not isinstance(cfg, dict):
-                cfg = {}
-        except Exception:
-            cfg = {}
-        active_raw = cfg.get("active") if isinstance(cfg, dict) else None
-        active_agent = active_raw.lower() if isinstance(active_raw, str) else None
-        use_opencode = active_agent not in {"kimi2", "airstar", "rstar"}
+            active_agent, agent_chain, _ = _load_agent_state()
+        except Exception:  # pragma: no cover - defensive guard
+            active_agent, agent_chain = None, []
+        use_opencode = active_agent not in agent_chain
         context = build_failure_context(name)
         patched = ai_invoker.handover(
             name,

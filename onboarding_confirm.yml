@@ -67,7 +67,7 @@ documents:
       scope: Neo-ABZU narrative engine.
   NEOABZU/docs/migration_crosswalk.md:
     commit: 757c452324fa8a380a8970175290cd03e8d78512
-    sha256: 45d21c44e765c2fcd5006c57ae40ff08741c42ff66ad9d028f0ef142a31c923a
+    sha256: 2a1cbeb2e7dc8dd24f7cf4ac7e2a911980d5226ce94261a947d683294776b14d
     signed_by: onboarding-wizard
     summary:
       insight: neoabzu-memory crate bundles core memory layers.
@@ -177,7 +177,7 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: 6f15684eb213eaa7607d24b15920646bfb51d4ac
-    sha256: 28389a5c0bc1c02b0122b367d99e4b229c9a4b9e8dae1e79ed67ad27a93ef6d3
+    sha256: e3a97f290bd51966612ec3eac91eb8b6ff40658cc3ddfd79a89466d68a20aa55
     summary:
       insight: Use the PR checklist to synchronize versions, connectors, and document
         summaries while keeping coverage high and removing placeholders before commit.
@@ -384,7 +384,7 @@ documents:
       scope: OS Guardian component.
   docs/persona_api_guide.md:
     commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
-    sha256: 767d276cddcb865a844c3e730aa2affc9d57ab6ebb52f3c4c05040288c94121f
+    sha256: 1f28b25f1ca7abb6bcec6eb2a50db819715763e2100aa855f765090a838d6fdb
     summary:
       insight: Ensure persona calls match documented schema.
       key_rules: Ensure persona API matches documented schema.
@@ -424,7 +424,7 @@ documents:
       scope: Music-specific RAG.
   docs/rag_pipeline.md:
     commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
-    sha256: ede89d0370b924a386236c48cde9b21f959f90c8518f805712c9539568099a20
+    sha256: 7479d96d3ebb8f819b894444a0747bab6730b2bbad1b61a2a055565901e65fd0
     summary:
       insight: Ensure changes preserve pipeline flow.
       key_rules: Preserve RAG pipeline flow.
@@ -456,7 +456,7 @@ documents:
       scope: System components and lifecycle.
   docs/vector_memory.md:
     commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
-    sha256: e4cd2186d833fd47c7a23034281e9f4e8ba5bc2e8265e4f4f9029b15d6967e28
+    sha256: 2641055d12ec9f6ae2fe2df6a52f9fc7dc928f8597aacae8f71f707dbdfa7ea8
     summary:
       insight: Review before modifying memory features.
       key_rules: Preserve vector memory API contracts.
