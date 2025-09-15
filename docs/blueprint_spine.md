@@ -82,7 +82,9 @@ context the Crown attempted to resolve.
 Thresholds, ordering, and service credentials for this cascade live in
 `config/razar_ai_agents.json`; see
 [system_blueprint.md#rstar-escalation](system_blueprint.md#rstar-escalation) for
-the authoritative escalation diagram and configuration notes.
+the component-level escalation diagram and
+[system_blueprint.md#remote-agent-failover-configuration](system_blueprint.md#remote-agent-failover-configuration)
+for the configuration contract and roster normalization rules.
 
 ### **Operator ↔ RAZAR/Crown Flow**
 
