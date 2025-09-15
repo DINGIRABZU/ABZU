@@ -13,7 +13,7 @@ For the narrative driver and lexicon grounding the engine, see [herojourney_engi
 | Crown Router | Coordinates system-level actions and delegates to RAG Orchestrator【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L45-L46】 | fully ported in Rust with optional ethical validation |
 | Kimicho Fallback | Provides fallback code generation when the Crown Router cannot reach K2 Coder | `kimicho` crate exposes `fallback_k2` via PyO3 `neoabzu_kimicho` bridge; legacy `kimicho.py` retired |
 | RAG Orchestrator | Dispatches queries to memory bundle and external sources【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L48-L52】 | Rust orchestrator merges memory and connector results with plugin connectors and ranking strategies (parity achieved) |
-| Insight Engine | Performs higher-order reasoning and returns insights via Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L54-L58】 | `neoabzu-insight` generates simple semantic embeddings for tokens and bigrams, exposing vectors and hooks for the Crown Router |
+| Insight Engine | Performs higher-order reasoning and returns insights via Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L54-L58】 | `neoabzu-insight` now computes semantic embeddings with per-word similarity scores, exposing advanced reasoning hooks for the Crown Router |
 | Memory Bundle | Cortex, Emotional, Mental, Spiritual, and Narrative layers for unified storage【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L48-L49】【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L72-L76】 | reuse |
 | System Coordination | Metrics, tracing, and caching align cross-subsystem orchestration | parity achieved |
 | Vector Search | Accelerates similarity lookups across memory layers【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L72-L76】 | Rust crate `neoabzu_vector` exposes gRPC with in-memory embeddings, metrics, and Python client helpers |

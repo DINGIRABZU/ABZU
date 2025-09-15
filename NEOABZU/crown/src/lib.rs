@@ -2,7 +2,11 @@ use std::time::Instant;
 
 use neoabzu_chakrapulse::emit_pulse;
 use neoabzu_core::{evaluate, reduce_inevitable_with_journey};
-use neoabzu_insight::{analyze as insight_analyze, embedding as insight_embed};
+use neoabzu_insight::{
+    analyze as insight_analyze,
+    embedding as insight_embed,
+    semantics as insight_semantics,
+};
 use neoabzu_memory::MemoryBundle;
 use neoabzu_rag::{retrieve_top, MoGEOrchestrator};
 use pyo3::exceptions::PyValueError;
@@ -127,6 +131,7 @@ pub fn route_decision(
         .map(|v| v.iter().map(|(b, _)| b.clone()).collect())
         .unwrap_or_default();
     let embedding = insight_embed(text);
+    let semantic = insight_semantics(text);
 
     let emotion: String = emotion_data
         .get_item("emotion")?
@@ -145,6 +150,7 @@ pub fn route_decision(
     result.set_item("insight_words", words)?;
     result.set_item("insight_bigrams", bigrams)?;
     result.set_item("insight_embedding", embedding)?;
+    result.set_item("insight_semantic", semantic)?;
     result.set_item("latency_seconds", start.elapsed().as_secs_f64())?;
     Ok(result.into())
 }
@@ -172,6 +178,11 @@ pub fn insight_embedding(text: &str) -> PyResult<Vec<f32>> {
 }
 
 #[pyfunction]
+pub fn insight_semantic(text: &str) -> PyResult<Vec<(String, f32)>> {
+    Ok(insight_semantics(text))
+}
+
+#[pyfunction]
 pub fn health_pulse() {
     emit_pulse("crown", true);
 }
@@ -183,6 +194,7 @@ fn neoabzu_crown(py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(route_inevitability, m)?)?;
     m.add_function(wrap_pyfunction!(query_memory, m)?)?;
     m.add_function(wrap_pyfunction!(insight_embedding, m)?)?;
+    m.add_function(wrap_pyfunction!(insight_semantic, m)?)?;
     m.add_function(wrap_pyfunction!(health_pulse, m)?)?;
     let _ = py; // reserve for future use
     Ok(())

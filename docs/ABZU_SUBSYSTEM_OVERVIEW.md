@@ -52,7 +52,7 @@ graph TD
 : If additional information is needed, the RAG layer reaches out to external connectors (see [Connector Index](connectors/CONNECTOR_INDEX.md)).
 
 **Crown Router → Insight Engine**
-: For higher-order reasoning over the collected context, the Crown Router engages the Insight Engine.
+: For higher-order reasoning over the collected context, the Crown Router engages the Insight Engine, which computes semantic embeddings and similarity metrics for advanced reasoning.
 
 **Insight Engine → Persona API**
 : Synthesized insights flow back through the Persona API before returning to the user.
