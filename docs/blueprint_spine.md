@@ -16,6 +16,7 @@ The inaugural ceremony is recorded in the [First Consecrated Computation](../NEO
 - **Per-agent avatars** render via the [avatar pipeline](avatar_pipeline.md) for session-specific visuals.
 - **Resuscitator flows** guide failure recovery; consult the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
+- **Neoabzu crates** bumped to **v0.1.2** with verified PyO3 bindings via `NEOABZU/pyproject.toml`.
 
 ### **Rust Workspace Crates**
 
@@ -24,8 +25,10 @@ The Rust workspace currently exposes several crates that anchor ABZU's topology:
 - `fusion` – cross-layer utilities binding Python and Rust components.
 - `numeric` – numerical kernels surfaced through PyO3.
 - `neoabzu-persona-layers` (path `persona`) – persona modeling layers.
-- `neoabzu-crown` (path `crown`) – Crown orchestration bindings.
-- `neoabzu-rag` (path `rag`) – retrieval-augmented generation helpers.
+- `neoabzu-crown` (path `crown`, **v0.1.2**) – Crown orchestration bindings.
+- `neoabzu-rag` (path `rag`, **v0.1.2**) – retrieval-augmented generation helpers.
+- `neoabzu-insight` (path `insight`, **v0.1.2**) – higher‑order reasoning primitives.
+- `kimicho` (path `kimicho`, **v0.1.2**) – fallback code generation via PyO3 bridge.
 
 Each crate must appear in this blueprint and the doctrine index and be listed as a `maturin` target in `NEOABZU/pyproject.toml`.
 This mapping keeps documentation and Python bindings aligned.

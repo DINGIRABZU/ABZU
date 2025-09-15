@@ -72,6 +72,11 @@ repos:
     language: system
     types: [rust]
     pass_filenames: false
+  - id: cargo-check
+    name: Run cargo check
+    entry: cargo check --workspace
+    language: system
+    pass_filenames: false
   - id: doc-indexer
     name: Regenerate documentation index
     entry: python tools/doc_indexer.py
@@ -201,6 +206,11 @@ repos:
   - id: verify-blueprint-refs
     name: Verify system blueprint crate references
     entry: python scripts/verify_blueprint_refs.py
+    language: system
+    pass_filenames: false
+  - id: verify-pyo3-exposure
+    name: Verify PyO3 exposure
+    entry: python scripts/verify_pyo3_exposure.py
     language: system
     pass_filenames: false
   - id: verify-doc-refs
