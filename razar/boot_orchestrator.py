@@ -37,7 +37,7 @@ except Exception:  # pragma: no cover - Rust crates optional
     _core_eval = None
 
 try:  # pragma: no cover - kimicho optional
-    from kimicho import init_kimicho  # PyO3 bindings
+    from neoabzu_kimicho import init_kimicho  # PyO3 bindings
 except Exception:  # pragma: no cover - kimicho optional
     init_kimicho = None
 

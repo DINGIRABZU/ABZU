@@ -10,7 +10,7 @@ For module-specific quirks and bugs, see the [Python legacy audit](../../docs/py
 | --- | --- | --- |
 | `memory` layers (`memory/`, `vector_memory.py`) | `neoabzu-memory` | PyO3 module `neoabzu_memory` bundles cortex, vector, spiral, emotional, mental, spiritual, and narrative layers. |
 | `crown_router.py` | `neoabzu-crown` | Fully ported; Python module is a thin stub over the Rust crate and supports optional `EthicalValidator` gating. |
-| legacy Python fallback subsystem (`razar/boot_orchestrator.py`) | `kimicho` | PyO3 module `neoabzu_kimicho` exposes `init_kimicho` and `fallback_k2` for Crown routing failover. |
+| legacy `kimicho.py` fallback subsystem (invoked by `razar/boot_orchestrator.py`) | `kimicho` | PyO3 module `neoabzu_kimicho` exposes `init_kimicho` and `fallback_k2` for Crown routing failover. |
 | `rag/orchestrator.py` | `neoabzu-rag` | `MoGEOrchestrator` aggregates memory and connector results via PyO3. |
 | `core` lambda engine (`core/`) | `neoabzu-core` | Accessible through `neoabzu_memory.eval_core` and `neoabzu_memory.reduce_inevitable_core` for Crown Router and RAZAR. |
 | `system coordination` (`metrics`, `tracing`, `caching`) | `neoabzu-crown` | Shared instrumentation and caches mirror ABZU coordination. |
