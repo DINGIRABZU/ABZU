@@ -38,3 +38,4 @@ Enable the `tracing` and `opentelemetry` features on these crates to emit spans 
 - [Onboarding](onboarding.md)
 - [First Consecrated Computation](Oroboros_Core.md#first-consecrated-computation) – inaugural narrative log
 - [Nazarick Convex PoC](nazarick_convex_poc.md) – Convex agent/log prototype
+- [Convex Connector Evaluation](convex_connector_evaluation.md) – performance and cost notes for Pipecat/videocall-rs and Vanna connectors

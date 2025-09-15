@@ -153,6 +153,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md](../NEOABZU/docs/SUMERIAN_SACRED_LEXICON.md) | SUMERIAN_SACRED_LEXICON.md | - | - |
 | [../NEOABZU/docs/Scribe_narrative_engine.md](../NEOABZU/docs/Scribe_narrative_engine.md) | Scribe_narrative_engine.md | - | - |
 | [../NEOABZU/docs/connector_api.md](../NEOABZU/docs/connector_api.md) | Connector Plugin API | Connector plugins supply external context to the RAG pipeline. A connector is a Python object or callable exposing a... | - |
+| [../NEOABZU/docs/convex_connector_evaluation.md](../NEOABZU/docs/convex_connector_evaluation.md) | Convex Connector Evaluation | - | - |
 | [../NEOABZU/docs/core_usage.md](../NEOABZU/docs/core_usage.md) | Core Usage Guide | Demonstrates evaluating lambda-calculus expressions via the Rust-backed `core` module. | - |
 | [../NEOABZU/docs/feature_parity.md](../NEOABZU/docs/feature_parity.md) | Feature Parity Matrix | Track NEOABZU progress toward ABZU functionality. Update this table as milestones complete to keep contributors aligned. | - |
 | [../NEOABZU/docs/herojourney_engine.md](../NEOABZU/docs/herojourney_engine.md) | herojourney_engine.md | - | - |
