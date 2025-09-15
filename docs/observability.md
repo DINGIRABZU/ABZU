@@ -27,8 +27,8 @@ Each crate calls `init_tracing` in its Python module initializer so spans are
 emitted when the module loads. Apply the `#[instrument]` attribute to functions
 to capture arguments and emit spans.
 
-RAZAR, Crown, and Kimicho expose a `tracing` feature flag. Enable it at build
-time to wire in the hooks and emit spans:
+Crown, RAG, Insight, and Kimicho expose a `tracing` feature flag. Enable it at
+build time to wire in the hooks and emit spans:
 
 ```bash
 cargo test -p neoabzu-crown --features tracing
@@ -57,5 +57,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ```
 
 With the recorder installed, counters and histograms emitted from Crown, RAG,
-Insight, and Vector become available at `http://localhost:9000/metrics`. Set
-`OTEL_EXPORTER_OTLP_ENDPOINT` to route spans to an external collector.
+Insight, Kimicho, and Vector become available at
+`http://localhost:9000/metrics`. Set `OTEL_EXPORTER_OTLP_ENDPOINT` to route spans
+to an external collector.
+
+## Dashboards
+
+Prometheus scrapes the `/metrics` endpoint and feeds Grafana dashboards. The
+default dashboard highlights request rates and latencies for Crown, RAG,
+Insight, and Kimicho. Launch Grafana locally to explore the metrics:
+
+```bash
+docker run -p 3000:3000 grafana/grafana
+```
+
+Then open `http://localhost:3000` and add the Prometheus data source pointing to
+`http://localhost:9000`. Import the provided dashboard JSON in `monitoring/`
+to visualize trace and metrics trends across services.

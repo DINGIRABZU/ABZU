@@ -3,6 +3,7 @@ use neoabzu_memory::MemoryBundle;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 use std::time::Instant;
+#[cfg(feature = "tracing")]
 use tracing::instrument;
 
 const EMBED_DIM: usize = 16;
@@ -27,17 +28,17 @@ fn cosine(a: &[f32; EMBED_DIM], b: &[f32; EMBED_DIM]) -> f32 {
 
 #[pyfunction]
 #[pyo3(signature = (question, top_n=5))]
-#[instrument(skip(py))]
+#[cfg_attr(feature = "tracing", instrument(skip(py)))]
 pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Vec<Py<PyDict>>> {
     let start = Instant::now();
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
     let q_dict = bundle.query(py, question)?;
-    let data = q_dict.as_ref(py);
+    let data = q_dict.bind(py);
     let vector_any = data
         .get_item("vector")?
         .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyKeyError, _>("vector"))?;
-    let vector_list: &PyList = vector_any.downcast()?;
+    let vector_list: &Bound<PyList> = vector_any.downcast()?;
     let q_emb = embed(question);
     let mut scored: Vec<(f32, Py<PyDict>)> = Vec::new();
     for item in vector_list.iter() {
@@ -48,7 +49,7 @@ pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Ve
                 .unwrap_or_default();
             let emb = embed(&text);
             let score = cosine(&q_emb, &emb);
-            let out = PyDict::new(py);
+            let out = PyDict::new_bound(py);
             for (k, v) in meta {
                 out.set_item(k, v)?;
             }
@@ -66,7 +67,8 @@ pub fn retrieve_top(py: Python<'_>, question: &str, top_n: usize) -> PyResult<Ve
 }
 
 #[pymodule]
-fn neoabzu_rag(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn neoabzu_rag(_py: Python<'_>, m: &Bound<PyModule>) -> PyResult<()> {
+    #[cfg(feature = "tracing")]
     let _ = neoabzu_instrumentation::init_tracing("rag");
     m.add_function(wrap_pyfunction!(retrieve_top, m)?)?;
     Ok(())
