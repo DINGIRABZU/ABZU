@@ -46,7 +46,13 @@ def test_rstar_escalation_after_threshold(tmp_path, monkeypatch, env_value, thre
     attempts: list[str] = []
     suggestion: dict[str, str] = {}
 
-    def fake_handover(component: str, error: str, use_opencode: bool = False):
+    def fake_handover(
+        component: str,
+        error: str,
+        *,
+        context: dict | None = None,
+        use_opencode: bool = False,
+    ):
         current = json.loads(cfg_path.read_text())["active"]
         attempts.append(current)
         if current == "rstar":
@@ -100,7 +106,13 @@ def test_agent_escalation_sequence(tmp_path, monkeypatch):
 
     sequence: list[str] = []
 
-    def fake_handover(component: str, error: str, use_opencode: bool = False):
+    def fake_handover(
+        component: str,
+        error: str,
+        *,
+        context: dict | None = None,
+        use_opencode: bool = False,
+    ):
         current = json.loads(cfg_path.read_text())["active"]
         sequence.append(current)
         return current == "rstar"
@@ -129,3 +141,50 @@ def test_agent_escalation_sequence(tmp_path, monkeypatch):
     log = json.loads(inv_log.read_text())
     escalations = [e.get("agent") for e in log if e.get("event") == "escalation"]
     assert escalations == ["kimi2", "airstar", "rstar"]
+
+
+def test_context_includes_history(tmp_path, monkeypatch):
+    """Final agent receives history of previous failed attempts."""
+    monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", "1")
+    importlib.reload(bo)
+
+    inv_log = tmp_path / "invocations.json"
+    cfg_path = tmp_path / "agents.json"
+    cfg_path.write_text(
+        json.dumps(
+            {
+                "active": "demo_agent",
+                "agents": [{"name": "demo_agent"}, {"name": "rstar"}],
+            }
+        )
+    )
+    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
+
+    contexts: list[dict | None] = []
+
+    def fake_handover(
+        component: str,
+        error: str,
+        *,
+        context: dict | None = None,
+        use_opencode: bool = False,
+    ) -> bool:
+        contexts.append(context)
+        current = json.loads(cfg_path.read_text())["active"]
+        return current == "rstar"
+
+    monkeypatch.setattr(bo.ai_invoker, "handover", fake_handover)
+    monkeypatch.setattr(bo.health_checks, "run", lambda name: True)
+    monkeypatch.setattr(bo, "launch_component", lambda comp: DummyProc())
+
+    component = {"name": "demo", "command": ["echo", "hi"]}
+    failure_tracker: dict[str, int] = {}
+    proc, used_attempts, err = bo._retry_with_ai(
+        "demo", component, "boom", 4, failure_tracker
+    )
+
+    assert proc is not None and used_attempts == 4
+    assert len(contexts) == 4
+    # Final context includes history from earlier failed attempts
+    assert any(h["agent"] == "airstar" for h in contexts[3]["history"])

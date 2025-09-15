@@ -38,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Operator uploads now store files under operator-specific paths and relay metadata through Crown to RAZAR.
 - Expanded remote assistance workflow with sequence diagram and dedicated invocation and patch logs.
 - Detailed handover and patch application flow with `ai_invoker` → `code_repair` diagram and patch log reference.
+- Cross-agent memory propagation sends recent `razar_ai_invocations.json` history to downstream agents during AI handovers.
 - Integrated `code_repair.repair_module` into `ai_invoker.handover` to apply remote patches and documented Remote Assistance section with flow diagram.
 - Added unit tests for `ai_invoker.handover` and `code_repair.repair_module`.
 - Added optional Opencode CLI handover path in `ai_invoker.handover` and
