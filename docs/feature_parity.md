@@ -9,5 +9,5 @@ Tracks Rust reimplementations of key Python subsystems.
 | Numeric Kernels | `neoabzu_numeric` | [system_blueprint.md#triadic-stack](system_blueprint.md#triadic-stack) | PCA and cosine similarity utilities via PyO3. |
 | Persona API | `neoabzu_persona` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | Tracks persona state and loads profile data. |
 | Crown Router | `neoabzu_crown` | [system_blueprint.md#operator-razar-crown-flow](system_blueprint.md#operator-razar-crown-flow) | Direct PyO3 interface with validation, `MoGEOrchestrator` calls, and telemetry parity. |
-| RAG Orchestrator | `neoabzu_rag` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | Merges memory records and external connector results via `MemoryBundle`. |
+| RAG Orchestrator | `neoabzu_rag` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | Aggregates memory and connector retrievals with pluggable ranking strategies via `MemoryBundle`. |
 | Insight Engine | `neoabzu_insight` | [ABZU_SUBSYSTEM_OVERVIEW.md#crown-router--insight-engine](ABZU_SUBSYSTEM_OVERVIEW.md#crown-router--insight-engine) | Semantic embeddings and similarity analysis exposed to Crown via PyO3. |

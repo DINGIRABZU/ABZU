@@ -2,15 +2,16 @@
 //!
 //! Enable telemetry with:
 //! `cargo test -p neoabzu-rag --features opentelemetry`
-use neoabzu_memory::MemoryBundle;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
 
 mod connector;
 mod ranker;
+mod orchestrator;
 
 pub use connector::FuncConnector;
 pub use ranker::CosineRanker;
+pub use orchestrator::Orchestrator;
 
 pub(crate) const EMBED_DIM: usize = 16;
 
@@ -99,7 +100,7 @@ pub fn merge_documents(
     Ok(scored.into_iter().take(top_n).map(|(_, d)| d).collect())
 }
 
-#[cfg_attr(feature = "tracing", tracing::instrument(skip(py, ranker)))]
+#[cfg_attr(feature = "tracing", tracing::instrument(skip(py, connectors, ranker)))]
 #[pyfunction]
 #[pyo3(signature = (question, top_n=5, connectors=None, ranker=None))]
 pub fn retrieve_top(
@@ -109,46 +110,7 @@ pub fn retrieve_top(
     connectors: Option<&PyList>,
     ranker: Option<&PyAny>,
 ) -> PyResult<Vec<Py<PyDict>>> {
-    let mut bundle = MemoryBundle::new();
-    bundle.initialize(py)?;
-    let q_dict = bundle.query(py, question)?;
-    let data = q_dict.as_ref(py);
-    let vector_any = data
-        .get_item("vector")?
-        .ok_or_else(|| PyErr::new::<pyo3::exceptions::PyKeyError, _>("vector"))?;
-    let vector_list: &PyList = vector_any.downcast()?;
-    let memory_list = vector_list;
-
-    let mut connector_accum: Vec<Py<PyDict>> = Vec::new();
-    if let Some(conn_list) = connectors {
-        for conn in conn_list.iter() {
-            let callable: &PyAny = if conn.hasattr("retrieve")? {
-                conn.getattr("retrieve")?
-            } else {
-                conn
-            };
-            if !callable.is_callable() {
-                continue;
-            }
-            let fetched = callable.call1((question,))?;
-            let items: &PyList = fetched.downcast()?;
-            for item in items.iter() {
-                if let Ok(meta) = item.downcast::<PyDict>() {
-                    connector_accum.push(meta.into());
-                }
-            }
-        }
-    }
-
-    let connector_list = PyList::new(py, connector_accum);
-    merge_documents(
-        py,
-        question,
-        memory_list,
-        Some(connector_list),
-        top_n,
-        ranker,
-    )
+    Orchestrator::retrieve(py, question, connectors, ranker, top_n)
 }
 
 /// Minimal orchestrator that gathers documents from memory and optional connectors.

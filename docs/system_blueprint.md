@@ -729,7 +729,7 @@ Performance-critical services are gradually migrating to Rust crates within NEOA
 
 The `neoabzu_fusion` crate merges invariants from symbolic and numeric layers to maintain triadic stack coherence. See the [Migration Crosswalk](migration_crosswalk.md#fusion-invariants) for migration details and legacy Python references.
 
-The RAG orchestrator is feature-complete, merging memory bundle and external connector results through a dedicated merge routine. The workspace mirrors existing Python APIs via PyO3 wrappers to permit side-by-side validation during the transition.
+The RAG orchestrator is feature-complete, merging memory bundle and external connector results through a dedicated merge and ranking routine. The workspace mirrors existing Python APIs via PyO3 wrappers to permit side-by-side validation during the transition.
 See the [Migration Crosswalk](migration_crosswalk.md) for mappings between Python subsystems and their Rust counterparts.
 
 ## Chakra-Aligned Architecture
