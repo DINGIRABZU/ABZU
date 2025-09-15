@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented PyO3 and gRPC interface contracts in `NEOABZU/Reignition.md` and
   introduced a CI job that builds Rust crates and runs Python integration tests.
 - Initialized NEOABZU Rust workspace with core lambda-calculus interpreter and Python bindings.
+- Tracing and metrics hooks for Crown, RAG, Insight, and Kimicho crates with
+  extended CI running `cargo fmt --check`, `cargo clippy`, `cargo test`, and
+  documentation reference checks.
 
 ### Changed
 - Removed legacy `crown_router.py` and `kimicho.py` in favor of Rust crate stubs.

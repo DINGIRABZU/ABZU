@@ -9,6 +9,8 @@ use pyo3::prelude::*;
 #[cfg(feature = "tracing")]
 use tracing::instrument;
 
+type Report = HashMap<String, Vec<(String, Vec<f32>)>>;
+
 /// Simple character-based embedding for a single word.
 fn word_embedding(word: &str) -> Vec<f32> {
     let mut vowels = 0_f32;
@@ -26,7 +28,7 @@ fn word_embedding(word: &str) -> Vec<f32> {
 
 /// Generate simple embeddings for words and bigrams within `text`.
 #[cfg_attr(feature = "tracing", instrument)]
-pub fn analyze(text: &str) -> HashMap<String, Vec<(String, Vec<f32>)>> {
+pub fn analyze(text: &str) -> Report {
     let start = Instant::now();
     let words: Vec<&str> = text.split_whitespace().collect();
     let mut word_embeddings: Vec<(String, Vec<f32>)> = Vec::new();
@@ -69,7 +71,7 @@ pub fn embedding(text: &str) -> Vec<f32> {
         return vec![0.0, 0.0, 0.0];
     }
     let count = words.len() as f32;
-    let mut sum = vec![0.0, 0.0, 0.0];
+    let mut sum = [0.0_f32; 3];
     for (_, emb) in &words {
         for (i, v) in emb.iter().enumerate() {
             sum[i] += v;
@@ -115,7 +117,7 @@ pub fn semantics(text: &str) -> Vec<(String, f32)> {
 }
 
 #[pyfunction]
-fn reason(text: &str) -> PyResult<HashMap<String, Vec<(String, Vec<f32>)>>> {
+fn reason(text: &str) -> PyResult<Report> {
     Ok(analyze(text))
 }
 
@@ -130,7 +132,9 @@ fn semantic(text: &str) -> PyResult<Vec<(String, f32)>> {
 }
 
 #[pymodule]
-fn neoabzu_insight(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn neoabzu_insight(_py: Python<'_>, m: &Bound<PyModule>) -> PyResult<()> {
+    #[cfg(feature = "tracing")]
+    let _ = neoabzu_instrumentation::init_tracing("insight");
     m.add_function(wrap_pyfunction!(reason, m)?)?;
     m.add_function(wrap_pyfunction!(embed, m)?)?;
     m.add_function(wrap_pyfunction!(semantic, m)?)?;

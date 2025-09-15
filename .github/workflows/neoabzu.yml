@@ -21,8 +21,13 @@ jobs:
           toolchain: stable
           profile: minimal
           override: true
-      - name: Run NEOABZU tests
-        run: cargo test --manifest-path NEOABZU/Cargo.toml
+          components: rustfmt, clippy
+      - name: cargo fmt
+        run: cargo fmt --manifest-path NEOABZU/Cargo.toml --all -- --check
+      - name: cargo clippy
+        run: cargo clippy --manifest-path NEOABZU/Cargo.toml --workspace --all-targets --all-features -- -D warnings
+      - name: cargo test
+        run: cargo test --manifest-path NEOABZU/Cargo.toml --workspace --all-features
 
   python:
     runs-on: ubuntu-latest
@@ -39,3 +44,12 @@ jobs:
         run: |
           cd NEOABZU
           pytest
+  doc-refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify documentation references
+        run: python scripts/verify_doc_refs.py
