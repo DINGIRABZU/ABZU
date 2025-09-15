@@ -10,7 +10,7 @@ For the narrative driver and lexicon grounding the engine, see [herojourney_engi
 | --- | --- | --- |
 | User Interface | Routes user intents through the Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L39-L40】 | drop |
 | Persona API | Normalizes user intents and forwards requests to the Crown Router【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L42-L43】 | migrated via `neoabzu_persona` |
-| Crown Router | Coordinates system-level actions and delegates to RAG Orchestrator【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L45-L46】 | fully ported in Rust |
+| Crown Router | Coordinates system-level actions and delegates to RAG Orchestrator【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L45-L46】 | fully ported in Rust with optional ethical validation |
 | Kimicho Fallback | Provides fallback code generation when the Crown Router cannot reach K2 Coder | `kimicho` crate exposes `fallback_k2` via PyO3 `neoabzu_kimicho` bridge |
 | RAG Orchestrator | Dispatches queries to memory bundle and external sources【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L48-L52】 | Rust orchestrator merges memory and connector results (parity achieved) |
 | Insight Engine | Performs higher-order reasoning and returns insights via Persona API【F:docs/ABZU_SUBSYSTEM_OVERVIEW.md†L54-L58】 | `neoabzu-insight` generates simple semantic embeddings for tokens and bigrams, exposing vectors and hooks for the Crown Router |

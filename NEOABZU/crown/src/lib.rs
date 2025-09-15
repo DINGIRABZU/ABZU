@@ -1,12 +1,13 @@
 use std::time::Instant;
 
+use neoabzu_chakrapulse::emit_pulse;
 use neoabzu_core::{evaluate, reduce_inevitable_with_journey};
 use neoabzu_insight::{analyze as insight_analyze, embedding as insight_embed};
 use neoabzu_memory::MemoryBundle;
 use neoabzu_rag::{retrieve_top, MoGEOrchestrator};
-use neoabzu_chakrapulse::emit_pulse;
-use pyo3::{prelude::*, wrap_pyfunction};
+use pyo3::exceptions::PyValueError;
 use pyo3::types::{PyDict, PyList};
+use pyo3::{prelude::*, wrap_pyfunction};
 
 fn select_store(archetype: &str) -> &str {
     match archetype.to_lowercase().as_str() {
@@ -62,20 +63,54 @@ pub fn route_decision(
     validator: Option<&PyAny>,
     documents: Option<&PyAny>,
 ) -> PyResult<Py<PyDict>> {
-    let _ = (orchestrator, validator); // legacy params for compatibility
     let start = Instant::now();
 
+    // allow external orchestrator or documents
     let docs_obj = if let Some(d) = documents {
         d.to_object(py)
     } else {
-        let orch = MoGEOrchestrator::new();
-        let routed = orch.route(py, text, emotion_data, None, false, false, false, None, None)?;
-        routed
-            .as_ref(py)
-            .get_item("documents")?
-            .map(|o| o.to_object(py))
-            .unwrap_or_else(|| py.None())
+        let routed_obj: PyObject = if let Some(o) = orchestrator {
+            let kwargs = PyDict::new(py);
+            kwargs.set_item("text_modality", false)?;
+            kwargs.set_item("voice_modality", false)?;
+            kwargs.set_item("music_modality", false)?;
+            kwargs.set_item("documents", py.None())?;
+            o.call_method("route", (text, emotion_data), Some(kwargs))?
+                .to_object(py)
+        } else {
+            let orch = MoGEOrchestrator::new();
+            let routed = orch.route(
+                py,
+                text,
+                emotion_data,
+                None,
+                false,
+                false,
+                false,
+                None,
+                None,
+            )?;
+            routed.into_py(py)
+        };
+        let routed_dict: &PyDict = routed_obj.downcast(py)?;
+        routed_dict
+            .get_item("documents")
+            .map_or(py.None(), |o| o.to_object(py))
     };
+
+    // optional validator check
+    if let Some(v) = validator {
+        let res: &PyDict = v
+            .call_method1("validate_action", ("operator", text))?
+            .downcast()?;
+        let compliant: bool = res
+            .get_item("compliant")?
+            .and_then(|o| o.extract().ok())
+            .unwrap_or(true);
+        if !compliant {
+            return Err(PyValueError::new_err("validation failed"));
+        }
+    }
 
     let mut bundle = MemoryBundle::new();
     bundle.initialize(py)?;
