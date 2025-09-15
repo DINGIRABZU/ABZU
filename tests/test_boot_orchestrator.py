@@ -143,6 +143,58 @@ def test_agent_escalation_sequence(tmp_path, monkeypatch):
     assert escalations == ["kimi2", "airstar", "rstar"]
 
 
+def test_mixed_case_agent_config(tmp_path, monkeypatch):
+    """Handles mixed-case agent names from configuration files."""
+    monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", "1")
+    importlib.reload(bo)
+
+    inv_log = tmp_path / "invocations.json"
+    cfg_path = tmp_path / "agents.json"
+    cfg_path.write_text(
+        json.dumps(
+            {
+                "active": "KiMi2",
+                "agents": [
+                    {"name": "KiMi2"},
+                    {"name": "AirStar"},
+                    {"name": "RStar"},
+                ],
+            }
+        )
+    )
+    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
+
+    attempts: list[str] = []
+
+    def fake_handover(
+        component: str,
+        error: str,
+        *,
+        context: dict | None = None,
+        use_opencode: bool = False,
+    ) -> bool:
+        current = json.loads(cfg_path.read_text())["active"]
+        attempts.append(current.lower())
+        return current.lower() == "rstar"
+
+    monkeypatch.setattr(bo.ai_invoker, "handover", fake_handover)
+    monkeypatch.setattr(bo.health_checks, "run", lambda name: True)
+    monkeypatch.setattr(bo, "launch_component", lambda comp: DummyProc())
+
+    component = {"name": "demo", "command": ["echo", "hi"]}
+    failure_tracker: dict[str, int] = {}
+    proc, used_attempts, err = bo._retry_with_ai(
+        "demo", component, "boom", 3, failure_tracker
+    )
+
+    assert proc is not None and used_attempts == 3
+    assert attempts == ["kimi2", "airstar", "rstar"]
+    log = json.loads(inv_log.read_text())
+    attempt_agents = [e.get("agent") for e in log if e.get("event") == "attempt"]
+    assert attempt_agents == ["kimi2", "airstar", "rstar"]
+
+
 def test_context_includes_history(tmp_path, monkeypatch):
     """Final agent receives history of previous failed attempts."""
     monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", "1")

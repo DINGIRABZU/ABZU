@@ -37,7 +37,7 @@ def _active_agent(path: Path = AGENT_CONFIG_PATH) -> str | None:
         if isinstance(data, dict):
             active = data.get("active")
             if isinstance(active, str):
-                return active
+                return active.lower()
     except Exception:
         return None
     return None
