@@ -153,6 +153,8 @@ layer so operators can audit service-to-service calls.
 See [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) for the
 current status of each connector.
 
+Performance and cost notes for Convex-linked connectors (Pipecat/videocall-rs and Vanna) reside in [NEOABZU/docs/convex_connector_evaluation.md](../NEOABZU/docs/convex_connector_evaluation.md).
+
 #### Connector Matrix
 
 ABZU bridges external and internal services through a mix of API and MCP
