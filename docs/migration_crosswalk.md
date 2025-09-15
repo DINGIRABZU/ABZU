@@ -10,6 +10,7 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 | Numeric embeddings | `neoabzu_numeric` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | — |
 | Persona context | `neoabzu_persona` | [system_blueprint.md#triadic-stack](system_blueprint.md#triadic-stack) | — |
 | RAG retrieval | `neoabzu_rag` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | `rag/orchestrator.py` |
+| Insight engine | `neoabzu_insight` | [ABZU_SUBSYSTEM_OVERVIEW.md#crown-router--insight-engine](ABZU_SUBSYSTEM_OVERVIEW.md#crown-router--insight-engine) | — |
 | Kimicho fallback | `neoabzu_kimicho` | [system_blueprint.md#operator-razar-crown-flow](system_blueprint.md#operator-razar-crown-flow) | — |
 
 ### RAZAR init
@@ -46,6 +47,12 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 - [x] Port complete
 - [x] Required tests: `NEOABZU/rag/tests/orchestrator.rs`, `NEOABZU/rag/tests/multi_source_ranking.rs`
 - [x] Documentation references: [Spiral RAG Pipeline](rag_pipeline.md#migration-crosswalk)
+- [x] Doctrine references: [The Absolute Protocol](The_Absolute_Protocol.md#migration-crosswalk-references)
+
+### Insight engine
+- [x] Port complete
+- [x] Required tests: `NEOABZU/insight/tests/integration.rs`, `NEOABZU/crown/tests/insight_hooks.rs`
+- [x] Documentation references: [System Blueprint](system_blueprint.md#floor-6-insight-observatory)
 - [x] Doctrine references: [The Absolute Protocol](The_Absolute_Protocol.md#migration-crosswalk-references)
 
 ### Kimicho fallback

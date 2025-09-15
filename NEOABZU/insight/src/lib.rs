@@ -101,19 +101,26 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
 /// Semantic similarity scores for each word against the overall text embedding.
 #[cfg_attr(feature = "tracing", instrument)]
 pub fn semantics(text: &str) -> Vec<(String, f32)> {
+    let start = Instant::now();
     let doc_emb = embedding(text);
     if doc_emb.iter().all(|v| *v == 0.0) {
         return Vec::new();
     }
     let report = analyze(text);
     let words = report.get("words").cloned().unwrap_or_default();
-    words
+    let out: Vec<(String, f32)> = words
         .into_iter()
         .map(|(w, emb)| {
             let sim = cosine_similarity(&emb, &doc_emb);
             (w, sim)
         })
-        .collect()
+        .collect();
+    counter!("neoabzu_insight_semantics_total", 1);
+    histogram!(
+        "neoabzu_insight_semantics_latency_seconds",
+        start.elapsed().as_secs_f64()
+    );
+    out
 }
 
 #[pyfunction]

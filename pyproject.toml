@@ -28,6 +28,7 @@ dependencies = [
     "neoabzu-crown==0.1.1",
     "neoabzu-kimicho==0.1.1",
     "neoabzu-rag==0.1.1",
+    "neoabzu-insight==0.1.1",
 ]
 
 [project.optional-dependencies]
@@ -101,8 +102,8 @@ citadel = [
     "neo4j==5.23.1",
 ]
 
-neoabzu = ["neoabzu", "neoabzu-crown", "neoabzu-kimicho"]
-insight = ["neoabzu"]
+neoabzu = ["neoabzu", "neoabzu-crown", "neoabzu-kimicho", "neoabzu-insight"]
+insight = ["neoabzu-insight"]
 
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
