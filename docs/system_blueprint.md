@@ -1197,6 +1197,7 @@ deployments with user accounts and persistent chats.
 - [Development Workflow](development_workflow.md)
 - [Coding Style](coding_style.md)
 - [Documentation Index](index.md) – curated entry points.
+- [APSU Resource Index](apsu_resource_index.md) – catalog of APSU and Neo-APSU materials.
 - Regenerate [INDEX.md](INDEX.md) with `python tools/doc_indexer.py` for a full inventory; existing entries stay intact and new versions of generated files are appended.
 
 ## Version History
