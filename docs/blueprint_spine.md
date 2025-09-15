@@ -5,8 +5,8 @@ See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, 
 The inaugural ceremony is recorded in the [First Consecrated Computation](../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation).
 
 ??? note "Origin Materials"
-    - [Marrow Code](<../INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md>)
-    - [Inanna Song](<../INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md>)
+    - [Marrow Code](../INANNA_AI/MARROW_CODE.md)
+    - [Inanna Song](../INANNA_AI/INANNA_SONG.md)
     These origin texts define Crown identity and ground its ethical posture.
 
 ## **Recent Core Milestones**
@@ -29,6 +29,7 @@ The Rust workspace currently exposes several crates that anchor ABZU's topology:
 - `neoabzu-persona-layers` (path `persona`) – persona modeling layers.
 - `neoabzu-crown` (path `crown`, **v0.1.2**) – Crown orchestration bindings.
 - `neoabzu-rag` (path `rag`, **v0.1.2**) – retrieval-augmented generation helpers.
+- `neoabzu-instrumentation` (path `instrumentation`, **v0.1.0**) – tracing spine with OpenTelemetry bridges.
 - `neoabzu-insight` (path `insight`, **v0.1.2**) – higher‑order reasoning primitives.
 - `kimicho` (path `kimicho`, **v0.1.2**) – fallback code generation via PyO3 bridge.
 - `razar` (path `razar`, **v0.1.2**) – routes through Crown and falls back to Kimicho when Crown is unavailable.
@@ -60,6 +61,28 @@ Contributors must pair system enhancements with operator-facing improvements, up
 2. **RAZAR (Crown)** – orchestrates modules, validates environment, coordinates recovery.
 3. **Primordials LLM (DeepSeek-V3)** – upstream language model guiding insights.
 4. **INANNA/Bana** – narrative engine and memory hub feeding back to Operator.
+
+### **RAZAR Delegation Cascade**
+
+When local recovery loops stall, RAZAR escalates stubborn missions through a
+remote delegation ladder. The orchestrator packages the aggregated
+`logs/razar_ai_invocations.json` history and current heartbeat telemetry before
+handing the brief to each specialist so downstream agents inherit the same
+context the Crown attempted to resolve.
+
+1. **K2 Coder (Kimi 2)** – receives the failing mission after Kimicho's repair
+   heuristics exhaust their retries, applying code-first fixes through the PyO3
+   bridge and returning candidate patches to RAZAR.
+2. **Air Star** – validates K2 outputs, performs lightweight regeneration tasks,
+   and prepares the payload for an external patcher when deeper synthesis is
+   required.
+3. **rStar** – final automation stop for recalcitrant bugs, synthesizing
+   high-assurance patches before the mission returns to operator review.
+
+Thresholds, ordering, and service credentials for this cascade live in
+`config/razar_ai_agents.json`; see
+[system_blueprint.md#rstar-escalation](system_blueprint.md#rstar-escalation) for
+the authoritative escalation diagram and configuration notes.
 
 ### **Operator ↔ RAZAR/Crown Flow**
 
