@@ -291,6 +291,15 @@ def _log_long_task(
     LONG_TASK_LOG_PATH.write_text(json.dumps(records, indent=2))
 
 
+def _should_escalate(failure_count: int) -> bool:
+    """Return ``True`` when persistent failures warrant escalation."""
+
+    threshold = RSTAR_THRESHOLD
+    if threshold <= 0:
+        return False
+    return failure_count % threshold == 0
+
+
 def _set_active_agent(agent: str) -> None:
     """Set the active remote agent in :data:`AGENT_CONFIG_PATH`."""
     try:
@@ -352,7 +361,7 @@ def _handle_ai_result(
         return
     count = failure_tracker.get(name, 0) + 1
     failure_tracker[name] = count
-    if count % RSTAR_THRESHOLD != 0:
+    if not _should_escalate(count):
         return
     active_agent, sequence, lookup = _load_agent_state()
     if not sequence:
