@@ -327,6 +327,8 @@ for runtime details.
 
 Integration tests (`NEOABZU/crown/tests/kimicho_fallback.rs`) confirm that RAZAR falls back to Kimicho transparently when Crown routing fails.
 
+`NEOABZU/crown/tests/razar_validator.rs` extends this path with manifesto checks, falling back to Kimicho when Crown rejects a request via `EthicalValidator`.
+
 See the [Migration Crosswalk](migration_crosswalk.md#razar-init) for initialization mapping, [crown routing](migration_crosswalk.md#crown-routing), and [Kimicho fallback](migration_crosswalk.md#kimicho-fallback) status.
 
 ```mermaid
