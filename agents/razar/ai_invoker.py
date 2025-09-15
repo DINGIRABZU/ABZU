@@ -13,13 +13,17 @@ remote agent or a confirmation that no suggestion was provided.
 
 from __future__ import annotations
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 from datetime import datetime
+import os
 import json
 import logging
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, Tuple, List
+
+import requests
 
 from . import remote_loader, code_repair
 
@@ -33,6 +37,23 @@ INVOCATION_LOG_PATH = (
 PATCH_LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_ai_patches.json"
 
 __all__ = ["handover"]
+
+
+def _expand_env(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    expanded = os.path.expandvars(value).strip()
+    if not expanded or ("${" in expanded and "}" in expanded):
+        return None
+    return expanded
+
+
+def _normalize_agent_entry(entry: Any) -> Dict[str, Any] | None:
+    if isinstance(entry, dict):
+        return dict(entry)
+    if isinstance(entry, str):
+        return {"name": entry}
+    return None
 
 
 def _load_config(path: Path) -> Dict[str, Any]:
@@ -63,28 +84,49 @@ def _load_config(path: Path) -> Dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
-def _select_agent(config: Dict[str, Any]) -> Tuple[str, str, str | None]:
+def _select_agent(config: Dict[str, Any]) -> Tuple[str, str | None, str | None]:
     """Return ``(name, endpoint, token)`` for the active agent."""
+
     agents = config.get("agents")
     if not isinstance(agents, list) or not agents:
         raise RuntimeError("No agents configured")
 
-    active = config.get("active")
-    chosen = None
-    if isinstance(active, str):
-        for entry in agents:
-            if entry.get("name") == active:
-                chosen = entry
-                break
-    if chosen is None:
-        chosen = agents[0]
+    normalized_agents: list[Dict[str, Any]] = []
+    for entry in agents:
+        payload = _normalize_agent_entry(entry)
+        if payload is not None:
+            normalized_agents.append(payload)
 
-    name = str(chosen.get("name"))
-    endpoint = str(chosen.get("endpoint"))
+    if not normalized_agents:
+        raise RuntimeError("No agents configured")
+
+    active = config.get("active")
+    active_name = active.lower() if isinstance(active, str) else None
+
+    chosen = None
+    for entry in normalized_agents:
+        candidate = entry.get("name")
+        if (
+            isinstance(candidate, str)
+            and active_name
+            and candidate.lower() == active_name
+        ):
+            chosen = entry
+            break
+
+    if chosen is None:
+        chosen = normalized_agents[0]
+
+    name = chosen.get("name")
+    if not isinstance(name, str):
+        raise RuntimeError("Agent entry missing name")
+
+    endpoint = _expand_env(chosen.get("endpoint"))
+    token: str | None = None
     auth = chosen.get("auth", {})
-    token = None
     if isinstance(auth, dict):
-        token = str(auth.get("token") or auth.get("key") or "") or None
+        token = _expand_env(auth.get("token") or auth.get("key"))
+
     return name, endpoint, token
 
 
@@ -100,6 +142,108 @@ def _append_log(path: Path, entry: Dict[str, Any]) -> None:
             logger.warning("Could not decode %s; starting fresh", path)
     records.append(entry)
     path.write_text(json.dumps(records, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _prepare_payload(context: Any | None) -> Dict[str, Any]:
+    if isinstance(context, dict):
+        return dict(context)
+    if context is None:
+        return {}
+    return {"context": context}
+
+
+def _call_patch_service(
+    name: str,
+    endpoint: str | None,
+    patch_context: Any | None,
+    token: str | None,
+    *,
+    timeout: float = 60.0,
+) -> tuple[SimpleNamespace, Dict[str, Any], Any]:
+    if not endpoint:
+        raise RuntimeError(f"Agent {name} is missing an endpoint")
+
+    payload = _prepare_payload(patch_context)
+    headers: Dict[str, str] = {}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+        headers["X-API-Key"] = token
+        if isinstance(payload, dict) and "auth_token" not in payload:
+            payload["auth_token"] = token
+
+    try:
+        response = requests.post(
+            endpoint,
+            json=payload,
+            headers=headers or None,
+            timeout=timeout,
+        )
+        response.raise_for_status()
+    except Exception as exc:  # pragma: no cover - network errors
+        logger.error("Request for %s failed: %s", name, exc)
+        raise
+
+    try:
+        suggestion = response.json()
+    except ValueError:
+        suggestion = {"response": response.text}
+
+    agent_config: Dict[str, Any] = {
+        "endpoint": endpoint,
+        "service": name.lower(),
+        "status_code": getattr(response, "status_code", None),
+    }
+    if token:
+        agent_config["token_provided"] = True
+
+    return SimpleNamespace(__name__=name), agent_config, suggestion
+
+
+# Adapter for the MoonshotAI Kimi-K2 service: https://github.com/MoonshotAI/Kimi-K2
+def _invoke_kimi2(
+    name: str,
+    endpoint: str | None,
+    patch_context: Any | None,
+    token: str | None,
+) -> tuple[SimpleNamespace, Dict[str, Any], Any]:
+    return _call_patch_service(name, endpoint, patch_context, token)
+
+
+def _invoke_airstar(
+    name: str,
+    endpoint: str | None,
+    patch_context: Any | None,
+    token: str | None,
+) -> tuple[SimpleNamespace, Dict[str, Any], Any]:
+    return _call_patch_service(name, endpoint, patch_context, token)
+
+
+# Adapter for the Microsoft rStar patch service: https://github.com/microsoft/rStar
+def _invoke_rstar(
+    name: str,
+    endpoint: str | None,
+    patch_context: Any | None,
+    token: str | None,
+) -> tuple[SimpleNamespace, Dict[str, Any], Any]:
+    return _call_patch_service(name, endpoint, patch_context, token)
+
+
+def _dispatch_agent(
+    name: str,
+    endpoint: str | None,
+    token: str | None,
+    patch_context: Dict[str, Any] | None,
+) -> tuple[SimpleNamespace, Dict[str, Any], Any]:
+    normalized = name.lower()
+    if normalized == "kimi2":
+        return _invoke_kimi2(name, endpoint, patch_context, token)
+    if normalized == "airstar":
+        return _invoke_airstar(name, endpoint, patch_context, token)
+    if normalized == "rstar":
+        return _invoke_rstar(name, endpoint, patch_context, token)
+    if not endpoint:
+        raise RuntimeError(f"Agent {name} is missing an endpoint")
+    return remote_loader.load_remote_agent(name, endpoint, patch_context=patch_context)
 
 
 def handover(
@@ -147,8 +291,8 @@ def handover(
         if token:
             patch_context["auth_token"] = token
 
-    _module, agent_config, suggestion = remote_loader.load_remote_agent(
-        name, endpoint, patch_context=patch_context
+    _module, agent_config, suggestion = _dispatch_agent(
+        name, endpoint, token, patch_context
     )
 
     applied: bool | None = None

@@ -6,12 +6,14 @@ applies any suggested patches via :mod:`agents.razar.code_repair`.
 
 from __future__ import annotations
 
-__all__ = ["handover"]
+__all__ = ["handover", "load_agent_definitions"]
 
 import json
 import logging
+import os
 import subprocess
 import shutil
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
@@ -20,7 +22,7 @@ from .bootstrap_utils import PATCH_LOG_PATH, LOGS_DIR
 from . import health_checks
 from tools import opencode_client
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -30,17 +32,85 @@ AGENT_CONFIG_PATH = (
 )
 
 
-def _active_agent(path: Path = AGENT_CONFIG_PATH) -> str | None:
-    """Return the name of the currently active remote agent."""
+@dataclass(frozen=True)
+class AgentDefinition:
+    """Normalized representation of a remote agent entry."""
+
+    name: str
+    normalized: str
+    endpoint: str | None
+    token: str | None
+    raw: Dict[str, Any]
+
+
+def _expand_env(value: Any) -> str | None:
+    """Return ``value`` with environment variables expanded."""
+
+    if not isinstance(value, str):
+        return None
+    expanded = os.path.expandvars(value).strip()
+    if not expanded or ("${" in expanded and "}" in expanded):
+        return None
+    return expanded
+
+
+def _load_agent_config(path: Path) -> Dict[str, Any]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            active = data.get("active")
-            if isinstance(active, str):
-                return active.lower()
     except Exception:
-        return None
-    return None
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def load_agent_definitions(
+    path: Path = AGENT_CONFIG_PATH,
+) -> tuple[str | None, list[AgentDefinition]]:
+    """Return the active agent and roster parsed from ``path``."""
+
+    config = _load_agent_config(path)
+    raw_active = config.get("active")
+    active = raw_active.lower() if isinstance(raw_active, str) else None
+
+    definitions: list[AgentDefinition] = []
+    agents = config.get("agents")
+    if isinstance(agents, list):
+        for entry in agents:
+            if isinstance(entry, dict):
+                payload = dict(entry)
+                name = payload.get("name")
+            elif isinstance(entry, str):
+                payload = {"name": entry}
+                name = entry
+            else:
+                continue
+            if not isinstance(name, str):
+                continue
+            endpoint = _expand_env(payload.get("endpoint"))
+            token: str | None = None
+            auth = payload.get("auth")
+            if isinstance(auth, dict):
+                token = _expand_env(auth.get("token") or auth.get("key"))
+            definitions.append(
+                AgentDefinition(
+                    name=name,
+                    normalized=name.lower(),
+                    endpoint=endpoint,
+                    token=token,
+                    raw=payload,
+                )
+            )
+
+    if active is None and definitions:
+        active = definitions[0].normalized
+
+    return active, definitions
+
+
+def _active_agent(path: Path = AGENT_CONFIG_PATH) -> str | None:
+    """Return the normalized name of the active remote agent."""
+
+    active, _definitions = load_agent_definitions(path)
+    return active
 
 
 def _append_patch_log(entry: Dict[str, Any]) -> None:

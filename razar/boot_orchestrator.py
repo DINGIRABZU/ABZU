@@ -316,35 +316,9 @@ def _set_active_agent(agent: str) -> None:
 def _load_agent_state() -> tuple[Optional[str], list[str], dict[str, str]]:
     """Return the active agent and ordered failover chain from configuration."""
 
-    active_agent: Optional[str] = None
-    sequence: list[str] = []
-    lookup: dict[str, str] = {}
-    try:
-        data = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
-        if not isinstance(data, dict):
-            data = {}
-    except Exception:
-        data = {}
-
-    raw_active = data.get("active") if isinstance(data, dict) else None
-    if isinstance(raw_active, str):
-        active_agent = raw_active.lower()
-
-    agents = data.get("agents") if isinstance(data, dict) else None
-    if isinstance(agents, list):
-        for entry in agents:
-            if isinstance(entry, dict):
-                name = entry.get("name")
-            elif isinstance(entry, str):
-                name = entry
-            else:
-                continue
-            if not isinstance(name, str):
-                continue
-            normalized = name.lower()
-            sequence.append(normalized)
-            lookup.setdefault(normalized, name)
-
+    active_agent, definitions = ai_invoker.load_agent_definitions(AGENT_CONFIG_PATH)
+    sequence = [definition.normalized for definition in definitions]
+    lookup = {definition.normalized: definition.name for definition in definitions}
     return active_agent, sequence, lookup
 
 
