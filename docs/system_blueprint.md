@@ -236,13 +236,15 @@ fresh health checks.
 
 #### rStar Escalation
 
-Repeated failures trigger an escalation chain: Crown first retries locally, then
+Repeated failures trigger an escalation chain defined in
+`config/razar_ai_agents.json`: Crown first retries locally, then
 defers to Kimicho. If faults persist, requests escalate to
 [K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2), followed by Air Star,
 and finally the external [rStar](https://github.com/microsoft/rStar) patch
 service. After nine unsuccessful repair attempts RAZAR forwards the fault
 context to rStar. Operators can tune escalation with
-`RAZAR_RSTAR_THRESHOLD` and set the service parameters via
+`RAZAR_RSTAR_THRESHOLD`, edit the failover order via
+`config/razar_ai_agents.json`, and set the service parameters through
 `RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
 [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details.
 
