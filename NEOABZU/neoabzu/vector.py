@@ -13,15 +13,25 @@ class VectorClient:
         self._stub: vector_pb2_grpc.VectorServiceStub | None = None
 
     def __enter__(self) -> "VectorClient":
+        return self.connect()
+
+    def __exit__(self, exc_type, exc, tb) -> None:
+        self.close()
+
+    def connect(self) -> "VectorClient":
+        """Establish the gRPC channel and return the client."""
         self._channel = grpc.insecure_channel(
             self._target, options=(("grpc.enable_http_proxy", 0),)
         )
         self._stub = vector_pb2_grpc.VectorServiceStub(self._channel)
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def close(self) -> None:
+        """Close the underlying gRPC channel."""
         if self._channel is not None:
             self._channel.close()
+            self._channel = None
+            self._stub = None
 
     def init(self) -> vector_pb2.InitResponse:
         if self._stub is None:
