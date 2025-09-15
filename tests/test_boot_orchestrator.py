@@ -72,3 +72,60 @@ def test_rstar_escalation_after_threshold(tmp_path, monkeypatch, env_value, thre
         e.get("event") == "escalation" and e.get("agent") == "rstar" for e in log
     )
     assert suggestion["value"] == "use rstar"
+
+
+def test_agent_escalation_sequence(tmp_path, monkeypatch):
+    """Escalates through kimi2 and airstar before succeeding with rstar."""
+    threshold = 2
+    monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", str(threshold))
+    importlib.reload(bo)
+
+    inv_log = tmp_path / "invocations.json"
+    cfg_path = tmp_path / "agents.json"
+    cfg_path.write_text(
+        json.dumps(
+            {
+                "active": "demo_agent",
+                "agents": [
+                    {"name": "demo_agent"},
+                    {"name": "kimi2"},
+                    {"name": "airstar"},
+                    {"name": "rstar"},
+                ],
+            }
+        )
+    )
+    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
+
+    sequence: list[str] = []
+
+    def fake_handover(component: str, error: str, use_opencode: bool = False):
+        current = json.loads(cfg_path.read_text())["active"]
+        sequence.append(current)
+        return current == "rstar"
+
+    monkeypatch.setattr(bo.ai_invoker, "handover", fake_handover)
+    monkeypatch.setattr(bo.health_checks, "run", lambda name: True)
+    monkeypatch.setattr(bo, "launch_component", lambda comp: DummyProc())
+
+    component = {"name": "demo", "command": ["echo", "hi"]}
+    failure_tracker: dict[str, int] = {}
+    proc, used_attempts, err = bo._retry_with_ai(
+        "demo", component, "boom", threshold * 3 + 1, failure_tracker
+    )
+
+    assert proc is not None and used_attempts == threshold * 3 + 1
+    expected = [
+        "demo_agent",
+        "demo_agent",
+        "kimi2",
+        "kimi2",
+        "airstar",
+        "airstar",
+        "rstar",
+    ]
+    assert sequence == expected
+    log = json.loads(inv_log.read_text())
+    escalations = [e.get("agent") for e in log if e.get("event") == "escalation"]
+    assert escalations == ["kimi2", "airstar", "rstar"]
