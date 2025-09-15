@@ -43,8 +43,8 @@ For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md).
 - [x] Doctrine references: [System Blueprint](system_blueprint.md)
 
 ### RAG retrieval
-- [ ] Port complete
-- [ ] Required tests: `NEOABZU/rag/tests/orchestrator.rs`
+- [x] Port complete
+- [x] Required tests: `NEOABZU/rag/tests/orchestrator.rs`, `NEOABZU/rag/tests/multi_source_ranking.rs`
 - [x] Documentation references: [Spiral RAG Pipeline](rag_pipeline.md#migration-crosswalk)
 - [x] Doctrine references: [The Absolute Protocol](The_Absolute_Protocol.md#migration-crosswalk-references)
 
