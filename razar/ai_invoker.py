@@ -20,7 +20,7 @@ from .bootstrap_utils import PATCH_LOG_PATH, LOGS_DIR
 from . import health_checks
 from tools import opencode_client
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -115,7 +115,11 @@ def handover(
 
     ctx: Dict[str, Any] = {"component": component, "error": error}
     if context:
-        ctx.update(context)
+        history = context.get("history")
+        if history:
+            existing = ctx.setdefault("history", [])
+            existing.extend(history)
+        ctx.update({k: v for k, v in context.items() if k != "history"})
     suggestion: Any | None = None
     if use_opencode is None:
         active = _active_agent(Path(config_path) if config_path else AGENT_CONFIG_PATH)

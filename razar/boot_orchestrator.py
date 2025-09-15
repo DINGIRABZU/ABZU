@@ -8,7 +8,7 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.10"
+__version__ = "0.2.11"
 
 import argparse
 import asyncio
@@ -226,6 +226,37 @@ def _log_ai_invocation(
     INVOCATION_LOG_PATH.write_text(json.dumps(records, indent=2))
 
 
+def build_failure_context(component: str, limit: int = 5) -> Dict[str, Any]:
+    """Return recent failure history for ``component``.
+
+    The history is read from :data:`INVOCATION_LOG_PATH` and truncated to the
+    most recent ``limit`` entries. The returned structure matches the expected
+    AI handover context format so downstream agents can reference prior
+    attempts.
+    """
+    if not INVOCATION_LOG_PATH.exists():
+        return {}
+    try:
+        records = json.loads(INVOCATION_LOG_PATH.read_text())
+        if not isinstance(records, list):
+            return {}
+    except json.JSONDecodeError:
+        return {}
+
+    history = [
+        {
+            k: entry.get(k)
+            for k in ("attempt", "error", "patched", "agent", "event", "timestamp")
+        }
+        for entry in records
+        if entry.get("component") == component
+    ]
+    history.sort(key=lambda e: e.get("timestamp", 0))
+    if not history:
+        return {}
+    return {"history": history[-limit:]}
+
+
 def _log_long_task(
     component: str,
     attempt: int,
@@ -324,7 +355,13 @@ def _retry_with_ai(
             cfg = {}
         active_agent = cfg.get("active")
         use_opencode = active_agent not in {"kimi2", "airstar", "rstar"}
-        patched = ai_invoker.handover(name, error_msg, use_opencode=use_opencode)
+        context = build_failure_context(name)
+        patched = ai_invoker.handover(
+            name,
+            error_msg,
+            context=context,
+            use_opencode=use_opencode,
+        )
         _log_ai_invocation(name, attempt, error_msg, patched, agent=active_agent)
         _handle_ai_result(name, error_msg, patched, attempt, failure_tracker)
         if not patched:

@@ -368,6 +368,14 @@ the [Recovery Playbook](recovery_playbook.md) and surface states such as
 `start`, `error`, `recovery`, `quarantine`, and `resolved` for every mission
 stage.
 
+### Cross-Agent Memory
+
+`razar.boot_orchestrator` records each handover attempt in
+`logs/razar_ai_invocations.json` and builds a concise history that
+`ai_invoker.handover` forwards to the active assistant. Downstream agents—K2
+Coder, Air Star, and rStar—receive this aggregated `history` payload so they can
+reference previous failures when proposing patches.
+
 ### Agent-Specific Recovery
 
 Each chakra has a dedicated remediation script. When the heartbeat poller
