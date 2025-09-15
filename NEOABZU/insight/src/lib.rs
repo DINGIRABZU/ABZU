@@ -84,6 +84,36 @@ pub fn embedding(text: &str) -> Vec<f32> {
     emb
 }
 
+/// Cosine similarity between two vectors.
+fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
+    let dot: f32 = a.iter().zip(b.iter()).map(|(x, y)| x * y).sum();
+    let norm_a: f32 = a.iter().map(|v| v * v).sum::<f32>().sqrt();
+    let norm_b: f32 = b.iter().map(|v| v * v).sum::<f32>().sqrt();
+    if norm_a == 0.0 || norm_b == 0.0 {
+        0.0
+    } else {
+        dot / (norm_a * norm_b)
+    }
+}
+
+/// Semantic similarity scores for each word against the overall text embedding.
+#[cfg_attr(feature = "tracing", instrument)]
+pub fn semantics(text: &str) -> Vec<(String, f32)> {
+    let doc_emb = embedding(text);
+    if doc_emb.iter().all(|v| *v == 0.0) {
+        return Vec::new();
+    }
+    let report = analyze(text);
+    let words = report.get("words").cloned().unwrap_or_default();
+    words
+        .into_iter()
+        .map(|(w, emb)| {
+            let sim = cosine_similarity(&emb, &doc_emb);
+            (w, sim)
+        })
+        .collect()
+}
+
 #[pyfunction]
 fn reason(text: &str) -> PyResult<HashMap<String, Vec<(String, Vec<f32>)>>> {
     Ok(analyze(text))
@@ -94,10 +124,16 @@ fn embed(text: &str) -> PyResult<Vec<f32>> {
     Ok(embedding(text))
 }
 
+#[pyfunction]
+fn semantic(text: &str) -> PyResult<Vec<(String, f32)>> {
+    Ok(semantics(text))
+}
+
 #[pymodule]
 fn neoabzu_insight(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(reason, m)?)?;
     m.add_function(wrap_pyfunction!(embed, m)?)?;
+    m.add_function(wrap_pyfunction!(semantic, m)?)?;
     Ok(())
 }
 
@@ -118,5 +154,12 @@ mod tests {
         let emb = embedding("hi there");
         assert_eq!(emb.len(), 3);
         assert!(emb.iter().all(|v| *v >= 0.0));
+    }
+
+    #[test]
+    fn test_semantics_scores_words() {
+        let sims = semantics("hi there");
+        assert_eq!(sims.len(), 2);
+        assert!(sims.iter().all(|(_, s)| *s >= 0.0));
     }
 }

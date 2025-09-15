@@ -10,3 +10,4 @@ Tracks Rust reimplementations of key Python subsystems.
 | Persona API | `neoabzu_persona` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | Tracks persona state and loads profile data. |
 | Crown Router | `neoabzu_crown` | [system_blueprint.md#operator-razar-crown-flow](system_blueprint.md#operator-razar-crown-flow) | Direct PyO3 interface with validation, `MoGEOrchestrator` calls, and telemetry parity. |
 | RAG Orchestrator | `neoabzu_rag` | [The_Absolute_Protocol.md#doctrine-reference-requirements](The_Absolute_Protocol.md#doctrine-reference-requirements) | Merges memory records and external connector results via `MemoryBundle`. |
+| Insight Engine | `neoabzu_insight` | [ABZU_SUBSYSTEM_OVERVIEW.md#crown-router--insight-engine](ABZU_SUBSYSTEM_OVERVIEW.md#crown-router--insight-engine) | Semantic embeddings and similarity analysis exposed to Crown via PyO3. |
