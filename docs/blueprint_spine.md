@@ -16,6 +16,7 @@ The inaugural ceremony is recorded in the [First Consecrated Computation](../NEO
 - **Per-agent avatars** render via the [avatar pipeline](avatar_pipeline.md) for session-specific visuals.
 - **Resuscitator flows** guide failure recovery; consult the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
+- **OS Guardian** now brokers host-level automation with allowlisted commands and auditable safeguards; see [os_guardian.md](os_guardian.md) and policy references in [os_guardian_permissions.md](os_guardian_permissions.md).
 - **Neoabzu crates** bumped to **v0.1.2** with verified PyO3 bindings via `NEOABZU/pyproject.toml`.
 - **Identity loader** reimplemented in Rust; Crown initialization writes mission and persona summary to `data/identity.json`.
 
@@ -75,6 +76,31 @@ sequenceDiagram
 
 This sequence traces how directives travel from the operator through RAZAR to
 Crown and back, forming the basis for retro console diagnostics.
+
+
+### **OS Guardian Safety Loop**
+
+When directives demand workstation automation, RAZAR hands the mission thread to
+the OS Guardian plane before any shell or UI command is executed. The Guardian's
+four modules—perception, planning, action, and safety—reside in
+[`os_guardian/perception.py`](../os_guardian/perception.py),
+[`os_guardian/planning.py`](../os_guardian/planning.py),
+[`os_guardian/action_engine.py`](../os_guardian/action_engine.py), and
+[`os_guardian/safety.py`](../os_guardian/safety.py). They decompose operator
+intent, replay steps through the `os-guardian` CLI (`python -m os_guardian.cli`),
+and enforce interactive confirmation as outlined in
+[`os_guardian.md`](os_guardian.md) and
+[`os_guardian_container.md`](os_guardian_container.md).
+
+- **Planning safeguards**: operators codify approved paths in
+  [`os_guardian_planning.md`](os_guardian_planning.md) so Guardian plans stay
+  transparent and reproducible.
+- **Permission policies**: the safety layer honors `OG_ALLOWED_COMMANDS`,
+  `OG_ALLOWED_APPS`, `OG_ALLOWED_DOMAINS`, and the `OG_POLICY` mode, registering
+  undo callbacks to keep actions reversible.
+
+The blueprint spine records each Guardian invocation in mission journals, tying
+automation back to doctrine approvals and simplifying audits.
 
 
 ### **Chakra-aligned Agents (“Great Tomb of Nazarick” metaphor)**
