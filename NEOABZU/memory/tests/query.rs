@@ -50,10 +50,7 @@ fn setup_stub_layers(py: Python<'_>) {
         "memory.narrative_engine",
         "def stream_stories():\n    return ['n']\n"
     );
-    stub!(
-        "neoabzu_core",
-        "def evaluate(expr):\n    return expr\n"
-    );
+    stub!("neoabzu_core", "def evaluate(expr):\n    return expr\n");
 }
 
 #[test]
