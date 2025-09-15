@@ -244,6 +244,16 @@ def test_mixed_case_agent_config(tmp_path, monkeypatch):
     log = json.loads(inv_log.read_text())
     attempt_agents = [e.get("agent") for e in log if e.get("event") == "attempt"]
     assert attempt_agents == ["kimi2", "airstar", "rstar"]
+    attempt_originals = [
+        e.get("agent_original") for e in log if e.get("event") == "attempt"
+    ]
+    assert attempt_originals == ["KiMi2", "AirStar", "RStar"]
+    escalations = [
+        (e.get("agent"), e.get("agent_original"))
+        for e in log
+        if e.get("event") == "escalation"
+    ]
+    assert escalations == [("airstar", "AirStar"), ("rstar", "RStar")]
 
 
 def test_custom_agent_failover_chain(tmp_path, monkeypatch):

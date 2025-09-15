@@ -98,3 +98,27 @@ def test_handover_rolls_back_on_failed_check(monkeypatch, tmp_path: Path) -> Non
     assert module_path.read_text(encoding="utf-8") == "original"
     snaps = list(backups.iterdir())
     assert len(snaps) == 1
+
+
+def test_active_agent_normalization(tmp_path: Path) -> None:
+    """Active agent helper normalizes mixed-case configuration values."""
+
+    cfg = tmp_path / "agents.json"
+    cfg.write_text(
+        json.dumps(
+            {
+                "active": "KiMi2",
+                "agents": [
+                    {"name": "KiMi2"},
+                    {"name": "AirStar"},
+                    {"name": "RStar"},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    active, definitions = ai_invoker.load_agent_definitions(cfg)
+    assert active == "kimi2"
+    assert [d.normalized for d in definitions] == ["kimi2", "airstar", "rstar"]
+    assert ai_invoker._active_agent(cfg) == "kimi2"

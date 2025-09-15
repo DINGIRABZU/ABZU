@@ -201,6 +201,7 @@ def _log_ai_invocation(
     *,
     event: str = "attempt",
     agent: str | None = None,
+    agent_original: str | None = None,
 ) -> None:
     """Append AI handover attempt details to :data:`INVOCATION_LOG_PATH`."""
     entry = {
@@ -213,6 +214,10 @@ def _log_ai_invocation(
     }
     if agent is not None:
         entry["agent"] = agent
+        if agent_original is None:
+            agent_original = agent
+    if agent_original is not None:
+        entry["agent_original"] = agent_original
     records: List[Dict[str, Any]] = []
     if INVOCATION_LOG_PATH.exists():
         try:
@@ -317,9 +322,10 @@ def _load_agent_state() -> tuple[Optional[str], list[str], dict[str, str]]:
     """Return the active agent and ordered failover chain from configuration."""
 
     active_agent, definitions = ai_invoker.load_agent_definitions(AGENT_CONFIG_PATH)
+    normalized_active = active_agent.lower() if isinstance(active_agent, str) else None
     sequence = [definition.normalized for definition in definitions]
     lookup = {definition.normalized: definition.name for definition in definitions}
-    return active_agent, sequence, lookup
+    return normalized_active, sequence, lookup
 
 
 def _handle_ai_result(
@@ -338,6 +344,9 @@ def _handle_ai_result(
     if not _should_escalate(count):
         return
     active_agent, sequence, lookup = _load_agent_state()
+    if active_agent is not None:
+        active_agent = active_agent.lower()
+    sequence = [agent.lower() for agent in sequence]
     if not sequence:
         return
 
@@ -348,9 +357,17 @@ def _handle_ai_result(
         next_agent = sequence[0]
 
     if next_agent:
-        _set_active_agent(lookup.get(next_agent, next_agent))
+        normalized_next = next_agent.lower()
+        original_next = lookup.get(normalized_next, normalized_next)
+        _set_active_agent(original_next)
         _log_ai_invocation(
-            name, attempt, error, patched, event="escalation", agent=next_agent
+            name,
+            attempt,
+            error,
+            patched,
+            event="escalation",
+            agent=normalized_next,
+            agent_original=original_next,
         )
 
 
@@ -371,9 +388,11 @@ def _retry_with_ai(
     """
     for attempt in range(1, max_attempts + 1):
         try:
-            active_agent, agent_chain, _ = _load_agent_state()
+            active_agent, agent_chain, lookup = _load_agent_state()
         except Exception:  # pragma: no cover - defensive guard
-            active_agent, agent_chain = None, []
+            active_agent, agent_chain, lookup = None, [], {}
+        if isinstance(active_agent, str):
+            active_agent = active_agent.lower()
         use_opencode = active_agent not in agent_chain
         context = build_failure_context(name)
         patched = ai_invoker.handover(
@@ -382,7 +401,17 @@ def _retry_with_ai(
             context=context,
             use_opencode=use_opencode,
         )
-        _log_ai_invocation(name, attempt, error_msg, patched, agent=active_agent)
+        agent_original = None
+        if isinstance(active_agent, str):
+            agent_original = lookup.get(active_agent, active_agent)
+        _log_ai_invocation(
+            name,
+            attempt,
+            error_msg,
+            patched,
+            agent=active_agent,
+            agent_original=agent_original,
+        )
         _handle_ai_result(name, error_msg, patched, attempt, failure_tracker)
         if not patched:
             continue
