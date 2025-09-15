@@ -25,6 +25,22 @@ __version__ = "0.1.2"
 LOGGER = logging.getLogger(__name__)
 
 PATCH_BACKUP_DIR = LOGS_DIR / "patch_backups"
+AGENT_CONFIG_PATH = (
+    Path(__file__).resolve().parents[1] / "config" / "razar_ai_agents.json"
+)
+
+
+def _active_agent(path: Path = AGENT_CONFIG_PATH) -> str | None:
+    """Return the name of the currently active remote agent."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(data, dict):
+            active = data.get("active")
+            if isinstance(active, str):
+                return active
+    except Exception:
+        return None
+    return None
 
 
 def _append_patch_log(entry: Dict[str, Any]) -> None:
@@ -70,7 +86,7 @@ def handover(
     *,
     context: Dict[str, Any] | None = None,
     config_path: Path | str | None = None,
-    use_opencode: bool = False,
+    use_opencode: bool | None = None,
 ) -> bool:
     """Delegate ``component`` failure to a remote agent or the ``opencode`` CLI.
 
@@ -101,6 +117,9 @@ def handover(
     if context:
         ctx.update(context)
     suggestion: Any | None = None
+    if use_opencode is None:
+        active = _active_agent(Path(config_path) if config_path else AGENT_CONFIG_PATH)
+        use_opencode = active not in {"kimi2", "airstar", "rstar"}
     if use_opencode:
         try:
             result = subprocess.run(

@@ -18,6 +18,22 @@
       }
     },
     {
+      "name": "kimi2",
+      "endpoint": "${KIMI2_ENDPOINT}",
+      "auth": {
+        "type": "bearer",
+        "token": "${KIMI2_TOKEN}"
+      }
+    },
+    {
+      "name": "airstar",
+      "endpoint": "${AIRSTAR_ENDPOINT}",
+      "auth": {
+        "type": "bearer",
+        "token": "${AIRSTAR_TOKEN}"
+      }
+    },
+    {
       "name": "rstar",
       "endpoint": "${RSTAR_ENDPOINT}",
       "auth": {
