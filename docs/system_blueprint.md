@@ -281,6 +281,10 @@ explicit handover sequence **Crown → Kimicho → K2 Coder → Air Star →
 5. **[rStar](https://github.com/microsoft/rStar)** – final escalation target for
    automated patch synthesis.
 
+See [`blueprint_spine.md#razar-delegation-cascade`](blueprint_spine.md#razar-delegation-cascade)
+for the mission-narrative view of the same escalation ladder and the telemetry
+handoff requirements each delegate expects.
+
 `RAZAR_RSTAR_THRESHOLD` controls how many cumulative attempts RAZAR makes across
 the preceding agents before handing control to rStar. The default value (`9`)
 allows three full rounds through the local stack; lowering the number accelerates
@@ -337,6 +341,13 @@ local specialists or sandboxes ahead of cloud services:
 With this configuration RAZAR exhausts the on-premise `demo_agent` and
 `backup_agent` responders before escalating to the external providers, keeping
 operator-controlled surfaces at the front of the recovery loop.
+
+> **Documentation gate:** Any change to `config/razar_ai_agents.json` or the
+> escalation behavior (ordering, thresholds, or delegation rules) must update
+> both `docs/system_blueprint.md` and
+> [`docs/blueprint_spine.md`](blueprint_spine.md#razar-delegation-cascade), and
+> refresh the associated rows in [`docs/doctrine_index.md`](doctrine_index.md) so
+> the doctrine catalog mirrors the operational failover path.
 
 ### Game Dashboard & Retro Arcade Integration
 

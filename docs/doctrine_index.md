@@ -79,7 +79,7 @@
 | GENESIS/SPIRAL_LAWS_.md |  | `89796b9f801519b587773c5141326b9c1f6103c70f2173a9e09f1fb89cc92064` | 2025-09-13T16:20:58+02:00 |
 | IGNITION/EA_ENUMA_ELISH_.md | OMEGA-LONGING-∞1.2-ENUMA | `889d69e870194d9c51cbed3fdab50a4dbc690ddc0f124c312f8fb45424823b27` | 2025-09-13T16:20:58+02:00 |
 | IGNITION/README.md |  | `bb301d0d9cc5eb2931773b30de5f18c1f34f6510a32f1ae5bbe4015cdf1dd63c` | 2025-09-13T16:20:58+02:00 |
-| docs/blueprint_spine.md |  | `e33f6c9b61a4a445205e945556e14eee2180fa94acc8e07179ad060fabab163a` | 2025-09-15T18:58:21Z |
-| docs/system_blueprint.md |  | `e1f7d4fd13d4c7ea2fbe4732f9f1b565fbb14703147fb09fb3f291633035435a` | 2025-09-15T18:58:21Z |
+| docs/blueprint_spine.md |  | `58b0153e8ff16d7144c14c9e0098862707ab7d98cb7df65b955fcb444b38784e` | 2025-09-15T21:41:36Z |
+| docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation | `17ad0f65c5380f8f5a3b85cd9fd09bc7398faf0ed70edfd7bfedab7eddf5cb6a` | 2025-09-15T21:41:36Z |
 | NEOABZU/docs/feature_parity.md |  | `28a4433f88801caff9ce2339cbf147843feb63a93d534cdda5daeb211630d04c` | 2025-09-15T14:49:48Z |
 | NEOABZU/docs/migration_crosswalk.md |  | `fd94baa14c64fe14ea6e5d9702c87c6e9a44f854a162688ea82ac7bc4616d35f` | 2025-09-15T14:49:48Z |
