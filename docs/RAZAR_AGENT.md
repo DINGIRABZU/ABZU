@@ -53,6 +53,16 @@ configured remote agent, applies any suggested patch with
 `logs/razar_ai_invocations.json` while applied patches are tracked in
 `logs/razar_ai_patches.json`.
 
+### Shared Failure Context
+Before every remote attempt, `boot_orchestrator._retry_with_ai` calls
+`build_failure_context` to load the recent history for the component from
+`logs/razar_ai_invocations.json`. The helper returns the last five interactions
+— including attempt number, agent name, error, and whether a patch was applied —
+and the resulting payload is passed directly to `ai_invoker.handover`. Because
+`_log_ai_invocation` appends a record after each delegation, later agents
+automatically receive the trail of earlier failures, ensuring the final handler
+can see which agents already attempted repairs and why they were rejected.
+
 To run repairs locally, install the Opencode CLI and enable the optional
 handover mode:
 

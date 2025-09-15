@@ -308,6 +308,62 @@ def test_custom_agent_failover_chain(tmp_path, monkeypatch):
     assert escalations == ["sentinel", "guardian"]
 
 
+def test_retry_with_ai_passes_failure_context(tmp_path, monkeypatch):
+    """`_retry_with_ai` forwards the context returned by `build_failure_context`."""
+
+    monkeypatch.delenv("RAZAR_RSTAR_THRESHOLD", raising=False)
+    importlib.reload(bo)
+
+    inv_log = tmp_path / "invocations.json"
+    cfg_path = tmp_path / "agents.json"
+    cfg_path.write_text(
+        json.dumps(
+            {
+                "active": "demo_agent",
+                "agents": [
+                    {"name": "demo_agent"},
+                ],
+            }
+        )
+    )
+    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
+
+    sentinel_context = {"history": ["sentinel"]}
+    context_calls: list[str] = []
+
+    def fake_build_failure_context(component: str) -> dict:
+        context_calls.append(component)
+        return sentinel_context
+
+    contexts: list[dict | None] = []
+
+    def fake_handover(
+        component: str,
+        error: str,
+        *,
+        context: dict | None = None,
+        use_opencode: bool = False,
+    ) -> bool:
+        contexts.append(context)
+        return True
+
+    monkeypatch.setattr(bo, "build_failure_context", fake_build_failure_context)
+    monkeypatch.setattr(bo.ai_invoker, "handover", fake_handover)
+    monkeypatch.setattr(bo.health_checks, "run", lambda name: True)
+    monkeypatch.setattr(bo, "launch_component", lambda comp: DummyProc())
+
+    component = {"name": "demo", "command": ["echo", "hi"]}
+    failure_tracker: dict[str, int] = {}
+    proc, used_attempts, err = bo._retry_with_ai(
+        "demo", component, "boom", 1, failure_tracker
+    )
+
+    assert proc is not None and used_attempts == 1
+    assert context_calls == ["demo"]
+    assert contexts == [sentinel_context]
+
+
 def test_context_includes_history(tmp_path, monkeypatch):
     """Final agent receives history of previous failed attempts."""
     monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", "1")
@@ -357,4 +413,10 @@ def test_context_includes_history(tmp_path, monkeypatch):
     assert proc is not None and used_attempts == 4
     assert len(contexts) == 4
     # Final context includes history from earlier failed attempts
-    assert any(h["agent"] == "airstar" for h in contexts[3]["history"])
+    final_history = contexts[3]["history"]
+    attempt_agents = [
+        entry["agent"]
+        for entry in final_history
+        if entry.get("event") == "attempt" and entry.get("agent")
+    ]
+    assert attempt_agents[-2:] == ["kimi2", "airstar"]
