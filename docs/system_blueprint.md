@@ -945,6 +945,8 @@ Persist conversations and embeddings for retrieval across sessions. See [Memory 
 - **Startup:** Start first to provide persistence for later services.
 - **Health Check:** Ping the database and confirm vector index readiness.
 - **Recovery:** Restore the database, replay deferred writes, then relaunch.
+- **Vector Service:** `neoabzu_vector` offers `Init` and `Search` gRPC RPCs with in-memory
+  embeddings, metrics, and tracing instrumentation.
 
 ### Chat2DB Interface
 Bridges the chat gateway with both the SQLite conversation log and the vector memory store. See [Chat2DB Interface](chat2db.md), [Memory Architecture](memory_architecture.md) and [Chakra Architecture](chakra_architecture.md#heart).

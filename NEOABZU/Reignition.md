@@ -72,7 +72,9 @@ shards for concurrent queries; omit or set to `1` for a single shard.
 Metrics counters `neoabzu_vector_init_total` and
 `neoabzu_vector_search_total` track RPC usage, and invalid requests
 surface gRPC errors (e.g. missing store, zero `top_n`, or searches
-before initialization). A small command-line client is available at
+before initialization). Launch with `--features tracing` to emit
+span data and enable `RUST_LOG` to observe `Init` and `Search`
+instrumentation. A small command-line client is available at
 `src/bin/vector_client.py` for ad-hoc queries.
 
 Python callers may connect using `neoabzu.vector.VectorClient`:
@@ -80,7 +82,7 @@ Python callers may connect using `neoabzu.vector.VectorClient`:
 ```python
 from neoabzu.vector import VectorClient
 
-with VectorClient("http://localhost:50051") as client:
+with VectorClient("http://localhost:50051").connect() as client:
     client.init()
     results = client.search("hello", 2)
 ```
