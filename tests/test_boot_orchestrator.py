@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+import importlib
 import json
 from types import SimpleNamespace
 
+import pytest
 import razar.boot_orchestrator as bo
+from tests.conftest import allow_test
+
+allow_test(__file__)
 
 
 class DummyProc(SimpleNamespace):
@@ -16,8 +21,15 @@ class DummyProc(SimpleNamespace):
         pass
 
 
-def test_rstar_escalation_after_ten_attempts(tmp_path, monkeypatch):
-    """Escalates to rStar on the tenth remote attempt."""
+@pytest.mark.parametrize("env_value, threshold", [(None, 9), ("11", 11)])
+def test_rstar_escalation_after_threshold(tmp_path, monkeypatch, env_value, threshold):
+    """Escalates to rStar once the configured threshold is reached."""
+    if env_value is None:
+        monkeypatch.delenv("RAZAR_RSTAR_THRESHOLD", raising=False)
+    else:
+        monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", env_value)
+    importlib.reload(bo)
+
     inv_log = tmp_path / "invocations.json"
     cfg_path = tmp_path / "agents.json"
     cfg_path.write_text(
@@ -37,8 +49,7 @@ def test_rstar_escalation_after_ten_attempts(tmp_path, monkeypatch):
     def fake_handover(component: str, error: str, use_opencode: bool = False):
         current = json.loads(cfg_path.read_text())["active"]
         attempts.append(current)
-        if len(attempts) == 10:
-            bo._set_active_agent("rstar")
+        if current == "rstar":
             suggestion["value"] = "use rstar"
             return True
         return False
@@ -48,11 +59,14 @@ def test_rstar_escalation_after_ten_attempts(tmp_path, monkeypatch):
     monkeypatch.setattr(bo, "launch_component", lambda comp: DummyProc())
 
     component = {"name": "demo", "command": ["echo", "hi"]}
-    proc, used_attempts, err = bo._retry_with_ai("demo", component, "boom", 10)
+    failure_tracker: dict[str, int] = {}
+    proc, used_attempts, err = bo._retry_with_ai(
+        "demo", component, "boom", threshold + 1, failure_tracker
+    )
 
-    assert proc is not None and used_attempts == 10
-    assert attempts[:9] == ["demo_agent"] * 9
-    assert attempts[9] == "rstar"
+    assert proc is not None and used_attempts == threshold + 1
+    assert attempts[:threshold] == ["demo_agent"] * threshold
+    assert attempts[threshold] == "rstar"
     log = json.loads(inv_log.read_text())
     assert any(
         e.get("event") == "escalation" and e.get("agent") == "rstar" for e in log

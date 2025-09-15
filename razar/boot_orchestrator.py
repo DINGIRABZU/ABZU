@@ -14,6 +14,7 @@ import argparse
 import asyncio
 import json
 import logging
+import os
 import subprocess
 import time
 from dataclasses import asdict
@@ -75,6 +76,7 @@ LONG_TASK_LOG_PATH = LOGS_DIR / "razar_long_task.json"
 AGENT_CONFIG_PATH = (
     Path(__file__).resolve().parents[1] / "config" / "razar_ai_agents.json"
 )
+RSTAR_THRESHOLD = int(os.getenv("RAZAR_RSTAR_THRESHOLD", 9))
 
 
 def load_history() -> Dict[str, Any]:
@@ -280,7 +282,7 @@ def _handle_ai_result(
         return
     count = failure_tracker.get(name, 0) + 1
     failure_tracker[name] = count
-    if count == 10:  # Escalate to rstar after ten consecutive failures
+    if count == RSTAR_THRESHOLD:  # Escalate to rstar after repeated failures
         _set_active_agent("rstar")
         _log_ai_invocation(
             name, attempt, error, patched, event="escalation", agent="rstar"
