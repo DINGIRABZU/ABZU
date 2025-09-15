@@ -282,10 +282,23 @@ def _handle_ai_result(
         return
     count = failure_tracker.get(name, 0) + 1
     failure_tracker[name] = count
-    if count == RSTAR_THRESHOLD:  # Escalate to rstar after repeated failures
-        _set_active_agent("rstar")
+    if count % RSTAR_THRESHOLD != 0:
+        return
+    try:
+        data = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        data = {}
+    active = data.get("active")
+    sequence = ["kimi2", "airstar", "rstar"]
+    if active not in sequence:
+        next_agent = sequence[0]
+    else:
+        idx = sequence.index(active)
+        next_agent = sequence[idx + 1] if idx + 1 < len(sequence) else None
+    if next_agent:
+        _set_active_agent(next_agent)
         _log_ai_invocation(
-            name, attempt, error, patched, event="escalation", agent="rstar"
+            name, attempt, error, patched, event="escalation", agent=next_agent
         )
 
 
@@ -305,8 +318,14 @@ def _retry_with_ai(
     encountered.
     """
     for attempt in range(1, max_attempts + 1):
-        patched = ai_invoker.handover(name, error_msg, use_opencode=True)
-        _log_ai_invocation(name, attempt, error_msg, patched)
+        try:
+            cfg = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            cfg = {}
+        active_agent = cfg.get("active")
+        use_opencode = active_agent not in {"kimi2", "airstar", "rstar"}
+        patched = ai_invoker.handover(name, error_msg, use_opencode=use_opencode)
+        _log_ai_invocation(name, attempt, error_msg, patched, agent=active_agent)
         _handle_ai_result(name, error_msg, patched, attempt, failure_tracker)
         if not patched:
             continue
