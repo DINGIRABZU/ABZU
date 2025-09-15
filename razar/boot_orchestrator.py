@@ -243,14 +243,18 @@ def build_failure_context(component: str, limit: int = 5) -> Dict[str, Any]:
     except json.JSONDecodeError:
         return {}
 
-    history = [
-        {
-            k: entry.get(k)
-            for k in ("attempt", "error", "patched", "agent", "event", "timestamp")
+    history: List[Dict[str, Any]] = []
+    for entry in records:
+        if entry.get("component") != component:
+            continue
+        record = {
+            key: entry.get(key)
+            for key in ("attempt", "error", "patched", "agent", "event", "timestamp")
         }
-        for entry in records
-        if entry.get("component") == component
-    ]
+        agent = record.get("agent")
+        if isinstance(agent, str):
+            record["agent"] = agent.lower()
+        history.append(record)
     history.sort(key=lambda e: e.get("timestamp", 0))
     if not history:
         return {}
@@ -317,9 +321,12 @@ def _handle_ai_result(
         return
     try:
         data = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            data = {}
     except Exception:
         data = {}
-    active = data.get("active")
+    active_raw = data.get("active") if isinstance(data, dict) else None
+    active = active_raw.lower() if isinstance(active_raw, str) else None
     sequence = ["kimi2", "airstar", "rstar"]
     if active not in sequence:
         next_agent = sequence[0]
@@ -351,9 +358,12 @@ def _retry_with_ai(
     for attempt in range(1, max_attempts + 1):
         try:
             cfg = json.loads(AGENT_CONFIG_PATH.read_text(encoding="utf-8"))
+            if not isinstance(cfg, dict):
+                cfg = {}
         except Exception:
             cfg = {}
-        active_agent = cfg.get("active")
+        active_raw = cfg.get("active") if isinstance(cfg, dict) else None
+        active_agent = active_raw.lower() if isinstance(active_raw, str) else None
         use_opencode = active_agent not in {"kimi2", "airstar", "rstar"}
         context = build_failure_context(name)
         patched = ai_invoker.handover(

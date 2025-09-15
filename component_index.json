@@ -222,7 +222,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "razar/ai_invoker.py",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "dependencies": [
         "__future__",
         "agents",
@@ -831,7 +831,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "razar/boot_orchestrator.py",
-      "version": "0.2.10",
+      "version": "0.2.11",
       "dependencies": [
         "__future__",
         "agents",
