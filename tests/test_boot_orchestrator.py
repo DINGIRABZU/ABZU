@@ -80,6 +80,57 @@ def test_rstar_escalation_after_threshold(tmp_path, monkeypatch, env_value, thre
     assert suggestion["value"] == "use rstar"
 
 
+def test_escalation_respects_module_threshold(tmp_path, monkeypatch):
+    """Escalates after exactly :data:`bo.RSTAR_THRESHOLD` failures."""
+
+    monkeypatch.delenv("RAZAR_RSTAR_THRESHOLD", raising=False)
+    importlib.reload(bo)
+    monkeypatch.setattr(bo, "RSTAR_THRESHOLD", 4)
+
+    inv_log = tmp_path / "invocations.json"
+    cfg_path = tmp_path / "agents.json"
+    cfg_path.write_text(
+        json.dumps(
+            {
+                "active": "demo_agent",
+                "agents": [{"name": "demo_agent"}, {"name": "rstar"}],
+            }
+        )
+    )
+    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
+
+    attempts: list[str] = []
+
+    def fake_handover(
+        component: str,
+        error: str,
+        *,
+        context: dict | None = None,
+        use_opencode: bool = False,
+    ):
+        current = json.loads(cfg_path.read_text())["active"]
+        attempts.append(current)
+        return current == "rstar"
+
+    monkeypatch.setattr(bo.ai_invoker, "handover", fake_handover)
+    monkeypatch.setattr(bo.health_checks, "run", lambda name: True)
+    monkeypatch.setattr(bo, "launch_component", lambda comp: DummyProc())
+
+    component = {"name": "demo", "command": ["echo", "hi"]}
+    failure_tracker: dict[str, int] = {}
+    max_attempts = bo.RSTAR_THRESHOLD + 1
+    proc, used_attempts, err = bo._retry_with_ai(
+        "demo", component, "boom", max_attempts, failure_tracker
+    )
+
+    assert proc is not None and used_attempts == max_attempts
+    assert attempts == ["demo_agent"] * bo.RSTAR_THRESHOLD + ["rstar"]
+    log = json.loads(inv_log.read_text())
+    escalations = [e.get("agent") for e in log if e.get("event") == "escalation"]
+    assert escalations == ["rstar"]
+
+
 def test_agent_escalation_sequence(tmp_path, monkeypatch):
     """Escalates through kimi2 and airstar before succeeding with rstar."""
     threshold = 2
