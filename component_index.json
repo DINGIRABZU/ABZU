@@ -2922,7 +2922,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "init_crown_agent.py",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "dependencies": [
         "INANNA_AI",
         "__future__",

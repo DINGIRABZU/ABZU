@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import logging
 import os
@@ -15,6 +15,7 @@ import servant_model_manager as smm
 from env_validation import parse_servant_models
 from INANNA_AI import corpus_memory
 from INANNA_AI.glm_integration import GLMIntegration
+from identity_loader import load_identity
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -214,6 +215,7 @@ def initialize_crown() -> GLMIntegration:
     try:
         _verify_servant_health(cfg.get("servant_models", {}))
         _check_glm(integration)
+        load_identity(integration)
     except RuntimeError as exc:
         logger.error("%s", exc)
         raise SystemExit(1)

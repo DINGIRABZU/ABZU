@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -251,6 +252,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [LLM_MODELS.md](LLM_MODELS.md) | LLM Models | This document describes the language models used in SPIRAL_OS and how to download them. | - |
 | [MAINTENANCE.md](MAINTENANCE.md) | Maintenance | - | - |
 | [MISSION.md](MISSION.md) | Mission | - | - |
+| [NEOABZU_spine.md](NEOABZU_spine.md) | NEOABZU Spine | **Version:** v0.1.0 **Last updated:** 2025-10-05 | - |
 | [Nazarick_GUIDE.md](Nazarick_GUIDE.md) | Nazarick Guide | - | - |
 | [OROBOROS_Engine.md](OROBOROS_Engine.md) | OROBOROS Engine | The inaugural ceremony executed the expression `(♀ :: ∞) :: ∅`. | - |
 | [Oroboros_Core.md](Oroboros_Core.md) | Oroboros Core Reference | The interpreter associates glyph tokens with elemental metadata that flows through evaluation. | - |
