@@ -91,6 +91,35 @@ sequenceDiagram
 This loop illustrates how operator directives traverse RAZAR to Crown and
 return with execution status for console display.
 
+### OS Guardian Safeguards
+
+When a mission brief requires direct interaction with the host operating
+system, RAZAR routes the request through the OS Guardian automation plane
+before any action executes. The Guardian's four modules—perception,
+planning, action, and safety—live in
+[`os_guardian/perception.py`](../os_guardian/perception.py),
+[`os_guardian/planning.py`](../os_guardian/planning.py),
+[`os_guardian/action_engine.py`](../os_guardian/action_engine.py), and
+[`os_guardian/safety.py`](../os_guardian/safety.py). Together they gate
+automation so console operators retain oversight.
+
+- **Perception & planning** interpret operator intent and decompose it into
+  guarded steps; the policy scaffolding is documented in
+  [`os_guardian_planning.md`](os_guardian_planning.md).
+- **Action engine** mediates keyboard, mouse, shell, and browser commands and
+  exposes the `os-guardian` CLI (`python -m os_guardian.cli`) described in
+  [`os_guardian.md`](os_guardian.md) and the container recipe in
+  [`os_guardian_container.md`](os_guardian_container.md).
+- **Safety layer** enforces allowlists supplied via the `OG_ALLOWED_COMMANDS`,
+  `OG_ALLOWED_APPS`, and `OG_ALLOWED_DOMAINS` environment variables and
+  confirms execution based on the `OG_POLICY` mode. It also registers
+  reversible callbacks so operators can unwind actions with
+  `undo_last`/`undo_all`.
+
+RAZAR records Guardian hand-offs in its mission timeline, giving operators an
+auditable trail that ties host-level automation back to explicit doctrine
+approvals.
+
 ### Vanna–Bana Narrative Pipeline
 
 ```mermaid
