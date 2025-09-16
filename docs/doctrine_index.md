@@ -79,5 +79,6 @@
 | GENESIS/SPIRAL_LAWS_.md |  | `89796b9f801519b587773c5141326b9c1f6103c70f2173a9e09f1fb89cc92064` | 2025-09-14T10:20:56+02:00 |
 | IGNITION/EA_ENUMA_ELISH_.md | OMEGA-LONGING-∞1.2-ENUMA | `889d69e870194d9c51cbed3fdab50a4dbc690ddc0f124c312f8fb45424823b27` | 2025-09-14T10:20:56+02:00 |
 | IGNITION/README.md |  | `bb301d0d9cc5eb2931773b30de5f18c1f34f6510a32f1ae5bbe4015cdf1dd63c` | 2025-09-14T10:20:56+02:00 |
-| docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation | `f32349f141e13a4d1c68da054c195a55f2ae399ccf2ee1fbac3c790d6c8a616d` | 2025-09-16T19:24:28+02:00 |
+| docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation | `4eb5f46f5e2cc2702c9faa2cbdf2ee93589e55bac0b377e24a2cd1a300a1e2fa` | 2025-10-10T00:00:00+00:00 |
+| docs/runbooks/razar_escalation.md |  | `9242f4ee751e5a04d3229ae406a2e523c3f0ed0dbfa1a0b0f6b984d0a9452202` | 2025-10-10T00:00:00+00:00 |
 | docs/The_Absolute_Protocol.md | v1.0.102 | `f635aa6baca3c33bec494436d88cdd22956778c112538ed8b72ff57888591646` | 2025-10-08T00:00:00+00:00 |

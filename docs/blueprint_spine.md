@@ -88,6 +88,10 @@ for the configuration contract and roster normalization rules. Shared context an
 logging mechanics for this ladder are documented in
 [RAZAR Agent – Shared Failure Context](RAZAR_AGENT.md#shared-failure-context) and
 [RAZAR Agent – Invocation Log Format](RAZAR_AGENT.md#invocation-log-format).
+Operational responders follow the [RAZAR Escalation
+Runbook](runbooks/razar_escalation.md) for the thresholds, log triage commands,
+metrics, and rollback flow that keep the delegation history intact during an
+incident.
 
 ### **Operator ↔ RAZAR/Crown Flow**
 

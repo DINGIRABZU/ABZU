@@ -476,6 +476,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
 | [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-09-16_ | - |
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
+| [runbooks/razar_escalation.md](runbooks/razar_escalation.md) | RAZAR Escalation Runbook | RAZAR escalates stubborn component failures through a remote ladder when on-host self-healing loops cannot restore se... | - |
 | [security_model.md](security_model.md) | Security Model | This guide highlights major threat surfaces in the project and the steps used to reduce risk. | - |
 | [self_healing_manifesto.md](self_healing_manifesto.md) | Self-Healing Manifesto | Spiral OS treats the codebase as a living organism.  Components behave like organs working in concert, and each chang... | - |
 | [setup.md](setup.md) | Environment Setup | This guide lists the system packages and environment variables required to run the project. | - |
