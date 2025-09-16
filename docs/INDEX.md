@@ -277,6 +277,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [adr/0003-require-adrs-for-protocol-updates.md](adr/0003-require-adrs-for-protocol-updates.md) | ADR 0003: Require ADRs for Absolute Protocol Updates | - **Status:** Accepted - **Date:** 2025-08-31 | - |
 | [adr/ADR_TEMPLATE.md](adr/ADR_TEMPLATE.md) | ADR XXXX: Title | - **Status:** Draft - **Date:** YYYY-MM-DD - **ADR ID:** XXXX | - |
 | [ai_ethics_framework.md](ai_ethics_framework.md) | AI Ethics Framework | Principles guiding the development and operation of INANNA_AI. | - |
+| [alpha_v0_1_charter.md](alpha_v0_1_charter.md) | Alpha v0.1 Charter | _Last updated: 2025-09-16_ | - |
 | [api_reference.md](api_reference.md) | API Reference | This document describes the FastAPI endpoints provided by `api.server`. | `../tests/test_server_endpoints.py` |
 | [apsu_resource_index.md](apsu_resource_index.md) | APSU Resource Index | Catalog of APSU and Neo-APSU resources across the repository. Each entry notes the file location, its role, and how i... | `../connectors/neo_apsu_connector_template.py`, `onboarding/wizard.py` |
 | [arcade_ui.md](arcade_ui.md) | Arcade UI | Operator-facing arcade interface that bridges the Operator API and RAZAR. | - |
