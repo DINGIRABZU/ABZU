@@ -1,0 +1,46 @@
+groups:
+  - name: razar-failover
+    rules:
+      - alert: RAZARExcessiveRetries
+        expr: sum(increase(razar_ai_invocation_retries_total[5m])) by (component) > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: razar
+        annotations:
+          summary: "RAZAR retries elevated for {{ $labels.component }}"
+          description: |
+            {{ $labels.component }} attempted more than ten AI retries in the last five minutes.
+            Investigate the component log for repeated patch failures and confirm the failover ladder is still progressing.
+          runbook: docs/runbooks/razar_escalation.md
+      - alert: RAZARAgentSuccessRateLow
+        expr: |
+          sum(increase(razar_ai_invocation_success_total[15m])) by (component)
+            /
+          clamp_min(
+            sum(increase(razar_ai_invocation_success_total[15m])) by (component)
+            + sum(increase(razar_ai_invocation_failure_total[15m])) by (component),
+            1
+          ) < 0.75
+        for: 10m
+        labels:
+          severity: critical
+          service: razar
+        annotations:
+          summary: "RAZAR agent success rate below threshold for {{ $labels.component }}"
+          description: |
+            Success rate for {{ $labels.component }} fell below 75% for ten minutes.
+            Review the agent health status and confirm external dependencies are reachable before rerunning the handover.
+          runbook: docs/monitoring/RAZAR.md#alert-thresholds
+      - alert: RAZAREscalationLoopStalled
+        expr: sum(increase(razar_ai_retry_duration_seconds_sum[30m])) by (component) > 900
+        for: 15m
+        labels:
+          severity: critical
+          service: razar
+        annotations:
+          summary: "RAZAR escalation loop saturated for {{ $labels.component }}"
+          description: |
+            {{ $labels.component }} spent more than 15 minutes inside the retry loop.
+            Trigger the escalation runbook and confirm that the operator notification bus is processing events.
+          runbook: docs/runbooks/razar_escalation.md

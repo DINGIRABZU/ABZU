@@ -1,0 +1,185 @@
+{
+  "title": "RAZAR Failover Observability",
+  "uid": "razar-failover",
+  "tags": ["razar", "failover", "escalation"],
+  "timezone": "utc",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "description": "Track AI handover retries, per-agent success rate, and escalation loops for the RAZAR orchestrator.",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "component",
+        "type": "query",
+        "label": "Component",
+        "datasource": "${DS_PROMETHEUS}",
+        "definition": "label_values(razar_ai_invocation_success_total, component)",
+        "refresh": 2,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*"
+      },
+      {
+        "name": "agent",
+        "type": "query",
+        "label": "External Agent",
+        "datasource": "${DS_PROMETHEUS}",
+        "definition": "label_values(razar_agent_call_duration_seconds_count, agent)",
+        "refresh": 2,
+        "sort": 2,
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Retry Attempts by Component",
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {"mode": "palette-classic"}
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(razar_ai_invocation_retries_total{component=~\"$component\"}[$__rate_interval])) by (component)",
+          "legendFormat": "{{component}}"
+        }
+      ],
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"}
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Agent Success Rate",
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "red", "value": 0},
+              {"color": "red", "value": 0.7},
+              {"color": "yellow", "value": 0.85},
+              {"color": "green", "value": 1}
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(razar_ai_invocation_success_total{component=~\"$component\"}[15m])) by (component) / clamp_min(sum(increase(razar_ai_invocation_success_total{component=~\"$component\"}[15m])) by (component) + sum(increase(razar_ai_invocation_failure_total{component=~\"$component\"}[15m])) by (component), 1)",
+          "legendFormat": "{{component}}"
+        }
+      ],
+      "options": {
+        "legend": {"displayMode": "table", "calcs": ["lastNotNull"], "placement": "bottom"}
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Retry Loop Duration (sum)",
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {"unit": "s"},
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(razar_ai_retry_duration_seconds_sum{component=~\"$component\"}[15m])) by (component)",
+          "legendFormat": "{{component}}"
+        }
+      ],
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"}
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Retry Loop Iterations",
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {"unit": "short"},
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(razar_ai_invocation_retries_total{component=~\"$component\"}[5m])) by (component)",
+          "legendFormat": "{{component}}"
+        }
+      ],
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"}
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "External Agent Latency",
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {"unit": "s"},
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(razar_agent_call_duration_seconds_sum{agent=~\"$agent\"}[5m])) by (agent) / clamp_min(sum(rate(razar_agent_call_duration_seconds_count{agent=~\"$agent\"}[5m])) by (agent), 1)",
+          "legendFormat": "{{agent}}"
+        }
+      ],
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"}
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Escalation Loop Warning",
+      "datasource": "${DS_PROMETHEUS}",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 300},
+              {"color": "red", "value": 600}
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "expr": "max(sum(increase(razar_ai_retry_duration_seconds_sum{component=~\"$component\"}[30m])) by (component))",
+          "legendFormat": "Loop duration"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "horizontal",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    }
+  ]
+}

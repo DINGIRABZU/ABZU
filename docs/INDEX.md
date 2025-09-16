@@ -418,6 +418,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [mix_tracks.md](mix_tracks.md) | Mix Tracks | `audio/mix_tracks.py` combines multiple audio stems into a single track. The module accepts a JSON instruction file s... | - |
 | [ml_environment.md](ml_environment.md) | ML Environment Setup | This guide explains how to create an isolated Python environment and start Jupyter notebooks for experimenting with S... | - |
 | [module_execution_flow.md](module_execution_flow.md) | Module Execution Flow | Overview of key modules with their inputs, core processing, outputs, and error handling. Flowcharts summarize the exe... | - |
+| [monitoring/RAZAR.md](monitoring/RAZAR.md) | RAZAR Failover Monitoring | The RAZAR orchestrator exports detailed telemetry about AI handovers, retry loops, and cross-agent escalations. Prome... | - |
 | [monitoring.md](monitoring.md) | Monitoring | The application writes JSON-formatted logs to `logs/INANNA_AI.log`. The file rotates when it reaches roughly 10 MB, k... | - |
 | [music_avatar_architecture.md](music_avatar_architecture.md) | Music Avatar Architecture | The Crown agent can reflect on musical input by combining feature extraction with language model reasoning.  The `mus... | - |
 | [music_generation_usage.md](music_generation_usage.md) | Music Generation Usage | Generate audio from text prompts or ritual invocations. | - |
