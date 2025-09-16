@@ -445,10 +445,24 @@ def test_context_includes_history(tmp_path, monkeypatch):
     assert proc is not None and used_attempts == 4
     assert len(contexts) == 4
     # Final context includes history from earlier failed attempts
-    final_history = contexts[3]["history"]
+    final_context = contexts[3]
+    assert final_context is not None
+    final_history = final_context.get("history", [])
     attempt_agents = [
-        entry["agent"]
+        entry.get("agent")
         for entry in final_history
         if entry.get("event") == "attempt" and entry.get("agent")
     ]
-    assert attempt_agents[-2:] == ["kimi2", "airstar"]
+    assert attempt_agents == ["kimi2", "airstar"]
+    attempt_originals = [
+        entry.get("agent_original")
+        for entry in final_history
+        if entry.get("event") == "attempt"
+    ]
+    assert attempt_originals == ["kimi2", "airstar"]
+    escalation_agents = [
+        entry.get("agent")
+        for entry in final_history
+        if entry.get("event") == "escalation"
+    ]
+    assert escalation_agents == ["kimi2", "airstar", "rstar"]
