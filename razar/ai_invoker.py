@@ -6,22 +6,24 @@ applies any suggested patches via :mod:`agents.razar.code_repair`.
 
 from __future__ import annotations
 
-__all__ = ["handover", "load_agent_definitions"]
+__all__ = ["handover", "load_agent_definitions", "invalidate_agent_config_cache"]
 
 import json
 import logging
 import multiprocessing
 import os
 import queue
-import subprocess
 import shutil
+import subprocess
+import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from threading import RLock
 from typing import Any, Dict
 
+from . import health_checks, metrics
 from .bootstrap_utils import PATCH_LOG_PATH, LOGS_DIR
-from . import health_checks
 from tools import opencode_client
 
 __version__ = "0.1.4"
@@ -55,6 +57,9 @@ _AGENT_SECRET_ENV_HINTS: Dict[str, tuple[str, ...]] = {
     ),
 }
 
+_CONFIG_CACHE: dict[Path, tuple[float, Dict[str, Any]]] = {}
+_CONFIG_CACHE_LOCK = RLock()
+
 _SANDBOX_TIMEOUT_SECONDS = 90.0
 _SANDBOX_MEMORY_LIMIT_MB = 512
 
@@ -81,12 +86,54 @@ def _expand_env(value: Any) -> str | None:
     return expanded
 
 
-def _load_agent_config(path: Path) -> Dict[str, Any]:
+def _normalize_config_path(path: Path | str | None) -> Path:
+    candidate = AGENT_CONFIG_PATH if path is None else path
+    if not isinstance(candidate, Path):
+        candidate = Path(candidate)
+    candidate = candidate.expanduser()
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
+        return candidate.resolve(strict=False)
+    except RuntimeError:  # pragma: no cover - pathological symlink loops
+        return candidate
+
+
+def invalidate_agent_config_cache(path: Path | str | None = None) -> None:
+    """Remove cached agent configuration data."""
+
+    if path is None:
+        with _CONFIG_CACHE_LOCK:
+            _CONFIG_CACHE.clear()
+        return
+
+    normalized = _normalize_config_path(path)
+    with _CONFIG_CACHE_LOCK:
+        _CONFIG_CACHE.pop(normalized, None)
+
+
+def _load_agent_config(path: Path | str) -> Dict[str, Any]:
+    normalized = _normalize_config_path(path)
+    try:
+        mtime = normalized.stat().st_mtime
+    except OSError:
+        invalidate_agent_config_cache(normalized)
         return {}
-    return data if isinstance(data, dict) else {}
+
+    with _CONFIG_CACHE_LOCK:
+        cached = _CONFIG_CACHE.get(normalized)
+        if cached and cached[0] == mtime:
+            return dict(cached[1])
+
+    try:
+        data = json.loads(normalized.read_text(encoding="utf-8"))
+    except Exception:
+        data = {}
+    if not isinstance(data, dict):
+        data = {}
+
+    snapshot = dict(data)
+    with _CONFIG_CACHE_LOCK:
+        _CONFIG_CACHE[normalized] = (mtime, snapshot)
+    return dict(snapshot)
 
 
 def _sanitize_env_key(name: str) -> str:
@@ -113,7 +160,7 @@ def _agent_env_token(name: str) -> str | None:
 
 
 def load_agent_definitions(
-    path: Path = AGENT_CONFIG_PATH,
+    path: Path | str = AGENT_CONFIG_PATH,
 ) -> tuple[str | None, list[AgentDefinition]]:
     """Return the active agent and roster parsed from ``path``."""
 
@@ -159,7 +206,7 @@ def load_agent_definitions(
     return active, definitions
 
 
-def _active_agent(path: Path = AGENT_CONFIG_PATH) -> str | None:
+def _active_agent(path: Path | str = AGENT_CONFIG_PATH) -> str | None:
     """Return the normalized name of the active remote agent."""
 
     active, _definitions = load_agent_definitions(path)
@@ -324,41 +371,98 @@ def handover(
             existing = ctx.setdefault("history", [])
             existing.extend(history)
         ctx.update({k: v for k, v in context.items() if k != "history"})
+
+    config_target = _normalize_config_path(config_path)
+    active = _active_agent(config_target)
+    normalized_agent = active or "remote_agent"
+
     suggestion: Any | None = None
     if use_opencode is None:
-        active = _active_agent(Path(config_path) if config_path else AGENT_CONFIG_PATH)
-        use_opencode = active not in {"kimi2", "airstar", "rstar"}
+        use_opencode = normalized_agent not in {"kimi2", "airstar", "rstar"}
+
     if use_opencode:
+        normalized_agent = "opencode"
+        payload = json.dumps(ctx)
+        start = time.perf_counter()
         try:
             result = subprocess.run(
                 ["opencode", "run", "--json"],
-                input=json.dumps(ctx),
+                input=payload,
                 capture_output=True,
                 text=True,
                 check=False,
             )
         except FileNotFoundError:
-            LOGGER.info("opencode CLI not found; falling back to library")
+            duration = time.perf_counter() - start
+            metrics.observe_agent_latency("opencode_cli", duration)
+            LOGGER.info(
+                "opencode CLI not found; falling back to library",
+                extra={
+                    "component": component,
+                    "duration": duration,
+                    "strategy": "cli",
+                },
+            )
+            client_start = time.perf_counter()
             try:
-                diff = opencode_client.complete(json.dumps(ctx))
+                diff = opencode_client.complete(payload)
             except Exception:  # pragma: no cover - defensive
+                client_duration = time.perf_counter() - client_start
+                metrics.observe_agent_latency("opencode_client", client_duration)
                 LOGGER.exception("opencode client failed for %s", component)
                 return False
+            client_duration = time.perf_counter() - client_start
+            metrics.observe_agent_latency("opencode_client", client_duration)
+            LOGGER.info(
+                "opencode client completed",
+                extra={
+                    "component": component,
+                    "duration": client_duration,
+                    "strategy": "client",
+                },
+            )
             suggestion = _diff_to_suggestions(diff, error)
         except Exception:  # pragma: no cover - defensive
+            duration = time.perf_counter() - start
+            metrics.observe_agent_latency("opencode_cli", duration)
             LOGGER.exception("opencode CLI failed for %s", component)
             return False
         else:
+            duration = time.perf_counter() - start
+            metrics.observe_agent_latency("opencode_cli", duration)
+            LOGGER.info(
+                "opencode CLI completed",
+                extra={
+                    "component": component,
+                    "duration": duration,
+                    "strategy": "cli",
+                    "returncode": result.returncode,
+                },
+            )
             if result.returncode != 0:
                 LOGGER.error(
                     "opencode exited with code %s; using library fallback",
                     result.returncode,
                 )
+                client_start = time.perf_counter()
                 try:
-                    diff = opencode_client.complete(json.dumps(ctx))
+                    diff = opencode_client.complete(payload)
                 except Exception:  # pragma: no cover - defensive
+                    client_duration = time.perf_counter() - client_start
+                    metrics.observe_agent_latency("opencode_client", client_duration)
                     LOGGER.exception("opencode client failed for %s", component)
                     return False
+                client_duration = time.perf_counter() - client_start
+                metrics.observe_agent_latency("opencode_client", client_duration)
+                LOGGER.info(
+                    "opencode client completed",
+                    extra={
+                        "component": component,
+                        "duration": client_duration,
+                        "strategy": "client",
+                        "source": "cli_fallback",
+                    },
+                )
                 suggestion = _diff_to_suggestions(diff, error)
             else:
                 try:
@@ -367,8 +471,21 @@ def handover(
                     LOGGER.warning("Could not decode opencode output for %s", component)
                     return False
     else:
+        start = time.perf_counter()
         suggestion = _invoke_remote_agent_sandboxed(
-            ctx, config_path, timeout=_SANDBOX_TIMEOUT_SECONDS
+            ctx, config_target, timeout=_SANDBOX_TIMEOUT_SECONDS
+        )
+        duration = time.perf_counter() - start
+        metrics.observe_agent_latency(normalized_agent, duration)
+        LOGGER.info(
+            "Remote agent invocation finished",
+            extra={
+                "component": component,
+                "agent": normalized_agent,
+                "duration": duration,
+                "strategy": "remote_agent",
+                "suggestion_present": bool(suggestion),
+            },
         )
         if suggestion is None:
             LOGGER.error(

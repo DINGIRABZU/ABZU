@@ -8,9 +8,10 @@ from threading import Lock
 from typing import Any
 
 try:  # pragma: no cover - optional dependency
-    from prometheus_client import Counter, start_http_server
+    from prometheus_client import Counter, Histogram, start_http_server
 except Exception:  # pragma: no cover - optional dependency
     Counter = None  # type: ignore[assignment]
+    Histogram = None  # type: ignore[assignment]
     start_http_server = None  # type: ignore[assignment]
 
 LOGGER = logging.getLogger(__name__)
@@ -18,11 +19,18 @@ LOGGER = logging.getLogger(__name__)
 _SUCCESS_COUNTER: Any = None
 _FAILURE_COUNTER: Any = None
 _RETRY_COUNTER: Any = None
+_RETRY_LATENCY: Any = None
+_AGENT_LATENCY: Any = None
 _LOCK = Lock()
 _INITIALIZED = False
 _SERVER_STARTED = False
 
-__all__ = ["init_metrics", "record_invocation"]
+__all__ = [
+    "init_metrics",
+    "record_invocation",
+    "observe_retry_duration",
+    "observe_agent_latency",
+]
 
 
 def _resolve_port(port: int | None) -> int:
@@ -47,6 +55,7 @@ def init_metrics(port: int | None = None) -> bool:
 
     global _INITIALIZED, _SERVER_STARTED
     global _SUCCESS_COUNTER, _FAILURE_COUNTER, _RETRY_COUNTER
+    global _RETRY_LATENCY, _AGENT_LATENCY
     if Counter is None or start_http_server is None:
         LOGGER.debug("prometheus_client not available; metrics disabled")
         return False
@@ -70,6 +79,18 @@ def init_metrics(port: int | None = None) -> bool:
             "Total retries performed across AI handover attempts",
             ["component"],
         )
+
+        if Histogram is not None:
+            _RETRY_LATENCY = Histogram(
+                "razar_ai_retry_duration_seconds",
+                "Total wall-clock time spent inside the AI retry loop",
+                ["component"],
+            )
+            _AGENT_LATENCY = Histogram(
+                "razar_agent_call_duration_seconds",
+                "Duration of external agent or opencode handovers",
+                ["agent"],
+            )
 
         port_value = _resolve_port(port)
         started = False
@@ -106,3 +127,25 @@ def record_invocation(component: str, success: bool, *, retries: int = 0) -> Non
 
     if retries > 0:
         retry_counter.labels(**labels).inc(retries)
+
+
+def observe_retry_duration(component: str, duration: float) -> None:
+    """Record the time spent inside the retry loop for ``component``."""
+
+    histogram = _RETRY_LATENCY
+    if histogram is None:
+        return
+
+    label = (component or "unknown").lower()
+    histogram.labels(component=label).observe(duration)
+
+
+def observe_agent_latency(agent: str, duration: float) -> None:
+    """Record how long an external agent or opencode call took."""
+
+    histogram = _AGENT_LATENCY
+    if histogram is None:
+        return
+
+    label = (agent or "unknown").lower()
+    histogram.labels(agent=label).observe(duration)

@@ -276,6 +276,7 @@ def rollback_to_safe_defaults() -> None:
     try:
         AGENT_CONFIG_PATH.write_bytes(AGENT_CONFIG_BACKUP_PATH.read_bytes())
         LOGGER.info("Restored agent configuration from %s", AGENT_CONFIG_BACKUP_PATH)
+        ai_invoker.invalidate_agent_config_cache(AGENT_CONFIG_PATH)
     except Exception:  # pragma: no cover - defensive logging
         LOGGER.exception("Failed to restore agent configuration from snapshot")
 
@@ -502,6 +503,7 @@ def _set_active_agent(agent: str) -> None:
     data["active"] = agent
     AGENT_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
     AGENT_CONFIG_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    ai_invoker.invalidate_agent_config_cache(AGENT_CONFIG_PATH)
 
 
 def _load_agent_state() -> tuple[Optional[str], list[str], dict[str, str]]:
@@ -584,58 +586,132 @@ def _retry_with_ai(
     number of AI retries performed, and ``error`` is the last error message
     encountered.
     """
-    for attempt in range(1, max_attempts + 1):
-        try:
-            active_agent, agent_chain, lookup = _load_agent_state()
-        except Exception:  # pragma: no cover - defensive guard
-            active_agent, agent_chain, lookup = None, [], {}
-        if isinstance(active_agent, str):
-            active_agent = active_agent.lower()
-        use_opencode = active_agent not in agent_chain
-        context = build_failure_context(name)
-        patched = ai_invoker.handover(
-            name,
-            error_msg,
-            context=context,
-            use_opencode=use_opencode,
+    attempts_used = 0
+    last_patched = False
+    last_agent: Optional[str] = None
+    final_proc: Optional[subprocess.Popen] = None
+    final_error = error_msg
+    success = False
+    retry_start = time.perf_counter()
+
+    try:
+        for attempt in range(1, max_attempts + 1):
+            attempts_used = attempt
+            attempt_start = time.perf_counter()
+            handover_duration = 0.0
+            agent_label = "unknown"
+            attempt_outcome = "handover_failed"
+            use_opencode = False
+            patched = False
+
+            try:
+                active_agent, agent_chain, lookup = _load_agent_state()
+            except Exception:  # pragma: no cover - defensive guard
+                active_agent, agent_chain, lookup = None, [], {}
+
+            if isinstance(active_agent, str):
+                active_agent = active_agent.lower()
+
+            use_opencode = active_agent not in agent_chain
+            context = build_failure_context(name)
+            hand_start = time.perf_counter()
+            patched = ai_invoker.handover(
+                name,
+                error_msg,
+                context=context,
+                use_opencode=use_opencode,
+            )
+            handover_duration = time.perf_counter() - hand_start
+            agent_label = (
+                "opencode" if use_opencode else (active_agent or "remote_agent")
+            )
+            last_agent = agent_label
+            last_patched = bool(patched)
+
+            agent_original = None
+            if isinstance(active_agent, str):
+                agent_original = lookup.get(active_agent, active_agent)
+
+            log_invocation(
+                name,
+                attempt,
+                error_msg,
+                patched,
+                agent=active_agent,
+                agent_original=agent_original,
+            )
+            _handle_ai_result(
+                name,
+                error_msg,
+                patched,
+                attempt,
+                failure_tracker,
+                escalation_tracker,
+                escalation_lock,
+            )
+            final_error = error_msg
+
+            try:
+                if not patched:
+                    attempt_outcome = "no_patch"
+                    continue
+
+                attempt_outcome = "patch_applied"
+                LOGGER.info(
+                    "Retrying %s after AI patch (remote attempt %s)", name, attempt
+                )
+                proc = launch_component(component)
+                # Re-run the health check after patch application to confirm recovery
+                if not _execute_health_probe(component):
+                    _record_probe(name, False)
+                    proc.terminate()
+                    proc.wait()
+                    LOGGER.error("Post-patch health check failed for %s", name)
+                    attempt_outcome = "health_check_failed"
+                    continue
+                final_proc = proc
+                final_error = error_msg
+                success = True
+                attempt_outcome = "relaunch_success"
+                break
+            except Exception as exc:  # pragma: no cover - complex patch failure
+                error_msg = str(exc)
+                final_error = error_msg
+                LOGGER.error("Remote attempt %s failed for %s: %s", attempt, name, exc)
+                attempt_outcome = "relaunch_error"
+            finally:
+                attempt_duration = time.perf_counter() - attempt_start
+                LOGGER.info(
+                    "AI retry attempt completed",
+                    extra={
+                        "component": name,
+                        "attempt": attempt,
+                        "agent": agent_label,
+                        "duration": attempt_duration,
+                        "handover_duration": handover_duration,
+                        "patched": last_patched,
+                        "outcome": attempt_outcome,
+                        "use_opencode": use_opencode,
+                    },
+                )
+    finally:
+        total_duration = time.perf_counter() - retry_start
+        metrics.observe_retry_duration(name, total_duration)
+        LOGGER.info(
+            "AI retry loop finished",
+            extra={
+                "component": name,
+                "attempts": attempts_used,
+                "duration": total_duration,
+                "patched": last_patched,
+                "agent": last_agent,
+                "success": success,
+            },
         )
-        agent_original = None
-        if isinstance(active_agent, str):
-            agent_original = lookup.get(active_agent, active_agent)
-        log_invocation(
-            name,
-            attempt,
-            error_msg,
-            patched,
-            agent=active_agent,
-            agent_original=agent_original,
-        )
-        _handle_ai_result(
-            name,
-            error_msg,
-            patched,
-            attempt,
-            failure_tracker,
-            escalation_tracker,
-            escalation_lock,
-        )
-        if not patched:
-            continue
-        LOGGER.info("Retrying %s after AI patch (remote attempt %s)", name, attempt)
-        try:
-            proc = launch_component(component)
-            # Re-run the health check after patch application to confirm recovery
-            if not _execute_health_probe(component):
-                _record_probe(name, False)
-                proc.terminate()
-                proc.wait()
-                LOGGER.error("Post-patch health check failed for %s", name)
-                continue
-            return proc, attempt, error_msg
-        except Exception as exc:  # pragma: no cover - complex patch failure
-            error_msg = str(exc)
-            LOGGER.error("Remote attempt %s failed for %s: %s", attempt, name, exc)
-    return None, max_attempts, error_msg
+
+    if not success:
+        return None, attempts_used or max_attempts, final_error
+    return final_proc, attempts_used, final_error
 
 
 def _rotate_mission_briefs(archive_dir: Path, limit: int = MAX_MISSION_BRIEFS) -> None:
