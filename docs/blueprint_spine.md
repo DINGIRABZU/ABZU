@@ -19,6 +19,7 @@ The inaugural ceremony is recorded in the [First Consecrated Computation](../NEO
 - **OS Guardian** now brokers host-level automation with allowlisted commands and auditable safeguards; see [os_guardian.md](os_guardian.md) and policy references in [os_guardian_permissions.md](os_guardian_permissions.md).
 - **Neoabzu crates** bumped to **v0.1.2** with verified PyO3 bindings via `NEOABZU/pyproject.toml`.
 - **Identity loader** reimplemented in Rust; Crown initialization writes mission and persona summary to `data/identity.json`.
+- **Blueprint governance** requires architecture commits to update [system_blueprint.md](system_blueprint.md), [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), [NEOABZU_spine.md](NEOABZU_spine.md), and the indexes [index.md](index.md) / [INDEX.md](INDEX.md) so ceremonial and operational guides remain in lockstep.
 
 ### **Rust Workspace Crates**
 

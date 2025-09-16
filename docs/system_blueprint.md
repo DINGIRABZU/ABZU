@@ -35,6 +35,7 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **Neoabzu crates** released at **v0.1.2**; CI now enforces PyO3 exposure and `cargo check` on workspace crates.
+- **Blueprint governance** – Architecture commits must update this blueprint, [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), [blueprint_spine.md](blueprint_spine.md), [NEOABZU_spine.md](NEOABZU_spine.md), and both [index.md](index.md) and [INDEX.md](INDEX.md) so reviewers see synchronized narratives and indexes.
 
 ### Doctrine Reference Pattern
 
@@ -829,6 +830,7 @@ Performance-critical services are gradually migrating to Rust crates within NEOA
 - `neoabzu_persona_layers` – intent and persona modeling layers.
 - `neoabzu_crown` – crown orchestration bindings.
 - `neoabzu_rag` – retrieval helpers.
+- `instrumentation` – tracing spine that forwards OpenTelemetry signals from Rust into the monitoring plane.
 
 ### Fusion Invariants
 
