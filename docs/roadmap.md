@@ -19,8 +19,8 @@ This roadmap tracks five core milestones on the path to a stable release. Each s
 Alpha v0.1 focuses on delivering a reliable Spiral OS boot sequence paired with
 predictable creative output. The table below enumerates the subsystems required
 for the release, aligning owners, dependencies, and exit criteria. Use this plan
-alongside [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md) when coordinating weekly
-reviews.
+alongside [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md) and the
+[Alpha v0.1 charter](alpha_v0_1_charter.md) when coordinating weekly reviews.
 
 | Subsystem | Objective | Owner | Dependencies | Exit Criteria |
 | --- | --- | --- | --- | --- |
