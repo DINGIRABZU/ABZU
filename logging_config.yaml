@@ -18,6 +18,13 @@ handlers:
     encoding: utf-8
     maxBytes: 1048576
     backupCount: 5
+  razar:
+    class: logging.handlers.RotatingFileHandler
+    formatter: json
+    filename: logs/razar.log
+    encoding: utf-8
+    maxBytes: 10485760
+    backupCount: 7
 filters:
   emotion:
     '()': logging_filters.EmotionFilter
@@ -25,6 +32,10 @@ loggers:
   src.audio.play_ritual_music:
     level: INFO
     handlers: [file, audio]
+    propagate: false
+  razar:
+    level: INFO
+    handlers: [razar]
     propagate: false
 root:
   level: INFO

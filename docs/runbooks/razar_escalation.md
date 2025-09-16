@@ -80,6 +80,19 @@ exporter) and reports gaps in the monitoring fabric.
 
 ## Rollback and Recovery Actions
 
+RAZAR snapshots `config/razar_ai_agents.json` at the start of every boot cycle
+and automatically restores the snapshot whenever escalations fail to heal a
+component. The orchestrator emits a critical monitoring alert with the message
+`Boot sequence halted; configuration rolled back to safe defaults`, writes the
+event to `logs/razar.log`, and preserves the final escalation history in
+`logs/razar_ai_invocations.json`. The helper lives in
+`razar/boot_orchestrator.py::rollback_to_safe_defaults`, and the integration
+suite (`tests/integration/test_razar_self_healing.py`) verifies both the
+restoration and the recorded context.
+
+Operators should still take the following manual steps after the automatic
+rollback completes:
+
 1. **Stop the destabilized component** with the operator console or via the
    lifecycle bus: `python -m razar stop <component>`.
 2. **Rollback recent patches** with the documented helper:
@@ -89,7 +102,8 @@ exporter) and reports gaps in the monitoring fabric.
    ```
 
    The script restores the previous artifact, appends a `reverted` record to
-   `logs/patch_history.jsonl`, and updates the boot snapshot.
+   `logs/patch_history.jsonl`, and updates the boot snapshot. Confirm that
+   `config/razar_ai_agents.json` matches the `.bak` snapshot before proceeding.
 3. **Re-run the handover flow** once the component is stable:
 
    ```bash
@@ -99,9 +113,12 @@ exporter) and reports gaps in the monitoring fabric.
 
    The `--long-task` flag keeps the orchestrator in escalation mode until the
    remote service returns success or the operator aborts, ensuring rStar receives
-   the refreshed context if earlier agents still cannot patch the issue.
+   the refreshed context if earlier agents still cannot patch the issue. Review
+   the preserved escalation history in `logs/razar_ai_invocations.json` to brief
+   downstream agents.
 4. **Document the timeline** – capture the warning threshold, invocation counts,
-   log excerpts, and metrics snapshots before closing the incident.
+   log excerpts (including the rollback notice), and metrics snapshots before
+   closing the incident.
 
 ## External Service References
 

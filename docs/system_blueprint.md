@@ -1262,6 +1262,15 @@ General guidance: stop the failed service, confirm dependencies, and restart
 following the startup order. For persistent issues, consult the
 [Recovery Playbook](recovery_playbook.md) to restore from snapshots.
 
+RAZAR snapshots the remote agent roster (`config/razar_ai_agents.json`) at boot
+and restores it automatically when the escalation ladder exhausts every
+handover without success. The `rollback_to_safe_defaults` helper triggers the
+restore, writes `Boot sequence halted; configuration rolled back to safe
+defaults` to `logs/razar.log`, and keeps the final escalation entries in
+`logs/razar_ai_invocations.json` for post‑mortem review. Integration coverage in
+`tests/integration/test_razar_self_healing.py` guards this behavior so operators
+can rely on the snapshot before attempting manual remediation.
+
 ## Quarantine and Diagnostics
 Persistent failures trigger RAZAR's quarantine routine. The affected
 component's metadata moves to `quarantine/` and an entry is added to
