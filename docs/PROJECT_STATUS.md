@@ -54,6 +54,11 @@ These results indicate optional dependencies and system binaries are still missi
 - v0.1 – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025). **Status:** Charter baseline approved in [alpha_v0_1_charter.md](alpha_v0_1_charter.md); subsystem execution tracked through the [Alpha v0.1 execution plan](roadmap.md#alpha-v01-execution-plan).
 - v0.2 – avatar console integration and basic RAG pipeline (target: Q4 2025). **Status:** Backlog shaping pending Alpha v0.1 exit criteria.
 
+## Alpha v0.1 Readiness Gate
+- Workflow defined in [docs/releases/alpha_v0_1_workflow.md](releases/alpha_v0_1_workflow.md) covering packaging, mandatory health checks, and acceptance tests.
+- Automation available through `scripts/run_alpha_gate.sh` with optional connector sweeps and pytest argument passthrough.
+- Dry runs validate build artifact generation (`python -m build --wheel`) and Spiral OS / RAZAR acceptance coverage ahead of staging promotion.
+
 ## Deprecation Roadmap
 
 - **Pydantic field aliases** – migrate remaining models away from deprecated
