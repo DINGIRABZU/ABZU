@@ -62,20 +62,27 @@ Run the gRPC service (binding to `0.0.0.0:50051`) with:
 
 ```bash
 export NEOABZU_VECTOR_STORE=tests/data/store.json
+export NEOABZU_VECTOR_DB=.neoabzu-vector/db
 cargo run -p neoabzu-vector --bin server
 ```
 
-The `NEOABZU_VECTOR_STORE` environment variable should point to a JSON
-array of strings. Each entry is embedded at startup and stored in
-memory. Set `NEOABZU_VECTOR_SHARDS` to split the store across multiple
-shards for concurrent queries; omit or set to `1` for a single shard.
+`NEOABZU_VECTOR_STORE` points to a JSON array of seed documents while
+`NEOABZU_VECTOR_DB` identifies the persistent sled directory that retains
+embeddings across restarts. `Init` embeds the dataset, writes the
+records to the database, and reloads from persistence when the JSON seed
+is missing. `Search` lazily hydrates in-memory shards from persistent
+storage so fresh processes recover without manual bootstrapping.
+`NEOABZU_VECTOR_SHARDS` still controls in-memory partitioning for
+concurrency; omit or set to `1` for a single shard.
+
 Metrics counters `neoabzu_vector_init_total` and
-`neoabzu_vector_search_total` track RPC usage, and invalid requests
-surface gRPC errors (e.g. missing store, zero `top_n`, or searches
-before initialization). Launch with `--features tracing` to emit
-span data and enable `RUST_LOG` to observe `Init` and `Search`
-instrumentation. A small command-line client is available at
-`src/bin/vector_client.py` for ad-hoc queries.
+`neoabzu_vector_search_total` capture call volume, while
+`neoabzu_vector_init_latency_seconds` and
+`neoabzu_vector_search_latency_seconds` histogram init/search durations.
+Launch with `--features tracing` to emit span data and enable `RUST_LOG`
+to observe `Init` and `Search` instrumentation. A small command-line
+client remains available at `src/bin/vector_client.py` for ad-hoc
+queries.
 
 Python callers may connect using `neoabzu.vector.VectorClient`:
 

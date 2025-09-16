@@ -16,10 +16,12 @@ Rust vector operations for Neo-ABZU.
 - **Serve gRPC endpoints** over Tonic:
   ```bash
   export NEOABZU_VECTOR_STORE=tests/data/store.json
+  export NEOABZU_VECTOR_DB=.neoabzu-vector/db
   cargo run -p neoabzu-vector --bin server
   ```
-  The server embeds each string in the JSON array and exposes `Init` and
-  `Search` RPCs on `0.0.0.0:50051`.
+  The server embeds each string in the JSON array, persists embeddings to the
+  path referenced by `NEOABZU_VECTOR_DB`, and exposes `Init` and `Search` RPCs
+  on `0.0.0.0:50051`.
 
 - **Call from Python** using the bundled helpers:
   ```python
