@@ -252,7 +252,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [LLM_MODELS.md](LLM_MODELS.md) | LLM Models | This document describes the language models used in SPIRAL_OS and how to download them. | - |
 | [MAINTENANCE.md](MAINTENANCE.md) | Maintenance | - | - |
 | [MISSION.md](MISSION.md) | Mission | - | - |
-| [NEOABZU_spine.md](NEOABZU_spine.md) | NEOABZU Spine | **Version:** v0.1.1 **Last updated:** 2025-10-07 | - |
+| [NEOABZU_spine.md](NEOABZU_spine.md) | NEOABZU Spine | **Version:** v0.1.2 **Last updated:** 2025-10-09 | - |
 | [Nazarick_GUIDE.md](Nazarick_GUIDE.md) | Nazarick Guide | - | - |
 | [OROBOROS_Engine.md](OROBOROS_Engine.md) | OROBOROS Engine | The inaugural ceremony executed the expression `(♀ :: ∞) :: ∅`. | - |
 | [Oroboros_Core.md](Oroboros_Core.md) | Oroboros Core Reference | The interpreter associates glyph tokens with elemental metadata that flows through evaluation. | - |

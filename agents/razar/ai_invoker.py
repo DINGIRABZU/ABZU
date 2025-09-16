@@ -13,7 +13,7 @@ remote agent or a confirmation that no suggestion was provided.
 
 from __future__ import annotations
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 from datetime import datetime
 import os
@@ -39,6 +39,21 @@ PATCH_LOG_PATH = Path(__file__).resolve().parents[2] / "logs" / "razar_ai_patche
 __all__ = ["handover"]
 
 
+class AgentCredentialError(RuntimeError):
+    """Raised when a remote agent credential is missing or invalid."""
+
+
+_MANDATORY_AGENT_ENV_VARS: Dict[str, str] = {
+    "kimi2": "KIMI2_API_KEY",
+    "airstar": "AIRSTAR_API_KEY",
+    "rstar": "RSTAR_API_KEY",
+}
+
+_AGENT_SECRET_ENV_HINTS: Dict[str, Tuple[str, ...]] = {
+    name: (env_var,) for name, env_var in _MANDATORY_AGENT_ENV_VARS.items()
+}
+
+
 def _expand_env(value: Any) -> str | None:
     if not isinstance(value, str):
         return None
@@ -53,6 +68,57 @@ def _normalize_agent_entry(entry: Any) -> Dict[str, Any] | None:
         return dict(entry)
     if isinstance(entry, str):
         return {"name": entry}
+    return None
+
+
+def _sanitize_env_key(name: str) -> str:
+    return "".join(ch if ch.isalnum() else "_" for ch in name).upper()
+
+
+def _candidate_secret_keys(name: str) -> Tuple[str, ...]:
+    normalized = name.lower()
+    required = _MANDATORY_AGENT_ENV_VARS.get(normalized)
+    if required:
+        return (required,)
+    hints = _AGENT_SECRET_ENV_HINTS.get(normalized)
+    if hints:
+        return hints
+    base = _sanitize_env_key(name)
+    return (f"{base}_API_KEY", f"{base}_TOKEN")
+
+
+def _require_env_secret(agent: str, env_key: str) -> str:
+    raw_value = os.environ.get(env_key)
+    if raw_value is None:
+        message = f"Environment variable {env_key} is required for agent {agent}"
+        logger.error(message)
+        raise AgentCredentialError(message)
+    token = raw_value.strip()
+    if not token:
+        message = f"Environment variable {env_key} for agent {agent} must not be empty"
+        logger.error(message)
+        raise AgentCredentialError(message)
+    return token
+
+
+def _agent_env_token(name: str) -> str | None:
+    normalized = name.lower()
+    required_env = _MANDATORY_AGENT_ENV_VARS.get(normalized)
+    if required_env:
+        return _require_env_secret(name, required_env)
+
+    for key in _candidate_secret_keys(name):
+        value = os.environ.get(key)
+        if value is None:
+            continue
+        token = value.strip()
+        if token:
+            return token
+        logger.error(
+            "Environment variable %s for agent %s is defined but empty",
+            key,
+            name,
+        )
     return None
 
 
@@ -125,7 +191,15 @@ def _select_agent(config: Dict[str, Any]) -> Tuple[str, str | None, str | None]:
     token: str | None = None
     auth = chosen.get("auth", {})
     if isinstance(auth, dict):
-        token = _expand_env(auth.get("token") or auth.get("key"))
+        config_token = _expand_env(auth.get("token") or auth.get("key"))
+        if isinstance(config_token, str):
+            stripped = config_token.strip()
+            if stripped:
+                token = stripped
+
+    env_token = _agent_env_token(name)
+    if env_token:
+        token = env_token
 
     return name, endpoint, token
 

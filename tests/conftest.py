@@ -129,6 +129,7 @@ allow_tests(
     ROOT / "tests" / "test_cortex_memory.py",
     ROOT / "tests" / "test_voice_cloner_cli.py",
     ROOT / "tests" / "test_security_canary.py",
+    ROOT / "tests" / "test_ai_invoker_credentials.py",
     ROOT / "tests" / "agents" / "test_land_graph_geo_knowledge.py",
     ROOT / "tests" / "agents" / "test_asian_gen.py",
     ROOT / "tests" / "test_orchestration_master.py",

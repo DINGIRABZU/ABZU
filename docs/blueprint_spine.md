@@ -81,6 +81,10 @@ context the Crown attempted to resolve. The default chain is
 
 Thresholds, ordering, and service credentials for this cascade live in
 `config/razar_ai_agents.json`; see
+[docs/SECURITY.md](SECURITY.md#remote-agent-credentials) for the dedicated
+`KIMI2_API_KEY`, `AIRSTAR_API_KEY`, and `RSTAR_API_KEY` variables required by
+each delegation path. Handover now fails fast when the environment is missing a
+secret, so pipelines must inject these keys at launch.
 [system_blueprint.md#configurable-crown-escalation-chain](system_blueprint.md#configurable-crown-escalation-chain)
 for the component-level escalation diagram and
 [system_blueprint.md#remote-agent-failover-configuration](system_blueprint.md#remote-agent-failover-configuration)

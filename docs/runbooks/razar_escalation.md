@@ -18,7 +18,7 @@ alert through rStar intervention.
 - **`RAZAR_RSTAR_THRESHOLD`** – cumulative attempts (across all agents) before
   rStar takes over. The default `9` gives three full passes through the local
   stack. Setting it to `0` disables rStar entirely.
-- **`RSTAR_ENDPOINT` / `RSTAR_TOKEN`** – API target and credential for rStar.
+- **`RSTAR_ENDPOINT` / `RSTAR_API_KEY`** – API target and credential for rStar.
   Pair them with `KIMI_K2_URL` and `KIMI_K2_TOKEN` (if present) so K2 Coder can
   authenticate during its turn in the ladder.
 - **`RAZAR_METRICS_PORT`** – port for Prometheus counters that track invocation
