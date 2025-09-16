@@ -9,6 +9,7 @@ from types import SimpleNamespace
 from pytest import MonkeyPatch
 
 import razar.boot_orchestrator as bo
+import razar.utils.logging as razar_logging
 
 
 class DummyProc(SimpleNamespace):
@@ -21,13 +22,18 @@ class DummyProc(SimpleNamespace):
         pass
 
 
+def configure_invocation_log(monkeypatch: MonkeyPatch, path: Path) -> None:
+    monkeypatch.setattr(razar_logging, "INVOCATION_LOG_PATH", path)
+    monkeypatch.setattr(razar_logging, "_LEGACY_CONVERTED", False)
+
+
 def test_retry_with_ai_applies_patch_and_relaunches(
     tmp_path: Path, monkeypatch: MonkeyPatch
 ) -> None:
     """Component restarts after Opencode patch and logs are updated."""
     patch_log = tmp_path / "patch_log.json"
     inv_log = tmp_path / "invocations.json"
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo.ai_invoker, "PATCH_LOG_PATH", patch_log)
 
     calls: dict[str, object] = {}

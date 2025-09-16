@@ -6,6 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 import razar.boot_orchestrator as bo
+import razar.utils.logging as razar_logging
 from tests.conftest import allow_test
 
 allow_test(__file__)
@@ -19,6 +20,17 @@ class DummyProc(SimpleNamespace):
 
     def wait(self) -> None:  # pragma: no cover - trivial
         pass
+
+
+def configure_invocation_log(monkeypatch, path):
+    monkeypatch.setattr(razar_logging, "INVOCATION_LOG_PATH", path)
+    monkeypatch.setattr(razar_logging, "_LEGACY_CONVERTED", False)
+
+
+def read_invocation_log(path):
+    if not path.exists():
+        return []
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
 @pytest.mark.parametrize("env_value, threshold", [(None, 9), ("11", 11)])
@@ -40,7 +52,7 @@ def test_rstar_escalation_after_threshold(tmp_path, monkeypatch, env_value, thre
             }
         )
     )
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
     attempts: list[str] = []
@@ -73,9 +85,10 @@ def test_rstar_escalation_after_threshold(tmp_path, monkeypatch, env_value, thre
     assert proc is not None and used_attempts == threshold + 1
     assert attempts[:threshold] == ["demo_agent"] * threshold
     assert attempts[threshold] == "rstar"
-    log = json.loads(inv_log.read_text())
+    entries = read_invocation_log(inv_log)
     assert any(
-        e.get("event") == "escalation" and e.get("agent") == "rstar" for e in log
+        entry.get("event") == "escalation" and entry.get("agent") == "rstar"
+        for entry in entries
     )
     assert suggestion["value"] == "use rstar"
 
@@ -97,7 +110,7 @@ def test_escalation_respects_module_threshold(tmp_path, monkeypatch):
             }
         )
     )
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
     attempts: list[str] = []
@@ -126,8 +139,10 @@ def test_escalation_respects_module_threshold(tmp_path, monkeypatch):
 
     assert proc is not None and used_attempts == max_attempts
     assert attempts == ["demo_agent"] * bo.RSTAR_THRESHOLD + ["rstar"]
-    log = json.loads(inv_log.read_text())
-    escalations = [e.get("agent") for e in log if e.get("event") == "escalation"]
+    entries = read_invocation_log(inv_log)
+    escalations = [
+        entry.get("agent") for entry in entries if entry.get("event") == "escalation"
+    ]
     assert escalations == ["rstar"]
 
 
@@ -149,7 +164,7 @@ def test_agent_escalation_sequence(tmp_path, monkeypatch, threshold):
             }
         )
     )
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
     original_build_failure_context = bo.build_failure_context
@@ -221,8 +236,10 @@ def test_agent_escalation_sequence(tmp_path, monkeypatch, threshold):
         ]
         assert escalation_agents == expected_escalations
 
-    log = json.loads(inv_log.read_text())
-    escalations = [e.get("agent") for e in log if e.get("event") == "escalation"]
+    entries = read_invocation_log(inv_log)
+    escalations = [
+        entry.get("agent") for entry in entries if entry.get("event") == "escalation"
+    ]
     assert escalations == chain[1:]
 
 
@@ -245,7 +262,7 @@ def test_mixed_case_agent_config(tmp_path, monkeypatch):
             }
         )
     )
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
     attempts: list[str] = []
@@ -273,17 +290,21 @@ def test_mixed_case_agent_config(tmp_path, monkeypatch):
 
     assert proc is not None and used_attempts == 3
     assert attempts == ["kimi2", "airstar", "rstar"]
-    log = json.loads(inv_log.read_text())
-    attempt_agents = [e.get("agent") for e in log if e.get("event") == "attempt"]
+    entries = read_invocation_log(inv_log)
+    attempt_agents = [
+        entry.get("agent") for entry in entries if entry.get("event") == "attempt"
+    ]
     assert attempt_agents == ["kimi2", "airstar", "rstar"]
     attempt_originals = [
-        e.get("agent_original") for e in log if e.get("event") == "attempt"
+        entry.get("agent_original")
+        for entry in entries
+        if entry.get("event") == "attempt"
     ]
     assert attempt_originals == ["KiMi2", "AirStar", "RStar"]
     escalations = [
-        (e.get("agent"), e.get("agent_original"))
-        for e in log
-        if e.get("event") == "escalation"
+        (entry.get("agent"), entry.get("agent_original"))
+        for entry in entries
+        if entry.get("event") == "escalation"
     ]
     assert escalations == [("airstar", "AirStar"), ("rstar", "RStar")]
 
@@ -307,7 +328,7 @@ def test_custom_agent_failover_chain(tmp_path, monkeypatch):
             }
         )
     )
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
     attempts: list[str] = []
@@ -335,8 +356,10 @@ def test_custom_agent_failover_chain(tmp_path, monkeypatch):
 
     assert proc is not None and used_attempts == 3
     assert attempts == ["scout", "sentinel", "guardian"]
-    log = json.loads(inv_log.read_text())
-    escalations = [e.get("agent") for e in log if e.get("event") == "escalation"]
+    entries = read_invocation_log(inv_log)
+    escalations = [
+        entry.get("agent") for entry in entries if entry.get("event") == "escalation"
+    ]
     assert escalations == ["sentinel", "guardian"]
 
 
@@ -358,7 +381,7 @@ def test_retry_with_ai_passes_failure_context(tmp_path, monkeypatch):
             }
         )
     )
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
     sentinel_context = {"history": ["sentinel"]}
@@ -416,7 +439,7 @@ def test_context_includes_history(tmp_path, monkeypatch):
             }
         )
     )
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
     contexts: list[dict | None] = []

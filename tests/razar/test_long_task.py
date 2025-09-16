@@ -45,13 +45,14 @@ def test_long_task_retries_until_success(
     # Redirect file paths used by boot orchestrator
     monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "state.json")
     monkeypatch.setattr(bo, "HISTORY_FILE", tmp_path / "history.json")
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", tmp_path / "invocations.json")
     monkeypatch.setattr(bo, "LONG_TASK_LOG_PATH", tmp_path / "long_task.json")
     monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
     monkeypatch.setattr(bo, "_perform_handshake", lambda comps: None)
     monkeypatch.setattr(bo, "launch_required_agents", lambda: None)
     monkeypatch.setattr(bo.doc_sync, "sync_docs", lambda: None)
-    monkeypatch.setattr(bo, "_log_ai_invocation", lambda *a, **k: None)
+    monkeypatch.setattr(bo, "log_invocation", lambda *a, **k: None)
+    monkeypatch.setattr(bo, "append_invocation_event", lambda *a, **k: None)
+    monkeypatch.setattr(bo.metrics, "init_metrics", lambda *a, **k: None)
     monkeypatch.setattr(bo.time, "sleep", lambda *a, **k: None)
 
     config = {

@@ -59,9 +59,49 @@ Before every remote attempt, `boot_orchestrator._retry_with_ai` calls
 `logs/razar_ai_invocations.json`. The helper returns the last five interactions
 — including attempt number, agent name, error, and whether a patch was applied —
 and the resulting payload is passed directly to `ai_invoker.handover`. Because
-`_log_ai_invocation` appends a record after each delegation, later agents
+`razar.utils.logging.log_invocation` appends a record after each delegation, later agents
 automatically receive the trail of earlier failures, ensuring the final handler
 can see which agents already attempted repairs and why they were rejected.
+
+### Invocation Log Format
+`razar.utils.logging` persists every handover attempt as a JSON line inside
+`logs/razar_ai_invocations.json`. Each record contains a stable core of
+telemetry fields:
+
+- `component` – the failing service or module name.
+- `attempt` – the 1-indexed retry counter for the component.
+- `error` – the failure summary forwarded to the remote agent.
+- `patched` – whether the agent returned a patch that repaired the component.
+- `status` – convenience label (`success` / `failure`) derived from `patched`.
+- `timestamp` – Unix epoch seconds captured when the event was stored.
+- `timestamp_iso` – UTC ISO-8601 rendering of the same timestamp.
+
+Optional attributes such as `agent`, `agent_original`, `event`, and `retries`
+capture escalation decisions and remote service routing. Because the log is
+append-only JSON lines, it can be tailed or streamed without loading the entire
+file. A representative entry looks like:
+
+```json
+{"component": "crown_router", "attempt": 2, "error": "Health check failed", "patched": false, "event": "escalation", "agent": "rstar", "status": "failure", "timestamp": 1730481774.125, "timestamp_iso": "2024-11-01T04:02:54.125000Z"}
+```
+
+### Invocation Metrics
+`razar.metrics.init_metrics()` exposes Prometheus counters whenever
+`prometheus_client` is installed. The boot orchestrator enables the endpoint
+during startup and reuse from other scripts is automatic because
+`log_invocation` wires each event into the counters. The server listens on port
+`9360` by default (override with the `RAZAR_METRICS_PORT` environment
+variable) and exports three primary metrics:
+
+- `razar_ai_invocation_success_total{component="…"}` – patches successfully
+  applied for a component.
+- `razar_ai_invocation_failure_total{component="…"}` – failed attempts that
+  still require attention.
+- `razar_ai_invocation_retries_total{component="…"}` – cumulative retries
+  beyond the initial attempt.
+
+Scrape the endpoint with `curl http://localhost:9360/metrics` or point your
+Prometheus server at the same URL to feed dashboards and alerts.
 
 To run repairs locally, install the Opencode CLI and enable the optional
 handover mode:

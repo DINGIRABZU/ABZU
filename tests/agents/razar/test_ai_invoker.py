@@ -12,6 +12,22 @@ from typing import Any
 import pytest
 
 import agents.razar.ai_invoker as ai_invoker
+import razar.utils.logging as razar_logging
+
+
+def configure_invocation_log(monkeypatch, path: Path) -> None:
+    monkeypatch.setattr(razar_logging, "INVOCATION_LOG_PATH", path)
+    monkeypatch.setattr(razar_logging, "_LEGACY_CONVERTED", False)
+
+
+def read_invocation_log(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def test_handover_returns_suggestion_and_logs(monkeypatch, tmp_path: Path) -> None:
@@ -24,7 +40,7 @@ def test_handover_returns_suggestion_and_logs(monkeypatch, tmp_path: Path) -> No
     monkeypatch.setattr(ai_invoker.remote_loader, "load_remote_agent", fake_loader)
     inv_log = tmp_path / "invocations.json"
     patch_log = tmp_path / "patches.json"
-    monkeypatch.setattr(ai_invoker, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", patch_log)
 
     config = {
@@ -45,7 +61,7 @@ def test_handover_returns_suggestion_and_logs(monkeypatch, tmp_path: Path) -> No
     )
     assert suggestion == {"patch": "data"}
 
-    inv_records = json.loads(inv_log.read_text(encoding="utf-8"))
+    inv_records = read_invocation_log(inv_log)
     assert inv_records[0]["event"] == "invocation"
     assert inv_records[0]["name"] == "test"
     assert inv_records[0]["endpoint"] == "http://example.com/agent.py"
@@ -66,7 +82,7 @@ def test_handover_returns_confirmation(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(ai_invoker.remote_loader, "load_remote_agent", fake_loader)
     inv_log = tmp_path / "invocations.json"
     patch_log = tmp_path / "patches.json"
-    monkeypatch.setattr(ai_invoker, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", patch_log)
 
     config = {
@@ -78,7 +94,7 @@ def test_handover_returns_confirmation(monkeypatch, tmp_path: Path) -> None:
     result = ai_invoker.handover(config_path=config_path)
     assert result == {"handover": True}
 
-    inv_records = json.loads(inv_log.read_text(encoding="utf-8"))
+    inv_records = read_invocation_log(inv_log)
     assert inv_records[0]["event"] == "invocation"
     assert inv_records[0]["name"] == "alpha"
     assert inv_records[0]["endpoint"] == "http://example.com/a.py"
@@ -114,7 +130,7 @@ def test_handover_applies_code_repair(monkeypatch, tmp_path: Path) -> None:
 
     inv_log = tmp_path / "inv.json"
     patch_log = tmp_path / "patch.json"
-    monkeypatch.setattr(ai_invoker, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", patch_log)
 
     config = {"agents": [{"name": "beta", "endpoint": "http://agent"}]}
@@ -173,7 +189,7 @@ def test_handover_uses_kimi2_adapter(monkeypatch, tmp_path: Path) -> None:
 
     inv_log = tmp_path / "invocations.json"
     patch_log = tmp_path / "patches.json"
-    monkeypatch.setattr(ai_invoker, "INVOCATION_LOG_PATH", inv_log)
+    configure_invocation_log(monkeypatch, inv_log)
     monkeypatch.setattr(ai_invoker, "PATCH_LOG_PATH", patch_log)
 
     config = {

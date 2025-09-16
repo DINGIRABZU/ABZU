@@ -13,8 +13,20 @@ from pytest import MonkeyPatch
 
 import razar.boot_orchestrator as bo
 import razar.ai_invoker as ai_invoker
+import razar.utils.logging as razar_logging
 import agents.razar.code_repair as code_repair_module
 from tools import opencode_client
+
+
+def configure_invocation_log(monkeypatch: MonkeyPatch, path: Path) -> None:
+    monkeypatch.setattr(razar_logging, "INVOCATION_LOG_PATH", path)
+    monkeypatch.setattr(razar_logging, "_LEGACY_CONVERTED", False)
+
+
+def read_invocation_log(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
 @pytest.mark.parametrize("backend", ["", "kimi"])
@@ -59,12 +71,13 @@ def test_remote_repair(tmp_path: Path, monkeypatch: MonkeyPatch, backend: str) -
     # Redirect file paths used by boot orchestrator
     monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "state.json")
     monkeypatch.setattr(bo, "HISTORY_FILE", tmp_path / "history.json")
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", tmp_path / "invocations.json")
+    configure_invocation_log(monkeypatch, tmp_path / "invocations.json")
     monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
     monkeypatch.setattr(bo, "_perform_handshake", lambda comps: None)
     monkeypatch.setattr(bo, "launch_required_agents", lambda: None)
     monkeypatch.setattr(bo.doc_sync, "sync_docs", lambda: None)
     monkeypatch.setattr(bo.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(bo.metrics, "init_metrics", lambda *a, **k: None)
 
     class DummyProc:
         returncode = 0
@@ -95,8 +108,8 @@ def test_remote_repair(tmp_path: Path, monkeypatch: MonkeyPatch, backend: str) -
     assert calls["repair"] == 1
     assert probe_state["patched"] is True
 
-    log = json.loads((tmp_path / "invocations.json").read_text())
-    assert log and log[0]["component"] == "demo"
+    entries = read_invocation_log(tmp_path / "invocations.json")
+    assert entries and entries[0]["component"] == "demo"
 
     history = json.loads((tmp_path / "history.json").read_text())
     comp = history["history"][0]["components"][0]
@@ -122,12 +135,13 @@ def test_remote_repair_retries_until_health_ok(
 
     monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "state.json")
     monkeypatch.setattr(bo, "HISTORY_FILE", tmp_path / "history.json")
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", tmp_path / "invocations.json")
+    configure_invocation_log(monkeypatch, tmp_path / "invocations.json")
     monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
     monkeypatch.setattr(bo, "_perform_handshake", lambda comps: None)
     monkeypatch.setattr(bo, "launch_required_agents", lambda: None)
     monkeypatch.setattr(bo.doc_sync, "sync_docs", lambda: None)
     monkeypatch.setattr(bo.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(bo.metrics, "init_metrics", lambda *a, **k: None)
 
     class DummyProc:
         returncode = 0
@@ -155,8 +169,8 @@ def test_remote_repair_retries_until_health_ok(
     bo.main()
 
     assert calls["handover"] == 2
-    log = json.loads((tmp_path / "invocations.json").read_text())
-    assert len(log) == 2 and log[1]["attempt"] == 2
+    entries = read_invocation_log(tmp_path / "invocations.json")
+    assert len(entries) == 2 and entries[1]["attempt"] == 2
 
     history = json.loads((tmp_path / "history.json").read_text())
     comp = history["history"][0]["components"][0]
@@ -203,12 +217,13 @@ def test_remote_repair_cli_absent(tmp_path: Path, monkeypatch: MonkeyPatch) -> N
 
     monkeypatch.setattr(bo, "STATE_FILE", tmp_path / "state.json")
     monkeypatch.setattr(bo, "HISTORY_FILE", tmp_path / "history.json")
-    monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", tmp_path / "invocations.json")
+    configure_invocation_log(monkeypatch, tmp_path / "invocations.json")
     monkeypatch.setattr(bo, "LOGS_DIR", tmp_path)
     monkeypatch.setattr(bo, "_perform_handshake", lambda comps: None)
     monkeypatch.setattr(bo, "launch_required_agents", lambda: None)
     monkeypatch.setattr(bo.doc_sync, "sync_docs", lambda: None)
     monkeypatch.setattr(bo.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(bo.metrics, "init_metrics", lambda *a, **k: None)
 
     class DummyProc:
         returncode = 0
@@ -239,8 +254,8 @@ def test_remote_repair_cli_absent(tmp_path: Path, monkeypatch: MonkeyPatch) -> N
     assert calls["repair"] == 1
     assert probe_state["patched"] is True
 
-    log = json.loads((tmp_path / "invocations.json").read_text())
-    assert log and log[0]["component"] == "demo"
+    entries = read_invocation_log(tmp_path / "invocations.json")
+    assert entries and entries[0]["component"] == "demo"
 
     history = json.loads((tmp_path / "history.json").read_text())
     comp = history["history"][0]["components"][0]
