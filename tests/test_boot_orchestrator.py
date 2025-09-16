@@ -131,31 +131,41 @@ def test_escalation_respects_module_threshold(tmp_path, monkeypatch):
     assert escalations == ["rstar"]
 
 
-def test_agent_escalation_sequence(tmp_path, monkeypatch):
-    """Escalates through kimi2 and airstar before succeeding with rstar."""
-    threshold = 2
+@pytest.mark.parametrize("threshold", [1, 2])
+def test_agent_escalation_sequence(tmp_path, monkeypatch, threshold):
+    """Escalates through the chain while validating context history."""
+
     monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", str(threshold))
     importlib.reload(bo)
 
     inv_log = tmp_path / "invocations.json"
     cfg_path = tmp_path / "agents.json"
+    chain = ["demo_agent", "kimi2", "airstar", "rstar"]
     cfg_path.write_text(
         json.dumps(
             {
-                "active": "demo_agent",
-                "agents": [
-                    {"name": "demo_agent"},
-                    {"name": "kimi2"},
-                    {"name": "airstar"},
-                    {"name": "rstar"},
-                ],
+                "active": chain[0],
+                "agents": [{"name": name} for name in chain],
             }
         )
     )
     monkeypatch.setattr(bo, "INVOCATION_LOG_PATH", inv_log)
     monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
 
+    original_build_failure_context = bo.build_failure_context
+
+    def full_history_context(component: str, limit: int = 5) -> dict:
+        """Increase history window to observe every escalation in the test."""
+
+        extended_limit = max(limit, threshold * len(chain) * 2)
+        return original_build_failure_context(component, limit=extended_limit)
+
+    monkeypatch.setattr(bo, "build_failure_context", full_history_context)
+
+    contexts: list[dict] = []
     sequence: list[str] = []
+    call_count = 0
+    fail_limit = threshold * (len(chain) - 1)
 
     def fake_handover(
         component: str,
@@ -163,10 +173,13 @@ def test_agent_escalation_sequence(tmp_path, monkeypatch):
         *,
         context: dict | None = None,
         use_opencode: bool = False,
-    ):
-        current = json.loads(cfg_path.read_text())["active"]
+    ) -> bool:
+        nonlocal call_count
+        contexts.append(context or {})
+        current = json.loads(cfg_path.read_text())["active"].lower()
         sequence.append(current)
-        return current == "rstar"
+        call_count += 1
+        return call_count > fail_limit
 
     monkeypatch.setattr(bo.ai_invoker, "handover", fake_handover)
     monkeypatch.setattr(bo.health_checks, "run", lambda name: True)
@@ -175,23 +188,42 @@ def test_agent_escalation_sequence(tmp_path, monkeypatch):
     component = {"name": "demo", "command": ["echo", "hi"]}
     failure_tracker: dict[str, int] = {}
     proc, used_attempts, err = bo._retry_with_ai(
-        "demo", component, "boom", threshold * 3 + 1, failure_tracker
+        "demo", component, "boom", fail_limit + 1, failure_tracker
     )
 
-    assert proc is not None and used_attempts == threshold * 3 + 1
-    expected = [
-        "demo_agent",
-        "demo_agent",
-        "kimi2",
-        "kimi2",
-        "airstar",
-        "airstar",
-        "rstar",
-    ]
-    assert sequence == expected
+    assert proc is not None and used_attempts == fail_limit + 1
+
+    expected_sequence: list[str] = []
+    for agent in chain[:-1]:
+        expected_sequence.extend([agent] * threshold)
+    expected_sequence.append(chain[-1])
+
+    assert sequence == expected_sequence
+    assert len(contexts) == len(sequence)
+    assert contexts[0] == {}
+
+    for idx, context in enumerate(contexts):
+        history = context.get("history", [])
+        attempt_agents = [
+            entry.get("agent")
+            for entry in history
+            if entry.get("event") == "attempt" and entry.get("agent")
+        ]
+        assert attempt_agents == expected_sequence[:idx]
+
+        expected_escalations = [
+            chain[i] for i in range(1, len(chain)) if threshold * i <= idx
+        ]
+        escalation_agents = [
+            entry.get("agent")
+            for entry in history
+            if entry.get("event") == "escalation"
+        ]
+        assert escalation_agents == expected_escalations
+
     log = json.loads(inv_log.read_text())
     escalations = [e.get("agent") for e in log if e.get("event") == "escalation"]
-    assert escalations == ["kimi2", "airstar", "rstar"]
+    assert escalations == chain[1:]
 
 
 def test_mixed_case_agent_config(tmp_path, monkeypatch):
