@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.101
-**Last updated:** 2025-10-07
+**Version:** v1.0.102
+**Last updated:** 2025-10-08
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -28,6 +28,16 @@ Components ported from Python to Rust must:
 - Update [doctrine_index.md](doctrine_index.md) with the component's checksum and note its place in the APSU sequence.
 - Document where the component sits in the APSU sequence and link to relevant diagrams such as [blueprint_spine.md](blueprint_spine.md) or [system_blueprint.md](system_blueprint.md#razar–crown–kimi-cho-migration).
 
+### Rust Contribution Doctrine
+
+Rust crates and services must follow the canon described in [NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md). Align naming, module layout, and formatting with repository-wide expectations in [CODE_STYLE.md](../CODE_STYLE.md) and coordinate documentation updates through the [Documentation Protocol](documentation_protocol.md).
+
+- **Coding style.** Mirror the module and API structure outlined in the Rust doctrine while matching the cross-language conventions captured in [CODE_STYLE.md](../CODE_STYLE.md).
+- **Tooling.** Run `cargo fmt --check` and `cargo clippy` locally or through pre-commit before pushing changes; resolve reported warnings rather than suppressing them.
+- **Testing.** Execute `cargo test` for each workspace crate and keep suites deterministic as required in the Rust doctrine, reporting outcomes alongside the repository coverage expectations in [Coverage & Testing Requirements](#coverage--testing-requirements).
+
+Rust updates that touch operator-facing workflows must also refresh relevant entries in [doctrine_index.md](doctrine_index.md) so the checksum registry remains accurate.
+
 ### Architecture Change Doctrine
 
 Commits that alter architecture—whether Python services, Rust crates, or orchestration manifests—must land with synchronized documentation updates. Always:
@@ -42,7 +52,12 @@ Commits that alter architecture—whether Python services, Rust crates, or orche
 
 All architecture or protocol documents must include a **Doctrine References** section that links back to canonical doctrine paths. This ensures new material stays traceable to its source rules.
 
-**Example**
+### Doctrine References
+- [doctrine_index.md](doctrine_index.md) – checksum registry for foundational doctrine, including this protocol.
+- [NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md) – Rust naming, testing, and tooling canon mirrored here.
+- [CODE_STYLE.md](../CODE_STYLE.md) – repository-wide formatting rules reinforced by the Rust doctrine.
+
+**Reference Pattern Example**
 
 ```markdown
 ### Doctrine References
