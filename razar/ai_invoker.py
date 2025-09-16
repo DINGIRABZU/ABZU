@@ -10,7 +10,9 @@ __all__ = ["handover", "load_agent_definitions"]
 
 import json
 import logging
+import multiprocessing
 import os
+import queue
 import subprocess
 import shutil
 from dataclasses import dataclass
@@ -30,6 +32,31 @@ PATCH_BACKUP_DIR = LOGS_DIR / "patch_backups"
 AGENT_CONFIG_PATH = (
     Path(__file__).resolve().parents[1] / "config" / "razar_ai_agents.json"
 )
+
+try:  # pragma: no cover - platform specific
+    import resource
+except ImportError:  # pragma: no cover - platform specific
+    resource = None  # type: ignore[assignment]
+
+
+_AGENT_SECRET_ENV_HINTS: Dict[str, tuple[str, ...]] = {
+    "kimi2": ("KIMI2_API_KEY", "KIMI2_TOKEN"),
+    "airstar": (
+        "AIRSTAR_API_KEY",
+        "AIRSTAR_TOKEN",
+        "RSTAR_API_KEY",
+        "RSTAR_TOKEN",
+    ),
+    "rstar": (
+        "RSTAR_API_KEY",
+        "RSTAR_TOKEN",
+        "AIRSTAR_API_KEY",
+        "AIRSTAR_TOKEN",
+    ),
+}
+
+_SANDBOX_TIMEOUT_SECONDS = 90.0
+_SANDBOX_MEMORY_LIMIT_MB = 512
 
 
 @dataclass(frozen=True)
@@ -62,6 +89,29 @@ def _load_agent_config(path: Path) -> Dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def _sanitize_env_key(name: str) -> str:
+    return "".join(ch if ch.isalnum() else "_" for ch in name).upper()
+
+
+def _candidate_secret_keys(name: str) -> tuple[str, ...]:
+    normalized = name.lower()
+    hints = _AGENT_SECRET_ENV_HINTS.get(normalized)
+    if hints:
+        return hints
+    base = _sanitize_env_key(name)
+    return (f"{base}_API_KEY", f"{base}_TOKEN")
+
+
+def _agent_env_token(name: str) -> str | None:
+    for key in _candidate_secret_keys(name):
+        value = os.environ.get(key)
+        if value:
+            token = value.strip()
+            if token:
+                return token
+    return None
+
+
 def load_agent_definitions(
     path: Path = AGENT_CONFIG_PATH,
 ) -> tuple[str | None, list[AgentDefinition]]:
@@ -90,6 +140,9 @@ def load_agent_definitions(
             auth = payload.get("auth")
             if isinstance(auth, dict):
                 token = _expand_env(auth.get("token") or auth.get("key"))
+            env_token = _agent_env_token(name)
+            if env_token:
+                token = env_token
             definitions.append(
                 AgentDefinition(
                     name=name,
@@ -152,6 +205,86 @@ def _diff_to_suggestions(diff: str, error: str) -> list[Dict[str, Any]]:
     return suggestions
 
 
+def _remote_agent_worker(
+    queue_out: multiprocessing.Queue,
+    ctx: Dict[str, Any] | None,
+    config_path: Path | str | None,
+    memory_limit_mb: int,
+    cpu_time_seconds: float,
+) -> None:
+    try:
+        if resource is not None:
+            if cpu_time_seconds:
+                seconds = max(int(cpu_time_seconds), 1)
+                resource.setrlimit(resource.RLIMIT_CPU, (seconds, seconds))
+            if memory_limit_mb:
+                limit_bytes = max(memory_limit_mb, 1) * 1024 * 1024
+                try:
+                    resource.setrlimit(resource.RLIMIT_AS, (limit_bytes, limit_bytes))
+                except (ValueError, OSError):  # pragma: no cover - kernel policies
+                    pass
+                try:
+                    resource.setrlimit(resource.RLIMIT_DATA, (limit_bytes, limit_bytes))
+                except (ValueError, OSError):  # pragma: no cover - kernel policies
+                    pass
+        from agents.razar import ai_invoker as remote_ai_invoker
+
+        result = remote_ai_invoker.handover(context=ctx, config_path=config_path)
+    except Exception as exc:  # pragma: no cover - defensive
+        queue_out.put({"status": "error", "error": repr(exc)})
+    else:
+        queue_out.put({"status": "ok", "result": result})
+
+
+def _invoke_remote_agent_sandboxed(
+    ctx: Dict[str, Any] | None,
+    config_path: Path | str | None,
+    *,
+    timeout: float = _SANDBOX_TIMEOUT_SECONDS,
+    memory_limit_mb: int = _SANDBOX_MEMORY_LIMIT_MB,
+) -> Any | None:
+    mp_ctx = multiprocessing.get_context("spawn")
+    queue_out: multiprocessing.Queue = mp_ctx.Queue()
+    process = mp_ctx.Process(
+        target=_remote_agent_worker,
+        args=(queue_out, ctx, config_path, memory_limit_mb, timeout),
+        name="razar_remote_agent",
+    )
+    process.start()
+    process.join(timeout)
+    if process.is_alive():
+        process.terminate()
+        process.join()
+        queue_out.close()
+        queue_out.join_thread()
+        LOGGER.error(
+            "Remote agent invocation exceeded timeout after %.1f seconds", timeout
+        )
+        return None
+    try:
+        message = queue_out.get(timeout=1.0)
+    except queue.Empty:
+        LOGGER.error("Remote agent invocation produced no output")
+        result = None
+    else:
+        status = message.get("status")
+        if status == "ok":
+            result = message.get("result")
+        else:
+            LOGGER.error(
+                "Remote agent invocation failed: %s",
+                message.get("error", "unknown error"),
+            )
+            result = None
+    finally:
+        queue_out.close()
+        queue_out.join_thread()
+    exit_code = process.exitcode
+    if exit_code not in (0, None):
+        LOGGER.warning("Remote agent process exited with code %s", exit_code)
+    return result
+
+
 def handover(
     component: str,
     error: str,
@@ -182,7 +315,6 @@ def handover(
         ``True`` if at least one patch was applied successfully, otherwise
         ``False``.
     """
-    from agents.razar import ai_invoker as remote_ai_invoker
     from agents.razar import code_repair
 
     ctx: Dict[str, Any] = {"component": component, "error": error}
@@ -235,12 +367,14 @@ def handover(
                     LOGGER.warning("Could not decode opencode output for %s", component)
                     return False
     else:
-        try:
-            suggestion = remote_ai_invoker.handover(
-                context=ctx, config_path=config_path
+        suggestion = _invoke_remote_agent_sandboxed(
+            ctx, config_path, timeout=_SANDBOX_TIMEOUT_SECONDS
+        )
+        if suggestion is None:
+            LOGGER.error(
+                "Sandboxed remote agent returned no suggestion for %s",
+                component,
             )
-        except Exception:  # pragma: no cover - defensive
-            LOGGER.exception("Remote agent invocation failed for %s", component)
             return False
     if not suggestion:
         return False
