@@ -45,6 +45,7 @@ def test_grpc_end_to_end(tmp_path):
     json.dump(["alpha", "beta"], store.open("w"))
     env = os.environ.copy()
     env["NEOABZU_VECTOR_STORE"] = str(store)
+    env["NEOABZU_VECTOR_DB"] = str(tmp_path / "db")
     server = subprocess.Popen(
         [
             "cargo",

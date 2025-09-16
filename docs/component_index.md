@@ -93,7 +93,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `NEOABZU/persona/src/lib.rs` | Rust | No description | once_cell, pyo3, serde, serde_yaml |
 | `NEOABZU/rag/src/lib.rs` | Rust | No description | neoabzu-memory, opentelemetry, pyo3, tracing, tracing-opentelemetry |
 | `NEOABZU/razar/src/lib.rs` | Rust | No description | neoabzu-chakrapulse, pyo3 |
-| `NEOABZU/vector/src/lib.rs` | Rust | No description | metrics, opentelemetry, prost, pyo3, serde_json, tokio, tonic, tracing, tracing-opentelemetry |
+| `NEOABZU/vector/src/lib.rs` | Rust | No description | metrics, opentelemetry, prost, pyo3, serde, serde_json, sled, thiserror, tokio, tonic, tracing, tracing-opentelemetry |
 | `NEOABZU/vector/tests/load_test.py` | Python | Simple load test for the vector gRPC service. | neoabzu |
 | `NEOABZU/vector/tests/test_grpc_python.py` | Python | No description | grpc, pytest |
 | `SPIRAL_OS/__init__.py` | Python | Expose Spiral OS components and dynamic helpers. | None |

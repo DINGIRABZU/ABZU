@@ -232,3 +232,61 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-14: No failures detected.
 
 - 2025-09-15: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+
+- 2025-09-16: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+
+- 2025-09-16: ERROR    nlq_api:nlq_api.py:35 failed to train Vanna on schemas/log_schema.sql
+- 2025-09-16: ERROR    nlq_api:nlq_api.py:35 failed to train Vanna on schemas/agent_interactions.sql
+- 2025-09-16: ERROR    nlq_api:nlq_api.py:35 failed to train Vanna on schemas/timescaledb_agent_events.sql
+- 2025-09-16: ERROR    nlq_api:nlq_api.py:35 failed to train Vanna on schemas/channel_schema.sql
+- 2025-09-16: ERROR tests/agents/razar/test_crown_kimicho.py
+- 2025-09-16: ERROR tests/agents/test_bana.py
+- 2025-09-16: ERROR tests/agents/test_bana_narrator.py
+- 2025-09-16: ERROR tests/connectors/test_avatar_broadcast.py
+- 2025-09-16: ERROR tests/connectors/test_connector_heartbeat.py
+- 2025-09-16: ERROR tests/connectors/test_signal_bus.py
+- 2025-09-16: ERROR tests/crown/server/test_openwebui_bridge.py - RuntimeError: GLM health check failed: 503 Server Error: Service Unavailable for url: https://glm.example.com/glm41v_9b/health
+- 2025-09-16: ERROR tests/crown/server/test_server.py - ValueError: Duplicated timeseries in CollectorRegistry: {'http_request_duration_seconds_bucket', 'http_request_duration_seconds_count', 'http_request_duration_seconds_created', 'http_request_duration_seconds_sum', 'http_request_duration_seconds'}
+- 2025-09-16: ERROR tests/crown/test_console_streaming.py
+- 2025-09-16: ERROR tests/crown/test_initialization.py
+- 2025-09-16: ERROR tests/crown/test_orchestrator_music.py
+- 2025-09-16: ERROR tests/integration/test_core_regressions.py
+- 2025-09-16: ERROR tests/monitoring/test_chakra_heartbeat.py
+- 2025-09-16: ERROR tests/monitoring/test_chakra_watchdog.py - TypeError: unhashable type: 'list'
+- 2025-09-16: ERROR tests/razar/test_ai_invoker.py
+- 2025-09-16: ERROR tests/root/test_metrics_logging.py
+- 2025-09-16: ERROR tests/test_auto_retrain.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
+- 2025-09-16: ERROR tests/test_autoretrain_full.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
+- 2025-09-16: ERROR tests/test_avatar_state_logging.py
+- 2025-09-16: ERROR tests/test_bots.py
+- 2025-09-16: ERROR tests/test_console_reflection.py
+- 2025-09-16: ERROR tests/test_console_sandbox_command.py
+- 2025-09-16: ERROR tests/test_dashboard_app.py - AttributeError: 'str' object has no attribute 'dtype'
+- 2025-09-16: ERROR tests/test_dashboard_qnl_mixer.py - AttributeError: 'str' object has no attribute 'dtype'
+- 2025-09-16: ERROR tests/test_gateway.py
+- 2025-09-16: ERROR tests/test_identity_loader.py
+- 2025-09-16: ERROR tests/test_initial_listen.py
+- 2025-09-16: ERROR tests/test_interconnectivity.py
+- 2025-09-16: ERROR tests/test_memory_bundle.py
+- 2025-09-16: ERROR tests/test_memory_bus.py - AttributeError: module 'conftest' has no attribute 'ALLOWED_TESTS'
+- 2025-09-16: ERROR tests/test_model_benchmarking.py
+- 2025-09-16: ERROR tests/test_music_llm_interface_prompt.py
+- 2025-09-16: ERROR tests/test_numeric_cosine_similarity.py
+- 2025-09-16: ERROR tests/test_orchestrator.py
+- 2025-09-16: ERROR tests/test_orchestrator_handle.py
+- 2025-09-16: ERROR tests/test_orchestrator_memory.py
+- 2025-09-16: ERROR tests/test_orchestrator_routing.py
+- 2025-09-16: ERROR tests/test_orchestrator_suggestions_logging.py
+- 2025-09-16: ERROR tests/test_personality_layers.py
+- 2025-09-16: ERROR tests/test_prometheus_metrics.py
+- 2025-09-16: ERROR tests/test_rag_retriever.py
+- 2025-09-16: ERROR tests/test_reflection_integration.py
+- 2025-09-16: ERROR tests/test_retrain_model.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
+- 2025-09-16: ERROR tests/test_ritual_cli.py
+- 2025-09-16: ERROR tests/test_session_logger.py
+- 2025-09-16: ERROR tests/test_silence_ritual.py
+- 2025-09-16: ERROR tests/test_soul_ritual.py
+- 2025-09-16: ERROR tests/test_spiral_cortex_memory.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
+- 2025-09-16: ERROR tests/test_start_spiral_os.py
+- 2025-09-16: ERROR tests/test_vast_pipeline.py
+- 2025-09-16: ERROR tests/test_voice_cloner_cli.py

@@ -31,6 +31,7 @@ def main() -> None:
         json.dump(["alpha", "beta"], store.open("w"))
     env = os.environ.copy()
     env["NEOABZU_VECTOR_STORE"] = str(store)
+    env["NEOABZU_VECTOR_DB"] = str(root / "vector" / "tests" / "data" / "db")
     server = subprocess.Popen(
         ["cargo", "run", "-p", "neoabzu-vector", "--bin", "server"],
         cwd=root,
