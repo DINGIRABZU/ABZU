@@ -42,12 +42,24 @@ try:  # pragma: no cover - kimicho optional
 except Exception:  # pragma: no cover - kimicho optional
     init_kimicho = None
 
-from . import ai_invoker, crown_handshake, doc_sync, health_checks, mission_logger
+from . import (
+    ai_invoker,
+    crown_handshake,
+    doc_sync,
+    health_checks,
+    metrics,
+    mission_logger,
+)
 from .bootstrap_utils import (
     HISTORY_FILE,
     LOGS_DIR,
     MAX_MISSION_BRIEFS,
     STATE_FILE,
+)
+from .utils.logging import (
+    append_invocation_event,
+    load_invocation_history,
+    log_invocation,
 )
 from .crown_handshake import CrownResponse
 from .quarantine_manager import is_quarantined, quarantine_component
@@ -70,8 +82,6 @@ def load_rust_components() -> None:
         _core_eval("(\\x.x)")
 
 
-# Path for recording AI handover attempts
-INVOCATION_LOG_PATH = LOGS_DIR / "razar_ai_invocations.json"
 LONG_TASK_LOG_PATH = LOGS_DIR / "razar_long_task.json"
 AGENT_CONFIG_PATH = (
     Path(__file__).resolve().parents[1] / "config" / "razar_ai_agents.json"
@@ -193,97 +203,35 @@ def _record_probe(name: str, ok: bool) -> None:
     _emit_event("probe", "ok" if ok else "fail", component=name)
 
 
-def _log_ai_invocation(
-    component: str,
-    attempt: int,
-    error: str,
-    patched: bool,
-    *,
-    event: str = "attempt",
-    agent: str | None = None,
-    agent_original: str | None = None,
-) -> None:
-    """Append AI handover attempt details to :data:`INVOCATION_LOG_PATH`."""
-    entry = {
-        "component": component,
-        "attempt": attempt,
-        "error": error,
-        "patched": patched,
-        "event": event,
-        "timestamp": time.time(),
-    }
-    if agent is not None:
-        entry["agent"] = agent
-        if agent_original is None:
-            agent_original = agent
-    if agent_original is not None:
-        entry["agent_original"] = agent_original
-    records: List[Dict[str, Any]] = []
-    if INVOCATION_LOG_PATH.exists():
-        try:
-            records = json.loads(INVOCATION_LOG_PATH.read_text())
-            if not isinstance(records, list):
-                records = []
-        except json.JSONDecodeError:
-            records = []
-    records.append(entry)
-    INVOCATION_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    INVOCATION_LOG_PATH.write_text(json.dumps(records, indent=2))
-
-
 def build_failure_context(component: str, limit: int = 5) -> Dict[str, Any]:
     """Return recent failure history for ``component``.
 
-    The history is read from :data:`INVOCATION_LOG_PATH` and truncated to the
+    The history is read from the shared invocation log and truncated to the
     most recent ``limit`` entries. The returned structure matches the expected
     AI handover context format so downstream agents can reference prior
     attempts.
     """
 
-    if not INVOCATION_LOG_PATH.exists():
+    history_entries = load_invocation_history(component, limit)
+    if not history_entries:
         return {}
 
-    try:
-        records = json.loads(INVOCATION_LOG_PATH.read_text())
-    except json.JSONDecodeError:
-        return {}
+    allowed_keys = {
+        "attempt",
+        "error",
+        "patched",
+        "event",
+        "agent",
+        "agent_original",
+        "timestamp",
+        "timestamp_iso",
+        "status",
+    }
 
-    if not isinstance(records, list):
-        return {}
-
-    history: List[Dict[str, Any]] = []
-    for entry in records:
-        if not isinstance(entry, dict):
-            continue
-        if entry.get("component") != component:
-            continue
-
-        record: Dict[str, Any] = {}
-        for key in (
-            "attempt",
-            "error",
-            "patched",
-            "event",
-            "agent",
-            "agent_original",
-            "timestamp",
-        ):
-            if key in entry:
-                record[key] = entry.get(key)
-
-        agent = record.get("agent")
-        if isinstance(agent, str):
-            record["agent"] = agent.lower()
-
-        history.append(record)
-
-    if not history:
-        return {}
-
-    history.sort(key=lambda item: item.get("timestamp", 0))
-
-    if limit > 0:
-        history = history[-limit:]
+    history = [
+        {key: entry[key] for key in allowed_keys if key in entry}
+        for entry in history_entries
+    ]
 
     return {"history": history}
 
@@ -382,14 +330,16 @@ def _handle_ai_result(
         normalized_next = next_agent.lower()
         original_next = lookup.get(normalized_next, normalized_next)
         _set_active_agent(original_next)
-        _log_ai_invocation(
-            name,
-            attempt,
-            error,
-            patched,
-            event="escalation",
-            agent=normalized_next,
-            agent_original=original_next,
+        append_invocation_event(
+            {
+                "component": name,
+                "attempt": attempt,
+                "error": error,
+                "patched": patched,
+                "event": "escalation",
+                "agent": normalized_next,
+                "agent_original": original_next,
+            }
         )
 
 
@@ -426,7 +376,7 @@ def _retry_with_ai(
         agent_original = None
         if isinstance(active_agent, str):
             agent_original = lookup.get(active_agent, active_agent)
-        _log_ai_invocation(
+        log_invocation(
             name,
             attempt,
             error_msg,
@@ -677,6 +627,8 @@ def main() -> None:
         handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
     )
 
+    metrics.init_metrics()
+
     load_rust_components()
 
     components = load_config(args.config)
@@ -728,9 +680,7 @@ def main() -> None:
                                         context=build_failure_context(name),
                                         use_opencode=True,
                                     )
-                                    _log_ai_invocation(
-                                        name, r_attempt, error_msg, patched
-                                    )
+                                    log_invocation(name, r_attempt, error_msg, patched)
                                     _handle_ai_result(
                                         name,
                                         error_msg,
