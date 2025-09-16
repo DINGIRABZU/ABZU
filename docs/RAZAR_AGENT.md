@@ -6,6 +6,8 @@ See [Agent Ecosystem & Relations](ABZU_blueprint.md#agent-ecosystem--relations) 
 
 RAZAR ↔ Crown ↔ Kimi2Code handoffs and recovery loops are diagrammed in the [Ignition Blueprint](ignition_blueprint.md).
 
+For the mission-level narrative and escalation ordering, consult [Blueprint Spine – RAZAR Delegation Cascade](blueprint_spine.md#razar-delegation-cascade); it links back to this guide for the context-sharing and logging contract.
+
 RAZAR now delegates crown routing and Kimicho fallback to the Rust crates `neoabzu_crown` and `neoabzu_kimicho`; the corresponding Python modules are stubs.
 
 Mission brief exchange and servant routing are summarized in [Mission Brief Exchange & Servant Routing](mission_brief_exchange.md).
@@ -63,6 +65,8 @@ and the resulting payload is passed directly to `ai_invoker.handover`. Because
 automatically receive the trail of earlier failures, ensuring the final handler
 can see which agents already attempted repairs and why they were rejected.
 
+The [Blueprint Spine](blueprint_spine.md#razar-delegation-cascade) references this hand-off contract when describing how recovery context travels with each escalation step.
+
 ### Invocation Log Format
 `razar.utils.logging` persists every handover attempt as a JSON line inside
 `logs/razar_ai_invocations.json`. Each record contains a stable core of
@@ -84,6 +88,10 @@ file. A representative entry looks like:
 ```json
 {"component": "crown_router", "attempt": 2, "error": "Health check failed", "patched": false, "event": "escalation", "agent": "rstar", "status": "failure", "timestamp": 1730481774.125, "timestamp_iso": "2024-11-01T04:02:54.125000Z"}
 ```
+
+The blueprint narrative calls back to this logging schema in the
+[RAZAR Delegation Cascade](blueprint_spine.md#razar-delegation-cascade) section to
+explain how mission journals remain synchronized with the invocation trail.
 
 ### Invocation Metrics
 `razar.metrics.init_metrics()` exposes Prometheus counters whenever

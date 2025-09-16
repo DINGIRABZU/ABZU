@@ -264,33 +264,51 @@ When a generated patch destabilizes the system, operators can revert via
 `logs/patch_history.jsonl` and the boot orchestrator requeues the component for
 fresh health checks.
 
-#### rStar Escalation
+#### Configurable Crown Escalation Chain
+
+```mermaid
+flowchart LR
+    Crown[Crown Router]
+    Kimicho[Kimi-cho Servant]
+    Kimi2[Kimi 2 Coder]
+    rStar[rStar Patch Synthesizer]
+
+    Crown --> Kimicho
+    Kimicho --> Kimi2
+    Kimi2 --> rStar
+```
 
 Repeated failures trigger an escalation chain defined in
 `config/razar_ai_agents.json`. The recovery path executes in order, forming the
-explicit handover sequence **Crown → Kimicho → K2 Coder → Air Star → rStar**:
+default handover sequence **Crown → Kimi-cho → Kimi 2 → rStar**:
 
 1. **Crown** – retries locally with the current servant roster and cached
-   mission context.
-2. **Kimicho** – receives the failing brief when Crown cannot self-heal and
-   applies the Kimicho-specific repair heuristics.
-3. **[K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2)** – performs
-   code-first fixes through the PyO3 bridge when Kimicho reports persistent
-   faults.
-4. **Air Star** – executes lightweight regeneration routines and prep work
-   before invoking the external patcher.
-5. **[rStar](https://github.com/microsoft/rStar)** – final escalation target for
-   automated patch synthesis.
+   mission context, attempting self-healing before any remote calls occur.
+2. **Kimi-cho** – receives the failing brief when Crown cannot self-heal and
+   applies the Kimicho-specific repair heuristics that prioritize minimal edits.
+3. **[Kimi 2 (K2 Coder)](https://github.com/MoonshotAI/Kimi-K2)** – performs
+   code-first fixes through the PyO3 bridge when Kimi-cho reports persistent
+   faults, emitting high-confidence patches.
+4. **[rStar](https://github.com/microsoft/rStar)** – final escalation target for
+   automated patch synthesis when the preceding services cannot restore the
+   component.
 
 See [`blueprint_spine.md#razar-delegation-cascade`](blueprint_spine.md#razar-delegation-cascade)
 for the mission-narrative view of the same escalation ladder and the telemetry
 handoff requirements each delegate expects.
 
-`RAZAR_RSTAR_THRESHOLD` controls how many cumulative attempts RAZAR makes across
-the preceding agents before handing control to rStar. The default value (`9`)
-allows three full rounds through the local stack; lowering the number accelerates
-external escalation, and setting it to `0` disables the rStar hand-off entirely.
-Operators can adjust the threshold alongside the failover order in
+Two environment-controlled thresholds govern how the ladder behaves:
+
+- `RAZAR_ESCALATION_WARNING_THRESHOLD` – after this many escalations during a
+  boot cycle, the boot orchestrator emits warnings and monitoring alerts so
+  operators can investigate repeated failures before rStar triggers.
+- `RAZAR_RSTAR_THRESHOLD` – controls how many cumulative attempts RAZAR makes
+  across the configured agents before handing control to rStar. The default
+  value (`9`) allows three full rounds through the local stack; lowering the
+  number accelerates external escalation, and setting it to `0` disables the
+  rStar hand-off entirely.
+
+Operators can adjust both thresholds alongside the failover order in
 `config/razar_ai_agents.json`, and set the service parameters through
 `RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
 [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details.
@@ -299,9 +317,10 @@ Operators can adjust the threshold alongside the failover order in
 
 `config/razar_ai_agents.json` stores both the currently active handover agent
 and the full failover sequence. The boot orchestrator parses this file on each
-handover attempt, normalizing every `name` entry to lowercase so that `kimi2`,
-`Kimi2`, or `KIMI2` all resolve to the same agent slot. This normalization keeps
-escalations predictable even when operators edit the roster by hand. When the
+handover attempt, normalizing every `name` entry to lowercase so that `kimi-cho`,
+`Kimicho`, or `KIMI-CHO` and `kimi2`, `Kimi2`, or `KIMI2` all resolve to the same
+agent slots. This normalization keeps escalations predictable even when
+operators edit the roster by hand. When the
 `active` field is present it selects the starting agent; otherwise the first
 entry in the `agents` array becomes the default. The array order establishes the
 retry path, and entries may be expressed as either full objects with connection
@@ -313,16 +332,16 @@ without disrupting escalation:
 
 ```json
 {
-  "active": "Kimi2",
+  "active": "Kimi-cho",
   "agents": [
-    {"name": "KIMI2", "endpoint": "${KIMI2_ENDPOINT}"},
-    {"name": "AirStar", "endpoint": "${AIRSTAR_ENDPOINT}"},
-    "RStar"
+    {"name": "Kimi-cho", "endpoint": "${KIMICHO_ENDPOINT}"},
+    {"name": "Kimi2", "endpoint": "${KIMI2_ENDPOINT}"},
+    "rStar"
   ]
 }
 ```
 
-The orchestrator treats the above configuration as the chain `kimi2 → airstar →
+The orchestrator treats the above configuration as the chain `kimi-cho → kimi2 →
 rstar`. Custom sequences follow the same pattern—reorder the array to introduce
 local specialists or sandboxes ahead of cloud services:
 
