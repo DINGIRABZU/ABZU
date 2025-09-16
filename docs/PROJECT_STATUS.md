@@ -51,7 +51,7 @@ These results indicate optional dependencies and system binaries are still missi
 - [Optional dependency stubs](https://github.com/DINGIRABZU/ABZU/issues/213) — owner: infra team.
 
 ## Planned Releases
-- v0.1 – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025).
+- v0.1 – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025). See the [Alpha v0.1 execution plan](roadmap.md#alpha-v01-execution-plan) for subsystem owners, dependencies, and exit criteria.
 - v0.2 – avatar console integration and basic RAG pipeline (target: Q4 2025).
 
 ## Deprecation Roadmap

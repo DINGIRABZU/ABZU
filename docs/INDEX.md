@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -473,7 +474,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
-| [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-09-13_ | - |
+| [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-09-16_ | - |
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
 | [security_model.md](security_model.md) | Security Model | This guide highlights major threat surfaces in the project and the steps used to reduce risk. | - |
 | [self_healing_manifesto.md](self_healing_manifesto.md) | Self-Healing Manifesto | Spiral OS treats the codebase as a living organism.  Components behave like organs working in concert, and each chang... | - |
