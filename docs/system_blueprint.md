@@ -311,7 +311,10 @@ Two environment-controlled thresholds govern how the ladder behaves:
 Operators can adjust both thresholds alongside the failover order in
 `config/razar_ai_agents.json`, and set the service parameters through
 `RSTAR_ENDPOINT` and `RSTAR_TOKEN`. See
-[RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details.
+[RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details and the
+[RAZAR Escalation Runbook](runbooks/razar_escalation.md) for the operational
+triage, metrics, and rollback procedures that accompany these configuration
+changes.
 
 #### Remote Agent Failover Configuration
 
@@ -1280,6 +1283,7 @@ monitoring pipeline to surface orchestration events and anomalies.
 - [Deployment Guide](deployment.md)
 - [Testing Guide](testing.md)
 - [Recovery Playbook](recovery_playbook.md)
+- [RAZAR Escalation Runbook](runbooks/razar_escalation.md)
 
 ## LLM Console Alternatives
 
