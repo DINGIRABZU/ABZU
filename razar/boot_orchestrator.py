@@ -239,31 +239,53 @@ def build_failure_context(component: str, limit: int = 5) -> Dict[str, Any]:
     AI handover context format so downstream agents can reference prior
     attempts.
     """
+
     if not INVOCATION_LOG_PATH.exists():
         return {}
+
     try:
         records = json.loads(INVOCATION_LOG_PATH.read_text())
-        if not isinstance(records, list):
-            return {}
     except json.JSONDecodeError:
+        return {}
+
+    if not isinstance(records, list):
         return {}
 
     history: List[Dict[str, Any]] = []
     for entry in records:
+        if not isinstance(entry, dict):
+            continue
         if entry.get("component") != component:
             continue
-        record = {
-            key: entry.get(key)
-            for key in ("attempt", "error", "patched", "agent", "event", "timestamp")
-        }
+
+        record: Dict[str, Any] = {}
+        for key in (
+            "attempt",
+            "error",
+            "patched",
+            "event",
+            "agent",
+            "agent_original",
+            "timestamp",
+        ):
+            if key in entry:
+                record[key] = entry.get(key)
+
         agent = record.get("agent")
         if isinstance(agent, str):
             record["agent"] = agent.lower()
+
         history.append(record)
-    history.sort(key=lambda e: e.get("timestamp", 0))
+
     if not history:
         return {}
-    return {"history": history[-limit:]}
+
+    history.sort(key=lambda item: item.get("timestamp", 0))
+
+    if limit > 0:
+        history = history[-limit:]
+
+    return {"history": history}
 
 
 def _log_long_task(
@@ -701,7 +723,10 @@ def main() -> None:
                                 r_attempt += 1
                                 try:
                                     patched = ai_invoker.handover(
-                                        name, error_msg, use_opencode=True
+                                        name,
+                                        error_msg,
+                                        context=build_failure_context(name),
+                                        use_opencode=True,
                                     )
                                     _log_ai_invocation(
                                         name, r_attempt, error_msg, patched
