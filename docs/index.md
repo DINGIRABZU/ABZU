@@ -9,7 +9,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [System Overview](system_overview.md) – mission, triadic stack, chakra agents, memory bundle, and avatar stack
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
 - [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview
-- [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight with retro console requirements
+- [The Absolute Protocol](The_Absolute_Protocol.md) – RAZAR ignition under operator oversight with retro console requirements and the architecture change doctrine for synchronizing blueprints and indexes
 - [RAZAR Guide](RAZAR_GUIDE.md) – boot orchestration and startup handshakes
 - [Crown Guide](Crown_GUIDE.md) – routes operator commands to servant models
 - [Nazarick Agents](nazarick_agents.md) – chakra stewards for layer health

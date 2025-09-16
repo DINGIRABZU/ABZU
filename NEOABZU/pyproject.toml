@@ -54,5 +54,20 @@ path = "rag"
 name = "neoabzu_insight"
 path = "insight"
 
+[[tool.maturin.targets]]
+name = "neoabzu_instrumentation"
+path = "instrumentation"
+
 [tool.neoabzu.workspace]
-members = ["core", "memory", "vector", "fusion", "persona", "crown", "rag", "numeric", "insight"]
+members = [
+  "core",
+  "memory",
+  "vector",
+  "fusion",
+  "persona",
+  "crown",
+  "rag",
+  "numeric",
+  "insight",
+  "instrumentation",
+]

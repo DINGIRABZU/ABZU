@@ -15,10 +15,18 @@ changed_set = set(changed)
 crate_paths = ("crown/", "NEOABZU/kimicho/")
 crate_changed = any(any(p.startswith(cp) for cp in crate_paths) for p in changed_set)
 
-docs_required = {"docs/system_blueprint.md", "docs/migration_crosswalk.md"}
+docs_required = {
+    "docs/The_Absolute_Protocol.md",
+    "docs/system_blueprint.md",
+    "docs/blueprint_spine.md",
+    "docs/NEOABZU_spine.md",
+    "docs/migration_crosswalk.md",
+    "docs/index.md",
+    "docs/INDEX.md",
+}
 if crate_changed and not docs_required.issubset(changed_set):
     sys.stderr.write(
-        "crate changes require system_blueprint.md and migration_crosswalk.md updates\n"
+        "crate changes require blueprint, protocol, and index document updates\n"
     )
     sys.exit(1)
 

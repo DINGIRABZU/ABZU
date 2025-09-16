@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.100
-**Last updated:** 2025-09-14
+**Version:** v1.0.101
+**Last updated:** 2025-10-07
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -27,6 +27,16 @@ Components ported from Python to Rust must:
 - Follow the [documentation protocol](documentation_protocol.md) to keep canonical references synchronized.
 - Update [doctrine_index.md](doctrine_index.md) with the component's checksum and note its place in the APSU sequence.
 - Document where the component sits in the APSU sequence and link to relevant diagrams such as [blueprint_spine.md](blueprint_spine.md) or [system_blueprint.md](system_blueprint.md#razar–crown–kimi-cho-migration).
+
+### Architecture Change Doctrine
+
+Commits that alter architecture—whether Python services, Rust crates, or orchestration manifests—must land with synchronized documentation updates. Always:
+
+- Revise [system_blueprint.md](system_blueprint.md), [blueprint_spine.md](blueprint_spine.md), and [NEOABZU_spine.md](NEOABZU_spine.md) so diagrams and mission narratives track the new structure.
+- Record operator governance shifts, escalation paths, or safety rules inside this protocol so contributors inherit the updated canon.
+- Regenerate the curated [index.md](index.md) and auto-generated [INDEX.md](INDEX.md) to surface new sections for reviewers.
+- Run the documentation pre-commit suite (`pre-commit run --files <changed docs>`) to trigger `doc-indexer`, doctrine audits, and blueprint reference checks before pushing.
+- Confirm CI passes [`verify_blueprint_refs.py`](../scripts/verify_blueprint_refs.py) to prove the system blueprint calls out every workspace crate.
 
 ### Doctrine Reference Requirements
 
