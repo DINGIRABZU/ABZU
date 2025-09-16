@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Alpha v0.1 readiness workflow documented in `docs/releases/alpha_v0_1_workflow.md`
+  with `scripts/run_alpha_gate.sh` automation covering packaging, health checks,
+  and acceptance tests.
 - Support for connector plugins and ranking strategies in the RAG
   orchestrator.
 - Simplified roadmap outlining five milestone stages with expected outcomes and cross-links from the index and system blueprint.
@@ -27,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   documentation reference checks.
 
 ### Changed
+- `docs/PROJECT_STATUS.md` highlights the Alpha v0.1 gate checkpoints and
+  automation entrypoints.
 - Removed legacy `crown_router.py` and `kimicho.py` in favor of Rust crate stubs.
 - Boot orchestrator imports PyO3 `neoabzu_kimicho`, completing retirement of `kimicho.py`.
 - Documented MCP connector compatibility matrix and integration roadmap; linked from project overview.

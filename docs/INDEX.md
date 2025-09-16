@@ -471,6 +471,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
 | [release_process.md](release_process.md) | Release Process | This guide covers signing build artifacts and verifying their integrity. | - |
 | [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
+| [releases/alpha_v0_1_workflow.md](releases/alpha_v0_1_workflow.md) | Alpha v0.1 Workflow Gate | Alpha v0.1 establishes the first end-to-end readiness gate for the Spiral OS stack. This workflow packages the build,... | `../../start_spiral_os.py` |
 | [repository_blueprint.md](repository_blueprint.md) | Repository Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | - |
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
