@@ -8,16 +8,19 @@ subsequent runs.
 
 from __future__ import annotations
 
-__version__ = "0.2.11"
+__version__ = "0.3.0"
 
 import argparse
 import asyncio
 import json
 import logging
 import os
+import smtplib
 import subprocess
+import threading
 import time
 from dataclasses import asdict
+from email.message import EmailMessage
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -41,6 +44,11 @@ try:  # pragma: no cover - kimicho optional
     from neoabzu_kimicho import init_kimicho  # PyO3 bindings
 except Exception:  # pragma: no cover - kimicho optional
     init_kimicho = None
+
+try:  # pragma: no cover - requests optional
+    import requests
+except Exception:  # pragma: no cover - requests optional
+    requests = None
 
 from . import (
     ai_invoker,
@@ -68,6 +76,43 @@ from agents.nazarick.service_launcher import launch_required_agents
 LOGGER = logging.getLogger("razar.boot_orchestrator")
 
 
+def _env_float(name: str, default: float) -> float:
+    """Return float from environment variable ``name`` with fallback."""
+
+    value = os.getenv(name)
+    if not value:
+        return default
+    try:
+        return float(value)
+    except ValueError:
+        LOGGER.warning("Invalid %s=%s; using default %s", name, value, default)
+        return default
+
+
+def _env_int(name: str, default: int) -> int:
+    """Return int from environment variable ``name`` with fallback."""
+
+    value = os.getenv(name)
+    if not value:
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        LOGGER.warning("Invalid %s=%s; using default %s", name, value, default)
+        return default
+
+
+HEALTH_PROBE_INTERVAL = _env_float("RAZAR_HEALTH_PROBE_INTERVAL", 60.0)
+ESCALATION_WARNING_THRESHOLD = _env_int("RAZAR_ESCALATION_WARNING_THRESHOLD", 3)
+ALERT_WEBHOOK_URL = os.getenv("RAZAR_ALERT_WEBHOOK")
+ALERT_EMAIL_RECIPIENT = os.getenv("RAZAR_ALERT_EMAIL")
+ALERT_EMAIL_SENDER = os.getenv("RAZAR_ALERT_EMAIL_SENDER", "razar@localhost")
+ALERT_EMAIL_SMTP = os.getenv("RAZAR_ALERT_EMAIL_SMTP", "localhost")
+ALERT_EMAIL_PORT = _env_int("RAZAR_ALERT_EMAIL_PORT", 25)
+MONITORING_ALERTS_DIR = Path(__file__).resolve().parents[1] / "monitoring" / "alerts"
+STATE_FILE_LOCK = threading.RLock()
+
+
 def load_rust_components() -> None:
     """Initialize Rust memory bundle and core engine if available."""
     if _memory_bundle is None or _core_eval is None:
@@ -86,7 +131,8 @@ LONG_TASK_LOG_PATH = LOGS_DIR / "razar_long_task.json"
 AGENT_CONFIG_PATH = (
     Path(__file__).resolve().parents[1] / "config" / "razar_ai_agents.json"
 )
-RSTAR_THRESHOLD = int(os.getenv("RAZAR_RSTAR_THRESHOLD", 9))
+AGENT_CONFIG_BACKUP_PATH = AGENT_CONFIG_PATH.with_suffix(".bak")
+RSTAR_THRESHOLD = _env_int("RAZAR_RSTAR_THRESHOLD", 9)
 
 
 def load_history() -> Dict[str, Any]:
@@ -144,63 +190,233 @@ def finalize_metrics(
 def _persist_handshake(response: Optional[CrownResponse]) -> None:
     """Write handshake ``response`` details to ``STATE_FILE``."""
     data: Dict[str, Any] = {}
-    if STATE_FILE.exists():
-        try:
-            data = json.loads(STATE_FILE.read_text())
-        except json.JSONDecodeError:
-            data = {}
-    if response is not None:
-        data["capabilities"] = response.capabilities
-        data["downtime"] = response.downtime
-        data["handshake"] = {
-            "acknowledgement": response.acknowledgement,
-            "capabilities": response.capabilities,
-            "downtime": response.downtime,
-        }
-    else:
-        data.setdefault("capabilities", [])
-        data.setdefault("downtime", {})
-        data.setdefault(
-            "handshake",
-            {"acknowledgement": "", "capabilities": [], "downtime": {}},
-        )
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(data, indent=2))
+    with STATE_FILE_LOCK:
+        if STATE_FILE.exists():
+            try:
+                data = json.loads(STATE_FILE.read_text())
+            except json.JSONDecodeError:
+                data = {}
+        if response is not None:
+            data["capabilities"] = response.capabilities
+            data["downtime"] = response.downtime
+            data["handshake"] = {
+                "acknowledgement": response.acknowledgement,
+                "capabilities": response.capabilities,
+                "downtime": response.downtime,
+            }
+        else:
+            data.setdefault("capabilities", [])
+            data.setdefault("downtime", {})
+            data.setdefault(
+                "handshake",
+                {"acknowledgement": "", "capabilities": [], "downtime": {}},
+            )
+        STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STATE_FILE.write_text(json.dumps(data, indent=2))
 
 
 def _emit_event(step: str, status: str, **details: Any) -> None:
     """Append a structured health event to :data:`STATE_FILE`."""
     data: Dict[str, Any] = {}
-    if STATE_FILE.exists():
-        try:
-            data = json.loads(STATE_FILE.read_text())
-        except json.JSONDecodeError:
-            data = {}
-    events = data.setdefault("events", [])
-    event = {"step": step, "status": status, "timestamp": time.time()}
-    if details:
-        event.update(details)
-    events.append(event)
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(data, indent=2))
+    with STATE_FILE_LOCK:
+        if STATE_FILE.exists():
+            try:
+                data = json.loads(STATE_FILE.read_text())
+            except json.JSONDecodeError:
+                data = {}
+        events = data.setdefault("events", [])
+        event = {"step": step, "status": status, "timestamp": time.time()}
+        if details:
+            event.update(details)
+        events.append(event)
+        STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STATE_FILE.write_text(json.dumps(data, indent=2))
 
 
 def _record_probe(name: str, ok: bool) -> None:
     """Persist the result of a component health probe."""
     data: Dict[str, Any] = {}
-    if STATE_FILE.exists():
-        try:
-            data = json.loads(STATE_FILE.read_text())
-        except json.JSONDecodeError:
-            data = {}
-    probes = data.setdefault("probes", {})
-    probes[name] = {
-        "status": "ok" if ok else "fail",
-        "timestamp": time.time(),
+    with STATE_FILE_LOCK:
+        if STATE_FILE.exists():
+            try:
+                data = json.loads(STATE_FILE.read_text())
+            except json.JSONDecodeError:
+                data = {}
+        probes = data.setdefault("probes", {})
+        previous = probes.get(name)
+        status = "ok" if ok else "fail"
+        probes[name] = {
+            "status": status,
+            "timestamp": time.time(),
+        }
+        STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STATE_FILE.write_text(json.dumps(data, indent=2))
+    if not ok or previous is None or previous.get("status") != status:
+        _emit_event("probe", status, component=name)
+
+
+def _snapshot_agent_config() -> None:
+    """Persist the current agent configuration for later rollback."""
+
+    if not AGENT_CONFIG_PATH.exists():
+        return
+    try:
+        AGENT_CONFIG_BACKUP_PATH.parent.mkdir(parents=True, exist_ok=True)
+        AGENT_CONFIG_BACKUP_PATH.write_bytes(AGENT_CONFIG_PATH.read_bytes())
+    except Exception:  # pragma: no cover - defensive logging
+        LOGGER.exception("Failed to snapshot agent configuration for rollback")
+
+
+def rollback_to_safe_defaults() -> None:
+    """Restore the most recent agent configuration snapshot."""
+
+    if not AGENT_CONFIG_BACKUP_PATH.exists():
+        LOGGER.warning("No agent configuration snapshot found for rollback")
+        return
+    try:
+        AGENT_CONFIG_PATH.write_bytes(AGENT_CONFIG_BACKUP_PATH.read_bytes())
+        LOGGER.info("Restored agent configuration from %s", AGENT_CONFIG_BACKUP_PATH)
+    except Exception:  # pragma: no cover - defensive logging
+        LOGGER.exception("Failed to restore agent configuration from snapshot")
+
+
+def _send_email_alert(recipient: str, subject: str, body: str) -> None:
+    """Send an email alert using the configured SMTP relay."""
+
+    message = EmailMessage()
+    message["From"] = ALERT_EMAIL_SENDER
+    message["To"] = recipient
+    message["Subject"] = subject
+    message.set_content(body)
+    with smtplib.SMTP(ALERT_EMAIL_SMTP, ALERT_EMAIL_PORT, timeout=10) as client:
+        client.send_message(message)
+
+
+def send_monitoring_alert(
+    message: str,
+    *,
+    severity: str = "warning",
+    context: Optional[Dict[str, Any]] = None,
+) -> None:
+    """Forward ``message`` to configured monitoring backends."""
+
+    timestamp = time.time()
+    payload: Dict[str, Any] = {
+        "message": message,
+        "severity": severity,
+        "timestamp": timestamp,
+        "timestamp_iso": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(timestamp)),
     }
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(data, indent=2))
-    _emit_event("probe", "ok" if ok else "fail", component=name)
+    if context:
+        payload["context"] = context
+
+    if ALERT_WEBHOOK_URL and requests is not None:
+        try:
+            response = requests.post(ALERT_WEBHOOK_URL, json=payload, timeout=5)
+            if response.status_code >= 400:
+                LOGGER.error(
+                    "Monitoring webhook responded with status %s: %s",
+                    response.status_code,
+                    response.text,
+                )
+        except Exception:  # pragma: no cover - network failure
+            LOGGER.exception("Failed to publish monitoring alert via webhook")
+    elif ALERT_WEBHOOK_URL:
+        LOGGER.warning("Requests unavailable; cannot post monitoring alerts")
+
+    if ALERT_EMAIL_RECIPIENT:
+        email_body = message
+        if context:
+            email_body += "\n\n" + json.dumps(context, indent=2, default=str)
+        try:
+            _send_email_alert(
+                ALERT_EMAIL_RECIPIENT,
+                f"[RAZAR] {severity.upper()} alert",
+                email_body,
+            )
+        except Exception:  # pragma: no cover - smtp failure
+            LOGGER.exception("Failed to dispatch monitoring alert email")
+
+    try:
+        MONITORING_ALERTS_DIR.mkdir(parents=True, exist_ok=True)
+        file_path = MONITORING_ALERTS_DIR / f"razar_{int(timestamp * 1000)}.json"
+        file_path.write_text(
+            json.dumps(payload, indent=2, default=str), encoding="utf-8"
+        )
+    except Exception:  # pragma: no cover - filesystem failure
+        LOGGER.exception("Failed to persist monitoring alert payload")
+
+
+def _execute_health_probe(component: Dict[str, Any]) -> bool:
+    """Run the configured health probe for ``component``."""
+
+    name = str(component.get("name", ""))
+    cmd = component.get("health_check")
+    if cmd:
+        try:
+            result = subprocess.run(cmd, check=False)
+        except Exception:  # pragma: no cover - subprocess failure
+            LOGGER.exception("Health check command errored for %s", name)
+            return False
+        return result.returncode == 0
+
+    ok = health_checks.run(name)
+    if name not in health_checks.CHECKS:
+        LOGGER.warning("No health probe defined for %s", name)
+    return ok
+
+
+def _periodic_probe_loop(
+    components_ref: Dict[str, Dict[str, Any]],
+    processes_ref: Dict[str, subprocess.Popen],
+    escalation_tracker: Dict[str, int],
+    stop_event: threading.Event,
+    lock: threading.Lock,
+) -> None:
+    """Background worker executing periodic health probes."""
+
+    alerted_components: Dict[str, int] = {}
+    while not stop_event.wait(HEALTH_PROBE_INTERVAL):
+        with lock:
+            components_snapshot = dict(components_ref)
+            processes_snapshot = dict(processes_ref)
+            escalation_snapshot = dict(escalation_tracker)
+
+        for name, component in components_snapshot.items():
+            proc = processes_snapshot.get(name)
+            if proc is None or proc.poll() is not None:
+                continue
+            ok = _execute_health_probe(component)
+            _record_probe(name, ok)
+            if not ok:
+                warning = f"Periodic health probe failed for {name}"
+                LOGGER.warning(warning)
+                send_monitoring_alert(
+                    warning,
+                    severity="critical",
+                    context={"component": name, "probe": "periodic"},
+                )
+
+        if ESCALATION_WARNING_THRESHOLD <= 0:
+            continue
+
+        for name, count in escalation_snapshot.items():
+            if count < ESCALATION_WARNING_THRESHOLD:
+                continue
+            last_alert = alerted_components.get(name)
+            if last_alert is not None and count <= last_alert:
+                continue
+            warning = (
+                f"Component {name} triggered {count} escalations during the current "
+                "boot cycle"
+            )
+            LOGGER.warning(warning)
+            send_monitoring_alert(
+                warning,
+                severity="warning",
+                context={"component": name, "escalations": count},
+            )
+            alerted_components[name] = count
 
 
 def build_failure_context(component: str, limit: int = 5) -> Dict[str, Any]:
@@ -304,6 +520,8 @@ def _handle_ai_result(
     patched: bool,
     attempt: int,
     failure_tracker: Dict[str, int],
+    escalation_tracker: Optional[Dict[str, int]] = None,
+    escalation_lock: Optional[threading.Lock] = None,
 ) -> None:
     """Update failure counter and escalate persistent issues."""
     if patched:
@@ -329,6 +547,12 @@ def _handle_ai_result(
     if next_agent:
         normalized_next = next_agent.lower()
         original_next = lookup.get(normalized_next, normalized_next)
+        if escalation_tracker is not None:
+            if escalation_lock is not None:
+                with escalation_lock:
+                    escalation_tracker[name] = escalation_tracker.get(name, 0) + 1
+            else:
+                escalation_tracker[name] = escalation_tracker.get(name, 0) + 1
         _set_active_agent(original_next)
         append_invocation_event(
             {
@@ -349,6 +573,8 @@ def _retry_with_ai(
     error_msg: str,
     max_attempts: int,
     failure_tracker: Dict[str, int],
+    escalation_tracker: Optional[Dict[str, int]] = None,
+    escalation_lock: Optional[threading.Lock] = None,
 ) -> tuple[Optional[subprocess.Popen], int, str]:
     """Invoke AI handover until success or ``max_attempts`` is reached.
 
@@ -384,14 +610,23 @@ def _retry_with_ai(
             agent=active_agent,
             agent_original=agent_original,
         )
-        _handle_ai_result(name, error_msg, patched, attempt, failure_tracker)
+        _handle_ai_result(
+            name,
+            error_msg,
+            patched,
+            attempt,
+            failure_tracker,
+            escalation_tracker,
+            escalation_lock,
+        )
         if not patched:
             continue
         LOGGER.info("Retrying %s after AI patch (remote attempt %s)", name, attempt)
         try:
             proc = launch_component(component)
             # Re-run the health check after patch application to confirm recovery
-            if not health_checks.run(name):
+            if not _execute_health_probe(component):
+                _record_probe(name, False)
                 proc.terminate()
                 proc.wait()
                 LOGGER.error("Post-patch health check failed for %s", name)
@@ -571,14 +806,7 @@ def launch_component(component: Dict[str, Any]) -> subprocess.Popen:
     _emit_event("launch", "start", component=name)
     proc = subprocess.Popen(component["command"])
 
-    cmd = component.get("health_check")
-    if cmd:
-        result = subprocess.run(cmd)
-        ok = result.returncode == 0
-    else:
-        ok = health_checks.run(name)
-        if name not in health_checks.CHECKS:
-            LOGGER.warning("No health probe defined for %s", name)
+    ok = _execute_health_probe(component)
     _record_probe(name, ok)
     if not ok:
         LOGGER.error("Health check failed for %s", name)
@@ -632,10 +860,37 @@ def main() -> None:
     load_rust_components()
 
     components = load_config(args.config)
+    _snapshot_agent_config()
     _emit_event("boot_sequence", "start")
     _perform_handshake(components)
     launch_required_agents()
-    processes: List[subprocess.Popen] = []
+    processes: Dict[str, subprocess.Popen] = {}
+    active_components: Dict[str, Dict[str, Any]] = {}
+    escalation_counts: Dict[str, int] = {}
+    registry_lock = threading.Lock()
+    stop_event = threading.Event()
+    probe_thread: Optional[threading.Thread] = None
+    if HEALTH_PROBE_INTERVAL > 0:
+        probe_thread = threading.Thread(
+            target=_periodic_probe_loop,
+            args=(
+                active_components,
+                processes,
+                escalation_counts,
+                stop_event,
+                registry_lock,
+            ),
+            name="razar-health-probes",
+            daemon=True,
+        )
+        probe_thread.start()
+
+    def register_process(
+        component_name: str, component_def: Dict[str, Any], proc: subprocess.Popen
+    ) -> None:
+        with registry_lock:
+            processes[component_name] = proc
+            active_components[component_name] = component_def
 
     history = load_history()
     failure_counts: Dict[str, int] = history.get("component_failures", {})
@@ -662,7 +917,7 @@ def main() -> None:
                 attempts = attempt
                 try:
                     proc = launch_component(comp)
-                    processes.append(proc)
+                    register_process(name, comp, proc)
                     success = True
                     break
                 except Exception as exc:
@@ -687,6 +942,8 @@ def main() -> None:
                                         patched,
                                         r_attempt,
                                         ai_failure_counts,
+                                        escalation_counts,
+                                        registry_lock,
                                     )
                                     _log_long_task(name, r_attempt, error_msg, patched)
                                 except KeyboardInterrupt:
@@ -712,7 +969,8 @@ def main() -> None:
                                     attempts += 1
                                     proc = launch_component(comp)
                                     # run a second health check to verify recovery
-                                    if not health_checks.run(name):
+                                    if not _execute_health_probe(comp):
+                                        _record_probe(name, False)
                                         proc.terminate()
                                         proc.wait()
                                         LOGGER.error(
@@ -720,7 +978,7 @@ def main() -> None:
                                             name,
                                         )
                                         continue
-                                    processes.append(proc)
+                                    register_process(name, comp, proc)
                                     success = True
                                     break
                                 except Exception as exc2:
@@ -741,10 +999,12 @@ def main() -> None:
                                 error_msg,
                                 args.remote_attempts,
                                 ai_failure_counts,
+                                escalation_counts,
+                                registry_lock,
                             )
                             attempts += ai_attempts
                             if patched_proc is not None:
-                                processes.append(patched_proc)
+                                register_process(name, comp, patched_proc)
                                 success = True
                                 break
                         failure_counts[name] = failure_counts.get(name, 0) + 1
@@ -764,15 +1024,24 @@ def main() -> None:
         LOGGER.info("All components launched")
         doc_sync.sync_docs()
         _emit_event("doc_sync", "success")
-        for proc in processes:
+        for proc in list(processes.values()):
             proc.wait()
-    except Exception:  # pragma: no cover - logs on failure
+    except Exception as exc:  # pragma: no cover - logs on failure
         LOGGER.exception("Boot sequence halted")
-        for proc in processes:
+        for proc in list(processes.values()):
             proc.terminate()
             proc.wait()
+        rollback_to_safe_defaults()
+        send_monitoring_alert(
+            "Boot sequence halted; configuration rolled back to safe defaults",
+            severity="critical",
+            context={"error": str(exc)},
+        )
         raise SystemExit(1)
     finally:
+        stop_event.set()
+        if probe_thread is not None:
+            probe_thread.join(timeout=5)
         finalize_metrics(run_metrics, history, failure_counts, run_start)
         _emit_event(
             "boot_sequence",
