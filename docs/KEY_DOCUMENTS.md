@@ -49,6 +49,7 @@ graph LR
 | [API Reference](api_reference.md) | API endpoints and schemas | Quarterly |
 | [Operator Protocol](operator_protocol.md) | Operator interaction rules | Quarterly |
 | [Neo-ABZU Onboarding](../NEOABZU/docs/onboarding.md) | Orientation for cross-project work | Quarterly |
+| [Rust Doctrine](../NEOABZU/docs/rust_doctrine.md) | Naming, testing, and tooling canon for Neo-ABZU Rust crates | Quarterly |
 | [OROBOROS Lexicon](../NEOABZU/docs/OROBOROS_Lexicon.md) | Canonical Sumerian glyph correspondences | Quarterly |
 | [Hero Journey Engine](../NEOABZU/docs/herojourney_engine.md) | Reduction stages mapped to mythic narrative | Quarterly |
 | [Sumerian 33‑Word Lexicon](../NEOABZU/docs/SUMERIAN_33WORDS.md) | Sacred vocabulary of 33 primordial concepts | Quarterly |
