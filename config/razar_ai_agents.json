@@ -22,7 +22,7 @@
       "endpoint": "${KIMI2_ENDPOINT}",
       "auth": {
         "type": "bearer",
-        "token": "${KIMI2_TOKEN}"
+        "token": "${KIMI2_API_KEY}"
       }
     },
     {
@@ -30,7 +30,7 @@
       "endpoint": "${AIRSTAR_ENDPOINT}",
       "auth": {
         "type": "bearer",
-        "token": "${AIRSTAR_TOKEN}"
+        "token": "${AIRSTAR_API_KEY}"
       }
     },
     {
@@ -38,7 +38,7 @@
       "endpoint": "${RSTAR_ENDPOINT}",
       "auth": {
         "type": "bearer",
-        "token": "${RSTAR_TOKEN}"
+        "token": "${RSTAR_API_KEY}"
       }
     }
   ]

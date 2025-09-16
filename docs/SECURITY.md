@@ -3,28 +3,42 @@
 ## Remote Agent Credentials
 
 The RAZAR remediation pipeline can delegate failure analysis to several hosted
-agents. Each agent requires an API key that must be injected via environment
-variables at runtime. The loader in `razar/ai_invoker.py` automatically maps
-agent names to their corresponding secrets.
+agents. Each agent now **must** source its API key from a dedicated environment
+variable; configuration tokens and fallback names are ignored. The loader in
+`razar/ai_invoker.py` validates the variables and fails fast with an
+`AgentCredentialError` when a required secret is missing or empty.
 
-| Agent name | Accepted secret variables | Notes |
-| ---------- | ------------------------- | ----- |
-| `kimi2`    | `KIMI2_API_KEY`, `KIMI2_TOKEN` | Standard MoonshotAI Kimi‑K2 deployment. |
-| `AiRstar` / `rStar` | `RSTAR_API_KEY`, `RSTAR_TOKEN`, `AIRSTAR_API_KEY`, `AIRSTAR_TOKEN` | `AiRstar` and `rStar` are aliases for the same Microsoft-hosted service. Either prefix is accepted. |
+| Agent name | Environment variable | Rotation cadence | Storage & handling | Sandbox guardrails |
+| ---------- | -------------------- | ---------------- | ------------------ | ------------------ |
+| `kimi2`    | `KIMI2_API_KEY`       | Rotate every 30 days or immediately after operator turnover. | Keep the key in the sealed secrets store; export it to the runtime environment only for the agent process. Never commit it to disk, logs, or patch archives. | Spawned worker limited to 90s CPU time and ~512 MB RAM; outbound network constrained to the configured endpoint. |
+| `AiRstar`  | `AIRSTAR_API_KEY`     | Rotate every 30 days; revoke and replace after any escalation to Microsoft support. | Same storage rule as above. The key may be dual-homed in Azure Key Vault but must be injected as an environment variable at launch. | Same sandbox as above; audit log entry records every invocation. |
+| `rStar`    | `RSTAR_API_KEY`       | Rotate every 30 days; rotate in lockstep with `AIRSTAR_API_KEY` when the services share a tenant. | Store alongside the AiRstar key with identical retention policies. Export only to the invocation worker. | Same sandbox guardrails; exit codes are recorded and failures trigger fallback repair logic. |
 
-Only one variable in each column is required; if multiple variables are set
-for the same agent the first populated value in the list is used. Secrets are
-never persisted to disk and are only forwarded to the active agent during the
-sandboxed invocation window.
+### Rotation & Storage Policy
 
-## Sandboxed Delegation
+- Secrets live exclusively inside the platform secrets manager. Deployment
+  pipelines inject them into the environment of the calling service and never
+  persist them to disk.
+- Rotation cadence defaults to 30 days for all three services. Emergency
+  rotation is mandatory whenever a key is exposed, an operator leaves the
+  rotation group, or the vendor requests renewal.
+- The worker process wipes its environment after the invocation. Patch logs and
+  telemetry include only the environment variable **names**, never the values.
+- The agent loader refuses blank strings, placeholder tokens, or unset
+  variables; these conditions surface as explicit errors in logs and metrics.
 
-All remote handovers now execute inside a constrained worker process. The
-sandbox enforces:
+### Invocation Sandbox
 
-- A CPU wall-clock timeout of 90 seconds for the external invocation.
-- Memory limits of approximately 512 MB to prevent runaway allocations.
+Every external handover executes inside a dedicated, resource-constrained
+worker process.
 
-If the sandbox terminates the agent early—due to the timeout or resource
-limits—the failure is logged and the orchestrator falls back without applying
-untrusted patches.
+- CPU execution is capped at 90 seconds. Processes exceeding the limit are
+  terminated and recorded as sandbox violations.
+- Memory allocations are limited to approximately 512 MB to prevent runaway
+  models from exhausting host resources.
+- The worker inherits only the minimal environment required for the target
+  agent and cannot persist files outside of the temporary patch backup
+  directory.
+- When the sandbox aborts an invocation, the orchestrator logs the exit code,
+  records the failure in metrics, and falls back without applying untrusted
+  patches.

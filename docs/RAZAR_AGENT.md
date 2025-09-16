@@ -175,7 +175,7 @@ Configuration knobs:
 
 - `RAZAR_RSTAR_THRESHOLD` – attempts before escalation (default `9`)
 - `RSTAR_ENDPOINT` – URL for the `rStar` patch API
-- `RSTAR_TOKEN` – access token for the API
+- `RSTAR_API_KEY` – access token for the API
 
 Set `RAZAR_RSTAR_THRESHOLD=0` to disable escalation entirely.
 

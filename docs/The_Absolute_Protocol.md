@@ -43,6 +43,9 @@ Rust updates that touch operator-facing workflows must also refresh relevant ent
 Commits that alter architecture—whether Python services, Rust crates, or orchestration manifests—must land with synchronized documentation updates. Always:
 
 - Revise [system_blueprint.md](system_blueprint.md), [blueprint_spine.md](blueprint_spine.md), and [NEOABZU_spine.md](NEOABZU_spine.md) so diagrams and mission narratives track the new structure.
+- Synchronize [SECURITY.md](SECURITY.md#remote-agent-credentials) when RAZAR
+  remote invocation rules change, including updates to the `KIMI2_API_KEY`,
+  `AIRSTAR_API_KEY`, and `RSTAR_API_KEY` policies.
 - Record operator governance shifts, escalation paths, or safety rules inside this protocol so contributors inherit the updated canon.
 - Regenerate the curated [index.md](index.md) and auto-generated [INDEX.md](INDEX.md) to surface new sections for reviewers.
 - Run the documentation pre-commit suite (`pre-commit run --files <changed docs>`) to trigger `doc-indexer`, doctrine audits, and blueprint reference checks before pushing.

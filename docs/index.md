@@ -101,6 +101,9 @@ abzu-memory-bootstrap
 - [RAZAR Agent](RAZAR_AGENT.md)
 - [RAZAR Self-Healing Overview](RAZAR_AGENT.md#self-healing-overview)
 - [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation)
+- [Security Overview](SECURITY.md#remote-agent-credentials) – rotation cadence
+  and sandbox policy for `KIMI2_API_KEY`, `AIRSTAR_API_KEY`, and
+  `RSTAR_API_KEY`.
 - [Persona API Guide](persona_api_guide.md) – utilities for managing persona interactions
 
 ## Indices

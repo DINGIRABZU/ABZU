@@ -1,7 +1,7 @@
 # NEOABZU Spine
 
-**Version:** v0.1.1
-**Last updated:** 2025-10-07
+**Version:** v0.1.2
+**Last updated:** 2025-10-09
 
 ## RAG + Insight Pipeline
 After Crown's LLM boots, `neoabzu_crown.load_identity` runs a retrieval and
@@ -19,5 +19,8 @@ context.
 Rust crate or pipeline adjustments must update [system_blueprint.md](system_blueprint.md), [blueprint_spine.md](blueprint_spine.md), [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), and refresh the documentation indexes ([index.md](index.md) and [INDEX.md](INDEX.md)). Run the documentation pre-commit hooks so `doc-indexer` and blueprint verifiers confirm the new crate layout is reflected across the doctrine.
 
 ## Version History
+- v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,
+  `AIRSTAR_API_KEY`, and `RSTAR_API_KEY` credentials documented in
+  [SECURITY.md](SECURITY.md#remote-agent-credentials).
 - v0.1.1 (2025-10-07): Documented blueprint synchronization requirements for architecture commits.
 - v0.1.0 (2025-10-05): Documented identity spine pipeline.

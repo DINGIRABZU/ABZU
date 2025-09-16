@@ -88,5 +88,5 @@ Expose the `rStar` patch API by setting its endpoint and access token:
 
 ```bash
 export RSTAR_ENDPOINT=http://localhost:8000/patch
-export RSTAR_TOKEN=your_token
+export RSTAR_API_KEY=your_token
 ```

@@ -6,7 +6,12 @@ applies any suggested patches via :mod:`agents.razar.code_repair`.
 
 from __future__ import annotations
 
-__all__ = ["handover", "load_agent_definitions", "invalidate_agent_config_cache"]
+__all__ = [
+    "handover",
+    "load_agent_definitions",
+    "invalidate_agent_config_cache",
+    "AgentCredentialError",
+]
 
 import json
 import logging
@@ -26,7 +31,7 @@ from . import health_checks, metrics
 from .bootstrap_utils import PATCH_LOG_PATH, LOGS_DIR
 from tools import opencode_client
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -41,20 +46,14 @@ except ImportError:  # pragma: no cover - platform specific
     resource = None  # type: ignore[assignment]
 
 
+_MANDATORY_AGENT_ENV_VARS: Dict[str, str] = {
+    "kimi2": "KIMI2_API_KEY",
+    "airstar": "AIRSTAR_API_KEY",
+    "rstar": "RSTAR_API_KEY",
+}
+
 _AGENT_SECRET_ENV_HINTS: Dict[str, tuple[str, ...]] = {
-    "kimi2": ("KIMI2_API_KEY", "KIMI2_TOKEN"),
-    "airstar": (
-        "AIRSTAR_API_KEY",
-        "AIRSTAR_TOKEN",
-        "RSTAR_API_KEY",
-        "RSTAR_TOKEN",
-    ),
-    "rstar": (
-        "RSTAR_API_KEY",
-        "RSTAR_TOKEN",
-        "AIRSTAR_API_KEY",
-        "AIRSTAR_TOKEN",
-    ),
+    name: (env_var,) for name, env_var in _MANDATORY_AGENT_ENV_VARS.items()
 }
 
 _CONFIG_CACHE: dict[Path, tuple[float, Dict[str, Any]]] = {}
@@ -62,6 +61,10 @@ _CONFIG_CACHE_LOCK = RLock()
 
 _SANDBOX_TIMEOUT_SECONDS = 90.0
 _SANDBOX_MEMORY_LIMIT_MB = 512
+
+
+class AgentCredentialError(RuntimeError):
+    """Raised when a remote agent credential is missing or invalid."""
 
 
 @dataclass(frozen=True)
@@ -142,6 +145,9 @@ def _sanitize_env_key(name: str) -> str:
 
 def _candidate_secret_keys(name: str) -> tuple[str, ...]:
     normalized = name.lower()
+    required = _MANDATORY_AGENT_ENV_VARS.get(normalized)
+    if required:
+        return (required,)
     hints = _AGENT_SECRET_ENV_HINTS.get(normalized)
     if hints:
         return hints
@@ -149,13 +155,36 @@ def _candidate_secret_keys(name: str) -> tuple[str, ...]:
     return (f"{base}_API_KEY", f"{base}_TOKEN")
 
 
+def _require_env_secret(agent: str, env_key: str) -> str:
+    raw_value = os.environ.get(env_key)
+    if raw_value is None:
+        message = f"Environment variable {env_key} is required for agent {agent}"
+        LOGGER.error(message)
+        raise AgentCredentialError(message)
+    token = raw_value.strip()
+    if not token:
+        message = f"Environment variable {env_key} for agent {agent} must not be empty"
+        LOGGER.error(message)
+        raise AgentCredentialError(message)
+    return token
+
+
 def _agent_env_token(name: str) -> str | None:
+    normalized = name.lower()
+    required_env = _MANDATORY_AGENT_ENV_VARS.get(normalized)
+    if required_env:
+        return _require_env_secret(name, required_env)
+
     for key in _candidate_secret_keys(name):
         value = os.environ.get(key)
-        if value:
-            token = value.strip()
-            if token:
-                return token
+        if value is None:
+            continue
+        token = value.strip()
+        if token:
+            return token
+        LOGGER.error(
+            "Environment variable %s for agent %s is defined but empty", key, name
+        )
     return None
 
 
