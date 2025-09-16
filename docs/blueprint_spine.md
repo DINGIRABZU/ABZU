@@ -69,23 +69,25 @@ When local recovery loops stall, RAZAR escalates stubborn missions through a
 remote delegation ladder. The orchestrator packages the aggregated
 `logs/razar_ai_invocations.json` history and current heartbeat telemetry before
 handing the brief to each specialist so downstream agents inherit the same
-context the Crown attempted to resolve.
+context the Crown attempted to resolve. The default chain is
+**Crown → Kimi-cho → Kimi 2 → rStar**:
 
-1. **K2 Coder (Kimi 2)** – receives the failing mission after Kimicho's repair
-   heuristics exhaust their retries, applying code-first fixes through the PyO3
-   bridge and returning candidate patches to RAZAR.
-2. **Air Star** – validates K2 outputs, performs lightweight regeneration tasks,
-   and prepares the payload for an external patcher when deeper synthesis is
-   required.
-3. **rStar** – final automation stop for recalcitrant bugs, synthesizing
+1. **Kimi-cho** – applies Kimicho's repair heuristics to pursue lightweight,
+   context-preserving fixes before invoking remote synthesis.
+2. **Kimi 2 (K2 Coder)** – escalates stubborn issues through the PyO3 bridge,
+   synthesizing code-first patches when Kimi-cho reports persistent faults.
+3. **rStar** – final automation stop for recalcitrant bugs, generating
    high-assurance patches before the mission returns to operator review.
 
 Thresholds, ordering, and service credentials for this cascade live in
 `config/razar_ai_agents.json`; see
-[system_blueprint.md#rstar-escalation](system_blueprint.md#rstar-escalation) for
-the component-level escalation diagram and
+[system_blueprint.md#configurable-crown-escalation-chain](system_blueprint.md#configurable-crown-escalation-chain)
+for the component-level escalation diagram and
 [system_blueprint.md#remote-agent-failover-configuration](system_blueprint.md#remote-agent-failover-configuration)
-for the configuration contract and roster normalization rules.
+for the configuration contract and roster normalization rules. Shared context and
+logging mechanics for this ladder are documented in
+[RAZAR Agent – Shared Failure Context](RAZAR_AGENT.md#shared-failure-context) and
+[RAZAR Agent – Invocation Log Format](RAZAR_AGENT.md#invocation-log-format).
 
 ### **Operator ↔ RAZAR/Crown Flow**
 

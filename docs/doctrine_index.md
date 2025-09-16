@@ -115,7 +115,7 @@
 | docs/PROJECT_STATUS.md |  | `13f4fa056bb802321a44c751879d778c09d83b25e1898a4eea22708860e7799a` | 2025-09-14T08:19:15+02:00 |
 | docs/QNL_Library.md |  | `4549f52d11135b22d33bc616f2960218c356405b1327a7687a6d47c48553f203` | 2025-09-14T08:19:15+02:00 |
 | docs/QUALITY_EVALUATION.md |  | `f5e7f02688948f7e4257abdc5cb01b84e44a431a3dd299feb3daaac6fac05e97` | 2025-09-14T08:19:15+02:00 |
-| docs/RAZAR_AGENT.md |  | `3dc68f34178316ad3c87f1538fd7b66d85f6ccf2192a11b8f9e5a44285805954` | 2025-09-15T23:12:33+02:00 |
+| docs/RAZAR_AGENT.md |  | `e4af98f01883a377a0ee73d7263f8078b3bc72cabd975c88460c8c031634ea87` | 2025-09-16T17:06:26+00:00 |
 | docs/RAZAR_GUIDE.md |  | `aafa52b660c2cc18cec0e9738609f8541d1ba52fc9fa40307c2b39506517c6a5` | 2025-09-14T08:19:15+02:00 |
 | docs/README.md |  | `072bd8cb140949306a11e3eac3a5f61b598f73081d00cff2c91d82ea54db1cbf` | 2025-09-14T08:19:15+02:00 |
 | docs/REPOSITORY_STRUCTURE.md |  | `4ee5533f42eff49a66530a3fb6a858ae32df9a033a386a6cf85ca0bbb8347b45` | 2025-09-14T08:19:15+02:00 |
@@ -148,7 +148,7 @@
 | docs/banana_rater.md |  | `3193e0e6ad8f41b7bc52090f9e2a56a894f5d3bb74c53738cea4ca81ef93c8b0` | 2025-09-14T08:19:15+02:00 |
 | docs/benchmarks/rust_vs_python.md |  | `e29616c118fb52e7ae503b61fc8c585b8737778c0ba7cb9372bf7ee69c2e7aff` | 2025-09-15T01:19:43+02:00 |
 | docs/blueprint_manual.md |  | `564887e1b58a49b14b155c5adab37776ddb2e7edd92c37f19530316f9e8fd9b7` | 2025-09-14T08:19:15+02:00 |
-| docs/blueprint_spine.md |  | `375638c8fd19c94c5a55b8a3190d9a5f8a16e5b3918b7777d54487b710b50325` | 2025-09-15T23:50:48+02:00 |
+| docs/blueprint_spine.md |  | `b6c6469c427c28a198178bee8ed832a54b0c60078a9af81437781efe40afef54` | 2025-09-16T17:06:26+00:00 |
 | docs/chakra_architecture.md |  | `16b89a8cc8705459c6369523a6193d8271fddf093b4b4e1d7983b755ecd9c835` | 2025-09-14T22:28:56+02:00 |
 | docs/chakra_healing.md |  | `11324c24b6e0e9a05804f83f2d5788bfb2c58df121faa28bfbc870a530eaae47` | 2025-09-14T08:19:15+02:00 |
 | docs/chakra_heartbeat.md |  | `43199dbea8871117c5e516ddb2e3243fb1678fddf4c33def6850aead92a7ca20` | 2025-09-14T08:19:15+02:00 |
@@ -198,7 +198,7 @@
 | docs/development_workflow.md |  | `17255b5c25dc5cfee5693cb9fb947912d89f87fe8f47431fb91c685b40f2c5a3` | 2025-09-14T08:19:15+02:00 |
 | docs/diagnostics.md |  | `756dc177bfcd6b90d1baff9970e56424eaef821454b00636c1a472e914f35251` | 2025-09-14T08:19:15+02:00 |
 | docs/docker_build_audio_tools.md |  | `8b7fb453368f87e1ad4a6a3c9f7123ac695642b4d23d073489cf0ea2a74ee447` | 2025-09-14T08:19:15+02:00 |
-| docs/doctrine_index.md |  | `3f3b61eccccb16191d7df7ecc4ee2c4becb9cb07edee98621d9a87aa5d9410ee` | 2025-09-15T23:50:48+02:00 |
+| docs/doctrine_index.md |  | `f655d9bca46d1ff43eaf005bbcd4677b63c8dbed663f9a0f87f1d2e464d4397f` | 2025-09-16T17:06:26+00:00 |
 | docs/documentation_protocol.md |  | `35b29351cfb9909d1ea11922a01efaac9ce1c5da8974aaeaa4426c625e1494b9` | 2025-09-14T16:23:23+02:00 |
 | docs/emotional_memory_matrix.md |  | `316e3b303792e4510d23fc28234474b10f8fff0e2d6d3bbacb481ef267274130` | 2025-09-14T08:19:15+02:00 |
 | docs/environment_setup.md |  | `a38e7e85504dfb03e75c179ab7b9adac496459778849c52d6f2bbc43d0836329` | 2025-09-14T08:19:15+02:00 |
@@ -306,7 +306,7 @@
 | docs/spiritual_architecture.md |  | `261f014d0852c1f4e86c83fbc71fbaa0bb7aa2baac1bd49bb32eb7819ff9e63b` | 2025-09-14T08:19:15+02:00 |
 | docs/style_guides/arcade_theme.md |  | `7e0a20e6ab52ad2bc1ac48d4f9c563557375cc4026fa1c69f387f2ed46b17832` | 2025-09-14T08:19:15+02:00 |
 | docs/style_management.md |  | `dac39a7b7026a1487e04642087237160bb87e2da511cea485ddba9bfff5dacdd` | 2025-09-14T08:19:15+02:00 |
-| docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation | `df830693fd44ed71bbace923aa7a7d873fe82ee1c5de008bee68c8907f567027` | 2025-09-16T12:04:39+02:00 |
+| docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation | `f32349f141e13a4d1c68da054c195a55f2ae399ccf2ee1fbac3c790d6c8a616d` | 2025-09-16T17:06:26+00:00 |
 | docs/system_overview.md |  | `fc05dfeea3725d4e2bf32aa2c5103c95e7a22fae0b271f91965c160aca50420d` | 2025-09-14T08:19:15+02:00 |
 | docs/test_index.md |  | `b0948d32c6fe238db15542225b33a7f39581724321f3c7907442866e6d82c69e` | 2025-09-15T18:04:23+02:00 |
 | docs/testing.md |  | `55c1b622168f3c59d693febd24ad75f50086591ca2995bc4c9764125f4d00155` | 2025-09-14T08:19:15+02:00 |
