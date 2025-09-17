@@ -58,6 +58,17 @@ Each step is orchestrated by [`initialize_crown`](../init_crown_agent.py) and th
 - **Logs:** Review `logs/razar_crown_dialogues.json` for handshake transcripts and `logs/identity_refresh/` for doctrine regeneration history.
 - **Runbooks:** Pair this guide with [awakening_overview.md](awakening_overview.md) for the full wake pipeline and [blueprint_spine.md](blueprint_spine.md#razar-delegation-cascade) for narrative context across the delegation ladder.
 
+## Deterministic Replay Capture
+
+- Refresh the Stage A replay bundle with `python scripts/crown_capture_replays.py`. The helper reads the curated scenarios in
+  `crown/replay_scenarios.yaml`, exercises each Crown → servant hand-off through
+  `crown_prompt_orchestrator_async`, and records the routed model, emotion state, and
+  deterministic seed in `logs/crown_replays/`.
+- Audio/video surrogates are logged through `tools.session_logger`, and the script records
+  SHA-256 hashes for every capture. Re-running the command fails fast when the current outputs
+  diverge from the stored baseline, signalling operators to investigate doctrine or routing drift
+  before the alpha review board convenes.
+
 ## Doctrine References
 
 - [crown_manifest.md](crown_manifest.md)

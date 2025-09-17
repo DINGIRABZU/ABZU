@@ -1,0 +1,398 @@
+"""Capture deterministic Crown replay outputs for Stage A validation."""
+
+from __future__ import annotations
+
+import argparse
+import asyncio
+import contextlib
+import hashlib
+import json
+import logging
+import random
+import tempfile
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, List
+from unittest import mock
+
+try:  # pragma: no cover - optional dependency
+    import numpy as np
+except Exception:  # pragma: no cover - numpy optional
+    np = None  # type: ignore[assignment]
+
+try:  # pragma: no cover - optional dependency
+    import yaml
+except Exception as exc:  # pragma: no cover - yaml required at runtime
+    raise RuntimeError("PyYAML is required to load Crown replay scenarios") from exc
+
+import crown_decider
+import crown_prompt_orchestrator as cpo
+import emotional_state
+import servant_model_manager as smm
+from state_transition_engine import StateTransitionEngine
+from tools import session_logger
+
+logger = logging.getLogger(__name__)
+
+LOG_DIR = Path("logs/crown_replays")
+INDEX_FILE = LOG_DIR / "index.json"
+DEFAULT_SCENARIO_FILE = Path("crown/replay_scenarios.yaml")
+
+
+@dataclass
+class CaptureResult:
+    """Structured record of a replay capture."""
+
+    timestamp: str
+    model: str
+    emotion: str | None
+    state: str | None
+    result: dict[str, Any]
+    result_hash: str
+    audio_path: str
+    audio_hash: str
+    video_path: str
+    video_hash: str
+    servant_prompt: str | None
+
+
+class _RecordingServant:
+    """Callable servant stub that records prompts and returns deterministic text."""
+
+    def __init__(self, name: str, scenario_id: str) -> None:
+        self.name = name
+        self.scenario_id = scenario_id
+        self.prompts: List[str] = []
+
+    def __call__(self, prompt: str) -> str:
+        self.prompts.append(prompt)
+        payload = f"{self.scenario_id}:{self.name}:{prompt}"
+        digest = hashlib.sha256(payload.encode("utf-8"))
+        return f"{self.name}:{digest.hexdigest()[:16]}"
+
+
+class _StubGLM:
+    """In-memory GLM stub mirroring the orchestrator interface."""
+
+    def __init__(self, seed: int) -> None:
+        self.seed = seed
+
+    def complete(self, prompt: str, quantum_context: str | None = None) -> str:
+        payload = f"glm:{self.seed}:{prompt}:{quantum_context}"
+        digest = hashlib.sha256(payload.encode("utf-8"))
+        return f"glm:{digest.hexdigest()[:16]}"
+
+
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _sha256_result(result: dict[str, Any]) -> str:
+    payload = json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _load_scenarios(path: Path) -> list[dict[str, Any]]:
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict) or "scenarios" not in data:
+        raise ValueError(f"Scenario file {path} is missing a 'scenarios' list")
+    scenarios = data["scenarios"]
+    if not isinstance(scenarios, list):
+        raise ValueError("'scenarios' must be a list")
+    parsed: list[dict[str, Any]] = []
+    for idx, raw in enumerate(scenarios):
+        if not isinstance(raw, dict):
+            raise ValueError(f"Scenario entry #{idx} is not a mapping")
+        if "id" not in raw or "prompt" not in raw or "expected_model" not in raw:
+            raise ValueError(f"Scenario entry #{idx} missing required keys")
+        parsed.append(raw)
+    return parsed
+
+
+def _prepare_audio_asset(
+    scenario_id: str, seed: int, result_text: str
+) -> tuple[Path, str]:
+    with tempfile.TemporaryDirectory() as tmp:
+        temp_path = Path(tmp) / f"{scenario_id}_audio.npy"
+        if np is not None:
+            rng = np.random.default_rng(seed)
+            samples = rng.standard_normal(2048).astype(np.float32)
+            np.save(temp_path, samples)
+        else:
+            payload = f"audio:{scenario_id}:{seed}:{result_text}"
+            digest = hashlib.sha256(payload.encode("utf-8")).digest()
+            temp_path.write_bytes(digest)
+        dest = session_logger.log_audio(temp_path)
+    return dest, _sha256_file(dest)
+
+
+def _prepare_video_asset(scenario_id: str, seed: int) -> tuple[Path, str]:
+    if np is not None:
+        rng = np.random.default_rng(seed)
+        frames = [
+            rng.integers(0, 255, size=(24, 24, 3), dtype=np.uint8) for _ in range(5)
+        ]
+    else:
+        rng = random.Random(seed)
+        frames = []
+        for _ in range(5):
+            frame = [rng.randint(0, 255) for _ in range(24 * 24 * 3)]
+            frames.append(frame)
+    dest = session_logger.log_video(frames)  # type: ignore[arg-type]
+    return dest, _sha256_file(dest)
+
+
+def _reset_emotion_state() -> None:
+    try:
+        emotional_state.set_current_layer(None)
+    except Exception:  # pragma: no cover - optional dependency failure
+        logger.exception("Failed to reset current layer")
+    try:
+        emotional_state.set_last_emotion(None)
+    except Exception:  # pragma: no cover - optional dependency failure
+        logger.exception("Failed to reset last emotion")
+
+
+async def _run_scenario(scenario: dict[str, Any]) -> CaptureResult:
+    scenario_id = str(scenario["id"])
+    expected_model = str(scenario["expected_model"])
+    seed = int(scenario.get("seed", 0))
+    include_memory = bool(scenario.get("include_memory", True))
+
+    logger.info(
+        "Running scenario %s (model=%s, seed=%s)", scenario_id, expected_model, seed
+    )
+
+    random.seed(seed)
+    if np is not None:
+        np.random.seed(seed)
+
+    _reset_emotion_state()
+
+    glm = _StubGLM(seed)
+
+    servant: _RecordingServant | None = None
+
+    with contextlib.ExitStack() as stack:
+        original_engine = getattr(cpo, "_STATE_ENGINE", None)
+        stack.callback(lambda: setattr(cpo, "_STATE_ENGINE", original_engine))
+        setattr(cpo, "_STATE_ENGINE", StateTransitionEngine())
+
+        if "context" in scenario:
+            context_entries = list(scenario.get("context", []))
+
+            def _load_interactions(limit: int = 3) -> list[dict[str, Any]]:
+                if limit is None:
+                    return context_entries
+                return context_entries[-limit:]
+
+        stack.enter_context(
+            mock.patch.object(cpo, "load_interactions", _load_interactions)
+        )
+
+        if "memory" in scenario:
+            memory_payload = scenario["memory"]
+
+            def _query_memory(_: str) -> dict[str, Any]:
+                return memory_payload
+
+            stack.enter_context(mock.patch.object(cpo, "query_memory", _query_memory))
+
+        stack.enter_context(
+            mock.patch.object(crown_decider, "recommend_llm", lambda *_: expected_model)
+        )
+
+        if expected_model != "glm":
+            servant = _RecordingServant(expected_model, scenario_id)
+            smm.unregister_model(expected_model)
+            smm.register_model(expected_model, servant)
+            stack.callback(lambda: smm.unregister_model(expected_model))
+
+        result = await cpo.crown_prompt_orchestrator_async(
+            str(scenario["prompt"]),
+            glm,
+            include_memory=include_memory,
+        )
+
+    result_hash = _sha256_result(result)
+    audio_path, audio_hash = _prepare_audio_asset(
+        scenario_id, seed, result.get("text", "")
+    )
+    video_path, video_hash = _prepare_video_asset(scenario_id, seed)
+    timestamp = datetime.utcnow().isoformat()
+
+    servant_prompt = servant.prompts[-1] if servant and servant.prompts else None
+
+    return CaptureResult(
+        timestamp=timestamp,
+        model=result.get("model", ""),
+        emotion=result.get("emotion"),
+        state=result.get("state"),
+        result=result,
+        result_hash=result_hash,
+        audio_path=str(audio_path),
+        audio_hash=audio_hash,
+        video_path=str(video_path),
+        video_hash=video_hash,
+        servant_prompt=servant_prompt,
+    )
+
+
+def _load_metadata(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _write_metadata(path: Path, data: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _validate_and_update_metadata(
+    scenario: dict[str, Any],
+    capture: CaptureResult,
+    metadata_path: Path,
+) -> None:
+    existing = _load_metadata(metadata_path)
+    expected_model = str(scenario["expected_model"])
+    seed = int(scenario.get("seed", 0))
+
+    capture_payload = {
+        "timestamp": capture.timestamp,
+        "model": capture.model,
+        "emotion": capture.emotion,
+        "state": capture.state,
+        "result_hash": capture.result_hash,
+        "audio_path": capture.audio_path,
+        "audio_hash": capture.audio_hash,
+        "video_path": capture.video_path,
+        "video_hash": capture.video_hash,
+        "servant_prompt": capture.servant_prompt,
+    }
+
+    if existing is None:
+        data = {
+            "id": scenario["id"],
+            "description": scenario.get("description"),
+            "prompt": scenario.get("prompt"),
+            "expected_model": expected_model,
+            "seed": seed,
+            "baseline": {**capture_payload, "result": capture.result},
+            "last_run": {**capture_payload, "result": capture.result},
+        }
+        _write_metadata(metadata_path, data)
+        return
+
+    baseline = existing.get("baseline", {})
+    if not baseline:
+        raise RuntimeError(f"Metadata for {scenario['id']} missing baseline block")
+
+    comparisons = {
+        "model": (baseline.get("model"), capture.model),
+        "result_hash": (baseline.get("result_hash"), capture.result_hash),
+        "audio_hash": (baseline.get("audio_hash"), capture.audio_hash),
+        "video_hash": (baseline.get("video_hash"), capture.video_hash),
+        "emotion": (baseline.get("emotion"), capture.emotion),
+        "state": (baseline.get("state"), capture.state),
+    }
+
+    for key, (expected, observed) in comparisons.items():
+        if expected != observed:
+            message = (
+                "Replay divergence for "
+                f"{scenario['id']}: {key} expected {expected!r} "
+                f"but observed {observed!r}"
+            )
+            raise RuntimeError(message)
+
+    existing["last_run"] = {**capture_payload, "result": capture.result}
+    _write_metadata(metadata_path, existing)
+
+
+def _update_index() -> None:
+    entries: list[dict[str, Any]] = []
+    for meta_path in sorted(LOG_DIR.glob("*.json")):
+        if meta_path.name == INDEX_FILE.name:
+            continue
+        data = json.loads(meta_path.read_text(encoding="utf-8"))
+        entry = {
+            "id": data.get("id"),
+            "expected_model": data.get("expected_model"),
+            "seed": data.get("seed"),
+            "baseline_timestamp": data.get("baseline", {}).get("timestamp"),
+            "baseline_hash": data.get("baseline", {}).get("result_hash"),
+            "last_run_timestamp": data.get("last_run", {}).get("timestamp"),
+        }
+        entries.append(entry)
+    INDEX_FILE.parent.mkdir(parents=True, exist_ok=True)
+    INDEX_FILE.write_text(
+        json.dumps(entries, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
+async def _async_main(args: argparse.Namespace) -> None:
+    scenario_file = Path(args.scenarios)
+    scenarios = _load_scenarios(scenario_file)
+
+    if args.scenario:
+        wanted = set(args.scenario)
+        scenarios = [sc for sc in scenarios if str(sc["id"]) in wanted]
+        missing = wanted - {str(sc["id"]) for sc in scenarios}
+        if missing:
+            ordered = ", ".join(sorted(missing))
+            raise SystemExit(f"Unknown scenario ids requested: {ordered}")
+
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+    for scenario in scenarios:
+        capture = await _run_scenario(scenario)
+        metadata_path = LOG_DIR / f"{scenario['id']}.json"
+        _validate_and_update_metadata(scenario, capture, metadata_path)
+
+    _update_index()
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--scenarios",
+        type=str,
+        default=str(DEFAULT_SCENARIO_FILE),
+        help="Path to the replay scenario YAML file.",
+    )
+    parser.add_argument(
+        "--scenario",
+        action="append",
+        help=(
+            "Limit execution to the specified scenario id (may be passed multiple"
+            " times)."
+        ),
+    )
+    parser.add_argument(
+        "--log-level",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Logging verbosity.",
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = _build_parser()
+    args = parser.parse_args(argv)
+    logging.basicConfig(
+        level=getattr(logging, args.log_level),
+        format="%(levelname)s %(message)s",
+    )
+    asyncio.run(_async_main(args))
+
+
+if __name__ == "__main__":  # pragma: no cover - CLI entry point
+    main()

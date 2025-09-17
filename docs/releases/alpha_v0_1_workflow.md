@@ -32,6 +32,15 @@ Alpha promotion requires a reproducible artifact bundle.
    ```
 3. Archive the generated wheel and supporting manifests under `release/` and
    cross-check signatures per [release_process.md](../release_process.md).
+4. Capture deterministic Crown replays for the Stage A evidence bundle:
+   ```bash
+   python scripts/crown_capture_replays.py
+   ```
+   The script validates the Crown → servant ladder defined in
+   `crown/replay_scenarios.yaml`, logs audio/video surrogates via
+   `tools.session_logger`, and writes hashed metadata to `logs/crown_replays/`.
+   Archive that directory with the other alpha gate artifacts so reviewers can
+   reproduce the routing traces.
 
 Successful packaging verifies that the project metadata and dependencies are in
 sync before health validation starts.
