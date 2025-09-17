@@ -10,6 +10,7 @@ SKIP_BUILD=0
 SKIP_HEALTH=0
 SKIP_TESTS=0
 RUN_CONNECTOR_CHECK=0
+RUN_CHAOS_DRILL=0
 PYTEST_EXTRA=()
 
 usage() {
@@ -21,6 +22,7 @@ Options:
   --skip-health        Skip mandatory health checks.
   --skip-tests         Skip acceptance test execution.
   --check-connectors   Run connector heartbeat checks during the health phase.
+  --run-chaos-drill    Execute the RAZAR chaos drill (dry-run) during health checks.
   --pytest-args ARGS   Extra arguments passed to pytest (may be repeated).
   -h, --help           Show this help message.
 
@@ -59,6 +61,10 @@ parse_args() {
                 ;;
             --check-connectors)
                 RUN_CONNECTOR_CHECK=1
+                shift
+                ;;
+            --run-chaos-drill)
+                RUN_CHAOS_DRILL=1
                 shift
                 ;;
             --pytest-args)
@@ -127,6 +133,15 @@ run_health_checks() {
         ) 2>&1 | tee -a "$log_file"
     else
         log_entry "$log_file" "Skipping connector sweep (enable with --check-connectors)"
+    fi
+    if ((RUN_CHAOS_DRILL == 1)); then
+        log_entry "$log_file" "Running RAZAR chaos drill in dry-run mode"
+        (
+            cd "$ROOT_DIR"
+            python scripts/razar_chaos_drill.py --dry-run
+        ) 2>&1 | tee -a "$log_file"
+    else
+        log_entry "$log_file" "Skipping RAZAR chaos drill (enable with --run-chaos-drill)"
     fi
     log_entry "$log_file" "Health checks completed"
 }

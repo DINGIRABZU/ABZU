@@ -331,3 +331,25 @@ def test_failed_escalations_log_history_before_rollback(
     assert attempts == [1, 2, 3]
 
     assert all(call["use_opencode"] is False for call in handovers)
+
+
+def test_razar_chaos_drill_records_rollbacks_and_alerts() -> None:
+    """Dry-run chaos drill exercises the full escalation ladder."""
+
+    from scripts import razar_chaos_drill
+
+    report = razar_chaos_drill.run_chaos_drill(dry_run=True)
+
+    assert report.dry_run is True
+    assert report.retry_durations, "Expected metrics.observe_retry_duration to run"
+    assert report.rollback_snapshots, "Rollback snapshots should be captured"
+    assert report.escalation_agents == ["k2 coder", "air star", "rstar"]
+
+    runbooks = report.alert_runbooks
+    assert runbooks, "Alert catalog should contain entries"
+    assert not report.alerts_missing_runbook
+    assert any(
+        "docs/runbooks/razar_escalation.md" in reference
+        for references in runbooks.values()
+        for reference in references
+    ), "Alerts must reference the escalation runbook"

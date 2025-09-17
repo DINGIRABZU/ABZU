@@ -56,6 +56,13 @@ Run the following checks in order and address any failures before continuing.
    Validates `/health` endpoints for configured connectors before running
    acceptance tests. Supply connector URLs via `OPERATOR_API_URL`,
    `WEBRTC_CONNECTOR_URL`, and `PRIMORDIALS_API_URL` as needed.
+4. **RAZAR chaos escalation drill** (optional)
+   ```bash
+   python scripts/razar_chaos_drill.py --dry-run
+   ```
+   Exercises the Crown → Kimi-cho → K2 Coder → Air Star → rStar ladder,
+   verifies `metrics.observe_retry_duration`, and confirms alert runbooks point
+   at [docs/runbooks/razar_escalation.md](../runbooks/razar_escalation.md).
 
 ## Acceptance Tests
 
@@ -101,8 +108,10 @@ logging.
 ```
 
 Pass `--skip-build`, `--skip-health`, or `--skip-tests` to bypass individual
-phases when rerunning investigations. The script exits with a non-zero status if
-any phase fails and writes consolidated logs to `logs/alpha_gate/` for review.
+phases when rerunning investigations. Use `--run-chaos-drill` to execute the
+dry-run escalation drill during the health phase. The script exits with a
+non-zero status if any phase fails and writes consolidated logs to
+`logs/alpha_gate/` for review.
 
 ## Version History
 
