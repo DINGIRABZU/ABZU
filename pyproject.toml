@@ -135,6 +135,7 @@ dev = [
     "bandit==1.8.6",
     "psutil==7.0.0",
     "coverage[toml]==7.6.10",
+    "coverage-badge==1.1.0",
 ]
 
 [project.scripts]

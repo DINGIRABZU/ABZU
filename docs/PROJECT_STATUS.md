@@ -22,16 +22,18 @@ This document summarizes the current state of the ABZU codebase. It serves as a 
 ## Test Run (pytest --maxfail=1 --cov -q)
 
 ```
-pytest --maxfail=1 --cov --cov-fail-under=0 -q tests/test_env_validation.py
+pytest --maxfail=1 --cov --cov-fail-under=90 -q \
+  tests/test_start_spiral_os.py \
+  tests/test_spiral_os.py \
+  tests/integration/test_razar_failover.py \
+  tests/test_spiral_memory.py \
+  tests/test_vector_memory.py \
+  tests/test_vector_memory_extensions.py \
+  tests/test_vector_memory_persistence.py \
+  tests/test_spiral_vector_db.py
 ```
 
-A minimal run over the environment validation tests completes without failures and exports Prometheus metrics for session runtime and pass/fail counts to `monitoring/pytest_metrics.prom`. CI enforces a minimum of 90% coverage:
-
-- `8 passed`.
-
-Coverage is **1%**; the badge above reflects the latest report.
-
-These results indicate optional dependencies and system binaries are still missing but do not block the minimal test run.
+Stage A rehearsals now exercise the Spiral OS boot entry points alongside Spiral memory and vector regression tests. Runs are expected to meet the ≥90 % coverage bar reflected in `coverage.svg`; failures block promotion from the gate.
 
 ## Recent Refactoring
 
