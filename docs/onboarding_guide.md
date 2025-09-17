@@ -19,6 +19,7 @@ Follow the setup documents:
 Study the system design materials to grasp component responsibilities and data flow:
 - [System Blueprint](system_blueprint.md)
 - [Architecture Overview](architecture_overview.md)
+- [Awakening Overview](awakening_overview.md)
 - [Data Flow](data_flow.md)
 - [Operator-Nazarick Bridge](operator_nazarick_bridge.md)
 - [Narrative Framework](narrative_framework.md)
