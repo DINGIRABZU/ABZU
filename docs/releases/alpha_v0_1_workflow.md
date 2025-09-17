@@ -83,7 +83,7 @@ Run the following checks in order and address any failures before continuing.
   ```bash
   pytest tests/integration/test_razar_failover.py
   ```
-- The suite asserts the boot orchestrator escalates through Kimicho and R*Star,
+- The suite asserts the boot orchestrator escalates through Crown → Kimi-cho → K2 Coder → Air Star → rStar,
   applies custom failover orders, and logs telemetry for
   `monitoring/razar_failover.json` dashboards.
 
