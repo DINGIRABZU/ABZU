@@ -35,6 +35,14 @@
         "multi": true,
         "includeAll": true,
         "allValue": ".*"
+      },
+      {
+        "name": "ledger_source",
+        "type": "datasource",
+        "label": "Self-Healing Ledger",
+        "query": "yesoreyeram-infinity-datasource",
+        "refresh": 2,
+        "sort": 3
       }
     ]
   },
@@ -173,6 +181,93 @@
         "reduceOptions": {
           "calcs": ["lastNotNull"],
           "fields": "",
+          "values": false
+        },
+        "orientation": "horizontal",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "type": "table",
+      "title": "Ledger Agent Success Trend",
+      "datasource": "$ledger_source",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"align": "auto"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {"color": "red", "value": 0},
+              {"color": "yellow", "value": 50},
+              {"color": "green", "value": 85}
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "monitoring/self_healing_ledger/razar_agent_trends.json",
+          "type": "json",
+          "format": "table",
+          "source": "file",
+          "url": "/monitoring/self_healing_ledger/razar_agent_trends.json",
+          "columns": [
+            {"selector": "date", "text": "date"},
+            {"selector": "agent", "text": "agent"},
+            {"selector": "component", "text": "component"},
+            {"selector": "attempts", "text": "attempts"},
+            {"selector": "successes", "text": "successes"},
+            {"selector": "failures", "text": "failures"},
+            {"selector": "success_rate", "text": "success_rate"}
+          ]
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "footer": {"show": false},
+        "sortBy": [
+          {"displayName": "date", "desc": true}
+        ]
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Ledger Lowest Success Rate",
+      "datasource": "$ledger_source",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {"color": "red", "value": 0},
+              {"color": "red", "value": 40},
+              {"color": "yellow", "value": 70},
+              {"color": "green", "value": 90}
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "monitoring/self_healing_ledger/razar_agent_trends.json",
+          "type": "json",
+          "format": "table",
+          "source": "file",
+          "url": "/monitoring/self_healing_ledger/razar_agent_trends.json"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": ["min"],
+          "fields": "success_rate",
           "values": false
         },
         "orientation": "horizontal",
