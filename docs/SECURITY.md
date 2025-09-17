@@ -11,8 +11,8 @@ variable; configuration tokens and fallback names are ignored. The loader in
 | Agent name | Environment variable | Rotation cadence | Storage & handling | Sandbox guardrails |
 | ---------- | -------------------- | ---------------- | ------------------ | ------------------ |
 | `kimi2`    | `KIMI2_API_KEY`       | Rotate every 30 days or immediately after operator turnover. | Keep the key in the sealed secrets store; export it to the runtime environment only for the agent process. Never commit it to disk, logs, or patch archives. | Spawned worker limited to 90s CPU time and ~512 MB RAM; outbound network constrained to the configured endpoint. |
-| `AiRstar`  | `AIRSTAR_API_KEY`     | Rotate every 30 days; revoke and replace after any escalation to Microsoft support. | Same storage rule as above. The key may be dual-homed in Azure Key Vault but must be injected as an environment variable at launch. | Same sandbox as above; audit log entry records every invocation. |
-| `rStar`    | `RSTAR_API_KEY`       | Rotate every 30 days; rotate in lockstep with `AIRSTAR_API_KEY` when the services share a tenant. | Store alongside the AiRstar key with identical retention policies. Export only to the invocation worker. | Same sandbox guardrails; exit codes are recorded and failures trigger fallback repair logic. |
+| `Air Star` | `AIRSTAR_API_KEY`     | Rotate every 30 days; revoke and replace after any escalation to Microsoft support. | Same storage rule as above. The key may be dual-homed in Azure Key Vault but must be injected as an environment variable at launch. | Same sandbox as above; audit log entry records every invocation. |
+| `rStar`    | `RSTAR_API_KEY`       | Rotate every 30 days; rotate in lockstep with `AIRSTAR_API_KEY` when the services share a tenant. | Store alongside the Air Star key with identical retention policies. Export only to the invocation worker. | Same sandbox guardrails; exit codes are recorded and failures trigger fallback repair logic. |
 
 ### Rotation & Storage Policy
 
