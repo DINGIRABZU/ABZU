@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- GitHub Actions `Alpha Gate` workflow and `deployment/pipelines/alpha_gate.yml`
+  mirror, executing `scripts/run_alpha_gate.sh --check-connectors`, caching
+  build artifacts, and publishing `logs/alpha_gate/` with stamped changelog
+  notes for Alpha v0.1 readiness reviews.
 - Alpha v0.1 readiness workflow documented in `docs/releases/alpha_v0_1_workflow.md`
   with `scripts/run_alpha_gate.sh` automation covering packaging, health checks,
   and acceptance tests.

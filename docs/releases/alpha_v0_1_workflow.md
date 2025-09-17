@@ -113,6 +113,32 @@ dry-run escalation drill during the health phase. The script exits with a
 non-zero status if any phase fails and writes consolidated logs to
 `logs/alpha_gate/` for review.
 
+## CI Integration
+
+- GitHub Actions workflow: `.github/workflows/alpha_gate.yml`.
+- Triggers: push events targeting `main`, weekly Monday 06:00 UTC schedule,
+  and manual `workflow_dispatch` runs when an operator wants to gate a
+  specific commit.
+- Environment preparation: restores cached `dist/` wheels, installs runtime and
+  test dependencies, and boots a lightweight mock connector server so
+  `--check-connectors` probes succeed in CI.
+- Artifacts: uploads `logs/alpha_gate/` (including the timestamped
+  `CHANGELOG.md` snippet) and the freshly built `dist/` wheel for auditing.
+- Pipeline mirror: `deployment/pipelines/alpha_gate.yml` enables `spiral-os
+  pipeline deploy deployment/pipelines/alpha_gate.yml` for local rehearsal.
+
+## Troubleshooting
+
+- Inspect the `alpha-gate-logs` artifact first; `build.log`,
+  `health_checks.log`, and `tests.log` include timestamped entries for each
+  phase.
+- Failures during connector probes usually mean the mock server was not
+  running. Re-run locally with `python -m http.server 8000` and create a `health`
+  file to mirror the CI setup before invoking the gate.
+- Packaging issues can be reproduced by running `python -m build --wheel`
+  directly; cached `dist/` artifacts are restored automatically on reruns but
+  are safe to delete if a rebuild is required.
+
 ## Version History
 
 - 2025-03-01: Initial workflow capturing alpha gate packaging, health checks,
