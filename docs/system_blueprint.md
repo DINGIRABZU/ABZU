@@ -280,7 +280,9 @@ flowchart LR
 
 Repeated failures trigger an escalation chain defined in
 `config/razar_ai_agents.json`. The recovery path executes in order, forming the
-default handover sequence **Crown → Kimi-cho → Kimi 2 → rStar**:
+default handover sequence **Crown → Kimi-cho → Kimi 2 → rStar**. Alpha v0.1 of
+the doctrine is codified in [The_Absolute_Protocol.md](The_Absolute_Protocol.md#alpha-v01-escalation-doctrine) and must be
+kept in sync with any adjustments documented here:
 
 1. **Crown** – retries locally with the current servant roster and cached
    mission context, attempting self-healing before any remote calls occur.
