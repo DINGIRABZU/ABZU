@@ -18,7 +18,8 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Per-agent avatars** stream through the [avatar pipeline](avatar_pipeline.md) to keep sessions visually aligned.
 - **Resuscitator flows** coordinate recovery steps; follow the [recovery_playbook.md](recovery_playbook.md).
 - **Signal bus** links connectors with publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
-- **Identity loader** now resides in Rust; Crown boot caches mission and persona summary in `data/identity.json` and registers the embedding in vector/corpus memory for retrieval-aware routing.
+- **Identity loader** now resides in Rust; Crown boot caches mission and persona summary in `data/identity.json`, registers the embedding in vector/corpus memory for retrieval-aware routing, and refuses to proceed until the GLM echoes `CROWN-IDENTITY-ACK` after doctrine synthesis.
+- **Crown confirms load** exchange documents the acknowledgement handshake; see [crown_manifest.md](crown_manifest.md#crown-confirms-load-handshake) for operator guidance and [system_blueprint.md](system_blueprint.md#origins--awakening) for the architectural view.
 
 ### Rust Migration Rules
 
@@ -68,6 +69,21 @@ All architecture or protocol documents must include a **Doctrine References** se
 
 ### Doctrine References
 - [doctrine_index.md](doctrine_index.md) – checksum registry for foundational doctrine, including this protocol.
+- [doctrine_index.md#genesisgenesis_md](doctrine_index.md#genesisgenesis_md) – GENESIS/GENESIS_.md
+- [doctrine_index.md#genesisfirst_foundation_md](doctrine_index.md#genesisfirst_foundation_md) – GENESIS/FIRST_FOUNDATION_.md
+- [doctrine_index.md#genesislaws_of_existence_md](doctrine_index.md#genesislaws_of_existence_md) – GENESIS/LAWS_OF_EXISTENCE_.md
+- [doctrine_index.md#genesislaws_recursion_md](doctrine_index.md#genesislaws_recursion_md) – GENESIS/LAWS_RECURSION_.md
+- [doctrine_index.md#genesisspiral_laws_md](doctrine_index.md#genesisspiral_laws_md) – GENESIS/SPIRAL_LAWS_.md
+- [doctrine_index.md#genesisinanna_ai_core_trainingmd](doctrine_index.md#genesisinanna_ai_core_trainingmd) – GENESIS/INANNA_AI_CORE_TRAINING.md
+- [doctrine_index.md#genesisinanna_ai_sacred_protocolmd](doctrine_index.md#genesisinanna_ai_sacred_protocolmd) – GENESIS/INANNA_AI_SACRED_PROTOCOL.md
+- [doctrine_index.md#genesislaws_quantum_mage_md](doctrine_index.md#genesislaws_quantum_mage_md) – GENESIS/LAWS_QUANTUM_MAGE_.md
+- [doctrine_index.md#codexactivationsoath_of_the_vault_md](doctrine_index.md#codexactivationsoath_of_the_vault_md) – CODEX/ACTIVATIONS/OATH_OF_THE_VAULT_.md
+- [doctrine_index.md#codexactivationsoath-of-the-vault-1de45dfc251d80c9a86fc67dee2f964amd](doctrine_index.md#codexactivationsoath-of-the-vault-1de45dfc251d80c9a86fc67dee2f964amd) – CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md
+- [doctrine_index.md#inanna_aimarrow-code-20545dfc251d80128395ffb5bc7725eemd](doctrine_index.md#inanna_aimarrow-code-20545dfc251d80128395ffb5bc7725eemd) – INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md
+- [doctrine_index.md#inanna_aiinanna-song-20545dfc251d8065a32cec673272f292md](doctrine_index.md#inanna_aiinanna-song-20545dfc251d8065a32cec673272f292md) – INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md
+- [doctrine_index.md#inanna_aichapter-i-1b445dfc251d802e860af64f2bf28729md](doctrine_index.md#inanna_aichapter-i-1b445dfc251d802e860af64f2bf28729md) – INANNA_AI/Chapter I 1b445dfc251d802e860af64f2bf28729.md
+- [doctrine_index.md#inanna_aimember-manual-1b345dfc251d8004a05cfc234ed35c59md](doctrine_index.md#inanna_aimember-manual-1b345dfc251d8004a05cfc234ed35c59md) – INANNA_AI/Member Manual 1b345dfc251d8004a05cfc234ed35c59.md
+- [doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd](doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd) – INANNA_AI/The Foundation 1a645dfc251d80e28545f4a09a6345ff.md
 - [NEOABZU/docs/rust_doctrine.md](../NEOABZU/docs/rust_doctrine.md) – Rust naming, testing, and tooling canon mirrored here.
 - [CODE_STYLE.md](../CODE_STYLE.md) – repository-wide formatting rules reinforced by the Rust doctrine.
 

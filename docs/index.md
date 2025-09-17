@@ -4,8 +4,8 @@ Curated starting points for understanding and operating the project. For an exha
 
 ## Orientation
 - [ABZU Project Declaration](project_mission_vision.md) – deployments must reach a living state
-- [Blueprint Spine](blueprint_spine.md) – mission overview, Operator ↔ RAZAR/Crown flow, identity embedding feed, memory bundle, and ignition map
-- [System Blueprint](system_blueprint.md) – chakra layers, Operator ↔ RAZAR/Crown flow, identity embedding pipeline, dynamic ignition, and operator UI
+- [Blueprint Spine](blueprint_spine.md) – mission overview, Operator ↔ RAZAR/Crown flow, identity embedding feed, Crown confirms load handshake, memory bundle, and ignition map
+- [System Blueprint](system_blueprint.md) – chakra layers, Operator ↔ RAZAR/Crown flow, identity embedding pipeline, handshake enforcement, dynamic ignition, and operator UI
 - [System Overview](system_overview.md) – mission, triadic stack, chakra agents, memory bundle, and avatar stack
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
 - [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview
