@@ -66,6 +66,9 @@ jobs:
             echo "No doctrine updates detected; skipping identity refresh"
           fi
 
+      - name: Verify identity sync
+        run: python scripts/check_identity_sync.py
+
       - name: Prepare mock connector endpoints
         run: |
           mkdir -p mock_connectors
