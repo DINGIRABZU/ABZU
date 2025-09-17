@@ -58,6 +58,10 @@ from . import (
     metrics,
     mission_logger,
 )
+from monitoring.boot_metrics import (
+    BootMetricValues,
+    export_metrics as export_boot_metrics,
+)
 from .bootstrap_utils import (
     HISTORY_FILE,
     LOGS_DIR,
@@ -158,10 +162,17 @@ def finalize_metrics(
     start_time: float,
 ) -> None:
     """Compute run statistics and update ``history``."""
-    total = len(run_metrics["components"])
-    successes = sum(1 for c in run_metrics["components"] if c["success"])
+    components = run_metrics["components"]
+    total = len(components)
+    successes = sum(1 for c in components if c["success"])
+    first_attempt_successes = sum(
+        1 for c in components if c["success"] and c.get("attempts", 0) == 1
+    )
+    retry_total = sum(max(int(c.get("attempts", 0)) - 1, 0) for c in components)
     run_metrics["success_rate"] = successes / total if total else 0.0
     run_metrics["total_time"] = time.time() - start_time
+    run_metrics["first_attempt_successes"] = first_attempt_successes
+    run_metrics["retry_total"] = retry_total
 
     history.setdefault("history", []).append(run_metrics)
 
@@ -185,6 +196,17 @@ def finalize_metrics(
 
     history["component_failures"] = failure_counts
     save_history(history)
+
+    try:
+        export_boot_metrics(
+            BootMetricValues(
+                first_attempt_success=float(first_attempt_successes),
+                retry_total=float(retry_total),
+                total_time=float(run_metrics["total_time"]),
+            )
+        )
+    except Exception:  # pragma: no cover - textfile export best-effort
+        LOGGER.exception("Unable to export boot metrics")
 
 
 def _persist_handshake(response: Optional[CrownResponse]) -> None:

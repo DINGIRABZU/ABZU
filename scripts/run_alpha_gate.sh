@@ -7,6 +7,7 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 LOG_DIR="$ROOT_DIR/logs/alpha_gate"
 METRICS_PROM="$ROOT_DIR/monitoring/alpha_gate.prom"
 METRICS_SUMMARY="$ROOT_DIR/monitoring/alpha_gate_summary.json"
+BOOT_METRICS_PROM="$ROOT_DIR/monitoring/boot_metrics.prom"
 
 declare -A PHASE_STARTS=()
 declare -A PHASE_ENDS=()
@@ -164,6 +165,9 @@ export_metrics() {
     fi
     if [[ -f "$METRICS_SUMMARY" ]]; then
         cp "$METRICS_SUMMARY" "$LOG_DIR/alpha_gate_summary.json"
+    fi
+    if [[ -f "$BOOT_METRICS_PROM" ]]; then
+        cp "$BOOT_METRICS_PROM" "$LOG_DIR/boot_metrics.prom"
     fi
 }
 
