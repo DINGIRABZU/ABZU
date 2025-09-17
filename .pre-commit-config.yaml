@@ -87,6 +87,13 @@ repos:
     name: Ensure blueprint updated with core changes
     entry: python scripts/ensure_blueprint_sync.py
     language: system
+  - id: check-identity-sync
+    name: Ensure Crown identity refreshed after doctrine updates
+    entry: python scripts/check_identity_sync.py
+    language: system
+    pass_filenames: false
+    files: >-
+      ^(docs/(MISSION\.md|persona_api_guide\.md|The_Absolute_Protocol\.md|ABZU_blueprint\.md|awakening_overview\.md)|data/identity\.json)
   - id: block-binaries
     name: Block binary files
     entry: python scripts/check_no_binaries.py

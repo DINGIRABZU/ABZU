@@ -35,7 +35,7 @@ ARCHITECTURE_PREFIXES: tuple[str, ...] = (
     "connectors/",
 )
 
-EXEMPT_ROOT_FILES = {"onboarding_confirm.yml"}
+EXEMPT_ROOT_FILES = {"onboarding_confirm.yml", ".pre-commit-config.yaml"}
 
 
 def _git_changed_files() -> set[Path]:
