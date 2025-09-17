@@ -271,27 +271,31 @@ flowchart LR
     Crown[Crown Router]
     Kimicho[Kimi-cho Servant]
     Kimi2[Kimi 2 Coder]
+    AirStar[Air Star Bridge]
     rStar[rStar Patch Synthesizer]
 
     Crown --> Kimicho
     Kimicho --> Kimi2
-    Kimi2 --> rStar
+    Kimi2 --> AirStar
+    AirStar --> rStar
 ```
 
 Repeated failures trigger an escalation chain defined in
 `config/razar_ai_agents.json`. The recovery path executes in order, forming the
-default handover sequence **Crown → Kimi-cho → Kimi 2 → rStar**. Alpha v0.1 of
-the doctrine is codified in [The_Absolute_Protocol.md](The_Absolute_Protocol.md#alpha-v01-escalation-doctrine) and must be
+default handover sequence **Crown → Kimi-cho → [K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2) → Air Star → [rStar](https://github.com/microsoft/rStar)**.
+Alpha v0.1 of the doctrine is codified in [The_Absolute_Protocol.md](The_Absolute_Protocol.md#alpha-v01-escalation-doctrine) and must be
 kept in sync with any adjustments documented here:
 
 1. **Crown** – retries locally with the current servant roster and cached
    mission context, attempting self-healing before any remote calls occur.
 2. **Kimi-cho** – receives the failing brief when Crown cannot self-heal and
    applies the Kimicho-specific repair heuristics that prioritize minimal edits.
-3. **[Kimi 2 (K2 Coder)](https://github.com/MoonshotAI/Kimi-K2)** – performs
+3. **[K2 Coder (Kimi 2)](https://github.com/MoonshotAI/Kimi-K2)** – performs
    code-first fixes through the PyO3 bridge when Kimi-cho reports persistent
    faults, emitting high-confidence patches.
-4. **[rStar](https://github.com/microsoft/rStar)** – final escalation target for
+4. **Air Star** – extends the MoonshotAI repair lane with cross-file planning
+   and patch validation before external escalation continues.
+5. **[rStar](https://github.com/microsoft/rStar)** – final escalation target for
    automated patch synthesis when the preceding services cannot restore the
    component.
 
@@ -312,7 +316,8 @@ Two environment-controlled thresholds govern how the ladder behaves:
 
 Operators can adjust both thresholds alongside the failover order in
 `config/razar_ai_agents.json`, and set the service parameters through
-`RSTAR_ENDPOINT` and `RSTAR_API_KEY`. See
+`KIMI2_ENDPOINT`/`KIMI2_API_KEY`, `AIRSTAR_ENDPOINT`/`AIRSTAR_API_KEY`, and
+`RSTAR_ENDPOINT`/`RSTAR_API_KEY`. See
 [RAZAR rStar Escalation](RAZAR_AGENT.md#rstar-escalation) for details and the
 [RAZAR Escalation Runbook](runbooks/razar_escalation.md) for the operational
 triage, metrics, and rollback procedures that accompany these configuration
