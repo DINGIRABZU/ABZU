@@ -38,6 +38,12 @@ rStar see every previous failure, patch attempt, and rejection.
 
 Operators should triage incidents with the following artifacts:
 
+- **Crown handshake transcripts** (`logs/razar_crown_dialogues.json`). Each
+  `crown` entry now appends an `identity_fingerprint` object that captures the
+  SHA-256 digest and last-modified timestamp of `data/identity.json` so you can
+  verify which identity summary the acknowledgement came from during
+  post-incident review.
+
 ```bash
 # Recent orchestration state changes and component failures
 tail -n 50 logs/razar.log

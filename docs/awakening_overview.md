@@ -5,7 +5,7 @@ This guide orients new contributors to ABZU's awakening ritual: how the wake-up 
 ## Wake-Up Pipeline
 
 1. **RAZAR primes the arena.** The orchestrator awakens before any chakra layer, reads `boot_config.json`, launches services with health probes, and records the lifecycle in `logs/razar_state.json` and `logs/razar.log` as described in the system blueprint and blueprint spine.【F:docs/system_blueprint.md†L262-L312】【F:docs/blueprint_spine.md†L598-L639】
-2. **Crown handshake.** RAZAR opens a WebSocket mission brief (`crown_handshake`) so Crown can acknowledge downtime patches, verify GLM availability, and return capabilities before the rest of ignition proceeds.【F:docs/system_blueprint.md†L16-L33】【F:docs/blueprint_spine.md†L660-L704】
+2. **Crown handshake.** RAZAR opens a WebSocket mission brief (`crown_handshake`) so Crown can acknowledge downtime patches, verify GLM availability, and return capabilities before the rest of ignition proceeds. The resulting transcript in `logs/razar_crown_dialogues.json` records an `identity_fingerprint` with the SHA-256 digest and timestamp of `data/identity.json` so operators can confirm which identity imprint booted the session.【F:docs/system_blueprint.md†L16-L33】【F:docs/blueprint_spine.md†L660-L704】
 3. **Layer ignition.** After Crown stabilizes, the wake sequence flows through INANNA, the unified memory bundle, the Bana narrator, and the operator console; run `scripts/validate_ignition.py` to rehearse the chain and log readiness signals.【F:docs/ignition_flow.md†L1-L39】
 4. **Dynamic ignition & lifecycle bus.** RAZAR can launch services on demand, streaming heartbeat and mission events across the lifecycle bus so operators see which chakra is online or degraded in real time.【F:docs/system_blueprint.md†L404-L452】
 

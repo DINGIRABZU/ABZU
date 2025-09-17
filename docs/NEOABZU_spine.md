@@ -11,9 +11,11 @@ Genesis and INANNA doctrine corpus listed in
 are embedded into vector and corpus memory with metadata tags so routing
 queries can recover the same ethical baseline, the GLM produces a summary, and
 the resulting identity is persisted at `data/identity.json` so subsequent
-invocations reuse the cached context. Initialization halts when the GLM fails
-to return the `CROWN-IDENTITY-ACK` token, guaranteeing acknowledgement of the
-blend.
+invocations reuse the cached context. Initialization now also publishes
+`CROWN_IDENTITY_FINGERPRINT` (SHA-256 digest plus modification timestamp) so
+mission-brief transcripts and downstream services can confirm which identity
+imprint authorized the boot. Initialization halts when the GLM fails to return
+the `CROWN-IDENTITY-ACK` token, guaranteeing acknowledgement of the blend.
 
 ### Doctrine References
 - [system_blueprint.md#razar–crown–kimi-cho-migration](system_blueprint.md#razar–crown–kimi-cho-migration)

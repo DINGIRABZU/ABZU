@@ -1755,7 +1755,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "razar/crown_handshake.py",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "dependencies": [
         "__future__",
         "dataclasses",
@@ -1775,7 +1775,8 @@
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
         "tests/integration/test_razar_failover.py",
-        "tests/test_failover_integration.py"
+        "tests/test_failover_integration.py",
+        "tests/razar/test_crown_handshake_identity.py"
       ],
       "metrics": {},
       "status": "active",
