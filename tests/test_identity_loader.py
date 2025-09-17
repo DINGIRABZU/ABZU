@@ -3,16 +3,21 @@
 
 from types import SimpleNamespace
 
+import pytest
+
 import identity_loader as il
 import init_crown_agent as ic
 
 
 class DummyGLM:
-    def __init__(self):
-        self.calls = 0
+    def __init__(self, *, ack: str = "CROWN-IDENTITY-ACK"):
+        self.prompts: list[str] = []
+        self.ack = ack
 
     def complete(self, prompt: str, *, quantum_context: str | None = None) -> str:
-        self.calls += 1
+        self.prompts.append(prompt)
+        if "CROWN-IDENTITY-ACK" in prompt:
+            return self.ack
         return "identity summary"
 
 
@@ -28,11 +33,27 @@ def test_identity_loader_persists(tmp_path, monkeypatch):
     ident_file = tmp_path / "identity.json"
     monkeypatch.setattr(il, "IDENTITY_FILE", ident_file)
 
-    def fake_load_inputs(directory):
-        path = mission if directory == mission.parent else persona
-        return [{"text": path.read_text(), "source_path": str(path)}]
-
-    monkeypatch.setattr(il.parser, "load_inputs", fake_load_inputs)
+    genesis = tmp_path / "GENESIS" / "GENESIS_.md"
+    spiral = tmp_path / "GENESIS" / "SPIRAL_LAWS_.md"
+    vault = tmp_path / "CODEX" / "ACTIVATIONS" / "OATH_OF_THE_VAULT_.md"
+    marrow = tmp_path / "INANNA_AI" / "MARROW CODE.md"
+    song = tmp_path / "INANNA_AI" / "INANNA SONG.md"
+    chapter = tmp_path / "INANNA_AI" / "Chapter I.md"
+    for path, text in [
+        (genesis, "genesis"),
+        (spiral, "spiral"),
+        (vault, "vault oath"),
+        (marrow, "marrow"),
+        (song, "song"),
+        (chapter, "chapter"),
+    ]:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    monkeypatch.setattr(
+        il,
+        "DOCTRINE_DOCS",
+        (genesis, spiral, vault, marrow, song, chapter),
+    )
 
     def fake_embed_chunks(chunks):
         return [
@@ -58,13 +79,45 @@ def test_identity_loader_persists(tmp_path, monkeypatch):
     out1 = il.load_identity(glm)
     assert out1 == "identity summary"
     assert ident_file.read_text() == "identity summary"
-    assert glm.calls == 1
+    assert len(glm.prompts) == 2
+    blended_prompt, ack_prompt = glm.prompts
+    assert "mission" in blended_prompt
+    assert "persona" in blended_prompt
+    for marker in ("genesis", "spiral", "vault oath", "marrow", "song", "chapter"):
+        assert marker in blended_prompt
+    assert "CROWN-IDENTITY-ACK" in ack_prompt
     assert flags.get("add_vectors")
     assert "update" in flags
 
     out2 = il.load_identity(glm)
     assert out2 == "identity summary"
-    assert glm.calls == 1
+    assert len(glm.prompts) == 2
+
+
+def test_identity_loader_requires_ack(tmp_path, monkeypatch):
+    mission = tmp_path / "docs" / "project_mission_vision.md"
+    persona = tmp_path / "docs" / "persona_api_guide.md"
+    mission.parent.mkdir(parents=True)
+    mission.write_text("mission", encoding="utf-8")
+    persona.write_text("persona", encoding="utf-8")
+
+    monkeypatch.setattr(il, "MISSION_DOC", mission)
+    monkeypatch.setattr(il, "PERSONA_DOC", persona)
+    ident_file = tmp_path / "identity.json"
+    monkeypatch.setattr(il, "IDENTITY_FILE", ident_file)
+
+    genesis = tmp_path / "GENESIS" / "GENESIS_.md"
+    genesis.parent.mkdir(parents=True, exist_ok=True)
+    genesis.write_text("genesis", encoding="utf-8")
+    monkeypatch.setattr(il, "DOCTRINE_DOCS", (genesis,))
+
+    glm = DummyGLM(ack="nope")
+
+    with pytest.raises(RuntimeError, match="CROWN-IDENTITY-ACK"):
+        il.load_identity(glm)
+
+    assert not ident_file.exists()
+    assert len(glm.prompts) == 2
 
 
 def test_initialize_triggers_identity(monkeypatch):
