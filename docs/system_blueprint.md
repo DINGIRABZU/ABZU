@@ -33,6 +33,7 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Per-agent avatars** render through the [avatar pipeline](avatar_pipeline.md) for synchronized sessions.
 - **Crown Router** now flows through the Rust crate [`neoabzu_crown`](../NEOABZU/crown/src/lib.rs), delivering built-in validation, orchestrator delegation, and telemetry hooks.
 - **Identity loader** migrated to Rust; Crown boot summarizes mission and persona into `data/identity.json` and seeds vector/corpus memory with an identity embedding for downstream retrieval. Each boot now emits a `CROWN_IDENTITY_FINGERPRINT` payload containing the SHA-256 digest and modification timestamp of that file so downstream audits can correlate handshake transcripts with the active identity imprint.
+- **Identity readiness telemetry** publishes the `crown_identity_ready` gauge from `init_crown_agent.py` after the identity summary hash matches the persisted fingerprint; the [RAZAR monitoring guide](monitoring/RAZAR.md) describes dashboard placement and the `CrownIdentityUnavailable` alert.
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **Neoabzu crates** released at **v0.1.2**; CI now enforces PyO3 exposure and `cargo check` on workspace crates.

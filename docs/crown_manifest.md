@@ -74,6 +74,12 @@ For a neutral summary of the router and related modules, see [architecture_overv
 
 After doctrine ingestion the identity loader issues a secondary prompt, "Confirm assimilation of the Crown identity synthesis request. Respond ONLY with the token CROWN-IDENTITY-ACK." Crown will not proceed unless the GLM echoes the token exactly. Initialization aborts if the acknowledgement is missing, preventing stale or partial personas from routing missions. Review [system_blueprint.md](system_blueprint.md#origins--awakening) and [NEOABZU_spine.md](NEOABZU_spine.md#rag--insight-pipeline) for the architecture view of the handshake.
 
+## Identity readiness telemetry
+
+`init_crown_agent.initialize_crown()` exports a Prometheus gauge named `crown_identity_ready`. The value flips to `1` after `load_identity()` completes and the SHA-256 fingerprint cached under `crown/state/crown_identity_fingerprint.json` matches the on-disk `identity.json`. Keep the value at `0` until fingerprint publication succeeds so operators can spot partial boots.
+
+Pin a single-stat panel to the top row of the **RAZAR Failover Observability** dashboard that renders this gauge (see [monitoring/RAZAR.md](monitoring/RAZAR.md)). Use green for the nominal `1` state and red for `0`. Alert if the metric stays at `0` for five minutes with the expression `min_over_time(crown_identity_ready[5m]) < 1`; this surfaces doctrine drift or a missing identity file before escalations fail.
+
 ## Key Scripts
 
 - `start_spiral_os.py` launches the Spiral OS initialization sequence and checks required environment configuration.
