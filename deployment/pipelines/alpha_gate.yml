@@ -1,0 +1,6 @@
+# Alpha Gate readiness pipeline executed via spiral-os pipeline deploy
+# Mirrors the CI workflow for Alpha v0.1 promotion validation.
+name: alpha-gate
+steps:
+  - run: scripts/run_alpha_gate.sh --check-connectors
+  - run: tar -czf logs/alpha_gate_artifacts.tgz logs/alpha_gate

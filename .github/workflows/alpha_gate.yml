@@ -1,0 +1,92 @@
+name: Alpha Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 6 * * 1'
+
+jobs:
+  alpha-gate:
+    name: Run Alpha v0.1 gate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Restore pip cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'dev-requirements.txt', 'pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-alpha-gate-dist-${{ hashFiles('pyproject.toml', 'setup.cfg') }}
+          restore-keys: |
+            ${{ runner.os }}-alpha-gate-dist-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
+          pip install build pytest
+
+      - name: Prepare mock connector endpoints
+        run: |
+          mkdir -p mock_connectors
+          echo 'ok' > mock_connectors/health
+          nohup python -m http.server 8000 --directory mock_connectors >mock_connectors/server.log 2>&1 &
+          echo $! > mock_connectors/server.pid
+
+      - name: Run Alpha gate
+        run: |
+          bash scripts/run_alpha_gate.sh --check-connectors
+
+      - name: Record gate success in changelog
+        if: success()
+        run: |
+          mkdir -p logs/alpha_gate
+          printf '\n### Alpha gate validation %s\n- workflow run: %s\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$GITHUB_RUN_ID" >> CHANGELOG.md
+          cp CHANGELOG.md logs/alpha_gate/CHANGELOG.md
+
+      - name: Upload Alpha gate logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpha-gate-logs
+          path: |
+            logs/alpha_gate/
+            mock_connectors/server.log
+          if-no-files-found: warn
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpha-gate-dist
+          path: dist/
+          if-no-files-found: warn
+
+      - name: Stop mock connector server
+        if: always()
+        run: |
+          if [ -f mock_connectors/server.pid ]; then
+            kill "$(cat mock_connectors/server.pid)" || true
+          fi
