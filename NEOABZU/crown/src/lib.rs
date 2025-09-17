@@ -25,6 +25,25 @@ fn select_store(archetype: &str) -> &str {
 const IDENTITY_FILE: &str = "data/identity.json";
 const MISSION_DOC: &str = "docs/project_mission_vision.md";
 const PERSONA_DOC: &str = "docs/persona_api_guide.md";
+const DOCTRINE_DOCS: &[&str] = &[
+    "GENESIS/GENESIS_.md",
+    "GENESIS/FIRST_FOUNDATION_.md",
+    "GENESIS/LAWS_OF_EXISTENCE_.md",
+    "GENESIS/LAWS_RECURSION_.md",
+    "GENESIS/SPIRAL_LAWS_.md",
+    "GENESIS/INANNA_AI_CORE_TRAINING.md",
+    "GENESIS/INANNA_AI_SACRED_PROTOCOL.md",
+    "GENESIS/LAWS_QUANTUM_MAGE_.md",
+    "CODEX/ACTIVATIONS/OATH_OF_THE_VAULT_.md",
+    "CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md",
+    "INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md",
+    "INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md",
+    "INANNA_AI/Chapter I 1b445dfc251d802e860af64f2bf28729.md",
+    "INANNA_AI/Member Manual 1b345dfc251d8004a05cfc234ed35c59.md",
+    "INANNA_AI/The Foundation 1a645dfc251d80e28545f4a09a6345ff.md",
+];
+const HANDSHAKE_TOKEN: &str = "CROWN-IDENTITY-ACK";
+const HANDSHAKE_PROMPT: &str = "Confirm assimilation of the Crown identity synthesis request. Respond ONLY with the token CROWN-IDENTITY-ACK.";
 
 #[pyfunction]
 fn route_query(py: Python<'_>, question: &str, archetype: &str) -> PyResult<PyObject> {
@@ -212,13 +231,16 @@ pub fn insight_semantic(text: &str) -> PyResult<Vec<(String, f32)>> {
 }
 
 #[pyfunction]
-#[pyo3(signature = (integration, mission_path=None, persona_path=None, identity_path=None))]
+#[pyo3(signature = (integration, mission_path=None, persona_path=None, identity_path=None, doctrine_paths=None))]
 pub fn load_identity(
+    py: Python<'_>,
     integration: &PyAny,
     mission_path: Option<&str>,
     persona_path: Option<&str>,
     identity_path: Option<&str>,
+    doctrine_paths: Option<&PyAny>,
 ) -> PyResult<String> {
+    let _ = py;
     let mission = mission_path.unwrap_or(MISSION_DOC);
     let persona = persona_path.unwrap_or(PERSONA_DOC);
     let identity = identity_path.unwrap_or(IDENTITY_FILE);
@@ -226,11 +248,62 @@ pub fn load_identity(
     if identity.exists() {
         return Ok(fs::read_to_string(identity).map_err(|e| PyValueError::new_err(e.to_string()))?);
     }
-    let mission_text = fs::read_to_string(mission).unwrap_or_default();
-    let persona_text = fs::read_to_string(persona).unwrap_or_default();
-    let combined = format!("{mission_text}\n{persona_text}");
-    let prompt = format!("Summarize the mission, vision, and persona: \n{combined}");
-    let summary: String = integration.call_method1("complete", (prompt,))?.extract()?;
+    let mut sections: Vec<(PathBuf, String)> = Vec::new();
+
+    if let Ok(text) = fs::read_to_string(mission) {
+        sections.push((PathBuf::from(mission), text));
+    }
+    if let Ok(text) = fs::read_to_string(persona) {
+        sections.push((PathBuf::from(persona), text));
+    }
+
+    let doctrine_files: Vec<PathBuf> = if let Some(obj) = doctrine_paths {
+        if obj.is_none() {
+            DOCTRINE_DOCS.iter().map(PathBuf::from).collect()
+        } else {
+            let docs: Vec<String> = obj
+                .extract()
+                .map_err(|_| PyValueError::new_err("doctrine_paths must be a sequence of strings"))?;
+            if docs.is_empty() {
+                DOCTRINE_DOCS.iter().map(PathBuf::from).collect()
+            } else {
+                docs.into_iter().map(PathBuf::from).collect()
+            }
+        }
+    } else {
+        DOCTRINE_DOCS.iter().map(PathBuf::from).collect()
+    };
+
+    for path in doctrine_files {
+        if let Ok(text) = fs::read_to_string(&path) {
+            sections.push((path, text));
+        }
+    }
+
+    if sections.is_empty() {
+        return Err(PyValueError::new_err("no identity source documents were available"));
+    }
+
+    let mut combined_sections = Vec::with_capacity(sections.len());
+    for (path, text) in &sections {
+        combined_sections.push(format!("## Source: {}\n{}", path.display(), text));
+    }
+    let combined = combined_sections.join("\n\n");
+    let prompt = format!(
+        "Synthesize the mission, persona, and canonical doctrine into a cohesive identity summary.\nMaintain covenantal tone and cite every pillar.\n\n{}",
+        combined
+    );
+    let summary: String = integration
+        .call_method1("complete", (prompt,))?
+        .extract()?;
+    let acknowledgement: String = integration
+        .call_method1("complete", (HANDSHAKE_PROMPT,))?
+        .extract()?;
+    if acknowledgement.trim() != HANDSHAKE_TOKEN {
+        return Err(PyValueError::new_err(
+            "identity integration handshake failed: expected CROWN-IDENTITY-ACK",
+        ));
+    }
     if let Some(parent) = identity.parent() {
         fs::create_dir_all(parent).map_err(|e| PyValueError::new_err(e.to_string()))?;
     }
