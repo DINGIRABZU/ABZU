@@ -33,3 +33,31 @@ restart commands.
 Running the test suite exports `pytest_metrics.prom` in this directory.  The file
 contains `pytest_test_duration_seconds` and `pytest_test_failures_total` metrics
 for Prometheus scraping.
+
+## Alpha Gate Metrics
+
+`scripts/run_alpha_gate.sh` now drops `monitoring/alpha_gate.prom` and a
+structured JSON summary every run. Prometheus can scrape the textfile directly
+or you can push the contents into a shared Pushgateway instance.
+
+### File-based scraping
+
+1. Add a [`textfile` collector job](https://prometheus.io/docs/instrumenting/writing_exporters/#textfile-collector)
+   to your Prometheus configuration.
+2. Symlink or copy `monitoring/alpha_gate.prom` into the directory that the
+   collector watches (for example `/var/lib/node_exporter/textfile_collector/`).
+3. Reload Prometheus and import the updated `monitoring/grafana-dashboard.json`
+   to visualize phase timing, success, and coverage panels.
+
+### Pushgateway
+
+1. Start a Pushgateway instance reachable from your automation host.
+2. After running the gate, push the metrics file:
+
+   ```bash
+   cat monitoring/alpha_gate.prom | curl --data-binary @- \
+     http://pushgateway.example.com:9091/metrics/job/alpha-gate
+   ```
+
+3. Point Grafana or alerting rules at the Pushgateway-hosted series to watch
+   coverage and phase success trends between promotions.

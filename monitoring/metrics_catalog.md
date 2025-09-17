@@ -12,4 +12,15 @@
 | `neoabzu_vector_init_latency_seconds` | Histogram | _none_ | Init RPC latency distribution | Vector service |
 | `neoabzu_vector_search_latency_seconds` | Histogram | _none_ | Search RPC latency distribution | Vector service |
 | `neoabzu_vector_store_size` | Gauge | _none_ | Embeddings loaded across vector shards | Vector service |
+| `alpha_gate_phase_start_timestamp_seconds` | Gauge | `phase` | UTC start time for each Alpha gate phase | Alpha gate |
+| `alpha_gate_phase_end_timestamp_seconds` | Gauge | `phase` | UTC completion time for each Alpha gate phase | Alpha gate |
+| `alpha_gate_phase_duration_seconds` | Gauge | `phase` | Elapsed seconds for each Alpha gate phase | Alpha gate |
+| `alpha_gate_phase_success` | Gauge | `phase` | 1 when the Alpha gate phase succeeded, 0 otherwise | Alpha gate |
+| `alpha_gate_phase_exit_code` | Gauge | `phase` | Exit code captured from the Alpha gate phase | Alpha gate |
+| `alpha_gate_phase_skipped` | Gauge | `phase` | 1 when the phase was skipped explicitly | Alpha gate |
+| `alpha_gate_overall_success` | Gauge | _none_ | 1 when all executed Alpha gate phases succeeded | Alpha gate |
+| `alpha_gate_coverage_percent` | Gauge | _none_ | Overall line coverage percentage from the gate run | Alpha gate |
+| `alpha_gate_coverage_lines_covered` | Gauge | _none_ | Total covered lines from coverage.py during the gate run | Alpha gate |
+| `alpha_gate_coverage_statements` | Gauge | _none_ | Total measured statements from coverage.py during the gate run | Alpha gate |
+| `alpha_gate_coverage_missing_lines` | Gauge | _none_ | Remaining uncovered lines from coverage.py during the gate run | Alpha gate |
 

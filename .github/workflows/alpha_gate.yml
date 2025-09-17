@@ -14,6 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      coverage-percent: ${{ steps.alpha-metrics.outputs.coverage_percent }}
+      build-success: ${{ steps.alpha-metrics.outputs.build_success }}
+      health-success: ${{ steps.alpha-metrics.outputs.health_success }}
+      tests-success: ${{ steps.alpha-metrics.outputs.tests_success }}
+      overall-success: ${{ steps.alpha-metrics.outputs.overall_success }}
     env:
       PYTHONUNBUFFERED: '1'
     steps:
@@ -80,6 +86,74 @@ jobs:
         run: |
           bash scripts/run_alpha_gate.sh --check-connectors
 
+      - name: Summarize Alpha gate metrics
+        if: always()
+        id: alpha-metrics
+        run: |
+          python - <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
+
+summary_path = Path("monitoring/alpha_gate_summary.json")
+summary: dict[str, object] | None
+if summary_path.exists():
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+else:
+    print("Alpha gate summary not found", file=sys.stderr)
+    summary = None
+
+phases = summary.get("phases", {}) if isinstance(summary, dict) else {}
+coverage = summary.get("coverage") if isinstance(summary, dict) else None
+
+def phase_info(name: str) -> dict[str, object]:
+    value = phases.get(name)
+    return value if isinstance(value, dict) else {}
+
+def fmt_bool(value: object) -> str:
+    if value is None:
+        return "unknown"
+    return "true" if value else "false"
+
+lines = ["# Alpha Gate metrics", ""]
+for phase_name in ("build", "health", "tests"):
+    phase = phase_info(phase_name)
+    success = phase.get("success")
+    skipped = phase.get("skipped")
+    duration = phase.get("duration_seconds")
+    exit_code = phase.get("exit_code")
+    lines.append(f"- **{phase_name.title()}**: success={fmt_bool(success)} skipped={fmt_bool(skipped)} duration={duration or 'n/a'}s exit_code={exit_code if exit_code is not None else 'n/a'}")
+
+coverage_percent = None
+if isinstance(coverage, dict):
+    coverage_percent = coverage.get("percent")
+    if coverage_percent is not None:
+        lines.append("")
+        lines.append(f"- **Coverage**: {coverage_percent}% line coverage")
+
+overall_success = summary.get("overall_success") if isinstance(summary, dict) else None
+lines.append("")
+lines.append(f"- **Overall**: success={fmt_bool(overall_success)}")
+
+summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+if summary_file:
+    with open(summary_file, "a", encoding="utf-8") as handle:
+        handle.write("\n".join(lines) + "\n")
+
+output_file = os.environ.get("GITHUB_OUTPUT")
+if output_file:
+    build = phase_info("build").get("success")
+    health = phase_info("health").get("success")
+    tests = phase_info("tests").get("success")
+    with open(output_file, "a", encoding="utf-8") as handle:
+        handle.write(f"coverage_percent={coverage_percent if coverage_percent is not None else 'unknown'}\n")
+        handle.write(f"build_success={fmt_bool(build)}\n")
+        handle.write(f"health_success={fmt_bool(health)}\n")
+        handle.write(f"tests_success={fmt_bool(tests)}\n")
+        handle.write(f"overall_success={fmt_bool(overall_success)}\n")
+PY
+
       - name: Record gate success in changelog
         if: success()
         run: |
@@ -96,6 +170,16 @@ jobs:
             logs/alpha_gate/
             logs/identity_refresh/
             mock_connectors/server.log
+          if-no-files-found: warn
+
+      - name: Upload Alpha gate metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpha-gate-metrics
+          path: |
+            monitoring/alpha_gate.prom
+            monitoring/alpha_gate_summary.json
           if-no-files-found: warn
 
       - name: Upload build artifacts
