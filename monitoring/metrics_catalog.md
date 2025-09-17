@@ -23,4 +23,7 @@
 | `alpha_gate_coverage_lines_covered` | Gauge | _none_ | Total covered lines from coverage.py during the gate run | Alpha gate |
 | `alpha_gate_coverage_statements` | Gauge | _none_ | Total measured statements from coverage.py during the gate run | Alpha gate |
 | `alpha_gate_coverage_missing_lines` | Gauge | _none_ | Remaining uncovered lines from coverage.py during the gate run | Alpha gate |
+| `razar_boot_first_attempt_success_total` | Gauge | _none_ | Components that succeeded on their first attempt in the latest boot run | Boot Ops |
+| `razar_boot_retry_total` | Gauge | _none_ | Aggregate retry count recorded during the latest boot run | Boot Ops |
+| `razar_boot_total_time_seconds` | Gauge | _none_ | Wall-clock duration of the latest boot sequence in seconds | Boot Ops |
 

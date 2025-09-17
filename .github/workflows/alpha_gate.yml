@@ -180,6 +180,7 @@ PY
           path: |
             monitoring/alpha_gate.prom
             monitoring/alpha_gate_summary.json
+            monitoring/boot_metrics.prom
           if-no-files-found: warn
 
       - name: Upload build artifacts

@@ -14,6 +14,9 @@ loop documented in [alpha_v0_1_charter.md](../alpha_v0_1_charter.md) and the
   `HF_TOKEN`) are exported or populated in `secrets.env`.
 - Install Python build tooling (`python -m pip install build`) and make sure the
   repository root is clean (`git status` shows no pending changes).
+- Review the Stage A runner requirements in
+  [hardware_support.md](../hardware_support.md) to confirm firmware and
+  exporter configuration before starting the gate.
 
 ## Build Packaging
 

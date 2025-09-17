@@ -40,6 +40,16 @@ for Prometheus scraping.
 structured JSON summary every run. Prometheus can scrape the textfile directly
 or you can push the contents into a shared Pushgateway instance.
 
+## Boot Metrics
+
+`razar.boot_orchestrator` exports `monitoring/boot_metrics.prom` with gauges for
+first-attempt successes, total retries, and the end-to-end boot duration. The
+Stage A gate copies the file into `logs/alpha_gate/boot_metrics.prom`, and the
+CI pipeline publishes it with the other Alpha gate artifacts. Point a Node
+Exporter textfile collector at the directory to surface the gauges on the Boot
+Ops Grafana board (panels titled *Boot First Attempt Successes*, *Boot Retry
+Attempts*, and *Boot Total Time*).
+
 ### File-based scraping
 
 1. Add a [`textfile` collector job](https://prometheus.io/docs/instrumenting/writing_exporters/#textfile-collector)

@@ -144,6 +144,38 @@
           "legendFormat": "coverage"
         }
       ]
+    },
+    {
+      "type": "stat",
+      "title": "Boot First Attempt Successes",
+      "targets": [
+        {
+          "expr": "razar_boot_first_attempt_success_total"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Boot Retry Attempts",
+      "targets": [
+        {
+          "expr": "razar_boot_retry_total"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Boot Total Time",
+      "targets": [
+        {
+          "expr": "razar_boot_total_time_seconds"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
     }
   ]
 }
