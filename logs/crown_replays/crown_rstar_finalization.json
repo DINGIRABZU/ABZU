@@ -1,0 +1,27 @@
+{
+  "id": "crown_rstar_finalization",
+  "expected_model": "rstar",
+  "seed": 5105,
+  "baseline": {
+    "model": "rstar",
+    "emotion": "neutral",
+    "state": "ritual",
+    "result_hash": "8b61fd4c4588866d50e33ce6c2ab8c680381bbcb35772468bea3397ef30a749f",
+    "audio_hash": "356f77bdfc4152529276bae5413a471c5edbc24647acf3c920a59a59cc18286e",
+    "video_hash": "ff756ee1ff0a0ee928d3a1c8e95a2873d3bddf5ed7159e7ed19c1ecef1e518f6",
+    "servant_prompt": "Air Star verdict: guard_path needs resilience hooks for telemetry gaps.\nrStar escalation protocol: include rollback stanza in final patch.\nOperator directive: archive final remediation in Stage A evidence bundle.\n\nrStar, synthesize the final remediation script so the ritual activation\ncompletes even under degraded telemetry.\n",
+    "result": {
+      "text": "rstar:97a088bb75f887f7",
+      "model": "rstar",
+      "emotion": "neutral",
+      "archetype": "Everyman",
+      "weight": 0.2,
+      "state": "ritual",
+      "context_used": "Air Star: handing final remediation to rStar with validation notes.",
+      "symbol": "♑",
+      "glyph_path": "crown_glyphs/c6006d9640b4e457.png",
+      "glyph_phrase": "Glyph hash c6006d9640b4",
+      "spiral_recall": "rStar, synthesize the final remediation script so the ritual activation\ncompletes even under degraded telemetry.\n\n<spiral:fc9a26a8d0769f9a>"
+    }
+  }
+}

@@ -8,6 +8,7 @@ LOG_DIR="$ROOT_DIR/logs/alpha_gate"
 METRICS_PROM="$ROOT_DIR/monitoring/alpha_gate.prom"
 METRICS_SUMMARY="$ROOT_DIR/monitoring/alpha_gate_summary.json"
 BOOT_METRICS_PROM="$ROOT_DIR/monitoring/boot_metrics.prom"
+REPLAY_SUMMARY="$ROOT_DIR/monitoring/crown_replay_summary.json"
 
 declare -A PHASE_STARTS=()
 declare -A PHASE_ENDS=()
@@ -158,6 +159,7 @@ export_metrics() {
         --prom-path "$METRICS_PROM" \
         --summary-path "$METRICS_SUMMARY" \
         --coverage-json "$ROOT_DIR/coverage.json" \
+        --replay-summary "$REPLAY_SUMMARY" \
         "${phase_args[@]}"
 
     if [[ -f "$METRICS_PROM" ]]; then
@@ -231,14 +233,16 @@ run_tests() {
         tests/test_vector_memory_extensions.py
         tests/test_vector_memory_persistence.py
         tests/test_spiral_vector_db.py
+        tests/crown/test_replay_determinism.py
     )
     if ((${#PYTEST_EXTRA[@]} > 0)); then
         pytest_args+=("${PYTEST_EXTRA[@]}")
     fi
     log_entry "$log_file" "Running pytest ${pytest_args[*]}"
+    rm -f "$REPLAY_SUMMARY" "$LOG_DIR/crown_replay_summary.json"
     (
         cd "$ROOT_DIR"
-        pytest "${pytest_args[@]}"
+        CROWN_REPLAY_SUMMARY_PATH="$REPLAY_SUMMARY" pytest "${pytest_args[@]}"
     ) 2>&1 | tee -a "$log_file"
     log_entry "$log_file" "Exporting coverage reports"
     (
@@ -250,6 +254,9 @@ run_tests() {
     cp "$ROOT_DIR/coverage.json" "$LOG_DIR/coverage.json"
     rm -rf "$LOG_DIR/htmlcov"
     cp -r "$ROOT_DIR/htmlcov" "$LOG_DIR/htmlcov"
+    if [[ -f "$REPLAY_SUMMARY" ]]; then
+        cp "$REPLAY_SUMMARY" "$LOG_DIR/crown_replay_summary.json"
+    fi
     log_entry "$log_file" "Acceptance tests completed"
 }
 

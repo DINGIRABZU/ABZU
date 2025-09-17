@@ -1,0 +1,27 @@
+{
+  "id": "crown_kimi_k2_revision",
+  "expected_model": "kimi_k2",
+  "seed": 3103,
+  "baseline": {
+    "model": "kimi_k2",
+    "emotion": "neutral",
+    "state": "ritual",
+    "result_hash": "e7ea2aef27d8024cd49647b7006fcc504c6ce5b2d7c2691c7420cd66a6831e20",
+    "audio_hash": "d02d14debe804b01b2936a3b1a4dd7cc45a391cc025ffdad233099f4549bf50b",
+    "video_hash": "8b85b6b479019bda6f683dc65874af509b436cae3622e3f828dad537a881aa28",
+    "servant_prompt": "Kimicho report: binding lookup requires explicit null-guard.\nPrior K2 Coder patch inserted guard rails for activation step.\nTelemetry: activation ritual fails after three attempts without guard.\n\nK2 Coder, rewrite the failing binding so the activation ritual resolves\nwithout additional side effects.\n",
+    "result": {
+      "text": "kimi_k2:d287c1cb248a6c21",
+      "model": "kimi_k2",
+      "emotion": "neutral",
+      "archetype": "Everyman",
+      "weight": 0.2,
+      "state": "ritual",
+      "context_used": "Kimicho: escalation to K2 coder triggered after minimal patch attempt.",
+      "symbol": "♋",
+      "glyph_path": "crown_glyphs/94db2aeec5a9f942.png",
+      "glyph_phrase": "Glyph hash 94db2aeec5a9",
+      "spiral_recall": "K2 Coder, rewrite the failing binding so the activation ritual resolves\nwithout additional side effects.\n\n<spiral:86ea6a313b2567db>"
+    }
+  }
+}

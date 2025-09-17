@@ -108,7 +108,9 @@ def load_coverage(path: Path) -> Dict[str, Any]:
 
 
 def build_registry(
-    phases: Iterable[PhaseRecord], coverage: Dict[str, Any]
+    phases: Iterable[PhaseRecord],
+    coverage: Dict[str, Any],
+    replay_summary: Optional[Dict[str, Any]] = None,
 ) -> CollectorRegistry:
     registry = CollectorRegistry()
     start_metric = Gauge(
@@ -204,11 +206,37 @@ def build_registry(
                 registry=registry,
             ).set(float(coverage["missing_lines"]))
 
+    if replay_summary:
+        divergences = replay_summary.get("divergences")
+        if divergences is not None:
+            Gauge(
+                "crown_replay_divergences_total",
+                "Number of replay divergences detected during Crown regression.",
+                registry=registry,
+            ).set(float(divergences))
+        duration = replay_summary.get("duration_seconds")
+        if duration is not None:
+            Gauge(
+                "crown_replay_duration_seconds",
+                "Elapsed seconds spent replaying recorded Crown scenarios.",
+                registry=registry,
+            ).set(float(duration))
+        scenarios = replay_summary.get("scenarios")
+        if scenarios is not None:
+            Gauge(
+                "crown_replay_scenarios_total",
+                "Total recorded scenarios exercised during replay regression.",
+                registry=registry,
+            ).set(float(scenarios))
+
     return registry
 
 
 def write_summary(
-    path: Path, phases: Iterable[PhaseRecord], coverage: Dict[str, Any]
+    path: Path,
+    phases: Iterable[PhaseRecord],
+    coverage: Dict[str, Any],
+    replay_summary: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     summary = {
         "generated_at": isoformat_or_none(
@@ -216,6 +244,7 @@ def write_summary(
         ),
         "phases": {phase.name: phase.to_summary() for phase in phases},
         "coverage": coverage or None,
+        "replay": replay_summary or None,
     }
     all_success = True
     for phase in phases:
@@ -228,6 +257,21 @@ def write_summary(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     return summary
+
+
+def load_replay_summary(path: Optional[Path]) -> Optional[Dict[str, Any]]:
+    if path is None:
+        return None
+    if not path.exists():
+        return None
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            f"failed to decode Crown replay summary at {path}: {exc}"
+        ) from exc
+    return data
 
 
 def main(argv: Optional[Iterable[str]] = None) -> int:
@@ -259,17 +303,24 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
         default=DEFAULT_SUMMARY_PATH,
         help="Path to write the structured Alpha gate summary JSON.",
     )
+    parser.add_argument(
+        "--replay-summary",
+        type=Path,
+        default=None,
+        help="Optional path to the Crown replay summary JSON.",
+    )
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     phases: list[PhaseRecord] = args.phases or []
     phases.sort(key=lambda record: record.name)
     coverage = load_coverage(args.coverage_json)
+    replay_summary = load_replay_summary(args.replay_summary)
 
-    registry = build_registry(phases, coverage)
+    registry = build_registry(phases, coverage, replay_summary)
     args.prom_path.parent.mkdir(parents=True, exist_ok=True)
     write_to_textfile(str(args.prom_path), registry)
 
-    write_summary(args.summary_path, phases, coverage)
+    write_summary(args.summary_path, phases, coverage, replay_summary)
     return 0
 
 

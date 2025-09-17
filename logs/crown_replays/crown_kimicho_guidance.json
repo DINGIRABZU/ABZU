@@ -1,0 +1,27 @@
+{
+  "id": "crown_kimicho_guidance",
+  "expected_model": "kimicho",
+  "seed": 2102,
+  "baseline": {
+    "model": "kimicho",
+    "emotion": "neutral",
+    "state": "ritual",
+    "result_hash": "9c1e53a1a23efb61566a867c9e804a4848986017fe93c9bf7046708b0c7eb31a",
+    "audio_hash": "174e95e83de7913f43f19c209ac248aec5145c4f9491b27249e4c8df48f61814",
+    "video_hash": "d90d65f8241fe5a727e4793f6879190a9a596ecbd7971774eb626b264457a803",
+    "servant_prompt": "Ritual ledger flagged missing binding during prior rehearsal.\nKimicho heuristic: prefer minimal code insertion before escalation.\nOperator note: retain existing bindings when applying Kimicho patch.\n\nKimicho, diagnose this failure signature and outline a minimal patch.\nTraceback: ValueError: ritual binding missing during activation stage.\n",
+    "result": {
+      "text": "kimicho:512ea5dc8cdd1dbd",
+      "model": "kimicho",
+      "emotion": "neutral",
+      "archetype": "Everyman",
+      "weight": 0.2,
+      "state": "ritual",
+      "context_used": "Operator: escalation requested for ritual binding fault.",
+      "symbol": "⚚",
+      "glyph_path": "crown_glyphs/3827620c5036a3d8.png",
+      "glyph_phrase": "Glyph hash 3827620c5036",
+      "spiral_recall": "Kimicho, diagnose this failure signature and outline a minimal patch.\nTraceback: ValueError: ritual binding missing during activation stage.\n\n<spiral:8720705182656260>"
+    }
+  }
+}
