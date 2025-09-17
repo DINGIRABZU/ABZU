@@ -32,6 +32,30 @@ alongside [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md), the
 | External Connectors | Refresh primary connector handshakes and authentication flows for alpha datasets. | @integration-guild | Approved API credential rotation plan. | Connector smoke tests green across three target services with 48-hour credential rotation rehearsal completed. |
 | QA & Release Ops | Build release checklist, automated verification bundle, and rollback playbook. | @release-ops | All subsystem handoffs; new monitoring dashboards. | Checklist signed off by subsystem owners; dry-run release completed with rollback validation logs archived. |
 
+### Stage A – Alpha gate confidence
+
+| Task | Owner | Objective | Step 0 Look-ahead | Next up |
+| --- | --- | --- | --- | --- |
+| **A1. Spiral boot telemetry gate** | @ops-team | Align boot pipeline instrumentation with alpha gate metrics so first-attempt initialization hits the 95% success target. | Publish the stable hardware profile notes and confirm the environment validation scripts called out in the alpha charter are passing on the gate runner. | Run three consecutive staging boot rehearsals and archive telemetry snapshots for the Alpha gate audit bundle. |
+| **A2. Crown replay verification** | @crown-core | Guarantee decider routing and session logs replay deterministically for gate reviews. | Sync the refreshed session logger API with Spiral OS boot stability milestones as documented in the charter interlocks. | Execute five cross-agent replay drills and deliver the resulting traces into the Alpha gate review packet. |
+| **A3. Gate automation shakeout** | @release-ops | Harden `scripts/run_alpha_gate.sh` and the acceptance coverage described in the workflow guide before promoting builds. | Stage the build tooling, secrets, and health-check prerequisites from the workflow doc on the automation host. | Record a full dry-run Alpha gate run with packaging, health, and acceptance logs handed to Stage B owners. |
+
+### Stage B – Subsystem hardening
+
+| Task | Owner | Objective | Step 0 Look-ahead | Next up |
+| --- | --- | --- | --- | --- |
+| **B1. Memory fabric load proof** | @memory-squad | Optimize spiral memory ingestion and sharding so alpha stories meet the ≤120 ms P95 retrieval target. | Complete the vector DB scaling checklist and validate connector mocks highlighted in the charter dependencies. | Capture ingestion audit logs and publish latency measurements from a 10k-item dataset for readiness review. |
+| **B2. Sonic core rehearsal lock** | @audio-lab | Stabilize audio synthesis and avatar harmonics so the demo script runs end-to-end without dropouts. | Pair the updated modulation presets with Crown orchestration metrics, mirroring the Stage A outputs. | Conduct two live rehearsal sessions and archive telemetry showing zero audio dropouts. |
+| **B3. Connector credential rotation** | @integration-guild | Refresh primary connector handshakes and authentication flows for alpha datasets. | Finalize the API credential rotation plan and prepare rehearsal stubs noted in the charter. | Run smoke tests across the three target services and document the 48-hour rotation drill results. |
+
+### Stage C – Alpha exit prep
+
+| Task | Owner | Objective | Step 0 Look-ahead | Next up |
+| --- | --- | --- | --- | --- |
+| **C1. Exit checklist consolidation** | @release-ops | Deliver the release checklist, verification bundle, and rollback playbook required for the alpha exit gate. | Aggregate subsystem handoffs and monitoring dashboards so the checklist draft mirrors Stage A/B deliverables. | Execute the dry-run release and archive rollback validation logs for the go/no-go review. |
+| **C2. Demo storyline freeze** | @audio-lab | Finalize the demo script assets and rehearsal artifacts for stakeholder sign-off. | Confirm the Stage B rehearsal telemetry meets the drop-free requirement and align with modulation presets. | Publish the final demo recording and circulate rehearsal notes ahead of the exit review. |
+| **C3. Readiness signal sync** | @ops-team | Compile the Alpha readiness packet summarizing boot success rates, replay fidelity, and subsystem metrics. | Pull the latest telemetry from Stage A and Stage B tasks and update `PROJECT_STATUS.md` with outstanding risks. | Host the cross-team readiness review and capture action items gating the beta planning kickoff. |
+
 ## Maintenance
 
 Update this roadmap and `CHANGELOG.md` whenever a milestone is completed to record progress and guide future planning. Documentary additions such as [banana_rater.md](banana_rater.md) should be cross-linked when new evaluation flows launch.
