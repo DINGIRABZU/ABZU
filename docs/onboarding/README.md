@@ -13,7 +13,8 @@ The Crown router, RAG orchestrator, and Kimicho fallback now use Rust crates (`n
 2. [Architecture Overview](../architecture_overview.md)
 3. [The Absolute Protocol](../The_Absolute_Protocol.md)
 4. [Blueprint Spine](../blueprint_spine.md)
-5. Module-specific guides relevant to your work:
+5. [Awakening Overview](../awakening_overview.md)
+6. Module-specific guides relevant to your work:
    - [Vector Memory](../vector_memory.md)
    - [RAG Pipeline](../rag_pipeline.md)
    - [RAG Music Oracle](../rag_music_oracle.md)
@@ -24,11 +25,11 @@ The Crown router, RAG orchestrator, and Kimicho fallback now use Rust crates (`n
    - [Narrative Engine Guide](../narrative_engine_GUIDE.md)
    - [Python Alpha Squad Dossier](python_alpha_squad.md) – subsystem leads, daily rituals, and escalation touchpoints for RAZAR boot ownership
 
-6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
-7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage
-8. [Neo-APSU Onboarding](../../NEOABZU/docs/onboarding.md) – orientation for cross-project work
-9. [OROBOROS Engine](../../NEOABZU/docs/OROBOROS_Engine.md), [OROBOROS Lexicon](../../NEOABZU/docs/OROBOROS_Lexicon.md), and [Migration Crosswalk](../../NEOABZU/docs/migration_crosswalk.md) – review engine mechanics, canonical glyphs, and Python↔Rust mapping
-10. [First Consecrated Computation](../../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation) – narrative log of the inaugural ceremony
+7. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
+8. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage
+9. [Neo-APSU Onboarding](../../NEOABZU/docs/onboarding.md) – orientation for cross-project work
+10. [OROBOROS Engine](../../NEOABZU/docs/OROBOROS_Engine.md), [OROBOROS Lexicon](../../NEOABZU/docs/OROBOROS_Lexicon.md), and [Migration Crosswalk](../../NEOABZU/docs/migration_crosswalk.md) – review engine mechanics, canonical glyphs, and Python↔Rust mapping
+11. [First Consecrated Computation](../../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation) – narrative log of the inaugural ceremony
 
 Confirm each item before starting code changes.
 

@@ -308,6 +308,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [avatar_ethics.md](avatar_ethics.md) | Avatar Ethics | The avatar and call features rely on audiovisual data that may reveal personal information. Operators must handle rec... | - |
 | [avatar_pipeline.md](avatar_pipeline.md) | Avatar Pipeline | The avatar pipeline synchronises generated speech with visual animation. It reads configuration from `guides/avatar_c... | - |
 | [avatar_setup.md](avatar_setup.md) | Avatar Setup | Configure the avatar pipeline by defining environment variables and adjusting textures. | - |
+| [awakening_overview.md](awakening_overview.md) | Awakening Overview | This guide orients new contributors to ABZU's awakening ritual: how the wake-up pipeline brings the stack online, how... | - |
 | [bana_engine.md](bana_engine.md) | Bana Engine | This guide summarizes the Bana narrative engine built on a fine‑tuned Mistral 7B model. It covers training data sourc... | - |
 | [banana_rater.md](banana_rater.md) | Banana Rater | - | - |
 | [benchmarks/rust_vs_python.md](benchmarks/rust_vs_python.md) | Rust vs Python Path Benchmark | The `rust_vs_python_path.py` script compares call throughput between the Rust `neoabzu_chakrapulse` implementation an... | - |
