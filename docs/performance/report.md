@@ -29,3 +29,11 @@ make bench-query-memory
 ```
 
 Benchmarks run weekly via the scheduled `Benchmarks` GitHub Actions workflow.
+
+## RAZAR Escalation Simulation
+
+`scripts/bench_razar_escalation.py` exercises bursty handover patterns and
+records Prometheus samples through `razar.metrics`. The generated
+[`razar_escalation.md`](razar_escalation.md) summary tracks latency percentiles
+against resilience expectations for the **Root chakra upgrade (Q3 2024)**
+milestone noted in [ABSOLUTE_MILESTONES.md](../ABSOLUTE_MILESTONES.md).
