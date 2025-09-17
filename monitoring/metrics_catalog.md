@@ -26,4 +26,8 @@
 | `razar_boot_first_attempt_success_total` | Gauge | _none_ | Components that succeeded on their first attempt in the latest boot run | Boot Ops |
 | `razar_boot_retry_total` | Gauge | _none_ | Aggregate retry count recorded during the latest boot run | Boot Ops |
 | `razar_boot_total_time_seconds` | Gauge | _none_ | Wall-clock duration of the latest boot sequence in seconds | Boot Ops |
+| `razar_boot_success_rate` | Gauge | _none_ | Success ratio recorded for the most recent boot sequence | Boot Ops |
+| `razar_boot_component_total` | Gauge | _none_ | Components evaluated during the most recent boot run | Boot Ops |
+| `razar_boot_component_success_total` | Gauge | _none_ | Components that completed successfully in the most recent boot run | Boot Ops |
+| `razar_boot_component_failure_total` | Gauge | _none_ | Components that failed in the most recent boot run | Boot Ops |
 

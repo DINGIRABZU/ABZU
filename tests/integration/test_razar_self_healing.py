@@ -9,6 +9,8 @@ import pytest
 
 import tests.conftest as conftest_module
 
+from monitoring.boot_metrics import METRIC_NAMES
+
 conftest_module.ALLOWED_TESTS.add(str(Path(__file__).resolve()))
 
 COMPONENT_NAME = "demo-self-heal-service"
@@ -333,7 +335,10 @@ def test_failed_escalations_log_history_before_rollback(
     assert all(call["use_opencode"] is False for call in handovers)
 
 
-def test_razar_chaos_drill_records_rollbacks_and_alerts() -> None:
+def test_razar_chaos_drill_records_rollbacks_and_alerts(
+    boot_metrics_output: Path,
+    parse_prometheus_textfile,
+) -> None:
     """Dry-run chaos drill exercises the full escalation ladder."""
 
     from scripts import razar_chaos_drill
@@ -353,3 +358,10 @@ def test_razar_chaos_drill_records_rollbacks_and_alerts() -> None:
         for references in runbooks.values()
         for reference in references
     ), "Alerts must reference the escalation runbook"
+
+    assert boot_metrics_output.exists(), "Chaos drill should export boot metrics"
+    metrics = parse_prometheus_textfile(boot_metrics_output)
+    assert metrics[METRIC_NAMES.component_total] == pytest.approx(1.0)
+    assert metrics[METRIC_NAMES.component_success_total] == pytest.approx(0.0)
+    assert metrics[METRIC_NAMES.component_failure_total] == pytest.approx(1.0)
+    assert metrics[METRIC_NAMES.success_rate] == pytest.approx(0.0)

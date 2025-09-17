@@ -22,6 +22,10 @@ __all__ = [
     "RETRY_TOTAL_GAUGE",
     "TOTAL_TIME_GAUGE",
     "BootMetricValues",
+    "SUCCESS_RATE_GAUGE",
+    "COMPONENT_TOTAL_GAUGE",
+    "COMPONENT_SUCCESS_GAUGE",
+    "COMPONENT_FAILURE_GAUGE",
     "export_metrics",
 ]
 
@@ -33,6 +37,10 @@ class BootMetricNames:
     first_attempt_success: str = "razar_boot_first_attempt_success_total"
     retry_total: str = "razar_boot_retry_total"
     total_time: str = "razar_boot_total_time_seconds"
+    success_rate: str = "razar_boot_success_rate"
+    component_total: str = "razar_boot_component_total"
+    component_success_total: str = "razar_boot_component_success_total"
+    component_failure_total: str = "razar_boot_component_failure_total"
 
 
 METRIC_NAMES = BootMetricNames()
@@ -56,11 +64,35 @@ if CollectorRegistry is not None and Gauge is not None:  # pragma: no branch
         "Wall-clock time required to finish the latest boot sequence in seconds.",
         registry=BOOT_METRICS_REGISTRY,
     )
+    SUCCESS_RATE_GAUGE = Gauge(
+        METRIC_NAMES.success_rate,
+        "Overall success ratio recorded during the latest boot run.",
+        registry=BOOT_METRICS_REGISTRY,
+    )
+    COMPONENT_TOTAL_GAUGE = Gauge(
+        METRIC_NAMES.component_total,
+        "Total components evaluated during the latest boot run.",
+        registry=BOOT_METRICS_REGISTRY,
+    )
+    COMPONENT_SUCCESS_GAUGE = Gauge(
+        METRIC_NAMES.component_success_total,
+        "Components that completed successfully in the latest boot run.",
+        registry=BOOT_METRICS_REGISTRY,
+    )
+    COMPONENT_FAILURE_GAUGE = Gauge(
+        METRIC_NAMES.component_failure_total,
+        "Components that failed in the latest boot run.",
+        registry=BOOT_METRICS_REGISTRY,
+    )
 else:  # pragma: no cover - metrics disabled without prometheus_client
     BOOT_METRICS_REGISTRY = None  # type: ignore[assignment]
     FIRST_ATTEMPT_SUCCESS_GAUGE = None  # type: ignore[assignment]
     RETRY_TOTAL_GAUGE = None  # type: ignore[assignment]
     TOTAL_TIME_GAUGE = None  # type: ignore[assignment]
+    SUCCESS_RATE_GAUGE = None  # type: ignore[assignment]
+    COMPONENT_TOTAL_GAUGE = None  # type: ignore[assignment]
+    COMPONENT_SUCCESS_GAUGE = None  # type: ignore[assignment]
+    COMPONENT_FAILURE_GAUGE = None  # type: ignore[assignment]
 
 
 @dataclass(frozen=True)
@@ -70,6 +102,10 @@ class BootMetricValues:
     first_attempt_success: float
     retry_total: float
     total_time: float
+    success_rate: float
+    component_total: float
+    component_success: float
+    component_failure: float
 
 
 def export_metrics(
@@ -81,6 +117,10 @@ def export_metrics(
     gauge_first = FIRST_ATTEMPT_SUCCESS_GAUGE
     gauge_retry = RETRY_TOTAL_GAUGE
     gauge_time = TOTAL_TIME_GAUGE
+    gauge_success_rate = SUCCESS_RATE_GAUGE
+    gauge_component_total = COMPONENT_TOTAL_GAUGE
+    gauge_component_success = COMPONENT_SUCCESS_GAUGE
+    gauge_component_failure = COMPONENT_FAILURE_GAUGE
     writer = write_to_textfile
 
     if (
@@ -88,12 +128,20 @@ def export_metrics(
         or gauge_first is None
         or gauge_retry is None
         or gauge_time is None
+        or gauge_success_rate is None
+        or gauge_component_total is None
+        or gauge_component_success is None
+        or gauge_component_failure is None
     ):
         return None
 
     gauge_first.set(values.first_attempt_success)
     gauge_retry.set(values.retry_total)
     gauge_time.set(values.total_time)
+    gauge_success_rate.set(values.success_rate)
+    gauge_component_total.set(values.component_total)
+    gauge_component_success.set(values.component_success)
+    gauge_component_failure.set(values.component_failure)
 
     path = Path(output_path) if output_path is not None else BOOT_METRICS_PATH
     path.parent.mkdir(parents=True, exist_ok=True)

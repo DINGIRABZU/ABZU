@@ -42,6 +42,36 @@ def boot_config_path() -> Path:
     return BOOT_CONFIG_PATH
 
 
+@pytest.fixture
+def boot_metrics_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Redirect Prometheus boot metrics to a temporary path for tests."""
+
+    from monitoring import boot_metrics
+
+    output = tmp_path / "monitoring" / "boot_metrics.prom"
+    monkeypatch.setattr(boot_metrics, "BOOT_METRICS_PATH", output)
+    return output
+
+
+@pytest.fixture
+def parse_prometheus_textfile():
+    """Return a helper that parses Prometheus textfiles into a dictionary."""
+
+    from prometheus_client.parser import text_string_to_metric_families
+
+    def _parse(path: Path) -> dict[str, float]:
+        metrics: dict[str, float] = {}
+        if not path.exists():
+            return metrics
+        content = path.read_text(encoding="utf-8")
+        for family in text_string_to_metric_families(content):
+            for sample in family.samples:
+                metrics[sample.name] = float(sample.value)
+        return metrics
+
+    return _parse
+
+
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
 allow_tests(
     ROOT / "tests" / "connectors" / "test_connector_heartbeat.py",
@@ -198,6 +228,8 @@ allow_tests(
     / "test_ai_invoker_remote_agents.py",
     ROOT / "tests" / "scripts" / "test_verify_chakra_monitoring.py",
     ROOT / "tests" / "scripts" / "test_verify_doctrine_refs.py",
+    ROOT / "tests" / "integration" / "test_boot_metrics.py",
+    ROOT / "tests" / "integration" / "test_razar_self_healing.py",
     ROOT / "tests" / "spiral_os" / "test_chakra_cycle.py",
     ROOT / "tests" / "chakra_healing" / "test_root.py",
     ROOT / "tests" / "chakra_healing" / "test_sacral.py",
