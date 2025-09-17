@@ -85,6 +85,7 @@ allow_tests(
     ROOT / "tests" / "web_console" / "test_arcade_ui.py",
     ROOT / "tests" / "performance" / "test_task_parser_performance.py",
     ROOT / "tests" / "performance" / "test_vector_memory_performance.py",
+    ROOT / "tests" / "performance" / "test_razar_latency.py",
     ROOT / "tests" / "test_auto_retrain.py",
     ROOT / "tests" / "test_autoretrain_full.py",
     ROOT / "tests" / "test_learning_mutator.py",
