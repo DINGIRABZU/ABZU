@@ -151,9 +151,15 @@ run_tests() {
     : >"$log_file"
     log_entry "$log_file" "Starting acceptance tests"
     local pytest_args=(
+        --maxfail=1
         tests/test_start_spiral_os.py
         tests/test_spiral_os.py
         tests/integration/test_razar_failover.py
+        tests/test_spiral_memory.py
+        tests/test_vector_memory.py
+        tests/test_vector_memory_extensions.py
+        tests/test_vector_memory_persistence.py
+        tests/test_spiral_vector_db.py
     )
     if ((${#PYTEST_EXTRA[@]} > 0)); then
         pytest_args+=("${PYTEST_EXTRA[@]}")
@@ -163,6 +169,16 @@ run_tests() {
         cd "$ROOT_DIR"
         pytest "${pytest_args[@]}"
     ) 2>&1 | tee -a "$log_file"
+    log_entry "$log_file" "Exporting coverage reports"
+    (
+        cd "$ROOT_DIR"
+        python scripts/export_coverage.py
+    ) 2>&1 | tee -a "$log_file"
+    log_entry "$log_file" "Archiving coverage artifacts"
+    cp "$ROOT_DIR/coverage.svg" "$LOG_DIR/coverage.svg"
+    cp "$ROOT_DIR/coverage.json" "$LOG_DIR/coverage.json"
+    rm -rf "$LOG_DIR/htmlcov"
+    cp -r "$ROOT_DIR/htmlcov" "$LOG_DIR/htmlcov"
     log_entry "$log_file" "Acceptance tests completed"
 }
 
