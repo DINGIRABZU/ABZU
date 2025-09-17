@@ -80,3 +80,5 @@ current progress summarized in [PROJECT_STATUS.md](PROJECT_STATUS.md).
   [PROJECT_STATUS.md](PROJECT_STATUS.md#planned-releases) and
   [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md#upcoming-milestones) to reflect
   the milestone as complete and trigger the release checklist audit.
+
+Execution Ladder: Squads anchor planning to the Stage A/B/C roadmap track detailed in the [Milestone Stages overview](roadmap.md#milestone-stages). Before writing code, each squad must surface and review its next three tasks from that ladder to confirm ownership, dependencies, and readiness signals.
