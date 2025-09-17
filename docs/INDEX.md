@@ -267,7 +267,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [SOCIAL_INVESTOR_ONE_PAGER.md](SOCIAL_INVESTOR_ONE_PAGER.md) | ABZU: Social Investor One-Pager | --- | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.104 **Last updated:** 2025-10-13 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py`, `../scripts/verify_blueprint_refs.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.105 **Last updated:** 2025-10-14 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py`, `../scripts/verify_blueprint_refs.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |

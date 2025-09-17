@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.104
-**Last updated:** 2025-10-13
+**Version:** v1.0.105
+**Last updated:** 2025-10-14
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -44,7 +44,7 @@ Rust updates that touch operator-facing workflows must also refresh relevant ent
 
 Alpha v0.1 establishes the canonical remote delegation ladder for the Crown and its servant agents. The escalation contract lives in [system_blueprint.md](system_blueprint.md#configurable-crown-escalation-chain) with configuration specifics in [system_blueprint.md](system_blueprint.md#remote-agent-failover-configuration) and the mission narrative overlay in [blueprint_spine.md](blueprint_spine.md#razar-delegation-cascade). Contributors must keep those sections synchronized with any change to `config/razar_ai_agents.json`, the escalation thresholds, or telemetry exports.
 
-- **Chain integrity.** Preserve the default **Crown → Kimi-cho → Kimi 2 → rStar** sequence unless the operator council signs off on an updated roster. Any roster change requires matching edits to the blueprint anchors above and to the [RAZAR Escalation Runbook](runbooks/razar_escalation.md) so responders inherit the approved ladder.
+- **Chain integrity.** Preserve the default **Crown → Kimi-cho → K2 Coder → Air Star → rStar** sequence unless the operator council signs off on an updated roster. Any roster change requires matching edits to the blueprint anchors above, synchronization of the `KIMICHO_*`, `KIMI_K2_*`, `AIRSTAR_*`, and `RSTAR_*` settings, and updates to the [RAZAR Escalation Runbook](runbooks/razar_escalation.md) so responders inherit the approved ladder.
 - **Threshold governance.** Adjustments to `RAZAR_ESCALATION_WARNING_THRESHOLD`, `RAZAR_RSTAR_THRESHOLD`, or new gating variables must be documented alongside the configuration diffs and annotated in [system_blueprint.md](system_blueprint.md#configurable-crown-escalation-chain) so operators can trace why escalations accelerate or pause.
 - **Telemetry continuity.** Each escalation hop must stream context into `logs/razar_ai_invocations.json` and the mission registry. When tweaking payload formats or log locations, update the data flow descriptions in [blueprint_spine.md](blueprint_spine.md#razar-delegation-cascade) and the monitoring playbooks referenced there.
 - **Doctrine versioning.** Bump the Alpha tag (v0.1, v0.2, etc.) inside this section whenever the chain structure, thresholds, or audit hooks change. Include a matching note in [doctrine_index.md](doctrine_index.md) so the checksum registry signals the doctrine shift to reviewers and onboarding automation.
