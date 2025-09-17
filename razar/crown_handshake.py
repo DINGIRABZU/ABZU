@@ -8,7 +8,7 @@ so operators can audit the dialogue later.
 
 from __future__ import annotations
 
-__version__ = "0.2.4"
+__version__ = "0.2.5"
 
 from dataclasses import asdict, dataclass
 import json
@@ -16,7 +16,7 @@ import logging
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from . import recovery_manager
 
@@ -44,6 +44,7 @@ class CrownResponse:
     acknowledgement: str
     capabilities: List[str]
     downtime: Dict[str, Any]
+    identity_fingerprint: Optional[Dict[str, Any]] = None
 
 
 DEFAULT_TRANSCRIPT_PATH = Path("logs/razar_crown_dialogues.json")
@@ -101,7 +102,25 @@ class CrownHandshake:
             reply = json.loads(reply_raw)
         except json.JSONDecodeError:  # pragma: no cover - passthrough
             reply = {"raw": reply_raw}
-        self._append_transcript("crown", reply)
+
+        fingerprint_raw = os.getenv("CROWN_IDENTITY_FINGERPRINT")
+        fingerprint: Optional[Dict[str, Any]]
+        if fingerprint_raw:
+            try:
+                parsed = json.loads(fingerprint_raw)
+                if isinstance(parsed, dict):
+                    fingerprint = parsed
+                else:  # pragma: no cover - unexpected payload shape
+                    fingerprint = {"value": fingerprint_raw}
+            except json.JSONDecodeError:  # pragma: no cover - legacy payloads
+                fingerprint = {"value": fingerprint_raw}
+        else:
+            fingerprint = None
+
+        transcript_payload = dict(reply)
+        if fingerprint is not None:
+            transcript_payload["identity_fingerprint"] = fingerprint
+        self._append_transcript("crown", transcript_payload)
 
         downtime = reply.get("downtime", {})
         archive_dir = Path(mission_brief_path).resolve().parent
@@ -116,6 +135,7 @@ class CrownHandshake:
             acknowledgement=reply.get("ack", ""),
             capabilities=reply.get("capabilities", []),
             downtime=downtime,
+            identity_fingerprint=fingerprint,
         )
 
 

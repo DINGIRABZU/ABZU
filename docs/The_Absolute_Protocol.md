@@ -55,6 +55,8 @@ Alpha v0.1 establishes the canonical remote delegation ladder for the Crown and 
 Commits that alter architecture—whether Python services, Rust crates, or orchestration manifests—must land with synchronized documentation updates. Always:
 
 - Revise [system_blueprint.md](system_blueprint.md), [blueprint_spine.md](blueprint_spine.md), and [NEOABZU_spine.md](NEOABZU_spine.md) so diagrams and mission narratives track the new structure.
+- When Crown identity handling changes, document the new `CROWN_IDENTITY_FINGERPRINT` semantics anywhere handshake transcripts or
+  audit procedures reference `data/identity.json`, including runbooks and awakening guides.
 - Synchronize [SECURITY.md](SECURITY.md#remote-agent-credentials) when RAZAR
   remote invocation rules change, including updates to the `KIMI2_API_KEY`,
   `AIRSTAR_API_KEY`, and `RSTAR_API_KEY` policies.

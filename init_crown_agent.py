@@ -5,9 +5,11 @@ from __future__ import annotations
 
 __version__ = "0.1.1"
 
+import hashlib
+import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml  # type: ignore[import-untyped]
@@ -47,6 +49,11 @@ vector_memory = _vector_memory  # Optional vector memory subsystem
 logger = logging.getLogger(__name__)
 
 CONFIG_FILE = Path(__file__).resolve().parent / "config" / "INANNA_CORE.yaml"
+IDENTITY_PATH = Path(__file__).resolve().parent / "data" / "identity.json"
+FINGERPRINT_ENV = "CROWN_IDENTITY_FINGERPRINT"
+FINGERPRINT_STATE_PATH = (
+    Path(__file__).resolve().parent / "state" / "crown_identity_fingerprint.json"
+)
 
 
 def _load_config() -> dict:
@@ -202,6 +209,42 @@ def _store_identity_summary(summary: str | None) -> None:
                 )
 
 
+def _compute_identity_fingerprint() -> dict[str, str] | None:
+    """Return stable metadata describing the on-disk identity summary."""
+
+    if not IDENTITY_PATH.exists():
+        return None
+
+    try:
+        digest = hashlib.sha256(IDENTITY_PATH.read_bytes()).hexdigest()
+        modified = datetime.fromtimestamp(
+            IDENTITY_PATH.stat().st_mtime, tz=timezone.utc
+        ).isoformat()
+    except OSError as exc:  # pragma: no cover - filesystem errors
+        logger.warning("failed to compute identity fingerprint: %s", exc)
+        return None
+
+    return {"sha256": digest, "modified": modified}
+
+
+def _publish_identity_fingerprint(fingerprint: dict[str, str] | None) -> None:
+    """Expose ``fingerprint`` to downstream consumers via env + state."""
+
+    if not fingerprint:
+        return
+
+    payload = json.dumps(fingerprint, sort_keys=True)
+    os.environ[FINGERPRINT_ENV] = payload
+
+    try:
+        FINGERPRINT_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        FINGERPRINT_STATE_PATH.write_text(payload, encoding="utf-8")
+    except OSError as exc:  # pragma: no cover - filesystem errors
+        logger.warning("failed to persist identity fingerprint: %s", exc)
+    else:
+        logger.info("identity fingerprint published to %s", FINGERPRINT_STATE_PATH)
+
+
 def _verify_servant_health(servants: dict) -> None:
     """Check that each servant model responds to a health request."""
     if not servants:
@@ -257,6 +300,7 @@ def initialize_crown() -> GLMIntegration:
         _verify_servant_health(cfg.get("servant_models", {}))
         _check_glm(integration)
         summary = load_identity(integration)
+        _publish_identity_fingerprint(_compute_identity_fingerprint())
         _store_identity_summary(summary)
     except RuntimeError as exc:
         logger.error("%s", exc)
