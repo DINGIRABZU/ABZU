@@ -1,0 +1,42 @@
+{
+  "request": {
+    "model": "moonshotai/Kimi-K2-Instruct",
+    "messages": [
+      {
+        "role": "user",
+        "content": "What's the weather like in Beijing today? Let's check using the tool."
+      }
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "get_weather",
+          "description": "Retrieve current weather information. Call this when the user asks about the weather.",
+          "parameters": {
+            "type": "object",
+            "required": [
+              "city"
+            ],
+            "properties": {
+              "city": {
+                "type": "string",
+                "description": "City to query"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "temperature": 0.6,
+    "max_tokens": 512
+  },
+  "response": {
+    "choices": [
+      {
+        "text": "<|tool_calls_section_begin|><|tool_call_begin|>functions.get_weather:0<|tool_call_argument_begin|>{\"city\": \"Beijing\"}<|tool_call_end|><|tool_calls_section_end|>",
+        "finish_reason": "stop"
+      }
+    ]
+  }
+}

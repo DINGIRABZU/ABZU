@@ -55,6 +55,40 @@ configured remote agent, applies any suggested patch with
 `logs/razar_ai_invocations.json` while applied patches are tracked in
 `logs/razar_ai_patches.json`.
 
+### Remote Agent Contracts
+
+The handover contract with external repair agents is exercised in
+`agents/razar/ai_invoker.py` and verified by
+`tests/integration/remote_agents/test_ai_invoker_remote_agents.py`. Each
+fixture replays a sample payload captured from the upstream projects:
+
+- **MoonshotAI Kimi-K2 / AirStar.** The fixture stored in
+  `tests/integration/remote_agents/kimi_k2_completion.json` mirrors the tool
+  calling example published in the
+  [MoonshotAI/Kimi-K2](https://github.com/MoonshotAI/Kimi-K2) documentation. It
+  forwards a `messages` array, accompanying `tools` schema, and optional failure
+  context for AirStar. When a bearer token is configured, `ai_invoker`
+  supplements the payload with an `auth_token` field and propagates the value in
+  both the `Authorization: Bearer` and `X-API-Key` headers.
+- **Microsoft rStar.** The replay stored in
+  `tests/integration/remote_agents/rstar_completion.json` reflects the
+  completion request used in the
+  [microsoft/rStar](https://github.com/microsoft/rStar) examples. The payload
+  encodes tokenized prompts and generation controls (`max_tokens`,
+  `skip_special_tokens`, `include_stop_str_in_output`).
+
+The integration tests assert that `_invoke_kimi2`, `_invoke_airstar`, and
+`_invoke_rstar` forward the fixture payloads verbatim, add authentication when a
+token is available, and preserve the original context dictionaries so callers
+can safely reuse them across retries.
+
+Administrators can also exercise the same schemas outside of the retry loop by
+running `python scripts/health_check_connectors.py --include-remote`. The script
+probes any configured K2/AirStar/rStar endpoints with the recorded payloads and
+logs outcomes through the `monitoring.alerts.razar_failover` logger (see
+`monitoring/alerts/razar_failover.yml` for the alert thresholds tied to these
+checks).
+
 ### Shared Failure Context
 Before every remote attempt, `boot_orchestrator._retry_with_ai` calls
 `build_failure_context` to load the recent history for the component from

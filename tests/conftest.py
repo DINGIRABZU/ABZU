@@ -182,6 +182,11 @@ allow_tests(
     ROOT / "tests" / "razar" / "test_long_task.py",
     ROOT / "tests" / "integration" / "test_core_regressions.py",
     ROOT / "tests" / "integration" / "test_full_flows.py",
+    ROOT
+    / "tests"
+    / "integration"
+    / "remote_agents"
+    / "test_ai_invoker_remote_agents.py",
     ROOT / "tests" / "scripts" / "test_verify_chakra_monitoring.py",
     ROOT / "tests" / "scripts" / "test_verify_doctrine_refs.py",
     ROOT / "tests" / "spiral_os" / "test_chakra_cycle.py",
