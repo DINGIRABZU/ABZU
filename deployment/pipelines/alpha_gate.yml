@@ -3,4 +3,23 @@
 name: alpha-gate
 steps:
   - run: scripts/run_alpha_gate.sh --check-connectors
+  - run: |
+      python - <<'PY'
+import json
+from pathlib import Path
+
+summary_path = Path("monitoring/alpha_gate_summary.json")
+if summary_path.exists():
+    data = json.loads(summary_path.read_text(encoding="utf-8"))
+    print("Alpha gate overview:")
+    for phase in ("build", "health", "tests"):
+        info = data.get("phases", {}).get(phase, {})
+        print(f"  {phase.title()}: success={info.get('success')} skipped={info.get('skipped')} duration={info.get('duration_seconds')}")
+    coverage = data.get("coverage", {}) or {}
+    if coverage:
+        print(f"  Coverage: {coverage.get('percent')}%")
+    print(f"  Overall success: {data.get('overall_success')}")
+else:
+    print("Alpha gate summary missing", flush=True)
+PY
   - run: tar -czf logs/alpha_gate_artifacts.tgz logs/alpha_gate

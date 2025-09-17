@@ -5,6 +5,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 LOG_DIR="$ROOT_DIR/logs/alpha_gate"
+METRICS_PROM="$ROOT_DIR/monitoring/alpha_gate.prom"
+METRICS_SUMMARY="$ROOT_DIR/monitoring/alpha_gate_summary.json"
+
+declare -A PHASE_STARTS=()
+declare -A PHASE_ENDS=()
+declare -A PHASE_STATUS=()
+declare -A PHASE_SKIPPED=()
 
 SKIP_BUILD=0
 SKIP_HEALTH=0
@@ -32,6 +39,10 @@ USAGE
 
 timestamp() {
     date -u +"%Y-%m-%dT%H:%M:%SZ"
+}
+
+current_epoch() {
+    date -u +%s
 }
 
 log_entry() {
@@ -98,6 +109,62 @@ parse_args() {
 
 ensure_log_dir() {
     mkdir -p "$LOG_DIR"
+}
+
+mark_phase_skipped() {
+    local phase="$1"
+    PHASE_SKIPPED["$phase"]=1
+}
+
+start_phase() {
+    local phase="$1"
+    PHASE_STARTS["$phase"]=$(current_epoch)
+}
+
+finish_phase() {
+    local phase="$1"
+    local status="$2"
+    PHASE_ENDS["$phase"]=$(current_epoch)
+    PHASE_STATUS["$phase"]="$status"
+}
+
+run_phase() {
+    local phase="$1"
+    shift
+    start_phase "$phase"
+    if "$@"; then
+        finish_phase "$phase" 0
+        return 0
+    else
+        local status=$?
+        finish_phase "$phase" "$status"
+        return "$status"
+    fi
+}
+
+export_metrics() {
+    local phase_args=()
+    local phase
+    for phase in build health tests; do
+        local start="${PHASE_STARTS[$phase]:-}"
+        local end="${PHASE_ENDS[$phase]:-}"
+        local status="${PHASE_STATUS[$phase]:-}"
+        local skipped="${PHASE_SKIPPED[$phase]:-0}"
+        phase_args+=("--phase" "${phase}:${start:-}:${end:-}:${status:-}:${skipped:-0}")
+    done
+
+    python "$SCRIPT_DIR/export_alpha_gate_metrics.py" \
+        --prom-path "$METRICS_PROM" \
+        --summary-path "$METRICS_SUMMARY" \
+        --coverage-json "$ROOT_DIR/coverage.json" \
+        "${phase_args[@]}"
+
+    if [[ -f "$METRICS_PROM" ]]; then
+        cp "$METRICS_PROM" "$LOG_DIR/alpha_gate.prom"
+    fi
+    if [[ -f "$METRICS_SUMMARY" ]]; then
+        cp "$METRICS_SUMMARY" "$LOG_DIR/alpha_gate_summary.json"
+    fi
 }
 
 run_build() {
@@ -186,25 +253,56 @@ main() {
     parse_args "$@"
     ensure_log_dir
 
+    local exit_code=0
+    local stop_remaining=0
+
     if ((SKIP_BUILD == 0)); then
-        run_build
+        if ! run_phase build run_build; then
+            exit_code=${PHASE_STATUS[build]}
+            stop_remaining=1
+        fi
     else
         echo "[$(timestamp)] Skipping packaging phase"
+        mark_phase_skipped build
     fi
 
-    if ((SKIP_HEALTH == 0)); then
-        run_health_checks
+    if ((stop_remaining == 0)); then
+        if ((SKIP_HEALTH == 0)); then
+            if ! run_phase health run_health_checks; then
+                exit_code=${PHASE_STATUS[health]}
+                stop_remaining=1
+            fi
+        else
+            echo "[$(timestamp)] Skipping health checks"
+            mark_phase_skipped health
+        fi
     else
         echo "[$(timestamp)] Skipping health checks"
+        mark_phase_skipped health
     fi
 
-    if ((SKIP_TESTS == 0)); then
-        run_tests
+    if ((stop_remaining == 0)); then
+        if ((SKIP_TESTS == 0)); then
+            if ! run_phase tests run_tests; then
+                exit_code=${PHASE_STATUS[tests]}
+            fi
+        else
+            echo "[$(timestamp)] Skipping acceptance tests"
+            mark_phase_skipped tests
+        fi
     else
         echo "[$(timestamp)] Skipping acceptance tests"
+        mark_phase_skipped tests
     fi
 
+    if ! export_metrics; then
+        echo "[$(timestamp)] Failed to export Alpha gate metrics" >&2
+        if ((exit_code == 0)); then
+            exit_code=1
+        fi
+    fi
     echo "[$(timestamp)] Alpha gate completed"
+    exit "$exit_code"
 }
 
 main "$@"

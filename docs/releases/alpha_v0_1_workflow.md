@@ -98,7 +98,10 @@ The consolidated run ensures the Stage A ≥90 % coverage bar is enforced lo
 
 Use `scripts/run_alpha_gate.sh` to orchestrate the full workflow. The helper
 script performs packaging, health checks, and test execution with structured
-logging.
+logging. Each phase records its UTC start and finish timestamps, exit code, and
+success flag while `scripts/export_alpha_gate_metrics.py` writes the metrics to
+`monitoring/alpha_gate.prom` and a companion
+`monitoring/alpha_gate_summary.json`.
 
 ```bash
 ./scripts/run_alpha_gate.sh
@@ -108,7 +111,9 @@ Pass `--skip-build`, `--skip-health`, or `--skip-tests` to bypass individual
 phases when rerunning investigations. Use `--run-chaos-drill` to execute the
 dry-run escalation drill during the health phase. The script exits with a
 non-zero status if any phase fails and writes consolidated logs to
-`logs/alpha_gate/` for review.
+`logs/alpha_gate/` for review. The exporter copies both the `.prom` textfile and
+JSON summary into the same directory so operators can replay the telemetry or
+ingest it into downstream dashboards without re-running the gate.
 
 ## CI Integration
 
@@ -121,6 +126,10 @@ non-zero status if any phase fails and writes consolidated logs to
   `--check-connectors` probes succeed in CI.
 - Artifacts: uploads `logs/alpha_gate/` (including the timestamped
   `CHANGELOG.md` snippet) and the freshly built `dist/` wheel for auditing.
+- Telemetry hand-off: publishes `monitoring/alpha_gate.prom` and
+  `monitoring/alpha_gate_summary.json` as the `alpha-gate-metrics` artifact and
+  surfaces build/health/test success plus coverage in the job summary and job
+  outputs for downstream automation.
 - Pipeline mirror: `deployment/pipelines/alpha_gate.yml` enables `spiral-os
   pipeline deploy deployment/pipelines/alpha_gate.yml` for local rehearsal.
 

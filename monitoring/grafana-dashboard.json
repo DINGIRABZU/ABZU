@@ -114,6 +114,36 @@
           "legendFormat": "{{service}}"
         }
       ]
+    },
+    {
+      "type": "graph",
+      "title": "Alpha Gate Phase Duration",
+      "targets": [
+        {
+          "expr": "alpha_gate_phase_duration_seconds",
+          "legendFormat": "{{phase}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Alpha Gate Phase Success",
+      "targets": [
+        {
+          "expr": "alpha_gate_phase_success",
+          "legendFormat": "{{phase}}"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Alpha Gate Coverage",
+      "targets": [
+        {
+          "expr": "alpha_gate_coverage_percent",
+          "legendFormat": "coverage"
+        }
+      ]
     }
   ]
 }
