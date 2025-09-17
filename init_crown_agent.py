@@ -44,6 +44,17 @@ SERVANT_HEALTH_GAUGE = (
     else None
 )
 
+IDENTITY_READY_GAUGE = (
+    Gauge(
+        "crown_identity_ready",
+        "1 when the on-disk identity summary matches the published fingerprint",
+    )
+    if Gauge is not None
+    else None
+)
+if IDENTITY_READY_GAUGE is not None:
+    IDENTITY_READY_GAUGE.set(0)
+
 vector_memory = _vector_memory  # Optional vector memory subsystem
 
 logger = logging.getLogger(__name__)
@@ -245,6 +256,23 @@ def _publish_identity_fingerprint(fingerprint: dict[str, str] | None) -> None:
         logger.info("identity fingerprint published to %s", FINGERPRINT_STATE_PATH)
 
 
+def _update_identity_ready_metric(
+    summary: str | None, fingerprint: dict[str, str] | None
+) -> None:
+    """Set ``crown_identity_ready`` to ``1`` when summary and fingerprint align."""
+
+    gauge = IDENTITY_READY_GAUGE
+    if gauge is None:
+        return
+
+    ready = False
+    if summary and fingerprint and fingerprint.get("sha256"):
+        digest = hashlib.sha256(summary.encode("utf-8")).hexdigest()
+        ready = digest == fingerprint.get("sha256")
+
+    gauge.set(1 if ready else 0)
+
+
 def _verify_servant_health(servants: dict) -> None:
     """Check that each servant model responds to a health request."""
     if not servants:
@@ -296,16 +324,21 @@ def initialize_crown() -> GLMIntegration:
         os.environ.setdefault("MODEL_PATH", str(cfg["model_path"]))
     _init_memory(cfg)
     _init_servants(cfg)
+    _update_identity_ready_metric(None, None)
     try:
         _verify_servant_health(cfg.get("servant_models", {}))
         _check_glm(integration)
         summary = load_identity(integration)
-        _publish_identity_fingerprint(_compute_identity_fingerprint())
+        fingerprint = _compute_identity_fingerprint()
+        _publish_identity_fingerprint(fingerprint)
         _store_identity_summary(summary)
+        _update_identity_ready_metric(summary, fingerprint)
     except RuntimeError as exc:
         logger.error("%s", exc)
+        _update_identity_ready_metric(None, None)
         raise SystemExit(1)
     except SystemExit:
+        _update_identity_ready_metric(None, None)
         raise
     return integration
 

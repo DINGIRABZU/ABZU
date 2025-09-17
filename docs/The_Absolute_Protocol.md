@@ -20,6 +20,7 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Signal bus** links connectors with publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **Identity loader** now resides in Rust; Crown boot caches mission and persona summary in `data/identity.json`, registers the embedding in vector/corpus memory for retrieval-aware routing, and refuses to proceed until the GLM echoes `CROWN-IDENTITY-ACK` after doctrine synthesis.
 - **Crown confirms load** exchange documents the acknowledgement handshake; see [crown_manifest.md](crown_manifest.md#crown-confirms-load-handshake) for operator guidance and [system_blueprint.md](system_blueprint.md#origins--awakening) for the architectural view.
+- **Identity readiness telemetry** requires the `crown_identity_ready` gauge to hold at `1` after `load_identity` publishes the fingerprint; monitor it via [monitoring/RAZAR.md](monitoring/RAZAR.md) and alert when the value stays `0` for more than five minutes.
 
 ### Rust Migration Rules
 

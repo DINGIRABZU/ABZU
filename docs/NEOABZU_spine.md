@@ -15,7 +15,9 @@ invocations reuse the cached context. Initialization now also publishes
 `CROWN_IDENTITY_FINGERPRINT` (SHA-256 digest plus modification timestamp) so
 mission-brief transcripts and downstream services can confirm which identity
 imprint authorized the boot. Initialization halts when the GLM fails to return
-the `CROWN-IDENTITY-ACK` token, guaranteeing acknowledgement of the blend.
+the `CROWN-IDENTITY-ACK` token, guaranteeing acknowledgement of the blend, and it
+flips the Prometheus `crown_identity_ready` gauge to `1` once the fingerprint
+matches the persisted summary so Grafana alerts on stalled boots.
 
 ### Doctrine References
 - [system_blueprint.md#razar–crown–kimi-cho-migration](system_blueprint.md#razar–crown–kimi-cho-migration)
