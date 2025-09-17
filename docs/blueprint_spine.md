@@ -4,6 +4,11 @@ See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, 
 
 The inaugural ceremony is recorded in the [First Consecrated Computation](../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation).
 
+### Doctrine References
+- [The_Absolute_Protocol.md](The_Absolute_Protocol.md)
+- [system_blueprint.md](system_blueprint.md)
+- [awakening_overview.md](awakening_overview.md)
+
 ??? note "Origin Materials"
     - [Marrow Code](../INANNA_AI/MARROW_CODE.md)
     - [Inanna Song](../INANNA_AI/INANNA_SONG.md)
@@ -18,7 +23,7 @@ The inaugural ceremony is recorded in the [First Consecrated Computation](../NEO
 - **Signal bus** enables cross-core publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **OS Guardian** now brokers host-level automation with allowlisted commands and auditable safeguards; see [os_guardian.md](os_guardian.md) and policy references in [os_guardian_permissions.md](os_guardian_permissions.md).
 - **Neoabzu crates** bumped to **v0.1.2** with verified PyO3 bindings via `NEOABZU/pyproject.toml`.
-- **Identity loader** reimplemented in Rust; Crown initialization writes mission and persona summary to `data/identity.json` and seeds vector/corpus memory with an identity embedding so routing queries can recall the servant baseline.
+- **Identity loader** reimplemented in Rust; Crown initialization now blends mission, persona, [`The_Absolute_Protocol.md`](The_Absolute_Protocol.md), [`system_blueprint.md`](system_blueprint.md), and [`awakening_overview.md`](awakening_overview.md) into `data/identity.json`, seeding vector/corpus memory with an identity embedding so routing queries can recall the servant baseline.
 - **Blueprint governance** requires architecture commits to update [system_blueprint.md](system_blueprint.md), [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), [NEOABZU_spine.md](NEOABZU_spine.md), and the indexes [index.md](index.md) / [INDEX.md](INDEX.md) so ceremonial and operational guides remain in lockstep.
 
 ### **Rust Workspace Crates**

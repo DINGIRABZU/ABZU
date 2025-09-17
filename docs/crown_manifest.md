@@ -53,6 +53,13 @@ For a neutral summary of the router and related modules, see [architecture_overv
 - Rust crate [`neoabzu_crown`](../NEOABZU/crown/src/lib.rs) routes model and expression decisions using recent emotional context.
 - `crown_decider.py` selects language models and expressive options based on heuristic rules.
 
+## Identity Corpus Expansion
+
+During initialization the Crown synthesizes `data/identity.json` from a blended corpus that now spans the mission brief, persona
+guide, [`The_Absolute_Protocol.md`](The_Absolute_Protocol.md), [`system_blueprint.md`](system_blueprint.md), and
+[`awakening_overview.md`](awakening_overview.md). The expanded summary set keeps the persisted identity aligned with the latest
+doctrine so vector and corpus memory receive a mission-first, operator-audited baseline every boot.
+
 ## Endpoint configuration
 
 The GLM endpoint and optional servants are configured through environment variables:
@@ -137,3 +144,8 @@ its URL via `SERVANT_MODELS` or a dedicated `<NAME>_URL` variable and ensure its
 `/health` check responds before letting operators interact with it. This
 registration flow keeps untrusted models sandboxed and prevents them from
 interfering with each other or the core GLM.
+
+### Doctrine References
+- [The_Absolute_Protocol.md](The_Absolute_Protocol.md)
+- [system_blueprint.md#recent-core-milestones](system_blueprint.md#recent-core-milestones)
+- [awakening_overview.md](awakening_overview.md)

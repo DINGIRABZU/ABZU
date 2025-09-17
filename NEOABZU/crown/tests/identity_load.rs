@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyModule};
+use pyo3::types::{PyDict, PyList, PyModule};
 use tempfile::tempdir;
 
 #[test]
@@ -13,9 +13,11 @@ fn load_identity_persists() {
 class Dummy:
     def __init__(self):
         self.calls = 0
+        self.last_prompt = ""
     def complete(self, prompt):
         self.calls += 1
-        return "identity summary"
+        self.last_prompt = prompt
+        return prompt
 "#;
         let integ_mod = PyModule::from_code(py, integration_code, "", "").unwrap();
         let integ = integ_mod.getattr("Dummy").unwrap().call0().unwrap();
@@ -27,6 +29,13 @@ class Dummy:
         std::fs::write(&mission_path, "mission").unwrap();
         let persona_path = docs_dir.join("persona_api_guide.md");
         std::fs::write(&persona_path, "persona").unwrap();
+        let doctrine_path = docs_dir.join("The_Absolute_Protocol.md");
+        std::fs::write(&doctrine_path, "protocol doctrine").unwrap();
+        let blueprint_path = docs_dir.join("system_blueprint.md");
+        std::fs::write(&blueprint_path, "blueprint doctrine").unwrap();
+        let awakening_path = docs_dir.join("awakening_overview.md");
+        std::fs::write(&awakening_path, "awakening doctrine").unwrap();
+
         let identity_path = dir.path().join("identity.json");
 
         let kwargs = PyDict::new(py);
@@ -39,20 +48,37 @@ class Dummy:
         kwargs
             .set_item("identity_path", identity_path.to_str().unwrap())
             .unwrap();
+        kwargs
+            .set_item(
+                "extra_paths",
+                PyList::new(
+                    py,
+                    vec![
+                        doctrine_path.to_str().unwrap(),
+                        blueprint_path.to_str().unwrap(),
+                        awakening_path.to_str().unwrap(),
+                    ],
+                ),
+            )
+            .unwrap();
 
         let res: String = func
-            .call((integ.clone(),), Some(kwargs))
+            .call((integ,), Some(kwargs))
             .unwrap()
             .extract()
             .unwrap();
-        assert_eq!(res, "identity summary");
+        assert!(res.contains("mission"));
+        assert!(res.contains("persona"));
+        assert!(res.contains("protocol doctrine"));
+        assert!(res.contains("blueprint doctrine"));
+        assert!(res.contains("awakening doctrine"));
         assert!(identity_path.exists());
         let res2: String = func
-            .call((integ.clone(),), Some(kwargs))
+            .call((integ,), Some(kwargs))
             .unwrap()
             .extract()
             .unwrap();
-        assert_eq!(res2, "identity summary");
+        assert_eq!(res2, res);
         let calls: i32 = integ.getattr("calls").unwrap().extract().unwrap();
         assert_eq!(calls, 1);
     });
@@ -113,7 +139,12 @@ class DummyGLM:
         init.setattr("load_identity", load_func).unwrap();
 
         init.getattr("initialize_crown").unwrap().call0().unwrap();
-        let called: bool = flag.get_item("called").unwrap().extract().unwrap();
+        let called: bool = flag
+            .get_item("called")
+            .unwrap()
+            .unwrap()
+            .extract()
+            .unwrap();
         assert!(called);
     });
 }

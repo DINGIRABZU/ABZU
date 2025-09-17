@@ -1,6 +1,7 @@
 # mypy: ignore-errors
 """Tests for the identity loading pipeline."""
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import identity_loader as il
@@ -10,27 +11,45 @@ import init_crown_agent as ic
 class DummyGLM:
     def __init__(self):
         self.calls = 0
+        self.prompts: list[str] = []
 
     def complete(self, prompt: str, *, quantum_context: str | None = None) -> str:
         self.calls += 1
-        return "identity summary"
+        self.prompts.append(prompt)
+        return prompt
 
 
 def test_identity_loader_persists(tmp_path, monkeypatch):
     mission = tmp_path / "docs" / "project_mission_vision.md"
     persona = tmp_path / "docs" / "persona_api_guide.md"
+    protocol = tmp_path / "docs" / "The_Absolute_Protocol.md"
+    blueprint = tmp_path / "docs" / "system_blueprint.md"
+    awakening = tmp_path / "docs" / "awakening_overview.md"
     mission.parent.mkdir(parents=True)
     mission.write_text("mission", encoding="utf-8")
     persona.write_text("persona", encoding="utf-8")
+    protocol.write_text("protocol doctrine", encoding="utf-8")
+    blueprint.write_text("blueprint doctrine", encoding="utf-8")
+    awakening.write_text("awakening doctrine", encoding="utf-8")
 
     monkeypatch.setattr(il, "MISSION_DOC", mission)
     monkeypatch.setattr(il, "PERSONA_DOC", persona)
     ident_file = tmp_path / "identity.json"
     monkeypatch.setattr(il, "IDENTITY_FILE", ident_file)
 
+    seen: set[Path] = set()
+
     def fake_load_inputs(directory):
-        path = mission if directory == mission.parent else persona
-        return [{"text": path.read_text(), "source_path": str(path)}]
+        if directory in seen:
+            return []
+        seen.add(directory)
+        return [
+            {"text": mission.read_text(), "source_path": str(mission)},
+            {"text": persona.read_text(), "source_path": str(persona)},
+            {"text": protocol.read_text(), "source_path": str(protocol)},
+            {"text": blueprint.read_text(), "source_path": str(blueprint)},
+            {"text": awakening.read_text(), "source_path": str(awakening)},
+        ]
 
     monkeypatch.setattr(il.parser, "load_inputs", fake_load_inputs)
 
@@ -56,14 +75,18 @@ def test_identity_loader_persists(tmp_path, monkeypatch):
 
     glm = DummyGLM()
     out1 = il.load_identity(glm)
-    assert out1 == "identity summary"
-    assert ident_file.read_text() == "identity summary"
+    assert "mission" in out1
+    assert "persona" in out1
+    assert "protocol doctrine" in out1
+    assert "blueprint doctrine" in out1
+    assert "awakening doctrine" in out1
+    assert ident_file.read_text() == out1
     assert glm.calls == 1
     assert flags.get("add_vectors")
     assert "update" in flags
 
     out2 = il.load_identity(glm)
-    assert out2 == "identity summary"
+    assert out2 == out1
     assert glm.calls == 1
 
 
