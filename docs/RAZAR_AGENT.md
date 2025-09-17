@@ -84,8 +84,11 @@ can safely reuse them across retries.
 
 Administrators can also exercise the same schemas outside of the retry loop by
 running `python scripts/health_check_connectors.py --include-remote`. The script
-probes any configured K2/AirStar/rStar endpoints with the recorded payloads and
-logs outcomes through the `monitoring.alerts.razar_failover` logger (see
+probes any configured K2/AirStar/rStar endpoints with the recorded payloads,
+reading `KIMI2_ENDPOINT`, `KIMI2_API_KEY`, `AIRSTAR_ENDPOINT`, and
+`AIRSTAR_API_KEY` (plus the legacy `RSTAR_ENDPOINT` and `RSTAR_API_KEY` settings
+when rStar escalation remains enabled) before issuing the requests. Results are
+logged through the `monitoring.alerts.razar_failover` logger (see
 `monitoring/alerts/razar_failover.yml` for the alert thresholds tied to these
 checks).
 
@@ -184,7 +187,10 @@ flowchart LR
 Set the following variables to route handover through the Kimi backend:
 
 - `OPENCODE_BACKEND=kimi`
-- `KIMI_K2_URL=<your K2 endpoint>`
+- `KIMI2_ENDPOINT=<your K2 endpoint>`
+- `KIMI2_API_KEY=<bearer token for the endpoint>`
+- `AIRSTAR_ENDPOINT=<optional AirStar fallback endpoint>`
+- `AIRSTAR_API_KEY=<AirStar API key>`
 
 See [Kimi Integration](tools/kimi_integration.md) for step-by-step instructions.
 
@@ -193,23 +199,26 @@ import os
 from agents.razar import ai_invoker
 
 os.environ["OPENCODE_BACKEND"] = "kimi"
-os.environ["KIMI_K2_URL"] = "https://k2.example/api"
+os.environ["KIMI2_ENDPOINT"] = "https://k2.example/api"
+os.environ["KIMI2_API_KEY"] = "k2-token"
+os.environ["AIRSTAR_ENDPOINT"] = "https://airstar.example/api"
+os.environ["AIRSTAR_API_KEY"] = "airstar-token"
 
 ai_invoker.handover("crown_router", "Health check failed", use_opencode=True)
 ```
 
 If Kimi supplies a patch, it is applied and the component relaunches.
 
-### rStar Escalation
+### AirStar Escalation
 RAZAR tracks consecutive repair attempts for each component. After nine
-unsuccessful tries it escalates the failure context to the `rStar` patch
-service for external triage.
+unsuccessful tries it escalates the failure context to the AirStar patch
+service for external triage before any manual rStar follow-up.
 
 Configuration knobs:
 
 - `RAZAR_RSTAR_THRESHOLD` – attempts before escalation (default `9`)
-- `RSTAR_ENDPOINT` – URL for the `rStar` patch API
-- `RSTAR_API_KEY` – access token for the API
+- `AIRSTAR_ENDPOINT` – URL for the AirStar patch API
+- `AIRSTAR_API_KEY` – access token for the API
 
 Set `RAZAR_RSTAR_THRESHOLD=0` to disable escalation entirely.
 
