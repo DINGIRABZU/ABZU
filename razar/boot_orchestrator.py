@@ -533,7 +533,11 @@ def _handle_ai_result(
     failure_tracker[name] = count
     if not _should_escalate(count):
         return
-    active_agent, sequence, lookup = _load_agent_state()
+    try:
+        active_agent, sequence, lookup = _load_agent_state()
+    except ai_invoker.AgentCredentialError as exc:
+        LOGGER.warning("Skipping remote escalation for %s: %s", name, exc)
+        return
     if active_agent is not None:
         active_agent = active_agent.lower()
     sequence = [agent.lower() for agent in sequence]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import logging
 import json
 from types import SimpleNamespace
 
@@ -10,6 +11,13 @@ import razar.utils.logging as razar_logging
 from tests.conftest import allow_test
 
 allow_test(__file__)
+
+
+@pytest.fixture(autouse=True)
+def _default_agent_credentials(monkeypatch):
+    monkeypatch.setenv("KIMI2_API_KEY", "test-kimi2-token")
+    monkeypatch.setenv("AIRSTAR_API_KEY", "test-airstar-token")
+    monkeypatch.setenv("RSTAR_API_KEY", "test-rstar-token")
 
 
 class DummyProc(SimpleNamespace):
@@ -489,3 +497,75 @@ def test_context_includes_history(tmp_path, monkeypatch):
         if entry.get("event") == "escalation"
     ]
     assert escalation_agents == ["kimi2", "airstar", "rstar"]
+
+
+def test_retry_skips_remote_escalation_without_credentials(
+    tmp_path, monkeypatch, caplog
+):
+    """Retries fall back to opencode when remote credentials are missing."""
+
+    monkeypatch.delenv("KIMI2_API_KEY", raising=False)
+    monkeypatch.delenv("AIRSTAR_API_KEY", raising=False)
+    monkeypatch.setenv("RAZAR_RSTAR_THRESHOLD", "1")
+    importlib.reload(bo)
+
+    inv_log = tmp_path / "invocations.json"
+    cfg_path = tmp_path / "agents.json"
+    cfg_path.write_text(
+        json.dumps(
+            {
+                "active": "kimi2",
+                "agents": [
+                    {"name": "kimi2"},
+                    {"name": "airstar"},
+                ],
+            }
+        )
+    )
+    configure_invocation_log(monkeypatch, inv_log)
+    monkeypatch.setattr(bo, "AGENT_CONFIG_PATH", cfg_path)
+    monkeypatch.setattr(bo.ai_invoker, "AGENT_CONFIG_PATH", cfg_path)
+    bo.ai_invoker.invalidate_agent_config_cache(cfg_path)
+
+    escalated = False
+
+    def fake_set_active(agent: str) -> None:  # pragma: no cover - defensive
+        nonlocal escalated
+        escalated = True
+
+    monkeypatch.setattr(bo, "_set_active_agent", fake_set_active)
+
+    attempts: list[bool] = []
+
+    def fake_handover(
+        component: str,
+        error: str,
+        *,
+        context: dict | None = None,
+        use_opencode: bool = False,
+    ) -> bool:
+        attempts.append(use_opencode)
+        return False
+
+    monkeypatch.setattr(bo.ai_invoker, "handover", fake_handover)
+    monkeypatch.setattr(bo.health_checks, "run", lambda name: True)
+    monkeypatch.setattr(bo, "launch_component", lambda comp: DummyProc())
+
+    component = {"name": "demo", "command": ["echo", "hi"]}
+    failure_tracker: dict[str, int] = {}
+
+    caplog.set_level(logging.WARNING, logger="razar.boot_orchestrator")
+
+    proc, used_attempts, err = bo._retry_with_ai(
+        "demo", component, "boom", 2, failure_tracker
+    )
+
+    assert proc is None
+    assert used_attempts == 2
+    assert err == "boom"
+    assert attempts == [True, True]
+    assert failure_tracker == {"demo": 2}
+    assert not escalated
+    assert any(
+        "Skipping remote escalation" in record.getMessage() for record in caplog.records
+    )
