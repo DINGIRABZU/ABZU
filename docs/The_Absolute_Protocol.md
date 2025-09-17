@@ -18,7 +18,7 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Per-agent avatars** stream through the [avatar pipeline](avatar_pipeline.md) to keep sessions visually aligned.
 - **Resuscitator flows** coordinate recovery steps; follow the [recovery_playbook.md](recovery_playbook.md).
 - **Signal bus** links connectors with publish/subscribe messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
-- **Identity loader** now resides in Rust; Crown boot caches mission and persona summary in `data/identity.json`.
+- **Identity loader** now resides in Rust; Crown boot caches mission and persona summary in `data/identity.json` and registers the embedding in vector/corpus memory for retrieval-aware routing.
 
 ### Rust Migration Rules
 
