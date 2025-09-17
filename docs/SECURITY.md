@@ -27,6 +27,40 @@ variable; configuration tokens and fallback names are ignored. The loader in
 - The agent loader refuses blank strings, placeholder tokens, or unset
   variables; these conditions surface as explicit errors in logs and metrics.
 
+### Credential Rotation Workflow
+
+- Maintain the sanitized rotation manifests under `secrets/`. Each JSON or
+  YAML file must list the agent `name`, the environment variable that carries
+  the credential, and (when applicable) a `config_path` override that points to
+  a staging copy of `config/razar_ai_agents.json`.
+- Initiate the rotation every 30 days (or immediately after an exposure) by
+  running a **dry run** to stage new placeholders and confirm cache invalidation:
+
+  ```bash
+  python scripts/rotate_remote_agent_keys.py --secrets-dir secrets --dry-run
+  ```
+
+  The helper reads the manifests, generates non-secret placeholder values, and
+  asserts that `invalidate_agent_config_cache` forces `ai_invoker` to reload
+  the updated roster.
+- Seek two-person approval before applying changes: the Security Lead approves
+  the credential update and the RAZAR service owner confirms that the rotation
+  aligns with the current incident state. Record both approvals (and the new
+  placeholder identifiers) in the active incident or change-management ticket.
+- After approval, apply the placeholders in a sandbox environment:
+
+  ```bash
+  python scripts/rotate_remote_agent_keys.py --secrets-dir secrets --apply
+  pytest tests/test_credential_rotation.py
+  ```
+
+  Export the placeholders to the sandbox runtime and trigger a smoke handover to
+  ensure the remote agent responds before propagating the secrets manager
+  update to production.
+- Once the sandbox validation passes, promote the credential update through the
+  deployment pipeline. Never copy placeholders or real tokens into Git history;
+  store the audit record exclusively in the ticketing system.
+
 ### Invocation Sandbox
 
 Every external handover executes inside a dedicated, resource-constrained

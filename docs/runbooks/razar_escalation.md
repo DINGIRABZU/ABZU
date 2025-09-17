@@ -120,6 +120,42 @@ rollback completes:
    log excerpts (including the rollback notice), and metrics snapshots before
    closing the incident.
 
+## Credential Rotation and Sandbox Validation
+
+- **Cadence:** Rotate `KIMI2_API_KEY`, `AIRSTAR_API_KEY`, and `RSTAR_API_KEY`
+  every 30 days or sooner when exposure, vendor notice, or operator turnover
+  warrants it. The sanitized rotation manifests live under `secrets/` and map
+  each agent to its environment variable and roster override.
+- **Dry-run staging:** Begin every rotation with a non-destructive rehearsal so
+  operators can review the generated placeholders and confirm cache invalidation
+  works before touching live configuration.
+
+  ```bash
+  python scripts/rotate_remote_agent_keys.py --secrets-dir secrets --dry-run
+  ```
+
+- **Approvals:** Record a two-person approval (Security Lead + RAZAR owner) in
+  the incident or change ticket before proceeding. Both approvers must confirm
+  that the placeholders match the intended agents and that no emergency repair
+  is currently relying on the legacy credential.
+- **Sandbox apply:** With approvals captured, apply the rotation in the staging
+  or sandbox environment and run the smoke checks:
+
+  ```bash
+  python scripts/rotate_remote_agent_keys.py --secrets-dir secrets --apply
+  pytest tests/test_credential_rotation.py
+  python -c "from razar import ai_invoker; ai_invoker.invalidate_agent_config_cache(); ai_invoker.load_agent_definitions('config/razar_ai_agents.json')"
+  ```
+
+  Export the placeholders to the sandbox service account (or inject them into
+  the session with `export KIMI2_API_KEY=...` and equivalents) before executing
+  the snippet above. The `load_agent_definitions` call must complete without
+  raising `AgentCredentialError`; otherwise roll back the change and escalate to
+  Security.
+- **Promotion:** After sandbox validation, push the secrets manager update
+  through the standard deployment pipeline, monitor the next escalation cycle,
+  and attach the sandbox logs plus approval trail to the ticket before closing.
+
 ## External Service References
 
 - [Kimi 2 (K2 Coder)](https://github.com/MoonshotAI/Kimi-K2) – remote repair
