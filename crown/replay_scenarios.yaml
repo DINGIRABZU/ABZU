@@ -1,0 +1,82 @@
+# Crown replay scenarios for deterministic routing captures.
+# Each entry mirrors a Crown → servant path from the alpha v0.1 charter.
+scenarios:
+  - id: crown_glm_reflection
+    description: "Baseline GLM reflection without servant escalation."
+    prompt: |
+      Crown, offer a reflective meditation on how the mission doctrine guides
+      today's operator sync.
+    expected_model: glm
+    include_memory: false
+    seed: 1101
+    context:
+      - input: "Operator: confirm Crown identity assimilation transcript."
+      - input: "Crown: mission brief acknowledged; awaiting directives."
+
+  - id: crown_kimicho_guidance
+    description: "Technical triage escalated to the Kimicho servant."
+    prompt: |
+      Kimicho, diagnose this failure signature and outline a minimal patch.
+      Traceback: ValueError: ritual binding missing during activation stage.
+    expected_model: kimicho
+    include_memory: true
+    seed: 2102
+    memory:
+      spiral: "Ritual ledger flagged missing binding during prior rehearsal."
+      cortex:
+        - "Kimicho heuristic: prefer minimal code insertion before escalation."
+      vector:
+        - text: "Operator note: retain existing bindings when applying Kimicho patch."
+    context:
+      - input: "Operator: escalation requested for ritual binding fault."
+
+  - id: crown_kimi_k2_revision
+    description: "Kimicho relays to the K2 Coder servant for code-first repair."
+    prompt: |
+      K2 Coder, rewrite the failing binding so the activation ritual resolves
+      without additional side effects.
+    expected_model: kimi_k2
+    include_memory: true
+    seed: 3103
+    memory:
+      spiral: "Kimicho report: binding lookup requires explicit null-guard."
+      cortex:
+        - "Prior K2 Coder patch inserted guard rails for activation step."
+      vector:
+        - text: "Telemetry: activation ritual fails after three attempts without guard."
+    context:
+      - input: "Kimicho: escalation to K2 coder triggered after minimal patch attempt."
+
+  - id: crown_air_star_validation
+    description: "Air Star reviews cross-file impact before final escalation."
+    prompt: |
+      Air Star, evaluate the revised binding plan and stage validation notes for
+      the operator review packet.
+    expected_model: air_star
+    include_memory: true
+    seed: 4104
+    memory:
+      spiral: "K2 Coder patch introduces guard_path parameter."
+      cortex:
+        - "Air Star directive: cross-verify companion modules before merge."
+      vector:
+        - text: "Review log: ensure guard_path maintains ritual state machine invariants."
+    context:
+      - input: "K2 Coder: patch candidate ready; requesting Air Star validation."
+
+  - id: crown_rstar_finalization
+    description: "Final rStar escalation capturing the terminal remediation output."
+    prompt: |
+      rStar, synthesize the final remediation script so the ritual activation
+      completes even under degraded telemetry.
+    expected_model: rstar
+    include_memory: true
+    seed: 5105
+    memory:
+      spiral: "Air Star verdict: guard_path needs resilience hooks for telemetry gaps."
+      cortex:
+        - "rStar escalation protocol: include rollback stanza in final patch."
+      vector:
+        - text: "Operator directive: archive final remediation in Stage A evidence bundle."
+    context:
+      - input: "Air Star: handing final remediation to rStar with validation notes."
