@@ -85,3 +85,39 @@ def test_initialize_triggers_identity(monkeypatch):
 
     ic.initialize_crown()
     assert called.flag
+
+
+def test_initialize_stores_identity_summary(monkeypatch):
+    dummy_glm = DummyGLM()
+    vector_calls: dict[str, dict] = {}
+    corpus_calls: dict[str, dict] = {}
+
+    class DummyVector:
+        def add_vector(self, text, metadata):
+            vector_calls["text"] = text
+            vector_calls["metadata"] = metadata
+
+    def fake_add_entry(text, tone, *, metadata=None):
+        corpus_calls["text"] = text
+        corpus_calls["metadata"] = metadata or {}
+
+    monkeypatch.setattr(ic, "GLMIntegration", lambda *a, **k: dummy_glm)
+    monkeypatch.setattr(ic, "_init_memory", lambda cfg: None)
+    monkeypatch.setattr(ic, "_init_servants", lambda cfg: None)
+    monkeypatch.setattr(ic, "_verify_servant_health", lambda servants: None)
+    monkeypatch.setattr(ic, "_check_glm", lambda integration: None)
+    monkeypatch.setattr(ic, "vector_memory", DummyVector())
+    monkeypatch.setattr(
+        ic,
+        "corpus_memory",
+        SimpleNamespace(add_entry=fake_add_entry, vector_memory=None),
+    )
+    monkeypatch.setattr(ic, "load_identity", lambda integration: "identity summary")
+
+    ic.initialize_crown()
+
+    assert vector_calls["text"] == "identity summary"
+    assert vector_calls["metadata"]["type"] == "identity_summary"
+    assert corpus_calls["text"] == "identity summary"
+    assert corpus_calls["metadata"]["type"] == "identity_summary"
+    assert corpus_calls["metadata"]["stage"] == "crown_boot"

@@ -7,6 +7,7 @@ __version__ = "0.1.1"
 
 import logging
 import os
+from datetime import datetime
 from pathlib import Path
 
 import yaml  # type: ignore[import-untyped]
@@ -161,6 +162,46 @@ def _init_servants(cfg: dict) -> None:
         _register_http_servant(name, url)
 
 
+def _store_identity_summary(summary: str | None) -> None:
+    """Persist ``summary`` to available memory backends."""
+
+    if not summary:
+        return
+
+    text = summary.strip()
+    if not text:
+        return
+
+    metadata = {
+        "source": "identity_loader",
+        "type": "identity_summary",
+        "stage": "crown_boot",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+    stored_in_vector = False
+    add_entry = getattr(corpus_memory, "add_entry", None)
+    if callable(add_entry):
+        try:
+            add_entry(text, None, metadata=metadata)
+            stored_in_vector = bool(getattr(corpus_memory, "vector_memory", None))
+            logger.info("identity summary stored in corpus memory")
+        except Exception as exc:  # pragma: no cover - optional deps
+            logger.warning("failed to store identity summary in corpus memory: %s", exc)
+
+    if not stored_in_vector and vector_memory is not None:
+        add_vector = getattr(vector_memory, "add_vector", None)
+        if callable(add_vector):
+            try:
+                add_vector(text, metadata)
+                stored_in_vector = True
+                logger.info("identity summary stored in vector memory")
+            except Exception as exc:  # pragma: no cover - optional deps
+                logger.warning(
+                    "failed to store identity summary in vector memory: %s", exc
+                )
+
+
 def _verify_servant_health(servants: dict) -> None:
     """Check that each servant model responds to a health request."""
     if not servants:
@@ -215,7 +256,8 @@ def initialize_crown() -> GLMIntegration:
     try:
         _verify_servant_health(cfg.get("servant_models", {}))
         _check_glm(integration)
-        load_identity(integration)
+        summary = load_identity(integration)
+        _store_identity_summary(summary)
     except RuntimeError as exc:
         logger.error("%s", exc)
         raise SystemExit(1)

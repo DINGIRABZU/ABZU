@@ -6,9 +6,10 @@
 ## RAG + Insight Pipeline
 After Crown's LLM boots, `neoabzu_crown.load_identity` runs a retrieval and
 insight pass over mission, vision, and persona documents. Chunks are embedded
-into vector memory, summarized by the GLM, and the resulting identity is
-persisted at `data/identity.json` so subsequent invocations reuse the cached
-context.
+into vector and corpus memory with metadata tags so routing queries can recover
+the same ethical baseline, the GLM produces a summary, and the resulting
+identity is persisted at `data/identity.json` so subsequent invocations reuse
+the cached context.
 
 ### Doctrine References
 - [system_blueprint.md#razar–crown–kimi-cho-migration](system_blueprint.md#razar–crown–kimi-cho-migration)
