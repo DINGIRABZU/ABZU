@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -48,6 +50,22 @@ jobs:
           pip install -r dev-requirements.txt
           pip install build pytest
 
+      - name: Refresh Crown identity when doctrine changes
+        run: |
+          set -euo pipefail
+          mkdir -p logs/identity_refresh
+          BASE_REF="${{ github.event.before }}"
+          if [ -z "$BASE_REF" ] || [ "$BASE_REF" = "0000000000000000000000000000000000000000" ]; then
+            BASE_REF="$(git rev-list --max-parents=0 HEAD)"
+          fi
+          CHANGED_FILES="$(git diff --name-only "$BASE_REF" HEAD || true)"
+          if echo "$CHANGED_FILES" | grep -E '^(docs/project_mission_vision\.md|docs/persona_api_guide\.md|GENESIS/|CODEX/ACTIVATIONS/|INANNA_AI/)' >/dev/null; then
+            echo "Doctrine updates detected; refreshing Crown identity"
+            python scripts/refresh_crown_identity.py --use-stub --log-dir logs/identity_refresh | tee logs/identity_refresh/latest_refresh.json
+          else
+            echo "No doctrine updates detected; skipping identity refresh"
+          fi
+
       - name: Prepare mock connector endpoints
         run: |
           mkdir -p mock_connectors
@@ -73,6 +91,7 @@ jobs:
           name: alpha-gate-logs
           path: |
             logs/alpha_gate/
+            logs/identity_refresh/
             mock_connectors/server.log
           if-no-files-found: warn
 
