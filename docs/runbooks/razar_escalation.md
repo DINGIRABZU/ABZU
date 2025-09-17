@@ -8,10 +8,10 @@ alert through rStar intervention.
 ## Escalation Ladder and Threshold Controls
 
 - **Default ordering:** Crown → Kimi-cho → [Kimi 2 (K2 Coder)](https://github.com/MoonshotAI/Kimi-K2)
-  → [rStar](https://github.com/microsoft/rStar). The sequence is stored in
-  [`config/razar_ai_agents.json`](../../config/razar_ai_agents.json). Confirm the
-  roster before changing thresholds so the warning and escalation counts line up
-  with actual agents.
+  → Air Star → [rStar](https://github.com/microsoft/rStar). The sequence is
+  stored in [`config/razar_ai_agents.json`](../../config/razar_ai_agents.json).
+  Confirm the roster before changing thresholds so the warning and escalation
+  counts line up with actual agents.
 - **`RAZAR_ESCALATION_WARNING_THRESHOLD`** – emits operator warnings after the
   specified number of escalations during a boot or repair cycle. Leave it ≥1 so
   alerts fire before rStar receives traffic.
@@ -19,8 +19,9 @@ alert through rStar intervention.
   rStar takes over. The default `9` gives three full passes through the local
   stack. Setting it to `0` disables rStar entirely.
 - **`RSTAR_ENDPOINT` / `RSTAR_API_KEY`** – API target and credential for rStar.
-  Pair them with `KIMI_K2_URL` and `KIMI_K2_TOKEN` (if present) so K2 Coder can
-  authenticate during its turn in the ladder.
+  Pair them with `KIMI2_ENDPOINT` / `KIMI2_API_KEY` and
+  `AIRSTAR_ENDPOINT` / `AIRSTAR_API_KEY` so K2 Coder and Air Star can authenticate
+  during their turns in the ladder.
 - **`RAZAR_METRICS_PORT`** – port for Prometheus counters that track invocation
   volume, failures, and retries. Defaults to `9360`.
 
@@ -32,8 +33,8 @@ values propagate into the escalation registry and metrics exporter.
 RAZAR automatically shares escalation history with downstream agents via
 `build_failure_context` (`razar/boot_orchestrator.py`). Each retry loads the
 latest entries from `logs/razar_ai_invocations.json` and forwards them as the
-`context` payload to `ai_invoker.handover`, ensuring K2 Coder and rStar see every
-previous failure, patch attempt, and rejection.
+`context` payload to `ai_invoker.handover`, ensuring K2 Coder, Air Star, and
+rStar see every previous failure, patch attempt, and rejection.
 
 Operators should triage incidents with the following artifacts:
 
@@ -148,10 +149,11 @@ rollback completes:
   ```
 
   Export the placeholders to the sandbox service account (or inject them into
-  the session with `export KIMI2_API_KEY=...` and equivalents) before executing
-  the snippet above. The `load_agent_definitions` call must complete without
-  raising `AgentCredentialError`; otherwise roll back the change and escalate to
-  Security.
+  the session with `export KIMI2_ENDPOINT=...`, `export KIMI2_API_KEY=...`,
+  `export AIRSTAR_ENDPOINT=...`, `export AIRSTAR_API_KEY=...`, and equivalents)
+  before executing the snippet above. The `load_agent_definitions` call must
+  complete without raising `AgentCredentialError`; otherwise roll back the
+  change and escalate to Security.
 - **Promotion:** After sandbox validation, push the secrets manager update
   through the standard deployment pipeline, monitor the next escalation cycle,
   and attach the sandbox logs plus approval trail to the ticket before closing.
@@ -160,6 +162,8 @@ rollback completes:
 
 - [Kimi 2 (K2 Coder)](https://github.com/MoonshotAI/Kimi-K2) – remote repair
   engine invoked after Kimi-cho.
+- Air Star – autonomous triage and patch refinement layer between K2 Coder and
+  rStar.
 - [rStar](https://github.com/microsoft/rStar) – final escalation target for
   high-assurance patch generation.
 
