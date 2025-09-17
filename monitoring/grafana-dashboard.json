@@ -147,6 +147,38 @@
     },
     {
       "type": "stat",
+      "title": "Crown Replay Divergences",
+      "targets": [
+        {
+          "expr": "crown_replay_divergences_total"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Crown Replay Duration",
+      "targets": [
+        {
+          "expr": "crown_replay_duration_seconds"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Crown Replay Scenarios",
+      "targets": [
+        {
+          "expr": "crown_replay_scenarios_total"
+        }
+      ]
+    },
+    {
+      "type": "stat",
       "title": "Boot First Attempt Successes",
       "targets": [
         {

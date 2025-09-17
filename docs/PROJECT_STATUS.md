@@ -30,10 +30,13 @@ pytest --maxfail=1 --cov --cov-fail-under=90 -q \
   tests/test_vector_memory.py \
   tests/test_vector_memory_extensions.py \
   tests/test_vector_memory_persistence.py \
-  tests/test_spiral_vector_db.py
+  tests/test_spiral_vector_db.py \
+  tests/crown/test_replay_determinism.py
 ```
 
 Stage A rehearsals now exercise the Spiral OS boot entry points alongside Spiral memory and vector regression tests. Runs are expected to meet the ≥90 % coverage bar reflected in `coverage.svg`; failures block promotion from the gate.
+
+The replay regression writes `monitoring/crown_replay_summary.json` so contributors can confirm the scenario count, runtime, and divergence status without re-running the suite. The Alpha gate copies the summary into `logs/alpha_gate/` alongside coverage exports.
 
 ## Recent Refactoring
 

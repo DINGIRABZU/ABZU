@@ -1,0 +1,27 @@
+{
+  "id": "crown_air_star_validation",
+  "expected_model": "air_star",
+  "seed": 4104,
+  "baseline": {
+    "model": "air_star",
+    "emotion": "neutral",
+    "state": "dormant",
+    "result_hash": "d2cfdf4616c02db7d27bb482c06762fefa0aaafd362af25e9c83933c99d00f77",
+    "audio_hash": "818ad1aaf0a357ad2b6527043bbe4aeeadf8799dd24826c005ae8b27177253be",
+    "video_hash": "0b8d7c846f497f0657a113c797abdf8d194c15b5e914501f3b70cd5bcae88d70",
+    "servant_prompt": "K2 Coder patch introduces guard_path parameter.\nAir Star directive: cross-verify companion modules before merge.\nReview log: ensure guard_path maintains ritual state machine invariants.\n\nAir Star, evaluate the revised binding plan and stage validation notes for\nthe operator review packet.\n",
+    "result": {
+      "text": "air_star:0434612d58b350b7",
+      "model": "air_star",
+      "emotion": "neutral",
+      "archetype": "Everyman",
+      "weight": 0.2,
+      "state": "dormant",
+      "context_used": "K2 Coder: patch candidate ready; requesting Air Star validation.",
+      "symbol": "♋",
+      "glyph_path": "crown_glyphs/6c7cb7761db3d881.png",
+      "glyph_phrase": "Glyph hash 6c7cb7761db3",
+      "spiral_recall": "Air Star, evaluate the revised binding plan and stage validation notes for\nthe operator review packet.\n\n<spiral:1dfa2af9429c43db>"
+    }
+  }
+}

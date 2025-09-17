@@ -1,0 +1,27 @@
+{
+  "id": "crown_glm_reflection",
+  "expected_model": "glm",
+  "seed": 1101,
+  "baseline": {
+    "model": "glm",
+    "emotion": "neutral",
+    "state": "dormant",
+    "result_hash": "6300cfff76610cc5047cc8ebb635e5a1d51ea4d043f40cc7743b8d9d7ae2165f",
+    "audio_hash": "f1f16c23ed28e4213143b8c5a9bec2c9cc92d77aa910ed5c044abb426aa8e82b",
+    "video_hash": "8f118df209fcfc2639b818ebc00c2d74d5f46175cfb9f843b17c06308113794f",
+    "servant_prompt": null,
+    "result": {
+      "text": "glm:fe3fe7a51ce79e1c",
+      "model": "glm",
+      "emotion": "neutral",
+      "archetype": "Everyman",
+      "weight": 0.2,
+      "state": "dormant",
+      "context_used": "Operator: confirm Crown identity assimilation transcript.\nCrown: mission brief acknowledged; awaiting directives.",
+      "symbol": "♈",
+      "glyph_path": "crown_glyphs/1cd177d01b450ddb.png",
+      "glyph_phrase": "Glyph hash 1cd177d01b45",
+      "spiral_recall": "Crown, offer a reflective meditation on how the mission doctrine guides\ntoday's operator sync.\n\n<spiral:d906207f71560217>"
+    }
+  }
+}

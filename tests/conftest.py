@@ -8,6 +8,8 @@ __version__ = "0.0.1"
 ALLOWED_TESTS: set[str] = set()
 __all__ = ["ALLOWED_TESTS", "allow_test", "allow_tests"]
 
+import hashlib
+import json
 import os
 import sys
 from pathlib import Path
@@ -72,6 +74,42 @@ def parse_prometheus_textfile():
     return _parse
 
 
+@pytest.fixture
+def crown_replay_env(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> dict[str, Path]:
+    """Provide deterministic stubs for Crown replay regression."""
+
+    import crown_prompt_orchestrator as cpo
+    import memory.sacred as sacred
+    from tools import session_logger
+
+    def _deterministic_glyph(inputs: dict[str, object]) -> tuple[Path, str]:
+        payload = json.dumps(inputs, sort_keys=True)
+        digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+        return Path(f"crown_glyphs/{digest[:16]}.png"), f"Glyph hash {digest[:12]}"
+
+    audio_dir = tmp_path / "audio"
+    video_dir = tmp_path / "video"
+    audio_dir.mkdir(parents=True, exist_ok=True)
+    video_dir.mkdir(parents=True, exist_ok=True)
+
+    monkeypatch.setattr(cpo, "record_task_flow", lambda *a, **k: None)
+    monkeypatch.setattr(cpo, "review_test_outcomes", lambda *a, **k: [])
+
+    def _stable_spiral(prompt: str) -> str:
+        digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+        return f"{prompt}\n<spiral:{digest[:16]}>"
+
+    monkeypatch.setattr(cpo, "spiral_recall", _stable_spiral)
+    monkeypatch.setattr(sacred, "generate_sacred_glyph", _deterministic_glyph)
+    monkeypatch.setattr(cpo, "generate_sacred_glyph", _deterministic_glyph)
+    monkeypatch.setattr(session_logger, "AUDIO_DIR", audio_dir)
+    monkeypatch.setattr(session_logger, "VIDEO_DIR", video_dir)
+
+    return {"audio_dir": audio_dir, "video_dir": video_dir}
+
+
 # Skip tests that rely on unavailable heavy resources unless explicitly allowed
 allow_tests(
     ROOT / "tests" / "connectors" / "test_connector_heartbeat.py",
@@ -79,6 +117,7 @@ allow_tests(
     ROOT / "tests" / "test_adaptive_learning_stub.py",
     ROOT / "tests" / "test_env_validation.py",
     ROOT / "tests" / "crown" / "test_config.py",
+    ROOT / "tests" / "crown" / "test_replay_determinism.py",
     ROOT / "tests" / "test_download_deepseek.py",
     ROOT / "tests" / "test_dashboard_app.py",
     ROOT / "tests" / "test_feedback_logging_import.py",
@@ -250,7 +289,6 @@ allow_tests(
 
 
 import importlib.util
-import json
 import shutil
 import time
 
