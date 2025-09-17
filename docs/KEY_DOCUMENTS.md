@@ -8,6 +8,8 @@ reviewed. When illustrating how these documents relate, use Mermaid diagrams ins
 PNG or SVG images. This requirement is reinforced by The Absolute Protocol's
 [Contributor Awareness Checklist](The_Absolute_Protocol.md#contributor-awareness-checklist).
 
+Escalation governance now inherits from the [Alpha v0.1 escalation doctrine](The_Absolute_Protocol.md#alpha-v01-escalation-doctrine); any update to the Crown delegation roster or thresholds must propagate here, the blueprint anchors it references, and the onboarding registry so protected-file summaries stay accurate.
+
 ## Contributor Summary Requirements
 Each key document entry in `onboarding_confirm.yml` **must** include four
 fields:
@@ -32,7 +34,7 @@ graph LR
 | Document | Description | Audit cadence |
 | --- | --- | --- |
 | [AGENTS.md](../AGENTS.md) | Repository-wide agent instructions | Quarterly |
-| [The Absolute Protocol](The_Absolute_Protocol.md) | Core contribution rules | Quarterly |
+| [The Absolute Protocol](The_Absolute_Protocol.md) | Core contribution rules and Alpha v0.1 escalation doctrine | Quarterly |
 | [System Blueprint](system_blueprint.md) | Architectural overview | Quarterly |
 | [Project Mission & Vision](project_mission_vision.md) | Unified mission, vision, and purpose | Quarterly |
 | [Component Index](component_index.md) | Inventory of modules and services | Quarterly |

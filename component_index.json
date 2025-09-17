@@ -112,9 +112,7 @@
         "tests/test_voice_layer_albedo.py",
         "tests/test_voice_profiles.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -143,9 +141,7 @@
         "tests/test_suggest_enhancement.py",
         "tests/test_voice_avatar_pipeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -163,9 +159,7 @@
         "pathlib"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -188,9 +182,7 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -210,9 +202,7 @@
       "tests": [
         "tests/agents/razar/test_agent_heartbeat.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -231,10 +221,15 @@
         "datetime",
         "json",
         "logging",
+        "multiprocessing",
         "os",
         "pathlib",
+        "queue",
+        "resource",
         "shutil",
         "subprocess",
+        "threading",
+        "time",
         "tools",
         "typing"
       ],
@@ -242,16 +237,18 @@
         "tests/agents/nazarick/test_resuscitator_flow.py",
         "tests/agents/razar/test_ai_invoker.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
+        "tests/test_ai_invoker_credentials.py",
         "tests/test_boot_orchestrator.py",
+        "tests/test_failover_integration.py",
         "tests/test_operator_api.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -264,10 +261,10 @@
       "version": "0.2.5",
       "dependencies": [
         "__future__",
-        "os",
         "datetime",
         "json",
         "logging",
+        "os",
         "pathlib",
         "requests",
         "types",
@@ -277,16 +274,18 @@
         "tests/agents/nazarick/test_resuscitator_flow.py",
         "tests/agents/razar/test_ai_invoker.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
+        "tests/test_ai_invoker_credentials.py",
         "tests/test_boot_orchestrator.py",
+        "tests/test_failover_integration.py",
         "tests/test_operator_api.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -324,9 +323,7 @@
         "tests/test_voice_layer_albedo.py",
         "tests/web_console/test_conversation_timeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -345,9 +342,7 @@
       "tests": [
         "tests/agents/test_asian_gen.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -419,9 +414,7 @@
         "tests/test_webrtc_connector.py",
         "tests/web_console/test_webrtc_gateway.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -439,9 +432,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -478,9 +469,7 @@
         "tests/web_console/test_multi_avatar_stream.py",
         "tests/web_console/test_webrtc_gateway.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -504,9 +493,7 @@
       "tests": [
         "tests/connectors/test_avatar_broadcast.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -529,9 +516,7 @@
       "tests": [
         "tests/monitoring/test_avatar_watchdog.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -552,9 +537,7 @@
       "tests": [
         "tests/monitoring/test_avatar_watchdog.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -578,9 +561,7 @@
         "tests/test_play_ritual_music_smoke.py",
         "tests/test_tts_backends.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -603,9 +584,7 @@
         "tests/test_metrics_endpoints.py",
         "tests/test_orchestration_master.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -634,9 +613,7 @@
         "tests/test_metrics_endpoints.py",
         "tests/test_orchestration_master.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -669,9 +646,7 @@
         "tests/test_synthetic_stego.py",
         "tests/tools/test_bot_mcp.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -702,9 +677,7 @@
         "tests/test_synthetic_stego.py",
         "tests/tools/test_bot_mcp.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -735,9 +708,7 @@
         "tests/test_synthetic_stego.py",
         "tests/tools/test_bot_mcp.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -770,9 +741,7 @@
         "tests/agents/test_bana_narrator.py",
         "tests/ignition/test_crown_wakes_services.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -800,9 +769,7 @@
         "tests/narrative_engine/test_jsonl_ingest_persist_retrieve.py",
         "tests/test_bana_narrative_engine.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -824,9 +791,7 @@
       "tests": [
         "tests/agents/test_razar_blueprint_synthesizer.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -845,17 +810,23 @@
         "bootstrap_utils",
         "crown_handshake",
         "dataclasses",
+        "email",
         "json",
-        "kimicho",
         "logging",
         "memory",
         "neoabzu_core",
+        "neoabzu_kimicho",
         "opentelemetry",
+        "os",
         "pathlib",
         "quarantine_manager",
+        "requests",
+        "smtplib",
         "subprocess",
+        "threading",
         "time",
-        "typing"
+        "typing",
+        "utils"
       ],
       "tests": [
         "tests/agents/razar/test_boot_orchestrator.py",
@@ -866,20 +837,21 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/monitoring/test_chakra_heartbeat.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
         "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
+        "tests/test_failover_integration.py",
         "tests/test_operator_api.py",
         "tests/web_operator/test_api.py",
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_operator/test_ignition_e2e.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -921,20 +893,21 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/monitoring/test_chakra_heartbeat.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
         "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
+        "tests/test_failover_integration.py",
         "tests/test_operator_api.py",
         "tests/web_operator/test_api.py",
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_operator/test_ignition_e2e.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -951,9 +924,7 @@
         "memory"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -975,9 +946,7 @@
         "worlds"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1004,9 +973,7 @@
         "tests/test_bots.py",
         "tests/tools/test_bot_mcp.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1032,9 +999,7 @@
         "tests/test_bots.py",
         "tests/tools/test_bot_mcp.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1053,9 +1018,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1076,9 +1039,7 @@
         "tests/test_memory_bundle_tracing.py",
         "tests/test_neoabzu_bindings.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1100,9 +1061,7 @@
       "tests": [
         "tests/spiral_os/test_chakra_cycle.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1127,9 +1086,7 @@
         "tests/monitoring/test_chakra_heartbeat.py",
         "tests/monitoring/test_chakra_status_board.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1145,9 +1102,7 @@
         "validate_component_index_json"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1166,9 +1121,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1186,9 +1139,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1204,9 +1155,7 @@
         "verify_dependencies"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1225,9 +1174,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1246,9 +1193,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1265,9 +1210,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1285,9 +1228,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1305,9 +1246,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1326,9 +1265,7 @@
       "tests": [
         "tests/agents/razar/test_checkpoint_manager.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1347,11 +1284,28 @@
       "tests": [
         "tests/agents/razar/test_checkpoint_manager.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "ci_verify_dashboards",
+      "chakra": "unknown",
+      "type": "script",
+      "path": "scripts/ci_verify_dashboards.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "json",
+        "pathlib",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {},
+      "status": "experimental",
+      "issues": "No tests found",
       "adr": null
     },
     {
@@ -1385,9 +1339,7 @@
         "tests/test_start_avatar_console.py",
         "tests/test_voice_cloner_cli.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1408,9 +1360,7 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1431,9 +1381,7 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1465,9 +1413,7 @@
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_remote_repair.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1485,9 +1431,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1507,9 +1451,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1534,9 +1476,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1555,9 +1495,7 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1596,9 +1534,7 @@
         "tests/tools/test_bot_mcp.py",
         "tests/web_console/test_connector_panel.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1634,9 +1570,7 @@
         "tests/test_training_feedback.py",
         "tests/test_voice_evolution_memory.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1678,9 +1612,7 @@
         "tests/web_operator/test_api.py",
         "tests/web_ui/test_memory_query.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1712,9 +1644,7 @@
         "tests/web_operator/test_api.py",
         "tests/web_ui/test_memory_query.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1732,9 +1662,7 @@
         "pathlib"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1759,9 +1687,7 @@
       "tests": [
         "tests/agents/test_asian_gen.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1781,9 +1707,7 @@
       "tests": [
         "tests/chakra_healing/test_crown.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1821,9 +1745,7 @@
         "tests/test_orchestrator_memory.py",
         "tests/test_orchestrator_routing.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1851,11 +1773,11 @@
         "tests/agents/razar/test_ignition_sequence.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
-        "tests/integration/test_full_flows.py"
+        "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/test_failover_integration.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1877,9 +1799,7 @@
       "tests": [
         "tests/agents/razar/test_crown_link.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1903,9 +1823,7 @@
       "tests": [
         "tests/agents/razar/test_crown_link.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1954,9 +1872,7 @@
         "tests/test_prometheus_metrics.py",
         "tests/test_session_logger.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -1972,9 +1888,7 @@
         "interfaces"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -1990,9 +1904,7 @@
         "guardian"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2013,9 +1925,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2034,9 +1944,7 @@
       "tests": [
         "tests/test_dependency_installer.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2067,9 +1975,7 @@
       "tests": [
         "tests/test_dev_orchestrator.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2095,9 +2001,7 @@
         "tests/monitoring/test_self_healing_ledger.py",
         "tests/spiral_os/test_chakra_cycle.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2117,9 +2021,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2146,12 +2048,11 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2173,12 +2074,11 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2191,9 +2091,7 @@
       "version": "0.1.0",
       "dependencies": [],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2233,9 +2131,7 @@
         "tests/test_task_profiling.py",
         "tests/test_task_profiling_wrappers.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2264,9 +2160,7 @@
         "tests/test_task_profiling.py",
         "tests/test_task_profiling_wrappers.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2280,12 +2174,11 @@
       "dependencies": [
         "__future__",
         "pathlib",
+        "subprocess",
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2308,37 +2201,9 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
-      "adr": null
-    },
-    {
-      "id": "escalation_notifier",
-      "chakra": "unknown",
-      "type": "module",
-      "path": "monitoring/escalation_notifier.py",
-      "version": "0.1.0",
-      "dependencies": [
-        "__future__",
-        "argparse",
-        "asyncio",
-        "datetime",
-        "json",
-        "operator_api",
-        "pathlib",
-        "re"
-      ],
-      "tests": [
-        "tests/monitoring/test_escalation_notifier.py"
-      ],
-      "metrics": {
-        "coverage": 1.0
-      },
-      "status": "active",
-      "issues": "No known issues",
       "adr": null
     },
     {
@@ -2361,9 +2226,31 @@
       "tests": [
         "tests/monitoring/test_escalation_notifier.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "escalation_notifier",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "monitoring/escalation_notifier.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "asyncio",
+        "datetime",
+        "json",
+        "operator_api",
+        "pathlib",
+        "re"
+      ],
+      "tests": [
+        "tests/monitoring/test_escalation_notifier.py"
+      ],
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2384,9 +2271,7 @@
         "tests/agents/nazarick/test_ethics_manifesto_integration.py",
         "tests/agents/test_razar_cli.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2406,9 +2291,7 @@
       "tests": [
         "tests/bana/test_event_structurizer.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2427,9 +2310,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2447,9 +2328,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2466,9 +2345,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2484,9 +2361,7 @@
         "tracing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2518,9 +2393,7 @@
         "tests/test_training_guide_trigger.py",
         "tests/web_console/test_webrtc_gateway.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2541,9 +2414,7 @@
         "urllib"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2573,9 +2444,7 @@
         "tests/test_transformers_generate.py",
         "tests/test_voice_avatar_pipeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2602,9 +2471,7 @@
         "tests/test_transformers_generate.py",
         "tests/test_voice_avatar_pipeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2626,9 +2493,7 @@
       "tests": [
         "tests/agents/test_land_graph_geo_knowledge.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2650,15 +2515,14 @@
         "tests/agents/razar/test_ignition_builder.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_os_guardian.py",
         "tests/test_os_guardian_action_engine.py",
         "tests/test_os_guardian_perception.py",
         "tests/test_os_guardian_planning.py",
         "tests/test_prometheus_metrics.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2677,9 +2541,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2707,15 +2569,16 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
         "tests/test_boot_orchestrator.py",
+        "tests/test_failover_integration.py",
         "tests/test_razar_health_checks.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2747,15 +2610,16 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/razar/test_ai_invoker.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
         "tests/test_boot_orchestrator.py",
+        "tests/test_failover_integration.py",
         "tests/test_razar_health_checks.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2775,11 +2639,26 @@
       "tests": [
         "tests/chakra_healing/test_heart.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "heart_mediator",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/heart_mediator.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "signal_bus",
+        "typing"
+      ],
+      "tests": [],
+      "metrics": {},
+      "status": "experimental",
+      "issues": "No tests found",
       "adr": null
     },
     {
@@ -2800,9 +2679,7 @@
       "tests": [
         "tests/agents/razar/test_ignition_builder.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2820,9 +2697,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2843,9 +2718,7 @@
       "tests": [
         "tests/narrative_engine/test_event_storage.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2870,9 +2743,7 @@
         "tests/narrative_engine/test_ingest_persist_retrieve.py",
         "tests/narrative_engine/test_ingestion_to_mistral_output.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2893,9 +2764,7 @@
       "tests": [
         "tests/narrative_engine/test_jsonl_ingest_persist_retrieve.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2915,9 +2784,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -2933,6 +2800,7 @@
         "__future__",
         "env_validation",
         "logging",
+        "neoabzu_crown",
         "os",
         "pathlib",
         "prometheus_client",
@@ -2946,12 +2814,11 @@
         "tests/crown/test_glm_health_check.py",
         "tests/crown/test_initialization.py",
         "tests/crown/test_servant_registration.py",
+        "tests/test_identity_loader.py",
         "tests/test_kimi_k2_servant.py",
         "tests/test_prometheus_metrics.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2971,9 +2838,7 @@
       "tests": [
         "tests/test_memory_bus.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -2991,9 +2856,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3008,9 +2871,7 @@
       "tests": [
         "NEOABZU/k2coder/tests/fallback.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3031,9 +2892,7 @@
         "tests/test_kimi_servant.py",
         "tests/tools/test_opencode_client.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3050,9 +2909,7 @@
       "tests": [
         "tests/agents/test_land_graph_geo_knowledge.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3080,9 +2937,7 @@
         "tests/agents/razar/test_lifecycle_bus.py",
         "tests/agents/razar/test_recovery_integration.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3102,9 +2957,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3125,9 +2978,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3150,9 +3001,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3170,9 +3019,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3191,9 +3038,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3298,9 +3143,7 @@
         "tests/web_operator/test_arcade_ui.py",
         "tests/web_ui/test_memory_query.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3318,9 +3161,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3347,9 +3188,7 @@
         "tests/core/test_memory_physical.py",
         "tests/integration/test_mix_and_store.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3381,9 +3220,7 @@
         "tests/test_seven_dimensional_music.py",
         "tests/test_seven_plane_analyzer.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3406,9 +3243,7 @@
         "tests/test_seven_dimensional_music.py",
         "tests/test_seven_plane_analyzer.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3429,9 +3264,7 @@
         "tests/connectors/test_message_formatter.py",
         "tests/tools/test_bot_mcp.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3454,9 +3287,7 @@
         "tests/test_nazarick_messaging.py",
         "tests/test_rival_messaging.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3480,11 +3311,12 @@
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/test_razar_cli.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
+        "tests/test_failover_integration.py",
         "tests/test_mission_logger.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3512,11 +3344,12 @@
         "tests/agents/razar/test_pytest_runner.py",
         "tests/agents/test_razar_cli.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
+        "tests/test_failover_integration.py",
         "tests/test_mission_logger.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3548,9 +3381,7 @@
         "tests/test_mix_tracks_emotion.py",
         "tests/test_mix_tracks_instructions.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3573,9 +3404,7 @@
       "tests": [
         "tests/agents/razar/test_module_builder.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3596,9 +3425,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3621,9 +3448,7 @@
       "tests": [
         "tests/test_music_memory.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3641,9 +3466,7 @@
       "tests": [
         "tests/test_music_memory.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3657,6 +3480,7 @@
       "dependencies": [
         "__future__",
         "agents",
+        "albedo",
         "event_structurizer",
         "memory",
         "typing"
@@ -3674,9 +3498,7 @@
         "tests/test_memory_bus.py",
         "tests/test_memory_snapshot.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3692,6 +3514,7 @@
         "fastapi",
         "json",
         "memory",
+        "os",
         "prometheus_client",
         "pydantic",
         "time",
@@ -3699,13 +3522,13 @@
       ],
       "tests": [
         "tests/communication/test_mcp_wrappers.py",
+        "tests/conftest.py",
+        "tests/narrative/test_narrative_api.py",
         "tests/narrative_engine/test_ingest_persist_retrieve.py",
         "tests/test_metrics_endpoints.py",
         "tests/test_prometheus_metrics.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3727,13 +3550,12 @@
       ],
       "tests": [
         "tests/communication/test_mcp_wrappers.py",
+        "tests/narrative/test_narrative_api.py",
         "tests/narrative_engine/test_ingest_persist_retrieve.py",
         "tests/test_metrics_endpoints.py",
         "tests/test_prometheus_metrics.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3769,6 +3591,7 @@
         "tests/crown/test_console_streaming.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/integration/test_full_flows.py",
+        "tests/narrative/test_narrative_api.py",
         "tests/narrative/test_self_heal_logging.py",
         "tests/narrative/test_story_lookup.py",
         "tests/narrative_engine/test_biosignal_pipeline.py",
@@ -3782,9 +3605,7 @@
         "tests/test_memory_bus.py",
         "tests/test_metrics_endpoints.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3810,6 +3631,7 @@
         "tests/crown/test_console_streaming.py",
         "tests/ignition/test_crown_wakes_services.py",
         "tests/integration/test_full_flows.py",
+        "tests/narrative/test_narrative_api.py",
         "tests/narrative/test_self_heal_logging.py",
         "tests/narrative/test_story_lookup.py",
         "tests/narrative_engine/test_biosignal_pipeline.py",
@@ -3823,9 +3645,7 @@
         "tests/test_memory_bus.py",
         "tests/test_metrics_endpoints.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3845,9 +3665,7 @@
       "tests": [
         "tests/communication/test_mcp_wrappers.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3876,9 +3694,7 @@
         "tests/agents/test_narrative_scribe.py",
         "tests/narrative/test_self_heal_logging.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -3921,11 +3737,29 @@
         "tests/test_openwebui_state_updates.py",
         "tests/test_trust_registry.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "nazarick-console-backend",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "nazarick-console/backend/src/main.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "axum",
+        "futures",
+        "neoabzu-chakrapulse",
+        "tokio",
+        "tracing",
+        "tracing-subscriber"
+      ],
+      "tests": [],
+      "metrics": {},
+      "status": "experimental",
+      "issues": "CLI crate without lib.rs; add dedicated tests to stabilize",
       "adr": null
     },
     {
@@ -3941,9 +3775,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3960,9 +3792,7 @@
         "pyo3"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -3986,9 +3816,7 @@
         "NEOABZU/core/tests/hero_journey.rs",
         "NEOABZU/core/tests/ceremony.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4007,9 +3835,7 @@
         "tracing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4032,14 +3858,16 @@
         "NEOABZU/crown/tests/kimicho_fallback.rs",
         "NEOABZU/crown/tests/route_decision.rs",
         "NEOABZU/crown/tests/memory_query.rs",
-        "NEOABZU/crown/tests/razar_integration.rs",
+        "NEOABZU/crown/tests/validator.rs",
         "NEOABZU/crown/tests/route_query.rs",
-        "NEOABZU/crown/tests/insight.rs",
-        "NEOABZU/crown/tests/legacy_parity.rs"
+        "NEOABZU/crown/tests/razar_legacy_parity.rs",
+        "NEOABZU/crown/tests/legacy_parity.rs",
+        "NEOABZU/crown/tests/identity_load.rs",
+        "NEOABZU/crown/tests/razar_validator.rs",
+        "NEOABZU/crown/tests/razar_integration.rs",
+        "NEOABZU/crown/tests/insight_hooks.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4057,9 +3885,25 @@
       "tests": [
         "NEOABZU/fusion/tests/invariants.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-inanna",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/inanna/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-chakrapulse",
+        "pyo3"
+      ],
+      "tests": [
+        "NEOABZU/inanna/tests/basic.rs"
+      ],
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4072,15 +3916,16 @@
       "version": "0.1.1",
       "dependencies": [
         "metrics",
+        "neoabzu-instrumentation",
         "pyo3",
         "tracing"
       ],
       "tests": [
-        "NEOABZU/insight/tests/integration.rs"
+        "NEOABZU/insight/tests/integration.rs",
+        "NEOABZU/insight/tests/crown_bridge.rs",
+        "NEOABZU/insight/tests/edge_cases.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4099,9 +3944,7 @@
         "tracing-subscriber"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4113,6 +3956,7 @@
       "path": "NEOABZU/kimicho/src/lib.rs",
       "version": "0.1.0",
       "dependencies": [
+        "metrics",
         "neoabzu-instrumentation",
         "once_cell",
         "pyo3",
@@ -4123,9 +3967,7 @@
       "tests": [
         "NEOABZU/kimicho/tests/razar_integration.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4146,9 +3988,7 @@
       "tests": [
         "NEOABZU/memory/tests/query.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4163,9 +4003,7 @@
         "tracing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4182,9 +4020,7 @@
         "pyo3"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4202,9 +4038,7 @@
         "serde_yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4221,9 +4055,7 @@
         "tracing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4242,9 +4074,7 @@
         "tracing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4263,13 +4093,31 @@
         "tracing-opentelemetry"
       ],
       "tests": [
-        "NEOABZU/rag/tests/orchestrator.rs",
+        "NEOABZU/rag/tests/multi_source_ranking.rs",
         "NEOABZU/rag/tests/merge.rs",
-        "NEOABZU/rag/tests/retrieval.rs"
+        "NEOABZU/rag/tests/retrieval.rs",
+        "NEOABZU/rag/tests/orchestrator.rs",
+        "NEOABZU/rag/tests/plugins.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "neoabzu-razar",
+      "chakra": "unknown",
+      "type": "rust",
+      "path": "NEOABZU/razar/src/lib.rs",
+      "version": "0.1.0",
+      "dependencies": [
+        "neoabzu-chakrapulse",
+        "pyo3"
+      ],
+      "tests": [
+        "NEOABZU/razar/tests/route.rs"
+      ],
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4297,9 +4145,7 @@
       "tests": [
         "NEOABZU/vector/tests/grpc.rs"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4317,9 +4163,7 @@
         "tracing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4341,9 +4185,7 @@
         "tests/razar/test_remote_repair.py",
         "tests/tools/test_opencode_client.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4357,6 +4199,7 @@
       "dependencies": [
         "__future__",
         "agents",
+        "bana",
         "datetime",
         "fastapi",
         "json",
@@ -4377,9 +4220,7 @@
         "tests/test_operator_command_route.py",
         "tests/web_console/test_conversation_timeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4403,9 +4244,7 @@
         "tests/test_prometheus_metrics.py",
         "tests/test_start_spiral_os.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4421,9 +4260,7 @@
         "guardian"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4441,9 +4278,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4467,9 +4302,7 @@
         "tests/agents/razar/test_planning_engine.py",
         "tests/agents/razar/test_pytest_runner.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4490,9 +4323,7 @@
         "tests/test_media_avatar.py",
         "tests/test_play_ritual_music_smoke.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4512,9 +4343,7 @@
         "tests/test_media_avatar.py",
         "tests/test_play_ritual_music_smoke.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4530,9 +4359,7 @@
         "guardian"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4553,9 +4380,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4578,9 +4403,7 @@
         "tests/communication/test_mcp_fallback.py",
         "tests/communication/test_mcp_wrappers.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4600,9 +4423,7 @@
       "tests": [
         "tests/communication/test_mcp_wrappers.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4623,9 +4444,7 @@
       "tests": [
         "tests/test_project_audit.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4648,9 +4467,7 @@
         "tests/agents/razar/conftest.py",
         "tests/agents/razar/test_ignition_builder.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4668,9 +4485,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4695,9 +4510,7 @@
       "tests": [
         "tests/agents/razar/test_pytest_runner.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4726,9 +4539,7 @@
         "tests/integration/test_full_flows.py",
         "tests/test_quarantine_manager.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4757,9 +4568,7 @@
         "tests/integration/test_full_flows.py",
         "tests/test_quarantine_manager.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4788,9 +4597,7 @@
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_ui/test_memory_query.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4837,6 +4644,8 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/monitoring/test_chakra_heartbeat.py",
         "tests/monitoring/test_chakra_status_board.py",
         "tests/monitoring/test_escalation_notifier.py",
@@ -4844,8 +4653,10 @@
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
+        "tests/test_ai_invoker_credentials.py",
         "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
+        "tests/test_failover_integration.py",
         "tests/test_mission_logger.py",
         "tests/test_operator_api.py",
         "tests/test_operator_command_route.py",
@@ -4856,9 +4667,7 @@
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_operator/test_ignition_e2e.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4908,6 +4717,8 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/ignition/test_full_stack.py",
         "tests/integration/test_full_flows.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
         "tests/monitoring/test_chakra_heartbeat.py",
         "tests/monitoring/test_chakra_status_board.py",
         "tests/monitoring/test_escalation_notifier.py",
@@ -4915,8 +4726,10 @@
         "tests/razar/test_long_task.py",
         "tests/razar/test_remote_repair.py",
         "tests/razar/test_retry_with_ai.py",
+        "tests/test_ai_invoker_credentials.py",
         "tests/test_boot_orchestrator.py",
         "tests/test_boot_sequence.py",
+        "tests/test_failover_integration.py",
         "tests/test_mission_logger.py",
         "tests/test_operator_api.py",
         "tests/test_operator_command_route.py",
@@ -4927,9 +4740,7 @@
         "tests/web_operator/test_arcade_flow.py",
         "tests/web_operator/test_ignition_e2e.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -4949,9 +4760,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -4977,9 +4786,7 @@
         "tests/agents/razar/test_crown_handshake.py",
         "tests/agents/razar/test_recovery_integration.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5007,9 +4814,7 @@
         "tests/agents/razar/test_crown_handshake.py",
         "tests/agents/razar/test_recovery_integration.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5058,9 +4863,7 @@
         "tests/test_tools_smoke.py",
         "tests/test_vast_pipeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5079,9 +4882,7 @@
         "pathlib"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5104,9 +4905,7 @@
       "tests": [
         "tests/scripts/test_sign_release.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5138,9 +4937,7 @@
         "tests/agents/razar/test_module_builder.py",
         "tests/test_remote_loader.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5159,9 +4956,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5178,9 +4973,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5199,9 +4992,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5223,9 +5014,7 @@
       "tests": [
         "tests/agents/test_razar_cli.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5246,9 +5035,7 @@
         "tests/agents/test_story_adapter.py",
         "tests/chakra_healing/test_root.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5276,9 +5063,7 @@
         "tests/agents/razar/conftest.py",
         "tests/agents/razar/test_runtime_manager.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5298,9 +5083,7 @@
       "tests": [
         "tests/chakra_healing/test_sacral.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5327,9 +5110,7 @@
         "tests/test_task_parser.py",
         "tests/test_vast_pipeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5352,9 +5133,7 @@
         "tests/test_task_parser.py",
         "tests/test_vast_pipeline.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5376,9 +5155,7 @@
         "tests/test_dependency_installer.py",
         "tests/test_sandbox_session.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5396,9 +5173,7 @@
         "subprocess"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5417,9 +5192,7 @@
         "re"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5466,9 +5239,7 @@
         "tests/test_vector_memory.py",
         "tests/test_vector_memory_extensions.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5508,9 +5279,7 @@
         "tests/test_vector_memory.py",
         "tests/test_vector_memory_extensions.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5532,9 +5301,7 @@
       "tests": [
         "tests/test_memory_bus.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5552,9 +5319,7 @@
       "tests": [
         "tests/test_memory_bus.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5570,9 +5335,7 @@
         "guardian"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5598,9 +5361,7 @@
         "tests/test_security_canary.py",
         "tests/test_smoke_imports.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5627,9 +5388,7 @@
         "tests/test_rival_messaging.py",
         "tests/test_vector_memory_extensions.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5651,9 +5410,7 @@
       "tests": [
         "tests/monitoring/test_self_healing_ledger.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5700,6 +5457,7 @@
         "yaml"
       ],
       "tests": [
+        "tests/agents/razar/test_crown_kimicho.py",
         "tests/agents/razar/test_crown_link.py",
         "tests/agents/razar/test_runtime_manager.py",
         "tests/agents/razar/test_servant_launch.py",
@@ -5728,9 +5486,7 @@
         "tests/test_webrtc_connector.py",
         "tests/web_operator/test_ignition_e2e.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5760,9 +5516,7 @@
         "tests/ignition/test_crown_wakes_services.py",
         "tests/integration/test_full_flows.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5789,9 +5543,7 @@
         "tests/test_session_logger.py",
         "tests/test_tools_smoke.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5811,9 +5563,7 @@
         "tests/agents/test_razar_cli.py",
         "tests/ignition/test_full_stack.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5839,9 +5589,7 @@
         "tests/connectors/test_signal_bus.py",
         "tests/tools/test_bot_mcp.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5859,9 +5607,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -5881,9 +5627,7 @@
       "tests": [
         "tests/chakra_healing/test_solar.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5904,9 +5648,7 @@
       "tests": [
         "tests/test_spiral_cortex_memory.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5926,9 +5668,7 @@
         "tests/test_memory_search.py",
         "tests/test_spiral_memory.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5952,9 +5692,7 @@
         "tests/test_memory_bus.py",
         "tests/test_memory_spiritual.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5974,9 +5712,7 @@
         "tests/test_memory_bus.py",
         "tests/test_memory_spiritual.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -5994,9 +5730,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6025,9 +5759,7 @@
         "tests/test_avatar_console_startup.py",
         "tests/test_start_avatar_console.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6049,9 +5781,7 @@
         "tests/monitoring/test_chakra_status_board.py",
         "tests/web_console/test_chakra_status_panel.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6076,9 +5806,7 @@
         "tests/web_operator/test_api.py",
         "tests/web_operator/test_arcade_flow.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6097,9 +5825,7 @@
       "tests": [
         "tests/agents/test_story_adapter.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6116,11 +5842,10 @@
         "typing"
       ],
       "tests": [
+        "tests/narrative/test_narrative_api.py",
         "tests/narrative/test_story_lookup.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6138,9 +5863,7 @@
         "time"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6159,9 +5882,7 @@
         "telegram"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6181,9 +5902,7 @@
       "tests": [
         "tests/chakra_healing/test_third_eye.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6203,9 +5922,7 @@
       "tests": [
         "tests/chakra_healing/test_throat.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6224,9 +5941,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6258,9 +5973,7 @@
         "tests/test_training_guide_parser.py",
         "tests/test_training_guide_trigger.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6284,9 +5997,7 @@
         "tests/test_music_generation_missing_pipeline.py",
         "tests/test_transformers_generate.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6320,9 +6031,7 @@
         "tests/test_rival_messaging.py",
         "tests/test_trust_registry.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6345,9 +6054,7 @@
         "tests/agents/razar/test_ignition_sequence.py",
         "tests/ignition/test_full_stack.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6367,9 +6074,7 @@
       "tests": [
         "tests/test_trust_registry.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6391,9 +6096,7 @@
         "tests/web_ui/test_boot_page.py",
         "tests/web_ui/test_memory_query.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6409,15 +6112,22 @@
         "story_adapter"
       ],
       "tests": [
+        "tests/agents/razar/test_ai_invoker.py",
         "tests/agents/test_story_adapter.py",
         "tests/conftest.py",
         "tests/crown/server/test_server.py",
+        "tests/integration/test_razar_failover.py",
+        "tests/integration/test_razar_self_healing.py",
+        "tests/razar/test_remote_repair.py",
+        "tests/razar/test_retry_with_ai.py",
         "tests/test_albedo_trust.py",
         "tests/test_audio_tools.py",
+        "tests/test_boot_orchestrator.py",
         "tests/test_defensive_network_utils.py",
         "tests/test_download_deepseek.py",
         "tests/test_download_model.py",
         "tests/test_download_models.py",
+        "tests/test_failover_integration.py",
         "tests/test_inanna_ai.py",
         "tests/test_listening_engine.py",
         "tests/test_music_generation_streaming.py",
@@ -6436,9 +6146,7 @@
         "tests/test_vector_memory_extensions.py",
         "tests/test_voice_profiles.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6460,9 +6168,7 @@
         "types"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6481,9 +6187,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6501,9 +6205,7 @@
         "pathlib"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "deprecated",
       "issues": "Marked deprecated in source",
       "adr": null
@@ -6523,9 +6225,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6545,9 +6245,7 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6566,9 +6264,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6590,9 +6286,7 @@
       "tests": [
         "tests/ignition/test_validate_ignition_script.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6611,9 +6305,7 @@
         "urllib"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6635,9 +6327,7 @@
         "worlds"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6678,6 +6368,7 @@
         "tests/test_emotional_voice.py",
         "tests/test_full_audio_pipeline.py",
         "tests/test_glm_command.py",
+        "tests/test_identity_loader.py",
         "tests/test_initial_listen.py",
         "tests/test_invocation_engine.py",
         "tests/test_kimi_k2_servant.py",
@@ -6708,9 +6399,7 @@
         "tests/test_voice_evolution_memory.py",
         "tests/test_voice_profiles.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6735,9 +6424,7 @@
       "tests": [
         "tests/scripts/test_verify_chakra_monitoring.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6756,9 +6443,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6778,9 +6463,7 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6799,9 +6482,7 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6821,9 +6502,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6843,9 +6522,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6863,9 +6540,7 @@
         "yaml"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6887,9 +6562,7 @@
       "tests": [
         "tests/scripts/test_verify_self_healing.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6909,9 +6582,7 @@
         "sys"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -6930,9 +6601,7 @@
         "tests/test_security_canary.py",
         "tests/test_smoke_imports.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6964,9 +6633,7 @@
         "tests/web_console/test_multi_avatar_stream.py",
         "tests/web_console/test_webrtc_gateway.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -6991,9 +6658,7 @@
         "tests/test_sandbox_session.py",
         "tests/test_virtual_env_manager.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -7010,9 +6675,7 @@
         "tests/conftest.py",
         "tests/vision/test_yoloe_adapter.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -7034,9 +6697,7 @@
         "tests/conftest.py",
         "tests/vision/test_yoloe_adapter.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -7057,9 +6718,7 @@
       "tests": [
         "tests/agents/razar/test_vision_adapter.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -7081,9 +6740,7 @@
       "tests": [
         "tests/test_vocal_isolation.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -7104,9 +6761,7 @@
         "tests/test_voice_avatar_pipeline.py",
         "tests/test_voice_conversion.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -7139,9 +6794,7 @@
         "tests/test_video_stream_audio.py",
         "tests/test_webrtc_connector.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null
@@ -7172,9 +6825,7 @@
         "typing"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -7189,9 +6840,7 @@
         "webrtc_gateway"
       ],
       "tests": [],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "experimental",
       "issues": "No tests found",
       "adr": null
@@ -7215,9 +6864,7 @@
         "tests/agents/razar/test_vision_adapter.py",
         "tests/vision/test_yoloe_adapter.py"
       ],
-      "metrics": {
-        "coverage": 1.0
-      },
+      "metrics": {},
       "status": "active",
       "issues": "No known issues",
       "adr": null

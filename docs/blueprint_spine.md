@@ -70,7 +70,8 @@ remote delegation ladder. The orchestrator packages the aggregated
 `logs/razar_ai_invocations.json` history and current heartbeat telemetry before
 handing the brief to each specialist so downstream agents inherit the same
 context the Crown attempted to resolve. The default chain is
-**Crown → Kimi-cho → Kimi 2 → rStar**:
+**Crown → Kimi-cho → Kimi 2 → rStar** and follows the
+[Alpha v0.1 escalation doctrine](The_Absolute_Protocol.md#alpha-v01-escalation-doctrine):
 
 1. **Kimi-cho** – applies Kimicho's repair heuristics to pursue lightweight,
    context-preserving fixes before invoking remote synthesis.
