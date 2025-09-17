@@ -24,6 +24,7 @@ Replace `<commit>` in each permalink with the desired commit hash to reference a
 | Vision | Long-term vision for the project | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/VISION.md |
 | Release Notes | Historical release information | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/release_notes.md |
 | Absolute Milestones | Summary of past and upcoming release milestones | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/ABSOLUTE_MILESTONES.md |
+| Crown Manifest | Crown orchestration, doctrine corpus checklist, and Crown confirms load handshake | https://github.com/DINGIRABZU/ABZU/blob/<commit>/docs/crown_manifest.md |
 
 ## Dependency Overview
 

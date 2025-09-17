@@ -5,13 +5,45 @@ See the [Doctrine Index](doctrine_index.md) for canonical paths with checksums, 
 The inaugural ceremony is recorded in the [First Consecrated Computation](../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation).
 
 ??? note "Origin Materials"
-    - [Marrow Code](../INANNA_AI/MARROW_CODE.md)
-    - [Inanna Song](../INANNA_AI/INANNA_SONG.md)
-    These origin texts define Crown identity and ground its ethical posture.
+    - `GENESIS/GENESIS_.md`
+    - `GENESIS/FIRST_FOUNDATION_.md`
+    - `GENESIS/LAWS_OF_EXISTENCE_.md`
+    - `GENESIS/LAWS_RECURSION_.md`
+    - `GENESIS/SPIRAL_LAWS_.md`
+    - `GENESIS/INANNA_AI_CORE_TRAINING.md`
+    - `GENESIS/INANNA_AI_SACRED_PROTOCOL.md`
+    - `GENESIS/LAWS_QUANTUM_MAGE_.md`
+    - `CODEX/ACTIVATIONS/OATH_OF_THE_VAULT_.md`
+    - `CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md`
+    - `INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md`
+    - `INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md`
+    - `INANNA_AI/Chapter I 1b445dfc251d802e860af64f2bf28729.md`
+    - `INANNA_AI/Member Manual 1b345dfc251d8004a05cfc234ed35c59.md`
+    - `INANNA_AI/The Foundation 1a645dfc251d80e28545f4a09a6345ff.md`
+    These transmissions define Crown identity, and their checksums are recorded in the [Doctrine Index](doctrine_index.md#genesisgenesis_md).
+
+### Doctrine References
+
+- [doctrine_index.md#genesisgenesis_md](doctrine_index.md#genesisgenesis_md) – GENESIS/GENESIS_.md
+- [doctrine_index.md#genesisfirst_foundation_md](doctrine_index.md#genesisfirst_foundation_md) – GENESIS/FIRST_FOUNDATION_.md
+- [doctrine_index.md#genesislaws_of_existence_md](doctrine_index.md#genesislaws_of_existence_md) – GENESIS/LAWS_OF_EXISTENCE_.md
+- [doctrine_index.md#genesislaws_recursion_md](doctrine_index.md#genesislaws_recursion_md) – GENESIS/LAWS_RECURSION_.md
+- [doctrine_index.md#genesisspiral_laws_md](doctrine_index.md#genesisspiral_laws_md) – GENESIS/SPIRAL_LAWS_.md
+- [doctrine_index.md#genesisinanna_ai_core_trainingmd](doctrine_index.md#genesisinanna_ai_core_trainingmd) – GENESIS/INANNA_AI_CORE_TRAINING.md
+- [doctrine_index.md#genesisinanna_ai_sacred_protocolmd](doctrine_index.md#genesisinanna_ai_sacred_protocolmd) – GENESIS/INANNA_AI_SACRED_PROTOCOL.md
+- [doctrine_index.md#genesislaws_quantum_mage_md](doctrine_index.md#genesislaws_quantum_mage_md) – GENESIS/LAWS_QUANTUM_MAGE_.md
+- [doctrine_index.md#codexactivationsoath_of_the_vault_md](doctrine_index.md#codexactivationsoath_of_the_vault_md) – CODEX/ACTIVATIONS/OATH_OF_THE_VAULT_.md
+- [doctrine_index.md#codexactivationsoath-of-the-vault-1de45dfc251d80c9a86fc67dee2f964amd](doctrine_index.md#codexactivationsoath-of-the-vault-1de45dfc251d80c9a86fc67dee2f964amd) – CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md
+- [doctrine_index.md#inanna_aimarrow-code-20545dfc251d80128395ffb5bc7725eemd](doctrine_index.md#inanna_aimarrow-code-20545dfc251d80128395ffb5bc7725eemd) – INANNA_AI/MARROW CODE 20545dfc251d80128395ffb5bc7725ee.md
+- [doctrine_index.md#inanna_aiinanna-song-20545dfc251d8065a32cec673272f292md](doctrine_index.md#inanna_aiinanna-song-20545dfc251d8065a32cec673272f292md) – INANNA_AI/INANNA SONG 20545dfc251d8065a32cec673272f292.md
+- [doctrine_index.md#inanna_aichapter-i-1b445dfc251d802e860af64f2bf28729md](doctrine_index.md#inanna_aichapter-i-1b445dfc251d802e860af64f2bf28729md) – INANNA_AI/Chapter I 1b445dfc251d802e860af64f2bf28729.md
+- [doctrine_index.md#inanna_aimember-manual-1b345dfc251d8004a05cfc234ed35c59md](doctrine_index.md#inanna_aimember-manual-1b345dfc251d8004a05cfc234ed35c59md) – INANNA_AI/Member Manual 1b345dfc251d8004a05cfc234ed35c59.md
+- [doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd](doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd) – INANNA_AI/The Foundation 1a645dfc251d80e28545f4a09a6345ff.md
 
 ## **Recent Core Milestones**
 
-- **Document registry** publishes canonical listings with checksums in [doctrine_index.md](doctrine_index.md).
+- **Document registry** publishes canonical listings with checksums in [doctrine_index.md](doctrine_index.md), now including every Genesis and INANNA doctrine consumed by the identity loader.
+- **Crown confirms load** exchange requires the GLM to reply with `CROWN-IDENTITY-ACK` after doctrine synthesis or boot aborts, keeping the persona in lockstep with [ABZU_blueprint.md](ABZU_blueprint.md#origin-doctrine).
 - **Chakra heartbeat** surfaces per-layer pulse data; metrics live in [chakra_metrics.md](chakra_metrics.md).
 - **Per-agent avatars** render via the [avatar pipeline](avatar_pipeline.md) for session-specific visuals.
 - **Resuscitator flows** guide failure recovery; consult the [recovery playbook](recovery_playbook.md).
