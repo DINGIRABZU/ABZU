@@ -36,6 +36,29 @@ required setup and the alert thresholds that backstop the failover ladder.
 5. **Verify the schema.** Execute `python scripts/ci_verify_dashboards.py` in CI
    and locally to ensure dashboards remain well-formed before deploying.
 
+## Nightly Telemetry Ledger
+
+Nightly automation should call `python scripts/ingest_razar_telemetry.py` to
+condense the JSON lines in `logs/razar_ai_invocations.json`. The job produces two
+artifacts under `monitoring/self_healing_ledger/`:
+
+- `razar_agent_trends.json` – ISO-8601 keyed summaries per agent/component/day
+  used by Grafana for quick comparisons.
+- `razar_agent_trends.parquet` – schema-stable table for analytics notebooks and
+  longer retention in warehouse jobs.
+
+The ingest routine tolerates malformed rows and ignores entries missing
+timestamps or status flags so nightly runs keep flowing even when a delegation
+emits partial telemetry. Override defaults with
+`python scripts/ingest_razar_telemetry.py --log-path <custom> --output-dir <dir>`
+if replaying history inside a sandbox.
+
+Grafana reads the JSON snapshot via the
+`yesoreyeram-infinity-datasource` plugin. Point a data source at
+`/monitoring/self_healing_ledger/razar_agent_trends.json` (or the hosted
+equivalent) and select it from the new `Self-Healing Ledger` dashboard variable
+before loading the panels described below.
+
 ## Dashboard Panels
 
 The dashboard surfaces the following signals:
@@ -58,6 +81,23 @@ The dashboard surfaces the following signals:
 - **Escalation Loop Warning** – stat panel that surfaces the largest retry-loop
   duration in the last 30 minutes so operators can intervene before the loop
   saturates.
+- **Ledger Agent Success Trend** – table sourced from the nightly ledger that
+  lists attempts, success counts, and failure totals per agent/component/day.
+- **Ledger Lowest Success Rate** – stat highlight fed by the ledger JSON that
+  surfaces the weakest success rate so the architect can triage targeted
+  escalations.
+
+### Navigation Notes for the New Architect
+
+1. From the Grafana home page, open **Dashboards → RAZAR Failover Observability**.
+2. Choose the failing component/agent combo from the Prometheus-powered
+   variables at the top of the screen.
+3. Switch the **Self-Healing Ledger** variable to the Infinity data source that
+   points at `monitoring/self_healing_ledger/razar_agent_trends.json`.
+4. Inspect **Ledger Agent Success Trend** for the last day of results—rows are
+   sorted by newest date so the freshest handovers appear first.
+5. Use **Ledger Lowest Success Rate** to decide whether manual escalation is
+   needed before the retry loop saturates.
 
 ## Alert Thresholds
 

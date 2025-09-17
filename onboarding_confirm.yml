@@ -75,8 +75,8 @@ documents:
       purpose: Map Python subsystems to Rust crates.
       scope: NEOABZU migration mapping and integration.
   NEOABZU/docs/onboarding.md:
-    commit: b18fb09087616c30ca30a9ebe5b4baccb1f83c8e
-    sha256: 10487de98b0700a2963cd28bcd455ed78534fed6b8f64f5c59365e10246d941a
+    commit: worktree
+    sha256: 75b17a22dc78660e2bf018feff915dfc7472a7893ca680b9d75cbabf2050050b
     signed_by: onboarding-wizard
     summary:
       insight: Cross-reference ABZU docs to maintain consistency.
@@ -177,7 +177,7 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 44634b7dc682c1cf75255e3c71389e4ee891c904bd7bb35bf28ba3e520af8164
+    sha256: 577ff9c080bdbdfd1bbc87e6db5c1ada18f4412c8a2de240c5cd16261032d7d8
     summary:
       insight: Use the PR checklist to synchronize versions, connectors, and document
         summaries while keeping coverage high and removing placeholders before commit.
