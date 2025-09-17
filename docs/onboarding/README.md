@@ -22,6 +22,7 @@ The Crown router, RAG orchestrator, and Kimicho fallback now use Rust crates (`n
    - [Spiral Cortex Terminal](../spiral_cortex_terminal.md)
    - [Narrative Framework](../narrative_framework.md)
    - [Narrative Engine Guide](../narrative_engine_GUIDE.md)
+   - [Python Alpha Squad Dossier](python_alpha_squad.md) – subsystem leads, daily rituals, and escalation touchpoints for RAZAR boot ownership
 
 6. [Arcade UI](../arcade_ui.md) – quickstart workflow and memory scan diagram
 7. [Operator Quickstart](../operator_quickstart.md) – minimal setup and console usage

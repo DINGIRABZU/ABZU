@@ -47,3 +47,11 @@ questions:
       c: "Unit test harnesses"
       d: "Documentation build scripts"
     answer: "b"
+  - id: 7
+    prompt: "According to docs/onboarding/python_alpha_squad.md, what is the first daily ritual the Python Alpha Squad completes each morning?"
+    options:
+      a: "Rotate the Nazarick agent roster and redeploy Crown"
+      b: "Review the overnight RAZAR boot metrics and success rate"
+      c: "Rebuild the operator console docker images"
+      d: "Archive the prior day's mission transcripts"
+    answer: "b"
