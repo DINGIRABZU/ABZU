@@ -165,6 +165,7 @@ def finalize_metrics(
     components = run_metrics["components"]
     total = len(components)
     successes = sum(1 for c in components if c["success"])
+    failures = total - successes
     first_attempt_successes = sum(
         1 for c in components if c["success"] and c.get("attempts", 0) == 1
     )
@@ -173,6 +174,9 @@ def finalize_metrics(
     run_metrics["total_time"] = time.time() - start_time
     run_metrics["first_attempt_successes"] = first_attempt_successes
     run_metrics["retry_total"] = retry_total
+    run_metrics["component_total"] = total
+    run_metrics["component_successes"] = successes
+    run_metrics["component_failures"] = failures
 
     history.setdefault("history", []).append(run_metrics)
 
@@ -203,6 +207,10 @@ def finalize_metrics(
                 first_attempt_success=float(first_attempt_successes),
                 retry_total=float(retry_total),
                 total_time=float(run_metrics["total_time"]),
+                success_rate=float(run_metrics["success_rate"]),
+                component_total=float(total),
+                component_success=float(successes),
+                component_failure=float(failures),
             )
         )
     except Exception:  # pragma: no cover - textfile export best-effort

@@ -19,6 +19,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
@@ -482,6 +483,7 @@ def run_chaos_drill(
                 "health_check": ["python", "-c", "print('noop')"],
             }
 
+            run_start = time.time()
             process, attempts_used, last_error = boot_orchestrator._retry_with_ai(
                 component,
                 component_def,
@@ -507,6 +509,33 @@ def run_chaos_drill(
                     "dry_run": dry_run,
                     "attempts": attempts_used,
                 },
+            )
+
+            history_payload: Dict[str, Any] = {}
+            if history_path.exists():
+                try:
+                    history_payload = json.loads(
+                        history_path.read_text(encoding="utf-8")
+                    )
+                except json.JSONDecodeError:  # pragma: no cover - defensive guard
+                    history_payload = {}
+
+            run_metrics = {
+                "components": [
+                    {
+                        "name": component,
+                        "attempts": attempts_used,
+                        "success": False,
+                    }
+                ],
+                "timestamp": time.time(),
+            }
+
+            boot_orchestrator.finalize_metrics(
+                run_metrics,
+                history_payload,
+                failure_tracker,
+                run_start,
             )
 
         escalation_agents = [attempt.get("active", "") for attempt in handover_calls]
