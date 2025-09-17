@@ -25,6 +25,11 @@ fn select_store(archetype: &str) -> &str {
 const IDENTITY_FILE: &str = "data/identity.json";
 const MISSION_DOC: &str = "docs/project_mission_vision.md";
 const PERSONA_DOC: &str = "docs/persona_api_guide.md";
+const DOCTRINE_DOCS: [&str; 3] = [
+    "docs/The_Absolute_Protocol.md",
+    "docs/system_blueprint.md",
+    "docs/awakening_overview.md",
+];
 
 #[pyfunction]
 fn route_query(py: Python<'_>, question: &str, archetype: &str) -> PyResult<PyObject> {
@@ -212,12 +217,21 @@ pub fn insight_semantic(text: &str) -> PyResult<Vec<(String, f32)>> {
 }
 
 #[pyfunction]
-#[pyo3(signature = (integration, mission_path=None, persona_path=None, identity_path=None))]
+#[pyo3(
+    signature = (
+        integration,
+        mission_path=None,
+        persona_path=None,
+        identity_path=None,
+        extra_paths=None
+    )
+)]
 pub fn load_identity(
     integration: &PyAny,
     mission_path: Option<&str>,
     persona_path: Option<&str>,
     identity_path: Option<&str>,
+    extra_paths: Option<&PyAny>,
 ) -> PyResult<String> {
     let mission = mission_path.unwrap_or(MISSION_DOC);
     let persona = persona_path.unwrap_or(PERSONA_DOC);
@@ -226,10 +240,65 @@ pub fn load_identity(
     if identity.exists() {
         return Ok(fs::read_to_string(identity).map_err(|e| PyValueError::new_err(e.to_string()))?);
     }
-    let mission_text = fs::read_to_string(mission).unwrap_or_default();
-    let persona_text = fs::read_to_string(persona).unwrap_or_default();
-    let combined = format!("{mission_text}\n{persona_text}");
-    let prompt = format!("Summarize the mission, vision, and persona: \n{combined}");
+    let mut sections: Vec<String> = Vec::new();
+
+    let mission_path = PathBuf::from(mission);
+    let persona_path = PathBuf::from(persona);
+
+    let mission_text = fs::read_to_string(&mission_path).unwrap_or_default();
+    if !mission_text.trim().is_empty() {
+        sections.push(format!(
+            "Mission Source ({}):\n{}",
+            mission_path.display(),
+            mission_text
+        ));
+    }
+
+    let persona_text = fs::read_to_string(&persona_path).unwrap_or_default();
+    if !persona_text.trim().is_empty() {
+        sections.push(format!(
+            "Persona Source ({}):\n{}",
+            persona_path.display(),
+            persona_text
+        ));
+    }
+
+    let provided_paths: Vec<String> = if let Some(obj) = extra_paths {
+        if obj.is_none() {
+            Vec::new()
+        } else {
+            obj.extract::<Vec<String>>().map_err(|_| {
+                PyValueError::new_err("extra_paths must be a sequence of strings")
+            })?
+        }
+    } else {
+        Vec::new()
+    };
+
+    let doctrine_paths: Vec<String> = if provided_paths.is_empty() {
+        DOCTRINE_DOCS.iter().map(|p| p.to_string()).collect()
+    } else {
+        provided_paths
+    };
+
+    for path in doctrine_paths {
+        let doctrine_path = PathBuf::from(&path);
+        let doctrine_text = fs::read_to_string(&doctrine_path).unwrap_or_default();
+        if doctrine_text.trim().is_empty() {
+            continue;
+        }
+        sections.push(format!(
+            "Doctrine Source ({}):\n{}",
+            doctrine_path.display(),
+            doctrine_text
+        ));
+    }
+
+    let combined = sections.join("\n\n");
+    let prompt = format!(
+        "Summarize the mission, vision, persona, and doctrine inputs:\n{}",
+        combined
+    );
     let summary: String = integration.call_method1("complete", (prompt,))?.extract()?;
     if let Some(parent) = identity.parent() {
         fs::create_dir_all(parent).map_err(|e| PyValueError::new_err(e.to_string()))?;
