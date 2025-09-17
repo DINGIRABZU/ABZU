@@ -39,11 +39,12 @@ The inaugural ceremony is recorded in the [First Consecrated Computation](../NEO
 - [doctrine_index.md#inanna_aichapter-i-1b445dfc251d802e860af64f2bf28729md](doctrine_index.md#inanna_aichapter-i-1b445dfc251d802e860af64f2bf28729md) – INANNA_AI/Chapter I 1b445dfc251d802e860af64f2bf28729.md
 - [doctrine_index.md#inanna_aimember-manual-1b345dfc251d8004a05cfc234ed35c59md](doctrine_index.md#inanna_aimember-manual-1b345dfc251d8004a05cfc234ed35c59md) – INANNA_AI/Member Manual 1b345dfc251d8004a05cfc234ed35c59.md
 - [doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd](doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd) – INANNA_AI/The Foundation 1a645dfc251d80e28545f4a09a6345ff.md
+- [crown_invocation_guide.md](crown_invocation_guide.md) – Crown invocation ritual and servant registration checklist
 
 ## **Recent Core Milestones**
 
 - **Document registry** publishes canonical listings with checksums in [doctrine_index.md](doctrine_index.md), now including every Genesis and INANNA doctrine consumed by the identity loader.
-- **Crown confirms load** exchange requires the GLM to reply with `CROWN-IDENTITY-ACK` after doctrine synthesis or boot aborts, keeping the persona in lockstep with [ABZU_blueprint.md](ABZU_blueprint.md#origin-doctrine).
+- **Crown confirms load** exchange requires the GLM to reply with `CROWN-IDENTITY-ACK` after doctrine synthesis or boot aborts, keeping the persona in lockstep with [ABZU_blueprint.md](ABZU_blueprint.md#origin-doctrine). Follow the operational steps in [crown_invocation_guide.md](crown_invocation_guide.md#handshake-broadcast) when rehearsing the ritual.
 - **Chakra heartbeat** surfaces per-layer pulse data; metrics live in [chakra_metrics.md](chakra_metrics.md).
 - **Per-agent avatars** render via the [avatar pipeline](avatar_pipeline.md) for session-specific visuals.
 - **Resuscitator flows** guide failure recovery; consult the [recovery playbook](recovery_playbook.md).

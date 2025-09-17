@@ -21,8 +21,13 @@ The Python Alpha Squad stewards ABZU's mission-critical boot and recovery toolch
 2. **Runbook alignment (09:00 UTC):** Walk through the RAZAR escalation runbook and release rehearsal checklist to ensure thresholds, notification channels, and fallback contacts match the current environment. Update `docs/runbooks/razar_escalation.md` and `docs/release_runbook.md` when new failure patterns appear.
 3. **Remote agent roster sync (09:15 UTC):** Validate that `agents/razar/ai_invoker.py` can load `config/razar_ai_agents.json`, each active agent advertises a healthy endpoint, and the expected credentials resolve from the environment. Record any drift in `logs/razar_ai_invocations.json` and alert ops if an agent token rotates.
 4. **Identity fingerprint audit (Release rehearsals & doctrine pushes):** Run `python scripts/refresh_crown_identity.py --use-stub` before release dry runs or after Genesis/INANNA doctrine edits to rebuild `data/identity.json`, publish the new fingerprint, and archive the refresh transcript under `logs/identity_refresh/`. Share the printed digest in the rehearsal channel so the wake-up crew tracks which imprint they exercised.【F:scripts/refresh_crown_identity.py†L1-L148】
+5. **Crown invocation rehearsal:** Walk through [crown_invocation_guide.md](../crown_invocation_guide.md) before duty rotations to confirm the handshake, memory initialization, and servant registration scripts still align with the live environment.
 
 ## Reference Threads
 - Follow the escalation ladder defined in [`docs/co_creation_escalation.md`](../co_creation_escalation.md) when mission briefs stall.
 - Coordinate with Nazarick servant owners via [`docs/nazarick_agents.md`](../nazarick_agents.md) whenever remote agents accept a patch suggestion.
 - Submit weekly findings to the Alpha v0.1 execution review so the roadmap reflects real-world reliability data.
+
+## Doctrine References
+
+- [crown_invocation_guide.md](../crown_invocation_guide.md)
