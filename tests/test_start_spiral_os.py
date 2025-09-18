@@ -31,6 +31,7 @@ sys.modules["numpy"].int16 = "int16"
 sys.modules["numpy"].float32 = float
 sys.modules["numpy"].ndarray = object
 st_mod = types.ModuleType("sentence_transformers")
+st_mod.__path__ = []  # treat as package for submodule imports
 
 
 class _StubSentenceTransformer:
@@ -108,7 +109,9 @@ reflection_mod.run_reflection_loop = lambda *a, **k: None
 tools_mod.reflection_loop = reflection_mod
 sys.modules.setdefault("tools", tools_mod)
 sys.modules.setdefault("tools.reflection_loop", reflection_mod)
-sys.modules.setdefault("server", types.ModuleType("server"))
+server_mod = types.ModuleType("server")
+server_mod.app = object()
+sys.modules.setdefault("server", server_mod)
 core_mod = types.ModuleType("core")
 core_mod.self_correction_engine = types.ModuleType("self_correction_engine")
 core_mod.language_engine = types.ModuleType("language_engine")
@@ -120,6 +123,7 @@ sys.modules.setdefault("core.utils", types.ModuleType("core.utils"))
 optional_mod = types.ModuleType("optional_deps")
 optional_mod.lazy_import = lambda name: sys.modules.get(name)
 sys.modules.setdefault("core.utils.optional_deps", optional_mod)
+core_mod.self_correction_engine.adjust = lambda *a, **k: None
 neoabzu_mod = types.ModuleType("neoabzu_rag")
 
 
@@ -152,10 +156,65 @@ spec = importlib.util.spec_from_loader("start_spiral_os", loader)
 start_spiral_os = importlib.util.module_from_spec(spec)
 loader.exec_module(start_spiral_os)
 start_spiral_os.reflection_loop.load_thresholds = lambda: {"default": 0.0}
-start_spiral_os.listening_engine.capture_audio = lambda *a, **k: ([], 44100)
-start_spiral_os.listening_engine._extract_features = lambda *a, **k: {
-    "emotion": "neutral",
-}
+
+
+@pytest.fixture(autouse=True)
+def _mock_listening_engine(monkeypatch):
+    """Provide deterministic audio capture and feature extraction."""
+
+    monkeypatch.setitem(sys.modules, "sentence_transformers", st_mod)
+    monkeypatch.setitem(sys.modules, "sentence_transformers.util", st_util)
+    monkeypatch.setattr(
+        getattr(start_spiral_os, "sentence_transformers", st_mod),
+        "SentenceTransformer",
+        _StubSentenceTransformer,
+        raising=False,
+    )
+    monkeypatch.setattr(
+        getattr(start_spiral_os, "sentence_transformers", st_mod),
+        "util",
+        st_util,
+        raising=False,
+    )
+    monkeypatch.setitem(sys.modules, "huggingface_hub", hf_stub)
+    monkeypatch.setitem(sys.modules, "huggingface_hub.utils", hf_stub)
+    if getattr(start_spiral_os, "vector_memory", None) is not None:
+        monkeypatch.setattr(
+            start_spiral_os.vector_memory, "add_vector", lambda *a, **k: None
+        )
+
+    class _DummyValidator:
+        def validate_text(self, _text: str) -> bool:  # pragma: no cover - simple stub
+            return True
+
+    monkeypatch.setattr(start_spiral_os, "EthicalValidator", lambda: _DummyValidator())
+
+    waveform = [0.0, 0.1, -0.1, 0.0]
+
+    def fake_capture(duration, sr=44100):
+        return waveform, False
+
+    def fake_extract(audio, sr):
+        return {
+            "emotion": "neutral",
+            "weight": 0.0,
+            "classification": "speech",
+            "dialect": "neutral",
+            "pitch": 0.0,
+            "tempo": 0.0,
+            "transcript": "synthetic sample",
+            "text": "synthetic sample",
+            "is_silent": False,
+            "intensity": 0.0,
+            "sample_rate": sr,
+            "sample_count": len(audio),
+            "timestamp": "1970-01-01T00:00:00",
+        }
+
+    monkeypatch.setattr(start_spiral_os.listening_engine, "capture_audio", fake_capture)
+    monkeypatch.setattr(
+        start_spiral_os.listening_engine, "_extract_features", fake_extract
+    )
 
 
 def _fake_collect_stats():
