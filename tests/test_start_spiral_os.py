@@ -15,6 +15,14 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 # Stub heavy dependencies
+hf_stub = types.ModuleType("huggingface_hub")
+hf_stub.HfHubHTTPError = RuntimeError
+hf_stub.snapshot_download = lambda *a, **k: ""
+hf_stub.hf_hub_download = lambda *a, **k: ""
+hf_stub.cached_download = lambda *a, **k: ""
+hf_stub.get_session = lambda: types.SimpleNamespace(post=lambda *a, **k: None)
+sys.modules["huggingface_hub"] = hf_stub
+sys.modules["huggingface_hub.utils"] = hf_stub
 sys.modules.setdefault("librosa", types.ModuleType("librosa"))
 sys.modules.setdefault("opensmile", types.ModuleType("opensmile"))
 sys.modules.setdefault("numpy", types.ModuleType("numpy"))
@@ -22,6 +30,29 @@ sys.modules["numpy"].random = types.SimpleNamespace(rand=lambda *a, **k: 0)
 sys.modules["numpy"].int16 = "int16"
 sys.modules["numpy"].float32 = float
 sys.modules["numpy"].ndarray = object
+st_mod = types.ModuleType("sentence_transformers")
+
+
+class _StubSentenceTransformer:
+    def __init__(self, *args, **kwargs):  # pragma: no cover - simple stub
+        self.args = args
+        self.kwargs = kwargs
+
+    def encode(self, inputs, *args, **kwargs):  # pragma: no cover - simple stub
+        if isinstance(inputs, str):
+            inputs = [inputs]
+        return [[0.0 for _ in range(3)] for _ in inputs]
+
+
+st_util = types.SimpleNamespace(cos_sim=lambda *a, **k: 0.0)
+st_mod.SentenceTransformer = _StubSentenceTransformer
+st_mod.util = st_util
+sys.modules["sentence_transformers"] = st_mod
+sys.modules["sentence_transformers.util"] = st_util
+if "sentence_transformers" in sys.modules:
+    sys.modules["sentence_transformers"].SentenceTransformer = _StubSentenceTransformer
+    setattr(sys.modules["sentence_transformers"], "util", st_util)
+    sys.modules["sentence_transformers.util"] = st_util
 scipy_mod = types.ModuleType("scipy")
 scipy_io = types.ModuleType("scipy.io")
 wavfile_mod = types.ModuleType("scipy.io.wavfile")
@@ -89,6 +120,20 @@ sys.modules.setdefault("core.utils", types.ModuleType("core.utils"))
 optional_mod = types.ModuleType("optional_deps")
 optional_mod.lazy_import = lambda name: sys.modules.get(name)
 sys.modules.setdefault("core.utils.optional_deps", optional_mod)
+neoabzu_mod = types.ModuleType("neoabzu_rag")
+
+
+class _StubMoGEOrchestrator:
+    def __init__(self, *args, **kwargs):  # pragma: no cover - simple stub
+        self.args = args
+        self.kwargs = kwargs
+
+    def handle_input(self, text):  # pragma: no cover - simple stub
+        return {}
+
+
+neoabzu_mod.MoGEOrchestrator = _StubMoGEOrchestrator
+sys.modules.setdefault("neoabzu_rag", neoabzu_mod)
 connectors_mod = types.ModuleType("connectors")
 webrtc_mod = types.ModuleType("webrtc_connector")
 webrtc_mod.router = object()
@@ -107,6 +152,24 @@ spec = importlib.util.spec_from_loader("start_spiral_os", loader)
 start_spiral_os = importlib.util.module_from_spec(spec)
 loader.exec_module(start_spiral_os)
 start_spiral_os.reflection_loop.load_thresholds = lambda: {"default": 0.0}
+start_spiral_os.listening_engine.capture_audio = lambda *a, **k: ([], 44100)
+start_spiral_os.listening_engine._extract_features = lambda *a, **k: {
+    "emotion": "neutral",
+}
+
+
+def _fake_collect_stats():
+    """Return deterministic telemetry for the boot sequence tests."""
+
+    return {
+        str(start_spiral_os.glm_init.PURPOSE_FILE): 0,
+        str(start_spiral_os.glm_analyze.ANALYSIS_FILE): 0,
+        str(start_spiral_os.inanna_ai.SUGGESTIONS_LOG): 0,
+        str(Path("network_logs/defensive.pcap")): 0,
+    }
+
+
+start_spiral_os.system_monitor.collect_stats = _fake_collect_stats
 
 
 def _run_main(args):
