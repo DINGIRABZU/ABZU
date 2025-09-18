@@ -1,5 +1,58 @@
 {
-  "history": [],
-  "best_sequence": null,
+  "history": [
+    {
+      "timestamp": 1758199569.1466036,
+      "components": [
+        {
+          "name": "basic_service",
+          "attempts": 1,
+          "success": true
+        },
+        {
+          "name": "complex_service",
+          "attempts": 1,
+          "success": true
+        }
+      ],
+      "success_rate": 1.0,
+      "total_time": 16.187525033950806,
+      "first_attempt_successes": 2,
+      "retry_total": 0,
+      "component_total": 2,
+      "component_successes": 2,
+      "component_failures": 0
+    },
+    {
+      "timestamp": 1758199622.2819278,
+      "components": [
+        {
+          "name": "basic_service",
+          "attempts": 1,
+          "success": true
+        },
+        {
+          "name": "complex_service",
+          "attempts": 1,
+          "success": true
+        }
+      ],
+      "success_rate": 1.0,
+      "total_time": 18.50835871696472,
+      "first_attempt_successes": 2,
+      "retry_total": 0,
+      "component_total": 2,
+      "component_successes": 2,
+      "component_failures": 0
+    }
+  ],
+  "best_sequence": {
+    "components": [
+      "basic_service",
+      "complex_service"
+    ],
+    "success_rate": 1.0,
+    "total_time": 16.187525033950806,
+    "timestamp": 1758199569.1466036
+  },
   "component_failures": {}
 }

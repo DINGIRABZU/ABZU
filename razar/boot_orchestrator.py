@@ -848,8 +848,32 @@ def _perform_handshake(components: List[Dict[str, Any]]) -> CrownResponse:
     response_path = archive_dir / f"{timestamp}_response.json"
 
     _emit_event("handshake", "start")
+    crown_url = os.getenv("CROWN_WS_URL")
+    if not crown_url:
+        LOGGER.warning(
+            "CROWN_WS_URL missing; continuing boot in offline handshake mode"
+        )
+        mission_logger.log_event(
+            "handshake", "crown", "skipped", "CROWN_WS_URL not set"
+        )
+        response = CrownResponse(
+            acknowledgement="offline",
+            capabilities=["GLM4V_OFFLINE"],
+            downtime={},
+        )
+        _persist_handshake(response)
+        _emit_event(
+            "handshake",
+            "skip",
+            reason="missing_crown_ws_url",
+            capabilities=response.capabilities,
+        )
+        response_path.write_text(json.dumps(asdict(response), indent=2))
+        _rotate_mission_briefs(archive_dir)
+        return response
+
     try:
-        response = asyncio.run(crown_handshake.perform(str(brief_path)))
+        response = asyncio.run(crown_handshake.perform(str(brief_path), url=crown_url))
         details = json.dumps(
             {"capabilities": response.capabilities, "downtime": response.downtime}
         )
