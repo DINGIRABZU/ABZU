@@ -22,7 +22,13 @@ This document summarizes the current state of the ABZU codebase. It serves as a 
 ## Test Run (pytest --maxfail=1 --cov -q)
 
 ```
-pytest --maxfail=1 --cov --cov-fail-under=90 -q \
+pytest --maxfail=1 -q \
+  --cov=start_spiral_os \
+  --cov=spiral_os \
+  --cov=spiral_memory \
+  --cov=spiral_vector_db \
+  --cov=vector_memory \
+  --cov-fail-under=90 \
   tests/test_start_spiral_os.py \
   tests/test_spiral_os.py \
   tests/integration/test_razar_failover.py \
@@ -34,7 +40,7 @@ pytest --maxfail=1 --cov --cov-fail-under=90 -q \
   tests/crown/test_replay_determinism.py
 ```
 
-Stage A rehearsals now exercise the Spiral OS boot entry points alongside Spiral memory and vector regression tests. Runs are expected to meet the ≥90 % coverage bar reflected in `coverage.svg`; failures block promotion from the gate.
+Stage A rehearsals now exercise the Spiral OS boot entry points alongside Spiral memory and vector regression tests. Runs must meet the ≥90 % coverage bar for the module list specified in the command above, mirroring the scope visualized in `coverage.svg`; failures block promotion from the gate.
 
 The replay regression writes `monitoring/crown_replay_summary.json` so contributors can confirm the scenario count, runtime, and divergence status without re-running the suite. The Alpha gate copies the summary into `logs/alpha_gate/<timestamp>/` alongside coverage exports.
 
