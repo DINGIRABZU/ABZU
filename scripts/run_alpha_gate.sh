@@ -267,10 +267,10 @@ run_tests() {
         python scripts/export_coverage.py
     ) 2>&1 | tee -a "$log_file"
     log_entry "$log_file" "Archiving coverage artifacts"
-    cp "$ROOT_DIR/coverage.svg" "$LOG_DIR/coverage.svg"
     cp "$ROOT_DIR/coverage.json" "$LOG_DIR/coverage.json"
-    rm -rf "$LOG_DIR/htmlcov"
-    cp -r "$ROOT_DIR/htmlcov" "$LOG_DIR/htmlcov"
+    if [[ -f "$ROOT_DIR/coverage.mmd" ]]; then
+        cp "$ROOT_DIR/coverage.mmd" "$LOG_DIR/coverage.mmd"
+    fi
     if [[ -f "$REPLAY_SUMMARY" ]]; then
         cp "$REPLAY_SUMMARY" "$LOG_DIR/crown_replay_summary.json"
     fi

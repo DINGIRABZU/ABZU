@@ -12,6 +12,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INDEX_PATH = REPO_ROOT / "component_index.json"
 COVERAGE_JSON = REPO_ROOT / "coverage.json"
+COVERAGE_MMD = REPO_ROOT / "coverage.mmd"
+PYTHON = sys.executable
 ACTIVE_STATUSES = {"active"}
 THRESHOLD = 90.0
 __version__ = "0.1.0"
@@ -20,15 +22,36 @@ __version__ = "0.1.0"
 def main() -> None:
     """Generate coverage reports, update metrics and enforce thresholds."""
     subprocess.run(
-        ["coverage", "json", "-i", "--fail-under=0", "-o", str(COVERAGE_JSON)],
+        [
+            PYTHON,
+            "-m",
+            "coverage",
+            "json",
+            "-i",
+            "--fail-under=0",
+            "-o",
+            str(COVERAGE_JSON),
+        ],
         check=True,
     )
-    subprocess.run(["coverage", "html", "-i", "--fail-under=0"], check=True)
-    subprocess.run(
-        ["coverage-badge", "-o", str(REPO_ROOT / "coverage.svg")], check=True
-    )
     with COVERAGE_JSON.open("r", encoding="utf-8") as fh:
-        coverage_data = json.load(fh)["files"]
+        coverage_payload = json.load(fh)
+
+    totals = coverage_payload.get("totals", {})
+    covered_statements = int(totals.get("covered_lines", 0))
+    total_statements = int(totals.get("num_statements", 0))
+    missed_statements = max(total_statements - covered_statements, 0)
+
+    COVERAGE_MMD.write_text(
+        (
+            "pie showData\n"
+            f'    "Covered" : {covered_statements}\n'
+            f'    "Missed" : {missed_statements}\n'
+        ),
+        encoding="utf-8",
+    )
+
+    coverage_data = coverage_payload["files"]
     with INDEX_PATH.open("r", encoding="utf-8") as fh:
         index = json.load(fh)
 
