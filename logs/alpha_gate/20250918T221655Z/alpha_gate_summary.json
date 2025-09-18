@@ -1,0 +1,43 @@
+{
+  "generated_at": "2025-09-18T22:17:29Z",
+  "phases": {
+    "build": {
+      "start_epoch": null,
+      "start": null,
+      "end_epoch": null,
+      "end": null,
+      "duration_seconds": null,
+      "exit_code": null,
+      "skipped": true,
+      "success": false
+    },
+    "health": {
+      "start_epoch": null,
+      "start": null,
+      "end_epoch": null,
+      "end": null,
+      "duration_seconds": null,
+      "exit_code": null,
+      "skipped": true,
+      "success": false
+    },
+    "tests": {
+      "start_epoch": 1758233815,
+      "start": "2025-09-18T22:16:55Z",
+      "end_epoch": 1758233848,
+      "end": "2025-09-18T22:17:28Z",
+      "duration_seconds": 33,
+      "exit_code": 0,
+      "skipped": false,
+      "success": true
+    }
+  },
+  "coverage": {
+    "percent": 35.50893550893551,
+    "covered_lines": 383,
+    "num_statements": 995,
+    "missing_lines": 612
+  },
+  "replay": null,
+  "overall_success": false
+}

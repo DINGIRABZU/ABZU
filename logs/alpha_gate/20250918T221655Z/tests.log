@@ -1,0 +1,296 @@
+[2025-09-18T22:16:55Z] Starting acceptance tests
+[2025-09-18T22:16:55Z] Running pytest --maxfail=1 tests/test_start_spiral_os.py tests/test_spiral_os.py tests/integration/test_razar_failover.py tests/test_spiral_memory.py tests/test_vector_memory.py tests/test_vector_memory_extensions.py tests/test_vector_memory_persistence.py tests/test_spiral_vector_db.py tests/crown/test_replay_determinism.py -k not vector_memory and not razar_failover_chain_escalates_through_air_star_to_rstar and not crown_replay_determinism --cov-fail-under=0
+===================================================== test session starts ======================================================
+platform linux -- Python 3.12.10, pytest-8.4.1, pluggy-1.6.0
+rootdir: /workspace/ABZU
+configfile: pytest.ini
+plugins: timeout-2.4.0, anyio-4.10.0, langsmith-0.4.28, requests-mock-1.12.1, cov-7.0.0
+
+----------------------------------------------------- live log collection ------------------------------------------------------
+WARNING  env_validation:env_validation.py:40 Optional package scapy not available: No module named 'scapy'
+collected 31 items / 14 deselected / 17 selected
+
+tests/test_start_spiral_os.py::test_sequence_with_network 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     emotional_state:emotional_state.py:198 last_emotion set to neutral
+INFO     start_spiral_os:start_spiral_os.py:212 Project summary: sum
+INFO     start_spiral_os:start_spiral_os.py:220 Startup self-correction for neutral (tol 0.000)
+PASSED                                                                                                                   [  5%]
+tests/test_start_spiral_os.py::test_sequence_skip_network 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     emotional_state:emotional_state.py:198 last_emotion set to neutral
+INFO     start_spiral_os:start_spiral_os.py:212 Project summary: sum
+INFO     start_spiral_os:start_spiral_os.py:220 Startup self-correction for neutral (tol 0.000)
+PASSED                                                                                                                   [ 11%]
+tests/test_start_spiral_os.py::test_command_parsing 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     emotional_state:emotional_state.py:198 last_emotion set to neutral
+INFO     start_spiral_os:start_spiral_os.py:212 Project summary: None
+INFO     start_spiral_os:start_spiral_os.py:220 Startup self-correction for neutral (tol 0.000)
+PASSED                                                                                                                   [ 17%]
+tests/test_start_spiral_os.py::test_server_and_reflection_run 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     emotional_state:emotional_state.py:198 last_emotion set to neutral
+INFO     start_spiral_os:start_spiral_os.py:212 Project summary: None
+INFO     start_spiral_os:start_spiral_os.py:220 Startup self-correction for neutral (tol 0.000)
+PASSED                                                                                                                   [ 23%]
+tests/test_start_spiral_os.py::test_validator_blocks_prompt 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     emotional_state:emotional_state.py:198 last_emotion set to neutral
+INFO     start_spiral_os:start_spiral_os.py:212 Project summary: None
+INFO     start_spiral_os:start_spiral_os.py:220 Startup self-correction for neutral (tol 0.000)
+PASSED                                                                                                                   [ 29%]
+tests/test_start_spiral_os.py::test_no_validator_option 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     emotional_state:emotional_state.py:198 last_emotion set to neutral
+INFO     start_spiral_os:start_spiral_os.py:212 Project summary: None
+INFO     start_spiral_os:start_spiral_os.py:220 Startup self-correction for neutral (tol 0.000)
+PASSED                                                                                                                   [ 35%]
+tests/test_start_spiral_os.py::test_rewrite_memory_option PASSED                                                         [ 41%]
+tests/test_start_spiral_os.py::test_rewrite_memory_failure PASSED                                                        [ 47%]
+tests/test_spiral_os.py::test_deploy_pipeline_runs_commands[True] 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     spiral_os:spiral_os:43 Running command: echo hello
+PASSED                                                                                                                   [ 52%]
+tests/test_spiral_os.py::test_deploy_pipeline_runs_commands[False] 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     spiral_os:spiral_os:43 Running command: echo hello
+PASSED                                                                                                                   [ 58%]
+tests/test_spiral_os.py::test_deploy_pipeline_multiline[True] 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     spiral_os:spiral_os:43 Running command: echo hello         world
+
+PASSED                                                                                                                   [ 64%]
+tests/test_spiral_os.py::test_deploy_pipeline_multiline[False] 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+INFO     spiral_os:spiral_os:43 Running command: echo hello         world
+
+PASSED                                                                                                                   [ 70%]
+tests/test_spiral_os.py::test_deploy_pipeline_invalid_yaml 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+ERROR    spiral_os:spiral_os:32 Failed to parse pipeline YAML /tmp/pytest-of-root/pytest-4/test_deploy_pipeline_invalid_y0/p.yaml: mapping values are not allowed here
+  in "<unicode string>", line 1, column 14:
+    :: not yaml ::
+                 ^
+PASSED                                                                                                                   [ 76%]
+tests/test_spiral_os.py::test_deploy_pipeline_command_failure 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+ERROR    spiral_os:spiral_os:46 Command failed with exit code 1: bad
+PASSED                                                                                                                   [ 82%]
+tests/test_spiral_os.py::test_deploy_pipeline_missing_file 
+-------------------------------------------------------- live log call ---------------------------------------------------------
+ERROR    spiral_os:spiral_os:27 Unable to read pipeline YAML /tmp/pytest-of-root/pytest-4/test_deploy_pipeline_missing_f0/absent.yaml: [Errno 2] No such file or directory: '/tmp/pytest-of-root/pytest-4/test_deploy_pipeline_missing_f0/absent.yaml'
+PASSED                                                                                                                   [ 88%]
+tests/test_spiral_memory.py::test_spiral_memory_register_and_recall PASSED                                               [ 94%]
+tests/test_spiral_vector_db.py::test_insert_and_query PASSED                                                             [100%]
+
+======================================================= warnings summary =======================================================
+agents/interaction_log.py:16
+  /workspace/ABZU/agents/interaction_log.py:16: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    entry.setdefault("timestamp", datetime.utcnow().isoformat())
+
+tests/test_spiral_memory.py::test_spiral_memory_register_and_recall
+tests/test_spiral_memory.py::test_spiral_memory_register_and_recall
+  /workspace/ABZU/spiral_memory.py:145: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    (datetime.utcnow().isoformat(), event, glyph_path, phrase),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================================================== tests coverage ========================================================
+_______________________________________ coverage: platform linux, python 3.12.10-final-0 _______________________________________
+
+Name                               Stmts   Miss Branch BrPart  Cover
+--------------------------------------------------------------------
+spiral_memory.py                      81     10     22      7    83%
+spiral_os                             47     14     10      3    67%
+spiral_vector_db/__init__.py          80     11     32     11    80%
+src/spiral_os/__init__.py              1      0      0      0   100%
+src/spiral_os/__main__.py             49     49     12      0     0%
+src/spiral_os/_hf_stub.py              4      1      0      0    75%
+src/spiral_os/chakra_cycle.py         41     41      6      0     0%
+src/spiral_os/pulse_emitter.py        16     16      2      0     0%
+src/spiral_os/start_spiral_os.py     145    145     38      0     0%
+start_spiral_os.py                   166     28     44      9    80%
+vector_memory.py                     365    297    126      0    15%
+--------------------------------------------------------------------
+TOTAL                                995    612    292     30    36%
+======================================== 17 passed, 14 deselected, 3 warnings in 3.26s =========================================
+[2025-09-18T22:17:26Z] Exporting coverage reports
+Wrote JSON report to /workspace/ABZU/coverage.json
+INANNA_AI coverage 0.0% below 90.0%
+INANNA_AI_AGENT coverage 0.0% below 90.0%
+agent_heartbeat coverage 0.0% below 90.0%
+ai_invoker coverage 0.0% below 90.0%
+ai_invoker coverage 0.0% below 90.0%
+albedo coverage 0.0% below 90.0%
+asian_gen coverage 0.0% below 90.0%
+audio coverage 0.0% below 90.0%
+avatar coverage 0.0% below 90.0%
+avatar_broadcast coverage 0.0% below 90.0%
+avatar_resuscitator coverage 0.0% below 90.0%
+avatar_watchdog coverage 0.0% below 90.0%
+backends coverage 0.0% below 90.0%
+bana coverage 0.0% below 90.0%
+bana coverage 0.0% below 90.0%
+base coverage 0.0% below 90.0%
+base coverage 0.0% below 90.0%
+base coverage 0.0% below 90.0%
+bio_adaptive_narrator coverage 0.0% below 90.0%
+biosignals coverage 0.0% below 90.0%
+blueprint_synthesizer coverage 0.0% below 90.0%
+boot_orchestrator coverage 0.0% below 90.0%
+boot_orchestrator coverage 0.0% below 90.0%
+bot_discord coverage 0.0% below 90.0%
+bot_telegram coverage 0.0% below 90.0%
+bundle coverage 0.0% below 90.0%
+chakra_cycle coverage 0.0% below 90.0%
+chakra_heartbeat coverage 0.0% below 90.0%
+checkpoint_manager coverage 0.0% below 90.0%
+checkpoint_manager coverage 0.0% below 90.0%
+cli coverage 0.0% below 90.0%
+cocytus coverage 0.0% below 90.0%
+code_repair coverage 0.0% below 90.0%
+connectors coverage 0.0% below 90.0%
+corpus_memory_logging coverage 0.0% below 90.0%
+cortex coverage 0.0% below 90.0%
+cortex coverage 0.0% below 90.0%
+creative_engine coverage 0.0% below 90.0%
+crown_agent coverage 0.0% below 90.0%
+crown_decider coverage 0.0% below 90.0%
+crown_handshake coverage 0.0% below 90.0%
+crown_link coverage 0.0% below 90.0%
+crown_link coverage 0.0% below 90.0%
+crown_prompt_orchestrator coverage 0.0% below 90.0%
+dependency_installer coverage 0.0% below 90.0%
+dev_orchestrator coverage 0.0% below 90.0%
+distributed_memory coverage 0.0% below 90.0%
+doc_sync coverage 0.0% below 90.0%
+doc_sync coverage 0.0% below 90.0%
+emotional coverage 0.0% below 90.0%
+emotional coverage 0.0% below 90.0%
+escalation_notifier coverage 0.0% below 90.0%
+escalation_notifier coverage 0.0% below 90.0%
+ethics_manifesto coverage 0.0% below 90.0%
+event_structurizer coverage 0.0% below 90.0%
+gateway coverage 0.0% below 90.0%
+generation coverage 0.0% below 90.0%
+generation coverage 0.0% below 90.0%
+geo_knowledge coverage 0.0% below 90.0%
+guardian coverage 0.0% below 90.0%
+health_checks coverage 0.0% below 90.0%
+health_checks coverage 0.0% below 90.0%
+heart_agent coverage 0.0% below 90.0%
+ignition_builder coverage 0.0% below 90.0%
+ingest_biosignal_events coverage 0.0% below 90.0%
+ingest_biosignals coverage 0.0% below 90.0%
+ingest_biosignals_jsonl coverage 0.0% below 90.0%
+init_crown_agent coverage 0.0% below 90.0%
+init_memory_layers coverage 0.0% below 90.0%
+k2coder coverage 0.0% below 90.0%
+kimi_k2_client coverage 0.0% below 90.0%
+land_graph coverage 0.0% below 90.0%
+lifecycle_bus coverage 0.0% below 90.0%
+memory coverage 0.0% below 90.0%
+memory_physical coverage 0.0% below 90.0%
+mental coverage 0.0% below 90.0%
+mental coverage 0.0% below 90.0%
+message_formatter coverage 0.0% below 90.0%
+messaging coverage 0.0% below 90.0%
+mission_logger coverage 0.0% below 90.0%
+mission_logger coverage 0.0% below 90.0%
+mix_tracks coverage 0.0% below 90.0%
+module_builder coverage 0.0% below 90.0%
+music_memory coverage 0.0% below 90.0%
+music_memory coverage 0.0% below 90.0%
+narrative coverage 0.0% below 90.0%
+narrative_api coverage 0.0% below 90.0%
+narrative_api coverage 0.0% below 90.0%
+narrative_engine coverage 0.0% below 90.0%
+narrative_engine coverage 0.0% below 90.0%
+narrative_mcp coverage 0.0% below 90.0%
+narrative_scribe coverage 0.0% below 90.0%
+nazarick coverage 0.0% below 90.0%
+neoabzu-core coverage 0.0% below 90.0%
+neoabzu-crown coverage 0.0% below 90.0%
+neoabzu-fusion coverage 0.0% below 90.0%
+neoabzu-inanna coverage 0.0% below 90.0%
+neoabzu-insight coverage 0.0% below 90.0%
+neoabzu-kimicho coverage 0.0% below 90.0%
+neoabzu-memory coverage 0.0% below 90.0%
+neoabzu-rag coverage 0.0% below 90.0%
+neoabzu-razar coverage 0.0% below 90.0%
+neoabzu-vector coverage 0.0% below 90.0%
+opencode_client coverage 0.0% below 90.0%
+operator_api coverage 0.0% below 90.0%
+optional_deps coverage 0.0% below 90.0%
+planning_engine coverage 0.0% below 90.0%
+playback coverage 0.0% below 90.0%
+playback coverage 0.0% below 90.0%
+primordials_api coverage 0.0% below 90.0%
+primordials_mcp coverage 0.0% below 90.0%
+project_audit coverage 0.0% below 90.0%
+prompt_arbiter coverage 0.0% below 90.0%
+pytest_runner coverage 0.0% below 90.0%
+quarantine_manager coverage 0.0% below 90.0%
+quarantine_manager coverage 0.0% below 90.0%
+query_memory coverage 0.0% below 90.0%
+razar coverage 0.0% below 90.0%
+razar coverage 0.0% below 90.0%
+recovery_manager coverage 0.0% below 90.0%
+recovery_manager coverage 0.0% below 90.0%
+reflection_loop coverage 0.0% below 90.0%
+release coverage 0.0% below 90.0%
+remote_loader coverage 0.0% below 90.0%
+retro_bootstrap coverage 0.0% below 90.0%
+root_agent coverage 0.0% below 90.0%
+runtime_manager coverage 0.0% below 90.0%
+sacral_agent coverage 0.0% below 90.0%
+sacred coverage 0.0% below 90.0%
+sacred coverage 0.0% below 90.0%
+sandbox_session coverage 0.0% below 90.0%
+search coverage 0.0% below 90.0%
+search coverage 0.0% below 90.0%
+search_api coverage 0.0% below 90.0%
+search_api coverage 0.0% below 90.0%
+security_canary coverage 0.0% below 90.0%
+seed coverage 0.0% below 90.0%
+self_healing_ledger coverage 0.0% below 90.0%
+server coverage 0.0% below 90.0%
+service_launcher coverage 0.0% below 90.0%
+session_logger coverage 0.0% below 90.0%
+shalltear coverage 0.0% below 90.0%
+signal_bus coverage 0.0% below 90.0%
+solar_agent coverage 0.0% below 90.0%
+spiral_cortex coverage 0.0% below 90.0%
+spiral_memory coverage 0.0% below 90.0%
+spiritual coverage 0.0% below 90.0%
+spiritual coverage 0.0% below 90.0%
+start_crown_console coverage 0.0% below 90.0%
+state_validator coverage 0.0% below 90.0%
+status_dashboard coverage 0.0% below 90.0%
+story_adapter coverage 0.0% below 90.0%
+story_lookup coverage 0.0% below 90.0%
+third_eye_agent coverage 0.0% below 90.0%
+throat_agent coverage 0.0% below 90.0%
+training_guide coverage 0.0% below 90.0%
+transformers coverage 0.0% below 90.0%
+trust coverage 0.0% below 90.0%
+trust_matrix coverage 0.0% below 90.0%
+trust_registry coverage 0.0% below 90.0%
+ui_service coverage 0.0% below 90.0%
+utils coverage 0.0% below 90.0%
+validate_ignition coverage 0.0% below 90.0%
+vector_memory coverage 0.0% below 90.0%
+verify_chakra_monitoring coverage 0.0% below 90.0%
+verify_self_healing coverage 0.0% below 90.0%
+victim coverage 0.0% below 90.0%
+video_stream coverage 0.0% below 90.0%
+virtual_env_manager coverage 0.0% below 90.0%
+vision coverage 0.0% below 90.0%
+vision coverage 0.0% below 90.0%
+vision_adapter coverage 0.0% below 90.0%
+vocal_isolation coverage 0.0% below 90.0%
+voice_conversion coverage 0.0% below 90.0%
+webrtc_connector coverage 0.0% below 90.0%
+yoloe_adapter coverage 0.0% below 90.0%
+[2025-09-18T22:17:28Z] Archiving coverage artifacts
+[2025-09-18T22:17:28Z] Acceptance tests completed
