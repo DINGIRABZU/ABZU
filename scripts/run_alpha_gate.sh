@@ -4,7 +4,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-LOG_DIR="$ROOT_DIR/logs/alpha_gate"
+LOG_ROOT_DIR="$ROOT_DIR/logs/alpha_gate"
+RUN_ID="$(date -u +"%Y%m%dT%H%M%SZ")"
+LOG_DIR="$LOG_ROOT_DIR/$RUN_ID"
 METRICS_PROM="$ROOT_DIR/monitoring/alpha_gate.prom"
 METRICS_SUMMARY="$ROOT_DIR/monitoring/alpha_gate_summary.json"
 BOOT_METRICS_PROM="$ROOT_DIR/monitoring/boot_metrics.prom"
@@ -110,7 +112,22 @@ parse_args() {
 }
 
 ensure_log_dir() {
+    mkdir -p "$LOG_ROOT_DIR"
+
+    local counter=1
+    local run_id_base="$RUN_ID"
+    while [[ -e "$LOG_DIR" ]]; do
+        RUN_ID="${run_id_base}-$counter"
+        LOG_DIR="$LOG_ROOT_DIR/$RUN_ID"
+        ((counter++))
+    done
+
     mkdir -p "$LOG_DIR"
+    (
+        cd "$LOG_ROOT_DIR"
+        ln -sfn "$RUN_ID" latest
+    )
+    echo "[$(timestamp)] Recording Alpha gate evidence under $LOG_DIR"
 }
 
 mark_phase_skipped() {
