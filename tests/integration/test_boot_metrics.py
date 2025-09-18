@@ -48,12 +48,10 @@ def test_boot_sequence_exports_prometheus_metrics(
     boot_sequence.boot_sequence()
 
     components = [
-        {"name": "basic_service", "success": True, "attempts": 1},
-        {"name": "complex_service", "success": True, "attempts": 2},
-        {"name": "shadow_service", "success": False, "attempts": 3},
+        {"name": f"service_{idx}", "success": True, "attempts": 1} for idx in range(20)
     ]
     run_metrics = {"components": components, "timestamp": time.time()}
-    failure_counts = {"shadow_service": 1}
+    failure_counts: dict[str, int] = {}
     history = {"history": []}
 
     start_time = time.time()
@@ -62,7 +60,15 @@ def test_boot_sequence_exports_prometheus_metrics(
     assert boot_metrics_output.exists(), "Expected boot_metrics.prom to be written"
     metrics = parse_prometheus_textfile(boot_metrics_output)
 
-    assert metrics[METRIC_NAMES.success_rate] == pytest.approx(2 / 3, rel=1e-6)
-    assert metrics[METRIC_NAMES.component_total] == pytest.approx(3.0)
-    assert metrics[METRIC_NAMES.component_success_total] == pytest.approx(2.0)
-    assert metrics[METRIC_NAMES.component_failure_total] == pytest.approx(1.0)
+    assert metrics[METRIC_NAMES.first_attempt_success] == pytest.approx(20.0)
+    assert metrics[METRIC_NAMES.success_rate] == pytest.approx(1.0, rel=1e-6)
+    assert metrics[METRIC_NAMES.component_total] == pytest.approx(20.0)
+    assert metrics[METRIC_NAMES.component_success_total] == pytest.approx(20.0)
+    assert metrics[METRIC_NAMES.retry_total] == pytest.approx(0.0)
+    assert metrics[METRIC_NAMES.component_failure_total] == pytest.approx(0.0)
+
+    ratio = (
+        metrics[METRIC_NAMES.first_attempt_success]
+        / metrics[METRIC_NAMES.component_total]
+    )
+    assert ratio >= 0.95
