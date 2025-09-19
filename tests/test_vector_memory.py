@@ -132,3 +132,16 @@ def test_persist_clusters(monkeypatch, tmp_path):
     assert str(path) in json.loads(manifest.read_text(encoding="utf-8"))
 
     assert vector_memory.load_latest_clusters() == data
+
+
+def test_optional_vector_memory_noops(monkeypatch):
+    optional_vm = pytest.importorskip("memory.optional.vector_memory")
+
+    sentinel_meta = {"id": 1, "tags": ["edge", "case"]}
+    # The optional module should tolerate arbitrary arguments and simply
+    # discard data without raising exceptions.
+    assert optional_vm.query_vectors("text", limit=5, filter=sentinel_meta) == []
+    assert optional_vm.search("question", filter=sentinel_meta, k=3) == []
+
+    # Even persistence-flavoured arguments should be ignored gracefully.
+    assert optional_vm.add_vector("payload", sentinel_meta, persist=True) is None
