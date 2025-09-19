@@ -26,7 +26,10 @@ PYTEST_EXTRA=()
 FLATTENED_PYTEST_EXTRA=()
 
 flatten_pytest_args() {
-    FLATTENED_PYTEST_EXTRA=()
+    local -n dest_ref="$1"
+    dest_ref=()
+    shift || true
+
     if (($# == 0)); then
         return
     fi
@@ -47,7 +50,7 @@ PY
     local token
     while IFS= read -r token; do
         [[ -z "$token" ]] && continue
-        FLATTENED_PYTEST_EXTRA+=("$token")
+        dest_ref+=("$token")
     done <<<"$python_output"
 }
 
@@ -67,8 +70,25 @@ ensure_cov_fail_under_threshold() {
     fi
 }
 
+collect_inherited_pytest_args() {
+    local env_var
+    local value
+    local flattened=()
+
+    for env_var in PYTEST_ADDOPTS PYTEST_OPTIONS PYTEST_ARGS; do
+        if [[ -z "${!env_var-}" ]]; then
+            continue
+        fi
+        value="${!env_var}"
+        flatten_pytest_args flattened "$value"
+        if ((${#flattened[@]} > 0)); then
+            PYTEST_EXTRA+=("${flattened[@]}")
+        fi
+    done
+}
+
 validate_pytest_extras() {
-    flatten_pytest_args "${PYTEST_EXTRA[@]}"
+    flatten_pytest_args FLATTENED_PYTEST_EXTRA "${PYTEST_EXTRA[@]}"
 
     local expect_cov_value=0
     local token
@@ -80,7 +100,7 @@ validate_pytest_extras() {
         fi
 
         case "$token" in
-            -k)
+            -k|-k?*)
                 echo "Alpha gate disallows pytest -k selectors" >&2
                 exit 1
                 ;;
@@ -360,6 +380,7 @@ run_tests() {
 }
 
 main() {
+    collect_inherited_pytest_args
     parse_args "$@"
     validate_pytest_extras
     ensure_log_dir
