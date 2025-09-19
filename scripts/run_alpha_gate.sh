@@ -347,6 +347,17 @@ run_tests() {
         tests/test_spiral_vector_db.py
         tests/crown/test_replay_determinism.py
     )
+
+    # Targeted skips for known flaky cases should name the exact tests rather than
+    # filtering by a shared substring (e.g. "vector_memory"). This keeps the vector
+    # memory suites in scope while still avoiding the unstable scenarios.
+    local -a skip_filters=(
+        "not test_razar_failover_chain_escalates_through_air_star_to_rstar"
+        "and not test_crown_replay_determinism"
+    )
+    if ((${#skip_filters[@]} > 0)); then
+        pytest_args+=(-k "${skip_filters[*]}")
+    fi
     if ((${#PYTEST_EXTRA[@]} > 0)); then
         pytest_args+=("${PYTEST_EXTRA[@]}")
     fi

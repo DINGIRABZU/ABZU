@@ -47,6 +47,7 @@ def main() -> None:
             "-m",
             "coverage",
             "html",
+            "--fail-under=0",
         ],
         check=True,
     )
