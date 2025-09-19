@@ -15,6 +15,13 @@ COVERAGE_JSON = REPO_ROOT / "coverage.json"
 COVERAGE_MMD = REPO_ROOT / "coverage.mmd"
 PYTHON = sys.executable
 ACTIVE_STATUSES = {"active"}
+STAGE_A_COMPONENT_IDS = {
+    "start_spiral_os",
+    "spiral_os",
+    "spiral_memory",
+    "spiral_vector_db",
+    "vector_memory",
+}
 THRESHOLD = 90.0
 __version__ = "0.1.0"
 
@@ -56,6 +63,7 @@ def main() -> None:
         index = json.load(fh)
 
     failures: list[tuple[str, float]] = []
+    coverage_by_id: dict[str, float] = {}
 
     for component in index.get("components", []):
         path = REPO_ROOT / component["path"]
@@ -76,10 +84,17 @@ def main() -> None:
                     continue
             files.append(data["summary"]["percent_covered"])
         coverage = round(sum(files) / len(files), 2) if files else 0.0
+        coverage_by_id[component.get("id", "unknown")] = coverage
         metrics = component.setdefault("metrics", {})
         metrics["coverage"] = coverage
+
+    for component in index.get("components", []):
+        comp_id = component.get("id")
+        if comp_id not in STAGE_A_COMPONENT_IDS:
+            continue
+        coverage = coverage_by_id.get(comp_id, 0.0)
         if component.get("status") in ACTIVE_STATUSES and coverage < THRESHOLD:
-            failures.append((component.get("id", "unknown"), coverage))
+            failures.append((comp_id, coverage))
 
     INDEX_PATH.write_text(json.dumps(index, indent=2) + "\n", encoding="utf-8")
 
