@@ -671,3 +671,231 @@ def test_rewrite_memory_failure(monkeypatch):
 
     with pytest.raises(SystemExit):
         _run_main(["--rewrite-memory", "x", "y"])
+
+
+def test_boot_diagnostics_fatal(monkeypatch):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+
+    def _failed_checks():
+        return {"logging": None, "emotional_state": object()}
+
+    monkeypatch.setattr(
+        start_spiral_os.boot_diagnostics, "run_boot_checks", _failed_checks
+    )
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+
+    with pytest.raises(SystemExit) as exc:
+        _run_main(["--skip-network", "--no-server", "--no-reflection"])
+
+    assert "Critical services unavailable" in str(exc.value)
+
+
+def test_rewrite_memory_missing_dependencies(monkeypatch):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+
+    def _checks():
+        return {
+            "logging": object(),
+            "emotional_state": object(),
+            "server": object(),
+            "invocation_engine": None,
+        }
+
+    monkeypatch.setattr(start_spiral_os.boot_diagnostics, "run_boot_checks", _checks)
+    original_import = importlib.import_module
+
+    def _fail_import(name, package=None):
+        if name == "invocation_engine":
+            raise RuntimeError("missing invocation engine")
+        return original_import(name, package)
+
+    monkeypatch.setattr(importlib, "import_module", _fail_import)
+    monkeypatch.setattr(start_spiral_os, "vector_memory", None)
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+
+    with pytest.raises(SystemExit) as exc:
+        _run_main(["--rewrite-memory", "id", "text"])
+
+    assert "missing dependencies" in str(exc.value)
+
+
+def test_invoke_ritual_requires_engine(monkeypatch):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+
+    def _checks():
+        return {
+            "logging": object(),
+            "emotional_state": object(),
+            "server": object(),
+            "invocation_engine": None,
+        }
+
+    monkeypatch.setattr(start_spiral_os.boot_diagnostics, "run_boot_checks", _checks)
+    original_import = importlib.import_module
+
+    def _fail_import(name, package=None):
+        if name == "invocation_engine":
+            raise RuntimeError("invoke missing")
+        if name == "server":
+            return types.SimpleNamespace(app=object())
+        return original_import(name, package)
+
+    monkeypatch.setattr(importlib, "import_module", _fail_import)
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+
+    with pytest.raises(SystemExit) as exc:
+        _run_main(["--invoke-ritual", "omega"])
+
+    assert "Invocation engine unavailable" in str(exc.value)
+
+
+def test_web_console_registers_connector(monkeypatch):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+    monkeypatch.setenv("WEB_CONSOLE_API_URL", "https://console.local")
+    calls = {"connector": []}
+
+    def _checks():
+        return {
+            "logging": object(),
+            "emotional_state": object(),
+            "server": types.SimpleNamespace(app=object()),
+            "invocation_engine": types.SimpleNamespace(
+                invoke_ritual=lambda *_a, **_k: []
+            ),
+        }
+
+    monkeypatch.setattr(start_spiral_os.boot_diagnostics, "run_boot_checks", _checks)
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+    monkeypatch.setattr(
+        start_spiral_os,
+        "language_engine",
+        types.SimpleNamespace(
+            register_connector=lambda connector: calls["connector"].append(connector)
+        ),
+    )
+    monkeypatch.setattr(start_spiral_os.uvicorn, "run", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
+    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.reflection_loop, "run_reflection_loop", lambda: None
+    )
+    monkeypatch.setattr(start_spiral_os, "EthicalValidator", lambda: None)
+    monkeypatch.setattr(builtins, "input", lambda _="": "")
+
+    _run_main(["--skip-network"])
+
+    assert calls["connector"] == [start_spiral_os.webrtc_connector]
+
+
+def test_personality_alias_resolution(monkeypatch):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+    events = {"layers": []}
+
+    def _checks():
+        return {
+            "logging": object(),
+            "emotional_state": object(),
+            "server": types.SimpleNamespace(app=object()),
+            "invocation_engine": types.SimpleNamespace(
+                invoke_ritual=lambda *_a, **_k: []
+            ),
+        }
+
+    monkeypatch.setattr(start_spiral_os.boot_diagnostics, "run_boot_checks", _checks)
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+    monkeypatch.setattr(start_spiral_os.uvicorn, "run", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
+    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.reflection_loop, "run_reflection_loop", lambda: None
+    )
+    monkeypatch.setattr(
+        start_spiral_os.emotion_registry,
+        "set_current_layer",
+        lambda name: events["layers"].append(name),
+    )
+
+    registry = {
+        "alt_layer": lambda: types.SimpleNamespace(name="alt"),
+    }
+    monkeypatch.setattr(start_spiral_os, "REGISTRY", registry)
+
+    class DummyValidator:
+        def validate_text(self, text):
+            return True
+
+    monkeypatch.setattr(start_spiral_os, "EthicalValidator", lambda: DummyValidator())
+
+    class DummyOrch:
+        def handle_input(self, text):
+            events.setdefault("commands", []).append(text)
+            return {"ok": True}
+
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
+    monkeypatch.setattr(builtins, "input", lambda _="": "")
+
+    _run_main(["--personality", "alt"])
+
+    assert events["layers"][0] == "alt_layer"
+
+
+def test_keyboard_interrupt_prints_blank_line(monkeypatch, capsys):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+
+    def _checks():
+        return {
+            "logging": object(),
+            "emotional_state": object(),
+            "server": types.SimpleNamespace(app=object()),
+            "invocation_engine": types.SimpleNamespace(
+                invoke_ritual=lambda *_a, **_k: []
+            ),
+        }
+
+    monkeypatch.setattr(start_spiral_os.boot_diagnostics, "run_boot_checks", _checks)
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+    monkeypatch.setattr(start_spiral_os.uvicorn, "run", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
+    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
+    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.reflection_loop, "run_reflection_loop", lambda: None
+    )
+    monkeypatch.setattr(start_spiral_os, "EthicalValidator", lambda: None)
+
+    class DummyOrch:
+        def handle_input(self, text):
+            raise AssertionError("should not be called")
+
+    monkeypatch.setattr(
+        start_spiral_os, "MoGEOrchestrator", lambda *a, **k: DummyOrch()
+    )
+
+    def _interrupt(_="") -> None:
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(builtins, "input", _interrupt)
+
+    _run_main(["--no-validator"])
+
+    out = capsys.readouterr().out
+    assert out.endswith("\n")

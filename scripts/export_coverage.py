@@ -84,7 +84,18 @@ def main() -> None:
     coverage_by_id: dict[str, float] = {}
 
     for component in index.get("components", []):
-        path = REPO_ROOT / component["path"]
+        raw_path = Path(component["path"])
+        abs_path = (REPO_ROOT / raw_path).resolve()
+        path_variants = {
+            str(raw_path),
+            str(raw_path).lstrip("./"),
+            str(abs_path),
+        }
+        try:
+            path_variants.add(str(abs_path.relative_to(REPO_ROOT)))
+        except ValueError:
+            pass
+
         files: list[float] = []
         for fname, data in coverage_data.items():
             fpath = Path(fname)
@@ -92,14 +103,24 @@ def main() -> None:
                 rel = fpath.relative_to(REPO_ROOT)
             except ValueError:
                 rel = fpath
-            if path.is_dir():
-                try:
-                    rel.relative_to(path)
-                except ValueError:
+
+            rel_str = str(rel)
+            fpath_str = str(fpath)
+
+            if abs_path.is_dir():
+                if not any(
+                    rel_str == variant.rstrip("/")
+                    or rel_str.startswith(variant.rstrip("/") + "/")
+                    for variant in path_variants
+                ):
                     continue
             else:
-                if rel != path:
+                if not any(
+                    rel_str == variant.rstrip("/") or fpath_str == variant.rstrip("/")
+                    for variant in path_variants
+                ):
                     continue
+
             files.append(data["summary"]["percent_covered"])
         coverage = round(sum(files) / len(files), 2) if files else 0.0
         coverage_by_id[component.get("id", "unknown")] = coverage

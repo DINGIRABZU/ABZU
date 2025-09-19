@@ -1,0 +1,43 @@
+{
+  "generated_at": "2025-09-19T22:19:10Z",
+  "phases": {
+    "build": {
+      "start_epoch": 1758320283,
+      "start": "2025-09-19T22:18:03Z",
+      "end_epoch": 1758320291,
+      "end": "2025-09-19T22:18:11Z",
+      "duration_seconds": 8,
+      "exit_code": 0,
+      "skipped": false,
+      "success": true
+    },
+    "health": {
+      "start_epoch": 1758320291,
+      "start": "2025-09-19T22:18:11Z",
+      "end_epoch": 1758320297,
+      "end": "2025-09-19T22:18:17Z",
+      "duration_seconds": 6,
+      "exit_code": 0,
+      "skipped": false,
+      "success": true
+    },
+    "tests": {
+      "start_epoch": 1758320297,
+      "start": "2025-09-19T22:18:17Z",
+      "end_epoch": 1758320349,
+      "end": "2025-09-19T22:19:09Z",
+      "duration_seconds": 52,
+      "exit_code": 0,
+      "skipped": false,
+      "success": true
+    }
+  },
+  "coverage": {
+    "percent": 92.92701279157261,
+    "covered_lines": 972,
+    "num_statements": 1023,
+    "missing_lines": 51
+  },
+  "replay": null,
+  "overall_success": true
+}
