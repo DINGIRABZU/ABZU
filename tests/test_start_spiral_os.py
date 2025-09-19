@@ -366,6 +366,63 @@ def test_sequence_skip_network(monkeypatch):
     assert events == ["welcome", "summary", "analyze", "suggest", "reflect"]
 
 
+def test_logging_fallback_branch(monkeypatch, caplog):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+    target = (
+        start_spiral_os.Path(start_spiral_os.__file__).resolve().parent
+        / "logging_config.yaml"
+    )
+    original_exists = start_spiral_os.Path.exists
+
+    def fake_exists(self):
+        if self == target:
+            return False
+        return original_exists(self)
+
+    monkeypatch.setattr(start_spiral_os.Path, "exists", fake_exists, raising=False)
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+    called = {}
+    monkeypatch.setattr(
+        start_spiral_os.logging,
+        "basicConfig",
+        lambda **kw: called.setdefault("basic", kw),
+    )
+    monkeypatch.setattr(start_spiral_os, "vector_memory", None)
+    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
+    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
+    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
+    monkeypatch.setattr(
+        start_spiral_os,
+        "MoGEOrchestrator",
+        lambda *a, **k: types.SimpleNamespace(handle_input=lambda *_a, **_k: None),
+    )
+    monkeypatch.setattr(builtins, "input", lambda _="": "")
+
+    sentinel_server = types.SimpleNamespace(app=object())
+    sentinel_invocation = types.SimpleNamespace(invoke_ritual=lambda *_a, **_k: [])
+    monkeypatch.setattr(
+        start_spiral_os.boot_diagnostics,
+        "run_boot_checks",
+        lambda: {
+            "logging": object(),
+            "emotional_state": object(),
+            "server": sentinel_server,
+            "invocation_engine": sentinel_invocation,
+        },
+    )
+
+    with caplog.at_level("WARNING"):
+        _run_main(["--skip-network", "--no-server", "--no-reflection"])
+
+    assert "basic" in called
+    assert "Vector memory module missing" in caplog.text
+
+
 def test_command_parsing(monkeypatch):
     monkeypatch.setenv("ARCHETYPE_STATE", "")
     events = []
@@ -431,6 +488,55 @@ def test_server_and_reflection_run(monkeypatch):
 
     assert calls["server"]
     assert calls["reflect"] > 0
+
+
+def test_boot_diagnostics_recovery(monkeypatch, caplog):
+    monkeypatch.setenv("ARCHETYPE_STATE", "")
+
+    def fake_checks():
+        return {
+            "logging": object(),
+            "emotional_state": object(),
+            "server": None,
+            "invocation_engine": None,
+        }
+
+    monkeypatch.setattr(
+        start_spiral_os.boot_diagnostics, "run_boot_checks", fake_checks
+    )
+    original_import = importlib.import_module
+
+    def fake_import(name, package=None):
+        if name == "server":
+            raise RuntimeError("server import failed")
+        if name == "invocation_engine":
+            raise RuntimeError("invocation engine missing")
+        return original_import(name, package)
+
+    monkeypatch.setattr(importlib, "import_module", fake_import)
+    monkeypatch.setattr(start_spiral_os.logging.config, "dictConfig", lambda cfg: None)
+    monkeypatch.setattr(start_spiral_os.glm_init, "summarize_purpose", lambda: None)
+    monkeypatch.setattr(start_spiral_os.glm_analyze, "analyze_code", lambda: None)
+    monkeypatch.setattr(
+        start_spiral_os.inanna_ai, "display_welcome_message", lambda: None
+    )
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "suggest_enhancement", lambda: None)
+    monkeypatch.setattr(start_spiral_os.inanna_ai, "reflect_existence", lambda: None)
+    monkeypatch.setattr(start_spiral_os.dnu, "monitor_traffic", lambda *a, **k: None)
+    monkeypatch.setattr(
+        start_spiral_os,
+        "MoGEOrchestrator",
+        lambda *a, **k: types.SimpleNamespace(handle_input=lambda *_a, **_k: None),
+    )
+    monkeypatch.setattr(start_spiral_os.uvicorn, "run", lambda *a, **k: None)
+    monkeypatch.setattr(builtins, "input", lambda _="": "")
+
+    with caplog.at_level("ERROR"):
+        _run_main(["--skip-network", "--no-reflection"])
+
+    assert "Server module unavailable" in caplog.text
+    assert "Invocation engine unavailable" in caplog.text
+    assert start_spiral_os.invocation_engine is None
 
 
 def test_validator_blocks_prompt(monkeypatch):
