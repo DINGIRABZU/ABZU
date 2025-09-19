@@ -17,6 +17,8 @@ from typing import Iterable, List, Mapping, Sequence
 from opentelemetry import trace
 from memory.sacred import generate_sacred_glyph
 
+__version__ = "0.1.0"
+
 logger = logging.getLogger(__name__)
 _tracer = trace.get_tracer(__name__)
 

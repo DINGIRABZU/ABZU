@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import asyncio
+import builtins
 import importlib
 import importlib.util
 import json
+import shlex
 import subprocess
 import sys
 import types
@@ -19,6 +21,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 spiral_os_path = ROOT / "spiral_os"
 loader = SourceFileLoader("spiral_os", str(spiral_os_path))
@@ -147,6 +150,36 @@ def test_deploy_pipeline_missing_file(
         with pytest.raises(OSError):
             spiral_os.deploy_pipeline(missing)
     assert "Unable to read pipeline YAML" in caplog.text
+
+
+def test_cli_main_pipeline_deploy(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    pipeline = tmp_path / "pipe.yaml"
+    pipeline.write_text("steps:\n  - run: echo hi\n")
+
+    calls: list[tuple[str, dict[str, Any]]] = []
+
+    def fake_run(cmd: str, **kwargs: Any) -> Any:
+        calls.append((cmd, kwargs))
+
+        class Result:
+            returncode = 0
+
+        return Result()
+
+    monkeypatch.setattr(spiral_os.subprocess, "run", fake_run)
+
+    exit_code = spiral_os.main(["pipeline", "deploy", str(pipeline)])
+    assert exit_code == 0
+    assert calls == [("echo hi", {"shell": True, "check": True})]
+
+
+def test_cli_main_prints_usage(capsys: pytest.CaptureFixture[str]) -> None:
+    exit_code = spiral_os.main([])
+    out = capsys.readouterr().out
+    assert exit_code == 1
+    assert out.startswith("usage: spiral_os")
 
 
 def test_hf_stub_behaviour() -> None:
@@ -441,3 +474,297 @@ def test_pkg_start_requires_invocation_engine(pkg_start) -> None:
     module.invocation_engine = None
     with pytest.raises(SystemExit):
         module.main(["--invoke-ritual", "beta"])
+
+
+@pytest.fixture()
+def src_pkg_start(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    for key in ("GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"):
+        monkeypatch.setenv(key, "token")
+    monkeypatch.chdir(tmp_path)
+
+    env_validation = types.ModuleType("env_validation")
+    env_validation.check_required = lambda names: None
+    env_validation.check_optional_packages = lambda names: None
+    monkeypatch.setitem(sys.modules, "env_validation", env_validation)
+
+    layer_changes: list[str] = []
+
+    def _set_current_layer(name: str) -> None:
+        layer_changes.append(name)
+
+    emotion_registry = types.SimpleNamespace(
+        layer_changes=layer_changes, set_current_layer=_set_current_layer
+    )
+    monkeypatch.setitem(sys.modules, "emotion_registry", emotion_registry)
+
+    last_state: list[str | None] = [None]
+
+    def _set_last_emotion(value: str | None) -> None:
+        last_state[0] = value
+
+    def _get_last_emotion() -> str | None:
+        return last_state[0]
+
+    emotional_state = types.SimpleNamespace(
+        last=last_state,
+        set_last_emotion=_set_last_emotion,
+        get_last_emotion=_get_last_emotion,
+    )
+    monkeypatch.setitem(sys.modules, "emotional_state", emotional_state)
+
+    server = types.ModuleType("server")
+    server.app = object()
+    monkeypatch.setitem(sys.modules, "server", server)
+
+    archetype = types.ModuleType("archetype_shift_engine")
+    archetype.maybe_shift_archetype = lambda *_a, **_k: None
+    monkeypatch.setitem(sys.modules, "archetype_shift_engine", archetype)
+
+    connectors = types.ModuleType("connectors")
+    webrtc = types.ModuleType("connectors.webrtc_connector")
+    webrtc.router = object()
+    webrtc.start_call = lambda *a, **k: None
+    webrtc.close_peers = lambda *a, **k: None
+    connectors.webrtc_connector = webrtc
+    monkeypatch.setitem(sys.modules, "connectors", connectors)
+    monkeypatch.setitem(sys.modules, "connectors.webrtc_connector", webrtc)
+
+    core = types.ModuleType("core")
+    language_engine = types.ModuleType("core.language_engine")
+    language_engine.calls = []
+
+    def _register_connector(connector: Any) -> None:
+        language_engine.calls.append(connector)
+
+    language_engine.register_connector = _register_connector
+    self_engine = types.ModuleType("core.self_correction_engine")
+    self_engine.adjustments = []
+    self_engine.adjust = lambda *a, **k: self_engine.adjustments.append((a, k))
+    core.language_engine = language_engine
+    core.self_correction_engine = self_engine
+    monkeypatch.setitem(sys.modules, "core", core)
+    monkeypatch.setitem(sys.modules, "core.language_engine", language_engine)
+    monkeypatch.setitem(sys.modules, "core.self_correction_engine", self_engine)
+
+    dashboard = types.ModuleType("dashboard")
+    system_stats: list[dict[str, Any]] = []
+
+    def _collect_stats() -> dict[str, bool]:
+        system_stats.append({"ok": True})
+        return {"ok": True}
+
+    system_monitor = types.SimpleNamespace(collect_stats=_collect_stats)
+    dashboard.system_monitor = system_monitor
+    monkeypatch.setitem(sys.modules, "dashboard", dashboard)
+    monkeypatch.setitem(sys.modules, "dashboard.system_monitor", system_monitor)
+
+    vector_module = types.ModuleType("vector_memory")
+    vector_module.records = []  # type: ignore[attr-defined]
+
+    def _vector_add(text: str, meta: dict[str, Any]) -> None:
+        vector_module.records.append((text, meta))
+
+    vector_module.add_vector = _vector_add
+    vector_module.rewrite_vector = lambda *_a, **_k: None
+    monkeypatch.setitem(sys.modules, "vector_memory", vector_module)
+
+    invocation_module = types.ModuleType("invocation_engine")
+    invocation_module.calls: list[str] = []
+
+    def _invoke(name: str) -> list[str]:
+        invocation_module.calls.append(name)
+        return [f"step:{name}"]
+
+    invocation_module.invoke_ritual = _invoke
+    monkeypatch.setitem(sys.modules, "invocation_engine", invocation_module)
+
+    uvicorn_mod = types.ModuleType("uvicorn")
+    uvicorn_mod.calls: list[tuple[Any, str, int]] = []
+
+    def _run_uvicorn(*, app: Any, host: str, port: int) -> None:
+        uvicorn_mod.calls.append((app, host, port))
+
+    uvicorn_mod.run = _run_uvicorn
+    monkeypatch.setitem(sys.modules, "uvicorn", uvicorn_mod)
+
+    tools_mod = types.ModuleType("tools")
+    reflection_mod = types.ModuleType("tools.reflection_loop")
+    reflection_mod.run_reflection_loop = lambda: None
+    reflection_mod.load_thresholds = lambda: {"default": 0.5}
+    tools_mod.reflection_loop = reflection_mod
+    monkeypatch.setitem(sys.modules, "tools", tools_mod)
+    monkeypatch.setitem(sys.modules, "tools.reflection_loop", reflection_mod)
+
+    ina_pkg = types.ModuleType("INANNA_AI")
+    dnu = types.ModuleType("INANNA_AI.defensive_network_utils")
+    dnu.monitor_traffic = lambda *a, **k: None
+    glm_init = types.ModuleType("INANNA_AI.glm_init")
+    glm_init.PURPOSE_FILE = tmp_path / "purpose.log"
+    glm_init.summarize_purpose = lambda: "purpose"
+    glm_analyze = types.ModuleType("INANNA_AI.glm_analyze")
+    glm_analyze.ANALYSIS_FILE = tmp_path / "analysis.log"
+    glm_analyze.analyze_code = lambda: None
+    listening_engine = types.ModuleType("INANNA_AI.listening_engine")
+    listening_engine.capture_audio = lambda duration: ([0.0], False)
+    listening_engine._extract_features = lambda audio, sr: {
+        "emotion": "calm",
+        "sample_rate": sr,
+    }
+    ethical_mod = types.ModuleType("INANNA_AI.ethical_validator")
+
+    class _Validator:
+        def validate_text(self, text: str) -> bool:
+            return "block" not in text
+
+    ethical_mod.EthicalValidator = _Validator
+    personality_mod = types.ModuleType("INANNA_AI.personality_layers")
+    personality_mod.REGISTRY = {
+        "albedo": lambda: object(),
+        "alias_layer": lambda: object(),
+    }
+    personality_mod.list_personalities = lambda: ["albedo"]
+    ina_pkg.defensive_network_utils = dnu
+    ina_pkg.glm_init = glm_init
+    ina_pkg.glm_analyze = glm_analyze
+    ina_pkg.listening_engine = listening_engine
+    ina_pkg.ethical_validator = ethical_mod
+    ina_pkg.personality_layers = personality_mod
+    monkeypatch.setitem(sys.modules, "INANNA_AI", ina_pkg)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.defensive_network_utils", dnu)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.glm_init", glm_init)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.glm_analyze", glm_analyze)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.listening_engine", listening_engine)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.ethical_validator", ethical_mod)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.personality_layers", personality_mod)
+
+    agent_pkg = types.ModuleType("INANNA_AI_AGENT")
+    inanna_ai = types.ModuleType("INANNA_AI_AGENT.inanna_ai")
+    inanna_ai.display_welcome_message = lambda: None
+    inanna_ai.suggest_enhancement = lambda: None
+    inanna_ai.reflect_existence = lambda: None
+    inanna_ai.SUGGESTIONS_LOG = tmp_path / "suggestions.log"
+    agent_pkg.inanna_ai = inanna_ai
+    monkeypatch.setitem(sys.modules, "INANNA_AI_AGENT", agent_pkg)
+    monkeypatch.setitem(sys.modules, "INANNA_AI_AGENT.inanna_ai", inanna_ai)
+
+    neo_pkg = types.ModuleType("neoabzu_rag")
+
+    orch_instances: list[Any] = []
+
+    class _Orchestrator:
+        def __init__(self, albedo_layer: Any | None = None) -> None:
+            self.albedo_layer = albedo_layer
+            self.handled: list[str] = []
+            orch_instances.append(self)
+
+        def handle_input(self, text: str) -> dict[str, Any]:
+            self.handled.append(text)
+            return {"echo": text}
+
+    neo_pkg.MoGEOrchestrator = _Orchestrator
+    monkeypatch.setitem(sys.modules, "neoabzu_rag", neo_pkg)
+
+    module_name = "src.spiral_os.start_spiral_os"
+    sys.modules.pop(module_name, None)
+    module = importlib.import_module(module_name)
+
+    context = {
+        "emotion_registry": emotion_registry,
+        "language_engine": language_engine,
+        "self_engine": self_engine,
+        "vector_memory": vector_module,
+        "invocation_engine": invocation_module,
+        "uvicorn": uvicorn_mod,
+        "system_stats": system_stats,
+        "orch_instances": orch_instances,
+    }
+    return module, context
+
+
+def test_src_start_invoke_ritual(src_pkg_start, capsys: pytest.CaptureFixture[str]):
+    module, ctx = src_pkg_start
+    module.main(["--invoke-ritual", "sigma"])
+    out = capsys.readouterr().out
+    assert "step:sigma" in out
+    assert ctx["invocation_engine"].calls == ["sigma"]
+
+
+def test_src_start_rewrite_memory(src_pkg_start):
+    module, ctx = src_pkg_start
+    module.main(["--rewrite-memory", "alpha", "payload"])
+    assert any(
+        rec[0] == json.dumps({"ok": True}) for rec in ctx["vector_memory"].records
+    )
+    assert ctx["invocation_engine"].calls[-1] == "alpha"
+
+
+def test_src_start_command_loop_with_validator(
+    src_pkg_start, monkeypatch: pytest.MonkeyPatch
+):
+    module, ctx = src_pkg_start
+    monkeypatch.setenv("WEB_CONSOLE_API_URL", "https://console.local")
+    inputs = iter(["block this", "echo", ""])
+    monkeypatch.setattr(builtins, "input", lambda _="": next(inputs))
+    module.main(["--command", "seed"])
+    # initial command is "seed" then validator blocks "block this" and accepts "echo"
+    orch = ctx["orch_instances"][-1]
+    assert orch.handled[0] == "seed"
+    assert orch.handled[-1] == "echo"
+    assert ctx["language_engine"].calls == [module.webrtc_connector]
+
+
+def test_src_start_personality_alias(src_pkg_start, monkeypatch: pytest.MonkeyPatch):
+    module, ctx = src_pkg_start
+    module.REGISTRY = {"alias_layer": lambda: object()}
+    monkeypatch.setattr(builtins, "input", lambda _="": "")
+    module.main(["--personality", "alias"])
+    assert ctx["emotion_registry"].layer_changes[0] == "alias_layer"
+
+
+def test_src_start_keyboard_interrupt(
+    src_pkg_start, monkeypatch: pytest.MonkeyPatch, capsys
+):
+    module, _ = src_pkg_start
+
+    def _interrupt(_="") -> None:
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(builtins, "input", _interrupt)
+    module.main(["--no-validator"])
+    out = capsys.readouterr().out
+    assert out.endswith("\n")
+
+
+def test_src_cli_deploy_pipeline(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    module = importlib.import_module("src.spiral_os.__main__")
+    yaml_file = tmp_path / "pipe.yaml"
+    yaml_file.write_text("steps:\n  - echo hi\n")
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, check=True):
+        calls.append(cmd if isinstance(cmd, list) else shlex.split(cmd))
+
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    module.deploy_pipeline(yaml_file)
+    assert calls[0] == ["echo", "hi"]
+
+
+def test_src_cli_deploy_requires_steps(tmp_path: Path):
+    module = importlib.import_module("src.spiral_os.__main__")
+    yaml_file = tmp_path / "pipe.yaml"
+    yaml_file.write_text("{}")
+    with pytest.raises(ValueError):
+        module.deploy_pipeline(yaml_file)
+
+
+def test_src_cli_main_dispatch(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    module = importlib.import_module("src.spiral_os.__main__")
+    yaml_file = tmp_path / "pipe.yaml"
+    yaml_file.write_text("steps:\n  - echo hi\n")
+    monkeypatch.setattr(module, "deploy_pipeline", lambda path: None)
+    start_calls: list[list[str]] = []
+    monkeypatch.setattr(module, "start_os", lambda args: start_calls.append(args))
+    assert module.main(["pipeline", "deploy", str(yaml_file)]) == 0
+    assert module.main(["start", "--", "--flag"]) == 0
+    assert start_calls == [["--", "--flag"]]
+    assert module.main([]) == 1

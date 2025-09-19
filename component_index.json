@@ -1126,7 +1126,7 @@
         "tests/spiral_os/test_chakra_cycle.py"
       ],
       "metrics": {
-        "coverage": 0.0
+        "coverage": 95.74
       },
       "status": "deprecated",
       "issues": "No known issues",
@@ -4835,7 +4835,7 @@
       ],
       "tests": [],
       "metrics": {
-        "coverage": 0.0
+        "coverage": 100.0
       },
       "status": "deprecated",
       "issues": "No tests found",
@@ -6090,7 +6090,7 @@
       "id": "spiral_memory",
       "chakra": "unknown",
       "type": "module",
-      "path": "memory/optional/spiral_memory.py",
+      "path": "spiral_memory.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
@@ -6102,7 +6102,7 @@
         "tests/test_spiral_memory.py"
       ],
       "metrics": {
-        "coverage": 0.0
+        "coverage": 97.12
       },
       "status": "active",
       "issues": "No known issues",
@@ -6829,7 +6829,7 @@
       "id": "vector_memory",
       "chakra": "unknown",
       "type": "module",
-      "path": "memory/optional/vector_memory.py",
+      "path": "vector_memory.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
@@ -6893,7 +6893,7 @@
         "tests/test_voice_profiles.py"
       ],
       "metrics": {
-        "coverage": 0.0
+        "coverage": 92.13
       },
       "status": "active",
       "issues": "No known issues",

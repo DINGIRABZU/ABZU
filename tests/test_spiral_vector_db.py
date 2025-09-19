@@ -191,3 +191,91 @@ def test_init_db_requires_chromadb(tmp_path, monkeypatch):
     monkeypatch.setattr(svdb, "chromadb", None)
     with pytest.raises(RuntimeError):
         svdb.init_db()
+
+
+def test_init_db_custom_path_and_empty_data(tmp_path, monkeypatch):
+    monkeypatch.setenv("SPIRAL_VECTOR_PATH", str(tmp_path / "db5"))
+    sys.modules.pop("spiral_vector_db", None)
+    svdb = importlib.import_module("spiral_vector_db")
+
+    class DummyCollection:
+        def __init__(self):
+            self.add_calls: list[tuple[list[str], list[list[float]], list[dict]]] = []
+
+        def add(self, ids=None, embeddings=None, metadatas=None, **_):
+            self.add_calls.append((ids or [], embeddings or [], metadatas or []))
+
+    collection = DummyCollection()
+
+    class DummyClient:
+        def __init__(self, path):
+            self.path = path
+
+        def get_or_create_collection(self, name):
+            return collection
+
+    monkeypatch.setattr(
+        svdb,
+        "chromadb",
+        SimpleNamespace(PersistentClient=lambda path: DummyClient(path)),
+    )
+
+    target = tmp_path / "custom"
+    svdb.init_db(path=target)
+    assert svdb.DB_PATH == target
+
+    svdb.insert_embeddings([])
+    assert collection.add_calls == []
+
+
+def test_insert_and_query_without_numpy(tmp_path, monkeypatch):
+    monkeypatch.setenv("SPIRAL_VECTOR_PATH", str(tmp_path / "db6"))
+    sys.modules.pop("spiral_vector_db", None)
+    svdb = importlib.import_module("spiral_vector_db")
+    svdb._COLLECTION = None
+    svdb.np = None
+
+    class DummyCollection:
+        def __init__(self):
+            self.calls: list[tuple[list[str], list[list[float]], list[dict]]] = []
+
+        def add(self, ids=None, embeddings=None, metadatas=None, **_):
+            self.calls.append((ids or [], embeddings or [], metadatas or []))
+
+        def query(self, query_embeddings, n_results, **_):
+            return {
+                "embeddings": [[[], [1.0, 0.0]]],
+                "metadatas": [[{"label": "skip"}, {"label": "keep"}]],
+            }
+
+    class DummyClient:
+        def __init__(self, path):
+            self.collection = DummyCollection()
+
+        def get_or_create_collection(self, name):
+            return self.collection
+
+    client = DummyClient(tmp_path)
+    monkeypatch.setattr(
+        svdb,
+        "chromadb",
+        SimpleNamespace(PersistentClient=lambda path: client),
+    )
+    monkeypatch.setattr(
+        svdb.qnl_utils,
+        "quantum_embed",
+        lambda text: [1.0, 0.0] if text else [0.0, 1.0],
+    )
+
+    svdb.insert_embeddings(
+        [
+            {"text": "a", "label": "keep"},
+            {"id": "b", "embedding": [0.5, 0.5], "label": "skip"},
+        ]
+    )
+
+    ids, embeddings, metas = client.collection.calls[0]
+    assert len(ids) == 2 and metas[0]["label"] == "keep"
+
+    results = svdb.query_embeddings("query", top_k=2, filters={"label": "keep"})
+    assert results == [{"label": "keep", "score": pytest.approx(1.0)}]
