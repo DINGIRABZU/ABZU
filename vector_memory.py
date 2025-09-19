@@ -403,9 +403,13 @@ def rewrite_vector(old_id: str, new_text: str) -> bool:
         emb_list = np.asarray(emb_raw, dtype=float).tolist()
     else:
         emb_list = [float(x) for x in emb_raw]
-    store.rewrite(old_id, emb_list, meta)
-    if _DIST is not None:
-        _DIST.backup(old_id, emb_list, meta)
+    try:
+        store.rewrite(old_id, emb_list, meta)
+        if _DIST is not None:
+            _DIST.backup(old_id, emb_list, meta)
+    except Exception:  # pragma: no cover - exercised via tests
+        logger.exception("Failed to rewrite vector %s", old_id)
+        raise
     _log("rewrite", new_text, meta)
     _after_write()
     return True
@@ -496,10 +500,27 @@ def restore(path: str | Path) -> None:
     """Load collection data from ``path`` replacing existing entries."""
 
     col = _get_collection()
+    resolved = Path(path)
     if hasattr(col, "restore"):
-        col.restore(path)
+        if resolved.is_dir() and not hasattr(col, "_stores"):
+            db_name = Path(getattr(col, "db_path", "memory.sqlite")).name
+            candidates = [resolved / db_name, resolved / f"{db_name}.bak"]
+            for candidate in candidates:
+                if candidate.exists():
+                    resolved = candidate
+                    break
+            else:
+                raise FileNotFoundError(
+                    f"no snapshot file found in {resolved} for {db_name}"
+                )
+        col.restore(resolved)
     else:
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        if resolved.is_dir():
+            candidates = sorted(resolved.glob("*.json"))
+            if not candidates:
+                raise FileNotFoundError(f"no snapshot data under {resolved}")
+            resolved = candidates[-1]
+        data = json.loads(resolved.read_text(encoding="utf-8"))
         existing = col.get().get("ids", [])
         if existing:
             col.delete(existing)
@@ -513,11 +534,25 @@ def persist_snapshot() -> Path:
     snap_dir = _DIR / "snapshots"
     snap_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    path = (
-        snap_dir / stamp if hasattr(store, "_stores") else snap_dir / f"{stamp}.sqlite"
-    )
-    snapshot(path)
-    return path
+    base_path = snap_dir / stamp
+    if hasattr(store, "_stores"):
+        target = base_path
+    else:
+        db_name = Path(getattr(store, "db_path", "memory.sqlite")).name
+        target = base_path / f"{db_name}.bak"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    snapshot(target)
+    manifest = snap_dir / "manifest.json"
+    try:
+        entries = json.loads(manifest.read_text(encoding="utf-8"))
+        target_str = str(target)
+        normalized = str(base_path)
+        if target_str in entries and normalized not in entries:
+            entries[entries.index(target_str)] = normalized
+            manifest.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+    except Exception:  # pragma: no cover - best effort
+        logger.exception("failed to normalize snapshot manifest")
+    return base_path
 
 
 def restore_latest_snapshot() -> bool:
@@ -526,7 +561,12 @@ def restore_latest_snapshot() -> bool:
     snap_dir = _DIR / "snapshots"
     if not snap_dir.exists():
         return False
-    snaps = sorted(snap_dir.iterdir())
+    snaps = sorted(
+        path
+        for path in snap_dir.iterdir()
+        if path.name not in {"manifest.json", "clusters_manifest.json"}
+        and not path.name.startswith("clusters-")
+    )
     if not snaps:
         return False
     try:
