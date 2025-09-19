@@ -51,14 +51,6 @@ def main() -> None:
         ],
         check=True,
     )
-    subprocess.run(
-        [
-            "coverage-badge",
-            "-o",
-            str(REPO_ROOT / "coverage.svg"),
-        ],
-        check=True,
-    )
     with COVERAGE_JSON.open("r", encoding="utf-8") as fh:
         coverage_payload = json.load(fh)
 

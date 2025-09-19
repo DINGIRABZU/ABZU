@@ -384,9 +384,6 @@ run_tests() {
     if [[ -f "$ROOT_DIR/coverage.mmd" ]]; then
         cp "$ROOT_DIR/coverage.mmd" "$LOG_DIR/coverage.mmd"
     fi
-    if [[ -f "$ROOT_DIR/coverage.svg" ]]; then
-        cp "$ROOT_DIR/coverage.svg" "$LOG_DIR/coverage.svg"
-    fi
     if [[ -d "$ROOT_DIR/htmlcov" ]]; then
         rm -rf "$LOG_DIR/htmlcov"
         cp -R "$ROOT_DIR/htmlcov" "$LOG_DIR/"
