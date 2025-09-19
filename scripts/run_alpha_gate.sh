@@ -23,6 +23,81 @@ SKIP_TESTS=0
 RUN_CONNECTOR_CHECK=0
 RUN_CHAOS_DRILL=0
 PYTEST_EXTRA=()
+FLATTENED_PYTEST_EXTRA=()
+
+flatten_pytest_args() {
+    FLATTENED_PYTEST_EXTRA=()
+    if (($# == 0)); then
+        return
+    fi
+
+    local python_output
+    python_output="$(python - "$@" <<'PY'
+import sys
+
+for arg in sys.argv[1:]:
+    if not arg:
+        continue
+    for token in arg.split():
+        if token:
+            print(token)
+PY
+)"
+
+    local token
+    while IFS= read -r token; do
+        [[ -z "$token" ]] && continue
+        FLATTENED_PYTEST_EXTRA+=("$token")
+    done <<<"$python_output"
+}
+
+ensure_cov_fail_under_threshold() {
+    local value="$1"
+    if [[ -z "$value" ]]; then
+        echo "--cov-fail-under requires a value" >&2
+        exit 1
+    fi
+    if [[ ! "$value" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+        echo "Invalid --cov-fail-under value: $value" >&2
+        exit 1
+    fi
+    if awk "BEGIN{exit !($value < 90)}"; then
+        echo "--cov-fail-under must be at least 90 (received $value)" >&2
+        exit 1
+    fi
+}
+
+validate_pytest_extras() {
+    flatten_pytest_args "${PYTEST_EXTRA[@]}"
+
+    local expect_cov_value=0
+    local token
+    for token in "${FLATTENED_PYTEST_EXTRA[@]}"; do
+        if ((expect_cov_value)); then
+            ensure_cov_fail_under_threshold "$token"
+            expect_cov_value=0
+            continue
+        fi
+
+        case "$token" in
+            -k)
+                echo "Alpha gate disallows pytest -k selectors" >&2
+                exit 1
+                ;;
+            --cov-fail-under)
+                expect_cov_value=1
+                ;;
+            --cov-fail-under=*)
+                ensure_cov_fail_under_threshold "${token#*=}"
+                ;;
+        esac
+    done
+
+    if ((expect_cov_value)); then
+        echo "--cov-fail-under requires a numeric threshold" >&2
+        exit 1
+    fi
+}
 
 usage() {
     cat <<'USAGE'
@@ -279,6 +354,7 @@ run_tests() {
 
 main() {
     parse_args "$@"
+    validate_pytest_extras
     ensure_log_dir
 
     local exit_code=0
