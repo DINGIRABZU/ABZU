@@ -12,8 +12,10 @@ import asyncio
 import json
 import logging
 import os
+import re
 from collections.abc import Mapping
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any, Iterable
 
 import httpx
@@ -27,6 +29,14 @@ _STAGE_B_CONTEXT = "stage-b-rehearsal"
 
 _DEFAULT_HEARTBEAT_CHAKRA = "neo"
 _DEFAULT_HEARTBEAT_CYCLE_COUNT = 0
+
+_ROOT = Path(__file__).resolve().parents[1]
+_COMPONENT_INDEX = _ROOT / "component_index.json"
+_CONNECTOR_INDEX = _ROOT / "docs" / "connectors" / "CONNECTOR_INDEX.md"
+
+_DURATION_PATTERN = re.compile(
+    r"^P(?:(?P<days>\d+)D)?(?:T(?:(?P<hours>\d+)H)?(?:(?P<minutes>\d+)M)?(?:(?P<seconds>\d+)S)?)?$"
+)
 
 
 def _iso_now() -> str:
@@ -360,10 +370,183 @@ async def send_heartbeat(
         await _execute(session_client)
 
 
-def doctrine_compliant() -> bool:
-    """Return True when the connector satisfies doctrine requirements."""
-    # Insert doctrine verification logic here.
-    return True
+def _parse_iso8601_timestamp(value: str) -> datetime:
+    """Return ``value`` parsed as a timezone-aware UTC timestamp."""
+
+    if not isinstance(value, str) or not value:
+        raise ValueError("value must be an ISO-8601 timestamp")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:  # pragma: no cover - defensive
+        raise ValueError("value must be an ISO-8601 timestamp") from exc
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc).replace(microsecond=0)
+
+
+def _parse_iso8601_duration(value: str) -> timedelta:
+    """Return ``value`` parsed as a ``timedelta``."""
+
+    if not isinstance(value, str) or not value:
+        raise ValueError("rotation_window must be an ISO-8601 duration")
+    match = _DURATION_PATTERN.match(value)
+    if not match:
+        raise ValueError(f"unsupported ISO-8601 duration: {value}")
+    days = int(match.group("days") or 0)
+    hours = int(match.group("hours") or 0)
+    minutes = int(match.group("minutes") or 0)
+    seconds = int(match.group("seconds") or 0)
+    return timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+
+
+def doctrine_compliant() -> tuple[bool, list[str]]:
+    """Return compliance status and failure reasons for doctrine checks."""
+
+    failures: list[str] = []
+
+    registry_entry: dict[str, Any] | None = None
+    try:
+        registry_data = json.loads(_COMPONENT_INDEX.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        failures.append(f"component registry missing: {_COMPONENT_INDEX}")
+    except json.JSONDecodeError as exc:  # pragma: no cover - defensive
+        failures.append(f"component registry invalid JSON: {exc}")
+    else:
+        components = registry_data.get("components")
+        if isinstance(components, list):
+            for item in components:
+                if (
+                    isinstance(item, Mapping)
+                    and item.get("path") == "connectors/neo_apsu_connector_template.py"
+                ):
+                    registry_entry = dict(item)
+                    break
+        if registry_entry is None:
+            failures.append(
+                "component registry missing neo_apsu_connector_template entry"
+            )
+        else:
+            if registry_entry.get("id") != "neo_apsu_connector_template":
+                failures.append(
+                    "component registry id mismatch for neo_apsu_connector_template"
+                )
+            if registry_entry.get("version") != __version__:
+                failures.append(
+                    "component registry version mismatch for "
+                    "neo_apsu_connector_template"
+                )
+
+    schema_path: Path | None = None
+    try:
+        connector_index_content = _CONNECTOR_INDEX.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        failures.append(f"connector index missing: {_CONNECTOR_INDEX}")
+        connector_index_content = ""
+
+    registry_row: str | None = None
+    for line in connector_index_content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("|") and "neo_apsu_connector_template" in stripped:
+            registry_row = line
+            break
+
+    if registry_row is None:
+        failures.append(
+            "connector registry missing row for neo_apsu_connector_template"
+        )
+    else:
+        columns = [col.strip() for col in registry_row.strip().split("|")[1:-1]]
+        if len(columns) < 10:
+            failures.append(
+                "connector registry row malformed for neo_apsu_connector_template"
+            )
+        else:
+            version_field = columns[2].strip("` ")
+            if version_field:
+                version_value = version_field.split()[0]
+                if version_value != __version__:
+                    failures.append(
+                        "connector registry version mismatch for "
+                        "neo_apsu_connector_template"
+                    )
+            schema_column = columns[9]
+            match = re.search(r"\(([^)]+)\)", schema_column)
+            if not match:
+                failures.append(
+                    "connector registry schema link missing for "
+                    "neo_apsu_connector_template"
+                )
+            else:
+                schema_rel = match.group(1)
+                schema_path = (_CONNECTOR_INDEX.parent / Path(schema_rel)).resolve()
+                if not schema_path.exists():
+                    failures.append(f"schema reference not found: {schema_rel}")
+                else:
+                    try:
+                        schema_data = json.loads(
+                            schema_path.read_text(encoding="utf-8")
+                        )
+                    except json.JSONDecodeError as exc:  # pragma: no cover - defensive
+                        failures.append(f"schema {schema_rel} invalid JSON: {exc}")
+                    else:
+                        required = schema_data.get("required", [])
+                        expected = {
+                            "chakra",
+                            "cycle_count",
+                            "context",
+                            "credential_expiry",
+                            "emitted_at",
+                        }
+                        missing = expected.difference(required)
+                        if missing:
+                            failures.append(
+                                "schema missing required fields: "
+                                + ", ".join(sorted(missing))
+                            )
+                        context_props = schema_data.get("properties", {}).get(
+                            "context", {}
+                        )
+                        if context_props.get("const") != _STAGE_B_CONTEXT:
+                            failures.append(
+                                "schema context const does not enforce "
+                                "stage-b-rehearsal"
+                            )
+
+    try:
+        payload = _build_handshake_payload()
+    except Exception as exc:  # pragma: no cover - defensive
+        failures.append(f"failed to build handshake payload: {exc}")
+    else:
+        rotation = payload.get("rotation") or {}
+        last_rotated_raw = rotation.get("last_rotated")
+        if not last_rotated_raw:
+            failures.append("rotation.last_rotated missing from handshake payload")
+        else:
+            try:
+                last_rotated = _parse_iso8601_timestamp(last_rotated_raw)
+            except ValueError as exc:
+                failures.append(f"rotation.last_rotated invalid: {exc}")
+            else:
+                window_raw = rotation.get("rotation_window")
+                if not window_raw:
+                    failures.append(
+                        "rotation.rotation_window missing from handshake payload"
+                    )
+                else:
+                    try:
+                        window_duration = _parse_iso8601_duration(window_raw)
+                    except ValueError as exc:
+                        failures.append(f"rotation_window invalid: {exc}")
+                    else:
+                        age = datetime.now(timezone.utc) - last_rotated
+                        if age > window_duration:
+                            overdue = age - window_duration
+                            failures.append(f"credential rotation stale by {overdue}")
+        supports_hot_swap = rotation.get("supports_hot_swap")
+        if not isinstance(supports_hot_swap, bool):
+            failures.append("rotation.supports_hot_swap must be a boolean")
+
+    return (not failures, failures)
 
 
 __all__ = ["handshake", "send_heartbeat", "doctrine_compliant"]

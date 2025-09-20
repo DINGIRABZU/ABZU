@@ -330,6 +330,12 @@ stack and replaces bespoke HTTP clients with a unified gateway.
 
 Migration status for each connector is tracked in the
 [Connector Index](connectors/CONNECTOR_INDEX.md).
+Before deployment each MCP connector must now satisfy the doctrine checklist:
+confirm its registry entries in `component_index.json` and
+[CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md), validate that Stage B
+heartbeats still conform to
+[schemas/mcp_heartbeat_payload.schema.json](../schemas/mcp_heartbeat_payload.schema.json),
+and prove the MCP rotation metadata documents fresh credentials.
 
 ### **Game Dashboard & Retro Arcade Integration**
 

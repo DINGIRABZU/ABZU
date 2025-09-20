@@ -61,6 +61,12 @@ now emits an MCP capability payload described in
 [mcp_capability_payload.md](connectors/mcp_capability_payload.md).
 Stage B handshakes log the acknowledged contexts and session identifiers so
 operators can reconcile rehearsal transcripts before heartbeats begin.
+Doctrine compliance now enforces a three-part checklist before a connector
+enters rehearsal: it must appear in `component_index.json` and
+[CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md), its heartbeat schema must
+align with [schemas/mcp_heartbeat_payload.schema.json](../schemas/mcp_heartbeat_payload.schema.json),
+and its MCP rotation metadata must confirm the credential was refreshed within
+the declared window.
 
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,

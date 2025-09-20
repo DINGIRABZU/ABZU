@@ -558,6 +558,14 @@ Connectors bridge the language engine to external communication layers. The cano
 
 Track all connectors in [`docs/connectors/CONNECTOR_INDEX.md`](connectors/CONNECTOR_INDEX.md). Each entry must list the connector name, `__version__`, purpose, endpoints, authentication method, linked agents, operator interface flows, status, and links to documentation and source code. See [Connector Overview](connectors/README.md) for shared design patterns and maintenance rules. Both documents are listed in [KEY_DOCUMENTS.md](KEY_DOCUMENTS.md). Update this registry whenever a connector is added, removed, or its interface changes.
 
+#### Connector Registry Protocol
+
+Neo-APSU connectors must clear the doctrine checklist before deployment:
+
+1. **Registry entry present.** Confirm the connector appears in `component_index.json` with an `id`, `path`, and `version` that match the module's `__version__`, and mirror the entry in [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md).
+2. **Schema alignment.** Maintain the JSON schema referenced from [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md), ensuring the heartbeat contract requires `chakra`, `cycle_count`, `context`, `credential_expiry`, and `emitted_at`, with `context` fixed to `stage-b-rehearsal` per the Stage B guide.
+3. **Credential freshness.** Advertise credential rotation metadata in the MCP capability payload: keep `rotation.last_rotated` within the declared `rotation_window`, set a truthful `supports_hot_swap` flag, and document overrides in [mcp_capability_payload.md](connectors/mcp_capability_payload.md) so operators can audit credential health.
+
 ## Subsystem Protocols
 
 - [Operator Protocol](operator_protocol.md) – documents `/operator/command`, `/operator/upload`, WebRTC channels, permission checks, and escalation rules through Crown to RAZAR.
