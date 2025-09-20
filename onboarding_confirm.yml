@@ -151,8 +151,8 @@ documents:
       purpose: Crown agent architecture and routing.
       scope: Crown-to-RAZAR interaction.
   docs/INDEX.md:
-    commit: 57b7dcb03679e8a415fef16ffc4b724689059c96
-    sha256: 558d210cfe5e8ee628aec4dbc9fe231fda8e4a04b95d69f768925e5dce933cfd
+    commit: worktree
+    sha256: 9759f3be3ed39028849a953d88ee03c28d6aa63f199b01eb135eb4414d0dde46
     summary:
       insight: Regenerate with tools/doc_indexer.py after updating docs.
       key_rules: Regenerate index after documentation updates.
@@ -177,10 +177,10 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 3983518de637d4e290ec5f493f343c611d277465621ea6e224832192b304a6db
+    sha256: 0039cc73bdf60c4c05f6770e8831e206e05da3dd89344cfc9c3338aadda2daed
     summary:
-      insight: Stage B MCP rehearsals now reference `OperatorMCPAdapter` and the
-        shared smoke script to verify connector rotation logs.
+      insight: Stage B MCP connectors now initialize the shared handshake during
+        operator_api startup and emit heartbeats that log credential rotations.
       key_rules: Register connectors in component and connector indexes, enforce
         heartbeat schema constraints, and keep MCP rotation metadata fresh per the
         capability payload guide and Stage B rehearsal checklist.
@@ -220,10 +220,11 @@ documents:
       purpose: Bana narrative engine guide.
       scope: Training data and workflow.
   docs/blueprint_spine.md:
-    commit: b3b80343640e18d6ff3ae9eabdee3b082400e9e9
-    sha256: 8d9d558de6e3dc97f26ecdb306209f485643e0d7eed43220cc4596d9dea6dfa8
+    commit: worktree
+    sha256: 7dc3517a463373b3749b29848dc98cf3146e2b3c1d45f506c203c353ade6bd31
     summary:
-      insight: Highlights triadic stack and operator-first design.
+      insight: Highlights triadic stack and operator-first design, including the
+        MCP startup handshake and heartbeat loop for operator connectors.
       key_rules: Keep cross-links and diagrams synchronized.
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -261,10 +262,10 @@ documents:
       purpose: Ensure connectors respond to health checks before merge.
       scope: All connectors.
   docs/connectors/CONNECTOR_INDEX.md:
-    commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
-    sha256: 4d8a396b0543791b601711932f85133679d988f658b29b6d80510e7219dbb3c8
+    commit: worktree
+    sha256: e26eeaf5c18cbabdc235e6f89708319c0cd4a7829951c8fc9a9df404dab06dcb
     summary:
-      insight: Ensure this registry entry is revised whenever a connector changes.
+      insight: Ensure this registry entry reflects live MCP status for each connector.
       key_rules: Update registry when connector changes.
       purpose: Registry of connector details.
       scope: All connectors.
@@ -293,10 +294,11 @@ documents:
       purpose: Workflow for updating documentation.
       scope: All documentation changes.
   docs/index.md:
-    commit: 21c5ff99552e46ac598941530363336d1ba66a59
-    sha256: 0d2f495589fa5ed997dea3e713da028476b77ce84445fdc275b3ea31b7a195ef
+    commit: worktree
+    sha256: b253fd93c3ae7a6afbb9e90efbc9b71bb1f8fb52c2b9f4e0986968e7f8b491a5
     summary:
-      insight: Links to Nazarick architecture, system blueprints, and repository blueprint.
+      insight: Links to Nazarick architecture, system blueprints, and the live
+        Operator MCP adoption audit.
       key_rules: Maintain curated documentation entry points.
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
@@ -447,10 +449,11 @@ documents:
       purpose: Spiral Cortex terminal guide.
       scope: Terminal interface.
   docs/system_blueprint.md:
-    commit: 8ec24f3f8a44fce594575d7fe7a0fbc61e329756
-    sha256: 9fbbfc3cdda1ad770a67b7bf47e86c9aff0b73af67662e807691ea666e44bf92
+    commit: worktree
+    sha256: c6e68868e08dd4f5bdf87ba003ae8ff2444f487a4507151cc18d45b05af7ca70
     summary:
-      insight: Describes heartbeat propagation and memory spine.
+      insight: Describes heartbeat propagation and the MCP adapter startup flow
+        for operator services.
       key_rules: Keep component changes reflected in blueprint.
       purpose: Operational architecture and recovery flows.
       scope: System components and lifecycle.

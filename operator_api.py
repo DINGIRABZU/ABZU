@@ -7,14 +7,17 @@
 
 from __future__ import annotations
 
-__version__ = "0.3.6"
+__version__ = "0.3.7"
 
+import asyncio
+import contextlib
 import json
 import logging
 import shutil
 from pathlib import Path
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import Any, Mapping
 
 from fastapi import (
     APIRouter,
@@ -44,6 +47,11 @@ from typing import cast
 from memory import query_memory
 from razar import ai_invoker, boot_orchestrator
 from scripts.ingest_ethics import ingest_ethics as run_ingest_ethics
+from connectors.operator_mcp_adapter import (
+    OperatorMCPAdapter,
+    record_rotation_drill,
+    stage_b_context_enabled,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +66,150 @@ _dispatcher = OperatorDispatcher(
 
 _event_clients: set[WebSocket] = set()
 _chat_rooms: dict[str, set[WebSocket]] = {}
+
+_MCP_ADAPTER: OperatorMCPAdapter | None = None
+_MCP_SESSION: Mapping[str, Any] | None = None
+_MCP_HEARTBEAT_TASK: asyncio.Task[None] | None = None
+_MCP_LOCK: asyncio.Lock | None = None
+_LAST_CREDENTIAL_EXPIRY: datetime | None = None
+
+
+async def _ensure_lock() -> asyncio.Lock:
+    global _MCP_LOCK
+    if _MCP_LOCK is None:
+        _MCP_LOCK = asyncio.Lock()
+    return _MCP_LOCK
+
+
+def _normalize_credential_expiry(value: Any) -> datetime | None:
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            value = value.replace(tzinfo=timezone.utc)
+        return value.astimezone(timezone.utc)
+    if isinstance(value, str):
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            logger.warning("invalid credential_expiry value: %s", value)
+            return None
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc)
+    return None
+
+
+def _process_handshake(handshake: Mapping[str, Any]) -> None:
+    global _MCP_SESSION, _LAST_CREDENTIAL_EXPIRY
+
+    session = handshake.get("session")
+    if isinstance(session, Mapping):
+        _MCP_SESSION = session
+        expiry = _normalize_credential_expiry(session.get("credential_expiry"))
+        if expiry and (
+            _LAST_CREDENTIAL_EXPIRY is None or expiry != _LAST_CREDENTIAL_EXPIRY
+        ):
+            _LAST_CREDENTIAL_EXPIRY = expiry
+            for connector_id in ("operator_api", "operator_upload"):
+                record_rotation_drill(connector_id, rotated_at=expiry)
+    else:
+        _MCP_SESSION = None
+
+
+async def _heartbeat_loop(adapter: OperatorMCPAdapter) -> None:
+    interval = getattr(adapter, "_interval", 30.0)
+    while True:
+        try:
+            payload = {
+                "event": "stage-b-heartbeat",
+                "service": "operator_api",
+                "timestamp": datetime.now(timezone.utc)
+                .replace(microsecond=0)
+                .isoformat()
+                .replace("+00:00", "Z"),
+            }
+            await adapter.emit_stage_b_heartbeat(
+                payload, credential_expiry=_LAST_CREDENTIAL_EXPIRY
+            )
+        except asyncio.CancelledError:  # pragma: no cover - shutdown path
+            raise
+        except Exception:  # pragma: no cover - best effort telemetry
+            logger.exception("operator MCP heartbeat failed")
+        await asyncio.sleep(float(interval))
+
+
+def _start_heartbeat_task(adapter: OperatorMCPAdapter) -> None:
+    global _MCP_HEARTBEAT_TASK
+    if _MCP_HEARTBEAT_TASK is not None and not _MCP_HEARTBEAT_TASK.done():
+        return
+    loop = asyncio.get_running_loop()
+    _MCP_HEARTBEAT_TASK = loop.create_task(_heartbeat_loop(adapter))
+
+
+async def _init_mcp_adapter() -> None:
+    global _MCP_ADAPTER
+
+    if not stage_b_context_enabled():
+        return
+
+    lock = await _ensure_lock()
+    async with lock:
+        adapter = _MCP_ADAPTER
+        created = False
+        if adapter is None:
+            adapter = OperatorMCPAdapter()
+            _MCP_ADAPTER = adapter
+            created = True
+
+        if adapter is None:  # pragma: no cover - defensive
+            return
+
+        handshake = await adapter.ensure_handshake()
+        _process_handshake(handshake)
+
+        if created:
+            adapter.start()
+
+        if _MCP_HEARTBEAT_TASK is None or _MCP_HEARTBEAT_TASK.done():
+            _start_heartbeat_task(adapter)
+
+
+async def _ensure_mcp_ready_for_request() -> None:
+    try:
+        await _init_mcp_adapter()
+    except Exception as exc:  # pragma: no cover - handshake failure
+        logger.exception("operator MCP handshake failed: %s", exc)
+        raise HTTPException(
+            status_code=503, detail="operator MCP handshake failed"
+        ) from exc
+
+
+@router.on_event("startup")
+async def _operator_mcp_startup() -> None:
+    try:
+        await _init_mcp_adapter()
+    except Exception:  # pragma: no cover - startup best effort
+        logger.exception("operator MCP adapter startup failed")
+
+
+@router.on_event("shutdown")
+async def _operator_mcp_shutdown() -> None:
+    global _MCP_ADAPTER, _MCP_HEARTBEAT_TASK, _MCP_SESSION, _LAST_CREDENTIAL_EXPIRY
+
+    if _MCP_HEARTBEAT_TASK is not None:
+        _MCP_HEARTBEAT_TASK.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await _MCP_HEARTBEAT_TASK
+        _MCP_HEARTBEAT_TASK = None
+
+    if _MCP_ADAPTER is not None:
+        try:
+            _MCP_ADAPTER.stop()
+        except Exception:  # pragma: no cover - defensive cleanup
+            logger.exception("operator MCP adapter shutdown failed")
+        _MCP_ADAPTER = None
+
+    _MCP_SESSION = None
+    _LAST_CREDENTIAL_EXPIRY = None
 
 
 def _log_command(entry: dict[str, object]) -> None:
@@ -151,6 +303,7 @@ async def chat_page(agents: str) -> HTMLResponse:  # pragma: no cover - simple
 @router.post("/operator/command")
 async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     """Dispatch an operator command to a target agent."""
+    await _ensure_mcp_ready_for_request()
     operator = data.get("operator", "")
     agent = data.get("agent", "")
     command_name = data.get("command", "")
@@ -345,6 +498,7 @@ async def upload_file(
     ``files`` may be empty, allowing metadata-only uploads that are still
     relayed to Crown for context.
     """
+    await _ensure_mcp_ready_for_request()
     command_id = str(uuid4())
     started_at = datetime.utcnow().isoformat()
 
