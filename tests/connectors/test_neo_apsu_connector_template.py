@@ -166,3 +166,60 @@ def test_send_heartbeat_requires_mcp_enabled(
 
     with pytest.raises(RuntimeError, match="MCP is not enabled"):
         asyncio.run(connector.send_heartbeat({"status": "ok"}))
+
+
+@pytest.mark.asyncio
+async def test_send_heartbeat_applies_canonical_metadata(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Heartbeat payloads merge canonical defaults and validate overrides."""
+
+    monkeypatch.setattr(connector, "_USE_MCP", True)
+
+    recorded: list[dict[str, object]] = []
+
+    def _capture(request: httpx.Request) -> httpx.Response:
+        recorded.append(json.loads(request.content))
+        return httpx.Response(202)
+
+    session_info = {"id": "sess-123", "expires_at": "2025-10-12T00:00:00Z"}
+
+    transport = httpx.MockTransport(_capture)
+
+    async with httpx.AsyncClient(transport=transport) as client:
+        await connector.send_heartbeat(
+            {"status": "aligned"},
+            client=client,
+            session=session_info,
+        )
+
+    assert recorded
+    baseline = recorded[-1]
+    assert baseline["chakra"] == "neo"
+    assert baseline["cycle_count"] == 0
+    assert baseline["credential_expiry"] == "2025-10-12T00:00:00Z"
+    assert baseline["context"] == "stage-b-rehearsal"
+    assert baseline["status"] == "aligned"
+
+    async with httpx.AsyncClient(transport=transport) as client:
+        await connector.send_heartbeat(
+            {"status": "aligned", "chakra": "solar", "cycle_count": 3},
+            client=client,
+            session=session_info,
+            credential_expiry="2025-12-01T00:00:00Z",
+        )
+
+    override = recorded[-1]
+    assert override["chakra"] == "solar"
+    assert override["cycle_count"] == 3
+    assert override["credential_expiry"] == "2025-12-01T00:00:00Z"
+
+    with pytest.raises(ValueError):
+        async with httpx.AsyncClient(transport=transport) as client:
+            await connector.send_heartbeat(
+                {"status": "aligned", "cycle_count": -1},
+                client=client,
+                session=session_info,
+            )
+
+    assert len(recorded) == 2
