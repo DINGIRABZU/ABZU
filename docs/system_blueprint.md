@@ -201,6 +201,11 @@ layer so operators can audit service-to-service calls.
 
 See [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) for the
 current status of each connector.
+Doctrine enforcement now requires MCP connectors to verify three items before
+deployment: registration in `component_index.json` and the connector index,
+adherence to the Stage B heartbeat schema at
+[schemas/mcp_heartbeat_payload.schema.json](../schemas/mcp_heartbeat_payload.schema.json),
+and fresh rotation metadata supplied through the capability payload.
 
 Performance and cost notes for Convex-linked connectors (Pipecat/videocall-rs and Vanna) reside in [NEOABZU/docs/convex_connector_evaluation.md](../NEOABZU/docs/convex_connector_evaluation.md).
 

@@ -111,6 +111,8 @@ abzu-memory-bootstrap
 
 ## Indices
 - [Component Index](component_index.md)
-- [Connector Index](connectors/CONNECTOR_INDEX.md)
+- [Connector Index](connectors/CONNECTOR_INDEX.md) – lists the doctrine checklist
+  for MCP connectors: registry alignment, Stage B heartbeat schema validation,
+  and credential rotation freshness.
 - [Dependency Index](dependency_index.md)
 - [Test Index](test_index.md)

@@ -177,13 +177,13 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 9f67b6b947c149a087a63d0377ed07ec63dea741bc6a3a96d59709e5662e5348
+    sha256: df069f505da93e43cc13c073b9d90c2edcf78b57162baa6e92129652955fd4d8
     summary:
-      insight: Use the PR checklist to synchronize versions, connectors, and document
-        summaries while keeping coverage high and removing placeholders before commit.
-      key_rules: Declare __version__ synced with component_index.json, include change
-        justification, verify key-document summaries, apply the core PR checklist,
-        maintain coverage thresholds, and forbid placeholder markers.
+      insight: Connector doctrine now requires registry entries, Stage B schema
+        enforcement, and credential rotation audits before deployment.
+      key_rules: Register connectors in component and connector indexes, enforce
+        heartbeat schema constraints, and keep MCP rotation metadata fresh per the
+        capability payload guide.
       purpose: Core contribution rules.
       scope: All contributors.
   docs/api_reference.md:

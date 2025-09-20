@@ -17,6 +17,14 @@ To keep integration layers discoverable and reliable:
 - Supply or update tests and docs alongside connector changes.
 - Publish JSON or YAML schemas for request and response payloads in `schemas/` and link them from [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md).
 
+## Doctrine Compliance Checklist
+
+Before deploying a Neo-APSU connector, satisfy the doctrine requirements codified in [The Absolute Protocol](../The_Absolute_Protocol.md#connector-registry-protocol):
+
+1. **Registry entry present.** Register the connector in `component_index.json` and [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md) with matching `id`, `path`, and `__version__` values so inventory tooling recognises the component.
+2. **Schema alignment.** Maintain the linked schema under `schemas/`, ensuring Stage B heartbeats require `chakra`, `cycle_count`, `context`, `credential_expiry`, and `emitted_at`, with `context` locked to `stage-b-rehearsal`.
+3. **Credential freshness.** Populate the MCP capability payload with up-to-date rotation metadata (`rotation.last_rotated`, `rotation_window`, `supports_hot_swap`) and document overrides in [mcp_capability_payload.md](mcp_capability_payload.md) so operators can audit credential health.
+
 ## Schema Conventions
 
 Connector entries share common fields:

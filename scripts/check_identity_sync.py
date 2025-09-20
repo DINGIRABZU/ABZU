@@ -63,6 +63,22 @@ def _git_last_commit(path: Path) -> datetime | None:
         return None
 
 
+def _has_uncommitted_changes(path: Path) -> bool:
+    """Return ``True`` when *path* has staged or unstaged modifications."""
+
+    try:
+        result = subprocess.run(
+            ["git", "status", "--porcelain", "--", str(path)],
+            check=True,
+            capture_output=True,
+            text=True,
+            cwd=ROOT,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return False
+    return bool(result.stdout.strip())
+
+
 def _filesystem_mtime(path: Path) -> datetime | None:
     """Return the filesystem modification time as an aware datetime."""
 
@@ -77,9 +93,14 @@ def _timestamp(path: Path) -> datetime | None:
     """Best effort timestamp for *path* using git history then filesystem data."""
 
     git_time = _git_last_commit(path)
-    if git_time is not None:
+    fs_time = _filesystem_mtime(path)
+    if git_time is None:
+        return fs_time
+    if fs_time is None:
         return git_time
-    return _filesystem_mtime(path)
+    if _has_uncommitted_changes(path):
+        return max(git_time, fs_time)
+    return git_time
 
 
 def _missing_paths(paths: Iterable[Path]) -> list[Path]:

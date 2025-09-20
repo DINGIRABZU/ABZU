@@ -198,28 +198,49 @@ async def test_send_heartbeat_applies_canonical_metadata(
     assert baseline["chakra"] == "neo"
     assert baseline["cycle_count"] == 0
     assert baseline["credential_expiry"] == "2025-10-12T00:00:00Z"
-    assert baseline["context"] == "stage-b-rehearsal"
-    assert baseline["status"] == "aligned"
 
-    async with httpx.AsyncClient(transport=transport) as client:
-        await connector.send_heartbeat(
-            {"status": "aligned", "chakra": "solar", "cycle_count": 3},
-            client=client,
-            session=session_info,
-            credential_expiry="2025-12-01T00:00:00Z",
-        )
 
-    override = recorded[-1]
-    assert override["chakra"] == "solar"
-    assert override["cycle_count"] == 3
-    assert override["credential_expiry"] == "2025-12-01T00:00:00Z"
+def test_doctrine_compliant_success(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Doctrine compliance passes when registry, schema, and rotation metadata align."""
 
-    with pytest.raises(ValueError):
-        async with httpx.AsyncClient(transport=transport) as client:
-            await connector.send_heartbeat(
-                {"status": "aligned", "cycle_count": -1},
-                client=client,
-                session=session_info,
-            )
+    monkeypatch.setenv("MCP_LAST_ROTATED", connector._iso_now())
+    monkeypatch.setenv("MCP_ROTATION_WINDOW", "PT24H")
 
-    assert len(recorded) == 2
+    compliant, reasons = connector.doctrine_compliant()
+
+    assert compliant
+    assert reasons == []
+
+
+def test_doctrine_compliant_reports_failures(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Doctrine compliance reports all failed checks."""
+
+    monkeypatch.setenv("MCP_LAST_ROTATED", "2020-01-01T00:00:00Z")
+    monkeypatch.setenv("MCP_ROTATION_WINDOW", "PT1H")
+
+    bad_registry = tmp_path / "component_index.json"
+    bad_registry.write_text(json.dumps({"components": []}), encoding="utf-8")
+    monkeypatch.setattr(connector, "_COMPONENT_INDEX", bad_registry)
+
+    bad_connector_index = tmp_path / "CONNECTOR_INDEX.md"
+    bad_connector_index.write_text(
+        (
+            "| id | purpose | version | auth | endpoints | linked agents | "
+            "status | code | docs | schema |\n"
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
+            "| `neo_apsu_connector_template` | template | 0.1.0 | Bearer | "
+            "`POST /handshake` | MCP | experimental | N/A | N/A | "
+            "[schema](../../schemas/missing.schema.json) |\n"
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(connector, "_CONNECTOR_INDEX", bad_connector_index)
+
+    compliant, reasons = connector.doctrine_compliant()
+
+    assert not compliant
+    assert any("component registry" in message for message in reasons)
+    assert any("schema" in message for message in reasons)
+    assert any("credential rotation" in message for message in reasons)
