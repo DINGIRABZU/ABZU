@@ -26,11 +26,20 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+
 from memory.bundle import MemoryBundle
 from monitoring.boot_metrics import (  # noqa: E402  (delayed import)
     MemoryInitMetricValues,
     record_memory_init_metrics,
     summarize_memory_statuses,
+)
+from check_memory_layers import (  # noqa: E402  (delayed import)
+    MemoryLayerCheckReport,
+    verify_memory_layers,
 )
 
 logger = logging.getLogger("memory.load_proof")
@@ -260,6 +269,46 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
     )
 
 
+def _append_pretest_report(
+    report: MemoryLayerCheckReport, dataset: Path, log_path: Path
+) -> None:
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "dataset": str(dataset),
+        "event": "memory-pretest",
+        "layer_statuses": report.statuses,
+        "optional_stubs": [
+            {
+                "layer": stub.layer,
+                "module": stub.module,
+                "reason": stub.reason,
+            }
+            for stub in report.optional_stubs
+        ],
+    }
+    with log_path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload))
+        handle.write("\n")
+
+
+def _run_pretest_hook(dataset: Path, log_path: Path) -> None:
+    report = verify_memory_layers()
+    if report.optional_stubs:
+        _append_pretest_report(report, dataset, log_path)
+        stub_summary = ", ".join(
+            f"{stub.layer}:{stub.module}" for stub in report.optional_stubs
+        )
+        logger.error(
+            "Optional memory stubs detected during preflight: %s", stub_summary
+        )
+        raise RuntimeError(
+            "Optional memory stubs detected. Halt load proof until primary layers"
+            " are restored."
+        )
+    logger.info("Memory layer preflight passed with %s layers", len(report.statuses))
+
+
 def _append_log(result: LoadProofResult, log_path: Path) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -288,6 +337,7 @@ def main() -> None:
         format="%(asctime)s %(levelname)s %(name)s :: %(message)s",
     )
 
+    _run_pretest_hook(args.dataset, args.log_path)
     result = run_load_proof(args)
     _append_log(result, args.log_path)
 

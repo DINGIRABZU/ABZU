@@ -3,11 +3,15 @@
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict
 
 from neoabzu_memory import MemoryBundle as _RustBundle
 
 __version__ = "0.2.0"
+
+
+logger = logging.getLogger("memory.bundle")
 
 
 class MemoryBundle:
@@ -34,13 +38,29 @@ class MemoryBundle:
         statuses = dict(result.get("statuses", {}))
         diagnostics_raw = result.get("diagnostics", {})
         diagnostics: Dict[str, Any] = {}
+        optional_fallbacks: list[tuple[str, Dict[str, Any]]] = []
         for layer, info in diagnostics_raw.items():
             entry = dict(info)
             attempts = [dict(attempt) for attempt in entry.get("attempts", [])]
             entry["attempts"] = attempts
             diagnostics[layer] = entry
+            loaded_module = entry.get("loaded_module")
+            if isinstance(loaded_module, str) and loaded_module.startswith(
+                "memory.optional."
+            ):
+                optional_fallbacks.append((layer, entry))
         self.statuses = statuses
         self.diagnostics = diagnostics
+        for layer, entry in optional_fallbacks:
+            logger.warning(
+                "Optional memory stub activated",
+                extra={
+                    "memory_layer": layer,
+                    "fallback_module": entry.get("loaded_module"),
+                    "fallback_reason": entry.get("fallback_reason"),
+                    "layer_status": entry.get("status"),
+                },
+            )
         return statuses
 
     def query(self, text: str) -> Dict[str, Any]:
