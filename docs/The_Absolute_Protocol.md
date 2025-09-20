@@ -22,6 +22,9 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Crown confirms load** exchange documents the acknowledgement handshake; see [crown_manifest.md](crown_manifest.md#crown-confirms-load-handshake) for operator guidance and [system_blueprint.md](system_blueprint.md#origins--awakening) for the architectural view.
 - **Identity readiness telemetry** requires the `crown_identity_ready` gauge to hold at `1` after `load_identity` publishes the fingerprint; monitor it via [monitoring/RAZAR.md](monitoring/RAZAR.md) and alert when the value stays `0` for more than five minutes.
 - **Audio stack enforcement** locks Stage B rehearsals to `AUDIO_BACKEND=pydub` and blocks `start_spiral_os.py` when `python -m audio.check_env --strict` cannot find FFmpeg, pydub or simpleaudio. The Stage B setup script additionally runs `modulation_arrangement.check_daw_availability` so Ardour/Carla gaps log remediation guidance while rehearsal exports fall back to audio-only renders.
+- **Audio telemetry charter** instruments `modulation_arrangement` and `src/audio/engine` with the shared `src.audio.telemetry`
+  collector so Stage B rehearsals log mix, playback, and fallback metrics documented in
+  [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md).
 
 ### Rust Migration Rules
 

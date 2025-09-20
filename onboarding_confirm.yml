@@ -177,7 +177,7 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 3de1705474e3099b3fbb94edee5b27522b1a46f946c0c40a326b4dbaf02fe790
+    sha256: 479575bd0b2e9a96c96275b75277370a0364226fd1f702ae04b99080d28423d9
     summary:
       insight: Use the PR checklist to synchronize versions, connectors, and document
         summaries while keeping coverage high and removing placeholders before commit.

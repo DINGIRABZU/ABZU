@@ -9,12 +9,15 @@ from __future__ import annotations
 import logging
 import shutil
 from pathlib import Path
+from time import perf_counter
 from typing import Dict, Iterable, List, Sequence
 
 try:  # pragma: no cover - optional dependency
     from audio.segment import AudioSegment
 except Exception:  # pragma: no cover - optional dependency
     AudioSegment = None  # type: ignore
+
+from src.audio.telemetry import telemetry
 
 
 # ---------------------------------------------------------------------------
@@ -41,11 +44,21 @@ def layer_stems(
         Iterable of gain offsets in decibels applied to each stem. ``None``
         leaves the original volume unchanged.
     """
+    start = perf_counter()
+    backend = "pydub" if AudioSegment is not None else "unavailable"
+    stem_items = list(stems.items())
     if AudioSegment is None:  # pragma: no cover - optional dependency
+        telemetry.emit(
+            "modulation.layer_stems",
+            backend=backend,
+            status="failure",
+            reason="audio_segment_unavailable",
+            stem_count=len(stem_items),
+            duration_s=perf_counter() - start,
+        )
         raise RuntimeError("pydub library required")
 
     segs: List[AudioSegment] = []
-    stem_items = list(stems.items())
     total = len(stem_items)
     pan_list = list(pans) if pans is not None else None
     vol_list = list(volumes) if volumes is not None else None
@@ -62,6 +75,14 @@ def layer_stems(
     mix = segs[0]
     for seg in segs[1:]:
         mix = mix.overlay(seg)
+
+    telemetry.emit(
+        "modulation.layer_stems",
+        backend=backend,
+        status="success",
+        stem_count=len(stem_items),
+        duration_s=perf_counter() - start,
+    )
     return mix
 
 
@@ -85,7 +106,29 @@ def apply_fades(
 
 def export_mix(segment: AudioSegment, path: Path, format: str = "wav") -> None:
     """Export ``segment`` to ``path`` in ``format``."""
-    segment.export(path, format=format)
+    start = perf_counter()
+    backend = "pydub" if hasattr(segment, "export") else "unknown"
+    try:
+        segment.export(path, format=format)
+    except Exception as exc:
+        telemetry.emit(
+            "modulation.export_mix",
+            backend=backend,
+            status="failure",
+            error=str(exc),
+            path=path,
+            format=format,
+            duration_s=perf_counter() - start,
+        )
+        raise
+    telemetry.emit(
+        "modulation.export_mix",
+        backend=backend,
+        status="success",
+        path=path,
+        format=format,
+        duration_s=perf_counter() - start,
+    )
 
 
 def export_session(
@@ -104,22 +147,69 @@ def export_session(
     session_format:
         ``"ardour"`` or ``"carla"`` to create an accompanying session file.
     """
+    overall_start = perf_counter()
     export_mix(segment, audio_path)
     if session_format is None:
+        telemetry.emit(
+            "modulation.export_session",
+            status="audio_only",
+            session_format=session_format,
+            audio_path=audio_path,
+            duration_s=perf_counter() - overall_start,
+        )
         return None
 
     try:
+        session_start = perf_counter()
         if session_format == "ardour":
-            return write_ardour_session(audio_path, audio_path.with_suffix(".ardour"))
-        if session_format == "carla":
-            return write_carla_project(audio_path, audio_path.with_suffix(".carxs"))
+            path = write_ardour_session(audio_path, audio_path.with_suffix(".ardour"))
+        elif session_format == "carla":
+            path = write_carla_project(audio_path, audio_path.with_suffix(".carxs"))
+        else:
+            telemetry.emit(
+                "modulation.export_session",
+                status="skipped",
+                session_format=session_format,
+                audio_path=audio_path,
+                duration_s=perf_counter() - session_start,
+                reason="unsupported_format",
+            )
+            return None
+        telemetry.emit(
+            "modulation.export_session",
+            status="success",
+            session_format=session_format,
+            audio_path=audio_path,
+            session_path=path,
+            duration_s=perf_counter() - session_start,
+        )
+        return path
     except DAWUnavailableError as exc:
+        telemetry.emit(
+            "modulation.export_session",
+            status="fallback",
+            session_format=session_format,
+            audio_path=audio_path,
+            duration_s=perf_counter() - overall_start,
+            available=exc.available,
+            remediation=exc.remediation,
+        )
         logger.warning(
             "Skipping %s session export because the DAW tooling is unavailable: %s",
             session_format,
             exc,
         )
         logger.debug("DAW availability snapshot: %s", exc.available)
+    except Exception as exc:
+        telemetry.emit(
+            "modulation.export_session",
+            status="failure",
+            session_format=session_format,
+            audio_path=audio_path,
+            duration_s=perf_counter() - overall_start,
+            error=str(exc),
+        )
+        raise
     return None
 
 
