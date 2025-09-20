@@ -323,6 +323,10 @@ they share a common handshake and logging surface. MCP covers calls within the
 stack and replaces bespoke HTTP clients with a unified gateway.
 
 - **MCP connectors** – `operator_api`, `operator_upload`, and `crown_handshake`
+  now list `OperatorMCPAdapter` as the bridge into the Stage B rehearsal
+  handshake/heartbeat flow. Run `scripts/stage_b_smoke.py` to validate those
+  connectors alongside `crown_handshake` and record the 48-hour credential
+  rotation drills under `logs/stage_b_rotation_drills.jsonl`.
   already speak MCP. `primordials_api` and `narrative_api` are next in line.
 - **External APIs** – Connectors that reach outside the stack, such as
   `telegram_bot`, `open_web_ui`, and the browser-facing `webrtc` bridge, remain

@@ -67,6 +67,11 @@ enters rehearsal: it must appear in `component_index.json` and
 align with [schemas/mcp_heartbeat_payload.schema.json](../schemas/mcp_heartbeat_payload.schema.json),
 and its MCP rotation metadata must confirm the credential was refreshed within
 the declared window.
+`OperatorMCPAdapter` wraps `operator_api` and `operator_upload` in that
+checklist, delegating the Stage B handshake and heartbeat to the template
+helpers. The shared `scripts/stage_b_smoke.py` run exercises those adapters with
+`crown_handshake` and appends credential rotation drills to
+`logs/stage_b_rotation_drills.jsonl`.
 
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,

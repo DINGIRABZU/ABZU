@@ -16,9 +16,12 @@ traces easier for operators to follow.
    `mcp.Client` that negotiates versions and sends structured payloads.
 3. **Update the registry.** Mark the entry in
    [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md) with `status: migrating` or `mcp`
-   once complete.
+   once complete. Reference any interim adapters (for example
+   `OperatorMCPAdapter`) so Stage B rehearsals can track coverage.
 4. **Revise schemas and tests.** Provide a JSON or YAML schema for the MCP
-   surface and expand unit tests to cover the handshake and error paths.
+   surface and expand unit tests to cover the handshake and error paths. Stage B
+   rehearsal smoke tests (`scripts/stage_b_smoke.py`) should exercise all
+   connectors listed in the `STAGE_B_TARGET_SERVICES` constant.
 
 ### Example: Converting `operator_api`
 

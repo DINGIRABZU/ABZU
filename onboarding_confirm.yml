@@ -177,13 +177,13 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: df069f505da93e43cc13c073b9d90c2edcf78b57162baa6e92129652955fd4d8
+    sha256: 1f9a998157722855567ffb40b3f101fee815cfecd6befe2e938385a01183b7d2
     summary:
-      insight: Connector doctrine now requires registry entries, Stage B schema
-        enforcement, and credential rotation audits before deployment.
+      insight: Stage B MCP rehearsals now reference `OperatorMCPAdapter` and the
+        shared smoke script to verify connector rotation logs.
       key_rules: Register connectors in component and connector indexes, enforce
         heartbeat schema constraints, and keep MCP rotation metadata fresh per the
-        capability payload guide.
+        capability payload guide and Stage B rehearsal checklist.
       purpose: Core contribution rules.
       scope: All contributors.
   docs/api_reference.md:
