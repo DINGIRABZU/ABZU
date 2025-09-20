@@ -577,6 +577,7 @@ Neo-APSU connectors must clear the doctrine checklist before deployment:
 - [Logging & Observability Protocol](#logging--observability-protocol) – structured logging and metrics requirements.
 - [Crown Handshake Protocol](#crown-handshake-protocol) – archives mission briefs and persists handshake responses.
 - [Connector Health Protocol](connector_health_protocol.md) – run `scripts/health_check_connectors.py` and merge only when all connectors are healthy.
+- [Operator MCP Runbook](connectors/operator_mcp_runbook.md) – Stage B rehearsal toggles, smoke drill workflow, rotation ledger expectations, and MCP rollback guardrails enforced by `OperatorMCPAdapter.doctrine_report`.
 
 ### Crown Handshake Protocol
 
