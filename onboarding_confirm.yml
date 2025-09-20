@@ -177,7 +177,7 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 1f9a998157722855567ffb40b3f101fee815cfecd6befe2e938385a01183b7d2
+    sha256: 3983518de637d4e290ec5f493f343c611d277465621ea6e224832192b304a6db
     summary:
       insight: Stage B MCP rehearsals now reference `OperatorMCPAdapter` and the
         shared smoke script to verify connector rotation logs.

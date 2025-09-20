@@ -159,6 +159,44 @@ for production. Every invocation appends the `layers`,
 prometheus scrapes and Stage B reviewers share a unified view of the boot
 sequence.
 
+### Memory load proof CLI
+
+Stage B readiness reviews now require a reproducible load proof against a
+10 k-record fixture. Use `python scripts/memory_load_proof.py` to initialize the
+bundle, replay stored queries, and capture latency percentiles alongside the
+`razar_memory_init_*` gauges.
+
+1. **Prepare the dataset.** The fixture must be a UTF-8 JSONL file with one
+   object per line. Each object must provide a `query` field containing the
+   text to replay. The CLI also accepts `prompt` or `text` when `query` is
+   absent, but the canonical layout is:
+
+   ```json
+   {"query": "describe the omen protocol", "metadata": {"id": 42}}
+   ```
+
+   Store the file under `data/memory/load_proofs/` (or another controlled
+   location) and ensure it includes at least **10 000** records.
+2. **Execute the load proof.** Run the CLI with the dataset path and the Stage B
+   source label used in readiness reports:
+
+   ```bash
+   python scripts/memory_load_proof.py data/memory/load_proofs/stageb_fixture.jsonl \
+     --metrics-source stageb-readiness --warmup 25
+   ```
+
+   The script measures initialization time with `time.perf_counter`, replays the
+   dataset queries, computes P50/P95/P99 latencies, and appends a JSON summary to
+   `logs/memory_load_proof.jsonl`.
+3. **Collect artifacts.** Attach the CLI stdout, the appended log entry, and the
+   Prometheus textfile (`monitoring/boot_metrics.prom` by default) to the Stage B
+   readiness package.
+
+**Acceptance thresholds.** Stage B sign-off requires `p95 ≤ 0.120 s` and
+`p99 ≤ 0.180 s` across the replayed queries. Any non-ready initialization status
+or query failure must be accompanied by operator sign-off and remediation notes
+before the load proof is accepted.
+
 ## Query aggregation
 
 Use `MemoryBundle.query` to retrieve results across cortex, vector, and spiral
