@@ -391,7 +391,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `scripts/check_env.py` | Python | Fail if required tools or packages are missing. | None |
 | `scripts/check_key_documents.py` | Python | Verify that key documents exist. | yaml |
 | `scripts/check_mcp_connectors.py` | Python | Verify connectors use MCP instead of raw HTTP endpoints. | None |
-| `scripts/check_memory_layers.py` | Python | Verify memory layers respond with seeded data. | memory |
+| `scripts/check_memory_layers.py` | Python | Verify memory layers respond with ready bootstrap data. | memory |
 | `scripts/check_neoabzu_onboarding.py` | Python | Ensure onboarding_confirm.yml updated when NEOABZU code changes. | None |
 | `scripts/check_no_binaries.py` | Python | Fail if any staged files are detected as binary. | None |
 | `scripts/check_placeholders.py` | Python | Fail if files contain TODO or FIXME placeholders. | None |
@@ -411,7 +411,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `scripts/ingest_ethics.py` | Python | Reindex ethics corpus files into the Chroma vector store. | INANNA_AI |
 | `scripts/ingest_music_books.py` | Python | Ingest music theory books into the vector memory. | pdfplumber, unstructured |
 | `scripts/ingest_sample_events.py` | Python | Ingest sample events into each memory layer and verify retrieval. | memory |
-| `scripts/init_memory_layers.py` | Python | Seed cortex, emotional, mental, spiritual and narrative stores. | memory |
+| `scripts/init_memory_layers.py` | Python | Bootstrap cortex, emotional, mental, spiritual and narrative stores. | memory |
 | `scripts/list_layers.py` | Python | Print configured personality layers and whether they are enabled. | yaml |
 | `scripts/log_intent.py` | Python | Append commit intent entries to the change ledger. | None |
 | `scripts/manage_servants.py` | Python | No description | requests |

@@ -1,6 +1,6 @@
 %% Operator query sequence diagram
-%% Version: v1.0.0
-%% Last updated: 2025-09-05
+%% Version: v1.1.0
+%% Last updated: 2025-10-07
 sequenceDiagram
     participant UI as Arcade UI
     participant API as /query_memory
@@ -10,6 +10,6 @@ sequenceDiagram
     UI->>API: submit query
     API->>MB: query_memory
     MB->>L: fan out
-    L-->>MB: results
-    MB-->>API: aggregate
+    L-->>MB: results + status (ready/skipped/error)
+    MB-->>API: aggregate + failed_layers
     API-->>UI: respond

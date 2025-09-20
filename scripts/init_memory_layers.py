@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Seed cortex, emotional, mental, spiritual and narrative stores.
+"""Bootstrap cortex, emotional, mental, spiritual and narrative stores.
 
-Creates sample records for each memory layer using file-backed stores
-and prints example queries verifying the inserts. The mental layer
-is skipped if Neo4j or its dependencies are unavailable.
+Creates sample records for each memory layer using file-backed stores,
+emits readiness states from the Rust memory bundle, and prints example
+queries verifying the inserts. The mental layer is reported as
+``skipped`` when Neo4j or its dependencies are unavailable.
 """
 from __future__ import annotations
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 
 import os
+import sys
 from pathlib import Path
 
 from memory import broadcast_layer_event
@@ -56,26 +58,54 @@ def main() -> None:
     class Node:
         children = []
 
-    statuses = {}
+    statuses: dict[str, str] = {}
 
-    record_spiral(Node(), {"result": "demo", "tags": ["example"]})
-    statuses["cortex"] = "seeded"
+    try:
+        record_spiral(Node(), {"result": "demo", "tags": ["example"]})
+    except Exception as exc:  # pragma: no cover - defensive logging
+        statuses["cortex"] = "error"
+        print(f"cortex bootstrap failed: {exc}", file=sys.stderr)
+    else:
+        statuses["cortex"] = "ready"
 
-    log_emotion([0.8], conn=emotion_conn())
-    statuses["emotional"] = "seeded"
+    try:
+        conn = emotion_conn()
+        log_emotion([0.8], conn=conn)
+    except Exception as exc:  # pragma: no cover - defensive logging
+        statuses["emotional"] = "error"
+        print(f"emotional bootstrap failed: {exc}", file=sys.stderr)
+    else:
+        statuses["emotional"] = "ready"
 
     if not _MENTAL_FALLBACK:
-        record_task_flow("taskA", {"step": 1})
-        statuses["mental"] = "seeded"
+        try:
+            record_task_flow("taskA", {"step": 1})
+        except Exception as exc:  # pragma: no cover - defensive logging
+            statuses["mental"] = "error"
+            print(f"mental bootstrap failed: {exc}", file=sys.stderr)
+        else:
+            statuses["mental"] = "ready"
     else:
         statuses["mental"] = "skipped"
 
-    spirit = spirit_conn()
-    map_to_symbol(("eclipse", "\u263E"), conn=spirit)
-    statuses["spiritual"] = "seeded"
+    spirit = None
+    try:
+        spirit = spirit_conn()
+        map_to_symbol(("eclipse", "\u263E"), conn=spirit)
+    except Exception as exc:  # pragma: no cover - defensive logging
+        statuses["spiritual"] = "error"
+        print(f"spiritual bootstrap failed: {exc}", file=sys.stderr)
+        spirit = None
+    else:
+        statuses["spiritual"] = "ready"
 
-    log_story("hero meets guide")
-    statuses["narrative"] = "seeded"
+    try:
+        log_story("hero meets guide")
+    except Exception as exc:  # pragma: no cover - defensive logging
+        statuses["narrative"] = "error"
+        print(f"narrative bootstrap failed: {exc}", file=sys.stderr)
+    else:
+        statuses["narrative"] = "ready"
 
     broadcast_layer_event(statuses)
 
@@ -85,7 +115,10 @@ def main() -> None:
         print("Mental:", query_related_tasks("taskA"))
     else:
         print("Mental: skipped (missing dependencies)")
-    print("Spiritual:", lookup_symbol_history("\u263E", conn=spirit))
+    if spirit is not None:
+        print("Spiritual:", lookup_symbol_history("\u263E", conn=spirit))
+    else:
+        print("Spiritual: error (see stderr)")
     print("Narrative:", list(stream_stories()))
 
 

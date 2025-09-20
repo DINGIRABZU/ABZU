@@ -1,11 +1,17 @@
 %% Layer initialization broadcast diagram
-%% Version: v1.0.0
-%% Last updated: 2025-09-05
+%% Version: v1.1.0
+%% Last updated: 2025-10-07
 graph TD
-    MB[MemoryBundle.initialize] --> EB[(EventBus: memory)]
-    EB --> Cortex[Cortex]
-    EB --> Emotional[Emotional]
-    EB --> Mental[Mental]
-    EB --> Spiritual[Spiritual]
-    EB --> Narrative[Narrative]
+    MB[MemoryBundle.initialize] -- layer_init<br/>ready · skipped · error --> EB[(EventBus: memory)]
+    EB -->|cortex: ready| Cortex[Cortex]
+    EB -->|emotional: ready| Emotional[Emotional]
+    EB -->|mental: skipped| Mental[Mental]
+    EB -->|spiritual: ready| Spiritual[Spiritual]
+    EB -->|narrative: ready/error| Narrative[Narrative]
+    classDef ready stroke:#24d05a,fill:#e9fcef,color:#0c3b1c;
+    classDef skipped stroke:#f5a623,fill:#fff5e6,color:#5a3d07;
+    classDef error stroke:#f04747,fill:#fdeaea,color:#5a0a0a;
+    class Cortex,Emotional,Spiritual ready;
+    class Mental skipped;
+    class Narrative error;
 

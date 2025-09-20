@@ -35,7 +35,7 @@ Ready-made helpers are available for spinning up the storage back ends:
 - [deployment/sqlite/bootstrap_memory_dbs.sh](../deployment/sqlite/bootstrap_memory_dbs.sh)
   creates SQLite files for file‑based stores.
 - [scripts/init_memory_layers.py](../scripts/init_memory_layers.py) and
-  [scripts/init_memory_layers.sh](../scripts/init_memory_layers.sh) seed all
+  [scripts/init_memory_layers.sh](../scripts/init_memory_layers.sh) bootstrap all
   layers with example records.
 
 ## Layer overview
@@ -77,7 +77,7 @@ bash scripts/init_memory_layers.sh
 python scripts/init_memory_layers.py
 ```
 
-3. Query individual stores to verify the seeded records:
+3. Query individual stores to verify the bootstrap records and confirm the bundle reports them as `ready`:
 
 ```bash
 # Cortex
