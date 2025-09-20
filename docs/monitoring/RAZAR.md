@@ -93,6 +93,17 @@ The dashboard surfaces the following signals:
   surfaces the weakest success rate so the architect can triage targeted
   escalations.
 
+Stage B readiness reviews now require the accompanying memory initialization
+gauges exported by the boot scripts. The `monitoring/boot_metrics.prom` textfile
+exposes per-source readings for `razar_memory_init_duration_seconds`, layer
+totals (`razar_memory_init_layer_total`, `…_ready_total`, `…_failed_total`), the
+binary failure flag (`razar_memory_init_error`), and the cumulative invocation
+count (`razar_memory_init_invocations_total`). Pair these gauges with the log
+fields `memory_layers`, `memory_init_duration`, `memory_init_ready`, and
+`memory_init_failed` emitted by `razar.boot_orchestrator`,
+`scripts/bootstrap_memory.py`, and `scripts/bootstrap_world.py` when proving a
+10 k-item audit to operations.
+
 ### Navigation Notes for the New Architect
 
 1. From the Grafana home page, open **Dashboards → RAZAR Failover Observability**.

@@ -60,7 +60,10 @@ from . import (
 )
 from monitoring.boot_metrics import (
     BootMetricValues,
+    MemoryInitMetricValues,
     export_metrics as export_boot_metrics,
+    record_memory_init_metrics,
+    summarize_memory_statuses,
 )
 from .bootstrap_utils import (
     HISTORY_FILE,
@@ -122,12 +125,69 @@ def load_rust_components() -> None:
     if _memory_bundle is None or _core_eval is None:
         LOGGER.debug("Rust components unavailable")
         return
+
+    def _initialize_with_metrics(source: str) -> Dict[str, str]:
+        start = time.perf_counter()
+        statuses: Dict[str, str] = {}
+        error: Optional[BaseException] = None
+        try:
+            statuses = _memory_bundle.initialize()
+            return statuses
+        except Exception as exc:  # pragma: no cover - propagates to caller
+            error = exc
+            raise
+        finally:
+            duration = time.perf_counter() - start
+            total, ready, failed = summarize_memory_statuses(statuses)
+            log_extra = {
+                "memory_init_duration": duration,
+                "memory_init_failed": failed,
+                "memory_init_ready": ready,
+                "memory_init_source": source,
+                "memory_layers": statuses,
+            }
+            if error is not None:
+                LOGGER.error(
+                    "Memory bundle initialization via %s failed after %.3fs",
+                    source,
+                    duration,
+                    exc_info=error,
+                    extra=log_extra,
+                )
+            else:
+                LOGGER.info(
+                    "Memory bundle initialization via %s completed in %.3fs "
+                    "(%s/%s ready, %s failed)",
+                    source,
+                    duration,
+                    ready,
+                    total,
+                    failed,
+                    extra=log_extra,
+                )
+            try:
+                record_memory_init_metrics(
+                    MemoryInitMetricValues(
+                        duration_seconds=float(duration),
+                        layer_total=float(total),
+                        layer_ready=float(ready),
+                        layer_failed=float(failed),
+                        source=source,
+                        error=(error is not None) or failed > 0,
+                    )
+                )
+            except Exception:  # pragma: no cover - best-effort metrics export
+                LOGGER.debug(
+                    "Unable to export memory initialization metrics", exc_info=True
+                )
+
+    source = "boot_orchestrator"
     if _tracer:
         with _tracer.start_as_current_span("razar.rust_boot"):
-            _memory_bundle.initialize()
+            _initialize_with_metrics(source)
             _core_eval("(\\x.x)")
     else:
-        _memory_bundle.initialize()
+        _initialize_with_metrics(source)
         _core_eval("(\\x.x)")
 
 

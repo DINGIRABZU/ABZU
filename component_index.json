@@ -6,7 +6,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "INANNA_AI/__init__.py",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": [
         "__future__"
       ],
@@ -124,7 +124,7 @@
       "chakra": "unknown",
       "type": "module",
       "path": "INANNA_AI_AGENT/__init__.py",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
         "builtins"
@@ -969,7 +969,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/bootstrap_memory.py",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
         "logging",
@@ -988,7 +988,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/bootstrap_world.py",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "dependencies": [
         "__future__",
         "agents",
