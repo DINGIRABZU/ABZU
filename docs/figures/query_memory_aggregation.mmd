@@ -1,6 +1,6 @@
 %% Query memory aggregation diagram
-%% Version: v1.1.0
-%% Last updated: 2025-10-07
+%% Version: v1.2.0
+%% Last updated: 2025-10-09
 graph TD
     Caller[Caller] --> MB[MemoryBundle.query]
     MB --> QM[query_memory]
@@ -11,11 +11,15 @@ graph TD
     Vector --> QM
     Spiral --> QM
     QM --> Failed[failed_layers ← error statuses]
+    QM --> Diagnostics[[diagnostics ← failed_attempts · fallbacks]]
+    Diagnostics --> StageBReview[Stage B review & gauges]
     QM --> MB
     MB --> Caller
+    MB --> BundleDiagnostics[[bundle.diagnostics cache]]
     subgraph Legend[Status Legend]
         Ready[ready → include results]
         SkippedLegend[skipped → empty responses]
         ErrorLegend[error → add to failed_layers]
+        DiagnosticsLegend[diagnostics → surface retry sources to Prometheus]
     end
 

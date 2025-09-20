@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-**Version:** v1.1.0
-**Last updated:** 2025-10-07
+**Version:** v1.2.0
+**Last updated:** 2025-10-09
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
@@ -34,6 +34,7 @@ from memory.bundle import MemoryBundle
 
 bundle = MemoryBundle()
 statuses = bundle.initialize()
+diagnostics = bundle.diagnostics
 ```
 
 The event payload contains a `layers` object populated by the Rust bundle. Each entry is one of three readiness states:
@@ -43,10 +44,64 @@ The event payload contains a `layers` object populated by the Rust bundle. Each 
 - `error` – neither the canonical module nor its fallback could initialize.
 
 ```json
-{"layers": {"cortex": "ready", "emotional": "ready", "mental": "skipped", "spiritual": "ready", "narrative": "error"}}
+{
+  "layers": {
+    "cortex": "ready",
+    "emotional": "ready",
+    "mental": "skipped",
+    "spiritual": "ready",
+    "narrative": "error"
+  },
+  "diagnostics": {
+    "failed_attempts": {"narrative": ["neoabzu.memory.narrative.Driver"]},
+    "fallbacks": {"mental": "memory.optional.mental_fallback"}
+  }
+}
 ```
 
-Clients should treat `ready` layers as active, `skipped` layers as inert no-ops, and `error` layers as failures requiring operator intervention.
+Clients should treat `ready` layers as active, `skipped` layers as inert no-ops, and `error` layers as failures requiring operator intervention. Stage B readiness reviews also surface the diagnostics payload described below so operators can confirm fallbacks and retry counts before signing off on the boot sequence.
+
+### Diagnostics payload
+
+`MemoryBundle.diagnostics` accompanies the status map on every `layer_init` broadcast. Stage B consumes this object to populate the Prometheus gauges documented in [RAZAR Failover Monitoring](monitoring/RAZAR.md) and to enrich the operations audit trail.
+
+The payload is composed of two keys:
+
+- `failed_attempts` – a mapping of layer names to the fully qualified module paths that failed to initialize.
+- `fallbacks` – a mapping of layer names to the fallback module that replaced the canonical implementation.
+
+Layers that initialize without error omit their entry from each map. An example diagnostic envelope looks like this:
+
+```json
+{
+  "layers": {
+    "cortex": "ready",
+    "emotional": "ready",
+    "mental": "skipped",
+    "spiritual": "ready",
+    "narrative": "error"
+  },
+  "diagnostics": {
+    "failed_attempts": {
+      "narrative": ["neoabzu.memory.narrative.Driver"],
+      "mental": ["neoabzu.memory.mental.Driver"]
+    },
+    "fallbacks": {
+      "mental": "memory.optional.mental_fallback"
+    }
+  }
+}
+```
+
+The bundle caches the latest diagnostics under `MemoryBundle.diagnostics` so clients can retrieve the data after initialization:
+
+```python
+bundle = MemoryBundle()
+bundle.initialize()
+print(bundle.diagnostics["failed_attempts"])  # {"narrative": ["neoabzu.memory.narrative.Driver"]}
+```
+
+Stage B inspectors compare these values with the gauges emitted under the `razar_memory_init_*` namespace to confirm fallbacks and failures were logged.
 
 ```mermaid
 {{#include figures/layer_init_broadcast.mmd}}
@@ -67,18 +122,21 @@ from memory.bundle import MemoryBundle
 
 bundle = MemoryBundle()
 statuses = bundle.initialize()
+diagnostics = bundle.diagnostics
 records = bundle.query("omen")
 ```
 
 `initialize()` imports each layer and immediately calls
-`broadcast_layer_event()` with the resulting status mapping. During package
-import every layer attempts to load its implementation and transparently
-falls back to the module in `memory.optional` if dependencies are missing.
-Substituted layers are marked as `skipped`; initialization continues and
-emits a consolidated result regardless of missing components. When both the
-canonical module and its fallback fail, the bundle labels the layer `error`
-so orchestration services can respond without blocking the remaining
-stores.
+`broadcast_layer_event()` with the resulting status mapping and diagnostics.
+During package import every layer attempts to load its implementation and
+transparently falls back to the module in `memory.optional` if dependencies
+are missing. Substituted layers are marked as `skipped`; initialization
+continues and emits a consolidated result regardless of missing components.
+When both the canonical module and its fallback fail, the bundle labels the
+layer `error` so orchestration services can respond without blocking the
+remaining stores. The diagnostics maps record which fallbacks activated and
+which imports failed so tooling can reconcile Prometheus gauges with the
+bundle event stream.
 
 ### Command-line bootstrap
 
@@ -89,7 +147,17 @@ and log layer statuses:
 memory-bootstrap
 ```
 
-Use this during development to verify all layers import correctly.
+Use this during development to verify all layers import correctly. The script
+logs `memory_init_duration`, `memory_init_ready`, and `memory_init_failed` in
+addition to the layer map, and it writes latency samples to the
+`razar_memory_init_duration_seconds` Prometheus gauge exposed alongside
+Stage B telemetry.
+
+`razar.boot_orchestrator` records the same metrics when staging the bundle
+for production. Every invocation appends the `layers`,
+`MemoryBundle.diagnostics`, and the latency counters to the operations log so
+prometheus scrapes and Stage B reviewers share a unified view of the boot
+sequence.
 
 ## Query aggregation
 
