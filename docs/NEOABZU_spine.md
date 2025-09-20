@@ -45,7 +45,11 @@ Rust crate or pipeline adjustments must update [system_blueprint.md](system_blue
 Stage B sonic rehearsals now require the audio stack guardrail introduced in
 `start_spiral_os.py`: the bootstrap aborts when `python -m audio.check_env
 --strict` reports missing FFmpeg, pydub or simpleaudio, enforcing
-`AUDIO_BACKEND=pydub` before rehearsals continue.
+`AUDIO_BACKEND=pydub` before rehearsals continue. The companion
+`scripts/setup_audio_env.sh` ritual calls
+`modulation_arrangement.check_daw_availability` so missing Ardour or Carla
+executables surface as warnings and rehearsal exports fall back to audio-only
+renders until the DAWs land on PATH.
 
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,
