@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.106
-**Last updated:** 2025-10-15
+**Version:** v1.0.107
+**Last updated:** 2025-10-16
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -21,6 +21,7 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Identity loader** now resides in Rust; Crown boot caches mission and persona summary in `data/identity.json`, registers the embedding in vector/corpus memory for retrieval-aware routing, and refuses to proceed until the GLM echoes `CROWN-IDENTITY-ACK` after doctrine synthesis. Run `python scripts/check_identity_sync.py` after editing the mission, persona, Absolute Protocol, ABZU blueprint, or awakening overview doctrine. If the check flags drift, regenerate the summary with `python scripts/refresh_crown_identity.py --use-stub` before committing.
 - **Crown confirms load** exchange documents the acknowledgement handshake; see [crown_manifest.md](crown_manifest.md#crown-confirms-load-handshake) for operator guidance and [system_blueprint.md](system_blueprint.md#origins--awakening) for the architectural view.
 - **Identity readiness telemetry** requires the `crown_identity_ready` gauge to hold at `1` after `load_identity` publishes the fingerprint; monitor it via [monitoring/RAZAR.md](monitoring/RAZAR.md) and alert when the value stays `0` for more than five minutes.
+- **Memory initialization diagnostics** extend `scripts/bootstrap_memory.py` with Prometheus gauges that validate the 10 k-item audit workflow; dashboards, alerts, and troubleshooting live in [monitoring/RAZAR.md](monitoring/RAZAR.md), while readiness expectations are codified in [memory_layers_GUIDE.md](memory_layers_GUIDE.md#diagnostics-payload).
 - **Audio stack enforcement** locks Stage B rehearsals to `AUDIO_BACKEND=pydub` and blocks `start_spiral_os.py` when `python -m audio.check_env --strict` cannot find FFmpeg, pydub or simpleaudio. The Stage B setup script additionally runs `modulation_arrangement.check_daw_availability` so Ardour/Carla gaps log remediation guidance while rehearsal exports fall back to audio-only renders.
 - **Audio telemetry charter** instruments `modulation_arrangement` and `src/audio/engine` with the shared `src.audio.telemetry`
   collector so Stage B rehearsals log mix, playback, and fallback metrics documented in
