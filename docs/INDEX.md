@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -382,16 +381,16 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [figures/agent_relations.mmd](figures/agent_relations.mmd) | Crown, Nazarick, and operator interaction diagram | Version: v1.0.0 Last updated: 2025-09-08 | - |
 | [figures/chakra_architecture.mmd](figures/chakra_architecture.mmd) | chakra_architecture.mmd | - | - |
 | [figures/heartbeat_self_healing.mmd](figures/heartbeat_self_healing.mmd) | heartbeat_self_healing.mmd | - | - |
-| [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.1.0 Last updated: 2025-10-07 | - |
-| [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) | layer_init_query_flow.mmd | - | - |
-| [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.2.0 Last updated: 2025-10-07 | - |
+| [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.2.0 Last updated: 2025-10-09 | - |
+| [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) | layer_init and query flow diagram | Version: v1.1.0 Last updated: 2025-10-09 | - |
+| [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.3.0 Last updated: 2025-10-09 | - |
 | [figures/memory_layer_flow.mmd](figures/memory_layer_flow.mmd) | Memory layer flow diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/nazarick_agents_chart.mmd](figures/nazarick_agents_chart.mmd) | nazarick_agents_chart.mmd | - | - |
 | [figures/nazarick_crown_razar_integration.mmd](figures/nazarick_crown_razar_integration.mmd) | nazarick_crown_razar_integration.mmd | - | - |
 | [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd) | nazarick_ui_pipeline.mmd | - | - |
 | [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.1.0 Last updated: 2025-10-07 | - |
 | [figures/pyo3_interfaces.mmd](figures/pyo3_interfaces.mmd) | pyo3_interfaces.mmd | - | - |
-| [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.1.0 Last updated: 2025-10-07 | - |
+| [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.2.0 Last updated: 2025-10-09 | - |
 | [figures/razar_crown_kimicho_flow.mmd](figures/razar_crown_kimicho_flow.mmd) | razar_crown_kimicho_flow.mmd | - | - |
 | [figures/rust_crate_boundaries.mmd](figures/rust_crate_boundaries.mmd) | rust_crate_boundaries.mmd | - | - |
 | [figures/system_tear_matrix.mmd](figures/system_tear_matrix.mmd) | system_tear_matrix.mmd | - | - |
@@ -415,7 +414,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_cortex.md](memory_cortex.md) | Cortex Memory Search | The `memory.cortex` module stores spiral decisions as JSON lines under `data/cortex_memory_spiral.jsonl`. Each entry... | - |
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
-| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.1.0 **Last updated:** 2025-10-07 | - |
+| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.2.0 **Last updated:** 2025-10-09 | - |
 | [migration_crosswalk.md](migration_crosswalk.md) | Migration Crosswalk | For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md). | - |
 | [migration_playbooks/crown.md](migration_playbooks/crown.md) | Crown Migration Playbook | - | - |
 | [migration_playbooks/razar.md](migration_playbooks/razar.md) | RAZAR Migration Playbook | - | - |
@@ -504,7 +503,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [system_blueprint.md](system_blueprint.md) | System Blueprint | - | `../INANNA_AI/db_storage.py`, `../INANNA_AI/ethical_validator.py`, `../INANNA_AI_AGENT/inanna_ai.py`, `../SPIRAL_OS/qnl_engine.py`, `../agents/cocytus/prompt_arbiter.py`, `../agents/demiurge/strategic_simulator.py`, `../agents/land_graph/geo_knowledge.py`, `../agents/pandora/persona_emulator.py`, `../agents/pleiades/signal_router.py`, `../agents/razar/code_repair.py`, `../agents/razar/doc_sync.py`, `../agents/razar/ignition_builder.py`, `../agents/razar/lifecycle_bus.py`, `../agents/razar/pytest_runner.py`, `../agents/razar/recovery_manager.py`, `../agents/razar/remote_loader.py`, `../agents/razar/runtime_manager.py`, `../agents/sebas/compassion_module.py`, `../agents/shalltear/fast_inference_agent.py`, `../agents/vanna_data.py`, `../agents/victim/security_canary.py`, `../connectors/signal_bus.py`, `../crown_prompt_orchestrator.py`, `../emotion_registry.py`, `../emotional_state.py`, `../examples/vision_wall_demo.py`, `../init_crown_agent.py`, `../insight_compiler.py`, `../learning_mutator.py`, `../memory_scribe.py`, `../memory_store.py`, `../operator_api.py`, `../orchestration_master.py`, `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py`, `../razar/adaptive_orchestrator.py`, `../razar/boot_orchestrator.py`, `../razar/checkpoint_manager.py`, `../razar/cocreation_planner.py`, `../razar/crown_link.py`, `../razar/environment_builder.py`, `../razar/health_checks.py`, `../razar/issue_analyzer.py`, `../razar/mission_logger.py`, `../razar/quarantine_manager.py`, `../razar/status_dashboard.py`, `../scripts/ingest_ethics.py`, `../server.py`, `../spiral_vector_db/__init__.py`, `../src/spiral_os/chakra_cycle.py`, `../start_dev_agents.py`, `../start_spiral_os.py`, `../state_transition_engine.py`, `../tools/dev_orchestrator.py`, `../vector_memory.py` |
 | [system_overview.md](system_overview.md) | System Overview | High-level orientation of ABZU's architecture and guiding design. | - |
 | [test_index.md](test_index.md) | Test Index | Generated automatically. Catalog of test modules and scenarios. | - |
-| [testing/failure_inventory.md](testing/failure_inventory.md) | Failure Inventory | Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`](../../scripts/capture_failing_tests... | `../../scripts/capture_failing_tests.py` |
 | [testing.md](testing.md) | Testing | ```mermaid flowchart LR D[Developer] --> T[pytest] T --> R[Report] ``` | - |
 | [testing_music_pipeline.md](testing_music_pipeline.md) | Testing Music Pipeline | To run the unit tests for the ritual music pipeline: | - |
 | [the_absolute_pytest.md](the_absolute_pytest.md) | The Absolute Pytest | > **Note:** Before writing tests, review [blueprint_spine.md](blueprint_spine.md) and consult the [Code Index](code_i... | - |

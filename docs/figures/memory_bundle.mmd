@@ -1,9 +1,14 @@
 %% Memory bundle initialization and query aggregation diagram
-%% Version: v1.2.0
-%% Last updated: 2025-10-07
+%% Version: v1.3.0
+%% Last updated: 2025-10-09
 flowchart LR
     subgraph Init[Layer Initialization]
-        MBInit[MemoryBundle.initialize] --> Bus[(EventBus: memory)]
+        MBInit[MemoryBundle.initialize]
+        MBInit --> StatusMap[[Status Map<br/>layers{ready · skipped · error}]]
+        MBInit --> Diagnostics[[Diagnostics<br/>failed_attempts · fallbacks]]
+        StatusMap --> Bus[(EventBus: memory)]
+        Diagnostics --> StageB[Stage B Review]
+        StageB --> Gauges[[Prometheus Gauges<br/>razar_memory_init_*]]
         Bus --> Cortex[Cortex]
         Bus --> Emotional[Emotional]
         Bus --> Mental[Mental]
@@ -14,6 +19,7 @@ flowchart LR
         Ready[ready → canonical layer online]
         Skipped[skipped → Python fallback engaged]
         Error[error → initialization failed]
+        DiagnosticsLegend[diagnostics → failed_attempts & fallbacks surfaced to Stage B]
     end
     subgraph Query[Query Aggregation]
         Caller[Caller] --> MBQuery[MemoryBundle.query]
@@ -28,4 +34,5 @@ flowchart LR
         QSpiritual --> MBQuery
         QNarrative --> MBQuery
         MBQuery --> Caller
+        MBQuery --> QueryDiagnostics[[bundle.diagnostics<br/>latest failed_attempts · fallbacks]]
     end

@@ -1,9 +1,14 @@
+%% layer_init and query flow diagram
+%% Version: v1.1.0
+%% Last updated: 2025-10-09
 flowchart LR
-    layer_init[(layer_init<br/>ready · skipped · error)] --> Cortex
+    layer_init[(layer_init<br/>layers map)] --> Cortex
     layer_init --> Emotional
     layer_init --> Mental
     layer_init --> Spiritual
     layer_init --> Narrative
+    layer_init --> Diagnostics[[diagnostics<br/>failed_attempts · fallbacks]]
+    Diagnostics --> StageB[Stage B gauges]
 
     Query[query_memory] --> Cortex
     Query --> Emotional
@@ -18,4 +23,5 @@ flowchart LR
     Narrative --> Aggregate
 
     Aggregate --> StatusMap[Status map + failed_layers]
+    Aggregate --> QueryDiagnostics[[bundle.diagnostics cache]]
     StatusMap --> OperatorAgent[Operator Agent]

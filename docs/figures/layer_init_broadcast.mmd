@@ -1,8 +1,12 @@
 %% Layer initialization broadcast diagram
-%% Version: v1.1.0
-%% Last updated: 2025-10-07
+%% Version: v1.2.0
+%% Last updated: 2025-10-09
 graph TD
-    MB[MemoryBundle.initialize] -- layer_init<br/>ready · skipped · error --> EB[(EventBus: memory)]
+    MB[MemoryBundle.initialize]
+    MB -->|layer_init<br/>layers map| EB[(EventBus: memory)]
+    MB -->|layer_init<br/>diagnostics| Diagnostics[[Diagnostics<br/>failed_attempts · fallbacks]]
+    Diagnostics --> StageB[Stage B readiness]
+    StageB --> Gauges[[Prometheus<br/>razar_memory_init_*]]
     EB -->|cortex: ready| Cortex[Cortex]
     EB -->|emotional: ready| Emotional[Emotional]
     EB -->|mental: skipped| Mental[Mental]
