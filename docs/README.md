@@ -6,6 +6,7 @@ Milestone VIII expands on the sovereign voice work with memory-aided routing and
 
 - [ALBEDO_LAYER.md](ALBEDO_LAYER.md)
 - [CORPUS_MEMORY.md](CORPUS_MEMORY.md)
+- [corpus_ingestion.md](corpus_ingestion.md)
 - [CROWN_OVERVIEW.md](CROWN_OVERVIEW.md)
 - [DASHBOARD.md](DASHBOARD.md)
 - [ETHICS_VALIDATION.md](ETHICS_VALIDATION.md)

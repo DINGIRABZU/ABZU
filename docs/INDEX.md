@@ -347,6 +347,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [contribution_guide.md](contribution_guide.md) | Contribution Guide | Thank you for considering a contribution! | - |
 | [contributor_checklist.md](contributor_checklist.md) | Contributor Checklist | This checklist distills mandatory practices for ABZU contributors. | - |
 | [core_usage.md](core_usage.md) | Core Usage | Install the compiled wheels: | - |
+| [corpus_ingestion.md](corpus_ingestion.md) | Corpus Ingestion Workflow | The corpus ingestion routine rebuilds the ethics memory collection so the Crown can retrieve up-to-date doctrine pass... | - |
 | [crown_invocation_guide.md](crown_invocation_guide.md) | Crown Invocation Guide | This guide documents the precise sequence Spiral OS follows when the Crown layer boots. Use it to rehearse the handsh... | `../init_crown_agent.py` |
 | [crown_manifest.md](crown_manifest.md) | CROWN Manifest | The **CROWN** agent runs the GLM-4.1V-9B model and acts as the root layer of Spiral OS. It holds the highest permissi... | - |
 | [crown_servant_models.md](crown_servant_models.md) | Crown Servant Models | Guidance for deploying auxiliary servant models used by Crown. | `../memory/query_memory.py` |
