@@ -26,9 +26,11 @@ def main() -> int:
             continue
         if path.suffix.lower() == ".md":
             continue
+        if path.is_dir():
+            continue
         try:
             content = path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, FileNotFoundError):
+        except (UnicodeDecodeError, FileNotFoundError, IsADirectoryError):
             continue
         for line_no, line in enumerate(content.splitlines(), 1):
             if PLACEHOLDER_RE.search(line):

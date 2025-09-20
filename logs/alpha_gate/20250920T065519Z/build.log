@@ -1,0 +1,333 @@
+[2025-09-20T06:55:19Z] Starting packaging phase
+[2025-09-20T06:55:19Z] Cleaning dist/ directory
+[2025-09-20T06:55:19Z] Building wheel via python -m build --wheel
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=61
+* Getting build dependencies for wheel...
+/tmp/build-env-8nlpitz3/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        By 2026-Feb-18, you need to update your project and remove deprecated calls
+        or your builds will no longer be supported.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+  corresp(dist, value, root_dir)
+/tmp/build-env-8nlpitz3/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsWarning: `install_requires` overwritten in `pyproject.toml` (dependencies)
+  corresp(dist, value, root_dir)
+running egg_info
+writing src/spiral_os.egg-info/PKG-INFO
+writing dependency_links to src/spiral_os.egg-info/dependency_links.txt
+writing entry points to src/spiral_os.egg-info/entry_points.txt
+writing requirements to src/spiral_os.egg-info/requires.txt
+writing top-level names to src/spiral_os.egg-info/top_level.txt
+reading manifest file 'src/spiral_os.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/spiral_os.egg-info/SOURCES.txt'
+* Building wheel...
+/tmp/build-env-8nlpitz3/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
+!!
+
+        ********************************************************************************
+        Please use a simple string containing a SPDX expression for `project.license`. You can also use `project.license-files`. (Both options available on setuptools>=77.0.0).
+
+        By 2026-Feb-18, you need to update your project and remove deprecated calls
+        or your builds will no longer be supported.
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+  corresp(dist, value, root_dir)
+/tmp/build-env-8nlpitz3/lib/python3.12/site-packages/setuptools/config/_apply_pyprojecttoml.py:82: SetuptoolsWarning: `install_requires` overwritten in `pyproject.toml` (dependencies)
+  corresp(dist, value, root_dir)
+running bdist_wheel
+running build
+running build_py
+copying src/cli/music_helper.py -> build/lib/cli
+copying src/cli/voice_clone.py -> build/lib/cli
+copying src/cli/spiral_cortex_terminal.py -> build/lib/cli
+copying src/cli/voice.py -> build/lib/cli
+copying src/cli/__init__.py -> build/lib/cli
+copying src/cli/console_interface.py -> build/lib/cli
+copying src/cli/sandbox_helper.py -> build/lib/cli
+copying src/cli/voice_clone_helper.py -> build/lib/cli
+copying src/bin/vector_client.py -> build/lib/bin
+copying src/api/memory_introspect.py -> build/lib/api
+copying src/api/__init__.py -> build/lib/api
+copying src/api/server.py -> build/lib/api
+copying src/lwm/__init__.py -> build/lib/lwm
+copying src/lwm/large_world_model.py -> build/lib/lwm
+copying src/lwm/config_model.py -> build/lib/lwm
+copying src/core/task_parser.py -> build/lib/core
+copying src/core/language_engine.py -> build/lib/core
+copying src/core/memory_physical.py -> build/lib/core
+copying src/core/context_tracker.py -> build/lib/core
+copying src/core/memory_logger.py -> build/lib/core
+copying src/core/task_profiler.py -> build/lib/core
+copying src/core/video_engine.py -> build/lib/core
+copying src/core/model_selector.py -> build/lib/core
+copying src/core/contracts.py -> build/lib/core
+copying src/core/config.py -> build/lib/core
+copying src/core/self_correction_engine.py -> build/lib/core
+copying src/core/__init__.py -> build/lib/core
+copying src/core/expressive_output.py -> build/lib/core
+copying src/core/avatar_expression_engine.py -> build/lib/core
+copying src/core/feedback_logging.py -> build/lib/core
+copying src/core/code_introspector.py -> build/lib/core
+copying src/core/emotion_analyzer.py -> build/lib/core
+copying src/core/facial_expression_controller.py -> build/lib/core
+copying src/audio/waveform.py -> build/lib/audio
+copying src/audio/stego.py -> build/lib/audio
+copying src/audio/mix_tracks.py -> build/lib/audio
+copying src/audio/segment.py -> build/lib/audio
+copying src/audio/engine.py -> build/lib/audio
+copying src/audio/voice_cloner.py -> build/lib/audio
+copying src/audio/check_env.py -> build/lib/audio
+copying src/audio/emotion_params.py -> build/lib/audio
+copying src/audio/backends.py -> build/lib/audio
+copying src/audio/__init__.py -> build/lib/audio
+copying src/audio/play_ritual_music.py -> build/lib/audio
+copying src/audio/dsp_engine.py -> build/lib/audio
+copying src/audio/voice_aura.py -> build/lib/audio
+copying src/audio/audio_ingestion.py -> build/lib/audio
+copying src/health/boot_diagnostics.py -> build/lib/health
+copying src/health/__init__.py -> build/lib/health
+copying src/health/essential_services.py -> build/lib/health
+copying src/media/base.py -> build/lib/media
+copying src/media/__init__.py -> build/lib/media
+copying src/dashboard/qnl_mixer.py -> build/lib/dashboard
+copying src/dashboard/rl_metrics.py -> build/lib/dashboard
+copying src/dashboard/app.py -> build/lib/dashboard
+copying src/dashboard/__init__.py -> build/lib/dashboard
+copying src/dashboard/usage.py -> build/lib/dashboard
+copying src/dashboard/system_monitor.py -> build/lib/dashboard
+copying src/spiral_os/pulse_emitter.py -> build/lib/spiral_os
+copying src/spiral_os/chakra_cycle.py -> build/lib/spiral_os
+copying src/spiral_os/__main__.py -> build/lib/spiral_os
+copying src/spiral_os/_hf_stub.py -> build/lib/spiral_os
+copying src/spiral_os/__init__.py -> build/lib/spiral_os
+copying src/spiral_os/start_spiral_os.py -> build/lib/spiral_os
+copying src/core/utils/seed.py -> build/lib/core/utils
+copying src/core/utils/optional_deps.py -> build/lib/core/utils
+copying src/media/video/playback.py -> build/lib/media/video
+copying src/media/video/base.py -> build/lib/media/video
+copying src/media/video/generation.py -> build/lib/media/video
+copying src/media/video/__init__.py -> build/lib/media/video
+copying src/media/audio/playback.py -> build/lib/media/audio
+copying src/media/audio/base.py -> build/lib/media/audio
+copying src/media/audio/backends.py -> build/lib/media/audio
+copying src/media/audio/generation.py -> build/lib/media/audio
+copying src/media/audio/__init__.py -> build/lib/media/audio
+copying src/media/avatar/playback.py -> build/lib/media/avatar
+copying src/media/avatar/base.py -> build/lib/media/avatar
+copying src/media/avatar/generation.py -> build/lib/media/avatar
+copying src/media/avatar/__init__.py -> build/lib/media/avatar
+copying src/media/avatar/lwm_renderer.py -> build/lib/media/avatar
+running egg_info
+writing src/spiral_os.egg-info/PKG-INFO
+writing dependency_links to src/spiral_os.egg-info/dependency_links.txt
+writing entry points to src/spiral_os.egg-info/entry_points.txt
+writing requirements to src/spiral_os.egg-info/requires.txt
+writing top-level names to src/spiral_os.egg-info/top_level.txt
+reading manifest file 'src/spiral_os.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/spiral_os.egg-info/SOURCES.txt'
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/cli
+copying build/lib/cli/music_helper.py -> build/bdist.linux-x86_64/wheel/./cli
+copying build/lib/cli/voice_clone.py -> build/bdist.linux-x86_64/wheel/./cli
+copying build/lib/cli/spiral_cortex_terminal.py -> build/bdist.linux-x86_64/wheel/./cli
+copying build/lib/cli/voice.py -> build/bdist.linux-x86_64/wheel/./cli
+copying build/lib/cli/__init__.py -> build/bdist.linux-x86_64/wheel/./cli
+copying build/lib/cli/console_interface.py -> build/bdist.linux-x86_64/wheel/./cli
+copying build/lib/cli/sandbox_helper.py -> build/bdist.linux-x86_64/wheel/./cli
+copying build/lib/cli/voice_clone_helper.py -> build/bdist.linux-x86_64/wheel/./cli
+creating build/bdist.linux-x86_64/wheel/bin
+copying build/lib/bin/vector_client.py -> build/bdist.linux-x86_64/wheel/./bin
+creating build/bdist.linux-x86_64/wheel/api
+copying build/lib/api/memory_introspect.py -> build/bdist.linux-x86_64/wheel/./api
+copying build/lib/api/__init__.py -> build/bdist.linux-x86_64/wheel/./api
+copying build/lib/api/server.py -> build/bdist.linux-x86_64/wheel/./api
+creating build/bdist.linux-x86_64/wheel/lwm
+copying build/lib/lwm/__init__.py -> build/bdist.linux-x86_64/wheel/./lwm
+copying build/lib/lwm/large_world_model.py -> build/bdist.linux-x86_64/wheel/./lwm
+copying build/lib/lwm/config_model.py -> build/bdist.linux-x86_64/wheel/./lwm
+creating build/bdist.linux-x86_64/wheel/core
+copying build/lib/core/task_parser.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/language_engine.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/memory_physical.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/context_tracker.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/memory_logger.py -> build/bdist.linux-x86_64/wheel/./core
+creating build/bdist.linux-x86_64/wheel/core/utils
+copying build/lib/core/utils/seed.py -> build/bdist.linux-x86_64/wheel/./core/utils
+copying build/lib/core/utils/optional_deps.py -> build/bdist.linux-x86_64/wheel/./core/utils
+copying build/lib/core/task_profiler.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/video_engine.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/model_selector.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/contracts.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/config.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/self_correction_engine.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/__init__.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/expressive_output.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/avatar_expression_engine.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/feedback_logging.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/code_introspector.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/emotion_analyzer.py -> build/bdist.linux-x86_64/wheel/./core
+copying build/lib/core/facial_expression_controller.py -> build/bdist.linux-x86_64/wheel/./core
+creating build/bdist.linux-x86_64/wheel/audio
+copying build/lib/audio/waveform.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/stego.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/mix_tracks.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/segment.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/engine.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/voice_cloner.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/check_env.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/emotion_params.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/backends.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/__init__.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/play_ritual_music.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/dsp_engine.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/voice_aura.py -> build/bdist.linux-x86_64/wheel/./audio
+copying build/lib/audio/audio_ingestion.py -> build/bdist.linux-x86_64/wheel/./audio
+creating build/bdist.linux-x86_64/wheel/health
+copying build/lib/health/boot_diagnostics.py -> build/bdist.linux-x86_64/wheel/./health
+copying build/lib/health/__init__.py -> build/bdist.linux-x86_64/wheel/./health
+copying build/lib/health/essential_services.py -> build/bdist.linux-x86_64/wheel/./health
+creating build/bdist.linux-x86_64/wheel/media
+creating build/bdist.linux-x86_64/wheel/media/video
+copying build/lib/media/video/playback.py -> build/bdist.linux-x86_64/wheel/./media/video
+copying build/lib/media/video/base.py -> build/bdist.linux-x86_64/wheel/./media/video
+copying build/lib/media/video/generation.py -> build/bdist.linux-x86_64/wheel/./media/video
+copying build/lib/media/video/__init__.py -> build/bdist.linux-x86_64/wheel/./media/video
+creating build/bdist.linux-x86_64/wheel/media/audio
+copying build/lib/media/audio/playback.py -> build/bdist.linux-x86_64/wheel/./media/audio
+copying build/lib/media/audio/base.py -> build/bdist.linux-x86_64/wheel/./media/audio
+copying build/lib/media/audio/backends.py -> build/bdist.linux-x86_64/wheel/./media/audio
+copying build/lib/media/audio/generation.py -> build/bdist.linux-x86_64/wheel/./media/audio
+copying build/lib/media/audio/__init__.py -> build/bdist.linux-x86_64/wheel/./media/audio
+copying build/lib/media/base.py -> build/bdist.linux-x86_64/wheel/./media
+creating build/bdist.linux-x86_64/wheel/media/avatar
+copying build/lib/media/avatar/playback.py -> build/bdist.linux-x86_64/wheel/./media/avatar
+copying build/lib/media/avatar/base.py -> build/bdist.linux-x86_64/wheel/./media/avatar
+copying build/lib/media/avatar/generation.py -> build/bdist.linux-x86_64/wheel/./media/avatar
+copying build/lib/media/avatar/__init__.py -> build/bdist.linux-x86_64/wheel/./media/avatar
+copying build/lib/media/avatar/lwm_renderer.py -> build/bdist.linux-x86_64/wheel/./media/avatar
+copying build/lib/media/__init__.py -> build/bdist.linux-x86_64/wheel/./media
+creating build/bdist.linux-x86_64/wheel/dashboard
+copying build/lib/dashboard/qnl_mixer.py -> build/bdist.linux-x86_64/wheel/./dashboard
+copying build/lib/dashboard/rl_metrics.py -> build/bdist.linux-x86_64/wheel/./dashboard
+copying build/lib/dashboard/app.py -> build/bdist.linux-x86_64/wheel/./dashboard
+copying build/lib/dashboard/__init__.py -> build/bdist.linux-x86_64/wheel/./dashboard
+copying build/lib/dashboard/usage.py -> build/bdist.linux-x86_64/wheel/./dashboard
+copying build/lib/dashboard/system_monitor.py -> build/bdist.linux-x86_64/wheel/./dashboard
+creating build/bdist.linux-x86_64/wheel/spiral_os
+copying build/lib/spiral_os/pulse_emitter.py -> build/bdist.linux-x86_64/wheel/./spiral_os
+copying build/lib/spiral_os/chakra_cycle.py -> build/bdist.linux-x86_64/wheel/./spiral_os
+copying build/lib/spiral_os/__main__.py -> build/bdist.linux-x86_64/wheel/./spiral_os
+copying build/lib/spiral_os/_hf_stub.py -> build/bdist.linux-x86_64/wheel/./spiral_os
+copying build/lib/spiral_os/__init__.py -> build/bdist.linux-x86_64/wheel/./spiral_os
+copying build/lib/spiral_os/start_spiral_os.py -> build/bdist.linux-x86_64/wheel/./spiral_os
+running install_egg_info
+Copying src/spiral_os.egg-info to build/bdist.linux-x86_64/wheel/./spiral_os-0.1.0-py3.12.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/spiral_os-0.1.0.dist-info/WHEEL
+creating '/workspace/ABZU/dist/.tmp-5wdtrxy6/spiral_os-0.1.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'api/__init__.py'
+adding 'api/memory_introspect.py'
+adding 'api/server.py'
+adding 'audio/__init__.py'
+adding 'audio/audio_ingestion.py'
+adding 'audio/backends.py'
+adding 'audio/check_env.py'
+adding 'audio/dsp_engine.py'
+adding 'audio/emotion_params.py'
+adding 'audio/engine.py'
+adding 'audio/mix_tracks.py'
+adding 'audio/play_ritual_music.py'
+adding 'audio/segment.py'
+adding 'audio/stego.py'
+adding 'audio/voice_aura.py'
+adding 'audio/voice_cloner.py'
+adding 'audio/waveform.py'
+adding 'bin/vector_client.py'
+adding 'cli/__init__.py'
+adding 'cli/console_interface.py'
+adding 'cli/music_helper.py'
+adding 'cli/sandbox_helper.py'
+adding 'cli/spiral_cortex_terminal.py'
+adding 'cli/voice.py'
+adding 'cli/voice_clone.py'
+adding 'cli/voice_clone_helper.py'
+adding 'core/__init__.py'
+adding 'core/avatar_expression_engine.py'
+adding 'core/code_introspector.py'
+adding 'core/config.py'
+adding 'core/context_tracker.py'
+adding 'core/contracts.py'
+adding 'core/emotion_analyzer.py'
+adding 'core/expressive_output.py'
+adding 'core/facial_expression_controller.py'
+adding 'core/feedback_logging.py'
+adding 'core/language_engine.py'
+adding 'core/memory_logger.py'
+adding 'core/memory_physical.py'
+adding 'core/model_selector.py'
+adding 'core/self_correction_engine.py'
+adding 'core/task_parser.py'
+adding 'core/task_profiler.py'
+adding 'core/video_engine.py'
+adding 'core/utils/optional_deps.py'
+adding 'core/utils/seed.py'
+adding 'dashboard/__init__.py'
+adding 'dashboard/app.py'
+adding 'dashboard/qnl_mixer.py'
+adding 'dashboard/rl_metrics.py'
+adding 'dashboard/system_monitor.py'
+adding 'dashboard/usage.py'
+adding 'health/__init__.py'
+adding 'health/boot_diagnostics.py'
+adding 'health/essential_services.py'
+adding 'lwm/__init__.py'
+adding 'lwm/config_model.py'
+adding 'lwm/large_world_model.py'
+adding 'media/__init__.py'
+adding 'media/base.py'
+adding 'media/audio/__init__.py'
+adding 'media/audio/backends.py'
+adding 'media/audio/base.py'
+adding 'media/audio/generation.py'
+adding 'media/audio/playback.py'
+adding 'media/avatar/__init__.py'
+adding 'media/avatar/base.py'
+adding 'media/avatar/generation.py'
+adding 'media/avatar/lwm_renderer.py'
+adding 'media/avatar/playback.py'
+adding 'media/video/__init__.py'
+adding 'media/video/base.py'
+adding 'media/video/generation.py'
+adding 'media/video/playback.py'
+adding 'spiral_os/__init__.py'
+adding 'spiral_os/__main__.py'
+adding 'spiral_os/_hf_stub.py'
+adding 'spiral_os/chakra_cycle.py'
+adding 'spiral_os/pulse_emitter.py'
+adding 'spiral_os/start_spiral_os.py'
+adding 'spiral_os-0.1.0.dist-info/licenses/LICENSE'
+adding 'spiral_os-0.1.0.dist-info/METADATA'
+adding 'spiral_os-0.1.0.dist-info/WHEEL'
+adding 'spiral_os-0.1.0.dist-info/entry_points.txt'
+adding 'spiral_os-0.1.0.dist-info/top_level.txt'
+adding 'spiral_os-0.1.0.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+Successfully built spiral_os-0.1.0-py3-none-any.whl
+[2025-09-20T06:55:24Z] Packaging phase completed
