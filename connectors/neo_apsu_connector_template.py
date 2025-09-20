@@ -212,6 +212,10 @@ async def handshake(
 
 async def send_heartbeat(payload: dict[str, Any]) -> None:
     """Emit heartbeat telemetry to maintain alignment."""
+
+    if not _USE_MCP:
+        raise RuntimeError("MCP is not enabled")
+
     async with httpx.AsyncClient() as client:
         resp = await client.post(f"{_MCP_URL}/heartbeat", json=payload, timeout=5.0)
         resp.raise_for_status()

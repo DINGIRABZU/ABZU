@@ -155,3 +155,14 @@ def test_handshake_raises_after_exhausting_retries(
 
     with pytest.raises(RuntimeError, match="authentication failed"):
         asyncio.run(_run())
+
+
+def test_send_heartbeat_requires_mcp_enabled(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Heartbeat emission is blocked when MCP is disabled."""
+
+    monkeypatch.setattr(connector, "_USE_MCP", False)
+
+    with pytest.raises(RuntimeError, match="MCP is not enabled"):
+        asyncio.run(connector.send_heartbeat({"status": "ok"}))
