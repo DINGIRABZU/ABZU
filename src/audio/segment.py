@@ -42,15 +42,46 @@ def has_ffmpeg() -> bool:
     return True
 
 
-_backend = os.environ.get("AUDIO_BACKEND", "numpy").lower()
+_backend_env = os.environ.get("AUDIO_BACKEND")
+_backend = (_backend_env or "pydub").lower()
+_ffmpeg_available = has_ffmpeg()
+
+if _backend not in {"numpy", "pydub"}:
+    if _backend == "auto":
+        _backend = "pydub"
+    else:  # pragma: no cover - defensive branch
+        logger.warning(
+            "Unknown AUDIO_BACKEND '%s'; defaulting to NumPy backend", _backend
+        )
+        _backend = "numpy"
+
+if _backend_env is None:
+    # Promote the preferred backend to the environment for downstream tools.
+    if _backend == "pydub" and not _ffmpeg_available:
+        logger.error("FFmpeg binary missing; falling back to NumPy audio backend")
+        _backend = "numpy"
+    os.environ["AUDIO_BACKEND"] = _backend
+
 if _backend != "numpy":
     pydub = lazy_import("pydub")
     _PydubSegment = getattr(pydub, "AudioSegment", None)
-    if getattr(pydub, "__stub__", False) or not has_ffmpeg():
-        logger.warning("pydub or ffmpeg unavailable; using NumPy audio backend")
-        _PydubSegment = None  # type: ignore
+    _pydub_errors: list[str] = []
+
+    if getattr(pydub, "__stub__", False):
+        _pydub_errors.append("pydub is not installed")
+    if not _ffmpeg_available:
+        _pydub_errors.append("ffmpeg binary not found")
+    if _PydubSegment is None:
+        _pydub_errors.append("pydub.AudioSegment not available")
+
+    if _pydub_errors:
+        logger.error(
+            "Cannot activate pydub audio backend (%s); using NumPy fallback",
+            "; ".join(_pydub_errors),
+        )
+        _PydubSegment = None  # type: ignore[assignment]
 else:  # pragma: no cover - respect backend choice
-    _PydubSegment = None  # type: ignore
+    _PydubSegment = None  # type: ignore[assignment]
 
 sf = lazy_import("soundfile")
 if getattr(sf, "__stub__", False):

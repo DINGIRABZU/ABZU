@@ -1177,6 +1177,9 @@ Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [
 - **Layer:** Root
 - **Priority:** 3
 - **Startup:** Activate after essential services.
+- **Preflight:** `start_spiral_os.py` enforces `AUDIO_BACKEND=pydub` and calls
+  `python -m audio.check_env --strict` so FFmpeg, pydub and simpleaudio must be
+  installed before the Stage B sonic rehearsals proceed.
 - **Health Check:** Run an audio loopback test.
 - **Recovery:** Reinitialize the audio backend or fall back to silent mode.
 

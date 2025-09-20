@@ -42,6 +42,11 @@ matches the persisted summary so Grafana alerts on stalled boots.
 ## Blueprint Synchronization
 Rust crate or pipeline adjustments must update [system_blueprint.md](system_blueprint.md), [blueprint_spine.md](blueprint_spine.md), [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), and refresh the documentation indexes ([index.md](index.md) and [INDEX.md](INDEX.md)). Run the documentation pre-commit hooks so `doc-indexer` and blueprint verifiers confirm the new crate layout is reflected across the doctrine.
 
+Stage B sonic rehearsals now require the audio stack guardrail introduced in
+`start_spiral_os.py`: the bootstrap aborts when `python -m audio.check_env
+--strict` reports missing FFmpeg, pydub or simpleaudio, enforcing
+`AUDIO_BACKEND=pydub` before rehearsals continue.
+
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,
   `AIRSTAR_API_KEY`, and `RSTAR_API_KEY` credentials documented in

@@ -21,6 +21,7 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Identity loader** now resides in Rust; Crown boot caches mission and persona summary in `data/identity.json`, registers the embedding in vector/corpus memory for retrieval-aware routing, and refuses to proceed until the GLM echoes `CROWN-IDENTITY-ACK` after doctrine synthesis. Run `python scripts/check_identity_sync.py` after editing the mission, persona, Absolute Protocol, ABZU blueprint, or awakening overview doctrine. If the check flags drift, regenerate the summary with `python scripts/refresh_crown_identity.py --use-stub` before committing.
 - **Crown confirms load** exchange documents the acknowledgement handshake; see [crown_manifest.md](crown_manifest.md#crown-confirms-load-handshake) for operator guidance and [system_blueprint.md](system_blueprint.md#origins--awakening) for the architectural view.
 - **Identity readiness telemetry** requires the `crown_identity_ready` gauge to hold at `1` after `load_identity` publishes the fingerprint; monitor it via [monitoring/RAZAR.md](monitoring/RAZAR.md) and alert when the value stays `0` for more than five minutes.
+- **Audio stack enforcement** locks Stage B rehearsals to `AUDIO_BACKEND=pydub` and blocks `start_spiral_os.py` when `python -m audio.check_env --strict` cannot find FFmpeg, pydub or simpleaudio.
 
 ### Rust Migration Rules
 
