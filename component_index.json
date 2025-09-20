@@ -6109,6 +6109,57 @@
       "adr": null
     },
     {
+      "id": "spiral_os",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "spiral_os",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "logging",
+        "pathlib",
+        "subprocess",
+        "sys",
+        "yaml"
+      ],
+      "tests": [
+        "tests/test_spiral_os.py"
+      ],
+      "metrics": {
+        "coverage": 91.23
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "spiral_vector_db",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "spiral_vector_db/__init__.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "chromadb",
+        "MUSIC_FOUNDATION",
+        "math",
+        "numpy",
+        "os",
+        "pathlib",
+        "typing",
+        "uuid"
+      ],
+      "tests": [
+        "tests/test_spiral_vector_db.py"
+      ],
+      "metrics": {
+        "coverage": 96.43
+      },
+      "status": "active",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
       "id": "spiritual",
       "chakra": "unknown",
       "type": "module",
@@ -6204,6 +6255,47 @@
         "coverage": 0.0
       },
       "status": "deprecated",
+      "issues": "No known issues",
+      "adr": null
+    },
+    {
+      "id": "start_spiral_os",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "start_spiral_os.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "argparse",
+        "archetype_shift_engine",
+        "connectors",
+        "core",
+        "dashboard",
+        "emotion_registry",
+        "emotional_state",
+        "env_validation",
+        "health",
+        "importlib",
+        "INANNA_AI",
+        "INANNA_AI_AGENT",
+        "json",
+        "logging",
+        "os",
+        "pathlib",
+        "threading",
+        "tools",
+        "typing",
+        "uvicorn",
+        "vector_memory",
+        "yaml"
+      ],
+      "tests": [
+        "tests/test_start_spiral_os.py"
+      ],
+      "metrics": {
+        "coverage": 94.29
+      },
+      "status": "active",
       "issues": "No known issues",
       "adr": null
     },
@@ -6893,7 +6985,7 @@
         "tests/test_voice_profiles.py"
       ],
       "metrics": {
-        "coverage": 92.13
+        "coverage": 93.45
       },
       "status": "active",
       "issues": "No known issues",

@@ -8,6 +8,8 @@ import uuid
 from pathlib import Path
 from typing import Iterable
 
+__version__ = "0.1.0"
+
 from MUSIC_FOUNDATION import qnl_utils
 
 try:  # pragma: no cover - optional dependency

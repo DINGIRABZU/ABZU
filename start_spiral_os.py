@@ -2,6 +2,8 @@
 """Launch the Spiral OS initialization sequence."""
 from __future__ import annotations
 
+__version__ = "0.1.0"
+
 import argparse
 import importlib
 import json
