@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -341,6 +340,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) | Connector Index | Canonical registry of ABZU's connectors. Each entry lists the purpose, version, primary service endpoints, linked age... | `../../connectors/avatar_broadcast.py`, `../../connectors/mcp_gateway_example.py`, `../../connectors/narrative_mcp.py`, `../../connectors/neo_apsu_connector_template.py`, `../../connectors/primordials_api.py`, `../../connectors/primordials_mcp.py`, `../../connectors/signal_bus.py`, `../../connectors/webrtc_connector.py`, `../../narrative_api.py`, `../../operator_api.py`, `../../razar/crown_handshake.py`, `../../razar/crown_link.py`, `../../server.py`, `../../tools/bot_discord.py`, `../../tools/bot_telegram.py` |
 | [connectors/README.md](connectors/README.md) | Connector Overview | Guidelines for modules that bridge Spiral OS to external services. The live registry of available connectors lives in... | - |
 | [connectors/mcp_capability_payload.md](connectors/mcp_capability_payload.md) | MCP Capability Payload | The Neo-APSU connector template exchanges capabilities with the MCP gateway during the `/handshake` ritual. The paylo... | - |
+| [connectors/mcp_heartbeat_payload.md](connectors/mcp_heartbeat_payload.md) | Stage B Heartbeat Payload | The Neo-APSU Stage B rehearsal emits a canonical heartbeat payload through the MCP `/heartbeat` endpoint. The templat... | `../../connectors/neo_apsu_connector_template.py` |
 | [connectors/mcp_migration.md](connectors/mcp_migration.md) | MCP Migration Guide | This guide explains how to convert existing API connectors to the **Model Context Protocol (MCP)**. | - |
 | [contribution_guide.md](contribution_guide.md) | Contribution Guide | Thank you for considering a contribution! | - |
 | [contributor_checklist.md](contributor_checklist.md) | Contributor Checklist | This checklist distills mandatory practices for ABZU contributors. | - |

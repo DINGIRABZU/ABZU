@@ -163,6 +163,9 @@ problems and surface recovery instructions. Lagging or missing beats surface
 alignment issues early and are mirrored in the dashboards described in the
 [System Blueprint](system_blueprint.md#heartbeat-propagation) and
 [Blueprint Spine](blueprint_spine.md#heartbeat-propagation-and-self-healing).
+For Stage B MCP rehearsals, reference the
+[Stage B Heartbeat Payload](connectors/mcp_heartbeat_payload.md) guide for the
+canonical Neo-APSU telemetry contract.
 
 ## Recovery Flows
 
