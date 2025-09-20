@@ -50,6 +50,10 @@ Stage B sonic rehearsals now require the audio stack guardrail introduced in
 `modulation_arrangement.check_daw_availability` so missing Ardour or Carla
 executables surface as warnings and rehearsal exports fall back to audio-only
 renders until the DAWs land on PATH.
+Telemetry collectors now wrap `modulation_arrangement` and `src/audio/engine`
+to emit JSON events during mixes, playback, and DAW fallbacks. Operators feed
+the resulting stream into [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md)
+for Stage B readiness sign-off.
 
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,

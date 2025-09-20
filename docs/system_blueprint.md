@@ -1184,6 +1184,10 @@ Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [
   `modulation_arrangement.check_daw_availability` via
   `scripts/setup_audio_env.sh`, warning operators when Ardour or Carla are
   missing and defaulting to audio-only exports until the DAWs are installed.
+- **Telemetry:** `modulation_arrangement` and `src/audio/engine` emit
+  structured playback metrics through `src.audio.telemetry`. Operators archive
+  these events per [Audio Rehearsal Telemetry](monitoring/audio_rehearsal_telemetry.md)
+  for Stage B certification.
 - **Health Check:** Run an audio loopback test.
 - **Recovery:** Reinitialize the audio backend or fall back to silent mode.
 

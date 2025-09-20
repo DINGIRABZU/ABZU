@@ -7,6 +7,7 @@ import shutil
 import tempfile
 from pathlib import Path
 from threading import Event, Thread
+from time import perf_counter
 from typing import Any
 
 import numpy as np
@@ -41,6 +42,8 @@ try:  # pragma: no cover - optional dependency
     import simpleaudio as sa
 except Exception:  # pragma: no cover - optional dependency
     sa = None  # type: ignore
+
+from .telemetry import telemetry
 
 logger = logging.getLogger(__name__)
 
@@ -85,35 +88,79 @@ def get_asset_path(
 
 def _loop_play(audio: Any) -> None:
     """Continuously play ``audio`` until ``stop_all`` is called."""
+    iteration = 0
     while not _stop_event.is_set():
-        pb = _play_segment(audio)
-        _playbacks.append(pb)
-        pb.wait_done()
+        iteration += 1
+        try:
+            pb = _play_segment(audio)
+            _playbacks.append(pb)
+            pb.wait_done()
+            telemetry.emit(
+                "audio.loop_play_iteration",
+                status="success",
+                iteration=iteration,
+            )
+        except Exception as exc:  # pragma: no cover - playback errors are rare
+            telemetry.emit(
+                "audio.loop_play_iteration",
+                status="failure",
+                iteration=iteration,
+                error=str(exc),
+            )
+            raise
 
 
 def _loop_play_n(audio: Any, loops: int) -> None:
     """Play ``audio`` ``loops`` times unless stopped."""
-    for _ in range(loops):
+    for index in range(loops):
         if _stop_event.is_set():
             break
         pb = _play_segment(audio)
         _playbacks.append(pb)
         pb.wait_done()
+        telemetry.emit(
+            "audio.loop_play_iteration",
+            status="success",
+            iteration=index + 1,
+            requested_loops=loops,
+        )
 
 
 def _play_segment(seg: Any) -> Any:
     """Play ``seg`` using the appropriate backend."""
-    if _play_with_simpleaudio is not None and not hasattr(seg, "data"):
-        return _play_with_simpleaudio(seg)
-    if sa is None:
-        raise RuntimeError("simpleaudio library not installed")
-    if not hasattr(seg, "data"):
-        raise TypeError("unsupported audio segment type")
-    data = seg.data
-    sr = seg.frame_rate
-    arr = np.int16(np.clip(data, -1, 1) * 32767)
-    channels = arr.shape[1] if arr.ndim > 1 else 1  # type: ignore[misc]
-    return sa.play_buffer(arr, channels, 2, sr)
+    start = perf_counter()
+    backend = "pydub.simpleaudio"
+    try:
+        if _play_with_simpleaudio is not None and not hasattr(seg, "data"):
+            playback = _play_with_simpleaudio(seg)
+        else:
+            backend = "simpleaudio.buffer"
+            if sa is None:
+                raise RuntimeError("simpleaudio library not installed")
+            if not hasattr(seg, "data"):
+                raise TypeError("unsupported audio segment type")
+            data = seg.data
+            sr = seg.frame_rate
+            arr = np.int16(np.clip(data, -1, 1) * 32767)
+            channels = arr.shape[1] if arr.ndim > 1 else 1  # type: ignore[misc]
+            playback = sa.play_buffer(arr, channels, 2, sr)
+    except Exception as exc:
+        telemetry.emit(
+            "audio.play_segment",
+            status="failure",
+            backend=backend,
+            error=str(exc),
+            duration_s=perf_counter() - start,
+        )
+        raise
+
+    telemetry.emit(
+        "audio.play_segment",
+        status="success",
+        backend=backend,
+        duration_s=perf_counter() - start,
+    )
+    return playback
 
 
 def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> None:
@@ -128,10 +175,25 @@ def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> N
     loops:
         Number of times to play the sample. Ignored when ``loop`` is ``True``.
     """
+    start = perf_counter()
     if AudioSegment is None:
+        telemetry.emit(
+            "audio.play_sound",
+            status="failure",
+            reason="audio_segment_unavailable",
+            path=path,
+            duration_s=perf_counter() - start,
+        )
         logger.warning("audio backend not available; cannot play audio")
         return
     if not _has_ffmpeg():
+        telemetry.emit(
+            "audio.play_sound",
+            status="failure",
+            reason="ffmpeg_missing",
+            path=path,
+            duration_s=perf_counter() - start,
+        )
         logger.warning("ffmpeg not installed; cannot play audio")
         return
     audio = AudioSegment.from_file(path)
@@ -139,14 +201,38 @@ def play_sound(path: Path, loop: bool = False, *, loops: int | None = None) -> N
         thread = Thread(target=_loop_play, args=(audio,), daemon=True)
         _loops.append(thread)
         thread.start()
+        telemetry.emit(
+            "audio.play_sound",
+            status="started",
+            mode="loop",
+            path=path,
+            duration_s=perf_counter() - start,
+        )
     elif loops and loops > 1:
         thread = Thread(target=_loop_play_n, args=(audio, loops), daemon=True)
         _loops.append(thread)
         thread.start()
+        telemetry.emit(
+            "audio.play_sound",
+            status="started",
+            mode="loop_n",
+            loops=loops,
+            path=path,
+            duration_s=perf_counter() - start,
+        )
     else:
-        pb = _play_segment(audio)
-        _playbacks.append(pb)
-        pb.wait_done()
+        try:
+            pb = _play_segment(audio)
+            _playbacks.append(pb)
+            pb.wait_done()
+        finally:
+            telemetry.emit(
+                "audio.play_sound",
+                status="completed",
+                mode="single",
+                path=path,
+                duration_s=perf_counter() - start,
+            )
 
 
 def stop_all() -> None:
@@ -162,6 +248,7 @@ def stop_all() -> None:
         thread.join(timeout=0.1)
     _loops.clear()
     _stop_event.clear()
+    telemetry.emit("audio.stop_all", status="completed")
 
 
 __all__ = [
