@@ -167,7 +167,7 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No tests found",
+      "issues": "Template connector demonstrating Stage B MCP handshake",
       "adr": null
     },
     {
@@ -4048,19 +4048,25 @@
       "chakra": "unknown",
       "type": "connector",
       "path": "connectors/neo_apsu_connector_template.py",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
+        "asyncio",
+        "datetime",
         "httpx",
+        "json",
+        "logging",
         "os",
         "typing"
       ],
-      "tests": [],
+      "tests": [
+        "tests/connectors/test_neo_apsu_connector_template.py"
+      ],
       "metrics": {
         "coverage": 0.0
       },
-      "status": "deprecated",
-      "issues": "No tests found",
+      "status": "experimental",
+      "issues": "Template connector demonstrating Stage B MCP handshake",
       "adr": null
     },
     {
