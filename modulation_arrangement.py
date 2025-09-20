@@ -6,9 +6,10 @@ processing.
 
 from __future__ import annotations
 
+import logging
 import shutil
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Sequence
 
 try:  # pragma: no cover - optional dependency
     from audio.segment import AudioSegment
@@ -104,10 +105,21 @@ def export_session(
         ``"ardour"`` or ``"carla"`` to create an accompanying session file.
     """
     export_mix(segment, audio_path)
-    if session_format == "ardour":
-        return write_ardour_session(audio_path, audio_path.with_suffix(".ardour"))
-    if session_format == "carla":
-        return write_carla_project(audio_path, audio_path.with_suffix(".carxs"))
+    if session_format is None:
+        return None
+
+    try:
+        if session_format == "ardour":
+            return write_ardour_session(audio_path, audio_path.with_suffix(".ardour"))
+        if session_format == "carla":
+            return write_carla_project(audio_path, audio_path.with_suffix(".carxs"))
+    except DAWUnavailableError as exc:
+        logger.warning(
+            "Skipping %s session export because the DAW tooling is unavailable: %s",
+            session_format,
+            exc,
+        )
+        logger.debug("DAW availability snapshot: %s", exc.available)
     return None
 
 
@@ -116,18 +128,61 @@ def export_session(
 # ---------------------------------------------------------------------------
 
 
+logger = logging.getLogger(__name__)
+
+
 def _tool_available(name: str) -> bool:
     return shutil.which(name) is not None
 
 
+def _resolve_tool(candidates: Sequence[str]) -> str | None:
+    for name in candidates:
+        if _tool_available(name):
+            return name
+    return None
+
+
+def _format_tool_list(candidates: Sequence[str]) -> str:
+    if not candidates:
+        return ""
+    if len(candidates) == 1:
+        return candidates[0]
+    return ", ".join(candidates[:-1]) + f" or {candidates[-1]}"
+
+
+class DAWUnavailableError(RuntimeError):
+    """Raised when an expected digital audio workstation is missing."""
+
+    def __init__(
+        self,
+        tools: Sequence[str],
+        remediation: str,
+        available: Dict[str, bool] | None = None,
+    ) -> None:
+        self.tools = tuple(dict.fromkeys(tools))
+        self.remediation = remediation
+        self.available = available or {}
+        message = (
+            "Missing DAW tool(s) on PATH: "
+            f"{_format_tool_list(self.tools)}. {self.remediation}"
+        )
+        super().__init__(message)
+
+
+ARDOUR_CANDIDATES = ("ardour7", "ardour6", "ardour")
+CARLA_CANDIDATES = ("carla",)
+
+
 def write_ardour_session(audio_path: Path, out_path: Path) -> Path:
     """Write a minimal Ardour session referencing ``audio_path``."""
-    if not (
-        _tool_available("ardour6")
-        or _tool_available("ardour7")
-        or _tool_available("ardour")
-    ):
-        raise RuntimeError("Ardour not installed")
+    if _resolve_tool(ARDOUR_CANDIDATES) is None:
+        raise DAWUnavailableError(
+            ARDOUR_CANDIDATES,
+            (
+                "Install Ardour and ensure its binary is on PATH or disable "
+                "Ardour session export."
+            ),
+        )
     xml = f'<Session><Sources><Source name="{audio_path}"/></Sources></Session>'
     out_path.write_text(xml)
     return out_path
@@ -135,8 +190,14 @@ def write_ardour_session(audio_path: Path, out_path: Path) -> Path:
 
 def write_carla_project(audio_path: Path, out_path: Path) -> Path:
     """Write a simple Carla rack session referencing ``audio_path``."""
-    if not _tool_available("carla"):
-        raise RuntimeError("Carla not installed")
+    if _resolve_tool(CARLA_CANDIDATES) is None:
+        raise DAWUnavailableError(
+            CARLA_CANDIDATES,
+            (
+                "Install Carla or remove Carla session export from the "
+                "rehearsal recipe."
+            ),
+        )
     xml = (
         "<?xml version='1.0'?><CarlaPatchbay><File name=\""
         f"{audio_path}"
@@ -144,6 +205,37 @@ def write_carla_project(audio_path: Path, out_path: Path) -> Path:
     )
     out_path.write_text(xml)
     return out_path
+
+
+def check_daw_availability(
+    require_ardour: bool = True,
+    require_carla: bool = True,
+    log: logging.Logger | None = None,
+) -> Dict[str, bool]:
+    """Return a map of DAW availability and raise when required tools are missing."""
+
+    available = {
+        "ardour": _resolve_tool(ARDOUR_CANDIDATES) is not None,
+        "carla": _resolve_tool(CARLA_CANDIDATES) is not None,
+    }
+    required_missing: list[str] = []
+    if require_ardour and not available["ardour"]:
+        required_missing.extend(ARDOUR_CANDIDATES)
+    if require_carla and not available["carla"]:
+        required_missing.extend(CARLA_CANDIDATES)
+
+    target_logger = log if log is not None else logger
+    target_logger.debug("DAW preflight availability: %s", available)
+
+    if required_missing:
+        remediation = (
+            "Install the missing DAW executables or disable session export for them."
+        )
+        error = DAWUnavailableError(required_missing, remediation, available)
+        target_logger.error("%s", error)
+        raise error
+
+    return available
 
 
 __all__ = [
@@ -154,4 +246,6 @@ __all__ = [
     "export_session",
     "write_ardour_session",
     "write_carla_project",
+    "check_daw_availability",
+    "DAWUnavailableError",
 ]

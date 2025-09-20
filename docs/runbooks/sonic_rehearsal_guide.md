@@ -53,11 +53,22 @@ The command verifies the following components:
 
    The command must report that ffmpeg, pydub and simpleaudio are present.
 
-4. Export the backend for local shells when invoking rehearsal utilities:
+4. Run the Stage B rehearsal setup script to confirm Ardour/Carla tooling:
+
+   ```bash
+   bash scripts/setup_audio_env.sh
+   ```
+
+   The script installs the pinned audio dependencies and executes the
+   `modulation_arrangement.check_daw_availability` preflight. When Ardour or
+   Carla binaries are missing, it logs a warning and Stage B exports fall back
+   to audio renders without generating the corresponding session files.
+
+5. Export the backend for local shells when invoking rehearsal utilities:
 
    ```bash
    export AUDIO_BACKEND=pydub
    ```
 
-5. Attach the validation transcript to the Stage B rehearsal checklist so the
+6. Attach the validation transcript to the Stage B rehearsal checklist so the
    audio lab can track regressions across runs.

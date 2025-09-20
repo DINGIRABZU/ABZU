@@ -1180,6 +1180,10 @@ Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [
 - **Preflight:** `start_spiral_os.py` enforces `AUDIO_BACKEND=pydub` and calls
   `python -m audio.check_env --strict` so FFmpeg, pydub and simpleaudio must be
   installed before the Stage B sonic rehearsals proceed.
+- **Session Export Guardrail:** Stage B prep invokes
+  `modulation_arrangement.check_daw_availability` via
+  `scripts/setup_audio_env.sh`, warning operators when Ardour or Carla are
+  missing and defaulting to audio-only exports until the DAWs are installed.
 - **Health Check:** Run an audio loopback test.
 - **Recovery:** Reinitialize the audio backend or fall back to silent mode.
 
