@@ -13,6 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 INDEX_PATH = REPO_ROOT / "component_index.json"
 COVERAGE_JSON = REPO_ROOT / "coverage.json"
 COVERAGE_MMD = REPO_ROOT / "coverage.mmd"
+COVERAGE_SVG = REPO_ROOT / "coverage.svg"
 PYTHON = sys.executable
 ACTIVE_STATUSES = {"active"}
 STAGE_A_COMPONENT_IDS = {
@@ -48,6 +49,26 @@ def main() -> None:
             "coverage",
             "html",
             "--fail-under=0",
+        ],
+        check=True,
+    )
+
+    htmlcov_dir = REPO_ROOT / "htmlcov"
+    if not htmlcov_dir.is_dir():
+        raise RuntimeError(
+            "Coverage HTML directory htmlcov/ missing; rerun coverage html."
+        )
+
+    if COVERAGE_SVG.exists():
+        COVERAGE_SVG.unlink()
+
+    subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "coverage_badge",
+            "-o",
+            str(COVERAGE_SVG),
         ],
         check=True,
     )
