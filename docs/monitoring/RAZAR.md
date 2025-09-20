@@ -104,6 +104,30 @@ fields `memory_layers`, `memory_init_duration`, `memory_init_ready`, and
 `scripts/bootstrap_memory.py`, and `scripts/bootstrap_world.py` when proving a
 10 k-item audit to operations.
 
+### Memory load proof telemetry
+
+Operators attach a dedicated load proof to Stage B packages using
+`python scripts/memory_load_proof.py <fixture>`. The CLI writes latency
+percentiles (P50/P95/P99) and the replayed record counts to
+`logs/memory_load_proof.jsonl`, while `record_memory_init_metrics` refreshes the
+`razar_memory_init_*` gauges under the supplied `--metrics-source` label.
+
+1. Produce (or request) a 10 k-record JSONL fixture where each line contains a
+   `query` field. Store it alongside prior audits under
+   `data/memory/load_proofs/`.
+2. Run the CLI with Stage B labels. Example:
+
+   ```bash
+   python scripts/memory_load_proof.py data/memory/load_proofs/stageb_fixture.jsonl \
+     --metrics-source stageb-readiness --warmup 25
+   ```
+
+3. Export `monitoring/boot_metrics.prom` and the appended JSON log for review.
+
+**Acceptance thresholds** for the audit remain `p95 ≤ 0.120 s` and
+`p99 ≤ 0.180 s`. Any non-ready layers or replay failures must be documented in the
+operations log with remediation notes before sign-off.
+
 ### Navigation Notes for the New Architect
 
 1. From the Grafana home page, open **Dashboards → RAZAR Failover Observability**.
