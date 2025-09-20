@@ -1,7 +1,9 @@
 # Operator MCP Adoption Audit
 
 This audit captures the work required to migrate the operator connectors to the
-`neo_apsu_connector_template` handshake, heartbeat, and doctrine patterns.
+`neo_apsu_connector_template` handshake, heartbeat, and doctrine patterns. The
+operational procedures that close the Stage B rehearsal loop now live in the
+[Operator MCP Runbook](operator_mcp_runbook.md).
 
 ## Current State
 
@@ -43,7 +45,7 @@ scheduled run passes.
 | --- | --- | --- |
 | Production integration | Adapter-enabled connectors route production traffic through the MCP handshake before command or upload execution. | `OperatorMCPAdapter` is implemented but still needs to be wired into the deployed `operator_api`/`operator_upload` services; the [Connector Index entries](CONNECTOR_INDEX.md) remain in the “migrating” state until rollout completes. |
 | Automation & observability | Stage B smoke checks run on a schedule, persist drill receipts, and page owners when rotation windows lapse. | Scheduled nightly drill now enforces the rotation window and publishes artifacts; remaining work is to connect the workflow failures to paging for 24/7 response. |
-| Runbook updates | Template connectors ship with an operations playbook covering MCP feature toggles, rotation review, and rollback. | Document production enablement steps and the Stage B rehearsal review loop so the operator team can graduate the connectors from “migrating” to “active.” |
+| Runbook updates | Template connectors ship with an operations playbook covering MCP feature toggles, rotation review, and rollback. | Draft runbook published at [operator_mcp_runbook.md](operator_mcp_runbook.md); circulate with operators, incorporate rollout-specific notes, and graduate the connectors from “migrating” to “active.” |
 
 ## Migration Tasks
 
