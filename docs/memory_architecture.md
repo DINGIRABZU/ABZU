@@ -100,6 +100,27 @@ The script seeds each layer using file-based back-ends and prints the results of
 these queries. The sections below describe manual setup and alternative back-end
 options.
 
+## Storage runtime reference
+
+Testers often switch between the lightweight SQLite bundle and the persistent
+Chroma vector service during load drills. Use the matrix below to confirm the
+runtime endpoint, data location, and liveness checks without tearing the bundle
+down between runs.
+
+| Back end | Runtime endpoint | Persistent volume | Health check | Notes |
+| --- | --- | --- | --- | --- |
+| SQLite bundle | Direct file handles in `data/emotions.db`, `data/ontology.db`, and `data/narrative_engine.db` created by `deployment/sqlite/bootstrap_memory_dbs.sh`. | Local `data/` directory (override with `*_DB_PATH` env vars per layer). | `sqlite3 <db> "VACUUM;"` confirms the file is writable, matching the bootstrap routine. | Re-run the bootstrap script to reset the files or point the layer to an alternate path. 【F:deployment/sqlite/bootstrap_memory_dbs.sh†L1-L11】 |
+| Chroma service | `http://localhost:8030` (mapped from container port `8000`). | Host `data/chroma` bound into the container at `/chroma`. | `docker compose -f deployment/chromadb/docker-compose.yaml exec chromadb curl -fsS http://localhost:8000/api/v1/heartbeat` reports `"status":"ok"` when the service is ready. | Container restarts reuse the seeded `/chroma` volume so vector collections persist across drills. 【F:deployment/chromadb/docker-compose.yaml†L1-L11】 |
+
+To validate seeding, inspect the mounted directory after the health check:
+
+```bash
+ls -lah data/chroma
+```
+
+The listing should include the persistent Chroma data files that back the vector
+collections referenced by the memory layers.
+
 ### Cortex store
 
 - **Purpose:** Persist application state with semantic tags.
