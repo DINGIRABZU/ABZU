@@ -55,6 +55,7 @@ alongside [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md), the
 | **C1. Exit checklist consolidation** | @release-ops | Deliver the release checklist, verification bundle, and rollback playbook required for the alpha exit gate. | Aggregate subsystem handoffs and monitoring dashboards so the checklist draft mirrors Stage A/B deliverables. | Execute the dry-run release and archive rollback validation logs for the go/no-go review. |
 | **C2. Demo storyline freeze** | @audio-lab | Finalize the demo script assets and rehearsal artifacts for stakeholder sign-off. | Confirm the Stage B rehearsal telemetry meets the drop-free requirement and align with modulation presets. | Publish the final demo recording and circulate rehearsal notes ahead of the exit review. |
 | **C3. Readiness signal sync** | @ops-team | Compile the Alpha readiness packet summarizing boot success rates, replay fidelity, and subsystem metrics. | Pull the latest telemetry from Stage A and Stage B tasks and update `PROJECT_STATUS.md` with outstanding risks. | Host the cross-team readiness review and capture action items gating the beta planning kickoff. |
+| **C4. Operator MCP drills** | @ops-team | Land `OperatorMCPAdapter` for `operator_api`/`operator_upload` and confirm Stage B parity with `crown_handshake`. | Run `scripts/stage_b_smoke.py` to log the 48-hour credential rotation drill for each connector and archive the results under `logs/stage_b_rotation_drills.jsonl`. | Promote the operator connectors to the MCP adoption checklist once smoke runs stabilize. |
 
 ## Maintenance
 

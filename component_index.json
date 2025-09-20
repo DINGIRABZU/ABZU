@@ -4070,6 +4070,33 @@
       "adr": null
     },
     {
+      "id": "operator_mcp_adapter",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/operator_mcp_adapter.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "datetime",
+        "httpx",
+        "json",
+        "logging",
+        "os",
+        "pathlib",
+        "typing"
+      ],
+      "tests": [
+        "tests/connectors/test_operator_mcp_adapter.py",
+        "tests/scripts/test_stage_b_smoke.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "experimental",
+      "issues": "MCP adapter shim for operator connectors with Stage B smoke coverage",
+      "adr": null
+    },
+    {
       "id": "neoabzu-chakrapulse",
       "chakra": "unknown",
       "type": "rust",

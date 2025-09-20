@@ -23,6 +23,7 @@ logs/*
 !logs/task_registry.jsonl
 !logs/operator_commands.jsonl
 !logs/operator_escalations.jsonl
+!logs/stage_b_rotation_drills.jsonl
 
 # Ignore Blender files
 *.blend

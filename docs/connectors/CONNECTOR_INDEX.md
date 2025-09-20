@@ -7,8 +7,8 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 
 | id | purpose | version | auth | endpoints | linked agents | status | code | docs | schema |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `operator_api` | operator chat command dispatch | 0.3.3 | Bearer | `POST /operator/command` | Orchestration Master | experimental | [operator_api.py](../../operator_api.py) | [operator_protocol.md](../operator_protocol.md) | N/A |
-| `operator_upload` | operator asset upload API for files, images, audio, and video | 0.3.3 | Bearer | `POST /operator/upload` | RAZAR | experimental | [operator_api.py](../../operator_api.py) | [operator_protocol.md](../operator_protocol.md) | N/A |
+| `operator_api` | operator chat command dispatch | 0.3.3 | Bearer | `POST /operator/command` | Orchestration Master | migrating (MCP adapter stub) | [operator_api.py](../../operator_api.py) | [operator_protocol.md](../operator_protocol.md), [operator_mcp_audit.md](operator_mcp_audit.md) | N/A |
+| `operator_upload` | operator asset upload API for files, images, audio, and video | 0.3.3 | Bearer | `POST /operator/upload` | RAZAR | migrating (MCP adapter stub) | [operator_api.py](../../operator_api.py) | [operator_protocol.md](../operator_protocol.md), [operator_mcp_audit.md](operator_mcp_audit.md) | N/A |
 | `crown_ws` | Crown WebSocket diagnostics channel for chat commands | 0.2.2 | Bearer | `WS /crown_link`, `POST /glm-command` | Crown | deprecated | [razar/crown_link.py](../../razar/crown_link.py) | [CROWN_OVERVIEW.md](../CROWN_OVERVIEW.md) | N/A |
 | `crown_handshake` | RAZAR mission brief handshake with Crown | 0.2.4 | Bearer | `WS CROWN_WS_URL` | Crown | active | [razar/crown_handshake.py](../../razar/crown_handshake.py) | [CROWN_OVERVIEW.md](../CROWN_OVERVIEW.md) | N/A |
 | `webrtc` | real-time avatar streaming bridge for audio/video | 0.3.3 | JWT | `POST /call` | Nazarick Web Console | experimental | [connectors/webrtc_connector.py](../../connectors/webrtc_connector.py) | [nazarick_web_console.md](../nazarick_web_console.md) | N/A |
@@ -28,8 +28,8 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 
 | connector | protocol | migration_notes |
 | --- | --- | --- |
-| `operator_api` | API | pending MCP support |
-| `operator_upload` | API | pending MCP support |
+| `operator_api` | API → MCP | `OperatorMCPAdapter` stub available; handshake and heartbeat rehearsals live in `scripts/stage_b_smoke.py`. |
+| `operator_upload` | API → MCP | Shares `OperatorMCPAdapter` session and rotation logging via Stage B smoke script. |
 | `crown_ws` | API | deprecated; no migration planned |
 | `crown_handshake` | API | evaluate MCP handshake |
 | `webrtc` | API | streaming; MCP transport under review |

@@ -230,6 +230,7 @@ Generated automatically. Lists each Python and Rust file with its description an
 | `connectors/message_formatter.py` | Python | No description | None |
 | `connectors/narrative_mcp.py` | Python | MCP wrapper for narrative logging. | httpx |
 | `connectors/neo_apsu_connector_template.py` | Python | Neo-APSU connector template. | httpx |
+| `connectors/operator_mcp_adapter.py` | Python | MCP adapter shim wrapping operator command and upload connectors. | httpx |
 | `connectors/primordials_api.py` | Python | Minimal connector for sending metrics to the Primordials service. | None |
 | `connectors/primordials_mcp.py` | Python | MCP wrapper for Primordials metrics. | httpx |
 | `connectors/signal_bus.py` | Python | Simple signal bus for cross-connector messaging. | kafka, redis |
