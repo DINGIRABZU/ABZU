@@ -342,7 +342,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [connectors/mcp_capability_payload.md](connectors/mcp_capability_payload.md) | MCP Capability Payload | The Neo-APSU connector template exchanges capabilities with the MCP gateway during the `/handshake` ritual. The paylo... | - |
 | [connectors/mcp_heartbeat_payload.md](connectors/mcp_heartbeat_payload.md) | Stage B Heartbeat Payload | The Neo-APSU Stage B rehearsal emits a canonical heartbeat payload through the MCP `/heartbeat` endpoint. The templat... | `../../connectors/neo_apsu_connector_template.py` |
 | [connectors/mcp_migration.md](connectors/mcp_migration.md) | MCP Migration Guide | This guide explains how to convert existing API connectors to the **Model Context Protocol (MCP)**. | - |
-| [connectors/operator_mcp_audit.md](connectors/operator_mcp_audit.md) | Operator MCP Adoption Audit | This audit captures the work required to migrate the operator connectors to the `neo_apsu_connector_template` handsha... | - |
+| [connectors/operator_mcp_audit.md](connectors/operator_mcp_audit.md) | Operator MCP Adoption Audit | This audit captures the work required to migrate the operator connectors to the `neo_apsu_connector_template` handsha... | `../../connectors/operator_mcp_adapter.py`, `../../scripts/stage_b_smoke.py` |
 | [contribution_guide.md](contribution_guide.md) | Contribution Guide | Thank you for considering a contribution! | - |
 | [contributor_checklist.md](contributor_checklist.md) | Contributor Checklist | This checklist distills mandatory practices for ABZU contributors. | - |
 | [core_usage.md](core_usage.md) | Core Usage | Install the compiled wheels: | - |
