@@ -71,7 +71,11 @@ the declared window.
 checklist, delegating the Stage B handshake and heartbeat to the template
 helpers. The shared `scripts/stage_b_smoke.py` run exercises those adapters with
 `crown_handshake` and appends credential rotation drills to
-`logs/stage_b_rotation_drills.jsonl`.
+`logs/stage_b_rotation_drills.jsonl`. Production FastAPI deployments now
+instantiate the shared adapter during startup so `/operator/command` and
+`/operator/upload` reuse the stored session and emit background Stage B
+heartbeats that log credential rotations when the gateway refreshes expiry
+timestamps.
 
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,

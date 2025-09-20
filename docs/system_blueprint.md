@@ -39,10 +39,11 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **Neoabzu crates** released at **v0.1.2**; CI now enforces PyO3 exposure and `cargo check` on workspace crates.
 - **Blueprint governance** – Architecture commits must update this blueprint, [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), [blueprint_spine.md](blueprint_spine.md), [NEOABZU_spine.md](NEOABZU_spine.md), and both [index.md](index.md) and [INDEX.md](INDEX.md) so reviewers see synchronized narratives and indexes.
-- **Stage B operator rehearsal** – `OperatorMCPAdapter` bridges `operator_api`
-  and `operator_upload` into the MCP handshake/heartbeat flow while
-  `scripts/stage_b_smoke.py` records credential rotation drills across the
-  Stage B target services list (including `crown_handshake`).
+- **Stage B operator rehearsal** – `OperatorMCPAdapter` now boots with
+  `operator_api`, establishing the MCP handshake session before
+  `/operator/command` or `/operator/upload` dispatch and running the shared
+  Stage B heartbeat loop that records credential rotation drills alongside the
+  `crown_handshake` rehearsal.
 
 ### Doctrine References
 

@@ -693,10 +693,12 @@ ad‑hoc HTTP clients and gives operators a consistent way to trace calls across
 stack.
 
 - **MCP connectors** – `operator_api`, `operator_upload`, and `crown_handshake`
-  adopt the `OperatorMCPAdapter` handshake/heartbeat shim. Stage B rehearsals
-  must run `scripts/stage_b_smoke.py` to emit the shared heartbeat, confirm
-  `crown_handshake` coverage, and log credential rotations to
-  `logs/stage_b_rotation_drills.jsonl`.
+  adopt the `OperatorMCPAdapter` handshake/heartbeat shim. FastAPI startup now
+  establishes the shared MCP session before operator commands or uploads, and
+  Stage B rehearsals must run `scripts/stage_b_smoke.py` to emit the shared
+  heartbeat, confirm `crown_handshake` coverage, and log credential rotations to
+  `logs/stage_b_rotation_drills.jsonl` whenever the gateway refreshes
+  credentials.
   already speak MCP. `primordials_api` and `narrative_api` are queued for
   conversion.
 - **External APIs** – `telegram_bot`, `open_web_ui`, and the browser-facing
