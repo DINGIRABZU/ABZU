@@ -462,6 +462,13 @@ pending events. See [Blueprint Spine](blueprint_spine.md#memory-spine)
 and the [Recovery Playbook](recovery_playbook.md#snapshot-recovery) for
 operational steps.
 
+Stage B readiness leans on the same observability: `MemoryBundle.diagnostics`
+from [`memory/bundle.py`](../memory/bundle.py) accompanies the broadcast so
+auditors can reconcile fallbacks with the `razar_memory_init_*` gauges outlined
+in [monitoring/RAZAR.md](monitoring/RAZAR.md#alert-thresholds), and the rotating
+handler in [`logging_config.yaml`](../logging_config.yaml) keeps the `logs/razar.log`
+audit stream pruned while retaining evidence for 10 k-item reviews.
+
 ### Dynamic Ignition
 
 RAZAR boots services on demand, letting the operator shape the startup sequence.
