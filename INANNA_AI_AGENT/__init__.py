@@ -6,7 +6,7 @@ Importing this package registers the command line interface and injects the
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import builtins as _builtins
 

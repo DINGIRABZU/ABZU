@@ -81,6 +81,29 @@ thresholds are about to trip. Pair these counters with the chakra heartbeat
 metrics (`chakra_pulse_hz`, `chakra_alignment`) to confirm whether the incident
 is isolated or affecting multiple layers.
 
+Stage B subsystem hardening drills also watch the new memory boot gauges
+written to `monitoring/boot_metrics.prom`. Each `MemoryBundle.initialize()`
+call now emits:
+
+- `razar_memory_init_duration_seconds{source="boot_orchestrator|bootstrap_memory|bootstrap_world"}` –
+  wall-clock time for the initialization pass.
+- `razar_memory_init_layer_total{source="…"}` – total layers reported by the
+  bundle during the attempt.
+- `razar_memory_init_layer_ready_total{source="…"}` /
+  `razar_memory_init_layer_failed_total{source="…"}` – ready versus failed
+  layers inferred from the status strings.
+- `razar_memory_init_error{source="…"}` – flag set to `1` when the run raises
+  an exception or any layer reports a failure value.
+- `razar_memory_init_invocations_total{source="…"}` – monotonically increasing
+  counter for initialization attempts by entry point.
+
+The orchestrator and bootstrap scripts log the same information in
+`logs/razar.log` (and their console output) with the `memory_layers`,
+`memory_init_duration`, `memory_init_ready`, and `memory_init_failed` fields so
+auditors can confirm the textfile values without a Prometheus scrape. Capture a
+copy of the log lines and the updated metrics file whenever a Stage B review
+requests proof of a 10 k-item memory audit.
+
 Run `python scripts/verify_chakra_monitoring.py` when diagnosing a prolonged
 outage; it probes the `/metrics` endpoints (node exporter, cAdvisor, GPU
 exporter) and reports gaps in the monitoring fabric.
