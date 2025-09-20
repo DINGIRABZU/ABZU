@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Verify memory layers respond with seeded data.
+"""Verify memory layers respond with ready bootstrap data.
 
 Runs minimal queries against each layer. Raises ``RuntimeError``
-if any layer is empty or unavailable. Used to guard Albedo
+if any layer is empty or unavailable, mirroring the ``ready``
+state emitted by the Rust bundle. Used to guard Albedo
 initialisation before persona modules load.
 """
 from __future__ import annotations
@@ -21,7 +22,7 @@ os.environ.setdefault("MENTAL_JSON_PATH", str(DATA_DIR / "tasks.jsonl"))
 os.environ.setdefault("SPIRITUAL_DB_PATH", str(DATA_DIR / "ontology.db"))
 os.environ.setdefault("NARRATIVE_LOG_PATH", str(DATA_DIR / "story.log"))
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from memory.cortex import query_spirals
 from memory.emotional import fetch_emotion_history, get_connection as emotion_conn

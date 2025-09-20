@@ -57,17 +57,17 @@ def test_broadcast_layer_event_emits():
 
     broadcast_layer_event(
         {
-            "cortex": "seeded",
-            "emotional": "seeded",
+            "cortex": "ready",
+            "emotional": "ready",
             "mental": "skipped",
-            "spiritual": "seeded",
-            "narrative": "seeded",
+            "spiritual": "ready",
+            "narrative": "ready",
         }
     )
 
     assert len(producer.events) == 1
     layers = producer.events[0].payload["layers"]
-    assert layers["cortex"] == "seeded"
+    assert layers["cortex"] == "ready"
     assert layers["mental"] == "skipped"
     set_event_producer(None)
 
@@ -337,10 +337,10 @@ def test_init_memory_layers_bootstrap_and_persist(tmp_path, monkeypatch):
 
     assert len(producer.events) == 1
     layer_events = producer.events[0].payload["layers"]
-    assert layer_events["cortex"] == "seeded"
-    assert layer_events["emotional"] == "seeded"
-    assert layer_events["spiritual"] == "seeded"
-    assert layer_events["narrative"] == "seeded"
+    assert layer_events["cortex"] == "ready"
+    assert layer_events["emotional"] == "ready"
+    assert layer_events["spiritual"] == "ready"
+    assert layer_events["narrative"] == "ready"
     assert "mental" in layer_events
 
     class Node:

@@ -1,5 +1,5 @@
 flowchart LR
-    layer_init[(layer_init)] --> Cortex
+    layer_init[(layer_init<br/>ready · skipped · error)] --> Cortex
     layer_init --> Emotional
     layer_init --> Mental
     layer_init --> Spiritual
@@ -17,4 +17,5 @@ flowchart LR
     Spiritual --> Aggregate
     Narrative --> Aggregate
 
-    Aggregate --> OperatorAgent[Operator Agent]
+    Aggregate --> StatusMap[Status map + failed_layers]
+    StatusMap --> OperatorAgent[Operator Agent]

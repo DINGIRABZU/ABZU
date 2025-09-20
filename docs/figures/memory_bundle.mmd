@@ -1,6 +1,6 @@
 %% Memory bundle initialization and query aggregation diagram
-%% Version: v1.1.0
-%% Last updated: 2025-09-07
+%% Version: v1.2.0
+%% Last updated: 2025-10-07
 flowchart LR
     subgraph Init[Layer Initialization]
         MBInit[MemoryBundle.initialize] --> Bus[(EventBus: memory)]
@@ -9,6 +9,11 @@ flowchart LR
         Bus --> Mental[Mental]
         Bus --> Spiritual[Spiritual]
         Bus --> Narrative[Narrative]
+    end
+    subgraph Legend[Status Legend]
+        Ready[ready → canonical layer online]
+        Skipped[skipped → Python fallback engaged]
+        Error[error → initialization failed]
     end
     subgraph Query[Query Aggregation]
         Caller[Caller] --> MBQuery[MemoryBundle.query]

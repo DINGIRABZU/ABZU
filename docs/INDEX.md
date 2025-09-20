@@ -223,6 +223,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../agents/nazarick/victim_character.md](../agents/nazarick/victim_character.md) | victim_character.md | - | - |
 | [../agents/nazarick/zohar-zero_character.md](../agents/nazarick/zohar-zero_character.md) | zohar-zero_character.md | - | - |
 | [../benchmarks/README.md](../benchmarks/README.md) | Benchmarks | Run `make bench` to execute all benchmarks. Results are written to `data/benchmarks`. | - |
+| [../coverage.mmd](../coverage.mmd) | coverage.mmd | - | - |
 | [../data/biosignals/README.md](../data/biosignals/README.md) | Biosignal Acquisition Guidelines | This directory hosts anonymized biosignal samples used by the Nazarick Narrative System. | - |
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
@@ -377,16 +378,16 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [figures/agent_relations.mmd](figures/agent_relations.mmd) | Crown, Nazarick, and operator interaction diagram | Version: v1.0.0 Last updated: 2025-09-08 | - |
 | [figures/chakra_architecture.mmd](figures/chakra_architecture.mmd) | chakra_architecture.mmd | - | - |
 | [figures/heartbeat_self_healing.mmd](figures/heartbeat_self_healing.mmd) | heartbeat_self_healing.mmd | - | - |
-| [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/layer_init_broadcast.mmd](figures/layer_init_broadcast.mmd) | Layer initialization broadcast diagram | Version: v1.1.0 Last updated: 2025-10-07 | - |
 | [figures/layer_init_query_flow.mmd](figures/layer_init_query_flow.mmd) | layer_init_query_flow.mmd | - | - |
-| [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.1.0 Last updated: 2025-09-07 | - |
+| [figures/memory_bundle.mmd](figures/memory_bundle.mmd) | Memory bundle initialization and query aggregation diagram | Version: v1.2.0 Last updated: 2025-10-07 | - |
 | [figures/memory_layer_flow.mmd](figures/memory_layer_flow.mmd) | Memory layer flow diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
 | [figures/nazarick_agents_chart.mmd](figures/nazarick_agents_chart.mmd) | nazarick_agents_chart.mmd | - | - |
 | [figures/nazarick_crown_razar_integration.mmd](figures/nazarick_crown_razar_integration.mmd) | nazarick_crown_razar_integration.mmd | - | - |
 | [figures/nazarick_ui_pipeline.mmd](figures/nazarick_ui_pipeline.mmd) | nazarick_ui_pipeline.mmd | - | - |
-| [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/operator_query_sequence.mmd](figures/operator_query_sequence.mmd) | Operator query sequence diagram | Version: v1.1.0 Last updated: 2025-10-07 | - |
 | [figures/pyo3_interfaces.mmd](figures/pyo3_interfaces.mmd) | pyo3_interfaces.mmd | - | - |
-| [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.0.0 Last updated: 2025-09-05 | - |
+| [figures/query_memory_aggregation.mmd](figures/query_memory_aggregation.mmd) | Query memory aggregation diagram | Version: v1.1.0 Last updated: 2025-10-07 | - |
 | [figures/razar_crown_kimicho_flow.mmd](figures/razar_crown_kimicho_flow.mmd) | razar_crown_kimicho_flow.mmd | - | - |
 | [figures/rust_crate_boundaries.mmd](figures/rust_crate_boundaries.mmd) | rust_crate_boundaries.mmd | - | - |
 | [figures/system_tear_matrix.mmd](figures/system_tear_matrix.mmd) | system_tear_matrix.mmd | - | - |
@@ -410,7 +411,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [memory_cortex.md](memory_cortex.md) | Cortex Memory Search | The `memory.cortex` module stores spiral decisions as JSON lines under `data/cortex_memory_spiral.jsonl`. Each entry... | - |
 | [memory_emotion.md](memory_emotion.md) | Memory and Emotion APIs | This document outlines the public interfaces for the in-memory vector store and emotion state utilities. | - |
 | [memory_layer.md](memory_layer.md) | Deprecated | See [Memory Layers Guide](memory_layers_GUIDE.md). | - |
-| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.0.9 **Last updated:** 2025-09-30 | - |
+| [memory_layers_GUIDE.md](memory_layers_GUIDE.md) | Memory Layers Guide | **Version:** v1.1.0 **Last updated:** 2025-10-07 | - |
 | [migration_crosswalk.md](migration_crosswalk.md) | Migration Crosswalk | For legacy edge cases, see the [Python legacy audit](python_legacy_audit.md). | - |
 | [migration_playbooks/crown.md](migration_playbooks/crown.md) | Crown Migration Playbook | - | - |
 | [migration_playbooks/razar.md](migration_playbooks/razar.md) | RAZAR Migration Playbook | - | - |
@@ -521,6 +522,10 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [world_bootstrap.md](world_bootstrap.md) | World Bootstrap | Guidelines for seeding and cloning world configurations. | - |
 | [../floor_client/README.md](../floor_client/README.md) | Floor Client | This folder contains the React interface for Floor channels. | - |
 | [../guides/visual_customization.md](../guides/visual_customization.md) | Avatar Visual Customization | This guide outlines how to turn a 2D concept image into the 3D model used by the video engine. | - |
+| [../logs/alpha_gate/20250918T221655Z/coverage.mmd](../logs/alpha_gate/20250918T221655Z/coverage.mmd) | coverage.mmd | - | - |
+| [../logs/alpha_gate/20250919T220647Z/coverage.mmd](../logs/alpha_gate/20250919T220647Z/coverage.mmd) | coverage.mmd | - | - |
+| [../logs/alpha_gate/20250919T221803Z/coverage.mmd](../logs/alpha_gate/20250919T221803Z/coverage.mmd) | coverage.mmd | - | - |
+| [../logs/alpha_gate/20250920T065519Z/coverage.mmd](../logs/alpha_gate/20250920T065519Z/coverage.mmd) | coverage.mmd | - | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |

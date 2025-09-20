@@ -1,7 +1,7 @@
 # Memory Layers Guide
 
-**Version:** v1.0.9
-**Last updated:** 2025-09-30
+**Version:** v1.1.0
+**Last updated:** 2025-10-07
 
 This guide describes the event bus protocol and query flow connecting the
 Cortex, Emotional, Mental, Spiritual, and Narrative memory layers.
@@ -21,7 +21,7 @@ The Mermaid source lives at [figures/memory_bundle.mmd](figures/memory_bundle.mm
 The layers communicate via the `agents.event_bus` channel named `memory`.
 Initialization broadcasts use the `layer_init` event type.
 
-During ignition, [RAZAR Agent](RAZAR_AGENT.md) invokes `query_memory` once the chakra layers are seeded to verify readiness. At runtime the [Crown](CROWN_OVERVIEW.md) issues the same call before delegating prompts so active layers provide fresh context as outlined in the [Chakra System Manual](chakra_system_manual.md).
+During ignition, [RAZAR Agent](RAZAR_AGENT.md) invokes `query_memory` once the Rust-backed bundle reports every chakra layer as `ready`. At runtime the [Crown](CROWN_OVERVIEW.md) issues the same call before delegating prompts so active layers provide fresh context as outlined in the [Chakra System Manual](chakra_system_manual.md).
 
 ### Broadcasting layer initialization
 
@@ -36,11 +36,17 @@ bundle = MemoryBundle()
 statuses = bundle.initialize()
 ```
 
-The event payload contains a `layers` object:
+The event payload contains a `layers` object populated by the Rust bundle. Each entry is one of three readiness states:
+
+- `ready` – the canonical implementation loaded and responded to the bootstrap probe.
+- `skipped` – a Python fallback module was substituted because dependencies are missing.
+- `error` – neither the canonical module nor its fallback could initialize.
 
 ```json
-{"layers": {"cortex": "seeded", "emotional": "seeded", ...}}
+{"layers": {"cortex": "ready", "emotional": "ready", "mental": "skipped", "spiritual": "ready", "narrative": "error"}}
 ```
+
+Clients should treat `ready` layers as active, `skipped` layers as inert no-ops, and `error` layers as failures requiring operator intervention.
 
 ```mermaid
 {{#include figures/layer_init_broadcast.mmd}}
@@ -69,7 +75,10 @@ records = bundle.query("omen")
 import every layer attempts to load its implementation and transparently
 falls back to the module in `memory.optional` if dependencies are missing.
 Substituted layers are marked as `skipped`; initialization continues and
-emits a consolidated result regardless of missing components.
+emits a consolidated result regardless of missing components. When both the
+canonical module and its fallback fail, the bundle labels the layer `error`
+so orchestration services can respond without blocking the remaining
+stores.
 
 ### Command-line bootstrap
 
@@ -157,7 +166,9 @@ no-op fallback in `memory/optional/`—including `cortex`, `emotional`, `mental`
 fallback, which exposes the same public API but returns empty data structures.
 Fallback layers are reported as `skipped`, and calls such as
 `aggregate_search` simply yield empty results for them while logging any
-underlying errors. Queries still return data from the remaining active layers.
+underlying errors. If a layer cannot be loaded at all it will be reported as
+`error` and omitted from aggregation, while queries continue returning data
+from the remaining active layers.
 
 ## Tracing
 

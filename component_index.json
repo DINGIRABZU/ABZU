@@ -1262,7 +1262,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/check_memory_layers.py",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": [
         "__future__",
         "memory",
@@ -3041,7 +3041,7 @@
       "chakra": "unknown",
       "type": "script",
       "path": "scripts/init_memory_layers.py",
-      "version": "0.1.3",
+      "version": "0.2.0",
       "dependencies": [
         "__future__",
         "memory",
