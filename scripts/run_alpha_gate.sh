@@ -379,6 +379,11 @@ run_tests() {
         cd "$ROOT_DIR"
         python scripts/export_coverage.py
     ) 2>&1 | tee -a "$log_file"
+    local export_status=${PIPESTATUS[0]}
+    if ((export_status != 0)); then
+        log_entry "$log_file" "Coverage export failed with status $export_status"
+        return "$export_status"
+    fi
     log_entry "$log_file" "Archiving coverage artifacts"
     cp "$ROOT_DIR/coverage.json" "$LOG_DIR/coverage.json"
     if [[ -f "$ROOT_DIR/coverage.mmd" ]]; then
