@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-import types
-
 from INANNA_AI import corpus_memory
+from tests.fixtures.chroma_baseline import stub_chromadb
 
 
 def test_reindex_embeds_marrow_and_song(tmp_path, monkeypatch):
@@ -32,33 +31,14 @@ def test_reindex_embeds_marrow_and_song(tmp_path, monkeypatch):
     )
     monkeypatch.setattr(corpus_memory, "_HAVE_SENTENCE_TRANSFORMER", True)
 
-    # Stub chromadb client
-    class DummyCollection:
-        def __init__(self) -> None:
-            self.ids: list[str] = []
-
-        def add(self, ids, embeddings, metadatas):  # noqa: D401 - simple stub
-            self.ids.extend(ids)
-
-    class DummyClient:
-        def __init__(self, path: str) -> None:
-            self.collection = DummyCollection()
-
-        def delete_collection(self, name: str) -> None:  # noqa: D401 - simple stub
-            self.collection = DummyCollection()
-
-        def create_collection(
-            self, name: str
-        ) -> DummyCollection:  # noqa: D401 - simple stub
-            self.collection = DummyCollection()
-            return self.collection
-
-    shared_client = DummyClient("dummy")
-    dummy_chroma = types.SimpleNamespace(PersistentClient=lambda path: shared_client)
-    monkeypatch.setattr(corpus_memory, "chromadb", dummy_chroma)
+    fake_chroma = stub_chromadb(monkeypatch, corpus_memory)
     monkeypatch.setattr(corpus_memory, "_HAVE_CHROMADB", True)
 
     assert corpus_memory.reindex_corpus()
-    ids = shared_client.collection.ids
+    assert fake_chroma.clients
+    client = next(iter(fake_chroma.clients.values()))
+    collection = client.collections.get("corpus")
+    assert collection is not None
+    ids = [rec["id"] for rec in collection.records]
     assert any(p.endswith("MARROW_CODE.md") for p in ids)
     assert any(p.endswith("INANNA_SONG.md") for p in ids)

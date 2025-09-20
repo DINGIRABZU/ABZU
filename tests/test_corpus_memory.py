@@ -7,16 +7,12 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import pytest
-
-pytestmark = pytest.mark.skip(reason="requires unavailable resources")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import types
-
 from INANNA_AI import corpus_memory
+from tests.fixtures.chroma_baseline import stub_chromadb
 
 
 def test_cli_search(tmp_path, monkeypatch, capsys):
@@ -46,42 +42,9 @@ def test_cli_search(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         corpus_memory, "SentenceTransformer", lambda name: DummyModel(name)
     )
+    monkeypatch.setattr(corpus_memory, "_HAVE_SENTENCE_TRANSFORMER", True)
 
-    class DummyCollection:
-        def __init__(self) -> None:
-            self.ids = []
-            self.embeddings = []
-
-        def add(self, ids, embeddings, metadatas):
-            self.ids.extend(ids)
-            self.embeddings.extend([np.array(e) for e in embeddings])
-
-        def query(self, query_embeddings, n_results):
-            q = np.array(query_embeddings[0])
-            sims = [
-                float(e @ q / ((np.linalg.norm(e) * np.linalg.norm(q)) + 1e-8))
-                for e in self.embeddings
-            ]
-            order = np.argsort(sims)[::-1][:n_results]
-            return {"ids": [[self.ids[i] for i in order]]}
-
-    class DummyClient:
-        def __init__(self, path):
-            self.collection = DummyCollection()
-
-        def get_or_create_collection(self, name):
-            return self.collection
-
-        def create_collection(self, name):
-            self.collection = DummyCollection()
-            return self.collection
-
-        def delete_collection(self, name):
-            self.collection = DummyCollection()
-
-    shared_client = DummyClient("dummy")
-    dummy_chroma = types.SimpleNamespace(PersistentClient=lambda path: shared_client)
-    monkeypatch.setattr(corpus_memory, "chromadb", dummy_chroma)
+    fake_chroma = stub_chromadb(monkeypatch, corpus_memory)
 
     assert corpus_memory.reindex_corpus()
 
@@ -102,6 +65,15 @@ def test_cli_search(tmp_path, monkeypatch, capsys):
 
     out = capsys.readouterr().out.lower()
     assert "magical unicorn" in out
+
+    assert fake_chroma.clients
+    client = next(iter(fake_chroma.clients.values()))
+    collection = client.collections.get("corpus")
+    assert collection is not None
+    assert any(
+        rec["metadata"].get("path", "").endswith("found.md")
+        for rec in collection.records
+    )
 
 
 def test_cli_reindex_runs(monkeypatch):
@@ -164,21 +136,27 @@ def test_reindex_delete_failure(monkeypatch, tmp_path, caplog):
         def __init__(self, name):
             pass
 
+        def encode(self, texts, convert_to_numpy=True):  # type: ignore[no-untyped-def]
+            return [[0.0] for _ in texts]
+
     monkeypatch.setattr(
         corpus_memory, "SentenceTransformer", lambda name: DummyModel(name)
     )
+    monkeypatch.setattr(corpus_memory, "_HAVE_SENTENCE_TRANSFORMER", True)
 
-    class DummyClient:
-        def __init__(self, path):
-            pass
+    fake_chroma = stub_chromadb(monkeypatch, corpus_memory)
 
-        def delete_collection(self, name):
-            raise RuntimeError("delete failed")
+    def failing(name: str) -> None:
+        raise RuntimeError("delete failed")
 
-    dummy_chroma = types.SimpleNamespace(
-        PersistentClient=lambda path: DummyClient(path)
-    )
-    monkeypatch.setattr(corpus_memory, "chromadb", dummy_chroma)
+    original_pc = fake_chroma.PersistentClient
+
+    def wrapped_pc(path: str | Path):
+        client = original_pc(path)
+        client.delete_collection = failing  # type: ignore[assignment]
+        return client
+
+    monkeypatch.setattr(fake_chroma, "PersistentClient", wrapped_pc)
 
     with caplog.at_level(logging.WARNING):
         ok = corpus_memory.reindex_corpus()

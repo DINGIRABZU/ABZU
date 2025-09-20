@@ -177,7 +177,7 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 0039cc73bdf60c4c05f6770e8831e206e05da3dd89344cfc9c3338aadda2daed
+    sha256: 597a68062ce057d675a61eacf2ab3a4326aa4002faebe6e7111722b313f4b74e
     summary:
       insight: Stage B MCP connectors now initialize the shared handshake during
         operator_api startup and emit heartbeats that log credential rotations.
