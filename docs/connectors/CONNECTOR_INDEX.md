@@ -22,7 +22,7 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 | `avatar_broadcast` | broadcast avatar frames to Discord and Telegram | 0.1.0 | Bot token | Discord API, Telegram API | Discord, Telegram | experimental | [connectors/avatar_broadcast.py](../../connectors/avatar_broadcast.py) | N/A | N/A |
 | `signal_bus` | cross-connector publish/subscribe bus | 0.3.0 | N/A | Redis/Kafka | all connectors | experimental | [connectors/signal_bus.py](../../connectors/signal_bus.py) | [README.md](README.md) | N/A |
 | `mcp_gateway_example` | example MCP gateway connector | 0.2.0 | Configured | `POST /model/invoke` | internal models | experimental | [connectors/mcp_gateway_example.py](../../connectors/mcp_gateway_example.py) | [README.md](README.md) | N/A |
-| `neo_apsu_connector_template` | template for new connectors | 0.1.0 | N/A | N/A | N/A | template | [connectors/neo_apsu_connector_template.py](../../connectors/neo_apsu_connector_template.py) | N/A | N/A |
+| `neo_apsu_connector_template` | template for new connectors | 0.2.0 | Bearer | `POST /handshake`, `POST /heartbeat` | MCP gateway | experimental | [connectors/neo_apsu_connector_template.py](../../connectors/neo_apsu_connector_template.py) | [mcp_capability_payload.md](mcp_capability_payload.md) | N/A |
 
 ## MCP Migration Status
 

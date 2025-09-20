@@ -55,6 +55,13 @@ to emit JSON events during mixes, playback, and DAW fallbacks. Operators feed
 the resulting stream into [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md)
 for Stage B readiness sign-off.
 
+Neo‑APSU connector rehearsals mirror that discipline: the
+[neo_apsu_connector_template](../connectors/neo_apsu_connector_template.py)
+now emits an MCP capability payload described in
+[mcp_capability_payload.md](connectors/mcp_capability_payload.md).
+Stage B handshakes log the acknowledged contexts and session identifiers so
+operators can reconcile rehearsal transcripts before heartbeats begin.
+
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,
   `AIRSTAR_API_KEY`, and `RSTAR_API_KEY` credentials documented in

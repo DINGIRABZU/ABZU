@@ -254,7 +254,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [LLM_MODELS.md](LLM_MODELS.md) | LLM Models | This document describes the language models used in SPIRAL_OS and how to download them. | - |
 | [MAINTENANCE.md](MAINTENANCE.md) | Maintenance | - | - |
 | [MISSION.md](MISSION.md) | Mission | - | - |
-| [NEOABZU_spine.md](NEOABZU_spine.md) | NEOABZU Spine | **Version:** v0.1.2 **Last updated:** 2025-10-09 | - |
+| [NEOABZU_spine.md](NEOABZU_spine.md) | NEOABZU Spine | **Version:** v0.1.2 **Last updated:** 2025-10-09 | `../connectors/neo_apsu_connector_template.py` |
 | [Nazarick_GUIDE.md](Nazarick_GUIDE.md) | Nazarick Guide | - | - |
 | [OROBOROS_Engine.md](OROBOROS_Engine.md) | OROBOROS Engine | The inaugural ceremony executed the expression `(♀ :: ∞) :: ∅`. | - |
 | [Oroboros_Core.md](Oroboros_Core.md) | Oroboros Core Reference | The interpreter associates glyph tokens with elemental metadata that flows through evaluation. | - |
@@ -340,6 +340,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [connector_health_protocol.md](connector_health_protocol.md) | Connector Health Protocol | Ensures registered connectors are reachable before merging. | - |
 | [connectors/CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) | Connector Index | Canonical registry of ABZU's connectors. Each entry lists the purpose, version, primary service endpoints, linked age... | `../../connectors/avatar_broadcast.py`, `../../connectors/mcp_gateway_example.py`, `../../connectors/narrative_mcp.py`, `../../connectors/neo_apsu_connector_template.py`, `../../connectors/primordials_api.py`, `../../connectors/primordials_mcp.py`, `../../connectors/signal_bus.py`, `../../connectors/webrtc_connector.py`, `../../narrative_api.py`, `../../operator_api.py`, `../../razar/crown_handshake.py`, `../../razar/crown_link.py`, `../../server.py`, `../../tools/bot_discord.py`, `../../tools/bot_telegram.py` |
 | [connectors/README.md](connectors/README.md) | Connector Overview | Guidelines for modules that bridge Spiral OS to external services. The live registry of available connectors lives in... | - |
+| [connectors/mcp_capability_payload.md](connectors/mcp_capability_payload.md) | MCP Capability Payload | The Neo-APSU connector template exchanges capabilities with the MCP gateway during the `/handshake` ritual. The paylo... | - |
 | [connectors/mcp_migration.md](connectors/mcp_migration.md) | MCP Migration Guide | This guide explains how to convert existing API connectors to the **Model Context Protocol (MCP)**. | - |
 | [contribution_guide.md](contribution_guide.md) | Contribution Guide | Thank you for considering a contribution! | - |
 | [contributor_checklist.md](contributor_checklist.md) | Contributor Checklist | This checklist distills mandatory practices for ABZU contributors. | - |

@@ -8,6 +8,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [System Blueprint](system_blueprint.md) – chakra layers, Operator ↔ RAZAR/Crown flow, identity embedding pipeline, `CROWN_IDENTITY_FINGERPRINT` publishing, `crown_identity_ready` monitoring, handshake enforcement, dynamic ignition, and operator UI
 - [Sonic Rehearsal Guide](runbooks/sonic_rehearsal_guide.md) – Stage B audio checklist enforcing `AUDIO_BACKEND=pydub`, FFmpeg/pydub/simpleaudio validation via `python -m audio.check_env --strict`, and the new Ardour/Carla preflight invoked from `scripts/setup_audio_env.sh`.
 - [Audio Rehearsal Telemetry](monitoring/audio_rehearsal_telemetry.md) – structured logging and archival workflow for Stage B audio metrics.
+- [MCP Capability Payload](connectors/mcp_capability_payload.md) – Neo‑APSU connector Stage B handshake schema, rotation metadata, and log expectations.
 - [System Overview](system_overview.md) – mission, triadic stack, chakra agents, memory bundle, and avatar stack
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
 - [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview

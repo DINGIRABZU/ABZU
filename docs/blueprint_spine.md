@@ -314,6 +314,7 @@ guide, while architectural placement appears in the
 | Avatar Broadcast | Stream avatar frames to social platforms | API – social platforms expose HTTP endpoints only | Relays heartbeat events to social streams. | 0.1.0 |
 | Primordials API | Metric bridge to upstream Primordials service | API – external service lacks MCP | Posts metrics tagged with both fields. | 0.1.1 |
 | MCP Gateway Bridge | Demonstrates pure MCP requests for internal models | MCP – showcases full MCP handshake | Uses MCP handshake with heartbeat metadata. | 0.1.0 |
+| Neo-APSU Template | Stage B connector scaffold with capability payload schema | MCP – registers contexts and rotates rehearsal tokens | Logs Stage B handshakes with accepted contexts before heartbeats. | 0.2.0 |
 
 ### **Model Context Protocol Migration**
 
