@@ -12,6 +12,7 @@ import asyncio
 import json
 import logging
 import os
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from typing import Any, Iterable
 
@@ -23,6 +24,9 @@ _USE_MCP = os.getenv("ABZU_USE_MCP") == "1"
 _MCP_URL = os.getenv("MCP_GATEWAY_URL", "http://localhost:8001")
 _HANDSHAKE_ENDPOINT = "/handshake"
 _STAGE_B_CONTEXT = "stage-b-rehearsal"
+
+_DEFAULT_HEARTBEAT_CHAKRA = "neo"
+_DEFAULT_HEARTBEAT_CYCLE_COUNT = 0
 
 
 def _iso_now() -> str:
@@ -131,6 +135,122 @@ def _sanitize_contexts(contexts: Iterable[Any]) -> list[str]:
     return sorted(names)
 
 
+def _normalize_isoformat(value: str) -> str:
+    """Return ``value`` normalised as an ISO-8601 string with ``Z`` suffix."""
+
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError("credential_expiry must be an ISO-8601 timestamp") from exc
+
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    parsed = parsed.astimezone(timezone.utc).replace(microsecond=0)
+    return parsed.isoformat().replace("+00:00", "Z")
+
+
+def _normalize_credential_expiry(value: Any) -> str:
+    """Normalise ``value`` to the canonical credential expiry representation."""
+
+    if isinstance(value, datetime):
+        value = value.astimezone(timezone.utc).replace(microsecond=0).isoformat()
+    if not isinstance(value, str):
+        raise ValueError("credential_expiry must be an ISO-8601 timestamp")
+    return _normalize_isoformat(value)
+
+
+def _validate_chakra(value: Any) -> str:
+    """Validate and return a chakra override."""
+
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("chakra must be a non-empty string")
+    return value.strip()
+
+
+def _validate_cycle_count(value: Any) -> int:
+    """Validate and return a cycle count override."""
+
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError("cycle_count must be an integer")
+    if value < 0:
+        raise ValueError("cycle_count must be non-negative")
+    return value
+
+
+def _validate_context(value: Any) -> str:
+    """Ensure heartbeat context aligns with Stage B expectations."""
+
+    if not isinstance(value, str):
+        raise ValueError("context must be a string")
+    if value.strip() != _STAGE_B_CONTEXT:
+        raise ValueError(f"context must be '{_STAGE_B_CONTEXT}'")
+    return value.strip()
+
+
+def _canonical_heartbeat_metadata(
+    session: Mapping[str, Any] | None,
+    *,
+    credential_expiry: Any = None,
+) -> dict[str, Any]:
+    """Return the canonical metadata applied to all heartbeat payloads."""
+
+    metadata = {
+        "chakra": _DEFAULT_HEARTBEAT_CHAKRA,
+        "cycle_count": _DEFAULT_HEARTBEAT_CYCLE_COUNT,
+        "context": _STAGE_B_CONTEXT,
+    }
+
+    candidate = credential_expiry
+    if candidate is None and session is not None:
+        if not isinstance(session, Mapping):
+            raise ValueError("session must be a mapping when supplied")
+        candidate = session.get("credential_expiry") or session.get("expires_at")
+
+    if candidate is not None:
+        metadata["credential_expiry"] = _normalize_credential_expiry(candidate)
+
+    return metadata
+
+
+def _prepare_heartbeat_payload(
+    payload: dict[str, Any],
+    *,
+    session: Mapping[str, Any] | None,
+    credential_expiry: Any = None,
+) -> dict[str, Any]:
+    """Merge canonical metadata with ``payload`` and validate overrides."""
+
+    if not isinstance(payload, dict):
+        raise TypeError("heartbeat payload must be a dictionary")
+
+    prepared: dict[str, Any] = dict(payload)
+    defaults = _canonical_heartbeat_metadata(
+        session, credential_expiry=credential_expiry
+    )
+
+    chakra = prepared.get("chakra", defaults["chakra"])
+    prepared["chakra"] = _validate_chakra(chakra)
+
+    cycle_count = prepared.get("cycle_count", defaults["cycle_count"])
+    prepared["cycle_count"] = _validate_cycle_count(cycle_count)
+
+    context = prepared.get("context", defaults["context"])
+    prepared["context"] = _validate_context(context)
+
+    expiry_value = prepared.get("credential_expiry")
+    if expiry_value is None:
+        expiry_value = defaults.get("credential_expiry")
+    if expiry_value is None:
+        raise ValueError(
+            "heartbeat payload requires credential_expiry via session data or override"
+        )
+    prepared["credential_expiry"] = _normalize_credential_expiry(expiry_value)
+
+    prepared.setdefault("emitted_at", _iso_now())
+
+    return prepared
+
+
 async def _post_handshake(
     client: httpx.AsyncClient, payload: dict[str, Any]
 ) -> httpx.Response:
@@ -210,15 +330,34 @@ async def handshake(
         return await _execute(session)
 
 
-async def send_heartbeat(payload: dict[str, Any]) -> None:
+async def send_heartbeat(
+    payload: dict[str, Any],
+    *,
+    session: Mapping[str, Any] | None = None,
+    credential_expiry: Any = None,
+    client: httpx.AsyncClient | None = None,
+) -> None:
     """Emit heartbeat telemetry to maintain alignment."""
 
     if not _USE_MCP:
         raise RuntimeError("MCP is not enabled")
 
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(f"{_MCP_URL}/heartbeat", json=payload, timeout=5.0)
+    body = _prepare_heartbeat_payload(
+        payload, session=session, credential_expiry=credential_expiry
+    )
+
+    async def _execute(session_client: httpx.AsyncClient) -> None:
+        resp = await session_client.post(
+            f"{_MCP_URL}/heartbeat", json=body, timeout=5.0
+        )
         resp.raise_for_status()
+
+    if client is not None:
+        await _execute(client)
+        return
+
+    async with httpx.AsyncClient() as session_client:
+        await _execute(session_client)
 
 
 def doctrine_compliant() -> bool:
