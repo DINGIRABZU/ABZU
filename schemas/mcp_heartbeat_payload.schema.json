@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abzu.ai/schemas/mcp_heartbeat_payload.schema.json",
+  "title": "Neo-APSU Stage B Heartbeat Payload",
+  "description": "Canonical telemetry emitted by the Neo-APSU connector during Stage B rehearsals.",
+  "type": "object",
+  "required": [
+    "chakra",
+    "cycle_count",
+    "context",
+    "credential_expiry",
+    "emitted_at"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "chakra": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Signal origin chakra tag. Must be a non-empty string.",
+      "examples": ["neo", "solar"]
+    },
+    "cycle_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Cycle alignment counter. Must be a non-negative integer.",
+      "examples": [0, 3, 42]
+    },
+    "context": {
+      "type": "string",
+      "const": "stage-b-rehearsal",
+      "description": "Stage context identifier. Stage B rehearsal is required.",
+      "examples": ["stage-b-rehearsal"]
+    },
+    "credential_expiry": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp describing when the MCP credential expires.",
+      "examples": ["2025-12-01T00:00:00Z"]
+    },
+    "emitted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp captured when the heartbeat was emitted.",
+      "examples": ["2025-11-15T12:00:00Z"]
+    }
+  }
+}
