@@ -7,6 +7,7 @@
 //! ```bash
 //! cargo test -p neoabzu-memory --features opentelemetry
 //! ```
+#![allow(deprecated)]
 use std::collections::HashMap;
 use std::sync::Mutex;
 
@@ -50,6 +51,12 @@ pub struct MemoryBundle {
     statuses: HashMap<String, String>,
 }
 
+impl Default for MemoryBundle {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[pymethods]
 impl MemoryBundle {
     #[new]
@@ -59,31 +66,87 @@ impl MemoryBundle {
         }
     }
 
-    pub fn initialize(&mut self, py: Python<'_>) -> PyResult<HashMap<String, String>> {
+    pub fn initialize(&mut self, py: Python<'_>) -> PyResult<Py<PyDict>> {
         #[cfg(feature = "tracing")]
         let span = info_span!("memory.bundle.initialize");
         #[cfg(feature = "tracing")]
         let _guard = span.enter();
 
         let mut statuses: HashMap<String, String> = HashMap::new();
+        let diagnostics = PyDict::new(py);
 
         for layer in LAYERS {
             let module_path = LAYER_IMPORTS.get(layer).expect("layer import path missing");
-            let status = match PyModule::import(py, *module_path) {
-                Ok(_) => "ready",
+            let layer_diag = PyDict::new(py);
+            layer_diag.set_item("primary_module", module_path)?;
+            let attempts = PyList::empty(py);
+            let primary_attempt = PyDict::new(py);
+            primary_attempt.set_item("module", module_path)?;
+            attempts.append(primary_attempt)?;
+
+            let mut status_value = String::from("ready");
+            let mut loaded_module: Option<String> = None;
+            let mut fallback_reason: Option<&'static str> = None;
+            let mut failure_reason: Option<&'static str> = None;
+            let mut fallback_attempt: Option<&PyDict> = None;
+
+            match PyModule::import(py, *module_path) {
+                Ok(_) => {
+                    primary_attempt.set_item("outcome", "loaded")?;
+                    loaded_module = Some((*module_path).to_string());
+                }
                 Err(err) => {
+                    primary_attempt.set_item("outcome", "error")?;
+                    primary_attempt.set_item("error", err.to_string())?;
                     if err.is_instance_of::<PyModuleNotFoundError>(py) {
+                        fallback_reason = Some("primary_module_not_found");
                         let optional_path = format!("memory.optional.{layer}");
-                        match PyModule::import(py, optional_path.as_str()) {
-                            Ok(_) => "skipped",
-                            Err(_) => "error",
+                        let optional_path_str = optional_path.as_str();
+                        let fallback_dict = PyDict::new(py);
+                        fallback_dict.set_item("module", optional_path_str)?;
+                        match PyModule::import(py, optional_path_str) {
+                            Ok(_) => {
+                                fallback_dict.set_item("outcome", "loaded")?;
+                                loaded_module = Some(optional_path);
+                                status_value = "skipped".to_string();
+                            }
+                            Err(optional_err) => {
+                                fallback_dict.set_item("outcome", "error")?;
+                                fallback_dict.set_item("error", optional_err.to_string())?;
+                                status_value = "error".to_string();
+                                failure_reason = Some("optional_module_import_failed");
+                            }
                         }
+                        fallback_attempt = Some(fallback_dict);
                     } else {
-                        "error"
+                        status_value = "error".to_string();
+                        failure_reason = Some("primary_import_failed");
                     }
                 }
-            };
-            statuses.insert((*layer).to_string(), status.to_string());
+            }
+
+            if let Some(fallback_dict) = fallback_attempt {
+                attempts.append(fallback_dict)?;
+            }
+
+            if status_value == "ready" && loaded_module.is_none() {
+                loaded_module = Some((*module_path).to_string());
+            }
+
+            layer_diag.set_item("status", status_value.as_str())?;
+            layer_diag.set_item("attempts", attempts)?;
+            if let Some(module) = loaded_module {
+                layer_diag.set_item("loaded_module", module)?;
+            }
+            if let Some(reason) = fallback_reason {
+                layer_diag.set_item("fallback_reason", reason)?;
+            }
+            if let Some(reason) = failure_reason {
+                layer_diag.set_item("failure_reason", reason)?;
+            }
+
+            diagnostics.set_item(layer, layer_diag)?;
+            statuses.insert((*layer).to_string(), status_value);
         }
 
         {
@@ -93,7 +156,16 @@ impl MemoryBundle {
 
         broadcast_layer_event(py, statuses.clone())?;
         self.statuses = statuses.clone();
-        Ok(statuses)
+
+        let statuses_dict = PyDict::new(py);
+        for (layer, status) in &statuses {
+            statuses_dict.set_item(layer, status)?;
+        }
+
+        let result = PyDict::new(py);
+        result.set_item("statuses", statuses_dict)?;
+        result.set_item("diagnostics", diagnostics)?;
+        Ok(result.into())
     }
 
     pub fn query(&self, py: Python<'_>, text: &str) -> PyResult<Py<PyDict>> {

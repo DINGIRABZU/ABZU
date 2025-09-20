@@ -16,11 +16,31 @@ class MemoryBundle:
     def __init__(self) -> None:
         self._bundle = _RustBundle()
         self.statuses: Dict[str, str] = {}
+        self.diagnostics: Dict[str, Any] = {}
 
     def initialize(self) -> Dict[str, str]:
-        """Initialize memory layers through the Rust bundle."""
-        statuses = self._bundle.initialize()
-        self.statuses = dict(statuses)
+        """Initialize memory layers through the Rust bundle.
+
+        Returns
+        -------
+        Dict[str, str]
+            Mapping of layer names to their initialization status. Detailed
+            diagnostic metadata emitted by the Rust extension (including import
+            attempts, fallback selections, and failure reasons) is stored on
+            :attr:`diagnostics` for callers that need richer introspection.
+        """
+
+        result = self._bundle.initialize()
+        statuses = dict(result.get("statuses", {}))
+        diagnostics_raw = result.get("diagnostics", {})
+        diagnostics: Dict[str, Any] = {}
+        for layer, info in diagnostics_raw.items():
+            entry = dict(info)
+            attempts = [dict(attempt) for attempt in entry.get("attempts", [])]
+            entry["attempts"] = attempts
+            diagnostics[layer] = entry
+        self.statuses = statuses
+        self.diagnostics = diagnostics
         return statuses
 
     def query(self, text: str) -> Dict[str, Any]:
