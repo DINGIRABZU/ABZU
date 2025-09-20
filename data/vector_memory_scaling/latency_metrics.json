@@ -1,0 +1,41 @@
+{
+  "corpus_file": "data/vector_memory_scaling/corpus.jsonl",
+  "metrics": [
+    {
+      "mode": "vector_memory",
+      "corpus_size": 10000,
+      "query_count": 200,
+      "write_latency": {
+        "count": 10000,
+        "p50": 0.0023854580003899173,
+        "p95": 0.010494072750680055,
+        "max": 0.1357845990005444
+      },
+      "query_latency": {
+        "count": 200,
+        "p50": 0.0172460100002354,
+        "p95": 0.01995247539853153,
+        "max": 0.02360235299966007
+      },
+      "duration_seconds": 44.92691125999954
+    },
+    {
+      "mode": "memory_store_fallback",
+      "corpus_size": 10000,
+      "query_count": 200,
+      "write_latency": {
+        "count": 10000,
+        "p50": 0.002509793500394153,
+        "p95": 0.004580617649571646,
+        "max": 0.07917637799982913
+      },
+      "query_latency": {
+        "count": 200,
+        "p50": 0.08433007150051708,
+        "p95": 0.09392099364986278,
+        "max": 0.15372809899963613
+      },
+      "duration_seconds": 47.50348817300073
+    }
+  ]
+}
