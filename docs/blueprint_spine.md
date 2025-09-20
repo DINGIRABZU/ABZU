@@ -54,6 +54,7 @@ The inaugural ceremony is recorded in the [First Consecrated Computation](../NEO
 - **Identity loader** reimplemented in Rust; Crown initialization writes mission and persona summary to `data/identity.json` and seeds vector/corpus memory with an identity embedding so routing queries can recall the servant baseline. The boot cycle now surfaces a `CROWN_IDENTITY_FINGERPRINT` (SHA-256 digest plus mtime) for that file so audit trails link each mission brief acknowledgement to the exact identity imprint.
 - **Identity readiness telemetry** exposes the `crown_identity_ready` gauge once that digest matches the stored summary; operators watch it on the RAZAR failover dashboard and alert on `min_over_time(crown_identity_ready[5m]) < 1` per [monitoring/RAZAR.md](monitoring/RAZAR.md#alert-thresholds).
 - **Memory initialization diagnostics** wire `scripts/bootstrap_memory.py` to Prometheus gauges that track the 10 k-item audit workflow; dashboards and alert thresholds remain in [monitoring/RAZAR.md](monitoring/RAZAR.md#alert-thresholds), and the layer readiness contract is documented in [memory_layers_GUIDE.md](memory_layers_GUIDE.md#diagnostics-payload).
+- **Stage B memory telemetry** requires the diagnostics payload emitted by [`memory/bundle.py`](../memory/bundle.py) to accompany every initialization so Stage B reviewers can correlate fallbacks with the `razar_memory_init_*` gauges tracked in [monitoring/RAZAR.md](monitoring/RAZAR.md#alert-thresholds); the rotating handler in [`logging_config.yaml`](../logging_config.yaml) preserves the audit trail under `logs/razar.log` without letting 10 k-item reviews exhaust disk.
 - **Sonic rehearsal guardrails** force `AUDIO_BACKEND=pydub` during Stage B and wire `start_spiral_os.py` to abort when `python -m audio.check_env --strict` reports missing FFmpeg, pydub or simpleaudio dependencies. The Stage B setup script now also calls `modulation_arrangement.check_daw_availability` so missing Ardour or Carla binaries only skip session files instead of blocking rehearsals.
 - **Audio telemetry spine** instruments `modulation_arrangement` and `src/audio/engine` to emit structured rehearsal metrics archived via [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md).
 - **Blueprint governance** requires architecture commits to update [system_blueprint.md](system_blueprint.md), [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), [NEOABZU_spine.md](NEOABZU_spine.md), and the indexes [index.md](index.md) / [INDEX.md](INDEX.md) so ceremonial and operational guides remain in lockstep.
@@ -264,6 +265,14 @@ heartbeat logs to fill any gaps, rehydrating sessions before mission
 processing resumes. See the [System Blueprint](system_blueprint.md#memory-spine)
 and [Recovery Playbook](recovery_playbook.md#snapshot-recovery) for
 operational guidance.
+
+Stage B readiness relies on the same instrumentation: `MemoryBundle.diagnostics`
+from [`memory/bundle.py`](../memory/bundle.py) rides with every broadcast so
+operators can match fallback attempts against the `razar_memory_init_*` gauges
+documented in [monitoring/RAZAR.md](monitoring/RAZAR.md#alert-thresholds), while
+the rotating `logs/razar.log` handler configured in
+[`logging_config.yaml`](../logging_config.yaml) keeps the audit ledger available
+without runaway growth during 10 k-item reviews.
 
 ### **Dynamic Ignition**
 
