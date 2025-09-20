@@ -23,20 +23,26 @@ Run the validation helper before each Stage B dry run:
 python -m audio.check_env --strict
 ```
 
-The command verifies the following components:
-
-- `ffmpeg` – binary required for encoding/decoding during overlays.
-- `pydub` – preferred audio backend powering Stage B rehearsals.
-- `simpleaudio` – realtime playback shim used by the sonic console.
-- Support libraries (`librosa`, `soundfile`, `opensmile`, `clap`, `rave`).
+The command verifies that the core `audio` extras stack is ready.
+See [Audio Stack Dependencies](../audio_stack.md) for the full
+degradation matrix covering optional packages such as CLAP or RAVE.
 
 ## Provisioning steps
 
-1. Install the Python packages inside the rehearsal virtual environment:
+1. Install the Python packages inside the rehearsal virtual environment using
+   the pinned versions:
 
    ```bash
-   pip install pydub simpleaudio librosa soundfile opensmile clap rave
+   pip install \
+       pydub==0.25.1 \
+       simpleaudio==1.0.4 \
+       soundfile==0.13.1 \
+       librosa==0.11.0 \
+       opensmile==2.6.0
    ```
+
+   Optional integrations (CLAP, RAVE, Demucs, Spleeter, EmotiVoice) can be
+   added afterwards depending on the rehearsal focus.
 
 2. Provision FFmpeg with the system package manager (example for Ubuntu):
 
@@ -45,13 +51,18 @@ The command verifies the following components:
    sudo apt-get install -y ffmpeg
    ```
 
+   Install `libasound2-dev` on Debian/Ubuntu hosts before compiling
+   `simpleaudio` so the ALSA headers are available.
+
 3. Confirm the toolchain:
 
    ```bash
    python -m audio.check_env --strict
    ```
 
-   The command must report that ffmpeg, pydub and simpleaudio are present.
+   The command must report that FFmpeg, pydub and simpleaudio are present. It
+   will log warnings for missing optional analyzers (e.g. CLAP) so operators
+   can record temporary degradations in the rehearsal log.
 
 4. Run the Stage B rehearsal setup script to confirm Ardour/Carla tooling:
 

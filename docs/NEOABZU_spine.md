@@ -45,11 +45,12 @@ Rust crate or pipeline adjustments must update [system_blueprint.md](system_blue
 Stage B sonic rehearsals now require the audio stack guardrail introduced in
 `start_spiral_os.py`: the bootstrap aborts when `python -m audio.check_env
 --strict` reports missing FFmpeg, pydub or simpleaudio, enforcing
-`AUDIO_BACKEND=pydub` before rehearsals continue. The companion
-`scripts/setup_audio_env.sh` ritual calls
-`modulation_arrangement.check_daw_availability` so missing Ardour or Carla
-executables surface as warnings and rehearsal exports fall back to audio-only
-renders until the DAWs land on PATH.
+`AUDIO_BACKEND=pydub` before rehearsals continue. Operators install the pinned
+`audio` extras bundle documented in [audio_stack.md](audio_stack.md) prior to
+triggering the guardrail. The companion `scripts/setup_audio_env.sh` ritual
+calls `modulation_arrangement.check_daw_availability` so missing Ardour or
+Carla executables surface as warnings and rehearsal exports fall back to
+audio-only renders until the DAWs land on PATH.
 Telemetry collectors now wrap `modulation_arrangement` and `src/audio/engine`
 to emit JSON events during mixes, playback, and DAW fallbacks. Operators feed
 the resulting stream into [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md)

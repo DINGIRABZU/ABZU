@@ -60,6 +60,8 @@ scipy==1.16.1
     # via spiral-os (pyproject.toml)
 soundfile==0.13.1
     # via spiral-os (pyproject.toml)
+simpleaudio==1.0.4
+    # via spiral-os (pyproject.toml)
 streamlit==1.48.1
     # via spiral-os (pyproject.toml)
 uvicorn==0.35.0

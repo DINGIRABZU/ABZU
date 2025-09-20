@@ -20,6 +20,10 @@ Track CVE monitoring links to ensure timely vulnerability remediation. Update th
 | scipy | 1.16.1 | 1.16.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=scipy) | Scientific computing |
 | scikit-learn | 1.7.1 | 1.7.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=scikit-learn) | Machine learning utilities |
 | soundfile | 0.13.1 | 0.13.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=soundfile) | Audio processing |
+| pydub | 0.25.1 | 0.25.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=pydub) | Audio editing backend |
+| simpleaudio | 1.0.4 | 1.0.4 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=simpleaudio) | Realtime playback |
+| librosa | 0.11.0 | 0.11.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=librosa) | Audio feature extraction |
+| opensmile | 2.6.0 | 2.6.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=opensmile) | Emotion descriptors |
 | phonemizer | 3.3.0 | 3.3.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=phonemizer) | Phoneme extraction |
 | fastapi | 0.116.1 | 0.116.1 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=fastapi) | Web framework |
 | redis | 5.0.3 | 5.0.3 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=redis) | Event processing (optional) |

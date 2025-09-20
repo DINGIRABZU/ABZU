@@ -24,8 +24,16 @@ scipy==1.16.1
     # provides sparse matrix utilities required by smoke tests
 scikit-learn==1.7.1
     # optional: machine learning utilities built on SciPy
+pydub==0.25.1
+    # optional: primary audio backend for playback and editing
+simpleaudio==1.0.4
+    # optional: realtime playback shim (requires libasound2-dev at build time)
 soundfile==0.13.1
-    # optional: audio processing features
+    # optional: audio processing features and NumPy fallback backend
+librosa==0.11.0
+    # optional: feature extraction and ingestion helpers
+opensmile==2.6.0
+    # optional: emotion-aware audio descriptors
 phonemizer==3.3.0
     # for phoneme extraction
 fastapi==0.116.1

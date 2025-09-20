@@ -1191,7 +1191,10 @@ Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [
 - **Startup:** Activate after essential services.
 - **Preflight:** `start_spiral_os.py` enforces `AUDIO_BACKEND=pydub` and calls
   `python -m audio.check_env --strict` so FFmpeg, pydub and simpleaudio must be
-  installed before the Stage B sonic rehearsals proceed.
+  installed before the Stage B sonic rehearsals proceed. The `audio` extras
+  bundle (`pydub==0.25.1`, `simpleaudio==1.0.4`, `soundfile==0.13.1`,
+  `librosa==0.11.0`, `opensmile==2.6.0`) is pinned in `requirements.txt` and
+  requires `libasound2-dev` on Debian-based hosts when compiling simpleaudio.
 - **Session Export Guardrail:** Stage B prep invokes
   `modulation_arrangement.check_daw_availability` via
   `scripts/setup_audio_env.sh`, warning operators when Ardour or Carla are
