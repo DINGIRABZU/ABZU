@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -305,6 +304,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [assets/razar_flow.mmd](assets/razar_flow.mmd) | razar_flow.mmd | - | - |
 | [assets/remote_assistance_sequence.mmd](assets/remote_assistance_sequence.mmd) | remote_assistance_sequence.mmd | - | - |
 | [audio_ingestion.md](audio_ingestion.md) | Audio Ingestion | This guide outlines how Spiral OS loads audio files and enriches them with optional features such as tempo and key de... | - |
+| [audio_stack.md](audio_stack.md) | Audio Stack Dependencies | The Stage B rehearsal pipeline relies on the `audio` extras group plus a small set of optional analyzers. The table b... | - |
 | [avatar_3d_api.md](avatar_3d_api.md) | 3D Avatar API | The 3D Avatar API streams animated meshes to viewers and exposes configuration hooks for the avatar pipeline. Crown r... | - |
 | [avatar_animation.md](avatar_animation.md) | Avatar Animation Modules | This document describes the lightweight avatar animation helpers found in `ai_core.avatar`. | - |
 | [avatar_ethics.md](avatar_ethics.md) | Avatar Ethics | The avatar and call features rely on audiovisual data that may reveal personal information. Operators must handle rec... | - |
