@@ -18,13 +18,31 @@ This audit captures the work required to migrate the operator connectors to the
 - The operator connector entries in the
   [Connector Index](CONNECTOR_INDEX.md) remain tagged as “migrating (MCP adapter
   stub)” while the production rollout and monitoring hooks are staged.
+- Nightly CI now runs the Stage B smoke checks with `ABZU_USE_MCP=1`, uploads
+  the JSON drill receipts, and fails if the latest rotation is older than the
+  [`ROTATION_WINDOW_HOURS`](../../connectors/operator_mcp_adapter.py) service
+  level objective, surfacing actionable logs for the operator team.
+
+## Automation & Alerting Expectations
+
+The **Stage B operator MCP drill** job in
+[`nightly_ci.yml`](../../.github/workflows/nightly_ci.yml) installs the
+connector dependencies, executes `python scripts/stage_b_smoke.py --json`, and
+stores the JSON output alongside the rotation ledger as GitHub artifacts. A
+lightweight parser reuses `ROTATION_WINDOW_HOURS` to ensure the most recent
+rotation record in [`logs/stage_b_rotation_drills.jsonl`](../../logs/stage_b_rotation_drills.jsonl)
+is within the allowed window. When the log is missing, empty, or stale, the job
+exits non-zero and the workflow highlights the failure. Operators should triage
+any failure within one rotation window, update credentials as needed, rerun the
+smoke script manually to confirm recovery, and close the incident once the next
+scheduled run passes.
 
 ## Gaps Relative to the Template
 
 | Area | Template Expectation | Remaining Gap |
 | --- | --- | --- |
 | Production integration | Adapter-enabled connectors route production traffic through the MCP handshake before command or upload execution. | `OperatorMCPAdapter` is implemented but still needs to be wired into the deployed `operator_api`/`operator_upload` services; the [Connector Index entries](CONNECTOR_INDEX.md) remain in the “migrating” state until rollout completes. |
-| Automation & observability | Stage B smoke checks run on a schedule, persist drill receipts, and page owners when rotation windows lapse. | `scripts/stage_b_smoke.py` runs manually; integrate it into CI/ops rotations and define alerting around [`logs/stage_b_rotation_drills.jsonl`](../../logs/stage_b_rotation_drills.jsonl). |
+| Automation & observability | Stage B smoke checks run on a schedule, persist drill receipts, and page owners when rotation windows lapse. | Scheduled nightly drill now enforces the rotation window and publishes artifacts; remaining work is to connect the workflow failures to paging for 24/7 response. |
 | Runbook updates | Template connectors ship with an operations playbook covering MCP feature toggles, rotation review, and rollback. | Document production enablement steps and the Stage B rehearsal review loop so the operator team can graduate the connectors from “migrating” to “active.” |
 
 ## Migration Tasks

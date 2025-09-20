@@ -34,3 +34,83 @@ jobs:
           name: pytest-results
           path: pytest.xml
           if-no-files-found: ignore
+
+  operator-mcp-stage-b:
+    name: Stage B operator MCP drill
+    runs-on: ubuntu-latest
+    env:
+      ABZU_USE_MCP: "1"
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r dev-requirements.txt
+          pip install -e .
+      - name: Run Stage B smoke checks
+        run: |
+          set -eo pipefail
+          python scripts/stage_b_smoke.py --json | tee stage_b_smoke.json
+      - name: Validate rotation recency
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          from connectors.operator_mcp_adapter import ROTATION_WINDOW_HOURS
+
+          log_path = Path("logs") / "stage_b_rotation_drills.jsonl"
+          if not log_path.exists():
+              print(f"Rotation log missing: {log_path}")
+              sys.exit(1)
+
+          lines = [
+              json.loads(line)
+              for line in log_path.read_text(encoding="utf-8").splitlines()
+              if line.strip()
+          ]
+          if not lines:
+              print("Rotation log is empty")
+              sys.exit(1)
+
+          latest = lines[-1]
+          rotated_at_str = latest.get("rotated_at")
+          if not rotated_at_str:
+              print(f"Latest entry missing rotated_at: {latest}")
+              sys.exit(1)
+
+          try:
+              rotated_at = datetime.fromisoformat(rotated_at_str.replace("Z", "+00:00"))
+          except ValueError as exc:
+              print(f"Invalid rotated_at timestamp '{rotated_at_str}': {exc}")
+              sys.exit(1)
+
+          age = datetime.now(timezone.utc) - rotated_at
+          age_hours = age.total_seconds() / 3600
+          if age_hours > ROTATION_WINDOW_HOURS:
+              print(
+                  "Rotation drill stale: "
+                  f"{age_hours:.2f}h old (window {ROTATION_WINDOW_HOURS}h)."
+              )
+              sys.exit(1)
+
+          print(
+              f"Rotation drill fresh: {age_hours:.2f}h old within "
+              f"the {ROTATION_WINDOW_HOURS}h window."
+          )
+          PY
+      - name: Upload Stage B artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-b-smoke
+          path: |
+            stage_b_smoke.json
+            logs/stage_b_rotation_drills.jsonl
+          if-no-files-found: warn
