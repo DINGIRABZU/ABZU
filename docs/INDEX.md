@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -491,6 +492,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
 | [runbooks/razar_escalation.md](runbooks/razar_escalation.md) | RAZAR Escalation Runbook | RAZAR escalates stubborn component failures through a remote ladder when on-host self-healing loops cannot restore se... | - |
 | [runbooks/sonic_rehearsal_guide.md](runbooks/sonic_rehearsal_guide.md) | Sonic Rehearsal Guide | The sonic rehearsal ritual validates the playback pipeline before Stage B sessions. The environment must honour the e... | - |
+| [scaling/vector_db_scaling_checklist.md](scaling/vector_db_scaling_checklist.md) | Vector DB Scaling Checklist | This checklist tracks the performance validation required by the roadmap's Memory Fabric milestones. Metrics were pro... | - |
 | [security_model.md](security_model.md) | Security Model | This guide highlights major threat surfaces in the project and the steps used to reduce risk. | - |
 | [self_healing_manifesto.md](self_healing_manifesto.md) | Self-Healing Manifesto | Spiral OS treats the codebase as a living organism.  Components behave like organs working in concert, and each chang... | - |
 | [setup.md](setup.md) | Environment Setup | This guide lists the system packages and environment variables required to run the project. | - |

@@ -132,6 +132,7 @@ allow_tests(
     ROOT / "tests" / "test_vector_memory.py",
     ROOT / "tests" / "test_vector_memory_extensions.py",
     ROOT / "tests" / "test_vector_memory_persistence.py",
+    ROOT / "tests" / "test_vector_memory_scaling.py",
     ROOT / "tests" / "test_spiral_vector_db.py",
     ROOT / "tests" / "test_chat2db_integration.py",
     ROOT / "tests" / "test_corpus_memory.py",
