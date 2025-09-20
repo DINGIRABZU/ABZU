@@ -32,6 +32,7 @@ from INANNA_AI.personality_layers import REGISTRY, list_personalities
 from INANNA_AI_AGENT import inanna_ai
 from neoabzu_rag import MoGEOrchestrator
 from tools import reflection_loop
+from audio.check_env import validate_audio_stack
 
 try:  # pragma: no cover - optional dependency
     import vector_memory as _vector_memory
@@ -74,6 +75,14 @@ def main(argv: Optional[List[str]] = None) -> None:
             vector_memory.add_vector(json.dumps(stats), {"type": "system_status"})
         else:  # pragma: no cover - optional dependency missing
             logger.warning("Vector memory module missing; system status not stored")
+    preferred_backend = os.environ.get("AUDIO_BACKEND", "pydub").lower()
+    require_pydub = preferred_backend != "numpy"
+    try:
+        validate_audio_stack(strict=require_pydub, log=logger)
+    except RuntimeError as exc:
+        logger.critical("Audio environment validation failed: %s", exc)
+        raise SystemExit(1) from exc
+
     parser = argparse.ArgumentParser(description="Start Spiral OS rituals")
     parser.add_argument("--interface", help="Interface to monitor")
     parser.add_argument(
