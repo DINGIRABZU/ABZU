@@ -38,6 +38,8 @@ sys.modules.setdefault("numpy", dummy_np)
 
 import numpy as np
 
+from tests.fixtures.chroma_baseline import stub_chromadb
+
 # stub qnl_utils used by spiral_vector_db
 sys.modules.setdefault("MUSIC_FOUNDATION", ModuleType("MUSIC_FOUNDATION"))
 qnl_mod = ModuleType("qnl_utils")
@@ -54,38 +56,13 @@ def test_chat2db_integration(tmp_path, monkeypatch):
     if "spiral_vector_db" in sys.modules:
         del sys.modules["spiral_vector_db"]
     svdb = importlib.import_module("spiral_vector_db")
-
-    class DummyCollection:
-        def __init__(self):
-            self.records = []
-
-        def add(self, ids, embeddings, metadatas):
-            for e, m in zip(embeddings, metadatas):
-                self.records.append((np.asarray(e), m))
-
-        def query(self, query_embeddings, n_results, **_):
-            q = np.asarray(query_embeddings[0])
-            sims = [
-                sum(a * b for a, b in zip(e, q)) / ((_norm(e) * _norm(q)) + 1e-8)
-                for e, _ in self.records
-            ]
-            order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[
-                :n_results
-            ]
-            return {
-                "embeddings": [[self.records[i][0] for i in order]],
-                "metadatas": [[self.records[i][1] for i in order]],
-            }
-
-    class DummyClient:
-        def __init__(self, path):
-            self.col = DummyCollection()
-
-        def get_or_create_collection(self, name):
-            return self.col
-
-    dummy_chroma = SimpleNamespace(PersistentClient=lambda path: DummyClient(path))
-    monkeypatch.setattr(svdb, "chromadb", dummy_chroma)
+    fake_chroma = stub_chromadb(monkeypatch, svdb)
+    monkeypatch.setattr(
+        svdb.qnl_utils,
+        "quantum_embed",
+        lambda text: np.array([1.0, 0.0]) if "hello" in text else np.array([0.0, 1.0]),
+    )
+    svdb.np = None
 
     db_path = tmp_path / "chat.db"
     db_storage.init_db(db_path=db_path)
@@ -99,3 +76,6 @@ def test_chat2db_integration(tmp_path, monkeypatch):
 
     matches = svdb.query_embeddings("hello", top_k=1)
     assert matches and matches[0]["label"] == "greeting"
+
+    collection = fake_chroma.get_collection(svdb.DB_PATH, "spiral_vectors")
+    assert any(rec["metadata"].get("label") == "greeting" for rec in collection.records)

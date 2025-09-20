@@ -3,11 +3,18 @@
 from __future__ import annotations
 
 import importlib
+import sqlite3
 import sys
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
 import pytest
+
+from tests.fixtures.chroma_baseline import (
+    load_baseline_records,
+    materialize_sqlite,
+    stub_chromadb,
+)
 
 # provide minimal numpy stub
 dummy_np = ModuleType("numpy")
@@ -62,38 +69,7 @@ def test_insert_and_query(tmp_path, monkeypatch):
     if "spiral_vector_db" in sys.modules:
         del sys.modules["spiral_vector_db"]
     svdb = importlib.import_module("spiral_vector_db")
-
-    class DummyCollection:
-        def __init__(self):
-            self.records = []
-
-        def add(self, ids, embeddings, metadatas):
-            for e, m in zip(embeddings, metadatas):
-                self.records.append((np.asarray(e), m))
-
-        def query(self, query_embeddings, n_results, **_):
-            q = np.asarray(query_embeddings[0])
-            sims = [
-                sum(a * b for a, b in zip(e, q)) / ((_norm(e) * _norm(q)) + 1e-8)
-                for e, _ in self.records
-            ]
-            order = list(reversed(sorted(range(len(sims)), key=lambda i: sims[i])))[
-                :n_results
-            ]
-            return {
-                "embeddings": [[self.records[i][0] for i in order]],
-                "metadatas": [[self.records[i][1] for i in order]],
-            }
-
-    class DummyClient:
-        def __init__(self, path):
-            self.col = DummyCollection()
-
-        def get_or_create_collection(self, name):
-            return self.col
-
-    dummy_chroma = SimpleNamespace(PersistentClient=lambda path: DummyClient(path))
-    monkeypatch.setattr(svdb, "chromadb", dummy_chroma)
+    fake_chroma = stub_chromadb(monkeypatch, svdb)
     monkeypatch.setattr(
         svdb.qnl_utils,
         "quantum_embed",
@@ -113,35 +89,16 @@ def test_insert_and_query(tmp_path, monkeypatch):
     assert len(res) == 1
     assert res[0]["label"] == "foo"
 
+    collection = fake_chroma.get_collection(svdb.DB_PATH, "spiral_vectors")
+    assert any(rec["metadata"].get("label") == "foo" for rec in collection.records)
+
 
 def test_insert_embeddings_without_vectors(tmp_path, monkeypatch):
     monkeypatch.setenv("SPIRAL_VECTOR_PATH", str(tmp_path / "db2"))
     sys.modules.pop("spiral_vector_db", None)
     svdb = importlib.import_module("spiral_vector_db")
-
-    class DummyCollection:
-        def __init__(self) -> None:
-            self.calls: list[tuple[list[str], list[list[float]], list[dict]]] = []
-
-        def add(self, ids=None, embeddings=None, metadatas=None, **_):  # type: ignore[no-untyped-def]
-            self.calls.append((ids, embeddings, metadatas))
-
-    collection = DummyCollection()
-
-    class DummyClient:
-        def __init__(self, path):
-            self.col = collection
-
-        def get_or_create_collection(self, name):
-            return self.col
-
+    fake_chroma = stub_chromadb(monkeypatch, svdb)
     embed_calls: list[str] = []
-
-    monkeypatch.setattr(
-        svdb,
-        "chromadb",
-        SimpleNamespace(PersistentClient=lambda path: DummyClient(path)),
-    )
     monkeypatch.setattr(
         svdb.qnl_utils,
         "quantum_embed",
@@ -157,10 +114,11 @@ def test_insert_embeddings_without_vectors(tmp_path, monkeypatch):
     )
 
     assert embed_calls == ["needs"]
-    ids, embeddings, metas = collection.calls[0]
-    assert ids[0] == "given"
-    assert metas[1]["label"] == "y"
-    assert embeddings[1]
+    collection = fake_chroma.get_collection(svdb.DB_PATH, "spiral_vectors")
+    first_add = collection.history[0]
+    assert first_add.data["ids"][0] == "given"
+    assert first_add.data["metadatas"][1]["label"] == "y"
+    assert first_add.data["embeddings"][1]
 
 
 def test_query_embeddings_filters_and_empty(tmp_path, monkeypatch):
@@ -197,35 +155,15 @@ def test_init_db_custom_path_and_empty_data(tmp_path, monkeypatch):
     monkeypatch.setenv("SPIRAL_VECTOR_PATH", str(tmp_path / "db5"))
     sys.modules.pop("spiral_vector_db", None)
     svdb = importlib.import_module("spiral_vector_db")
-
-    class DummyCollection:
-        def __init__(self):
-            self.add_calls: list[tuple[list[str], list[list[float]], list[dict]]] = []
-
-        def add(self, ids=None, embeddings=None, metadatas=None, **_):
-            self.add_calls.append((ids or [], embeddings or [], metadatas or []))
-
-    collection = DummyCollection()
-
-    class DummyClient:
-        def __init__(self, path):
-            self.path = path
-
-        def get_or_create_collection(self, name):
-            return collection
-
-    monkeypatch.setattr(
-        svdb,
-        "chromadb",
-        SimpleNamespace(PersistentClient=lambda path: DummyClient(path)),
-    )
+    fake_chroma = stub_chromadb(monkeypatch, svdb)
 
     target = tmp_path / "custom"
     svdb.init_db(path=target)
     assert svdb.DB_PATH == target
 
     svdb.insert_embeddings([])
-    assert collection.add_calls == []
+    collection = fake_chroma.get_collection(target, "spiral_vectors")
+    assert all(entry.op != "add" for entry in collection.history)
 
 
 def test_insert_and_query_without_numpy(tmp_path, monkeypatch):
@@ -234,33 +172,7 @@ def test_insert_and_query_without_numpy(tmp_path, monkeypatch):
     svdb = importlib.import_module("spiral_vector_db")
     svdb._COLLECTION = None
     svdb.np = None
-
-    class DummyCollection:
-        def __init__(self):
-            self.calls: list[tuple[list[str], list[list[float]], list[dict]]] = []
-
-        def add(self, ids=None, embeddings=None, metadatas=None, **_):
-            self.calls.append((ids or [], embeddings or [], metadatas or []))
-
-        def query(self, query_embeddings, n_results, **_):
-            return {
-                "embeddings": [[[], [1.0, 0.0]]],
-                "metadatas": [[{"label": "skip"}, {"label": "keep"}]],
-            }
-
-    class DummyClient:
-        def __init__(self, path):
-            self.collection = DummyCollection()
-
-        def get_or_create_collection(self, name):
-            return self.collection
-
-    client = DummyClient(tmp_path)
-    monkeypatch.setattr(
-        svdb,
-        "chromadb",
-        SimpleNamespace(PersistentClient=lambda path: client),
-    )
+    fake_chroma = stub_chromadb(monkeypatch, svdb)
     monkeypatch.setattr(
         svdb.qnl_utils,
         "quantum_embed",
@@ -274,8 +186,38 @@ def test_insert_and_query_without_numpy(tmp_path, monkeypatch):
         ]
     )
 
-    ids, embeddings, metas = client.collection.calls[0]
-    assert len(ids) == 2 and metas[0]["label"] == "keep"
+    collection = fake_chroma.get_collection(svdb.DB_PATH, "spiral_vectors")
+    first_add = collection.history[0]
+    assert len(first_add.data["ids"]) == 2
+    assert first_add.data["metadatas"][0]["label"] == "keep"
 
     results = svdb.query_embeddings("query", top_k=2, filters={"label": "keep"})
-    assert results == [{"label": "keep", "score": pytest.approx(1.0)}]
+    assert results
+    assert results[0]["label"] == "keep"
+    assert results[0]["score"] == pytest.approx(1.0)
+
+
+def test_stub_chromadb_seeds_baseline(tmp_path, monkeypatch):
+    monkeypatch.setenv("SPIRAL_VECTOR_PATH", str(tmp_path / "db7"))
+    sys.modules.pop("spiral_vector_db", None)
+    svdb = importlib.import_module("spiral_vector_db")
+    fake_chroma = stub_chromadb(monkeypatch, svdb)
+
+    target = tmp_path / "db7"
+    svdb.init_db(path=target)
+
+    collection = fake_chroma.get_collection(target, "spiral_vectors")
+    labels = {rec["metadata"].get("label") for rec in collection.records}
+    ids = {rec["id"] for rec in collection.records}
+    assert "baseline-greeting" in ids
+    assert "greeting" in labels
+
+
+def test_materialize_sqlite_mirror(tmp_path):
+    db_path = materialize_sqlite(tmp_path)
+    assert db_path.exists()
+
+    with sqlite3.connect(db_path) as conn:
+        count = conn.execute("SELECT COUNT(*) FROM records").fetchone()[0]
+
+    assert count == len(load_baseline_records())

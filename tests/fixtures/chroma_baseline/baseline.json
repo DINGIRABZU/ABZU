@@ -1,0 +1,23 @@
+{
+  "collection": "spiral_vectors",
+  "records": [
+    {
+      "id": "baseline-greeting",
+      "embedding": [0.8, 0.2],
+      "metadata": {
+        "label": "greeting",
+        "text": "Baseline hello sequence",
+        "tone": "warm"
+      }
+    },
+    {
+      "id": "baseline-farewell",
+      "embedding": [0.1, 0.9],
+      "metadata": {
+        "label": "farewell",
+        "text": "Baseline goodbye cadence",
+        "tone": "calm"
+      }
+    }
+  ]
+}
