@@ -24,8 +24,10 @@ def test_memory_bundle_initialize():
     memory = pytest.importorskip("neoabzu_memory")
     setup_event_bus()
     bundle = memory.MemoryBundle()
-    statuses = bundle.initialize()
-    assert "vector" in statuses
+    result = bundle.initialize()
+    assert "statuses" in result
+    assert "diagnostics" in result
+    assert "vector" in result["statuses"]
 
 
 def test_vector_search():

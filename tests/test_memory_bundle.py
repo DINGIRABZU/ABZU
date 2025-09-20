@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import builtins
 import importlib
+import sys
+import types
 
 from citadel.event_producer import Event, EventProducer
 
@@ -36,16 +39,30 @@ def stub_layer_queries(monkeypatch):
 
     calls: list[str] = []
 
-    def stub(name: str, value):
-        def _stub(prompt: str):
-            calls.append(name)
-            return value
+    def install_module(name: str, func_name: str, record: str, return_value):
+        module = types.ModuleType(name)
 
-        return _stub
+        def _stub(*args, **kwargs):
+            calls.append(record)
+            return return_value
 
-    monkeypatch.setattr(qm, "query_cortex", stub("cortex", ["c"]))
-    monkeypatch.setattr(qm, "query_vector_store", stub("vector", ["v"]))
-    monkeypatch.setattr(qm, "spiral_recall", stub("spiral", "s"))
+        setattr(module, func_name, _stub)
+        monkeypatch.setitem(sys.modules, name, module)
+        if "." in name:
+            parent_name, attr = name.rsplit(".", 1)
+            parent_module = sys.modules.get(parent_name)
+            if parent_module is not None:
+                monkeypatch.setattr(parent_module, attr, module, raising=False)
+
+    install_module("memory.cortex", "query_spirals", "cortex", ["c"])
+    install_module("vector_memory", "query_vectors", "vector", ["v"])
+    install_module("spiral_memory", "spiral_recall", "spiral", "s")
+    install_module("memory.emotional", "fetch_emotion_history", "emotional", ["e"])
+    install_module("memory.mental", "query_related_tasks", "mental", ["m"])
+    install_module("memory.spiritual", "lookup_symbol_history", "spiritual", ["p"])
+    install_module("memory.narrative_engine", "stream_stories", "narrative", ["n"])
+    install_module("neoabzu_core", "evaluate", "core", "core")
+
     return calls
 
 
@@ -60,8 +77,12 @@ def test_initialize_emits_event_and_sets_ready_statuses(monkeypatch):
     event = producer.events[0]
     assert event.event_type == "layer_init"
     assert event.payload["layers"] == statuses
-    assert set(statuses) == set(LAYERS)
-    assert all(statuses[layer] == "ready" for layer in LAYERS)
+    expected_layers = set(LAYERS) | {"core"}
+    assert set(statuses) == expected_layers
+    assert set(bundle.diagnostics) == expected_layers
+    for layer in LAYERS:
+        assert bundle.diagnostics[layer]["status"] == statuses[layer]
+    assert bundle.diagnostics["core"]["status"] == statuses["core"]
     set_event_producer(None)
 
 
@@ -69,26 +90,32 @@ def test_initialize_marks_skipped_layer(monkeypatch):
     producer = DummyProducer()
     set_event_producer(producer)
 
-    real_import = importlib.import_module
+    real_import = builtins.__import__
 
-    class OptionalModule:
-        __name__ = "memory.optional.mental"
-
-    def fake_import(name: str):
+    def fake_import(name: str, globals=None, locals=None, fromlist=(), level=0):
         if name == "memory.mental":
             raise ModuleNotFoundError(name)
-        if name == "memory.optional.mental":
-            return OptionalModule()
-        return real_import(name)
+        return real_import(name, globals, locals, fromlist, level)
 
-    monkeypatch.setattr("memory.bundle.import_module", fake_import)
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    monkeypatch.delitem(sys.modules, "memory.mental", raising=False)
+    monkeypatch.delitem(sys.modules, "memory.optional.mental", raising=False)
     monkeypatch.setitem(LAYER_STATUSES, "mental", "skipped")
 
     bundle = MemoryBundle()
     statuses = bundle.initialize()
+    diag = bundle.diagnostics["mental"]
 
     assert statuses["mental"] == "skipped"
     assert producer.events[0].payload["layers"]["mental"] == "skipped"
+    assert diag["status"] == "skipped"
+    assert diag["fallback_reason"] == "primary_module_not_found"
+    assert diag["loaded_module"].endswith("memory.optional.mental")
+    attempts = diag["attempts"]
+    assert attempts[0]["module"] == "memory.mental"
+    assert attempts[0]["outcome"] == "error"
+    assert attempts[1]["module"].endswith("memory.optional.mental")
+    assert attempts[1]["outcome"] == "loaded"
     set_event_producer(None)
 
 
@@ -96,21 +123,29 @@ def test_initialize_handles_import_error(monkeypatch):
     producer = DummyProducer()
     set_event_producer(producer)
 
-    real_import = importlib.import_module
+    real_import = builtins.__import__
 
-    def fake_import(name: str):
+    def fake_import(name: str, globals=None, locals=None, fromlist=(), level=0):
         if name == "memory.spiritual":
             raise ImportError("boom")
-        return real_import(name)
+        return real_import(name, globals, locals, fromlist, level)
 
-    monkeypatch.setattr("memory.bundle.import_module", fake_import)
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    monkeypatch.delitem(sys.modules, "memory.spiritual", raising=False)
     monkeypatch.setitem(LAYER_STATUSES, "spiritual", "error")
 
     bundle = MemoryBundle()
     statuses = bundle.initialize()
+    diag = bundle.diagnostics["spiritual"]
 
     assert statuses["spiritual"] == "error"
     assert producer.events[0].payload["layers"]["spiritual"] == "error"
+    assert diag["status"] == "error"
+    assert diag["failure_reason"] == "primary_import_failed"
+    attempts = diag["attempts"]
+    assert attempts[0]["module"] == "memory.spiritual"
+    assert attempts[0]["outcome"] == "error"
+    assert "boom" in attempts[0]["error"]
     set_event_producer(None)
 
 
@@ -125,9 +160,23 @@ def test_query_aggregates_results(stub_layer_queries):
         "cortex": ["c"],
         "vector": ["v"],
         "spiral": "s",
+        "emotional": ["e"],
+        "mental": ["m"],
+        "spiritual": ["p"],
+        "narrative": ["n"],
+        "core": "core",
         "failed_layers": [],
     }
-    assert stub_layer_queries == ["cortex", "vector", "spiral"]
+    assert stub_layer_queries == [
+        "cortex",
+        "vector",
+        "spiral",
+        "emotional",
+        "mental",
+        "spiritual",
+        "narrative",
+        "core",
+    ]
 
     assert len(producer.events) in (0, 1)
     if producer.events:
@@ -152,13 +201,19 @@ def test_memory_bundle_traces(monkeypatch, stub_layer_queries, provider):
     bundle = bundle_module.MemoryBundle()
 
     statuses = bundle.initialize()
-    assert set(statuses) == set(LAYERS)
+    expected_layers = set(LAYERS) | {"core"}
+    assert set(statuses) == expected_layers
 
     result = bundle.query("text")
     assert result == {
         "cortex": ["c"],
         "vector": ["v"],
         "spiral": "s",
+        "emotional": ["e"],
+        "mental": ["m"],
+        "spiritual": ["p"],
+        "narrative": ["n"],
+        "core": "core",
         "failed_layers": [],
     }
 
