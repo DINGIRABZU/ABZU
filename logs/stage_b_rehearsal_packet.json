@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-21T09:43:11Z",
+  "generated_at": "2025-09-24T18:23:00.412Z",
   "stage": "B",
   "context": "stage-b-rehearsal",
   "connectors": {
@@ -28,7 +28,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-21T09:43:11Z",
+          "last_rotated": "2025-09-24T18:23:00.412Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "operator"
@@ -50,7 +50,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-21T09:43:11Z"
+        "emitted_at": "2025-09-24T18:23:00.412Z"
       },
       "heartbeat_payload": {
         "status": "aligned",
@@ -58,7 +58,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-21T09:43:11Z"
+        "emitted_at": "2025-09-24T18:23:00.412Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -98,7 +98,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-21T09:43:11Z",
+          "last_rotated": "2025-09-24T18:23:00.412Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "operator-upload"
@@ -120,7 +120,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-21T09:43:11Z"
+        "emitted_at": "2025-09-24T18:23:00.412Z"
       },
       "heartbeat_payload": {
         "status": "aligned",
@@ -128,7 +128,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-21T09:43:11Z"
+        "emitted_at": "2025-09-24T18:23:00.412Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -168,7 +168,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-21T09:43:11Z",
+          "last_rotated": "2025-09-24T18:23:00.412Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "crown"
@@ -190,7 +190,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-11-15T00:00:00Z",
-        "emitted_at": "2025-09-21T09:43:11Z"
+        "emitted_at": "2025-09-24T18:23:00.412Z"
       },
       "heartbeat_payload": {
         "status": "mission-brief-ready",
@@ -198,7 +198,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-11-15T00:00:00Z",
-        "emitted_at": "2025-09-21T09:43:11Z"
+        "emitted_at": "2025-09-24T18:23:00.412Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
