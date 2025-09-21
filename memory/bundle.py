@@ -51,14 +51,28 @@ class MemoryBundle:
                 optional_fallbacks.append((layer, entry))
         self.statuses = statuses
         self.diagnostics = diagnostics
-        for layer, entry in optional_fallbacks:
+        if optional_fallbacks:
+            summary_pairs = []
+            for layer, entry in optional_fallbacks:
+                module = entry.get("loaded_module")
+                summary_pairs.append(f"{layer}:{module}")
+                logger.warning(
+                    "Optional memory stub activated",
+                    extra={
+                        "memory_layer": layer,
+                        "fallback_module": module,
+                        "fallback_reason": entry.get("fallback_reason"),
+                        "layer_status": entry.get("status"),
+                    },
+                )
             logger.warning(
-                "Optional memory stub activated",
+                "Optional memory modules loaded during initialization",
                 extra={
-                    "memory_layer": layer,
-                    "fallback_module": entry.get("loaded_module"),
-                    "fallback_reason": entry.get("fallback_reason"),
-                    "layer_status": entry.get("status"),
+                    "optional_layers": [layer for layer, _ in optional_fallbacks],
+                    "optional_modules": [
+                        entry.get("loaded_module") for _, entry in optional_fallbacks
+                    ],
+                    "optional_summary": ", ".join(summary_pairs),
                 },
             )
         return statuses
