@@ -18,6 +18,15 @@ its role and the behaviour when it is not available.
 | Latent morphing | `rave`, `torch` | Enables RAVE encode/decode and morph operations for ritual audio. | RAVE helpers raise `RuntimeError` and voice aura skips morphing when the library or torch backend is unavailable.【F:src/audio/dsp_engine.py†L95-L153】【F:src/audio/voice_aura.py†L92-L99】 |
 | CLAP embeddings | `transformers` (CLAP) | Produces audio/text embeddings for retrieval. | `embed_clap` raises a `RuntimeError` until the CLAP processor, model and torch are installed.【F:src/audio/audio_ingestion.py†L33-L177】 |
 
+## Stage B audio extras inventory
+
+| Dependency | Version | Provisioned via | Primary usage |
+| --- | --- | --- | --- |
+| Librosa | 0.11.0 | `requirements.txt` / `scripts/setup_audio_env.sh` | Feature extraction for ingestion and rehearsal analytics (`audio_ingestion`, MUSIC foundation utilities).【F:requirements.txt†L24-L28】【F:scripts/setup_audio_env.sh†L10-L18】【F:MUSIC_FOUNDATION/music_foundation.py†L18-L67】 |
+| PyDub + FFmpeg | 0.25.1 / system FFmpeg | `requirements.txt` / `scripts/setup_audio_env.sh`; `audio.check_env` enforces binary presence | Primary playback backend for segment/engine; FFmpeg enables decoding, looping and DSP paths.【F:requirements.txt†L20-L36】【F:scripts/setup_audio_env.sh†L9-L22】【F:src/audio/segment.py†L45-L120】【F:src/audio/engine.py†L37-L207】【F:src/audio/check_env.py†L9-L61】 |
+| OpenSMILE | 2.6.0 | `requirements.txt` / `scripts/setup_audio_env.sh` | Emotion descriptors for listening and rehearsal telemetry.【F:requirements.txt†L29-L36】【F:scripts/setup_audio_env.sh†L10-L18】【F:INANNA_AI/listening_engine.py†L21-L145】 |
+| EmotiVoice | 0.2.0 | `scripts/setup_audio_env.sh` / `pyproject.toml` extra | Voice cloning output for avatar narration when the optional synthesiser is available.【F:scripts/setup_audio_env.sh†L10-L18】【F:pyproject.toml†L74-L83】【F:src/audio/voice_cloner.py†L62-L116】 |
+
 Operators should validate this matrix during rehearsals and capture any
 intentional degradations in the run log alongside the `audio.check_env`
 transcript.

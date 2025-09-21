@@ -1198,8 +1198,9 @@ Manages audio capture and playback. See [Audio Ingestion](audio_ingestion.md), [
   `python -m audio.check_env --strict` so FFmpeg, pydub and simpleaudio must be
   installed before the Stage B sonic rehearsals proceed. The `audio` extras
   bundle (`pydub==0.25.1`, `simpleaudio==1.0.4`, `soundfile==0.13.1`,
-  `librosa==0.11.0`, `opensmile==2.6.0`) is pinned in `requirements.txt` and
-  requires `libasound2-dev` on Debian-based hosts when compiling simpleaudio.
+  `librosa==0.11.0`, `opensmile==2.6.0`, `EmotiVoice==0.2.0`) is pinned via
+  deployment notes and `scripts/setup_audio_env.sh` and requires
+  `libasound2-dev` on Debian-based hosts when compiling simpleaudio.【F:requirements.txt†L20-L36】【F:scripts/setup_audio_env.sh†L1-L31】
 - **Session Export Guardrail:** Stage B prep invokes
   `modulation_arrangement.check_daw_availability` via
   `scripts/setup_audio_env.sh`, warning operators when Ardour or Carla are
