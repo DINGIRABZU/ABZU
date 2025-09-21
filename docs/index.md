@@ -42,6 +42,7 @@ abzu-memory-bootstrap
 - [The Absolute Protocol – Unified Memory Bundle](The_Absolute_Protocol.md#unified-memory-bundle) – `layer_init` broadcast and `query_memory` façade
 - [Subsystem Overview](ABZU_SUBSYSTEM_OVERVIEW.md#memory-bundle-layers) – full five-layer bundle diagram and roles
 - [Memory Layers Guide](memory_layers_GUIDE.md) – bus protocol with diagrams: [Memory Bundle](figures/memory_bundle.mmd), [Layer Initialization Broadcast](figures/layer_init_broadcast.mmd), [Query Memory Aggregation](figures/query_memory_aggregation.mmd)
+- [Vector DB Scaling Checklist](scaling/vector_db_scaling_checklist.md) – 10 k-item ingestion drill with P95 latency evidence for standard and fallback pipelines
 - [Narrative Engine Guide](narrative_engine_GUIDE.md) – transforms biosignals into structured StoryEvents
 
 ### Architecture

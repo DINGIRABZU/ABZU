@@ -68,6 +68,7 @@ Alpha v0.1 establishes the canonical remote delegation ladder for the Crown and 
 Commits that alter architecture—whether Python services, Rust crates, or orchestration manifests—must land with synchronized documentation updates. Always:
 
 - Revise [system_blueprint.md](system_blueprint.md), [blueprint_spine.md](blueprint_spine.md), and [NEOABZU_spine.md](NEOABZU_spine.md) so diagrams and mission narratives track the new structure.
+- Record vector memory fallback adjustments in the blueprint set and refresh [scaling/vector_db_scaling_checklist.md](scaling/vector_db_scaling_checklist.md) whenever retrieval latency contracts or caching strategies change.
 - Document connector capability payload updates in [connectors/mcp_capability_payload.md](connectors/mcp_capability_payload.md) and mirror handshake logging expectations in the blueprint set whenever MCP gateways change.
 - When Crown identity handling changes, document the new `CROWN_IDENTITY_FINGERPRINT` semantics anywhere handshake transcripts or
   audit procedures reference `data/identity.json`, including runbooks and awakening guides.
