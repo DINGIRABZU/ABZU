@@ -1,0 +1,14 @@
+{
+  "session_id": "session01",
+  "text": "Guardians, confirm the harmonic weave holds steady.",
+  "emotion": "devotion",
+  "layer": "albedo_layer",
+  "start_utc": "2025-09-21T16:49:16Z",
+  "end_utc": "2025-09-21T16:49:20Z",
+  "telemetry_events": 1,
+  "dropouts_detected": 1,
+  "audio_path": "logs/stage_c_demo/run1/session01/speech.wav.b64",
+  "avatar_path": "logs/stage_c_demo/run1/session01/avatar.gif.b64",
+  "telemetry_path": "logs/stage_c_demo/run1/session01/telemetry.json",
+  "emotion_log_path": "logs/stage_c_demo/run1/session01/emotion_stream.jsonl"
+}
