@@ -213,5 +213,73 @@
         "mission-brief"
       ]
     }
-  }
+  },
+  "rehearsal_runs": [
+    {
+      "run_id": "20250921T230434Z",
+      "bundle": "logs/stage_b/20250921T230434Z/rehearsals/",
+      "session_total": 2,
+      "sessions": [
+        {
+          "session_id": "session_01",
+          "seed": 101,
+          "steps": 3,
+          "max_sync_offset_s": 0.067,
+          "dropouts_detected": false,
+          "telemetry": {
+            "run_summary": "session_01/telemetry/run_summary.json",
+            "summary": "session_01/telemetry/summary.json",
+            "events": "session_01/telemetry/events.jsonl",
+            "media_manifest": "session_01/telemetry/media_manifest.json"
+          },
+          "emotion_stream": "session_01/emotion/stream.jsonl",
+          "audio_dir": "session_01/audio",
+          "video_dir": "session_01/video",
+          "run_log": "session_01/run.log"
+        },
+        {
+          "session_id": "session_02",
+          "seed": 202,
+          "steps": 3,
+          "max_sync_offset_s": 0.067,
+          "dropouts_detected": false,
+          "telemetry": {
+            "run_summary": "session_02/telemetry/run_summary.json",
+            "summary": "session_02/telemetry/summary.json",
+            "events": "session_02/telemetry/events.jsonl",
+            "media_manifest": "session_02/telemetry/media_manifest.json"
+          },
+          "emotion_stream": "session_02/emotion/stream.jsonl",
+          "audio_dir": "session_02/audio",
+          "video_dir": "session_02/video",
+          "run_log": "session_02/run.log"
+        }
+      ],
+      "fallbacks": {
+        "audio_env_check": {
+          "timestamp": "2025-09-21T23:07:05Z",
+          "command": "PYTHONPATH=src python -m audio.check_env --strict",
+          "missing": [
+            {
+              "module": "ffmpeg",
+              "impact": "FFmpeg binary unavailable; pydub operations fall back to the NumPy segment backend."
+            },
+            {
+              "module": "simpleaudio",
+              "impact": "Realtime buffer playback disabled; rehearsal playback limited to file renders."
+            },
+            {
+              "module": "clap",
+              "impact": "CLAP embeddings unavailable; retrieval telemetry omitted."
+            },
+            {
+              "module": "rave",
+              "impact": "RAVE latent morphing disabled; neural timbre morphs skipped."
+            }
+          ],
+          "notes": "Audio backend operated in NumPy fallback due to missing FFmpeg and simpleaudio."
+        }
+      }
+    }
+  ]
 }
