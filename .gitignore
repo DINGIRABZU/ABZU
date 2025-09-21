@@ -37,6 +37,7 @@ logs/*
 
 # Training data managed by DVC
 data/training/
+data/vector_memory_scaling/chroma_seed/
 
 # Local virtual environment
 .venv/

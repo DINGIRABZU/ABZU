@@ -16,6 +16,8 @@ from typing import Callable, Dict, Iterable, List, Sequence
 
 import numpy as np
 
+from scripts.ingest_ethics import build_chroma_seed_snapshot
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -39,6 +41,35 @@ class BenchmarkRecord:
     write_latency: LatencyStats
     query_latency: LatencyStats
     duration_seconds: float
+
+
+def _rebuild_chroma_seed() -> dict[str, object] | None:
+    """Regenerate the Chroma snapshot used for scaling drills."""
+
+    try:
+        snapshot_dir = build_chroma_seed_snapshot()
+    except Exception:  # pragma: no cover - optional dependency path
+        LOGGER.warning(
+            "Unable to rebuild Chroma seed snapshot; continuing without seed",
+            exc_info=True,
+        )
+        return None
+
+    manifest_path = snapshot_dir / "manifest.json"
+    manifest_data: dict[str, object] | None = None
+    try:
+        with manifest_path.open("r", encoding="utf-8") as handle:
+            manifest_data = json.load(handle)
+    except Exception:  # pragma: no cover - best effort logging
+        LOGGER.warning("Failed to load Chroma seed manifest from %s", manifest_path)
+
+    return {
+        "snapshot_dir": str(snapshot_dir),
+        "chroma_dir": str((snapshot_dir / "chroma")),
+        "manifest_path": str(manifest_path),
+        "manifest": manifest_data,
+        "sqlite_dump_path": str(snapshot_dir / "chroma.dump.sql"),
+    }
 
 
 def _compute_percentiles(samples: Sequence[float]) -> LatencyStats:
@@ -186,6 +217,11 @@ def run_benchmark(
     """Execute benchmarks for both standard and fallback storage paths."""
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
+    seed_snapshot = _rebuild_chroma_seed()
+    if seed_snapshot is not None:
+        LOGGER.info(
+            "Chroma seed manifest prepared at %s", seed_snapshot["snapshot_dir"]
+        )
     corpus_dir = Path("data/vector_memory_scaling")
     corpus_dir.mkdir(parents=True, exist_ok=True)
     corpus_file = corpus_dir / "corpus.jsonl"
@@ -242,6 +278,8 @@ def run_benchmark(
             for record in results
         ],
     }
+    if seed_snapshot is not None:
+        payload["chroma_seed"] = seed_snapshot
     with output.open("w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2)
         handle.write("\n")

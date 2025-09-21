@@ -225,6 +225,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../benchmarks/README.md](../benchmarks/README.md) | Benchmarks | Run `make bench` to execute all benchmarks. Results are written to `data/benchmarks`. | - |
 | [../coverage.mmd](../coverage.mmd) | coverage.mmd | - | - |
 | [../data/biosignals/README.md](../data/biosignals/README.md) | Biosignal Acquisition Guidelines | This directory hosts anonymized biosignal samples used by the Nazarick Narrative System. | - |
+| [../data/vector_memory_scaling/README.md](../data/vector_memory_scaling/README.md) | Vector Memory Scaling Fixtures | The benchmarking utilities generate their fixtures on demand. To rebuild the Chroma seed used during scaling drills run: | - |
 | [ABSOLUTE_MILESTONES.md](ABSOLUTE_MILESTONES.md) | Absolute Milestones | This timeline captures notable releases and planned work. Each entry links to the relevant specification and pull req... | - |
 | [ABZU_DEPLOYMENT.md](ABZU_DEPLOYMENT.md) | ABZU Deployment | This guide outlines the environment preparation, boot order, and rollback steps for deploying ABZU. | - |
 | [ABZU_SUBSYSTEM_OVERVIEW.md](ABZU_SUBSYSTEM_OVERVIEW.md) | ABZU Subsystem Overview | The diagram below outlines how the primary subsystems collaborate within ABZU. | - |
