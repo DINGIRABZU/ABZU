@@ -568,7 +568,7 @@ graph TD
 
 ### Memory Bundle Architecture
 
-`MemoryBundle` links the Cortex, Emotional, Mental, Spiritual, and Narrative layers behind a common bus. `broadcast_layer_event("layer_init")` announces readiness, while the `query_memory` façade fans out recalls and returns a merged view for Crown and operator agents.
+`MemoryBundle` links the Cortex, Emotional, Mental, Spiritual, and Narrative layers behind a common bus. `broadcast_layer_event("layer_init")` announces readiness, while the `query_memory` façade fans out recalls and returns a merged view for Crown and operator agents. The vector shard now caches its fallback embeddings as a NumPy matrix so pure-Python searches remain within the 120 ms P95 retrieval contract even when FAISS is unavailable.
 
 ### Document Map
 

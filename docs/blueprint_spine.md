@@ -651,7 +651,7 @@ For repository rules see [The Absolute Protocol](The_Absolute_Protocol.md) and d
 
 A memory bus routes experiences into each store, forming a coordinated flow from input to narrative output. Additional subsystems extend this foundation:
 
-- **Vector Memory** – FAISS/SQLite store with decay policies and narrative hooks, ensuring embeddings remain tied to story context
+- **Vector Memory** – FAISS/SQLite store with decay policies and narrative hooks, ensuring embeddings remain tied to story context. When FAISS is unavailable, the fallback path now materializes the vector lattice as a NumPy matrix so pure-Python searches satisfy the 10 k-item ≤ 120 ms recall target.
 - **Spiral Memory** – Cross-layer registry that aggregates embeddings, logs major events, and can generate sacred glyphs for deep recall
 - **Unified Search** – An aggregator that queries cortex, spiral, and vector layers, ranking results by recency and source
 

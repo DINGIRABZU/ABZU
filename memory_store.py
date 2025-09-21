@@ -20,8 +20,10 @@ from opentelemetry import trace
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
+    from numpy.typing import NDArray
 except Exception:  # pragma: no cover - optional dependency
     np = cast(Any, None)
+    NDArray = Any
 
 try:  # pragma: no cover - optional dependency
     # ``faiss`` is optional and ships without type hints
@@ -56,6 +58,7 @@ class MemoryStore:
         self.metadata: Dict[str, Dict[str, Any]] = {}
         self.index: faiss.Index | None = None
         self._vectors: List[List[float]] = []  # fallback storage when FAISS unavailable
+        self._fallback_matrix: NDArray | None = None
         self.snapshot_interval = max(0, snapshot_interval)
         self._op_count = 0
         self.snapshot_dir = self.db_path.parent / "snapshots"
@@ -107,6 +110,7 @@ class MemoryStore:
             self.ids = []
             self.metadata = {}
             self._vectors = []
+            self._fallback_matrix = None
             if not rows:
                 self.index = None
                 return
@@ -132,6 +136,10 @@ class MemoryStore:
                     self.ids.append(id_)
                     self._vectors.append([float(x) for x in vec])
                     self.metadata[id_] = json.loads(meta_json) if meta_json else {}
+                if np is not None and self._vectors:
+                    self._fallback_matrix = np.asarray(self._vectors, dtype="float32")
+                else:
+                    self._fallback_matrix = None
 
     # ------------------------------------------------------------------
     def add(self, id_: str, vector: Sequence[float], metadata: Dict[str, Any]) -> None:
@@ -147,6 +155,7 @@ class MemoryStore:
             else:
                 vec_list = [float(x) for x in vector]
                 self._vectors.append(vec_list)
+                self._fallback_matrix = None
                 vec_blob = json.dumps(vec_list)
             with self._connection() as conn:
                 conn.execute(
@@ -195,6 +204,29 @@ class MemoryStore:
                     return results
                 # fallback search
                 vec = [float(x) for x in vector]
+                if np is not None:
+                    if self._fallback_matrix is None and self._vectors:
+                        self._fallback_matrix = np.asarray(
+                            self._vectors, dtype="float32"
+                        )
+                    matrix = self._fallback_matrix
+                    if matrix is None or matrix.size == 0:
+                        return []
+                    query = np.asarray(vec, dtype="float32")
+                    diff = matrix - query
+                    dists = np.einsum("ij,ij->i", diff, diff)
+                    if len(dists) <= k:
+                        idxs = np.argsort(dists)
+                    else:
+                        idxs = np.argpartition(dists, k - 1)[:k]
+                        idxs = idxs[np.argsort(dists[idxs])]
+                    for raw_idx in idxs[:k]:
+                        idx = int(raw_idx)
+                        id_ = self.ids[idx]
+                        emb = matrix[idx].astype(float).tolist()
+                        meta = dict(self.metadata.get(id_, {}))
+                        results.append((id_, emb, meta))
+                    return results
                 dists = [
                     sum((a - b) ** 2 for a, b in zip(v, vec)) for v in self._vectors
                 ]

@@ -51,6 +51,8 @@ triggering the guardrail. The companion `scripts/setup_audio_env.sh` ritual
 calls `modulation_arrangement.check_daw_availability` so missing Ardour or
 Carla executables surface as warnings and rehearsal exports fall back to
 audio-only renders until the DAWs land on PATH.
+
+Vector memory updates now mirror this discipline: the fallback lattice keeps a NumPy cache so pure-Python search stays under the 120 ms P95 target during the 10 k-item ingestion drill. Update [scaling/vector_db_scaling_checklist.md](scaling/vector_db_scaling_checklist.md) whenever the benchmarks move.
 Telemetry collectors now wrap `modulation_arrangement` and `src/audio/engine`
 to emit JSON events during mixes, playback, and DAW fallbacks. Operators feed
 the resulting stream into [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md)
