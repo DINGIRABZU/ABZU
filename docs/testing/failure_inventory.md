@@ -290,3 +290,4 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-16: ERROR tests/test_start_spiral_os.py
 - 2025-09-16: ERROR tests/test_vast_pipeline.py
 - 2025-09-16: ERROR tests/test_voice_cloner_cli.py
+

@@ -458,6 +458,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [operator_onboarding.md](operator_onboarding.md) | Operator Onboarding | A guided walkthrough for composing and executing your first mission. | - |
 | [operator_protocol.md](operator_protocol.md) | Operator Protocol | Operator actions dispatched via the API include a unique `command_id` UUID. The identifier is returned in responses,... | - |
 | [operator_quickstart.md](operator_quickstart.md) | Operator Quickstart | Minimal steps to launch ABZU's Operator API and Arcade UI. | - |
+| [optional_dependency_fallbacks.md](optional_dependency_fallbacks.md) | Optional Dependency Fallback Matrix | This matrix inventories optional components across Spiral OS subsystems and documents how each module degrades when a... | - |
 | [os_guardian.md](os_guardian.md) | OS Guardian | Sources: [`../os_guardian/perception.py`](../os_guardian/perception.py), [`../os_guardian/planning.py`](../os_guardia... | `../os_guardian/action_engine.py`, `../os_guardian/perception.py`, `../os_guardian/planning.py`, `../os_guardian/safety.py` |
 | [os_guardian_container.md](os_guardian_container.md) | OS Guardian Container | This guide covers running the `os_guardian` tools inside Docker. | - |
 | [os_guardian_permissions.md](os_guardian_permissions.md) | OS Guardian Permission Policies | The `safety` module guards high-risk actions executed by the OS Guardian utilities. Permissions are configured with e... | - |

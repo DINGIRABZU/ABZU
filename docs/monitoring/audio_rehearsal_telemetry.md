@@ -81,3 +81,11 @@ During Stage B rehearsals, operators should:
 Following this workflow provides auditable evidence that modulation layering,
 session export, and playback systems operated without dropouts and that
 fall-back procedures were followed when toolchains were unavailable.
+
+## Fallback evidence summary
+
+Attach the optional-dependency fallback summary from
+[optional_dependency_fallbacks.md](../optional_dependency_fallbacks.md) to each
+Stage B rehearsal evidence bundle so reviewers understand which subsystems ran
+in degraded mode, the expected quality impacts, and the mitigation plans logged
+for follow-up.
