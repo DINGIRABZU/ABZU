@@ -23,6 +23,16 @@ if summary_path.exists():
             stage_b.get("ok"), stage_b.get("doctrine_ok")
         )
     )
+    memory = data.get("memory_checks", {})
+    memory_note = memory.get("notes")
+    if memory_note:
+        print(
+            "  Memory layers ok: {} (notes: {})".format(
+                memory.get("ok"), memory_note
+            )
+        )
+    else:
+        print(f"  Memory layers ok: {memory.get('ok')}")
     rotation = data.get("rotation_drills", {})
     print(
         "  Rotation coverage ok: {} (entries recorded: {})".format(

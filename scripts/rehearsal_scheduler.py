@@ -11,8 +11,9 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping
 
 from scripts import health_check_connectors
+from scripts.check_memory_layers import OptionalStubActivation, verify_memory_layers
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 LOGGER = logging.getLogger("stage_b.rehearsal_scheduler")
 
@@ -25,6 +26,7 @@ PROMETHEUS_FILENAME = "rehearsal_status.prom"
 HEALTH_FILENAME = "health_checks.json"
 STAGE_B_FILENAME = "stage_b_smoke.json"
 ROTATION_FILENAME = "rotation_drills.json"
+MEMORY_FILENAME = "memory_checks.json"
 
 EXPECTED_ROTATION_CONNECTORS: tuple[str, ...] = (
     "operator_api",
@@ -63,6 +65,21 @@ def _load_rotation_entries(path: Path) -> List[Dict[str, Any]]:
             except json.JSONDecodeError:
                 continue
     return entries
+
+
+def _serialise_optional_stubs(
+    stubs: Iterable[OptionalStubActivation],
+) -> List[Dict[str, Any]]:
+    serialised: List[Dict[str, Any]] = []
+    for stub in stubs:
+        serialised.append(
+            {
+                "layer": stub.layer,
+                "module": stub.module,
+                "reason": stub.reason,
+            }
+        )
+    return serialised
 
 
 def extract_new_rotation_entries(
@@ -354,6 +371,45 @@ def main(argv: List[str] | None = None) -> int:
     }
     summary["stage_b_smoke"] = stage_b_section
 
+    # Memory layer rehearsal checks
+    memory_path = run_dir / MEMORY_FILENAME
+    try:
+        memory_report = verify_memory_layers()
+    except Exception as exc:  # pragma: no cover - defensive logging
+        LOGGER.exception("Memory layer verification failed: %s", exc)
+        memory_ok = False
+        optional_stubs = []
+        memory_notes = "Memory layer verification failed; see error for details."
+        memory_section = {
+            "ok": False,
+            "error": str(exc),
+            "checked_at": generated_at,
+            "notes": memory_notes,
+            "optional_stubs": optional_stubs,
+        }
+    else:
+        optional_stubs = _serialise_optional_stubs(memory_report.optional_stubs)
+        memory_ok = not optional_stubs
+        if optional_stubs:
+            summary_pairs = ", ".join(
+                f"{item['layer']}→{item['module']}" for item in optional_stubs
+            )
+            memory_notes = (
+                "Optional memory stubs active during rehearsal: " f"{summary_pairs}"
+            )
+            LOGGER.error(memory_notes)
+        else:
+            memory_notes = "All memory layers initialised from primary modules."
+        memory_section = {
+            "ok": memory_ok,
+            "checked_at": generated_at,
+            "notes": memory_notes,
+            "statuses": memory_report.statuses,
+            "optional_stubs": optional_stubs,
+        }
+    _write_json(memory_path, memory_section)
+    summary["memory_checks"] = memory_section
+
     rotation_section = {
         "ok": rotation_ok if stage_b_ok is not None else None,
         "new_entries": rotation_summary,
@@ -365,7 +421,12 @@ def main(argv: List[str] | None = None) -> int:
 
     checks = [
         value
-        for value in (health_summary.get("ok"), stage_b_ok, rotation_section.get("ok"))
+        for value in (
+            health_summary.get("ok"),
+            stage_b_ok,
+            rotation_section.get("ok"),
+            memory_section.get("ok"),
+        )
         if value is not None
     ]
     summary["overall_ok"] = bool(checks) and all(checks)
@@ -376,6 +437,7 @@ def main(argv: List[str] | None = None) -> int:
         "rotation_drills": _relative_path(run_dir / ROTATION_FILENAME),
         "summary": _relative_path(run_dir / SUMMARY_FILENAME),
         "prometheus": _relative_path(run_dir / PROMETHEUS_FILENAME),
+        "memory_checks": _relative_path(memory_path),
     }
 
     stage_b_path = run_dir / STAGE_B_FILENAME
@@ -393,7 +455,12 @@ def main(argv: List[str] | None = None) -> int:
     prom_path.write_text(render_prometheus_metrics(summary), encoding="utf-8")
 
     _update_latest(
-        {"summary": summary_path, "prometheus": prom_path}, artifact_root / "latest"
+        {
+            "summary": summary_path,
+            "prometheus": prom_path,
+            "memory_checks": memory_path,
+        },
+        artifact_root / "latest",
     )
 
     print(json.dumps(summary, indent=2))
