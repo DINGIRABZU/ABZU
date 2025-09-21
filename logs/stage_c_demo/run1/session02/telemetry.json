@@ -1,0 +1,10 @@
+[
+  {
+    "duration_s": 0.0021885299993300578,
+    "event": "audio.play_sound",
+    "path": "logs/stage_c_demo/run1/session02/speech.wav",
+    "reason": "ffmpeg_missing",
+    "status": "failure",
+    "timestamp": 1758473360.6878753
+  }
+]

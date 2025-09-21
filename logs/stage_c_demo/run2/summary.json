@@ -1,0 +1,49 @@
+{
+  "generated_at": "2025-09-21T16:49:44Z",
+  "output_dir": "logs/stage_c_demo/run2",
+  "bundle_path": "/workspace/ABZU/logs/stage_c_demo/run2/telemetry_bundle.zip.b64",
+  "sessions": [
+    {
+      "session_id": "session01",
+      "emotion": "devotion",
+      "layer": "albedo_layer",
+      "start_utc": "2025-09-21T16:49:39Z",
+      "end_utc": "2025-09-21T16:49:43Z",
+      "audio_path": "logs/stage_c_demo/run2/session01/speech.wav.b64",
+      "avatar_path": "logs/stage_c_demo/run2/session01/avatar.gif.b64",
+      "telemetry_path": "logs/stage_c_demo/run2/session01/telemetry.json",
+      "emotion_log_path": "logs/stage_c_demo/run2/session01/emotion_stream.jsonl",
+      "dropouts": [
+        {
+          "duration_s": 0.005094779000501148,
+          "event": "audio.play_sound",
+          "path": "logs/stage_c_demo/run2/session01/speech.wav",
+          "reason": "ffmpeg_missing",
+          "status": "failure",
+          "timestamp": 1758473383.8827612
+        }
+      ]
+    },
+    {
+      "session_id": "session02",
+      "emotion": "reverence",
+      "layer": "rubedo_layer",
+      "start_utc": "2025-09-21T16:49:43Z",
+      "end_utc": "2025-09-21T16:49:44Z",
+      "audio_path": "logs/stage_c_demo/run2/session02/speech.wav.b64",
+      "avatar_path": "logs/stage_c_demo/run2/session02/avatar.gif.b64",
+      "telemetry_path": "logs/stage_c_demo/run2/session02/telemetry.json",
+      "emotion_log_path": "logs/stage_c_demo/run2/session02/emotion_stream.jsonl",
+      "dropouts": [
+        {
+          "duration_s": 0.004009025999039295,
+          "event": "audio.play_sound",
+          "path": "logs/stage_c_demo/run2/session02/speech.wav",
+          "reason": "ffmpeg_missing",
+          "status": "failure",
+          "timestamp": 1758473384.0536933
+        }
+      ]
+    }
+  ]
+}

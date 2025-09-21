@@ -1,0 +1,14 @@
+{
+  "session_id": "session02",
+  "text": "Initiate the rubedo cadence and sync avatar resonance.",
+  "emotion": "reverence",
+  "layer": "rubedo_layer",
+  "start_utc": "2025-09-21T16:49:43Z",
+  "end_utc": "2025-09-21T16:49:44Z",
+  "telemetry_events": 1,
+  "dropouts_detected": 1,
+  "audio_path": "logs/stage_c_demo/run2/session02/speech.wav.b64",
+  "avatar_path": "logs/stage_c_demo/run2/session02/avatar.gif.b64",
+  "telemetry_path": "logs/stage_c_demo/run2/session02/telemetry.json",
+  "emotion_log_path": "logs/stage_c_demo/run2/session02/emotion_stream.jsonl"
+}
