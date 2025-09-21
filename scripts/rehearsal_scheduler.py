@@ -26,7 +26,11 @@ HEALTH_FILENAME = "health_checks.json"
 STAGE_B_FILENAME = "stage_b_smoke.json"
 ROTATION_FILENAME = "rotation_drills.json"
 
-EXPECTED_ROTATION_CONNECTORS: tuple[str, ...] = ("operator_api", "operator_upload")
+EXPECTED_ROTATION_CONNECTORS: tuple[str, ...] = (
+    "operator_api",
+    "operator_upload",
+    "crown_handshake",
+)
 
 
 def _iso_now() -> str:

@@ -1,0 +1,20 @@
+# HELP stage_b_rehearsal_run_status Stage B rehearsal overall success (1=ok)
+# TYPE stage_b_rehearsal_run_status gauge
+stage_b_rehearsal_run_status 1
+# HELP stage_b_rehearsal_health_status Connector and agent health results (1=ok)
+# TYPE stage_b_rehearsal_health_status gauge
+stage_b_rehearsal_health_status 0
+# HELP stage_b_rehearsal_stage_b_smoke_success Stage B smoke success (1=ok)
+# TYPE stage_b_rehearsal_stage_b_smoke_success gauge
+stage_b_rehearsal_stage_b_smoke_success 1
+# HELP stage_b_rehearsal_stage_b_smoke_doctrine_ok Doctrine compliance from Stage B smoke (1=ok)
+# TYPE stage_b_rehearsal_stage_b_smoke_doctrine_ok gauge
+stage_b_rehearsal_stage_b_smoke_doctrine_ok 0
+# HELP stage_b_rehearsal_rotation_status Credential rotation coverage (1=ok)
+# TYPE stage_b_rehearsal_rotation_status gauge
+stage_b_rehearsal_rotation_status 1
+stage_b_rehearsal_rotation_entries_total 11
+stage_b_rehearsal_rotation_entries_recorded 3
+stage_b_rehearsal_rotation_entry{connector_id="operator_api"} 1
+stage_b_rehearsal_rotation_entry{connector_id="operator_upload"} 1
+stage_b_rehearsal_rotation_entry{connector_id="crown_handshake"} 1

@@ -35,13 +35,16 @@ the negotiated capabilities and rotation windows exercised during the latest run
 
 | Connector | Module | Contexts, channels, capabilities | Credential rotation | Evidence |
 | --- | --- | --- | --- | --- |
-| `operator_api_stage_b` | `connectors.operator_api_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `command` and capabilities `register`, `telemetry`, `command`. | `last_rotated` `2025-09-21T09:43:11Z`, window `PT48H`, hot swap supported, token hint `operator`; session expires `2025-12-01T00:00:00Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) · [Rotation drills](../../logs/stage_b/latest/stage_b_rotation_drills.jsonl) |
-| `operator_upload_stage_b` | `connectors.operator_upload_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `upload` and capabilities `register`, `telemetry`, `upload`. | `last_rotated` `2025-09-21T09:43:11Z`, window `PT48H`, hot swap supported, token hint `operator-upload`; session expires `2025-12-01T00:00:00Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) · [Rotation drills](../../logs/stage_b/latest/stage_b_rotation_drills.jsonl) |
-| `crown_handshake_stage_b` | `connectors.crown_handshake_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `mission-brief` and capabilities `register`, `telemetry`, `mission-brief`. | `last_rotated` `2025-09-21T09:43:11Z`, window `PT48H`, hot swap supported, token hint `crown`; session expires `2025-11-15T00:00:00Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) |
+| `operator_api_stage_b` | `connectors.operator_api_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `command` and capabilities `register`, `telemetry`, `command`. | `last_rotated` `2025-09-21T12:25:30Z`, window `PT48H`, hot swap supported, token hint `operator`; heartbeat credential expiry `2025-09-23T12:25:30Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) · [Stage B smoke (handshake & heartbeat)](../../logs/stage_b/20250921T122529Z/stage_b_smoke.json) · [Rotation summary](../../logs/stage_b/20250921T122529Z/rotation_drills.json) |
+| `operator_upload_stage_b` | `connectors.operator_upload_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `upload` and capabilities `register`, `telemetry`, `upload`. | `last_rotated` `2025-09-21T12:25:30Z`, window `PT48H`, hot swap supported, token hint `operator-upload`; shares heartbeat expiry `2025-09-23T12:25:30Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) · [Stage B smoke (handshake & heartbeat)](../../logs/stage_b/20250921T122529Z/stage_b_smoke.json) · [Rotation summary](../../logs/stage_b/20250921T122529Z/rotation_drills.json) |
+| `crown_handshake_stage_b` | `connectors.crown_handshake_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `mission-brief` and capabilities `register`, `telemetry`, `mission-brief`. | `last_rotated` `2025-09-21T12:25:30Z`, window `PT48H`, hot swap supported, token hint `crown`; heartbeat credential expiry `2025-09-23T12:25:30Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) · [Stage B smoke (handshake & heartbeat)](../../logs/stage_b/20250921T122529Z/stage_b_smoke.json) · [Rotation summary](../../logs/stage_b/20250921T122529Z/rotation_drills.json) |
 
-Rotation drills captured alongside the rehearsal confirm the operator connectors
-rotated credentials on `2025-01-01T00:00:00Z`, maintaining the declared 48-hour
-window for Stage B readiness ([stage_b_rotation_drills.jsonl](../../logs/stage_b/latest/stage_b_rotation_drills.jsonl)).
+Rotation drills captured alongside the latest rehearsal confirm the operator
+and Crown connectors rotated credentials on `2025-09-21T12:25:30Z`, maintaining
+the declared 48-hour window for Stage B readiness. Review the append-only log at
+[stage_b_rotation_drills.jsonl](../../logs/stage_b_rotation_drills.jsonl) for the
+full drill history and cross-check the run-scoped export in
+[`logs/stage_b/20250921T122529Z/rotation_drills.json`](../../logs/stage_b/20250921T122529Z/rotation_drills.json).
 
 ## MCP Migration Status
 
