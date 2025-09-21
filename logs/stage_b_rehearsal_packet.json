@@ -1,0 +1,217 @@
+{
+  "generated_at": "2025-09-21T09:43:11Z",
+  "stage": "B",
+  "context": "stage-b-rehearsal",
+  "connectors": {
+    "operator_api": {
+      "connector_id": "operator_api",
+      "module": "connectors.operator_api_stage_b",
+      "handshake_request": {
+        "identity": {
+          "connector_id": "operator_api",
+          "version": "0.1.0",
+          "instance": "local"
+        },
+        "supported_contexts": [
+          {
+            "name": "stage-b-rehearsal",
+            "channels": [
+              "handshake",
+              "heartbeat",
+              "command"
+            ],
+            "capabilities": [
+              "register",
+              "telemetry",
+              "command"
+            ]
+          }
+        ],
+        "rotation": {
+          "last_rotated": "2025-09-21T09:43:11Z",
+          "rotation_window": "PT48H",
+          "supports_hot_swap": true,
+          "token_hint": "operator"
+        }
+      },
+      "handshake_response": {
+        "authenticated": true,
+        "session": {
+          "id": "sess-operator",
+          "credential_expiry": "2025-12-01T00:00:00Z"
+        },
+        "accepted_contexts": [
+          "stage-b-rehearsal"
+        ]
+      },
+      "heartbeat_request": {
+        "status": "aligned",
+        "chakra": "operator",
+        "cycle_count": 0,
+        "context": "stage-b-rehearsal",
+        "credential_expiry": "2025-12-01T00:00:00Z",
+        "emitted_at": "2025-09-21T09:43:11Z"
+      },
+      "heartbeat_payload": {
+        "status": "aligned",
+        "chakra": "operator",
+        "cycle_count": 0,
+        "context": "stage-b-rehearsal",
+        "credential_expiry": "2025-12-01T00:00:00Z",
+        "emitted_at": "2025-09-21T09:43:11Z"
+      },
+      "doctrine_ok": true,
+      "doctrine_failures": [],
+      "supported_channels": [
+        "handshake",
+        "heartbeat",
+        "command"
+      ],
+      "capabilities": [
+        "register",
+        "telemetry",
+        "command"
+      ]
+    },
+    "operator_upload": {
+      "connector_id": "operator_upload",
+      "module": "connectors.operator_upload_stage_b",
+      "handshake_request": {
+        "identity": {
+          "connector_id": "operator_upload",
+          "version": "0.1.0",
+          "instance": "local"
+        },
+        "supported_contexts": [
+          {
+            "name": "stage-b-rehearsal",
+            "channels": [
+              "handshake",
+              "heartbeat",
+              "upload"
+            ],
+            "capabilities": [
+              "register",
+              "telemetry",
+              "upload"
+            ]
+          }
+        ],
+        "rotation": {
+          "last_rotated": "2025-09-21T09:43:11Z",
+          "rotation_window": "PT48H",
+          "supports_hot_swap": true,
+          "token_hint": "operator-upload"
+        }
+      },
+      "handshake_response": {
+        "authenticated": true,
+        "session": {
+          "id": "sess-upload",
+          "credential_expiry": "2025-12-01T00:00:00Z"
+        },
+        "accepted_contexts": [
+          "stage-b-rehearsal"
+        ]
+      },
+      "heartbeat_request": {
+        "status": "aligned",
+        "chakra": "operator",
+        "cycle_count": 0,
+        "context": "stage-b-rehearsal",
+        "credential_expiry": "2025-12-01T00:00:00Z",
+        "emitted_at": "2025-09-21T09:43:11Z"
+      },
+      "heartbeat_payload": {
+        "status": "aligned",
+        "chakra": "operator",
+        "cycle_count": 0,
+        "context": "stage-b-rehearsal",
+        "credential_expiry": "2025-12-01T00:00:00Z",
+        "emitted_at": "2025-09-21T09:43:11Z"
+      },
+      "doctrine_ok": true,
+      "doctrine_failures": [],
+      "supported_channels": [
+        "handshake",
+        "heartbeat",
+        "upload"
+      ],
+      "capabilities": [
+        "register",
+        "telemetry",
+        "upload"
+      ]
+    },
+    "crown_handshake": {
+      "connector_id": "crown_handshake",
+      "module": "connectors.crown_handshake_stage_b",
+      "handshake_request": {
+        "identity": {
+          "connector_id": "crown_handshake",
+          "version": "0.1.0",
+          "instance": "local"
+        },
+        "supported_contexts": [
+          {
+            "name": "stage-b-rehearsal",
+            "channels": [
+              "handshake",
+              "heartbeat",
+              "mission-brief"
+            ],
+            "capabilities": [
+              "register",
+              "telemetry",
+              "mission-brief"
+            ]
+          }
+        ],
+        "rotation": {
+          "last_rotated": "2025-09-21T09:43:11Z",
+          "rotation_window": "PT48H",
+          "supports_hot_swap": true,
+          "token_hint": "crown"
+        }
+      },
+      "handshake_response": {
+        "authenticated": true,
+        "session": {
+          "id": "sess-crown",
+          "credential_expiry": "2025-11-15T00:00:00Z"
+        },
+        "accepted_contexts": [
+          "stage-b-rehearsal"
+        ]
+      },
+      "heartbeat_request": {
+        "status": "mission-brief-ready",
+        "chakra": "crown",
+        "cycle_count": 0,
+        "context": "stage-b-rehearsal",
+        "credential_expiry": "2025-11-15T00:00:00Z",
+        "emitted_at": "2025-09-21T09:43:11Z"
+      },
+      "heartbeat_payload": {
+        "status": "mission-brief-ready",
+        "chakra": "crown",
+        "cycle_count": 0,
+        "context": "stage-b-rehearsal",
+        "credential_expiry": "2025-11-15T00:00:00Z",
+        "emitted_at": "2025-09-21T09:43:11Z"
+      },
+      "doctrine_ok": true,
+      "doctrine_failures": [],
+      "supported_channels": [
+        "handshake",
+        "heartbeat",
+        "mission-brief"
+      ],
+      "capabilities": [
+        "register",
+        "telemetry",
+        "mission-brief"
+      ]
+    }
+  }
+}

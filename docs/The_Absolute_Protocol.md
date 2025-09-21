@@ -554,6 +554,11 @@ Connectors bridge the language engine to external communication layers. The cano
 - update [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md) whenever the connector changes
   (the `check-connector-index` pre-commit hook fails if a touched connector lacks an entry)
 - cross-link implementation modules such as [`connectors/webrtc_connector.py`](../connectors/webrtc_connector.py) and the package [`connectors`](../connectors/__init__.py)
+- Stage B rehearsal connectors ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
+  [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
+  [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) must
+  reuse the shared helper so rehearsal handshakes mirror the production
+  adapters and continue logging credential rotations.
 
 ### Connector Registry
 

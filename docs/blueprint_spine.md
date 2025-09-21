@@ -328,7 +328,13 @@ stack and replaces bespoke HTTP clients with a unified gateway.
   handshake/heartbeat flow. Production startup initializes the shared adapter
   so operator requests reuse the MCP session while the heartbeat loop records
   the 48-hour credential rotation drills alongside `crown_handshake` (also
-  verified via `scripts/stage_b_smoke.py`).
+  verified via `scripts/stage_b_smoke.py`). Dedicated rehearsal modules
+  ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
+  [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
+  [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) reuse
+  the Stage B helper to negotiate the handshake and emit schema-aligned
+  heartbeats before adapters route production traffic. Connector adapters for
+  Primordials (`primordials_mcp`) and narrative logging (`narrative_mcp`)
   already speak MCP. `primordials_api` and `narrative_api` are next in line.
 - **External APIs** – Connectors that reach outside the stack, such as
   `telegram_bot`, `open_web_ui`, and the browser-facing `webrtc` bridge, remain

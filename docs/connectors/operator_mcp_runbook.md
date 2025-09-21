@@ -90,6 +90,15 @@ session populates the Stage B heartbeat and exposes `accepted_contexts` that
 must include `stage-b-rehearsal` or the template raises an exception, causing
 `doctrine_report` to flag the run.【F:connectors/neo_apsu_connector_template.py†L132-L196】
 
+## Stage B Rehearsal Packet
+
+Use `python scripts/generate_stage_b_rehearsal_packet.py` when a dry-run rehearsal needs Stage B handshake and heartbeat artifacts without touching the live gateway. The script writes `logs/stage_b_rehearsal_packet.json`, capturing the outbound handshake payload, the mock gateway response, the emitted heartbeat, and the doctrine verdict for each connector.
+
+- The latest run (`generated_at: 2025-09-21T09:43:11Z`) recorded `doctrine_ok: true` for `operator_api`, `operator_upload`, and `crown_handshake`, so no remediation was required.
+- If any future run surfaces entries in `doctrine_failures`, document the issue and the remediation steps in the rehearsal packet before attempting production rotations.
+
+Archive the JSON alongside the rotation ledger so auditors can confirm the MCP contract payloads used during the rehearsal.
+
 ### Heartbeat payload
 
 ```json

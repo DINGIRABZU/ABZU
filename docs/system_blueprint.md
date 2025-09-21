@@ -201,7 +201,12 @@ Protocol (MCP)**. MCP provides a shared handshake, authentication, and logging
 layer so operators can audit service-to-service calls.
 
 - **MCP connectors** – `operator_api`, `operator_upload`, `crown_handshake`,
-  `primordials_mcp`, and `narrative_mcp` expose unified MCP surfaces.
+  `primordials_mcp`, and `narrative_mcp` expose unified MCP surfaces. Dedicated
+  Stage B rehearsal modules ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
+  [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
+  [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) wrap
+  the shared Stage B helper so rehearsals log credential rotations before the
+  adapter services go live.
 - **External APIs** – `telegram_bot`, `open_web_ui`, and the browser-oriented
   `webrtc` bridge depend on standard HTTP and will remain outside MCP.
 

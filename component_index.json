@@ -4070,6 +4070,104 @@
       "adr": null
     },
     {
+      "id": "neo_apsu_stage_b",
+      "chakra": "unknown",
+      "type": "library",
+      "path": "connectors/neo_apsu_stage_b.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "asyncio",
+        "dataclasses",
+        "datetime",
+        "httpx",
+        "json",
+        "logging",
+        "os",
+        "pathlib",
+        "re",
+        "typing"
+      ],
+      "tests": [
+        "tests/connectors/test_stage_b_connectors.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "experimental",
+      "issues": "Shared Stage B MCP helpers for connector handshakes",
+      "adr": null
+    },
+    {
+      "id": "operator_api_stage_b",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/operator_api_stage_b.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "connectors.neo_apsu_stage_b",
+        "httpx",
+        "logging",
+        "typing"
+      ],
+      "tests": [
+        "tests/connectors/test_stage_b_connectors.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "experimental",
+      "issues": "Stage B MCP wrapper for operator command flows",
+      "adr": null
+    },
+    {
+      "id": "operator_upload_stage_b",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/operator_upload_stage_b.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "connectors.neo_apsu_stage_b",
+        "httpx",
+        "logging",
+        "typing"
+      ],
+      "tests": [
+        "tests/connectors/test_stage_b_connectors.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "experimental",
+      "issues": "Stage B MCP wrapper for operator upload flows",
+      "adr": null
+    },
+    {
+      "id": "crown_handshake_stage_b",
+      "chakra": "unknown",
+      "type": "connector",
+      "path": "connectors/crown_handshake_stage_b.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "connectors.neo_apsu_stage_b",
+        "httpx",
+        "logging",
+        "typing"
+      ],
+      "tests": [
+        "tests/connectors/test_stage_b_connectors.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "experimental",
+      "issues": "Stage B MCP wrapper aligning the Crown mission brief exchange",
+      "adr": null
+    },
+    {
       "id": "operator_mcp_adapter",
       "chakra": "unknown",
       "type": "connector",
