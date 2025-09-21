@@ -23,4 +23,19 @@ heartbeat and health details.
 2. Add Notion and LangChain adapters, validating context registration.
 3. Expand to GitHub Actions and publish reference implementations.
 
+## Stage B MCP rehearsal catalog (2025-09-21)
+
+Stage B rehearsals refreshed the catalog with live handshake transcripts and
+credential rotation drills for the operator and Crown adapters. The table below
+captures the negotiated capabilities, verified session windows, and the
+rotation metadata recorded in the latest rehearsal export. Links point to the
+archived artifacts maintained under `logs/stage_b/` for audit traceability.
+
+| Connector | Module | Handshake snapshot | Rotation status | Evidence |
+| --- | --- | --- | --- | --- |
+| `operator_api_stage_b` | `connectors.operator_api_stage_b` | Version `0.1.0` handshake accepted context `stage-b-rehearsal` with channels `handshake`, `heartbeat`, `command`; session `sess-operator` authenticated and valid until `2025-12-01T00:00:00Z`. | `last_rotated` `2025-09-21T12:25:30Z`, window `PT48H`, hot swap supported, token hint `operator`. | [Rehearsal packet](../logs/stage_b_rehearsal_packet.json) · [Smoke handshake](../logs/stage_b/20250921T122529Z/stage_b_smoke.json) · [Rotation drills](../logs/stage_b/20250921T122529Z/rotation_drills.json) |
+| `operator_upload_stage_b` | `connectors.operator_upload_stage_b` | Version `0.1.0` handshake mirrored `stage-b-rehearsal` context with channels `handshake`, `heartbeat`, `upload`; session `sess-upload` authenticated and reuses the operator MCP expiry `2025-12-01T00:00:00Z`. | `last_rotated` `2025-09-21T12:25:30Z`, window `PT48H`, hot swap supported, token hint `operator-upload`. | [Rehearsal packet](../logs/stage_b_rehearsal_packet.json) · [Smoke handshake](../logs/stage_b/20250921T122529Z/stage_b_smoke.json) · [Rotation drills](../logs/stage_b/20250921T122529Z/rotation_drills.json) |
+| `crown_handshake_stage_b` | `connectors.crown_handshake_stage_b` | Version `0.1.0` handshake confirmed `stage-b-rehearsal` context with channels `handshake`, `heartbeat`, `mission-brief`; session `sess-crown` authenticated with credential expiry `2025-11-15T00:00:00Z`. | `last_rotated` `2025-09-21T12:25:30Z`, window `PT48H`, hot swap supported, token hint `crown`. | [Rehearsal packet](../logs/stage_b_rehearsal_packet.json) · [Smoke handshake](../logs/stage_b/20250921T122529Z/stage_b_smoke.json) · [Rotation drills](../logs/stage_b/20250921T122529Z/rotation_drills.json) |
+| `neo_apsu_connector_template` | `connectors.neo_apsu_connector_template` | Template handshake echoed during Stage B smoke: context `stage-b-rehearsal` with channels `handshake`, `heartbeat`; session `stage-b-session` accepted with capability set `register`, `telemetry`. | `last_rotated` `2025-09-21T12:25:29Z`, window `PT48H`, hot swap supported, token hint `local`. | [Smoke handshake echo](../logs/stage_b/20250921T122529Z/stage_b_smoke.json) |
+
 Backlinks: [MCP Gateway Overview](mcp_overview.md)
