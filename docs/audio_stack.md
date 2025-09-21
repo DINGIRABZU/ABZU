@@ -30,3 +30,14 @@ its role and the behaviour when it is not available.
 Operators should validate this matrix during rehearsals and capture any
 intentional degradations in the run log alongside the `audio.check_env`
 transcript.
+
+## Automated rehearsal host provisioning
+
+Stage B rehearsal hosts install and verify this bundle automatically.
+The `stage-b-rehearsal` pipeline now invokes `scripts/setup_audio_env.sh`
+before running smoke checks so every run refreshes the pinned Python
+packages, warns about missing FFmpeg binaries, and executes the strict
+environment validation.【F:deployment/pipelines/stage_b_rehearsal.yml†L1-L47】【F:scripts/setup_audio_env.sh†L1-L42】
+Operators preparing a new host should run the same script manually to
+mirror the pipeline behaviour and capture its validation transcript in
+the rehearsal evidence bundle.
