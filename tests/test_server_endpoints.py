@@ -8,6 +8,7 @@ endpoint responds with an ``alive`` status and that the privileged
 
 from __future__ import annotations
 
+import importlib
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -71,7 +72,31 @@ sys.modules["connectors.webrtc_connector"] = webrtc_stub
 from crown_config import settings
 
 settings.glm_command_token = "token"
-import server
+try:
+    import server
+finally:
+    for name in [
+        "core",
+        "core.feedback_logging",
+        "core.video_engine",
+        "video_engine",
+        "feedback_logging",
+        "vector_memory",
+        "music_generation",
+        "video_stream",
+        "connectors",
+        "connectors.webrtc_connector",
+    ]:
+        sys.modules.pop(name, None)
+
+core = importlib.import_module("core")
+server.core = core
+server.feedback_logging = importlib.import_module("feedback_logging")
+server.video_engine = importlib.import_module("video_engine")
+server.vector_memory = importlib.import_module("vector_memory")
+server.music_generation = importlib.import_module("music_generation")
+server.video_stream = importlib.import_module("video_stream")
+server.connectors = importlib.import_module("connectors")
 
 
 def test_health_check():
