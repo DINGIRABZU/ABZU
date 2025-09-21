@@ -10,7 +10,7 @@ the process exits with status code 1 if any connector is unhealthy.
 
 from __future__ import annotations
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 import argparse
 import json
@@ -208,13 +208,22 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv)
+def run_health_checks(*, include_remote: bool = False) -> Dict[str, bool]:
+    """Return connector and optional remote agent health probe results."""
+
     _configure_logging()
 
     results = {name: _check(url) for name, url in CONNECTORS.items()}
-    if args.include_remote:
+    if include_remote:
         results.update(_check_remote_agents())
+
+    return results
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+
+    results = run_health_checks(include_remote=args.include_remote)
 
     print(json.dumps(results, sort_keys=True))
     return 0 if results and all(results.values()) else 1

@@ -50,6 +50,24 @@ Exporter textfile collector at the directory to surface the gauges on the Boot
 Ops Grafana board (panels titled *Boot First Attempt Successes*, *Boot Retry
 Attempts*, and *Boot Total Time*).
 
+## Stage B rehearsal scheduler
+
+Run `python scripts/rehearsal_scheduler.py` to orchestrate the Stage B rehearsal
+workflow. Each execution:
+
+- Executes `scripts/health_check_connectors.py` (including remote agent probes)
+  and writes the JSON results to
+  `monitoring/stage_b/<run-id>/health_checks.json`.
+- Invokes `scripts/stage_b_smoke.py` to capture the full smoke-test payload,
+  new credential rotation timestamps, and the doctrine verdict. Artifacts are
+  persisted under `monitoring/stage_b/<run-id>/` alongside a consolidated
+  `rehearsal_summary.json` bundle.
+- Emits `monitoring/stage_b/<run-id>/rehearsal_status.prom`, a Prometheus
+  textfile that surfaces health, smoke-test, and rotation coverage gauges for
+  alerting dashboards. The latest run is mirrored to
+  `monitoring/stage_b/latest/` so Grafana panels and alert rules can scrape the
+  most recent status during the 48-hour credential drill.
+
 ### File-based scraping
 
 1. Add a [`textfile` collector job](https://prometheus.io/docs/instrumenting/writing_exporters/#textfile-collector)
