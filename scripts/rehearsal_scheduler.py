@@ -13,12 +13,13 @@ from typing import Any, Dict, Iterable, List, Mapping
 from scripts import health_check_connectors
 from scripts.check_memory_layers import OptionalStubActivation, verify_memory_layers
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 LOGGER = logging.getLogger("stage_b.rehearsal_scheduler")
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT_ROOT = REPO_ROOT / "monitoring" / "stage_b"
+LOG_ROOT = REPO_ROOT / "logs" / "stage_b"
 ROTATION_LOG = REPO_ROOT / "logs" / "stage_b_rotation_drills.jsonl"
 
 SUMMARY_FILENAME = "rehearsal_summary.json"
@@ -101,29 +102,56 @@ def extract_new_rotation_entries(
     return new_entries
 
 
-def summarise_health_results(results: Dict[str, bool]) -> Dict[str, Any]:
+def summarise_health_results(
+    results: Mapping[str, Mapping[str, Any]]
+) -> Dict[str, Any]:
     """Normalise connector and remote agent probe outcomes."""
 
     details: List[Dict[str, Any]] = []
+    raw: Dict[str, bool] = {}
     for name in sorted(results):
-        details.append(
-            {
-                "name": name,
-                "ok": bool(results[name]),
-                "kind": (
-                    "connector"
-                    if name in health_check_connectors.CONNECTORS
-                    else "remote"
-                ),
-            }
+        payload = results[name]
+        ok = bool(payload.get("ok"))
+        raw[name] = ok
+        kind = payload.get("kind") or (
+            "connector" if name in health_check_connectors.CONNECTORS else "remote"
         )
+        detail: Dict[str, Any] = {
+            "name": name,
+            "ok": ok,
+            "kind": kind,
+            "status_code": payload.get("status_code"),
+            "latency_seconds": payload.get("latency_seconds"),
+            "checked_at": payload.get("checked_at"),
+            "probe": payload.get("probe"),
+            "target": payload.get("url") or payload.get("endpoint"),
+        }
+        if "error" in payload and payload.get("error"):
+            detail["error"] = payload["error"]
+        if "token_present" in payload:
+            detail["token_present"] = payload.get("token_present")
+        details.append(detail)
 
     ok = bool(details) and all(item["ok"] for item in details)
-    return {"ok": ok, "results": details, "raw": results}
+    return {"ok": ok, "results": details, "raw": raw, "report": dict(results)}
 
 
 def _bool_to_int(value: bool | None) -> int:
     return 1 if value else 0
+
+
+def _iso_to_epoch(value: Any) -> float | None:
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return value.timestamp()
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed.timestamp()
 
 
 def render_prometheus_metrics(summary: Mapping[str, Any]) -> str:
@@ -159,12 +187,24 @@ def render_prometheus_metrics(summary: Mapping[str, Any]) -> str:
         name = item.get("name", "unknown")
         kind = item.get("kind", "connector")
         value = _bool_to_int(item.get("ok"))
-        lines.append(
-            (
-                'stage_b_rehearsal_health_check{target="'
-                f'{name}",kind="{kind}"}} {value}'
+        labels = f'target="{name}",kind="{kind}"'
+        lines.append(f"stage_b_rehearsal_health_check{{{labels}}} {value}")
+        status_code = item.get("status_code")
+        if isinstance(status_code, int):
+            lines.append(
+                f"stage_b_rehearsal_health_status_code{{{labels}}} {status_code}"
             )
-        )
+        latency = item.get("latency_seconds")
+        if isinstance(latency, (int, float)):
+            lines.append(
+                f"stage_b_rehearsal_health_latency_seconds{{{labels}}} {latency:.6f}"
+            )
+        checked_at = item.get("checked_at")
+        epoch = _iso_to_epoch(checked_at)
+        if epoch is not None:
+            lines.append(
+                f"stage_b_rehearsal_health_checked_at_seconds{{{labels}}} {epoch}"
+            )
 
     stage_b = summary.get("stage_b_smoke", {})
     smoke_ok = stage_b.get("ok")
@@ -217,11 +257,39 @@ def render_prometheus_metrics(summary: Mapping[str, Any]) -> str:
             )
         )
 
+    latest_rotations = rotation.get("latest_rotations") or {}
+    if isinstance(latest_rotations, Mapping):
+        for connector_id, rotated_at in latest_rotations.items():
+            epoch = _iso_to_epoch(rotated_at)
+            if epoch is None:
+                continue
+            lines.append(
+                (
+                    'stage_b_rehearsal_rotation_timestamp_seconds{connector_id="'
+                    f'{connector_id}"}} {epoch}'
+                )
+            )
+
     return "\n".join(lines) + "\n"
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+
+
+def _write_json_dual(
+    run_dir: Path, log_dir: Path, filename: str, payload: Mapping[str, Any]
+) -> tuple[Path, Path]:
+    run_path = run_dir / filename
+    _write_json(run_path, payload)
+    log_path = log_dir / filename
+    _write_json(log_path, payload)
+    return run_path, log_path
+
+
+def _write_text_dual(run_path: Path, log_path: Path, content: str) -> None:
+    run_path.write_text(content, encoding="utf-8")
+    log_path.write_text(content, encoding="utf-8")
 
 
 def _ensure_artifact_dir(path: Path) -> Path:
@@ -275,6 +343,24 @@ def _summarise_rotation_entries(entries: List[Dict[str, Any]]) -> List[Dict[str,
     return summary
 
 
+def _latest_rotation_map(
+    entries: Iterable[Mapping[str, Any]], expected: Iterable[str]
+) -> Dict[str, str | None]:
+    latest: Dict[str, str | None] = {}
+    for entry in entries:
+        connector_id = entry.get("connector_id")
+        rotated_at = entry.get("rotated_at")
+        if not connector_id or not rotated_at:
+            continue
+        rotated_str = str(rotated_at)
+        existing = latest.get(connector_id)
+        if existing is None or rotated_str > existing:
+            latest[connector_id] = rotated_str
+    for connector_id in expected:
+        latest.setdefault(connector_id, None)
+    return latest
+
+
 def _update_latest(run_files: Dict[str, Path], latest_dir: Path) -> None:
     latest_dir.mkdir(parents=True, exist_ok=True)
     for path in run_files.values():
@@ -297,24 +383,32 @@ def main(argv: List[str] | None = None) -> int:
 
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = _ensure_artifact_dir(artifact_root / run_id)
+    log_dir = _ensure_artifact_dir(LOG_ROOT / run_id)
     generated_at = _iso_now()
 
     summary: Dict[str, Any] = {
         "run_id": run_id,
         "generated_at": generated_at,
         "artifact_dir": _relative_path(run_dir),
+        "log_artifact_dir": _relative_path(log_dir),
     }
 
     # Health checks
-    health_results: Dict[str, bool] = {}
     if args.skip_health_checks:
         LOGGER.info("Skipping connector health checks")
-        health_summary = {"ok": None, "results": [], "raw": {}, "skipped": True}
+        health_report: Dict[str, Dict[str, Any]] = {}
+        health_summary = {
+            "ok": None,
+            "results": [],
+            "raw": {},
+            "report": {},
+            "skipped": True,
+        }
     else:
-        health_results = health_check_connectors.run_health_checks(
+        health_report = health_check_connectors.collect_health_reports(
             include_remote=args.include_remote
         )
-        health_summary = summarise_health_results(health_results)
+        health_summary = summarise_health_results(health_report)
     summary["health_checks"] = health_summary
 
     health_payload = {
@@ -322,8 +416,9 @@ def main(argv: List[str] | None = None) -> int:
         "include_remote": args.include_remote,
         **health_summary,
     }
-    health_path = run_dir / HEALTH_FILENAME
-    _write_json(health_path, health_payload)
+    health_path, health_log_path = _write_json_dual(
+        run_dir, log_dir, HEALTH_FILENAME, health_payload
+    )
 
     # Stage B smoke and rotation entries
     rotation_before = _load_rotation_entries(ROTATION_LOG)
@@ -372,7 +467,6 @@ def main(argv: List[str] | None = None) -> int:
     summary["stage_b_smoke"] = stage_b_section
 
     # Memory layer rehearsal checks
-    memory_path = run_dir / MEMORY_FILENAME
     try:
         memory_report = verify_memory_layers()
     except Exception as exc:  # pragma: no cover - defensive logging
@@ -407,8 +501,19 @@ def main(argv: List[str] | None = None) -> int:
             "statuses": memory_report.statuses,
             "optional_stubs": optional_stubs,
         }
-    _write_json(memory_path, memory_section)
+    memory_path, memory_log_path = _write_json_dual(
+        run_dir, log_dir, MEMORY_FILENAME, memory_section
+    )
     summary["memory_checks"] = memory_section
+
+    latest_rotations = _latest_rotation_map(
+        rotation_after, EXPECTED_ROTATION_CONNECTORS
+    )
+    rotation_epochs: Dict[str, float] = {}
+    for connector_id, rotated_at in latest_rotations.items():
+        epoch_value = _iso_to_epoch(rotated_at)
+        if epoch_value is not None:
+            rotation_epochs[connector_id] = epoch_value
 
     rotation_section = {
         "ok": rotation_ok if stage_b_ok is not None else None,
@@ -416,6 +521,8 @@ def main(argv: List[str] | None = None) -> int:
         "total_entries": len(rotation_after),
         "missing": missing,
         "expected": list(EXPECTED_ROTATION_CONNECTORS),
+        "latest_rotations": latest_rotations,
+        "latest_rotation_epochs": rotation_epochs,
     }
     summary["rotation_drills"] = rotation_section
 
@@ -431,37 +538,68 @@ def main(argv: List[str] | None = None) -> int:
     ]
     summary["overall_ok"] = bool(checks) and all(checks)
 
-    summary["artifacts"] = {
-        "health_checks": _relative_path(health_path),
-        "stage_b_smoke": _relative_path(run_dir / STAGE_B_FILENAME),
-        "rotation_drills": _relative_path(run_dir / ROTATION_FILENAME),
-        "summary": _relative_path(run_dir / SUMMARY_FILENAME),
-        "prometheus": _relative_path(run_dir / PROMETHEUS_FILENAME),
-        "memory_checks": _relative_path(memory_path),
+    rotation_payload = {
+        "generated_at": generated_at,
+        "entries": rotation_summary,
+        "latest_rotations": latest_rotations,
+        "latest_rotation_epochs": rotation_epochs,
     }
 
-    stage_b_path = run_dir / STAGE_B_FILENAME
-    rotation_path = run_dir / ROTATION_FILENAME
-    _write_json(stage_b_path, stage_b_payload)
-    _write_json(
-        rotation_path,
-        {"generated_at": generated_at, "entries": rotation_summary},
+    stage_b_path, stage_b_log_path = _write_json_dual(
+        run_dir, log_dir, STAGE_B_FILENAME, stage_b_payload
+    )
+    rotation_path, rotation_log_path = _write_json_dual(
+        run_dir, log_dir, ROTATION_FILENAME, rotation_payload
     )
 
     summary_path = run_dir / SUMMARY_FILENAME
-    _write_json(summary_path, summary)
-
+    summary_log_path = log_dir / SUMMARY_FILENAME
     prom_path = run_dir / PROMETHEUS_FILENAME
-    prom_path.write_text(render_prometheus_metrics(summary), encoding="utf-8")
+    prom_log_path = log_dir / PROMETHEUS_FILENAME
 
-    _update_latest(
-        {
-            "summary": summary_path,
-            "prometheus": prom_path,
-            "memory_checks": memory_path,
-        },
-        artifact_root / "latest",
+    summary["artifacts"] = {
+        "health_checks": _relative_path(health_path),
+        "stage_b_smoke": _relative_path(stage_b_path),
+        "rotation_drills": _relative_path(rotation_path),
+        "summary": _relative_path(summary_path),
+        "prometheus": _relative_path(prom_path),
+        "memory_checks": _relative_path(memory_path),
+    }
+    summary["log_artifacts"] = {
+        "health_checks": _relative_path(health_log_path),
+        "stage_b_smoke": _relative_path(stage_b_log_path),
+        "rotation_drills": _relative_path(rotation_log_path),
+        "summary": _relative_path(summary_log_path),
+        "prometheus": _relative_path(prom_log_path),
+        "memory_checks": _relative_path(memory_log_path),
+    }
+
+    summary_path, summary_log_path = _write_json_dual(
+        run_dir, log_dir, SUMMARY_FILENAME, summary
     )
+
+    prom_text = render_prometheus_metrics(summary)
+    _write_text_dual(prom_path, prom_log_path, prom_text)
+
+    run_files = {
+        "summary": summary_path,
+        "prometheus": prom_path,
+        "memory_checks": memory_path,
+        "health_checks": health_path,
+        "stage_b_smoke": stage_b_path,
+        "rotation_drills": rotation_path,
+    }
+    _update_latest(run_files, artifact_root / "latest")
+
+    log_files = {
+        "summary": summary_log_path,
+        "prometheus": prom_log_path,
+        "memory_checks": memory_log_path,
+        "health_checks": health_log_path,
+        "stage_b_smoke": stage_b_log_path,
+        "rotation_drills": rotation_log_path,
+    }
+    _update_latest(log_files, LOG_ROOT / "latest")
 
     print(json.dumps(summary, indent=2))
 
