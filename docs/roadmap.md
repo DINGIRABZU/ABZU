@@ -57,6 +57,10 @@ alongside [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md), the
 | **C3. Readiness signal sync** | @ops-team | Compile the Alpha readiness packet summarizing boot success rates, replay fidelity, and subsystem metrics. | Pull the latest telemetry from Stage A and Stage B tasks and update `PROJECT_STATUS.md` with outstanding risks. | Host the cross-team readiness review and capture action items gating the beta planning kickoff. |
 | **C4. Operator MCP drills** | @ops-team | Land `OperatorMCPAdapter` for `operator_api`/`operator_upload` and confirm Stage B parity with `crown_handshake`. | Run `scripts/stage_b_smoke.py` to log the 48-hour credential rotation drill for each connector and archive the results under `logs/stage_b_rotation_drills.jsonl`. | Promote the operator connectors to the MCP adoption checklist once smoke runs stabilize. |
 
+Stage C planners should review the Sonic Core optional component inventory and
+the rehearsal evidence packet before go/no-go reviews so degraded audio or
+avatar fidelity is flagged early for demo stakeholders.【F:docs/sonic_core_harmonics.md†L23-L51】【F:logs/stage_b_rehearsal_packet.json†L217-L344】
+
 ## Maintenance
 
 Update this roadmap and `CHANGELOG.md` whenever a milestone is completed to record progress and guide future planning. Documentary additions such as [banana_rater.md](banana_rater.md) should be cross-linked when new evaluation flows launch.
