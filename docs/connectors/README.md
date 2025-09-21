@@ -16,6 +16,7 @@ To keep integration layers discoverable and reliable:
 - Keep modules lightweight with clear dependencies and minimal side effects.
 - Supply or update tests and docs alongside connector changes.
 - Publish JSON or YAML schemas for request and response payloads in `schemas/` and link them from [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md).
+- File credential rotation plans and sign-off logs alongside connector docs so operators have immediate access during drills (see [credential_rotation_playbook.md](credential_rotation_playbook.md)).
 
 ## Doctrine Compliance Checklist
 
@@ -24,6 +25,14 @@ Before deploying a Neo-APSU connector, satisfy the doctrine requirements codifie
 1. **Registry entry present.** Register the connector in `component_index.json` and [CONNECTOR_INDEX.md](CONNECTOR_INDEX.md) with matching `id`, `path`, and `__version__` values so inventory tooling recognises the component.
 2. **Schema alignment.** Maintain the linked schema under `schemas/`, ensuring Stage B heartbeats require `chakra`, `cycle_count`, `context`, `credential_expiry`, and `emitted_at`, with `context` locked to `stage-b-rehearsal`.
 3. **Credential freshness.** Populate the MCP capability payload with up-to-date rotation metadata (`rotation.last_rotated`, `rotation_window`, `supports_hot_swap`) and document overrides in [mcp_capability_payload.md](mcp_capability_payload.md) so operators can audit credential health.
+
+### Stage B Rotation Plan on File
+
+- The [Stage B Credential Rotation Playbook](credential_rotation_playbook.md) (rev. 2025-02-18) captures the approved plan for
+  `operator_api`, `operator_upload`, and `crown_handshake`, including stakeholder approvals, rehearsal stubs, and rollback
+  confirmations from Security and Operations.
+- Reference the playbook during drills to locate the latest smoke script receipt locations and sign-off log entries before
+  filing rehearsal evidence.
 
 ## Schema Conventions
 
