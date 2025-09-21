@@ -3,7 +3,10 @@
 This playbook provides the approved credential-rotation plan for the Stage B
 connector targets. It aligns with the integration guild roadmap to deliver a
 48-hour rehearsal cadence across the three MCP-integrated services and keeps
-rollback and evidence expectations explicit for operators and auditors.
+rollback and evidence expectations explicit for operators and auditors. The
+2025-02-18 revision captures the latest stakeholder approvals, review notes,
+and rehearsal stubs so the signed plan can be referenced directly from the
+connector documentation set during drills.
 
 ## Scope and Stage B Targets
 
@@ -19,11 +22,20 @@ cadence prior to sign-off.
 
 ## Approvals and Contacts
 
-| Role | Owner | Approval status | Date |
-| --- | --- | --- | --- |
-| Security | @security-anchor | ✅ Reviewed data-handling controls and confirmed credential storage paths. | 2025-01-17 |
-| Operations | @ops-team | ✅ Validated rehearsal flow, fallback triggers, and logging coverage. | 2025-01-17 |
-| Integration Guild | @integration-guild | ✅ Confirmed roadmap alignment and rehearsal stubs. | 2025-01-17 |
+| Role | Owner | Approval status | Date | Notes |
+| --- | --- | --- | --- | --- |
+| Security | @security-anchor | ✅ Reviewed data-handling controls, confirmed credential storage paths, and signed off on rollback checkpoints. | 2025-02-18 | Timelines and rollback sequencing reaffirmed for Stage B rehearsals. |
+| Operations | @ops-team | ✅ Validated rehearsal flow, fallback triggers, and logging coverage with the security team. | 2025-02-18 | Committed to paging rotation support during drills and real rotations. |
+| Integration Guild | @integration-guild | ✅ Confirmed roadmap alignment and rehearsal stubs. | 2025-02-18 | Roadmap dependencies remain unchanged. |
+
+### Stakeholder Review Summary
+
+- **Security + Operations review (2025-02-18):** Walked through the rotation
+  timeline and rollback procedure, re-checking staging rehearsal coverage and
+  confirming the doctrine report artifacts recorded after each drill.
+- **Actionable follow-ups:** Security retains ownership of the post-rotation
+  verification checklist, while Operations ensures the smoke script receipts
+  are archived alongside the ledger JSON for every rehearsal.
 
 For urgent escalations, page the Security on-call first, then coordinate with
 Operations to manage the traffic cutover or rollback.
@@ -74,11 +86,15 @@ below for routine cycles and emergency replacements:
 
 ### Rehearsal Stubs
 
+Document rehearsal evidence by filling out the stub at the conclusion of each
+dry run. Store receipts under `logs/stage_b/` so operators can cross-reference
+them quickly during incident response.
+
 | Service | Rehearsal window | Smoke script receipt stored at | Ledger line verified (Y/N) | Notes |
 | --- | --- | --- | --- | --- |
-| `operator_api` | `____` | `____` | `____` | `____` |
-| `operator_upload` | `____` | `____` | `____` | `____` |
-| `crown_handshake` | `____` | `____` | `____` | `____` |
+| `operator_api` | `____` | `logs/stage_b/YYYYMMDDThhmmssZ/operator_api_smoke.json` | `____` | `____` |
+| `operator_upload` | `____` | `logs/stage_b/YYYYMMDDThhmmssZ/operator_upload_smoke.json` | `____` | `____` |
+| `crown_handshake` | `____` | `logs/stage_b/YYYYMMDDThhmmssZ/crown_handshake_smoke.json` | `____` | `____` |
 
 During each rehearsal, operators must capture the doctrine report output and
 note any deviations for follow-up before production rotation proceeds.
@@ -99,6 +115,7 @@ note any deviations for follow-up before production rotation proceeds.
 | Date | Summary | Security reviewer | Operations reviewer |
 | --- | --- | --- | --- |
 | 2025-01-17 | Stage B credential plan validated, rehearsal stubs reviewed, rollback tested. | @security-anchor | @ops-team |
+| 2025-02-18 | Rotation timeline and rollback walkthrough reconfirmed; rehearsal stub locations updated for Stage B evidence capture. | @security-anchor | @ops-team |
 
 Store additional validation entries as future rehearsals occur. Evidence (JSON
 receipts and ledger snapshots) should be linked from the incident log or stored
