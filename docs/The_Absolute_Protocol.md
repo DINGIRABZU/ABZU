@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.109
-**Last updated:** 2025-10-18
+**Version:** v1.0.110
+**Last updated:** 2025-10-19
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -33,6 +33,7 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 - **Stage B memory fabric evidence** – Follow the [Stage B load objectives](roadmap.md#stage-b--subsystem-hardening) to demonstrate ≤ 120 ms P95 recalls on a 10 k-item dataset, and package ingestion audits plus latency dashboards into the memory bundle log set catalogued at [system_blueprint.md#stage-gate-evidence](system_blueprint.md#stage-gate-evidence). Update the relevant Doctrine Index rows whenever the dataset snapshot, replay scripts, or verification tooling shifts.
 - **Stage B sonic rehearsal evidence** – Enforce the pinned audio stack and DAW preflight rules described in [system_blueprint.md#audio-device](system_blueprint.md#audio-device) while completing two clean rehearsal exports with zero dropouts. Store telemetry, preset manifests, and fallbacks per the Stage B sonic trace expectations in [system_blueprint.md#stage-gate-evidence](system_blueprint.md#stage-gate-evidence) and refresh Doctrine Index references when presets or guardrails change.
 - **Stage B connector rotation evidence** – Exercise the MCP rehearsal adapters so 48-hour rotation drills, smoke tests, and heartbeat payloads align with the [Stage B connector target](roadmap.md#stage-b--subsystem-hardening). Synchronize the [Model Context Protocol migration blueprint](system_blueprint.md#model-context-protocol-migration) with adapter logs and archive the drill manifests called out in [system_blueprint.md#stage-gate-evidence](system_blueprint.md#stage-gate-evidence) to prove connector readiness before promotion.
+- **Future gRPC adoption gate** – Expand gRPC endpoints following the NeoABZU vector service handshake as the canonical reference. Trigger the rollout after Stage B evidence bundles in [roadmap.md](roadmap.md#stage-b--subsystem-hardening) close out, then publish mixed REST/gRPC rehearsal traces, parity validations, and operator sign-offs to the [stage gate ledger](system_blueprint.md#stage-gate-evidence) so Doctrine reviewers can trace the transition.
 
 ### Rust Migration Rules
 
