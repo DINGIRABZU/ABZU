@@ -6,6 +6,10 @@ corpus using the benchmarking utilities in
 `scripts/run_vector_memory_scaling.py` and recorded in
 `data/vector_memory_scaling/latency_metrics.json`.
 
+> Chroma fixtures are generated on demand. Run
+> `python scripts/ingest_ethics.py --emit-seed --seed-output data/vector_memory_scaling/chroma_seed`
+> before collecting new metrics to refresh the manifest and SQLite dump.
+
 | Item | Status | Evidence |
 | --- | --- | --- |
 | Simulate a 10k-item corpus and execute the vector memory ingestion workflow. | ✅ | `scripts/run_vector_memory_scaling.py` populates `data/vector_memory_scaling/corpus.jsonl` and logs timings while ingesting all 10k entries. |
