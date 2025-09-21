@@ -107,10 +107,10 @@ Chroma vector service during load drills. Use the matrix below to confirm the
 runtime endpoint, data location, and liveness checks without tearing the bundle
 down between runs.
 
-| Back end | Runtime endpoint | Persistent volume | Health check | Notes |
-| --- | --- | --- | --- | --- |
-| SQLite bundle | Direct file handles in `data/emotions.db`, `data/ontology.db`, and `data/narrative_engine.db` created by `deployment/sqlite/bootstrap_memory_dbs.sh`. | Local `data/` directory (override with `*_DB_PATH` env vars per layer). | `sqlite3 <db> "VACUUM;"` confirms the file is writable, matching the bootstrap routine. | Re-run the bootstrap script to reset the files or point the layer to an alternate path. 【F:deployment/sqlite/bootstrap_memory_dbs.sh†L1-L11】 |
-| Chroma service | `http://localhost:8030` (mapped from container port `8000`). | Host `data/chroma` bound into the container at `/chroma`. | `docker compose -f deployment/chromadb/docker-compose.yaml exec chromadb curl -fsS http://localhost:8000/api/v1/heartbeat` reports `"status":"ok"` when the service is ready. | Container restarts reuse the seeded `/chroma` volume so vector collections persist across drills. 【F:deployment/chromadb/docker-compose.yaml†L1-L11】 |
+| Back end | Endpoint / Port | Persistent volume | Credentials | Health check | Notes |
+| --- | --- | --- | --- | --- | --- |
+| SQLite bundle | Direct file handles in `data/emotions.db`, `data/ontology.db`, and `data/narrative_engine.db` created by `deployment/sqlite/bootstrap_memory_dbs.sh` (no network port). | Local `data/` directory (override with `*_DB_PATH` env vars per layer). | Uses OS file permissions only; no database users are configured. | `sqlite3 <db> "VACUUM;"` confirms the file is writable, matching the bootstrap routine. | Re-run the bootstrap script to reset the files or point the layer to an alternate path. 【F:deployment/sqlite/bootstrap_memory_dbs.sh†L1-L11】 |
+| Chroma service | `http://localhost:8030` on the host (forwarded to container port `8000`). | Host `data/chroma` bound into the container at `/chroma`. | Authentication is disabled by default; run behind trusted networks or supply reverse-proxy auth if required. | `docker compose -f deployment/chromadb/docker-compose.yaml exec chromadb curl -fsS http://localhost:8000/api/v1/heartbeat` reports `"status":"ok"` when the service is ready. | Container restarts reuse the seeded `/chroma` volume so vector collections persist across drills. 【F:deployment/chromadb/docker-compose.yaml†L1-L11】 |
 
 To validate seeding, inspect the mounted directory after the health check:
 
@@ -120,6 +120,33 @@ ls -lah data/chroma
 
 The listing should include the persistent Chroma data files that back the vector
 collections referenced by the memory layers.
+
+### Switching storage modes on demand
+
+Load drills flip between the SQLite bundle and the Chroma vector service by
+changing the memory back-end environment variables exposed to the servants:
+
+```bash
+# File-backed configuration (default paths under data/)
+export CORTEX_BACKEND=file
+export CORTEX_PATH=data/cortex.jsonl
+export EMOTION_BACKEND=file
+export EMOTION_DB_PATH=data/emotions.db
+export SPIRIT_BACKEND=file
+export SPIRITUAL_DB_PATH=data/ontology.db
+export NARRATIVE_BACKEND=file
+export NARRATIVE_LOG_PATH=data/story.log
+
+# Vector-backed configuration (persisted in the Chroma volume)
+export SPIRAL_VECTOR_PATH=data/chroma
+export CORTEX_BACKEND=vector
+export EMOTION_BACKEND=vector
+export SPIRIT_BACKEND=vector
+export NARRATIVE_BACKEND=vector
+```
+
+Restart the affected services or reload the workers after changing the
+environment to apply the new storage mode.
 
 ### Cortex store
 
