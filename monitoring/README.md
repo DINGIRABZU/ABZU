@@ -53,7 +53,9 @@ Attempts*, and *Boot Total Time*).
 ## Stage B rehearsal scheduler
 
 Run `python scripts/rehearsal_scheduler.py` to orchestrate the Stage B rehearsal
-workflow. Each execution:
+workflow or trigger the automated pipeline defined in
+`deployment/pipelines/stage_b_rehearsal.yml` via
+`spiral-os pipeline deploy stage_b_rehearsal`. Each execution:
 
 - Executes `scripts/health_check_connectors.py` (including remote agent probes)
   and writes the JSON results to
@@ -67,6 +69,10 @@ workflow. Each execution:
   alerting dashboards. The latest run is mirrored to
   `monitoring/stage_b/latest/` so Grafana panels and alert rules can scrape the
   most recent status during the 48-hour credential drill.
+
+The pipeline archives the entire `monitoring/stage_b/` directory as
+`logs/stage_b_rehearsal_artifacts.tgz` after the scheduler completes so ops
+teams can attach the run artifacts to Stage B readiness reviews.
 
 ### File-based scraping
 
