@@ -6,17 +6,23 @@ as not ready. When ``--include-remote`` is supplied the script also performs a
 lightweight POST against the Kimi K2, AirStar, and rStar endpoints using sample
 payloads derived from the public repositories. Results are printed as JSON and
 the process exits with status code 1 if any connector is unhealthy.
+
+When invoked from automation (for example, ``scripts/rehearsal_scheduler.py``)
+the module emits a richer report that includes HTTP status codes, probe latency,
+and timestamps for downstream dashboards and alerting rules.
 """
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 import argparse
 import json
 import logging
 import os
+import time
 from copy import deepcopy
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
@@ -126,6 +132,15 @@ REMOTE_AGENT_PAYLOADS: Mapping[str, Dict[str, Any]] = {
 }
 
 
+def _iso_now() -> str:
+    return (
+        datetime.now(timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
+
+
 def _configure_logging() -> None:
     if logging.getLogger().handlers:
         return
@@ -135,20 +150,47 @@ def _configure_logging() -> None:
     )
 
 
-def _check(url: str) -> bool:
+def _probe_connector(name: str, url: str) -> Dict[str, Any]:
+    start = time.perf_counter()
+    response: requests.Response | None = None
+    error: str | None = None
+    status_code: int | None = None
+
     try:
-        resp = requests.get(f"{url}/health", timeout=5)
-        return resp.status_code == 200
+        response = requests.get(f"{url.rstrip('/')}/health", timeout=5)
+        status_code = getattr(response, "status_code", None)
+        ok = status_code == 200
     except Exception as exc:  # pragma: no cover - network failures => unhealthy
-        logger.warning("Connector probe failed for %s: %s", url, exc)
-        return False
+        error = str(exc)
+        ok = False
+    else:
+        if status_code != 200:
+            logger.warning("Connector probe returned %s for %s", status_code, url)
+        ok = status_code == 200
+
+    elapsed = time.perf_counter() - start
+
+    if error:
+        logger.warning("Connector probe failed for %s: %s", url, error)
+
+    return {
+        "name": name,
+        "ok": ok,
+        "status_code": status_code,
+        "latency_seconds": elapsed,
+        "url": url,
+        "error": error,
+        "checked_at": _iso_now(),
+        "probe": "GET /health",
+        "kind": "connector",
+    }
 
 
 def _remote_payload(name: str) -> Dict[str, Any]:
     return deepcopy(REMOTE_AGENT_PAYLOADS[name])
 
 
-def _probe_remote_agent(name: str, endpoint: str, token: str | None) -> bool:
+def _probe_remote_agent(name: str, endpoint: str, token: str | None) -> Dict[str, Any]:
     payload = _remote_payload(name)
     headers: Dict[str, str] = {}
 
@@ -157,6 +199,11 @@ def _probe_remote_agent(name: str, endpoint: str, token: str | None) -> bool:
         headers["Authorization"] = f"Bearer {token}"
         headers["X-API-Key"] = token
 
+    start = time.perf_counter()
+    response: requests.Response | None = None
+    error: str | None = None
+    status_code: int | None = None
+
     try:
         response = requests.post(
             endpoint,
@@ -164,27 +211,47 @@ def _probe_remote_agent(name: str, endpoint: str, token: str | None) -> bool:
             headers=headers or None,
             timeout=10,
         )
+        status_code = getattr(response, "status_code", None)
         response.raise_for_status()
+        ok = True
     except Exception as exc:  # pragma: no cover - network failures
+        error = str(exc)
+        ok = False
+        status_code = getattr(
+            getattr(exc, "response", None), "status_code", status_code
+        )
         logger.warning(
             "Remote agent %s probe failed: %s (see %s)",
             name,
             exc,
             ALERTS_PATH,
         )
-        return False
+    else:
+        logger.info(
+            "Remote agent %s responded with %s (see %s)",
+            name,
+            status_code,
+            ALERTS_PATH,
+        )
 
-    logger.info(
-        "Remote agent %s responded with %s (see %s)",
-        name,
-        getattr(response, "status_code", "unknown"),
-        ALERTS_PATH,
-    )
-    return True
+    elapsed = time.perf_counter() - start
+
+    return {
+        "name": name,
+        "ok": ok,
+        "status_code": status_code,
+        "latency_seconds": elapsed,
+        "endpoint": endpoint,
+        "error": error,
+        "checked_at": _iso_now(),
+        "probe": "POST",
+        "kind": "remote",
+        "token_present": bool(token),
+    }
 
 
-def _check_remote_agents() -> Dict[str, bool]:
-    results: Dict[str, bool] = {}
+def _check_remote_agents() -> Dict[str, Dict[str, Any]]:
+    results: Dict[str, Dict[str, Any]] = {}
     for name, (endpoint_env, token_env) in REMOTE_AGENT_ENV.items():
         endpoint = os.getenv(endpoint_env)
         if not endpoint:
@@ -205,28 +272,54 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "when endpoints are configured."
         ),
     )
+    parser.add_argument(
+        "--detailed",
+        action="store_true",
+        help="Print the full health report (status codes, latency, timestamps).",
+    )
     return parser.parse_args(argv)
 
 
-def run_health_checks(*, include_remote: bool = False) -> Dict[str, bool]:
-    """Return connector and optional remote agent health probe results."""
+def collect_health_reports(
+    *, include_remote: bool = False
+) -> Dict[str, Dict[str, Any]]:
+    """Return detailed connector and optional remote agent probe results."""
 
     _configure_logging()
 
-    results = {name: _check(url) for name, url in CONNECTORS.items()}
+    results = {name: _probe_connector(name, url) for name, url in CONNECTORS.items()}
     if include_remote:
         results.update(_check_remote_agents())
 
     return results
 
 
+def run_health_checks(*, include_remote: bool = False) -> Dict[str, bool]:
+    """Return connector and optional remote agent health probe results."""
+
+    reports = collect_health_reports(include_remote=include_remote)
+    return {name: bool(report.get("ok")) for name, report in reports.items()}
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
 
-    results = run_health_checks(include_remote=args.include_remote)
+    if args.detailed:
+        results: Mapping[str, Any] = collect_health_reports(
+            include_remote=args.include_remote
+        )
+    else:
+        results = run_health_checks(include_remote=args.include_remote)
 
     print(json.dumps(results, sort_keys=True))
-    return 0 if results and all(results.values()) else 1
+
+    if not results:
+        return 1
+
+    if args.detailed:
+        return 0 if all(bool(item.get("ok")) for item in results.values()) else 1
+
+    return 0 if all(results.values()) else 1
 
 
 if __name__ == "__main__":
