@@ -75,6 +75,12 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 - Dry runs validate build artifact generation (`python -m build --wheel`) and Spiral OS / RAZAR acceptance coverage ahead of staging promotion. The same steps are codified in [`deployment/pipelines/alpha_gate.yml`](../deployment/pipelines/alpha_gate.yml) for local `spiral-os pipeline deploy` rehearsal.
 - Doctrine drift is now gated by `python scripts/check_identity_sync.py`. If the check reports that `data/identity.json` predates updates to the mission, persona, Absolute Protocol, ABZU blueprint, or awakening overview doctrine, rerun `python scripts/refresh_crown_identity.py --use-stub` before continuing the gate.
 
+### Stage A evidence register
+
+| Timestamp (UTC) | Location | Notes |
+| --- | --- | --- |
+| 2025-09-21T22:02:58Z | `logs/alpha_gate/20250921T220258Z/` | Coverage export failed in the container (missing `core.task_profiler` import during pytest collection), but build, health, and test phase logs were captured for the bundle review. |
+
 ## Deprecation Roadmap
 
 - **Pydantic field aliases** – migrate remaining models away from deprecated
