@@ -77,6 +77,11 @@ instantiate the shared adapter during startup so `/operator/command` and
 `/operator/upload` reuse the stored session and emit background Stage B
 heartbeats that log credential rotations when the gateway refreshes expiry
 timestamps.
+ Dedicated rehearsal modules ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
+ [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
+ [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) build on
+ the shared helper to emit the canonical heartbeat payloads while keeping
+ production adapters lean.
 
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,

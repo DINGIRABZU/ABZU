@@ -176,16 +176,15 @@ documents:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
-    commit: worktree
-    sha256: 597a68062ce057d675a61eacf2ab3a4326aa4002faebe6e7111722b313f4b74e
+    commit: 6b4e94b8a710f4025dc4ebc62cc19ed827a0ed85
+    sha256: 3448ae52cdf8cb1d8e8fd94a6adfec40c8b3f300c738bac865e28eae0b0ef6f0
     summary:
-      insight: Stage B MCP connectors now initialize the shared handshake during
-        operator_api startup and emit heartbeats that log credential rotations.
-      key_rules: Register connectors in component and connector indexes, enforce
-        heartbeat schema constraints, and keep MCP rotation metadata fresh per the
-        capability payload guide and Stage B rehearsal checklist.
-      purpose: Core contribution rules.
-      scope: All contributors.
+      insight: Central doctrine coordinates versioning, MCP governance, and
+        documentation duties for every subsystem.
+      key_rules: Declare `__version__` for modules, register connector changes in
+        the indexes, and mirror architecture updates across blueprint files.
+      purpose: Canonical contribution protocol and governance contract.
+      scope: All contributors and subsystems.
   docs/api_reference.md:
     commit: 18ad40926d0b92ad8e2bb4fbc93a9d5d650d73d9
     sha256: 6273ffa4258f9015f3e1b06d1dadbfd3f03f0585f0fee79bc1ba1c32e2f00721
