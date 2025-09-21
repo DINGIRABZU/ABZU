@@ -37,20 +37,34 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _isoformat(value: datetime) -> str:
+    """Return ``value`` normalised to a ``Z``-suffixed ISO-8601 string."""
+
+    return (
+        value.astimezone(timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
+
+
 async def _run_operator_checks(
     *,
     emit_heartbeat: bool,
-) -> dict[str, Any]:
+) -> tuple[dict[str, Any], dict[str, Any] | None, str | None]:
     adapter = OperatorMCPAdapter()
     handshake_data = await adapter.ensure_handshake()
 
+    heartbeat_payload: dict[str, Any] | None = None
+    heartbeat_expiry_iso: str | None = None
     if emit_heartbeat:
         expiry = datetime.now(timezone.utc) + timedelta(hours=ROTATION_WINDOW_HOURS)
-        await adapter.emit_stage_b_heartbeat(
+        heartbeat_payload = await adapter.emit_stage_b_heartbeat(
             {"event": "stage-b-smoke"}, credential_expiry=expiry
         )
+        heartbeat_expiry_iso = _isoformat(expiry)
 
-    return handshake_data
+    return handshake_data, heartbeat_payload, heartbeat_expiry_iso
 
 
 def _collect_crown_metadata() -> dict[str, Any]:
@@ -66,7 +80,9 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
     if not stage_b_context_enabled():
         raise RuntimeError("ABZU_USE_MCP=1 required for Stage B smoke checks")
 
-    handshake = await _run_operator_checks(emit_heartbeat=emit_heartbeat)
+    handshake, heartbeat_payload, heartbeat_expiry = await _run_operator_checks(
+        emit_heartbeat=emit_heartbeat
+    )
 
     results: Dict[str, Any] = {
         "stage": "B",
@@ -84,7 +100,14 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
         },
     }
 
-    for connector_id in ("operator_api", "operator_upload"):
+    results["handshake"] = handshake
+    if heartbeat_payload is not None:
+        results["heartbeat"] = {
+            "payload": heartbeat_payload,
+            "credential_expiry": heartbeat_expiry,
+        }
+
+    for connector_id in ("operator_api", "operator_upload", "crown_handshake"):
         record_rotation_drill(connector_id)
 
     doctrine_ok, doctrine_failures = evaluate_operator_doctrine()

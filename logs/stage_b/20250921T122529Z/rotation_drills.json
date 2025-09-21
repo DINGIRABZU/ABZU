@@ -1,0 +1,20 @@
+{
+  "generated_at": "2025-09-21T12:25:29Z",
+  "entries": [
+    {
+      "connector_id": "operator_api",
+      "rotated_at": "2025-09-21T12:25:30Z",
+      "window_hours": 48
+    },
+    {
+      "connector_id": "operator_upload",
+      "rotated_at": "2025-09-21T12:25:30Z",
+      "window_hours": 48
+    },
+    {
+      "connector_id": "crown_handshake",
+      "rotated_at": "2025-09-21T12:25:30Z",
+      "window_hours": 48
+    }
+  ]
+}

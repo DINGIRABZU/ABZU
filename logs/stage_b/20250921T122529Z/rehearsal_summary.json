@@ -1,0 +1,129 @@
+{
+  "run_id": "20250921T122529Z",
+  "generated_at": "2025-09-21T12:25:29Z",
+  "artifact_dir": "logs/stage_b/20250921T122529Z",
+  "health_checks": {
+    "ok": null,
+    "results": [],
+    "raw": {},
+    "skipped": true
+  },
+  "stage_b_smoke": {
+    "ok": true,
+    "doctrine_ok": false,
+    "result": {
+      "stage": "B",
+      "targets": [
+        "operator_api",
+        "operator_upload",
+        "crown_handshake"
+      ],
+      "services": {
+        "operator_api": {
+          "session": {
+            "id": "stage-b-session",
+            "credential_expiry": "2025-09-23T12:25:30Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted"
+            }
+          ]
+        },
+        "operator_upload": {
+          "session_reused": true,
+          "notes": "Upload operations share the operator MCP session."
+        },
+        "crown_handshake": {
+          "version": "0.2.5",
+          "module": "/workspace/ABZU/razar/crown_handshake.py"
+        }
+      },
+      "handshake": {
+        "authenticated": true,
+        "session": {
+          "id": "stage-b-session",
+          "credential_expiry": "2025-09-23T12:25:30Z"
+        },
+        "accepted_contexts": [
+          {
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          }
+        ],
+        "echo": {
+          "identity": {
+            "connector_id": "neo_apsu_connector_template",
+            "version": "0.2.0",
+            "instance": "local"
+          },
+          "supported_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "channels": [
+                "handshake",
+                "heartbeat"
+              ],
+              "capabilities": [
+                "register",
+                "telemetry"
+              ]
+            }
+          ],
+          "rotation": {
+            "last_rotated": "2025-09-21T12:25:29Z",
+            "rotation_window": "PT48H",
+            "supports_hot_swap": true,
+            "token_hint": "local"
+          }
+        }
+      },
+      "heartbeat": {
+        "payload": {
+          "event": "stage-b-smoke"
+        },
+        "credential_expiry": "2025-09-23T12:25:30Z"
+      },
+      "doctrine_ok": false,
+      "doctrine_failures": [
+        "connector index missing MCP adapter status note"
+      ]
+    }
+  },
+  "rotation_drills": {
+    "ok": true,
+    "new_entries": [
+      {
+        "connector_id": "operator_api",
+        "rotated_at": "2025-09-21T12:25:30Z",
+        "window_hours": 48
+      },
+      {
+        "connector_id": "operator_upload",
+        "rotated_at": "2025-09-21T12:25:30Z",
+        "window_hours": 48
+      },
+      {
+        "connector_id": "crown_handshake",
+        "rotated_at": "2025-09-21T12:25:30Z",
+        "window_hours": 48
+      }
+    ],
+    "total_entries": 11,
+    "missing": [],
+    "expected": [
+      "operator_api",
+      "operator_upload",
+      "crown_handshake"
+    ]
+  },
+  "overall_ok": true,
+  "artifacts": {
+    "health_checks": "logs/stage_b/20250921T122529Z/health_checks.json",
+    "stage_b_smoke": "logs/stage_b/20250921T122529Z/stage_b_smoke.json",
+    "rotation_drills": "logs/stage_b/20250921T122529Z/rotation_drills.json",
+    "summary": "logs/stage_b/20250921T122529Z/rehearsal_summary.json",
+    "prometheus": "logs/stage_b/20250921T122529Z/rehearsal_status.prom"
+  }
+}
