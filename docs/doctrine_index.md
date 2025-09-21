@@ -87,5 +87,5 @@
 | docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation | `4eb5f46f5e2cc2702c9faa2cbdf2ee93589e55bac0b377e24a2cd1a300a1e2fa` | 2025-10-10T00:00:00+00:00 |
 | docs/awakening_overview.md | wake pipeline • memory spine • escalation doctrine | `ac5bad51f2346bb815caaff9c97f5c646dd31816e7aa8709f84314cd7e008c1c` | 2025-10-15T00:00:00+00:00 |
 | docs/runbooks/razar_escalation.md |  | `9242f4ee751e5a04d3229ae406a2e523c3f0ed0dbfa1a0b0f6b984d0a9452202` | 2025-10-10T00:00:00+00:00 |
-| docs/The_Absolute_Protocol.md | v1.0.105 | `46f1a3afbf56e1d0d986244da84a09e14872f17c6655917700cd92fc24a6a30a` | 2025-10-14T00:00:00+00:00 |
+| docs/The_Absolute_Protocol.md | v1.0.109 | `65b763ef8269253b703a53554f99cd3cc7607b284db2886085e8476fb9f7577f` | 2025-10-18T00:00:00+00:00 |
 | NEOABZU/docs/rust_doctrine.md |  | `f5ba02df33694dd469c31ccdedaf8e1af51d3882cc051d5e6a8088ea8586a77b` | 2025-10-12T00:00:00+00:00 |

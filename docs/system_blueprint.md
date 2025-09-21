@@ -39,11 +39,10 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **Neoabzu crates** released at **v0.1.2**; CI now enforces PyO3 exposure and `cargo check` on workspace crates.
 - **Blueprint governance** – Architecture commits must update this blueprint, [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), [blueprint_spine.md](blueprint_spine.md), [NEOABZU_spine.md](NEOABZU_spine.md), and both [index.md](index.md) and [INDEX.md](INDEX.md) so reviewers see synchronized narratives and indexes.
-- **Stage B operator rehearsal** – `OperatorMCPAdapter` now boots with
-  `operator_api`, establishing the MCP handshake session before
-  `/operator/command` or `/operator/upload` dispatch and running the shared
-  Stage B heartbeat loop that records credential rotation drills alongside the
-  `crown_handshake` rehearsal.
+- **Stage A guardrails** – `scripts/run_alpha_gate.sh` now packages coverage exports, health checks, and identity sync results into the Alpha evidence bundle catalogued in the [Stage gate evidence ledger](#stage-gate-evidence).
+- **Stage B memory proof** – Memory rehearsals archive latency dashboards and ingestion audits next to the [Memory Bundle Architecture](#memory-bundle-architecture) callouts and the Stage gate evidence ledger.
+- **Stage B sonic rehearsal** – Audio rehearsals pin the DAW preflight, telemetry capture, and fallback manifests outlined under [Audio Device](#audio-device) and surface them through the Stage gate evidence ledger.
+- **Stage B connector rehearsal** – The Stage B MCP adapters (`operator_api_stage_b.py`, `operator_upload_stage_b.py`, `crown_handshake_stage_b.py`) log rotation drills, heartbeat payloads, and rehearsal manifests referenced in the Stage gate evidence ledger so connector promotion reviews receive consistent artifacts.
 
 ### Doctrine References
 
@@ -64,6 +63,15 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - [doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd](doctrine_index.md#inanna_aithe-foundation-1a645dfc251d80e28545f4a09a6345ffmd) – INANNA_AI/The Foundation 1a645dfc251d80e28545f4a09a6345ff.md
 
 > **Reference pattern.** Every architecture document must publish a **Doctrine References** block that links back to `doctrine_index.md` entries for touched components so reviewers can verify provenance.
+
+### Stage Gate Evidence
+
+Stage readiness reviews rely on shared evidence ledgers so operators and auditors see identical data across doctrine, blueprints, and log bundles.
+
+- **Stage A guardrails.** `scripts/run_alpha_gate.sh` collects build artifacts, health probes, and the mandated coverage invocation into `logs/alpha_gate/<timestamp>/`, then stamps the identity sync status from `python scripts/check_identity_sync.py`. Update [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment) whenever guardrail scope changes and record bundle hashes in [doctrine_index.md](doctrine_index.md) to confirm provenance.
+- **Stage B memory proof.** The load harness exports latency metrics and corpus checksums through `scripts/export_stage_b_artifacts.py`, writing structured outputs to `logs/stage_b/` and `monitoring/stage_b/` alongside dashboards referenced by the [Memory Bundle Architecture](#memory-bundle-architecture). Document dataset revisions, shard counts, and verification scripts in the Doctrine Index with each rehearsal snapshot.
+- **Stage B sonic rehearsal.** Audio preflight runs `scripts/setup_audio_env.sh` and captures rehearsal manifests through `scripts/generate_stage_b_rehearsal_packet.py`, archiving `logs/stage_b_rehearsal_packet.json`, DAW availability results, and telemetry described in [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md). Link preset or fallback changes back to the Doctrine Index so reviewers can replay the evidence chain.
+- **Stage B connector rotation.** Connector drills execute `scripts/stage_b_smoke.py`, emit `logs/stage_b_rotation_drills.jsonl`, and package heartbeat payloads per [Model Context Protocol Migration](#model-context-protocol-migration). Keep the rehearsal packet and rotation manifests synchronized with [mcp_connectors.md](mcp_connectors.md) and Stage B doctrine so promotion decisions inherit the same artifacts.
 
 ### Origins & Awakening
 
