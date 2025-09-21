@@ -483,6 +483,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [rag_pipeline.md](rag_pipeline.md) | Spiral RAG Pipeline | The Spiral retrieval pipeline turns local documents into embeddings so queries can be answered with context. Files ar... | - |
 | [recovery_playbook.md](recovery_playbook.md) | Recovery Playbook | This playbook outlines how RAZAR restores service after a component failure. Recurring problems and their fixes are c... | - |
 | [registry_audit.md](registry_audit.md) | Registry Audit | This guide describes how to validate `logs/task_registry.jsonl` to keep the task log accurate. | - |
+| [rehearsals/stage_c_demo_summary.md](rehearsals/stage_c_demo_summary.md) | Stage C Scripted Demo Rehearsal Summary | The Stage C rehearsal script was executed twice using the synthetic harness to mirror production telemetry capture. E... | - |
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
 | [release_process.md](release_process.md) | Release Process | This guide covers signing build artifacts and verifying their integrity. | - |
 | [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
