@@ -90,3 +90,8 @@
 | docs/The_Absolute_Protocol.md | v1.0.110 | `83784cfb4a0f435378e0469e8c9bebb46dcdfe74befe83fa1aacb0f6a396bcbc` | 2025-10-19T00:00:00+00:00 |
 | docs/roadmap.md | roadmap • Stage B • gRPC adoption milestone | `c472433367144df3b0582339b140c1f7e29a84d9301f6688b665ff1dfc176ebd` | 2025-10-19T00:00:00+00:00 |
 | NEOABZU/docs/rust_doctrine.md |  | `f5ba02df33694dd469c31ccdedaf8e1af51d3882cc051d5e6a8088ea8586a77b` | 2025-10-12T00:00:00+00:00 |
+
+## Stage B Rehearsal Tracker
+
+- **Run 20250921T230434Z** – Evidence bundle at `logs/stage_b/20250921T230434Z/rehearsals/summary.json` captures two scripted demo sessions (seeds 101 and 202) with three beats each, max audio/video sync offset 0.067 s, and no dropout flags.
+- Fallbacks: FFmpeg and simpleaudio were unavailable so the audio backend operated in the NumPy path; optional CLAP and RAVE extras were also absent. See `logs/stage_b/20250921T230434Z/rehearsals/fallbacks.json` for the detailed checklist.

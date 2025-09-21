@@ -1,0 +1,5 @@
+INFO Starting scripted demo session (seed=202)
+INFO [arrival] cue=Avatar arrives on stage and greets the operators. emotion=anticipatory
+INFO [handoff] cue=Mission handoff with modulation overlay. emotion=focused
+INFO [closing] cue=Closing salutation with harmonic swell. emotion=resonant
+INFO Session complete: 3 steps, max sync offset 0.067s
