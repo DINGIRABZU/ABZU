@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-24T18:23:00.412Z",
+  "generated_at": "2025-09-21T18:41:58Z",
   "stage": "B",
   "context": "stage-b-rehearsal",
   "connectors": {
@@ -28,7 +28,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-24T18:23:00.412Z",
+          "last_rotated": "2025-09-21T18:41:58Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "operator"
@@ -50,7 +50,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-24T18:23:00.412Z"
+        "emitted_at": "2025-09-21T18:41:58Z"
       },
       "heartbeat_payload": {
         "status": "aligned",
@@ -58,7 +58,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-24T18:23:00.412Z"
+        "emitted_at": "2025-09-21T18:41:58Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -98,7 +98,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-24T18:23:00.412Z",
+          "last_rotated": "2025-09-21T18:41:58Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "operator-upload"
@@ -120,7 +120,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-24T18:23:00.412Z"
+        "emitted_at": "2025-09-21T18:41:58Z"
       },
       "heartbeat_payload": {
         "status": "aligned",
@@ -128,7 +128,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-24T18:23:00.412Z"
+        "emitted_at": "2025-09-21T18:41:58Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -168,7 +168,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-24T18:23:00.412Z",
+          "last_rotated": "2025-09-21T18:41:58Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "crown"
@@ -190,7 +190,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-11-15T00:00:00Z",
-        "emitted_at": "2025-09-24T18:23:00.412Z"
+        "emitted_at": "2025-09-21T18:41:58Z"
       },
       "heartbeat_payload": {
         "status": "mission-brief-ready",
@@ -198,7 +198,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-11-15T00:00:00Z",
-        "emitted_at": "2025-09-24T18:23:00.412Z"
+        "emitted_at": "2025-09-21T18:41:58Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -213,133 +213,5 @@
         "mission-brief"
       ]
     }
-  },
-  "sonic_core_optional_components": [
-    {
-      "component": "SadTalker",
-      "role": "Avatar lip-sync driver",
-      "degraded_behaviour": "Falls back to procedural frames without SadTalker mouth cues.",
-      "mitigation": "Install SadTalker extra or document simplified render.",
-      "status": "verify"
-    },
-    {
-      "component": "wav2lip",
-      "role": "Precise lip alignment",
-      "degraded_behaviour": "Lip motion desynchronises; only amplitude overlays play.",
-      "mitigation": "Pin wav2lip extra or capture degraded sync in notes.",
-      "status": "verify"
-    },
-    {
-      "component": "MediaPipe",
-      "role": "Face mesh landmarks",
-      "degraded_behaviour": "Facial overlays render without landmark smoothing.",
-      "mitigation": "Restore MediaPipe or log diminished tracking fidelity.",
-      "status": "verify"
-    },
-    {
-      "component": "ControlNet / AnimateDiff",
-      "role": "Gesture injection",
-      "degraded_behaviour": "Gestural cues are omitted, leaving static upper-body motion.",
-      "mitigation": "Install gesture extras or choreograph manual gestures.",
-      "status": "verify"
-    },
-    {
-      "component": "vector_memory",
-      "role": "Scene-specific avatar traits",
-      "degraded_behaviour": "Trait overrides skipped; default skins persist.",
-      "mitigation": "Reconnect vector memory or annotate missing personalization.",
-      "status": "verify"
-    },
-    {
-      "component": "lwm",
-      "role": "Camera path automation",
-      "degraded_behaviour": "Camera automation unavailable; manual paths required.",
-      "mitigation": "Restore lwm or script alternate moves.",
-      "status": "verify"
-    },
-    {
-      "component": "sounddevice",
-      "role": "Realtime playback & capture",
-      "degraded_behaviour": "Live audio I/O aborts, forcing silent or pre-rendered runs.",
-      "mitigation": "Install sounddevice with ALSA headers or log silent mode.",
-      "status": "verify"
-    },
-    {
-      "component": "opensmile",
-      "role": "Acoustic emotion telemetry",
-      "degraded_behaviour": "Sentiment scores fall back to heuristics with lower fidelity.",
-      "mitigation": "Install OpenSMILE or record reduced metrics coverage.",
-      "status": "verify"
-    },
-    {
-      "component": "websockets",
-      "role": "Streaming listening telemetry",
-      "degraded_behaviour": "Remote dashboards cannot receive realtime feeds.",
-      "mitigation": "Re-enable module or export logs offline.",
-      "status": "verify"
-    },
-    {
-      "component": "gTTS",
-      "role": "Baseline speech synthesis",
-      "degraded_behaviour": "Falls back to sine-wave placeholders with no intelligible speech.",
-      "mitigation": "Install gTTS or switch to alternate backend.",
-      "status": "verify"
-    },
-    {
-      "component": "OpenVoice",
-      "role": "Advanced timbre morphing",
-      "degraded_behaviour": "Only coarse pitch-shift conversion is available.",
-      "mitigation": "Restore OpenVoice or align expectations with simplified output.",
-      "status": "verify"
-    },
-    {
-      "component": "EmotiVoice",
-      "role": "Neural voice cloning",
-      "degraded_behaviour": "Cloned speech renders silent placeholders with low MOS.",
-      "mitigation": "Reinstall EmotiVoice or pre-record narration.",
-      "status": "verify"
-    },
-    {
-      "component": "librosa",
-      "role": "Audio analysis & lip sync",
-      "degraded_behaviour": "Feature extraction and WAV persistence fail across pipeline.",
-      "mitigation": "Provision librosa extra or document analytics gaps.",
-      "status": "verify"
-    },
-    {
-      "component": "soundfile",
-      "role": "WAV export & DSP filters",
-      "degraded_behaviour": "Audio assets cannot be saved or processed.",
-      "mitigation": "Install soundfile or capture alternate recordings.",
-      "status": "verify"
-    },
-    {
-      "component": "pydub / FFmpeg",
-      "role": "Full AudioSegment backend",
-      "degraded_behaviour": "Resolver drops to NumPy with simplified DSP and playback errors without FFmpeg.",
-      "mitigation": "Restore FFmpeg and pydub or highlight reduced mix controls.",
-      "status": "verify"
-    },
-    {
-      "component": "simpleaudio",
-      "role": "Direct buffer playback",
-      "degraded_behaviour": "Single-shot playback fails outside pydub path.",
-      "mitigation": "Ship audio extras bundle or rely on looped cues.",
-      "status": "verify"
-    },
-    {
-      "component": "RAVE / torch",
-      "role": "Neural morphing",
-      "degraded_behaviour": "RAVE helpers raise errors; morphing unavailable.",
-      "mitigation": "Deploy RAVE dependencies or log disabled feature set.",
-      "status": "verify"
-    },
-    {
-      "component": "NSynth",
-      "role": "Cross-timbral interpolation",
-      "degraded_behaviour": "Interpolation raises errors and is skipped.",
-      "mitigation": "Install NSynth tooling or capture omission.",
-      "status": "verify"
-    }
-  ]
+  }
 }

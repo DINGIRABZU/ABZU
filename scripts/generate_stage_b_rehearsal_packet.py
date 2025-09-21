@@ -119,27 +119,40 @@ async def _exercise_connector(
         credential_expiry=credential_expiry,
     )
 
+    handshake_payload = module.build_handshake_payload()
     async with httpx.AsyncClient(transport=transport) as client:
         handshake_result = await module.handshake(client=client)
         heartbeat_result = await module.send_heartbeat(
             dict(heartbeat_payload),
             client=client,
             session=handshake_result.get("session"),
+            credential_expiry=credential_expiry,
         )
 
     doctrine_ok, doctrine_failures = module.doctrine_compliant()
 
-    heartbeat_request = None
+    recorded_handshake = state.get("handshake_request")
+    if recorded_handshake is not None and recorded_handshake != handshake_payload:
+        raise AssertionError("handshake payload mismatch during rehearsal capture")
+
+    canonical_heartbeat = module.build_heartbeat_payload(
+        dict(heartbeat_payload),
+        session=handshake_result.get("session"),
+        credential_expiry=credential_expiry,
+    )
+
     heartbeats = state.get("heartbeats")
     if isinstance(heartbeats, list) and heartbeats:
-        heartbeat_request = heartbeats[-1]
+        last_heartbeat = heartbeats[-1]
+        if last_heartbeat != canonical_heartbeat:
+            raise AssertionError("heartbeat payload mismatch during rehearsal capture")
 
     return {
         "connector_id": config.connector_id,
         "module": module.__name__,
-        "handshake_request": state.get("handshake_request"),
+        "handshake_request": handshake_payload,
         "handshake_response": handshake_result,
-        "heartbeat_request": heartbeat_request,
+        "heartbeat_request": canonical_heartbeat,
         "heartbeat_payload": heartbeat_result,
         "doctrine_ok": doctrine_ok,
         "doctrine_failures": doctrine_failures,
