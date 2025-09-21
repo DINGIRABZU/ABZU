@@ -3,6 +3,7 @@
 # and credential rotation summaries end-to-end.
 name: stage-b-rehearsal
 steps:
+  - run: bash scripts/setup_audio_env.sh
   - run: python scripts/rehearsal_scheduler.py --artifact-root monitoring/stage_b
   - run: |
       python - <<'PY'

@@ -82,7 +82,7 @@ Install the optional packages below to enable higher quality emotion detection
 and real-time voice conversion:
 
 ```bash
-pip install opensmile==2.5.1 EmotiVoice==0.2.0 voicefixer==0.1.3
+pip install opensmile==2.6.0 EmotiVoice==0.2.0 voicefixer==0.1.3
 ```
 
 When these libraries are present the listening engine automatically uses

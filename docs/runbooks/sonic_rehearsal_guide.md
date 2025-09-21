@@ -30,22 +30,21 @@ degradation matrix covering optional packages such as CLAP or RAVE.
 ## Provisioning steps
 
 1. Install the Python packages inside the rehearsal virtual environment using
-   the pinned versions:
+   the pinned versions. The `stage-b-rehearsal` pipeline now runs
+   `scripts/setup_audio_env.sh` ahead of every smoke test cycle,【F:deployment/pipelines/stage_b_rehearsal.yml†L1-L47】 so local
+   rehearsal hosts should invoke the same helper to stay aligned with the
+   automated workflow:
 
    ```bash
-   pip install \
-       pydub==0.25.1 \
-       simpleaudio==1.0.4 \
-       soundfile==0.13.1 \
-       librosa==0.11.0 \
-       opensmile==2.6.0 \
-       EmotiVoice==0.2.0
+   bash scripts/setup_audio_env.sh
    ```
 
    Optional integrations (CLAP, RAVE, Demucs, Spleeter, EmotiVoice) can be
-   added afterwards depending on the rehearsal focus.
+   added afterwards depending on the rehearsal focus. If the script reports a
+   missing FFmpeg binary, install it using the platform package manager before
+   rerunning the helper.
 
-2. Provision FFmpeg with the system package manager (example for Ubuntu):
+2. Provision FFmpeg manually when required (example for Ubuntu):
 
    ```bash
    sudo apt-get update
@@ -65,17 +64,12 @@ degradation matrix covering optional packages such as CLAP or RAVE.
    will log warnings for missing optional analyzers (e.g. CLAP) so operators
    can record temporary degradations in the rehearsal log.
 
-4. Run the Stage B rehearsal setup script to confirm Ardour/Carla tooling:
-
-   ```bash
-   bash scripts/setup_audio_env.sh
-   ```
-
-   The script installs the pinned audio dependencies, runs the strict audio
-   validation helper, and executes the
-   `modulation_arrangement.check_daw_availability` preflight. When Ardour or
-   Carla binaries are missing, it logs a warning and Stage B exports fall back
-   to audio renders without generating the corresponding session files.【F:scripts/setup_audio_env.sh†L1-L42】
+4. Rerun `scripts/setup_audio_env.sh` whenever FFmpeg or DAW tooling is updated
+   to reconfirm Ardour/Carla availability. The helper runs the strict audio
+   validation and the `modulation_arrangement.check_daw_availability`
+   preflight. When Ardour or Carla binaries are missing, it logs a warning and
+   Stage B exports fall back to audio renders without generating the
+   corresponding session files.【F:scripts/setup_audio_env.sh†L1-L42】
 
 5. Export the backend for local shells when invoking rehearsal utilities:
 
