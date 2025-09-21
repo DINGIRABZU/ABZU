@@ -409,6 +409,19 @@ class StageBConnector:
         prepared.setdefault("emitted_at", _iso_now())
         return prepared
 
+    def build_heartbeat_payload(
+        self,
+        payload: dict[str, Any],
+        *,
+        session: Mapping[str, Any] | None = None,
+        credential_expiry: Any = None,
+    ) -> dict[str, Any]:
+        """Return the canonical heartbeat payload without transmitting it."""
+
+        return self._prepare_heartbeat_payload(
+            payload, session=session, credential_expiry=credential_expiry
+        )
+
     async def send_heartbeat(
         self,
         payload: dict[str, Any],
@@ -422,7 +435,7 @@ class StageBConnector:
         if not _MCP_ENABLED:
             raise RuntimeError("MCP is not enabled")
 
-        body = self._prepare_heartbeat_payload(
+        body = self.build_heartbeat_payload(
             payload, session=session, credential_expiry=credential_expiry
         )
 

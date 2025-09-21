@@ -96,6 +96,7 @@ def test_handshake_payload_contains_expected_identity(
     assert (
         observed["identity"]["connector_id"] == module._CONNECTOR._config.connector_id
     )
+    assert observed == module.build_handshake_payload()
     assert result["session"]["id"] == "sess-123"
     assert any(
         "Stage B rehearsal handshake acknowledged" in record.getMessage()
@@ -140,6 +141,9 @@ def test_send_heartbeat_merges_defaults(module_name: str, expected_chakra: str) 
 
     assert recorded
     payload = recorded[-1]
+    assert payload == module.build_heartbeat_payload(
+        {"status": "aligned"}, session=session_info
+    )
     assert payload["chakra"] == expected_chakra
     assert payload["cycle_count"] == 0
     assert payload["context"] == stage_base._STAGE_B_CONTEXT
