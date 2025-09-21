@@ -1,0 +1,36 @@
+# Stage B rehearsal pipeline executed via spiral-os pipeline deploy
+# Mirrors the Stage B readiness rehearsal to run health checks, smoke tests,
+# and credential rotation summaries end-to-end.
+name: stage-b-rehearsal
+steps:
+  - run: python scripts/rehearsal_scheduler.py --artifact-root monitoring/stage_b
+  - run: |
+      python - <<'PY'
+import json
+from pathlib import Path
+
+summary_path = Path("monitoring/stage_b/latest/rehearsal_summary.json")
+if summary_path.exists():
+    data = json.loads(summary_path.read_text(encoding="utf-8"))
+    print("Stage B rehearsal overview:")
+    print(f"  Run ID: {data.get('run_id')}")
+    print(f"  Generated: {data.get('generated_at')}")
+    health = data.get("health_checks", {})
+    print(f"  Health checks ok: {health.get('ok')}")
+    stage_b = data.get("stage_b_smoke", {})
+    print(
+        "  Stage B smoke ok: {} (doctrine_ok={})".format(
+            stage_b.get("ok"), stage_b.get("doctrine_ok")
+        )
+    )
+    rotation = data.get("rotation_drills", {})
+    print(
+        "  Rotation coverage ok: {} (entries recorded: {})".format(
+            rotation.get("ok"), len(rotation.get("new_entries") or [])
+        )
+    )
+    print(f"  Overall success: {data.get('overall_ok')}")
+else:
+    print("Stage B rehearsal summary missing", flush=True)
+PY
+  - run: tar -czf logs/stage_b_rehearsal_artifacts.tgz monitoring/stage_b
