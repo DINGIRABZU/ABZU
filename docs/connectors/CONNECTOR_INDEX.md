@@ -27,6 +27,22 @@ refer to the [MCP Migration Guide](mcp_migration.md).
 | `operator_upload_stage_b` | Stage B MCP handshake and heartbeat for operator uploads | 0.1.0 | Bearer | `POST /handshake`, `POST /heartbeat` | RAZAR | experimental | [connectors/operator_upload_stage_b.py](../../connectors/operator_upload_stage_b.py) | [operator_mcp_runbook.md](operator_mcp_runbook.md), [credential_rotation_playbook.md](credential_rotation_playbook.md) | [mcp_heartbeat_payload.schema.json](../../schemas/mcp_heartbeat_payload.schema.json) |
 | `crown_handshake_stage_b` | Stage B MCP handshake mirroring Crown mission briefs | 0.1.0 | Bearer | `POST /handshake`, `POST /heartbeat` | Crown | experimental | [connectors/crown_handshake_stage_b.py](../../connectors/crown_handshake_stage_b.py) | [operator_mcp_runbook.md](operator_mcp_runbook.md), [credential_rotation_playbook.md](credential_rotation_playbook.md) | [mcp_heartbeat_payload.schema.json](../../schemas/mcp_heartbeat_payload.schema.json) |
 
+### Stage B MCP rehearsal evidence
+
+Stage B rehearsals refreshed the MCP connector catalog with validated handshakes,
+accepted contexts, and credential rotation telemetry. The artifacts below capture
+the negotiated capabilities and rotation windows exercised during the latest run.
+
+| Connector | Module | Contexts, channels, capabilities | Credential rotation | Evidence |
+| --- | --- | --- | --- | --- |
+| `operator_api_stage_b` | `connectors.operator_api_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `command` and capabilities `register`, `telemetry`, `command`. | `last_rotated` `2025-09-21T09:43:11Z`, window `PT48H`, hot swap supported, token hint `operator`; session expires `2025-12-01T00:00:00Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) · [Rotation drills](../../logs/stage_b/latest/stage_b_rotation_drills.jsonl) |
+| `operator_upload_stage_b` | `connectors.operator_upload_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `upload` and capabilities `register`, `telemetry`, `upload`. | `last_rotated` `2025-09-21T09:43:11Z`, window `PT48H`, hot swap supported, token hint `operator-upload`; session expires `2025-12-01T00:00:00Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) · [Rotation drills](../../logs/stage_b/latest/stage_b_rotation_drills.jsonl) |
+| `crown_handshake_stage_b` | `connectors.crown_handshake_stage_b` | Context `stage-b-rehearsal` accepted with channels `handshake`, `heartbeat`, `mission-brief` and capabilities `register`, `telemetry`, `mission-brief`. | `last_rotated` `2025-09-21T09:43:11Z`, window `PT48H`, hot swap supported, token hint `crown`; session expires `2025-11-15T00:00:00Z`. | [Stage B rehearsal packet](../../logs/stage_b_rehearsal_packet.json) |
+
+Rotation drills captured alongside the rehearsal confirm the operator connectors
+rotated credentials on `2025-01-01T00:00:00Z`, maintaining the declared 48-hour
+window for Stage B readiness ([stage_b_rotation_drills.jsonl](../../logs/stage_b/latest/stage_b_rotation_drills.jsonl)).
+
 ## MCP Migration Status
 
 | connector | protocol | migration_notes |
