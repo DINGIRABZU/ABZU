@@ -38,7 +38,8 @@ degradation matrix covering optional packages such as CLAP or RAVE.
        simpleaudio==1.0.4 \
        soundfile==0.13.1 \
        librosa==0.11.0 \
-       opensmile==2.6.0
+       opensmile==2.6.0 \
+       EmotiVoice==0.2.0
    ```
 
    Optional integrations (CLAP, RAVE, Demucs, Spleeter, EmotiVoice) can be
@@ -70,10 +71,11 @@ degradation matrix covering optional packages such as CLAP or RAVE.
    bash scripts/setup_audio_env.sh
    ```
 
-   The script installs the pinned audio dependencies and executes the
+   The script installs the pinned audio dependencies, runs the strict audio
+   validation helper, and executes the
    `modulation_arrangement.check_daw_availability` preflight. When Ardour or
    Carla binaries are missing, it logs a warning and Stage B exports fall back
-   to audio renders without generating the corresponding session files.
+   to audio renders without generating the corresponding session files.【F:scripts/setup_audio_env.sh†L1-L42】
 
 5. Export the backend for local shells when invoking rehearsal utilities:
 

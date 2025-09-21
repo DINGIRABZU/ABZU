@@ -4,6 +4,14 @@ The avatar pipeline synchronises generated speech with visual animation. It read
 configuration from `guides/avatar_config.toml` and produces frames via
 `core.video_engine`.
 
+## Renderer inventory
+
+| Renderer | Module | Mode | Notes |
+| --- | --- | --- | --- |
+| Default 2D | `core.video_engine.default_render_2d_frame` | 2D | Generates 64×64 frames using persona traits, emotion overlays and optional Wav2Lip/SadTalker assistance.【F:src/core/video_engine.py†L96-L211】 |
+| Default 3D | `core.video_engine.default_render_3d_frame` | 3D | Extends the 2D renderer with camera path integration and mesh handling when 3D assets are configured.【F:src/core/video_engine.py†L212-L286】 |
+| LWM plug-in | `media.avatar.lwm_renderer` | 2D/3D | Loads Large World Model meshes, camera paths and lip-sync audio before delegating to the registered default renderers.【F:src/media/avatar/lwm_renderer.py†L1-L139】 |
+
 ## Heartbeat and Session Management
 
 The video engine listens for the system heartbeat so avatar streams stay in sync

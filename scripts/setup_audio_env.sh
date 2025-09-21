@@ -1,16 +1,27 @@
 #!/usr/bin/env bash
-# Install pinned audio dependencies
-set -e
+# Install pinned audio dependencies for Stage B rehearsals
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
+echo "Installing Stage B audio extras..."
 pip install \
-  librosa==0.11.0 \
+  pydub==0.25.1 \
+  simpleaudio==1.0.4 \
   soundfile==0.13.1 \
+  librosa==0.11.0 \
   opensmile==2.6.0 \
+  EmotiVoice==0.2.0 \
   clap==0.7 \
   rave==1.0.0
+
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  echo "WARNING: ffmpeg binary not found on PATH. Install it via your package manager." >&2
+fi
+
+echo "Validating audio stack..."
+python -m audio.check_env --strict
 
 python3 - <<'PY'
 """Stage B rehearsal preflight for optional DAW session tooling."""
