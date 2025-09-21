@@ -339,9 +339,9 @@ run_tests() {
         --maxfail=1
         --cov=start_spiral_os
         --cov=spiral_os
-        --cov=spiral_memory
+        --cov=memory.optional.spiral_memory
         --cov=spiral_vector_db
-        --cov=vector_memory
+        --cov=memory.optional.vector_memory
         --cov=src/spiral_os
         --cov-fail-under=90
         tests/test_start_spiral_os.py

@@ -6233,7 +6233,7 @@
         "tests/test_spiral_memory.py"
       ],
       "metrics": {
-        "coverage": 97.12
+        "coverage": 95.19
       },
       "status": "active",
       "issues": "No known issues",
@@ -6424,7 +6424,7 @@
         "tests/test_start_spiral_os.py"
       ],
       "metrics": {
-        "coverage": 94.31
+        "coverage": 93.15
       },
       "status": "active",
       "issues": "No known issues",
