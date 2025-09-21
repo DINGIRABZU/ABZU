@@ -20,6 +20,36 @@ The Sonic Core layers audio synthesis and expression modules on top of Spiral OS
 - `EmotiVoice` and `sounddevice` for optional voice cloning
 - Optional: `pydub` and the `ffmpeg` binary for the full `AudioSegment` backend. Set `AUDIO_BACKEND=pydub` when both are available.
 
+## Optional components and fallback behaviour
+
+Stage B rehearsals often operate with a reduced toolchain. Track which optional
+packages are missing so the resulting artefacts can be interpreted correctly.
+
+| Component | Sonic Core role | Behaviour when missing | Primary mitigation |
+| --- | --- | --- | --- |
+| SadTalker | Drives the 3‑D lip-sync pipeline during avatar playback. | Falls back to procedural frames without SadTalker mouth cues. | Install the SadTalker extra or document the simplified render. 【F:docs/optional_dependency_fallbacks.md†L7-L14】 |
+| wav2lip | Aligns lip motion with generated speech. | Uses amplitude overlays only, desynchronising lip motion. | Pin the `wav2lip` extra or record the degraded sync in rehearsal notes. 【F:docs/optional_dependency_fallbacks.md†L9-L17】 |
+| MediaPipe | Provides face mesh landmarks for smoothing. | Overlays render without landmark feedback, reducing facial fidelity. | Restore MediaPipe on demo rigs or log the diminished tracking. 【F:docs/optional_dependency_fallbacks.md†L7-L14】 |
+| ControlNet / AnimateDiff | Injects gesture animation into avatar output. | Gestural cues are omitted, leaving static upper-body motion. | Install ControlNet/AnimateDiff or choreograph manual gestures. 【F:docs/optional_dependency_fallbacks.md†L12-L17】 |
+| vector_memory | Supplies scene-specific avatar traits. | Trait overrides are skipped and default skins persist. | Reconnect vector memory or annotate the missing personalization. 【F:docs/optional_dependency_fallbacks.md†L16-L17】 |
+| lwm | Generates automated camera paths. | Camera automation is unavailable; scenes require manual paths. | Restore `lwm` or script alternate camera moves. 【F:docs/optional_dependency_fallbacks.md†L16-L17】 |
+| sounddevice | Handles realtime playback and microphone capture. | Live audio I/O aborts, forcing silent or pre-rendered rehearsals. | Install `sounddevice` (with ALSA headers) or log silent-mode runs. 【F:docs/optional_dependency_fallbacks.md†L21-L24】 |
+| opensmile | Extracts acoustic features for emotion telemetry. | Sentiment scores fall back to heuristics, reducing fidelity. | Install OpenSMILE or record the diminished metrics coverage. 【F:docs/optional_dependency_fallbacks.md†L23-L25】 |
+| websockets | Streams listening telemetry to dashboards. | Streaming server errors prevent remote monitoring. | Re-enable the module or export logs offline. 【F:docs/optional_dependency_fallbacks.md†L25-L26】 |
+| gTTS | Generates default spoken prompts. | Playback becomes a sine-wave placeholder with no intelligible speech. | Install gTTS or switch to another synthesis backend. 【F:docs/optional_dependency_fallbacks.md†L26-L27】 |
+| OpenVoice | Performs advanced timbre morphing. | Falls back to coarse pitch-shift conversion only. | Restore OpenVoice or align expectations with simplified output. 【F:docs/optional_dependency_fallbacks.md†L27-L28】 |
+| EmotiVoice | Provides neural voice cloning. | Cloned speech renders silent placeholders and low MOS scores. | Reinstall EmotiVoice or pre-record narration. 【F:docs/optional_dependency_fallbacks.md†L32-L33】 |
+| librosa | Powers audio analysis, lip sync and DSP utilities. | Feature extraction and WAV persistence fail across the pipeline. | Provision the `librosa` extra or document analytics gaps. 【F:docs/optional_dependency_fallbacks.md†L10-L30】 |
+| soundfile | Enables WAV export and DSP filters. | Audio assets cannot be saved or processed. | Install `soundfile` or capture alternate recordings. 【F:docs/optional_dependency_fallbacks.md†L29-L34】 |
+| pydub / FFmpeg | Unlocks the full `AudioSegment` backend. | Resolver drops to NumPy with simplified DSP; playback errors without FFmpeg. | Restore FFmpeg and the `pydub` extra or highlight reduced mix controls. 【F:docs/optional_dependency_fallbacks.md†L30-L31】 |
+| simpleaudio | Supports direct buffer playback. | Single-shot playback fails outside the pydub path. | Ship the audio extras bundle or rely on looped cues. 【F:docs/optional_dependency_fallbacks.md†L31-L32】 |
+| RAVE / torch | Enables neural morphing and latent mixing. | RAVE helpers raise errors; morphing is unavailable. | Deploy the RAVE dependencies or log the disabled feature set. 【F:docs/optional_dependency_fallbacks.md†L33-L34】 |
+| NSynth | Provides cross-timbral interpolation. | Interpolation raises errors and is skipped entirely. | Install NSynth tooling or capture the omission. 【F:docs/optional_dependency_fallbacks.md†L33-L34】 |
+
+Stage leads should cross-reference the [Optional Dependency Fallback Matrix](optional_dependency_fallbacks.md)
+when rehearsals run in degraded mode and attach the relevant excerpts to the
+evidence bundle.
+
 ## From QNL Phrase to Sound
 
 1. `inanna_music_COMPOSER_ai.py` or `qnl_utils.generate_qnl_structure` produces QNL phrases.
