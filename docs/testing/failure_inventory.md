@@ -291,3 +291,6 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-16: ERROR tests/test_vast_pipeline.py
 - 2025-09-16: ERROR tests/test_voice_cloner_cli.py
 
+- 2025-09-21: No failures detected.
+
+- 2025-09-21: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
