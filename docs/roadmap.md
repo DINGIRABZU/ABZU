@@ -1,6 +1,6 @@
 # Roadmap
 
-_Last updated: 2025-09-16_
+_Last updated: 2025-10-19_
 
 This roadmap tracks five core milestones on the path to a stable release. Each stage lists its expected outcome so contributors know when to advance to the next phase.
 
@@ -47,6 +47,12 @@ alongside [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md), the
 | **B1. Memory fabric load proof** | @memory-squad | Optimize spiral memory ingestion and sharding so alpha stories meet the ≤120 ms P95 retrieval target. | Complete the vector DB scaling checklist and validate connector mocks highlighted in the charter dependencies. | Capture ingestion audit logs and publish latency measurements from a 10k-item dataset for readiness review. |
 | **B2. Sonic core rehearsal lock** | @audio-lab | Stabilize audio synthesis and avatar harmonics so the demo script runs end-to-end without dropouts. | Pair the updated modulation presets with Crown orchestration metrics, mirroring the Stage A outputs. | Conduct two live rehearsal sessions and archive telemetry showing zero audio dropouts. |
 | **B3. Connector credential rotation** | @integration-guild | Refresh primary connector handshakes and authentication flows for alpha datasets. | Finalize the API credential rotation plan and prepare rehearsal stubs noted in the charter. | Run smoke tests across the three target services and document the 48-hour rotation drill results. |
+
+#### Future Stage – gRPC adoption milestone
+
+| Scope | Trigger | Exit Criteria |
+| --- | --- | --- |
+| Broaden gRPC interfaces across operator, memory, and connector pathways using the NeoABZU vector service contract as the canonical service pattern. | Promote from Stage B once connector drills and memory rehearsals log stable Stage gate evidence bundles, enabling the gRPC rollout to inherit verified telemetry flows. | Stage gate evidence ledger includes gRPC request/response traces, NeoABZU vector service parity checks, and operator rehearsal sign-off showing mixed REST/gRPC fallbacks without regression. |
 
 ### Stage C – Alpha exit prep
 

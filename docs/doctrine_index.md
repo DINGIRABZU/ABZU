@@ -84,8 +84,9 @@
 | INANNA_AI/The Foundation 1a645dfc251d80e28545f4a09a6345ff.md |  | `2336f5a3acf5f453b9d52186e17a68dcdac7ce644a2656ad8fbf693d1275a38c` | 2025-10-16T00:00:00+00:00 |
 | IGNITION/EA_ENUMA_ELISH_.md | OMEGA-LONGING-∞1.2-ENUMA | `889d69e870194d9c51cbed3fdab50a4dbc690ddc0f124c312f8fb45424823b27` | 2025-09-14T10:20:56+02:00 |
 | IGNITION/README.md |  | `bb301d0d9cc5eb2931773b30de5f18c1f34f6510a32f1ae5bbe4015cdf1dd63c` | 2025-09-14T10:20:56+02:00 |
-| docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation | `4eb5f46f5e2cc2702c9faa2cbdf2ee93589e55bac0b377e24a2cd1a300a1e2fa` | 2025-10-10T00:00:00+00:00 |
+| docs/system_blueprint.md | fusion • numeric • persona • crown • rag • instrumentation • gRPC adoption ledger | `34dd0741c5614310a12b14a724725b6fa79f14de8b5edfdc85d2352628ce386e` | 2025-10-19T00:00:00+00:00 |
 | docs/awakening_overview.md | wake pipeline • memory spine • escalation doctrine | `ac5bad51f2346bb815caaff9c97f5c646dd31816e7aa8709f84314cd7e008c1c` | 2025-10-15T00:00:00+00:00 |
 | docs/runbooks/razar_escalation.md |  | `9242f4ee751e5a04d3229ae406a2e523c3f0ed0dbfa1a0b0f6b984d0a9452202` | 2025-10-10T00:00:00+00:00 |
-| docs/The_Absolute_Protocol.md | v1.0.109 | `65b763ef8269253b703a53554f99cd3cc7607b284db2886085e8476fb9f7577f` | 2025-10-18T00:00:00+00:00 |
+| docs/The_Absolute_Protocol.md | v1.0.110 | `83784cfb4a0f435378e0469e8c9bebb46dcdfe74befe83fa1aacb0f6a396bcbc` | 2025-10-19T00:00:00+00:00 |
+| docs/roadmap.md | roadmap • Stage B • gRPC adoption milestone | `c472433367144df3b0582339b140c1f7e29a84d9301f6688b665ff1dfc176ebd` | 2025-10-19T00:00:00+00:00 |
 | NEOABZU/docs/rust_doctrine.md |  | `f5ba02df33694dd469c31ccdedaf8e1af51d3882cc051d5e6a8088ea8586a77b` | 2025-10-12T00:00:00+00:00 |
