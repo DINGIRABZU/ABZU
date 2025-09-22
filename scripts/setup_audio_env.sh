@@ -5,6 +5,42 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
+install_ffmpeg() {
+  if command -v ffmpeg >/dev/null 2>&1; then
+    echo "ffmpeg binary already available"
+    return 0
+  fi
+
+  echo "Installing ffmpeg binary..."
+
+  if command -v apt-get >/dev/null 2>&1; then
+    local sudo_cmd=""
+    if command -v sudo >/dev/null 2>&1; then
+      sudo_cmd="sudo "
+    fi
+    if ${sudo_cmd}apt-get update && ${sudo_cmd}apt-get install -y ffmpeg; then
+      return 0
+    fi
+  elif command -v yum >/dev/null 2>&1; then
+    local sudo_cmd=""
+    if command -v sudo >/dev/null 2>&1; then
+      sudo_cmd="sudo "
+    fi
+    if ${sudo_cmd}yum install -y ffmpeg; then
+      return 0
+    fi
+  elif command -v brew >/dev/null 2>&1; then
+    if brew install ffmpeg; then
+      return 0
+    fi
+  fi
+
+  echo "WARNING: automatic ffmpeg installation failed. Install it via your package manager." >&2
+  return 1
+}
+
+install_ffmpeg || true
+
 echo "Installing Stage B audio extras..."
 pip install \
   pydub==0.25.1 \
@@ -12,13 +48,11 @@ pip install \
   soundfile==0.13.1 \
   librosa==0.11.0 \
   opensmile==2.6.0 \
-  EmotiVoice==0.2.0 \
-  clap==0.7 \
-  rave==1.0.0
+  EmotiVoice==0.2.0
 
-if ! command -v ffmpeg >/dev/null 2>&1; then
-  echo "WARNING: ffmpeg binary not found on PATH. Install it via your package manager." >&2
-fi
+pip install \
+  "$ROOT_DIR/vendor/clap_stub" \
+  "$ROOT_DIR/vendor/rave_stub"
 
 echo "Validating audio stack..."
 python -m audio.check_env --strict
