@@ -68,10 +68,18 @@ pip install -r MUSIC_FOUNDATION/REQUIREMENTS_Music_Foundation.txt
 
 ## Example commands
 
-The examples in `README_OPERATOR.md` demonstrate how to run the tools. Key commands include:
+The examples in `README_OPERATOR.md` demonstrate how to run the tools. When you
+need the Stage B audio demo, download the packaged evidence bundle first:
 
 ```bash
+aws s3 cp s3://abzu-stage-b-rehearsals/stage-b-audio-20250218T120000Z.tar.gz .
+tar -xzf stage-b-audio-20250218T120000Z.tar.gz -C SONS_FOR_TESTS
 python run_song_demo.py "SONS_FOR_TESTS/Music Is My Everything.mp3"
+```
+
+Other frequently used commands:
+
+```bash
 python INANNA_AI_AGENT/inanna_ai.py --activate
 python INANNA_AI_AGENT/inanna_ai.py --hex 012345abcdef
 python download_models.py deepseek

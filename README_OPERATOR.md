@@ -217,11 +217,18 @@ at a specific model endpoint. These values override the `PLANNER_MODEL`,
 
 ### Analyze the sample song
 
+Download the Stage B rehearsal bundle described in
+[`evidence_manifests/stage-b-audio.json`](evidence_manifests/stage-b-audio.json)
+before running the demo:
+
 ```bash
+aws s3 cp s3://abzu-stage-b-rehearsals/stage-b-audio-20250218T120000Z.tar.gz .
+tar -xzf stage-b-audio-20250218T120000Z.tar.gz -C SONS_FOR_TESTS
 python run_song_demo.py "SONS_FOR_TESTS/Music Is My Everything.mp3"
 ```
 
-This writes `output/preview.wav` and `output/qnl_7plane.json` while printing the QNL phrases derived from the song.
+The script writes `output/preview.wav` and `output/qnl_7plane.json` while
+printing the QNL phrases derived from the song.
 
 ### Generate music from a prompt
 
