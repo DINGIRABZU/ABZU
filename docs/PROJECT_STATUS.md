@@ -80,6 +80,18 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 | Timestamp (UTC) | Location | Notes |
 | --- | --- | --- |
 | 2025-09-21T22:02:58Z | `logs/alpha_gate/20250921T220258Z/` | Coverage export failed in the container (missing `core.task_profiler` import during pytest collection), but build, health, and test phase logs were captured for the bundle review. |
+| 2025-09-20T06:55:19Z | `logs/alpha_gate/20250920T065519Z/` | Successful gate run with 92.95 % coverage; bundle includes HTML coverage export, Prometheus counters, and phase logs for audit.【F:logs/alpha_gate/20250920T065519Z/coverage.json†L1-L1】 |
+
+### Stage B evidence
+
+- **Load test (2025-09-20)** – [`load_test_summary.json`](../logs/stage_b/20250920T222728Z/load_test_summary.json) captures the 10 k document vector memory ingestion with p95 query latency at 19.95 ms and fallback store p95 at 93.92 ms, confirming the CPU rehearsal meets the <100 ms goal while preserving write throughput margins.【F:logs/stage_b/20250920T222728Z/load_test_summary.json†L1-L61】
+- **Rehearsal bundle (2025-09-21)** – [`rehearsals/summary.json`](../logs/stage_b/20250921T230434Z/rehearsals/summary.json) documents two three-step sessions with ≤67 ms sync drift and no dropouts, but flags missing FFmpeg, simpleaudio, CLAP, and RAVE dependencies forcing NumPy audio fallbacks.【F:logs/stage_b/20250921T230434Z/rehearsals/summary.json†L1-L40】
+- **Connector rotation run (2025-09-21)** – [`rehearsal_summary.json`](../logs/stage_b/20250921T122529Z/rehearsal_summary.json) records successful Stage B smoke validation, refreshed operator and crown credentials, and 48 h rotations across operator_api, operator_upload, and crown_handshake, while doctrine automation still reports the missing MCP adapter status note.【F:logs/stage_b/20250921T122529Z/rehearsal_summary.json†L1-L63】
+
+### Stage C planning snapshot
+
+- **Audio dependency remediation:** Rehearsal audio checks continue to report missing FFmpeg, simpleaudio, CLAP, and RAVE packages, locking media playback into fallback modes until the toolchain is provisioned.【F:logs/stage_b/20250921T230434Z/rehearsals/summary.json†L23-L40】
+- **Health automation activation:** Stage B rehearsal health checks remain skipped, indicating the automated probes still need wiring before Stage C gate reviews.【F:logs/stage_b/20250921T122529Z/rehearsal_summary.json†L4-L15】
 
 ## Deprecation Roadmap
 
