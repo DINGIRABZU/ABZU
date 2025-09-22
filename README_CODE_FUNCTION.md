@@ -32,11 +32,13 @@ For an overview of the Albedo personality layer see [docs/ALBEDO_LAYER.md](docs/
   gender, resonance and default tone.
 
 - **Tone presets** – The module defines four preset voices used when
-  generating speech:
-  - `albedo` – speed 1.05, pitch +0.2
-  - `nigredo` – speed 0.9, pitch -0.3
-  - `rubedo` – speed 1.1, pitch +0.5
-  - `lunar` – speed 0.95, pitch -0.4
+  generating speech. The Crown telemetry refresh rebalanced the base
+  parameters so they load directly from
+  `crown_config/settings/modulation_presets.yaml` at runtime.
+  - `albedo` – speed 1.00, pitch +0.19
+  - `nigredo` – speed 0.93, pitch -0.31
+  - `rubedo` – speed 0.95, pitch +0.43
+  - `lunar` – speed 0.99, pitch -0.42
 
 ## MUSIC_FOUNDATION modules
 
