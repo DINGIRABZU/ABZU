@@ -57,3 +57,7 @@ floor_client/node_modules/
 
 # Floor client build output
 floor_client/dist/
+
+# Evidence packaging outputs
+artifacts/
+*.tar.gz

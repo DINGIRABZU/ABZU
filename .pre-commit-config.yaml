@@ -99,6 +99,12 @@ repos:
     entry: python scripts/check_no_binaries.py
     language: system
     pass_filenames: false
+  - id: validate-evidence-manifests
+    name: Validate evidence manifests
+    entry: python scripts/check_evidence_manifests.py --require-upload-hint
+    language: system
+    pass_filenames: false
+    files: ^evidence_manifests/
   - id: placeholder-elimination
     name: Placeholder Elimination
     entry: python scripts/check_placeholders.py

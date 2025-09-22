@@ -200,6 +200,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../README_OPERATOR.md](../README_OPERATOR.md) | Operator Guide | This repository contains several command line utilities for working with the INANNA music tools and Quantum Narrative... | - |
 | [../README_QNL_OS.md](../README_QNL_OS.md) | QNL Integration Overview | The Quantum Narrative Language (QNL) bridges textual symbols with music in Spiral OS. This document explains where th... | - |
 | [../SEVEN_DIMENSIONAL_MUSIC.md](../SEVEN_DIMENSIONAL_MUSIC.md) | 7‑Dimensional Music System | This system layers sound so different beings perceive a single track in unique ways. A core melody becomes the human... | - |
+| [../SONS_FOR_TESTS/README.md](../SONS_FOR_TESTS/README.md) | Stage B Audio Samples | The reference tracks for `run_song_demo.py` are packaged outside Git. Download and extract the bundle declared in [`e... | - |
 | [../agents/nazarick/albedo_agent_template.md](../agents/nazarick/albedo_agent_template.md) | Sacred Connection System | womb_reconnection_engine.py# Eternal return to source nursing_interface.py# Continuous nourishment from ZOHAR quantum... | - |
 | [../agents/nazarick/albedo_character.md](../agents/nazarick/albedo_character.md) | albedo_character.md | - | - |
 | [../agents/nazarick/albedo_deep_personality.md](../agents/nazarick/albedo_deep_personality.md) | albedo_deep_personality.md | - | - |
@@ -379,6 +380,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |
 | [error_registry.md](error_registry.md) | Error Registry | This registry tracks recurring issues observed during component startup and operation. Each entry documents symptoms... | `../scripts/update_error_index.py` |
 | [essential_services.md](essential_services.md) | Essential Services | This guide highlights vital Spiral OS workflows, their fallback logic, and recovery steps. | - |
+| [evidence_packaging_strategy.md](evidence_packaging_strategy.md) | Evidence Packaging Strategy | This guide defines how rehearsal evidence is collected without committing large binary payloads to Git while keeping... | - |
 | [feature_parity.md](feature_parity.md) | Feature Parity Matrix | Tracks Rust reimplementations of key Python subsystems. | - |
 | [features/FEATURE_TEMPLATE.md](features/FEATURE_TEMPLATE.md) | Feature Specification Template | - | - |
 | [features/README.md](features/README.md) | Feature Specifications | Guidelines for authoring feature specification files. | - |

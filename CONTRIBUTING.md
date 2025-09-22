@@ -67,6 +67,19 @@ git add .pre-commit-config.yaml
 Create a separate commit (e.g. `chore: update pre-commit hooks`) so the update
 is easy to track.
 
+### Evidence Packaging
+
+- Never commit rehearsal audio, logs, or other large binaries. The
+  `check_no_binaries` hook blocks staged payloads detected as binary.
+- Package rehearsal bundles with
+  `python scripts/package_evidence.py <bundle> <source> --upload-base s3://abzu-stage-b-rehearsals`.
+  The command writes a manifest under `evidence_manifests/` and a temporary
+  archive in `artifacts/evidence/`.
+- Upload the archive to the shared bucket, delete the local tarball, and commit
+  the JSON manifest plus README pointers. CI runs
+  `scripts/check_evidence_manifests.py --require-upload-hint` so every bundle
+  includes a checksum and retrieval URI before review starts.
+
 ## Coding Style
 
 Follow the conventions in [CODE_STYLE.md](CODE_STYLE.md). Highlights include:

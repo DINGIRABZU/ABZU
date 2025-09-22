@@ -1,0 +1,29 @@
+{
+  "archive": {
+    "content_type": "application/gzip",
+    "filename": "stage-b-audio-20250922T144547Z.tar.gz",
+    "sha256": "b3236623f28e17cddef9658648f078247fb7124f40a43c9e43c2a096624673fb",
+    "size_bytes": 12647616,
+    "upload_hint": "s3://abzu-stage-b-rehearsals/stage-b-audio-20250922T144547Z.tar.gz"
+  },
+  "bundle": "stage-b-audio",
+  "created_at": "2025-09-22T14:45:48.036629+00:00",
+  "files": [
+    {
+      "path": "Music Is My Everything.mp3",
+      "sha256": "b6b4c23bb16495a4b105c4b811a4b883c6a5ef7273abbfe2c7d8d6d5d987b265",
+      "size_bytes": 3619039
+    },
+    {
+      "path": "Surrender_instrumental.mp3",
+      "sha256": "6b8c588c03f6e96c52e2baa30c9d59aa83517263dbc43f22c984c088c8b56e08",
+      "size_bytes": 9298547
+    }
+  ],
+  "notes": [
+    "Upload the generated archive to durable storage and share the upload URI",
+    "Remove the local archive after upload to avoid accidental commits"
+  ],
+  "source": "SONS_FOR_TESTS",
+  "timestamp": "20250922T144547Z"
+}
