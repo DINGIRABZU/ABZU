@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from pathlib import Path
+from typing import Any, Dict
 
 from . import speaking_engine, voice_evolution
 
@@ -13,6 +14,60 @@ TONE_PRESETS: Dict[str, Dict[str, float]] = {
     "rubedo": {"speed": 1.1, "pitch": 0.5},
     "lunar": {"speed": 0.95, "pitch": -0.4},
 }
+
+try:  # pragma: no cover - optional dependency used during calibration
+    import yaml
+except Exception:  # pragma: no cover - fallback when PyYAML missing
+    yaml = None  # type: ignore
+
+
+def _load_crown_presets() -> (
+    tuple[Dict[str, Dict[str, float]], Dict[str, Dict[str, Any]]]
+):
+    """Return telemetry-derived overrides and their source metadata."""
+
+    if yaml is None:
+        return {}, {}
+
+    preset_path = (
+        Path(__file__).resolve().parents[1]
+        / "crown_config"
+        / "settings"
+        / "modulation_presets.yaml"
+    )
+    if not preset_path.exists():
+        return {}, {}
+
+    try:
+        data: Dict[str, Any] = (
+            yaml.safe_load(preset_path.read_text(encoding="utf-8")) or {}
+        )
+    except Exception:  # pragma: no cover - defensive guard for malformed YAML
+        return {}, {}
+
+    tones = data.get("tones", {})
+    presets: Dict[str, Dict[str, float]] = {}
+    metadata: Dict[str, Dict[str, Any]] = {}
+    for name, info in tones.items():
+        tone_name = str(name).lower()
+        speed = float(
+            info.get("speed", TONE_PRESETS.get(tone_name, {}).get("speed", 1.0))
+        )
+        pitch = float(
+            info.get("pitch", TONE_PRESETS.get(tone_name, {}).get("pitch", 0.0))
+        )
+        presets[tone_name] = {"speed": speed, "pitch": pitch}
+        metadata[tone_name] = dict(info)
+    return presets, metadata
+
+
+CROWN_PRESET_METADATA: Dict[str, Dict[str, Any]] = {}
+
+# Inject telemetry-derived preset values before merging configuration overlays.
+_crown_overrides, _crown_metadata = _load_crown_presets()
+if _crown_overrides:
+    TONE_PRESETS.update(_crown_overrides)
+    CROWN_PRESET_METADATA.update(_crown_metadata)
 
 # Merge presets defined in ``voice_config.yaml``
 for info in voice_evolution.VOICE_CONFIG.values():
@@ -65,4 +120,4 @@ def speak(text: str, tone: str) -> str:
     return path
 
 
-__all__ = ["modulate_voice", "speak", "TONE_PRESETS"]
+__all__ = ["modulate_voice", "speak", "TONE_PRESETS", "CROWN_PRESET_METADATA"]

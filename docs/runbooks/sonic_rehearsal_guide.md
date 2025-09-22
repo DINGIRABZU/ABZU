@@ -79,3 +79,9 @@ degradation matrix covering optional packages such as CLAP or RAVE.
 
 6. Attach the validation transcript to the Stage B rehearsal checklist so the
    audio lab can track regressions across runs.
+
+## Telemetry reference
+
+- The latest Stage B refresh report (`rehearsals/stage_b_20250921_summary.md`)
+  records modulation preset overrides, dependency findings, and evidence bundle
+  locations derived from the Crown telemetry export.【F:docs/rehearsals/stage_b_20250921_summary.md†L1-L41】
