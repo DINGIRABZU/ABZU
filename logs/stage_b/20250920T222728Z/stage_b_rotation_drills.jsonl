@@ -1,2 +1,5 @@
 {"connector_id": "operator_api", "rotated_at": "2025-01-01T00:00:00Z", "window_hours": 48}
 {"connector_id": "operator_upload", "rotated_at": "2025-01-01T00:00:00Z", "window_hours": 48}
+{"connector_id": "operator_api", "rotated_at": "2025-09-22T10:15:54Z", "window_hours": 48, "rotation_window": {"window_id": "20250922T101554Z-PT48H", "started_at": "2025-09-22T10:15:54Z", "expires_at": "2025-09-24T10:15:54Z", "duration": "PT48H"}}
+{"connector_id": "operator_upload", "rotated_at": "2025-09-22T10:15:54Z", "window_hours": 48, "rotation_window": {"window_id": "20250922T101554Z-PT48H", "started_at": "2025-09-22T10:15:54Z", "expires_at": "2025-09-24T10:15:54Z", "duration": "PT48H"}}
+{"connector_id": "crown_handshake", "rotated_at": "2025-09-22T10:15:54Z", "window_hours": 48, "rotation_window": {"window_id": "20250922T101554Z-PT48H", "started_at": "2025-09-22T10:15:54Z", "expires_at": "2025-09-24T10:15:54Z", "duration": "PT48H"}}
