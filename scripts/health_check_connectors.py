@@ -14,13 +14,14 @@ and timestamps for downstream dashboards and alerting rules.
 
 from __future__ import annotations
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 import argparse
 import json
 import logging
 import os
 import time
+from dataclasses import dataclass
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
@@ -35,10 +36,81 @@ ALERTS_PATH = (
     Path(__file__).resolve().parents[1] / "monitoring" / "alerts" / "razar_failover.yml"
 )
 
-CONNECTORS: Dict[str, str] = {
-    "operator_api": os.getenv("OPERATOR_API_URL", "http://localhost:8000"),
-    "webrtc": os.getenv("WEBRTC_CONNECTOR_URL", "http://localhost:8000"),
-    "primordials_api": os.getenv("PRIMORDIALS_API_URL", "http://localhost:8000"),
+STAGE_B_CONTEXT = "stage-b-rehearsal"
+
+
+@dataclass(frozen=True)
+class ConnectorTarget:
+    """Configuration describing a connector health probe target."""
+
+    url_env: str
+    default_url: str
+    token_env: str | None = None
+    stage_header_value: str | None = STAGE_B_CONTEXT
+    stage_header_name: str = "X-Stage-Context"
+    extra_headers_env: str | None = None
+
+    def resolve_url(self) -> str:
+        """Return the connector base URL from the environment or default."""
+
+        return os.getenv(self.url_env, self.default_url)
+
+    def resolve_headers(self) -> tuple[Dict[str, str], bool]:
+        """Return headers for the probe and whether a credential was supplied."""
+
+        headers: Dict[str, str] = {}
+        token_present = False
+
+        if self.stage_header_value:
+            headers[self.stage_header_name] = self.stage_header_value
+
+        if self.token_env:
+            token = os.getenv(self.token_env)
+            if token:
+                token_present = True
+                auth_value = token
+                if not token.lower().startswith("bearer "):
+                    auth_value = f"Bearer {token}"
+                headers["Authorization"] = auth_value
+                headers.setdefault("X-API-Key", token)
+
+        if self.extra_headers_env:
+            raw_headers = os.getenv(self.extra_headers_env)
+            if raw_headers:
+                try:
+                    extra = json.loads(raw_headers)
+                except json.JSONDecodeError:
+                    logger.warning(
+                        "Invalid JSON supplied via %s; ignoring extra headers",
+                        self.extra_headers_env,
+                    )
+                else:
+                    for key, value in extra.items():
+                        if isinstance(key, str) and isinstance(value, str):
+                            headers[key] = value
+
+        return headers, token_present
+
+
+CONNECTORS: Dict[str, ConnectorTarget] = {
+    "operator_api": ConnectorTarget(
+        url_env="OPERATOR_API_STAGE_B_URL",
+        default_url="https://stage-b.operator-api.abzu.dev",
+        token_env="OPERATOR_API_STAGE_B_TOKEN",
+        extra_headers_env="OPERATOR_API_STAGE_B_EXTRA_HEADERS",
+    ),
+    "operator_upload": ConnectorTarget(
+        url_env="OPERATOR_UPLOAD_STAGE_B_URL",
+        default_url="https://stage-b.operator-upload.abzu.dev",
+        token_env="OPERATOR_UPLOAD_STAGE_B_TOKEN",
+        extra_headers_env="OPERATOR_UPLOAD_STAGE_B_EXTRA_HEADERS",
+    ),
+    "crown_handshake": ConnectorTarget(
+        url_env="CROWN_HANDSHAKE_STAGE_B_URL",
+        default_url="https://stage-b.crown-handshake.abzu.dev",
+        token_env="CROWN_HANDSHAKE_STAGE_B_TOKEN",
+        extra_headers_env="CROWN_HANDSHAKE_STAGE_B_EXTRA_HEADERS",
+    ),
 }
 
 REMOTE_AGENT_ENV: Dict[str, tuple[str, str]] = {
@@ -150,14 +222,18 @@ def _configure_logging() -> None:
     )
 
 
-def _probe_connector(name: str, url: str) -> Dict[str, Any]:
+def _probe_connector(name: str, target: ConnectorTarget) -> Dict[str, Any]:
+    url = target.resolve_url()
+    headers, token_present = target.resolve_headers()
     start = time.perf_counter()
     response: requests.Response | None = None
     error: str | None = None
     status_code: int | None = None
 
     try:
-        response = requests.get(f"{url.rstrip('/')}/health", timeout=5)
+        response = requests.get(
+            f"{url.rstrip('/')}/health", headers=headers or None, timeout=5
+        )
         status_code = getattr(response, "status_code", None)
         ok = status_code == 200
     except Exception as exc:  # pragma: no cover - network failures => unhealthy
@@ -183,6 +259,8 @@ def _probe_connector(name: str, url: str) -> Dict[str, Any]:
         "checked_at": _iso_now(),
         "probe": "GET /health",
         "kind": "connector",
+        "headers_applied": sorted(headers.keys()),
+        "token_present": token_present,
     }
 
 
@@ -287,7 +365,9 @@ def collect_health_reports(
 
     _configure_logging()
 
-    results = {name: _probe_connector(name, url) for name, url in CONNECTORS.items()}
+    results = {
+        name: _probe_connector(name, target) for name, target in CONNECTORS.items()
+    }
     if include_remote:
         results.update(_check_remote_agents())
 
