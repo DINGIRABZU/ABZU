@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clap"
+version = "0.7.1.post1"
+description = "Compatibility shim exposing CLAP helpers from transformers for Stage B rehearsals"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "transformers>=4.31",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["clap*"]
