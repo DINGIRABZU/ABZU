@@ -296,6 +296,11 @@ run_build() {
         cd "$ROOT_DIR"
         python -m build --wheel
     ) 2>&1 | tee -a "$log_file"
+    local build_status=${PIPESTATUS[0]}
+    if ((build_status != 0)); then
+        log_entry "$log_file" "Packaging phase failed with status $build_status"
+        return "$build_status"
+    fi
     log_entry "$log_file" "Packaging phase completed"
 }
 
@@ -305,17 +310,32 @@ run_health_checks() {
     log_entry "$log_file" "Starting health checks"
     log_entry "$log_file" "Running scripts/check_requirements.sh"
     "$SCRIPT_DIR/check_requirements.sh" 2>&1 | tee -a "$log_file"
+    local requirements_status=${PIPESTATUS[0]}
+    if ((requirements_status != 0)); then
+        log_entry "$log_file" "Requirement validation failed with status $requirements_status"
+        return "$requirements_status"
+    fi
     log_entry "$log_file" "Running verify_self_healing.py"
     (
         cd "$ROOT_DIR"
         python scripts/verify_self_healing.py --max-quarantine-hours 24 --max-cycle-hours 24
     ) 2>&1 | tee -a "$log_file"
+    local self_healing_status=${PIPESTATUS[0]}
+    if ((self_healing_status != 0)); then
+        log_entry "$log_file" "Self-healing verification failed with status $self_healing_status"
+        return "$self_healing_status"
+    fi
     if ((RUN_CONNECTOR_CHECK == 1)); then
         log_entry "$log_file" "Running connector health sweep"
         (
             cd "$ROOT_DIR"
             python scripts/health_check_connectors.py
         ) 2>&1 | tee -a "$log_file"
+        local connector_status=${PIPESTATUS[0]}
+        if ((connector_status != 0)); then
+            log_entry "$log_file" "Connector health sweep failed with status $connector_status"
+            return "$connector_status"
+        fi
     else
         log_entry "$log_file" "Skipping connector sweep (enable with --check-connectors)"
     fi
@@ -325,6 +345,11 @@ run_health_checks() {
             cd "$ROOT_DIR"
             python scripts/razar_chaos_drill.py --dry-run
         ) 2>&1 | tee -a "$log_file"
+        local chaos_status=${PIPESTATUS[0]}
+        if ((chaos_status != 0)); then
+            log_entry "$log_file" "RAZAR chaos drill failed with status $chaos_status"
+            return "$chaos_status"
+        fi
     else
         log_entry "$log_file" "Skipping RAZAR chaos drill (enable with --run-chaos-drill)"
     fi
@@ -374,6 +399,11 @@ run_tests() {
         cd "$ROOT_DIR"
         CROWN_REPLAY_SUMMARY_PATH="$REPLAY_SUMMARY" pytest "${pytest_args[@]}"
     ) 2>&1 | tee -a "$log_file"
+    local pytest_status=${PIPESTATUS[0]}
+    if ((pytest_status != 0)); then
+        log_entry "$log_file" "Acceptance tests failed with status $pytest_status"
+        return "$pytest_status"
+    fi
     log_entry "$log_file" "Exporting coverage reports"
     (
         cd "$ROOT_DIR"
