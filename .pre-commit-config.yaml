@@ -158,6 +158,12 @@ repos:
     entry: python scripts/require_module_docs.py
     language: system
     pass_filenames: false
+  - id: check-rehearsal-bundles
+    name: Ensure rehearsal telemetry packaged
+    entry: python scripts/check_rehearsal_bundles.py
+    language: system
+    pass_filenames: false
+    files: ^logs/stage_b/
     always_run: true
   - id: verify-dependencies
     name: Verify dependency versions

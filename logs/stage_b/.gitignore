@@ -1,3 +1,8 @@
 *
 !*/
-!*/health_checks.json
+!**/health_checks.json
+!**/rehearsal_manifest.json
+!**/session_manifest.json
+!**/run.log
+!summary.json
+!fallbacks.json
