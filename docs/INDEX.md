@@ -554,3 +554,5 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../src/dashboard/OVERVIEW.md](../src/dashboard/OVERVIEW.md) | Dashboard Overview | Streamlit dashboard for monitoring and interacting with Spiral OS components. | - |
 | [../src/dashboard/README.md](../src/dashboard/README.md) | Dashboard | This package bundles Streamlit applications for monitoring and interacting with the system. | - |
 | [../tests/README.md](../tests/README.md) | Test suite notes | - | - |
+| [../vendor/clap_stub/README.md](../vendor/clap_stub/README.md) | clap shim | This lightweight package exposes the CLAP processor and model from the `transformers` library under the historical ``... | - |
+| [../vendor/rave_stub/README.md](../vendor/rave_stub/README.md) | rave shim | The original RAVE audio package is not published on PyPI, yet Stage B rehearsals expect ``import rave`` to succeed. T... | - |

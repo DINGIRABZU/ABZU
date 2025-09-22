@@ -1,5 +1,5 @@
 {
-  "collected_at": "2025-09-20T22:27:28Z",
+  "collected_at": "2025-09-22T10:15:54Z",
   "corpus": {
     "metadata": {
       "exists": true,
@@ -60,6 +60,7 @@
   },
   "rotation_summary": {
     "connectors": [
+      "crown_handshake",
       "operator_api",
       "operator_upload"
     ],
@@ -69,13 +70,22 @@
       "window_hours": 48
     },
     "latest_rotation": {
-      "connector_id": "operator_upload",
-      "rotated_at": "2025-01-01T00:00:00Z",
-      "window_hours": 48
+      "connector_id": "crown_handshake",
+      "rotated_at": "2025-09-22T10:15:54Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20250922T101554Z-PT48H",
+        "started_at": "2025-09-22T10:15:54Z",
+        "expires_at": "2025-09-24T10:15:54Z",
+        "duration": "PT48H"
+      }
     },
-    "total_entries": 2
+    "total_entries": 14,
+    "latest_window_id": "20250922T101554Z-PT48H",
+    "rotation_log": "logs/stage_b_rotation_drills.jsonl",
+    "last_updated": "2025-09-22T10:15:54Z"
   },
-  "run_id": "20250920T222728Z",
+  "run_id": "20250922T101554Z",
   "vector_memory_metrics": {
     "metadata": {
       "exists": true,
