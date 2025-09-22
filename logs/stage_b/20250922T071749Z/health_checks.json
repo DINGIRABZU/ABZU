@@ -1,0 +1,98 @@
+{
+  "generated_at": "2025-09-22T07:17:49Z",
+  "include_remote": false,
+  "ok": true,
+  "results": [
+    {
+      "name": "crown_handshake",
+      "ok": true,
+      "kind": "connector",
+      "status_code": 200,
+      "latency_seconds": 0.0017920969985425472,
+      "checked_at": "2025-09-22T07:17:49Z",
+      "probe": "GET /health",
+      "target": "http://127.0.0.1:8765",
+      "token_present": true
+    },
+    {
+      "name": "operator_api",
+      "ok": true,
+      "kind": "connector",
+      "status_code": 200,
+      "latency_seconds": 0.003683070004626643,
+      "checked_at": "2025-09-22T07:17:49Z",
+      "probe": "GET /health",
+      "target": "http://127.0.0.1:8765",
+      "token_present": true
+    },
+    {
+      "name": "operator_upload",
+      "ok": true,
+      "kind": "connector",
+      "status_code": 200,
+      "latency_seconds": 0.0023325270012719557,
+      "checked_at": "2025-09-22T07:17:49Z",
+      "probe": "GET /health",
+      "target": "http://127.0.0.1:8765",
+      "token_present": true
+    }
+  ],
+  "raw": {
+    "crown_handshake": true,
+    "operator_api": true,
+    "operator_upload": true
+  },
+  "report": {
+    "operator_api": {
+      "name": "operator_api",
+      "ok": true,
+      "status_code": 200,
+      "latency_seconds": 0.003683070004626643,
+      "url": "http://127.0.0.1:8765",
+      "error": null,
+      "checked_at": "2025-09-22T07:17:49Z",
+      "probe": "GET /health",
+      "kind": "connector",
+      "headers_applied": [
+        "Authorization",
+        "X-API-Key",
+        "X-Stage-Context"
+      ],
+      "token_present": true
+    },
+    "operator_upload": {
+      "name": "operator_upload",
+      "ok": true,
+      "status_code": 200,
+      "latency_seconds": 0.0023325270012719557,
+      "url": "http://127.0.0.1:8765",
+      "error": null,
+      "checked_at": "2025-09-22T07:17:49Z",
+      "probe": "GET /health",
+      "kind": "connector",
+      "headers_applied": [
+        "Authorization",
+        "X-API-Key",
+        "X-Stage-Context"
+      ],
+      "token_present": true
+    },
+    "crown_handshake": {
+      "name": "crown_handshake",
+      "ok": true,
+      "status_code": 200,
+      "latency_seconds": 0.0017920969985425472,
+      "url": "http://127.0.0.1:8765",
+      "error": null,
+      "checked_at": "2025-09-22T07:17:49Z",
+      "probe": "GET /health",
+      "kind": "connector",
+      "headers_applied": [
+        "Authorization",
+        "X-API-Key",
+        "X-Stage-Context"
+      ],
+      "token_present": true
+    }
+  }
+}

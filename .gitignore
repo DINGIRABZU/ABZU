@@ -24,6 +24,9 @@ logs/*
 !logs/operator_commands.jsonl
 !logs/operator_escalations.jsonl
 !logs/stage_b_rotation_drills.jsonl
+!logs/stage_b/
+!logs/stage_b/.gitignore
+!logs/stage_b/**/health_checks.json
 !logs/stage_c_demo/
 !logs/stage_c_demo/**
 

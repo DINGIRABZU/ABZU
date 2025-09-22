@@ -42,7 +42,7 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Stage A guardrails** – `scripts/run_alpha_gate.sh` now packages coverage exports, health checks, and identity sync results into the Alpha evidence bundle catalogued in the [Stage gate evidence ledger](#stage-gate-evidence).
 - **Stage B memory proof** – Memory rehearsals archive latency dashboards and ingestion audits next to the [Memory Bundle Architecture](#memory-bundle-architecture) callouts and the Stage gate evidence ledger.
 - **Stage B sonic rehearsal** – Audio rehearsals pin the DAW preflight, telemetry capture, and fallback manifests outlined under [Audio Device](#audio-device) and surface them through the Stage gate evidence ledger.
-- **Stage B connector rehearsal** – The Stage B MCP adapters (`operator_api_stage_b.py`, `operator_upload_stage_b.py`, `crown_handshake_stage_b.py`) log rotation drills, heartbeat payloads, and rehearsal manifests referenced in the Stage gate evidence ledger so connector promotion reviews receive consistent artifacts.
+- **Stage B connector rehearsal** – The Stage B MCP adapters (`operator_api_stage_b.py`, `operator_upload_stage_b.py`, `crown_handshake_stage_b.py`) log rotation drills, heartbeat payloads, and rehearsal manifests referenced in the Stage gate evidence ledger so connector promotion reviews receive consistent artifacts. The rehearsal scheduler now also archives Stage B `/health` probes at `logs/stage_b/20250922T071749Z/health_checks.json`, capturing token usage, Stage context headers, and status codes for the operator and Crown connectors.
 
 ### Doctrine References
 
