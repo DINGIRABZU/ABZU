@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "stage": "stage_b",
+  "run_id": "20250921T230434Z",
+  "session": "session_01",
+  "generated_at": "2025-09-22T10:38:32Z",
+  "bundle": {
+    "name": "session_01_media.tar.gz",
+    "artifact_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+    "sha256": "0a862de42e7c1564a10cd14d87ffac764b4e9042e5d9cc797951ffdd7e2fb458",
+    "size_bytes": 841661,
+    "sources": [
+      "audio",
+      "video",
+      "emotion",
+      "telemetry/events.jsonl",
+      "telemetry/media_manifest.json"
+    ]
+  },
+  "retained_files": [
+    "run.log",
+    "telemetry"
+  ]
+}
