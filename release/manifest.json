@@ -1,3 +1,9 @@
 {
-  "files": {}
+  "files": {
+    "stage_a": {
+      "stage_a1_boot_telemetry": "release/stage_a/20250923T200333Z-stage_a1_boot_telemetry-summary.json",
+      "stage_a2_crown_replays": "release/stage_a/20250923T200406Z-stage_a2_crown_replays-summary.json",
+      "stage_a3_gate_shakeout": "release/stage_a/20250923T200435Z-stage_a3_gate_shakeout-summary.json"
+    }
+  }
 }

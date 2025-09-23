@@ -1,0 +1,32 @@
+{
+  "status": "error",
+  "stage": "stage_a2_crown_replays",
+  "run_id": "20250923T200406Z-stage_a2_crown_replays",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "scripts/crown_capture_replays.py"
+  ],
+  "returncode": 1,
+  "started_at": "2025-09-23T20:04:06.666279+00:00",
+  "completed_at": "2025-09-23T20:04:21.677501+00:00",
+  "duration_seconds": 15.011222,
+  "log_dir": "logs/stage_a/20250923T200406Z-stage_a2_crown_replays",
+  "stdout_path": "logs/stage_a/20250923T200406Z-stage_a2_crown_replays/stage_a2_crown_replays.stdout.log",
+  "stderr_path": "logs/stage_a/20250923T200406Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log",
+  "stdout_lines": 0,
+  "stderr_lines": 40,
+  "stderr_tail": [
+    "    return self._loop.run_until_complete(task)",
+    "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/root/.pyenv/versions/3.12.10/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete",
+    "    return future.result()",
+    "           ^^^^^^^^^^^^^^^",
+    "  File \"/workspace/ABZU/scripts/crown_capture_replays.py\", line 357, in _async_main",
+    "    _validate_and_update_metadata(scenario, capture, metadata_path)",
+    "  File \"/workspace/ABZU/scripts/crown_capture_replays.py\", line 312, in _validate_and_update_metadata",
+    "    raise RuntimeError(message)",
+    "RuntimeError: Replay divergence for crown_glm_reflection: result_hash expected '6300cfff76610cc5047cc8ebb635e5a1d51ea4d043f40cc7743b8d9d7ae2165f' but observed '8d0ba17b3c1d44441f1671a9476cb034b36cdd67c47e4226673d059a1ebff1cf'"
+  ],
+  "stderr": "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)\n  warnings.warn(\nINFO Running scenario crown_glm_reflection (model=glm, seed=1101)\nINFO current_layer set to None\nINFO last_emotion set to None\nERROR task flow logging failed\nTraceback (most recent call last):\n  File \"/workspace/ABZU/crown_prompt_orchestrator.py\", line 188, in crown_prompt_orchestrator_async\n    record_task_flow(f\"msg_{stable_id}\", {\"message\": message, \"emotion\": emotion})\n  File \"/workspace/ABZU/memory/mental.py\", line 138, in record_task_flow\n    driver = _get_driver()\n             ^^^^^^^^^^^^^\n  File \"/workspace/ABZU/memory/mental.py\", line 89, in _get_driver\n    raise RuntimeError(\"neo4j driver not installed\")\nRuntimeError: neo4j driver not installed\n/workspace/ABZU/memory/sacred.py:142: RuntimeWarning: invalid value encountered in cast\n  img_uint8 = (img * 255).clip(0, 255).astype(\"uint8\")\nINFO logged audio to logs/audio/20250923_200419.npy\nINFO logged video to logs/video/20250923_200419.npz\n/workspace/ABZU/scripts/crown_capture_replays.py:227: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  timestamp = datetime.utcnow().isoformat()\nTraceback (most recent call last):\n  File \"/workspace/ABZU/scripts/crown_capture_replays.py\", line 398, in <module>\n    main()\n  File \"/workspace/ABZU/scripts/crown_capture_replays.py\", line 394, in main\n    asyncio.run(_async_main(args))\n  File \"/root/.pyenv/versions/3.12.10/lib/python3.12/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/root/.pyenv/versions/3.12.10/lib/python3.12/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/.pyenv/versions/3.12.10/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"/workspace/ABZU/scripts/crown_capture_replays.py\", line 357, in _async_main\n    _validate_and_update_metadata(scenario, capture, metadata_path)\n  File \"/workspace/ABZU/scripts/crown_capture_replays.py\", line 312, in _validate_and_update_metadata\n    raise RuntimeError(message)\nRuntimeError: Replay divergence for crown_glm_reflection: result_hash expected '6300cfff76610cc5047cc8ebb635e5a1d51ea4d043f40cc7743b8d9d7ae2165f' but observed '8d0ba17b3c1d44441f1671a9476cb034b36cdd67c47e4226673d059a1ebff1cf'\n",
+  "error": "stage_a2_crown_replays exited with code 1"
+}
