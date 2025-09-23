@@ -93,6 +93,12 @@ export default function MissionMap({ stages }) {
                 {
                   id: `${action.id}-btn`,
                   onClick: action.action,
+                  className: [
+                    'mission-stage__button',
+                    action.status ? `mission-stage__button--${action.status}` : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' '),
                 },
                 action.label
               ),

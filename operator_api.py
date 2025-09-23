@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from uuid import uuid4
 from datetime import datetime, timezone
-from typing import Any, Awaitable, Callable, Mapping
+from typing import Any, Awaitable, Callable, Mapping, Sequence
 
 import inspect
 
@@ -78,6 +78,7 @@ _LAST_CREDENTIAL_EXPIRY: datetime | None = None
 
 _STAGE_A_ROOT = Path("logs") / "stage_a"
 _STAGE_B_ROOT = Path("logs") / "stage_b"
+_STAGE_C_ROOT = Path("logs") / "stage_c"
 
 
 async def _ensure_lock() -> asyncio.Lock:
@@ -195,10 +196,29 @@ StageMetricsExtractor = Callable[
 ]
 
 
+def _sanitize_for_json(value: Any) -> Any:
+    """Return ``value`` converted to JSON-serialisable primitives."""
+
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            value = value.replace(tzinfo=timezone.utc)
+        return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    if isinstance(value, Mapping):
+        return {str(k): _sanitize_for_json(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_sanitize_for_json(v) for v in value]
+    return str(value)
+
+
+CommandBuilder = Callable[[Path], Sequence[str]]
+
+
 async def _run_stage_workflow(
     stage_root: Path,
     slug: str,
-    command: list[str],
+    command: Sequence[str] | CommandBuilder,
     *,
     metrics_extractor: StageMetricsExtractor | None = None,
 ) -> dict[str, Any]:
@@ -212,9 +232,14 @@ async def _run_stage_workflow(
 
     started_at = datetime.now(timezone.utc)
 
+    if callable(command):
+        command_args = list(command(log_dir))
+    else:
+        command_args = list(command)
+
     try:
         process = await asyncio.create_subprocess_exec(
-            *command,
+            *command_args,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
@@ -227,7 +252,7 @@ async def _run_stage_workflow(
             "status": "error",
             "stage": slug,
             "run_id": run_id,
-            "command": command,
+            "command": command_args,
             "returncode": None,
             "error": stderr_text,
             "started_at": started_at.isoformat(),
@@ -261,7 +286,7 @@ async def _run_stage_workflow(
         "status": "success" if process.returncode == 0 else "error",
         "stage": slug,
         "run_id": run_id,
-        "command": command,
+        "command": command_args,
         "returncode": process.returncode,
         "started_at": started_at.isoformat(),
         "completed_at": completed_at.isoformat(),
@@ -433,6 +458,213 @@ def _stage_b3_metrics(
         "heartbeat_payload": heartbeat_payload,
         "heartbeat_expiry": credential_expiry,
     }
+
+
+def _stage_c1_metrics(
+    stdout_text: str,
+    _stderr_text: str,
+    _log_dir: Path,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    lines = [line.strip() for line in stdout_text.splitlines() if line.strip()]
+    unchecked = [line for line in lines if line.startswith("- [ ]")]
+    completed = not unchecked
+    summary_line = next(
+        (line for line in reversed(lines) if not line.startswith("- [ ]")), ""
+    )
+    metrics = {
+        "completed": completed,
+        "unchecked_count": len(unchecked),
+        "unchecked_items": unchecked,
+        "message": summary_line or None,
+    }
+    if not completed:
+        payload["error"] = "checklist contains unchecked items"
+    return metrics
+
+
+def _stage_c2_metrics(
+    _stdout_text: str,
+    _stderr_text: str,
+    log_dir: Path,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    output_dir = log_dir / "demo_storyline"
+    telemetry_dir = output_dir / "telemetry"
+    summary_path = telemetry_dir / "summary.json"
+    run_summary_path = telemetry_dir / "run_summary.json"
+    manifest_path = telemetry_dir / "media_manifest.json"
+    events_path = telemetry_dir / "events.jsonl"
+    emotion_path = output_dir / "emotion" / "stream.jsonl"
+
+    metrics: dict[str, Any] = {
+        "output_dir": str(output_dir),
+        "summary": None,
+        "telemetry_events": str(events_path) if events_path.exists() else None,
+        "emotion_stream": str(emotion_path) if emotion_path.exists() else None,
+        "media_manifest": str(manifest_path) if manifest_path.exists() else None,
+        "run_summary": str(run_summary_path) if run_summary_path.exists() else None,
+    }
+
+    if summary_path.exists():
+        metrics["summary"] = json.loads(summary_path.read_text(encoding="utf-8"))
+    else:
+        payload["error"] = f"demo summary missing at {summary_path}"
+        payload["status"] = "error"
+
+    artifacts = payload.setdefault("artifacts", {})
+    for label, path in (
+        ("summary", summary_path),
+        ("run_summary", run_summary_path),
+        ("telemetry_events", events_path),
+        ("emotion_stream", emotion_path),
+        ("media_manifest", manifest_path),
+    ):
+        if path.exists():
+            artifacts[label] = str(path)
+
+    return metrics
+
+
+def _latest_stage_summary(
+    stage_root: Path,
+) -> tuple[Path | None, dict[str, Any] | None]:
+    if not stage_root.exists():
+        return None, None
+    summary_files = sorted(stage_root.glob("*/summary.json"))
+    if not summary_files:
+        return None, None
+    latest = max(summary_files)
+    data = json.loads(latest.read_text(encoding="utf-8"))
+    return latest, data
+
+
+def _stage_c3_metrics(
+    _stdout_text: str,
+    _stderr_text: str,
+    _log_dir: Path,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    stage_a_path, stage_a_summary = _latest_stage_summary(_STAGE_A_ROOT)
+    stage_b_path, stage_b_summary = _latest_stage_summary(_STAGE_B_ROOT)
+
+    metrics: dict[str, Any] = {
+        "stage_a": {
+            "summary": stage_a_summary,
+            "summary_path": str(stage_a_path) if stage_a_path else None,
+        },
+        "stage_b": {
+            "summary": stage_b_summary,
+            "summary_path": str(stage_b_path) if stage_b_path else None,
+        },
+    }
+
+    missing = [
+        stage
+        for stage, summary in (
+            ("stage_a", stage_a_summary),
+            ("stage_b", stage_b_summary),
+        )
+        if summary is None
+    ]
+
+    if missing:
+        payload["status"] = "error"
+        payload["error"] = f"missing readiness summaries: {', '.join(missing)}"
+    else:
+        metrics["merged"] = {
+            "latest_runs": {
+                "stage_a": stage_a_summary.get("run_id"),
+                "stage_b": stage_b_summary.get("run_id"),
+            },
+            "completed_at": {
+                "stage_a": stage_a_summary.get("completed_at"),
+                "stage_b": stage_b_summary.get("completed_at"),
+            },
+            "statuses": {
+                "stage_a": stage_a_summary.get("status"),
+                "stage_b": stage_b_summary.get("status"),
+            },
+        }
+
+    metrics["missing"] = missing
+    return metrics
+
+
+async def _stage_c4_metrics(
+    _stdout_text: str,
+    _stderr_text: str,
+    log_dir: Path,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    try:
+        await _ensure_mcp_ready_for_request()
+    except HTTPException as exc:  # pragma: no cover - handled in tests
+        payload["status"] = "error"
+        payload["error"] = str(exc.detail)
+        return {
+            "handshake": None,
+            "heartbeat_active": False,
+            "error": exc.detail,
+        }
+
+    adapter = _MCP_ADAPTER
+    handshake = _sanitize_for_json(_MCP_SESSION)
+    credential_expiry = (
+        _sanitize_for_json(_LAST_CREDENTIAL_EXPIRY) if _LAST_CREDENTIAL_EXPIRY else None
+    )
+
+    timestamp = (
+        datetime.now(timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
+    heartbeat_payload = {
+        "event": "stage-c-mcp-drill",
+        "service": "operator_api",
+        "timestamp": timestamp,
+    }
+
+    heartbeat_error: str | None = None
+    heartbeat_emitted = False
+    if adapter is not None and hasattr(adapter, "emit_stage_b_heartbeat"):
+        try:
+            await adapter.emit_stage_b_heartbeat(
+                heartbeat_payload, credential_expiry=_LAST_CREDENTIAL_EXPIRY
+            )
+            heartbeat_emitted = True
+        except Exception as exc:  # pragma: no cover - defensive
+            heartbeat_error = str(exc)
+
+    metrics: dict[str, Any] = {
+        "handshake": handshake,
+        "credential_expiry": credential_expiry,
+        "heartbeat_active": bool(
+            _MCP_HEARTBEAT_TASK is not None and not _MCP_HEARTBEAT_TASK.done()
+        ),
+        "heartbeat_emitted": heartbeat_emitted,
+    }
+    if heartbeat_error:
+        metrics["heartbeat_error"] = heartbeat_error
+        payload["status"] = "error"
+        payload["error"] = heartbeat_error
+    else:
+        metrics["heartbeat_payload"] = heartbeat_payload
+
+    evidence = {
+        "handshake": handshake,
+        "credential_expiry": credential_expiry,
+        "heartbeat_payload": metrics.get("heartbeat_payload"),
+        "heartbeat_error": heartbeat_error,
+    }
+    evidence_path = log_dir / "mcp_handshake.json"
+    evidence_path.write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    payload.setdefault("artifacts", {})["handshake"] = str(evidence_path)
+
+    return metrics
 
 
 @router.on_event("startup")
@@ -714,6 +946,98 @@ async def stage_b3_connector_rotation() -> dict[str, Any]:
         raise HTTPException(
             status_code=500,
             detail=result.get("error", "Stage B3 connector rotation failed"),
+        )
+    return result
+
+
+def _stage_c2_command(log_dir: Path) -> Sequence[str]:
+    output_dir = log_dir / "demo_storyline"
+    return [
+        sys.executable,
+        "scripts/stage_c_scripted_demo.py",
+        str(output_dir),
+        "--seed",
+        "42",
+    ]
+
+
+def _stage_c3_command(_log_dir: Path) -> Sequence[str]:
+    return [sys.executable, "-c", "print('Stage C readiness sync starting')"]
+
+
+def _stage_c4_command(_log_dir: Path) -> Sequence[str]:
+    return [sys.executable, "-c", "print('Stage C MCP drill handshake')"]
+
+
+@router.post("/alpha/stage-c1-exit-checklist")
+async def stage_c1_exit_checklist() -> dict[str, Any]:
+    """Validate the Stage C exit checklist and archive the output."""
+
+    command = [sys.executable, "scripts/validate_absolute_protocol_checklist.py"]
+    result = await _run_stage_workflow(
+        _STAGE_C_ROOT,
+        "stage_c1_exit_checklist",
+        command,
+        metrics_extractor=_stage_c1_metrics,
+    )
+    if result.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Stage C1 exit checklist failed"),
+        )
+    return result
+
+
+@router.post("/alpha/stage-c2-demo-storyline")
+async def stage_c2_demo_storyline() -> dict[str, Any]:
+    """Run the scripted demo harness and capture Stage C telemetry."""
+
+    result = await _run_stage_workflow(
+        _STAGE_C_ROOT,
+        "stage_c2_demo_storyline",
+        _stage_c2_command,
+        metrics_extractor=_stage_c2_metrics,
+    )
+    if result.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Stage C2 demo storyline failed"),
+        )
+    return result
+
+
+@router.post("/alpha/stage-c3-readiness-sync")
+async def stage_c3_readiness_sync() -> dict[str, Any]:
+    """Merge Stage A/B readiness evidence for the Stage C review."""
+
+    result = await _run_stage_workflow(
+        _STAGE_C_ROOT,
+        "stage_c3_readiness_sync",
+        _stage_c3_command,
+        metrics_extractor=_stage_c3_metrics,
+    )
+    if result.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Stage C3 readiness sync failed"),
+        )
+    return result
+
+
+@router.post("/alpha/stage-c4-operator-mcp-drill")
+async def stage_c4_operator_mcp_drill() -> dict[str, Any]:
+    """Exercise the MCP adapter handshake and heartbeat for Stage C."""
+
+    result = await _run_stage_workflow(
+        _STAGE_C_ROOT,
+        "stage_c4_operator_mcp_drill",
+        _stage_c4_command,
+        metrics_extractor=_stage_c4_metrics,
+    )
+    if result.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Stage C4 operator MCP drill failed"),
         )
     return result
 

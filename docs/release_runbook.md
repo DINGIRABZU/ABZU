@@ -21,6 +21,26 @@
 3. Restart services in boot order, validating health checks before advancing.
 4. Document the rollback and remediation steps.
 
+## Stage C Automation Hooks
+
+The operator API now exposes Stage C automation so the console can archive
+evidence and surface results in the event log:
+
+- `POST /alpha/stage-c1-exit-checklist` validates
+  `docs/absolute_protocol_checklist.md` and writes a summary under
+  `logs/stage_c/<run>/stage_c1_exit_checklist/`.
+- `POST /alpha/stage-c2-demo-storyline` runs the scripted demo harness and
+  captures telemetry, manifests, and media metadata in the same run directory.
+- `POST /alpha/stage-c3-readiness-sync` aggregates the latest Stage A/Stage B
+  summaries and persists the merged snapshot for exit reviews.
+- `POST /alpha/stage-c4-operator-mcp-drill` exercises the MCP adapter handshake
+  and heartbeat capture, storing the sanitized payload in
+  `logs/stage_c/<run>/mcp_handshake.json`.
+
+Operators should trigger these endpoints from the dashboard before final sign
+off so the release bundle contains the Stage C evidence bundle alongside the
+existing Stage A/B artifacts.
+
 ## Sign-Off Checklist
 Confirm completion of the following before declaring the release complete. Refer to [The Absolute Protocol](The_Absolute_Protocol.md) for the full repository rules and mandatory sign-off steps.
 

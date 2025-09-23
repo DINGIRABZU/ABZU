@@ -91,6 +91,12 @@ function GameDashboard() {
         lines.push(`  [metrics JSON failed: ${err?.message ?? err}]`);
       }
     }
+    if (payload?.artifacts && typeof payload.artifacts === 'object') {
+      lines.push('artifacts:');
+      Object.entries(payload.artifacts).forEach(([key, value]) => {
+        lines.push(`  ${key}: ${value}`);
+      });
+    }
     if (payload?.metrics_error) {
       lines.push(`metrics error: ${payload.metrics_error}`);
     }
@@ -99,6 +105,9 @@ function GameDashboard() {
       payload.stderr_tail.forEach((line) => lines.push(`  ${line}`));
     } else if (payload?.stderr) {
       lines.push(`stderr: ${payload.stderr}`);
+    }
+    if (payload?.raw) {
+      lines.push(`raw: ${payload.raw}`);
     }
     if (payload?.error && !payload?.stderr_tail?.length) {
       lines.push(`error: ${payload.error}`);
@@ -161,6 +170,7 @@ function GameDashboard() {
   );
 
   const [stageBResults, setStageBResults] = React.useState({});
+  const [stageCResults, setStageCResults] = React.useState({});
 
   const logStreamChunk = React.useCallback(
     (label, chunk) => {
@@ -445,6 +455,267 @@ function GameDashboard() {
     [createLoggedAction, formatStageABlock, renderStageBDetails, streamJsonPost, appendLog]
   );
 
+  const renderStageCDetails = React.useCallback(
+    (id) => {
+      const entry = stageCResults[id];
+      if (!entry) return null;
+      const elements = [];
+      if (entry.status) {
+        elements.push(
+          React.createElement(
+            'p',
+            {
+              key: 'status',
+              className: `mission-stage__status mission-stage__status--${entry.status}`,
+            },
+            `Status: ${entry.status}`
+          )
+        );
+      }
+      if (entry.responseStatus != null) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'http' },
+            `HTTP status: ${entry.responseStatus}`
+          )
+        );
+      }
+      if (entry.runId) {
+        elements.push(
+          React.createElement('p', { key: 'run' }, `Run ID: ${entry.runId}`)
+        );
+      }
+      if (entry.logDir) {
+        elements.push(
+          React.createElement('p', { key: 'logs' }, `Log dir: ${entry.logDir}`)
+        );
+      }
+      if (entry.summaryPath) {
+        elements.push(
+          React.createElement('p', { key: 'summary' }, `Summary: ${entry.summaryPath}`)
+        );
+      }
+      if (entry.stdoutPath) {
+        elements.push(
+          React.createElement('p', { key: 'stdout' }, `Stdout: ${entry.stdoutPath}`)
+        );
+      }
+      if (entry.stderrPath) {
+        elements.push(
+          React.createElement('p', { key: 'stderr' }, `Stderr: ${entry.stderrPath}`)
+        );
+      }
+      if (entry.startedAt) {
+        elements.push(
+          React.createElement('p', { key: 'started' }, `Started: ${entry.startedAt}`)
+        );
+      }
+      if (entry.completedAt) {
+        elements.push(
+          React.createElement('p', { key: 'completed' }, `Completed: ${entry.completedAt}`)
+        );
+      }
+      if (entry.error) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'error', className: 'mission-stage__error' },
+            `Error: ${entry.error}`
+          )
+        );
+      }
+      if (entry.artifacts && Object.keys(entry.artifacts).length) {
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'artifacts' },
+            [
+              React.createElement('p', { key: 'artifacts-label' }, 'Artifacts:'),
+              React.createElement(
+                'ul',
+                { key: 'artifacts-list' },
+                Object.entries(entry.artifacts).map(([key, value]) =>
+                  React.createElement('li', { key }, `${key}: ${value}`)
+                )
+              ),
+            ]
+          )
+        );
+      }
+      if (entry.metrics) {
+        elements.push(
+          React.createElement(
+            'pre',
+            { key: 'metrics', className: 'mission-stage__metrics' },
+            JSON.stringify(entry.metrics, null, 2)
+          )
+        );
+      }
+      if (entry.stderrTail && entry.stderrTail.length) {
+        elements.push(
+          React.createElement(
+            'pre',
+            { key: 'stderr-tail', className: 'mission-stage__metrics' },
+            entry.stderrTail.join('\n')
+          )
+        );
+      } else if (entry.stderr) {
+        elements.push(
+          React.createElement(
+            'pre',
+            { key: 'stderr-text', className: 'mission-stage__metrics' },
+            entry.stderr
+          )
+        );
+      }
+      if (entry.rawResponse && !entry.metrics) {
+        elements.push(
+          React.createElement(
+            'pre',
+            { key: 'raw', className: 'mission-stage__metrics' },
+            entry.rawResponse
+          )
+        );
+      }
+      if (!elements.length) {
+        return null;
+      }
+      return React.createElement(
+        'div',
+        { className: 'mission-stage__details', key: `${id}-details` },
+        elements
+      );
+    },
+    [stageCResults]
+  );
+
+  const createStageCAction = React.useCallback(
+    ({ id, label, endpoint }) => {
+      const execute = async () => {
+        const startedAt = new Date().toISOString();
+        setStageCResults((prev) => ({
+          ...prev,
+          [id]: {
+            status: 'running',
+            startedAt,
+            completedAt: null,
+            error: null,
+            metrics: null,
+            responseStatus: null,
+            rawResponse: null,
+            runId: null,
+            logDir: null,
+            summaryPath: null,
+            stdoutPath: null,
+            stderrPath: null,
+            stderrTail: null,
+            artifacts: null,
+          },
+        }));
+
+        const response = await fetch(`${BASE_URL}${endpoint}`, { method: 'POST' });
+        const raw = await response.text();
+        let data = null;
+        let parseError = null;
+        if (raw.trim()) {
+          try {
+            data = JSON.parse(raw);
+          } catch (err) {
+            parseError = err;
+          }
+        }
+        if (parseError) {
+          const message = `Failed to parse response JSON: ${parseError.message}`;
+          const completedAt = new Date().toISOString();
+          setStageCResults((prev) => ({
+            ...prev,
+            [id]: {
+              ...(prev[id] ?? {}),
+              status: 'error',
+              error: message,
+              completedAt,
+              responseStatus: response.status,
+              rawResponse: raw,
+            },
+          }));
+          appendLog(
+            formatStageABlock(label, {
+              status: 'error',
+              error: message,
+              raw,
+            })
+          );
+          throw new Error(message);
+        }
+
+        const payload = {
+          status: response.ok ? 'success' : 'error',
+          status_code: response.status,
+          ...(data ?? {}),
+        };
+        appendLog(formatStageABlock(label, payload));
+        const completedAt = new Date().toISOString();
+        const baseUpdate = {
+          status: payload.status,
+          startedAt,
+          completedAt,
+          error: null,
+          metrics: payload.metrics ?? null,
+          responseStatus: response.status,
+          rawResponse: raw,
+          runId: payload.run_id ?? null,
+          logDir: payload.log_dir ?? null,
+          summaryPath: payload.summary_path ?? null,
+          stdoutPath: payload.stdout_path ?? null,
+          stderrPath: payload.stderr_path ?? null,
+          stderrTail: payload.stderr_tail ?? null,
+          stderr: payload.stderr ?? null,
+          artifacts: payload.artifacts ?? null,
+        };
+        if (payload.status !== 'success') {
+          baseUpdate.error = payload.error || payload.detail || `HTTP ${response.status}`;
+          setStageCResults((prev) => ({ ...prev, [id]: baseUpdate }));
+          const error = new Error(baseUpdate.error);
+          error.stageResult = payload;
+          throw error;
+        }
+        setStageCResults((prev) => ({ ...prev, [id]: baseUpdate }));
+        return payload;
+      };
+
+      const action = createLoggedAction(id, label, execute, {
+        onError: (error) => {
+          if (error?.stageResult) {
+            return;
+          }
+          setStageCResults((prev) => ({
+            ...prev,
+            [id]: {
+              ...(prev[id] ?? {}),
+              status: 'error',
+              error: error?.message ?? String(error),
+              completedAt: new Date().toISOString(),
+            },
+          }));
+          appendLog(
+            formatStageABlock(label, {
+              status: 'error',
+              error: error?.message ?? String(error),
+            })
+          );
+        },
+      });
+
+      return {
+        ...action,
+        status: stageCResults[id]?.status,
+        renderDetails: () => renderStageCDetails(id),
+      };
+    },
+    [appendLog, createLoggedAction, formatStageABlock, renderStageCDetails, stageCResults]
+  );
+
   const logSuccess = React.useCallback(
     (label, detail) => {
       logLine('✅', `${label} ${detail}`);
@@ -521,6 +792,26 @@ function GameDashboard() {
         id: 'stage-c',
         title: stageTitles['stage-c'],
         actions: [
+          createStageCAction({
+            id: 'stage-c1-exit-checklist',
+            label: 'Stage C1 – Exit Checklist',
+            endpoint: '/alpha/stage-c1-exit-checklist',
+          }),
+          createStageCAction({
+            id: 'stage-c2-demo-storyline',
+            label: 'Stage C2 – Demo Storyline',
+            endpoint: '/alpha/stage-c2-demo-storyline',
+          }),
+          createStageCAction({
+            id: 'stage-c3-readiness-sync',
+            label: 'Stage C3 – Readiness Sync',
+            endpoint: '/alpha/stage-c3-readiness-sync',
+          }),
+          createStageCAction({
+            id: 'stage-c4-operator-mcp-drill',
+            label: 'Stage C4 – Operator MCP Drill',
+            endpoint: '/alpha/stage-c4-operator-mcp-drill',
+          }),
           createLoggedAction('handover', 'Handover', () =>
             fetch(`${BASE_URL}/handover`, { method: 'POST' })
               .then((r) => r.json())
@@ -533,7 +824,13 @@ function GameDashboard() {
         ],
       },
     ],
-    [createLoggedAction, createStageAAction, createStageBAction, logSuccess]
+    [
+      createLoggedAction,
+      createStageAAction,
+      createStageBAction,
+      createStageCAction,
+      logSuccess,
+    ]
   );
   const [wizardDone, setWizardDone] = React.useState(() => localStorage.getItem('setupWizardCompleted') === 'true');
   const [missionDone, setMissionDone] = React.useState(() => localStorage.getItem('missionWizardCompleted') === 'true');
