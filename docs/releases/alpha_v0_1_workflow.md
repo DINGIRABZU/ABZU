@@ -152,6 +152,23 @@ After each green run, compress the full timestamped directory and attach it to
 the CI artifacts bundle (or upload it alongside local evidence) so prior gate
 evidence is never overwritten.
 
+Stage C automation is available through the operator API to complete the exit
+package. Trigger the following endpoints from the dashboard when preparing a
+release:
+
+- `POST /alpha/stage-c1-exit-checklist` – validates the Absolute Protocol
+  checklist and archives the results under `logs/stage_c/<run>/`.
+- `POST /alpha/stage-c2-demo-storyline` – runs the scripted demo harness and
+  stores telemetry, manifests, and media snapshots for playback validation.
+- `POST /alpha/stage-c3-readiness-sync` – merges the latest Stage A/Stage B
+  `summary.json` files into a consolidated readiness snapshot for reviewers.
+- `POST /alpha/stage-c4-operator-mcp-drill` – performs the MCP handshake/heartbeat
+  drill and records the sanitized payload as `mcp_handshake.json`.
+
+Each invocation updates the dashboard event log with formatted JSON and stderr
+tails so reviewers can confirm success without manually inspecting the
+filesystem.
+
 ## CI Integration
 
 - GitHub Actions workflow: `.github/workflows/alpha_gate.yml`.

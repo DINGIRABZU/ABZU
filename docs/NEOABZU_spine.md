@@ -85,6 +85,11 @@ Recent console work also exposes Stage A automation lanes directly through
 operators trigger boot telemetry, replay capture, and gate shakeouts without
 dropping into shell scripts while still producing the same `logs/stage_a/<run_id>/summary.json`
 artifacts consumed by the roadmap and doctrine ledgers.
+The same console lanes now cover Stage C by exposing `/alpha/stage-c1-exit-checklist`,
+`/alpha/stage-c2-demo-storyline`, `/alpha/stage-c3-readiness-sync`, and
+`/alpha/stage-c4-operator-mcp-drill` so operators can validate the exit checklist,
+capture the scripted demo harness, merge Stage A/B readiness snapshots, and record
+MCP drill evidence under `logs/stage_c/<run_id>/` without leaving the dashboard.
  Dedicated rehearsal modules ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
  [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
  [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) build on

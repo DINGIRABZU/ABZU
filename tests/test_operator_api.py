@@ -1,11 +1,12 @@
 """Tests for operator api."""
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
 import pytest
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
 import operator_api
@@ -52,6 +53,7 @@ def configure_subprocess(
     stdout: bytes = b"",
     stderr: bytes = b"",
     returncode: int = 0,
+    on_spawn: Callable[[tuple[Any, ...]], None] | None = None,
 ) -> None:
     """Replace subprocess execution with a dummy process returning canned output."""
 
@@ -63,6 +65,8 @@ def configure_subprocess(
             return stdout, stderr
 
     async def fake_create_subprocess_exec(*args: Any, **kwargs: Any) -> DummyProcess:
+        if on_spawn is not None:
+            on_spawn(args)
         return DummyProcess()
 
     monkeypatch.setattr(
@@ -397,3 +401,163 @@ def test_stage_b3_connector_rotation_failure(
     resp = client.post("/alpha/stage-b3-connector-rotation")
     assert resp.status_code == 500
     assert "exited with code 3" in resp.json()["detail"].lower()
+
+
+def test_stage_c1_exit_checklist_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configure_subprocess(
+        monkeypatch,
+        stdout=b"All checklist items are marked complete.\n",
+    )
+    resp = client.post("/alpha/stage-c1-exit-checklist")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["metrics"]["completed"] is True
+    assert body["metrics"]["unchecked_count"] == 0
+    assert Path(body["log_dir"]).exists()
+
+
+def test_stage_c1_exit_checklist_failure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    stdout = (
+        "Unchecked items in absolute_protocol_checklist.md:\n- [ ] pending item\n"
+    ).encode("utf-8")
+    configure_subprocess(
+        monkeypatch,
+        stdout=stdout,
+        returncode=1,
+    )
+    resp = client.post("/alpha/stage-c1-exit-checklist")
+    assert resp.status_code == 500
+    assert "checklist" in resp.json()["detail"]
+
+
+def test_stage_c2_demo_storyline_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def _create_demo(args: tuple[Any, ...]) -> None:
+        for index, arg in enumerate(args):
+            if isinstance(arg, str) and arg.endswith("stage_c_scripted_demo.py"):
+                output_dir = Path(args[index + 1])
+                telemetry = output_dir / "telemetry"
+                emotion = output_dir / "emotion"
+                telemetry.mkdir(parents=True, exist_ok=True)
+                emotion.mkdir(parents=True, exist_ok=True)
+                summary = {
+                    "timestamp": "2025-09-21T17:35:46Z",
+                    "steps": 3,
+                    "max_sync_offset_s": 0.067,
+                    "dropouts_detected": False,
+                }
+                (telemetry / "summary.json").write_text(
+                    json.dumps(summary), encoding="utf-8"
+                )
+                (telemetry / "run_summary.json").write_text("{}", encoding="utf-8")
+                (telemetry / "media_manifest.json").write_text("[]", encoding="utf-8")
+                (telemetry / "events.jsonl").write_text("{}\n", encoding="utf-8")
+                (emotion / "stream.jsonl").write_text("{}\n", encoding="utf-8")
+                break
+
+    configure_subprocess(
+        monkeypatch,
+        stdout=b"demo\n",
+        on_spawn=_create_demo,
+    )
+    resp = client.post("/alpha/stage-c2-demo-storyline")
+    assert resp.status_code == 200
+    body = resp.json()
+    metrics = body["metrics"]
+    assert metrics["summary"]["steps"] == 3
+    assert metrics["media_manifest"].endswith("media_manifest.json")
+    assert Path(body["log_dir"]).exists()
+
+
+def test_stage_c2_demo_storyline_failure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configure_subprocess(
+        monkeypatch,
+        stdout=b"",
+        stderr=b"boom",
+        returncode=2,
+    )
+    resp = client.post("/alpha/stage-c2-demo-storyline")
+    assert resp.status_code == 500
+    assert "demo summary missing" in resp.json()["detail"].lower()
+
+
+def test_stage_c3_readiness_sync_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    stage_a_dir = Path("logs") / "stage_a" / "20240101T000000Z-stage"
+    stage_b_dir = Path("logs") / "stage_b" / "20240102T000000Z-stage"
+    stage_a_dir.mkdir(parents=True, exist_ok=True)
+    stage_b_dir.mkdir(parents=True, exist_ok=True)
+    (stage_a_dir / "summary.json").write_text(
+        json.dumps({"run_id": "a", "status": "success", "completed_at": "2024"}),
+        encoding="utf-8",
+    )
+    (stage_b_dir / "summary.json").write_text(
+        json.dumps({"run_id": "b", "status": "success", "completed_at": "2024"}),
+        encoding="utf-8",
+    )
+    configure_subprocess(monkeypatch, stdout=b"ready\n")
+    resp = client.post("/alpha/stage-c3-readiness-sync")
+    assert resp.status_code == 200
+    body = resp.json()
+    merged = body["metrics"]["merged"]
+    assert merged["latest_runs"] == {"stage_a": "a", "stage_b": "b"}
+
+
+def test_stage_c3_readiness_sync_missing(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configure_subprocess(monkeypatch, stdout=b"ready\n")
+    resp = client.post("/alpha/stage-c3-readiness-sync")
+    assert resp.status_code == 500
+    assert "missing readiness" in resp.json()["detail"]
+
+
+def test_stage_c4_operator_mcp_drill_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class DummyAdapter:
+        async def emit_stage_b_heartbeat(
+            self, payload: dict, credential_expiry: Any
+        ) -> None:
+            self.payload = payload
+
+    adapter = DummyAdapter()
+
+    async def _ensure_ready() -> None:
+        operator_api._MCP_ADAPTER = adapter
+        operator_api._MCP_SESSION = {"session": {"id": "sess-1"}}
+        operator_api._LAST_CREDENTIAL_EXPIRY = datetime.now(timezone.utc)
+
+    monkeypatch.setattr(operator_api, "_ensure_mcp_ready_for_request", _ensure_ready)
+    configure_subprocess(monkeypatch, stdout=b"drill\n")
+    resp = client.post("/alpha/stage-c4-operator-mcp-drill")
+    assert resp.status_code == 200
+    body = resp.json()
+    metrics = body["metrics"]
+    assert metrics["handshake"]["session"]["id"] == "sess-1"
+    assert metrics["heartbeat_emitted"] is True
+    assert Path(body["log_dir"]).exists()
+    operator_api._MCP_ADAPTER = None
+    operator_api._MCP_SESSION = None
+    operator_api._LAST_CREDENTIAL_EXPIRY = None
+
+
+def test_stage_c4_operator_mcp_drill_failure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async def _raise() -> None:
+        raise HTTPException(status_code=503, detail="handshake failed")
+
+    monkeypatch.setattr(operator_api, "_ensure_mcp_ready_for_request", _raise)
+    configure_subprocess(monkeypatch, stdout=b"drill\n")
+    resp = client.post("/alpha/stage-c4-operator-mcp-drill")
+    assert resp.status_code == 500
+    assert resp.json()["detail"] == "handshake failed"
