@@ -543,6 +543,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../logs/alpha_gate/20250919T220647Z/coverage.mmd](../logs/alpha_gate/20250919T220647Z/coverage.mmd) | coverage.mmd | - | - |
 | [../logs/alpha_gate/20250919T221803Z/coverage.mmd](../logs/alpha_gate/20250919T221803Z/coverage.mmd) | coverage.mmd | - | - |
 | [../logs/alpha_gate/20250920T065519Z/coverage.mmd](../logs/alpha_gate/20250920T065519Z/coverage.mmd) | coverage.mmd | - | - |
+| [../logs/alpha_gate/20250922T181919Z/coverage.mmd](../logs/alpha_gate/20250922T181919Z/coverage.mmd) | coverage.mmd | - | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |

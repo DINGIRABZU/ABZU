@@ -14,6 +14,7 @@ import contextlib
 import json
 import logging
 import shutil
+import sys
 from pathlib import Path
 from uuid import uuid4
 from datetime import datetime, timezone
@@ -72,6 +73,8 @@ _MCP_SESSION: Mapping[str, Any] | None = None
 _MCP_HEARTBEAT_TASK: asyncio.Task[None] | None = None
 _MCP_LOCK: asyncio.Lock | None = None
 _LAST_CREDENTIAL_EXPIRY: datetime | None = None
+
+_STAGE_A_ROOT = Path("logs") / "stage_a"
 
 
 async def _ensure_lock() -> asyncio.Lock:
@@ -181,6 +184,90 @@ async def _ensure_mcp_ready_for_request() -> None:
         raise HTTPException(
             status_code=503, detail="operator MCP handshake failed"
         ) from exc
+
+
+async def _run_stage_a_workflow(slug: str, command: list[str]) -> dict[str, Any]:
+    run_id = f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{slug}"
+    log_dir = _STAGE_A_ROOT / run_id
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    stdout_path = log_dir / f"{slug}.stdout.log"
+    stderr_path = log_dir / f"{slug}.stderr.log"
+    summary_path = log_dir / "summary.json"
+
+    started_at = datetime.now(timezone.utc)
+
+    try:
+        process = await asyncio.create_subprocess_exec(
+            *command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+    except OSError as exc:
+        completed_at = datetime.now(timezone.utc)
+        stderr_text = f"failed to spawn command: {exc}"
+        stdout_path.write_bytes(b"")
+        stderr_path.write_text(stderr_text, encoding="utf-8")
+        payload: dict[str, Any] = {
+            "status": "error",
+            "stage": slug,
+            "run_id": run_id,
+            "command": command,
+            "returncode": None,
+            "error": stderr_text,
+            "started_at": started_at.isoformat(),
+            "completed_at": completed_at.isoformat(),
+            "duration_seconds": (completed_at - started_at).total_seconds(),
+            "log_dir": str(log_dir),
+            "stdout_path": str(stdout_path),
+            "stderr_path": str(stderr_path),
+            "stdout_lines": 0,
+            "stderr_lines": len(stderr_text.splitlines()),
+            "stderr_tail": stderr_text.splitlines()[-10:],
+        }
+        summary_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        payload["summary_path"] = str(summary_path)
+        return payload
+
+    stdout_bytes, stderr_bytes = await process.communicate()
+    completed_at = datetime.now(timezone.utc)
+
+    stdout_path.write_bytes(stdout_bytes)
+    stderr_path.write_bytes(stderr_bytes)
+
+    stdout_text = stdout_bytes.decode("utf-8", errors="replace")
+    stderr_text = stderr_bytes.decode("utf-8", errors="replace")
+    stdout_lines = stdout_text.splitlines()
+    stderr_lines = stderr_text.splitlines()
+
+    summary_line = next((line for line in reversed(stdout_lines) if line.strip()), "")
+
+    payload = {
+        "status": "success" if process.returncode == 0 else "error",
+        "stage": slug,
+        "run_id": run_id,
+        "command": command,
+        "returncode": process.returncode,
+        "started_at": started_at.isoformat(),
+        "completed_at": completed_at.isoformat(),
+        "duration_seconds": (completed_at - started_at).total_seconds(),
+        "log_dir": str(log_dir),
+        "stdout_path": str(stdout_path),
+        "stderr_path": str(stderr_path),
+        "stdout_lines": len(stdout_lines),
+        "stderr_lines": len(stderr_lines),
+        "stderr_tail": stderr_lines[-10:],
+    }
+    if summary_line:
+        payload["summary"] = summary_line
+    if stderr_text.strip():
+        payload["stderr"] = stderr_text
+    if payload["status"] == "error":
+        payload.setdefault("error", f"{slug} exited with code {process.returncode}")
+
+    summary_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    payload["summary_path"] = str(summary_path)
+    return payload
 
 
 @router.on_event("startup")
@@ -377,6 +464,30 @@ async def handover_endpoint(payload: dict[str, str] | None = None) -> dict[str, 
     error = data.get("error", "operator initiated")
     result = ai_invoker.handover(component, error)
     return {"handover": result}
+
+
+@router.post("/alpha/stage-a1-boot-telemetry")
+async def stage_a1_boot_telemetry() -> dict[str, Any]:
+    """Execute the bootstrap telemetry sweep and archive logs under ``logs/stage_a``."""
+
+    command = [sys.executable, "scripts/bootstrap.py"]
+    return await _run_stage_a_workflow("stage_a1_boot_telemetry", command)
+
+
+@router.post("/alpha/stage-a2-crown-replays")
+async def stage_a2_crown_replays() -> dict[str, Any]:
+    """Capture Crown replay evidence for Stage A auditing."""
+
+    command = [sys.executable, "scripts/crown_capture_replays.py"]
+    return await _run_stage_a_workflow("stage_a2_crown_replays", command)
+
+
+@router.post("/alpha/stage-a3-gate-shakeout")
+async def stage_a3_gate_shakeout() -> dict[str, Any]:
+    """Run the Alpha gate automation shakeout script."""
+
+    command = ["bash", "scripts/run_alpha_gate.sh"]
+    return await _run_stage_a_workflow("stage_a3_gate_shakeout", command)
 
 
 @router.get("/operator/status")

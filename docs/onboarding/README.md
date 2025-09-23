@@ -31,6 +31,8 @@ The Crown router, RAG orchestrator, and Kimicho fallback now use Rust crates (`n
 10. [OROBOROS Engine](../../NEOABZU/docs/OROBOROS_Engine.md), [OROBOROS Lexicon](../../NEOABZU/docs/OROBOROS_Lexicon.md), and [Migration Crosswalk](../../NEOABZU/docs/migration_crosswalk.md) – review engine mechanics, canonical glyphs, and Python↔Rust mapping
 11. [First Consecrated Computation](../../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation) – narrative log of the inaugural ceremony
 
+   - Review the Stage A automation entry points exposed by `operator_api`: `POST /alpha/stage-a1-boot-telemetry`, `POST /alpha/stage-a2-crown-replays`, and `POST /alpha/stage-a3-gate-shakeout`. Each endpoint records telemetry in `logs/stage_a/<run_id>/summary.json` for audit trails referenced by the roadmap and readiness reviews.
+
 Confirm each item before starting code changes.
 
 When submitting a pull request, ensure you can check:
