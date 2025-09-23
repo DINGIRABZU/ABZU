@@ -13,6 +13,7 @@ Curated starting points for understanding and operating the project. For an exha
 - [MCP Capability Payload](connectors/mcp_capability_payload.md) – Neo‑APSU connector Stage B handshake schema, rotation metadata, and log expectations.
 - [Operator MCP Adoption Audit](connectors/operator_mcp_audit.md) – documents the live Stage B handshake, heartbeat loop, and doctrine checks now wired into `operator_api`/`operator_upload` via `OperatorMCPAdapter`.
 - Stage B rehearsal connectors – [operator_api_stage_b.py](../connectors/operator_api_stage_b.py), [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py) wrap the shared helper so rehearsals log credential rotations before adapters serve production traffic.
+- [Stage A Automation Endpoints](roadmap.md#stage-a--alpha-gate-confidence) – console buttons invoke `POST /alpha/stage-a1-boot-telemetry`, `/alpha/stage-a2-crown-replays`, and `/alpha/stage-a3-gate-shakeout`, with outputs mirrored under `logs/stage_a/<run_id>/summary.json` for roadmap and doctrine ledgers.
 - [System Overview](system_overview.md) – mission, triadic stack, chakra agents, memory bundle, and avatar stack
 - [ABZU Blueprint](ABZU_blueprint.md) – high-level narrative for recreating the system with chakra and heartbeat roles
 - [Repository Blueprint](repository_blueprint.md) – mission, architecture, and memory bundle overview

@@ -79,6 +79,12 @@ instantiate the shared adapter during startup so `/operator/command` and
 `/operator/upload` reuse the stored session and emit background Stage B
 heartbeats that log credential rotations when the gateway refreshes expiry
 timestamps.
+Recent console work also exposes Stage A automation lanes directly through
+`operator_api` (`POST /alpha/stage-a1-boot-telemetry`,
+`/alpha/stage-a2-crown-replays`, `/alpha/stage-a3-gate-shakeout`), letting
+operators trigger boot telemetry, replay capture, and gate shakeouts without
+dropping into shell scripts while still producing the same `logs/stage_a/<run_id>/summary.json`
+artifacts consumed by the roadmap and doctrine ledgers.
  Dedicated rehearsal modules ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
  [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
  [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) build on
