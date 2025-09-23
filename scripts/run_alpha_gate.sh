@@ -422,6 +422,7 @@ run_tests() {
     if [[ -d "$ROOT_DIR/htmlcov" ]]; then
         rm -rf "$LOG_DIR/htmlcov"
         cp -R "$ROOT_DIR/htmlcov" "$LOG_DIR/"
+        find "$LOG_DIR/htmlcov" -type f -name '*.png' -delete
     fi
     if [[ -f "$REPLAY_SUMMARY" ]]; then
         cp "$REPLAY_SUMMARY" "$LOG_DIR/crown_replay_summary.json"
