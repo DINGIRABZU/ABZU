@@ -6227,7 +6227,7 @@
       "id": "spiral_memory",
       "chakra": "unknown",
       "type": "module",
-      "path": "spiral_memory.py",
+      "path": "memory/optional/spiral_memory.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
@@ -6239,7 +6239,7 @@
         "tests/test_spiral_memory.py"
       ],
       "metrics": {
-        "coverage": 97.12
+        "coverage": 100.0
       },
       "status": "active",
       "issues": "No known issues",
@@ -7058,7 +7058,7 @@
       "id": "vector_memory",
       "chakra": "unknown",
       "type": "module",
-      "path": "vector_memory.py",
+      "path": "memory/optional/vector_memory.py",
       "version": "0.1.0",
       "dependencies": [
         "__future__",
@@ -7122,7 +7122,7 @@
         "tests/test_voice_profiles.py"
       ],
       "metrics": {
-        "coverage": 93.45
+        "coverage": 100.0
       },
       "status": "active",
       "issues": "No known issues",
