@@ -18,7 +18,9 @@ import sys
 from pathlib import Path
 from uuid import uuid4
 from datetime import datetime, timezone
-from typing import Any, Mapping
+from typing import Any, Awaitable, Callable, Mapping
+
+import inspect
 
 from fastapi import (
     APIRouter,
@@ -75,6 +77,7 @@ _MCP_LOCK: asyncio.Lock | None = None
 _LAST_CREDENTIAL_EXPIRY: datetime | None = None
 
 _STAGE_A_ROOT = Path("logs") / "stage_a"
+_STAGE_B_ROOT = Path("logs") / "stage_b"
 
 
 async def _ensure_lock() -> asyncio.Lock:
@@ -186,9 +189,21 @@ async def _ensure_mcp_ready_for_request() -> None:
         ) from exc
 
 
-async def _run_stage_a_workflow(slug: str, command: list[str]) -> dict[str, Any]:
+StageMetricsExtractor = Callable[
+    [str, str, Path, dict[str, Any]],
+    Awaitable[dict[str, Any] | None] | dict[str, Any] | None,
+]
+
+
+async def _run_stage_workflow(
+    stage_root: Path,
+    slug: str,
+    command: list[str],
+    *,
+    metrics_extractor: StageMetricsExtractor | None = None,
+) -> dict[str, Any]:
     run_id = f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{slug}"
-    log_dir = _STAGE_A_ROOT / run_id
+    log_dir = stage_root / run_id
     log_dir.mkdir(parents=True, exist_ok=True)
 
     stdout_path = log_dir / f"{slug}.stdout.log"
@@ -265,9 +280,159 @@ async def _run_stage_a_workflow(slug: str, command: list[str]) -> dict[str, Any]
     if payload["status"] == "error":
         payload.setdefault("error", f"{slug} exited with code {process.returncode}")
 
+    if metrics_extractor is not None:
+        try:
+            metrics = metrics_extractor(stdout_text, stderr_text, log_dir, payload)
+            if inspect.isawaitable(metrics):
+                metrics = await metrics
+            if metrics is not None:
+                payload["metrics"] = metrics
+        except Exception as exc:  # pragma: no cover - defensive metrics parsing
+            payload["metrics_error"] = str(exc)
+            payload["status"] = "error"
+            payload.setdefault("error", f"{slug} metrics extraction failed: {exc}")
+
     summary_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     payload["summary_path"] = str(summary_path)
     return payload
+
+
+def _extract_json_from_stdout(text: str) -> dict[str, Any]:
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip().startswith("{"):
+            candidate = "\n".join(lines[index:]).strip()
+            if not candidate:
+                continue
+            try:
+                return json.loads(candidate)
+            except json.JSONDecodeError:
+                continue
+    raise ValueError("no JSON payload found in command stdout")
+
+
+def _seconds_to_ms(value: Any) -> float | None:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return round(number * 1000.0, 3)
+
+
+def _stage_b1_metrics(
+    stdout_text: str,
+    _stderr_text: str,
+    _log_dir: Path,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    summary = _extract_json_from_stdout(stdout_text)
+    latency_ms = {
+        "p50": _seconds_to_ms(summary.get("latency_p50_s")),
+        "p95": _seconds_to_ms(summary.get("latency_p95_s")),
+        "p99": _seconds_to_ms(summary.get("latency_p99_s")),
+    }
+    layers = summary.get("layers")
+    if isinstance(layers, Mapping):
+        layer_summary = {
+            "total": layers.get("total"),
+            "ready": layers.get("ready"),
+            "failed": layers.get("failed"),
+        }
+    else:
+        layer_summary = None
+    return {
+        "dataset": summary.get("dataset"),
+        "total_records": summary.get("total_records"),
+        "queries_timed": summary.get("queries_timed"),
+        "latency_ms": latency_ms,
+        "layers": layer_summary,
+        "query_failures": summary.get("query_failures"),
+    }
+
+
+def _stage_b2_metrics(
+    _stdout_text: str,
+    _stderr_text: str,
+    log_dir: Path,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    packet_path = Path("logs") / "stage_b_rehearsal_packet.json"
+    if not packet_path.exists():
+        raise FileNotFoundError(
+            "Stage B rehearsal packet not found at logs/stage_b_rehearsal_packet.json"
+        )
+    data = json.loads(packet_path.read_text(encoding="utf-8"))
+    destination = log_dir / packet_path.name
+    destination.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    artifacts = payload.setdefault("artifacts", {})
+    artifacts["rehearsal_packet"] = str(destination)
+
+    connectors_summary: dict[str, Any] = {}
+    connectors = data.get("connectors", {})
+    if isinstance(connectors, Mapping):
+        for connector_id, record in connectors.items():
+            if not isinstance(record, Mapping):
+                continue
+            handshake = record.get("handshake_response")
+            if isinstance(handshake, Mapping):
+                accepted = handshake.get("accepted_contexts")
+            else:
+                accepted = None
+            connectors_summary[str(connector_id)] = {
+                "module": record.get("module"),
+                "doctrine_ok": record.get("doctrine_ok"),
+                "supported_channels": record.get("supported_channels"),
+                "capabilities": record.get("capabilities"),
+                "accepted_contexts": accepted,
+            }
+
+    return {
+        "generated_at": data.get("generated_at"),
+        "stage": data.get("stage"),
+        "context": data.get("context"),
+        "connectors": connectors_summary,
+    }
+
+
+def _stage_b3_metrics(
+    stdout_text: str,
+    _stderr_text: str,
+    log_dir: Path,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    result = _extract_json_from_stdout(stdout_text)
+
+    rotation_log = Path("logs") / "stage_b_rotation_drills.jsonl"
+    if rotation_log.exists():
+        destination = log_dir / rotation_log.name
+        shutil.copy2(rotation_log, destination)
+        artifacts = payload.setdefault("artifacts", {})
+        artifacts["rotation_log"] = str(destination)
+
+    handshake = result.get("handshake")
+    accepted_contexts = None
+    session_info = None
+    if isinstance(handshake, Mapping):
+        accepted_contexts = handshake.get("accepted_contexts")
+        session_info = handshake.get("session")
+
+    heartbeat = result.get("heartbeat")
+    heartbeat_payload = None
+    credential_expiry = None
+    if isinstance(heartbeat, Mapping):
+        heartbeat_payload = heartbeat.get("payload")
+        credential_expiry = heartbeat.get("credential_expiry")
+
+    return {
+        "stage": result.get("stage"),
+        "targets": result.get("targets"),
+        "doctrine_ok": result.get("doctrine_ok"),
+        "doctrine_failures": result.get("doctrine_failures"),
+        "accepted_contexts": accepted_contexts,
+        "session": session_info,
+        "heartbeat_payload": heartbeat_payload,
+        "heartbeat_expiry": credential_expiry,
+    }
 
 
 @router.on_event("startup")
@@ -471,7 +636,7 @@ async def stage_a1_boot_telemetry() -> dict[str, Any]:
     """Execute the bootstrap telemetry sweep and archive logs under ``logs/stage_a``."""
 
     command = [sys.executable, "scripts/bootstrap.py"]
-    return await _run_stage_a_workflow("stage_a1_boot_telemetry", command)
+    return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a1_boot_telemetry", command)
 
 
 @router.post("/alpha/stage-a2-crown-replays")
@@ -479,7 +644,7 @@ async def stage_a2_crown_replays() -> dict[str, Any]:
     """Capture Crown replay evidence for Stage A auditing."""
 
     command = [sys.executable, "scripts/crown_capture_replays.py"]
-    return await _run_stage_a_workflow("stage_a2_crown_replays", command)
+    return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a2_crown_replays", command)
 
 
 @router.post("/alpha/stage-a3-gate-shakeout")
@@ -487,7 +652,70 @@ async def stage_a3_gate_shakeout() -> dict[str, Any]:
     """Run the Alpha gate automation shakeout script."""
 
     command = ["bash", "scripts/run_alpha_gate.sh"]
-    return await _run_stage_a_workflow("stage_a3_gate_shakeout", command)
+    return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a3_gate_shakeout", command)
+
+
+@router.post("/alpha/stage-b1-memory-proof")
+async def stage_b1_memory_proof() -> dict[str, Any]:
+    """Execute the Stage B memory load proof and summarise latency metrics."""
+
+    command = [
+        sys.executable,
+        "scripts/memory_load_proof.py",
+        "data/vector_memory_scaling/corpus.jsonl",
+        "--limit",
+        "1000",
+    ]
+    result = await _run_stage_workflow(
+        _STAGE_B_ROOT,
+        "stage_b1_memory_proof",
+        command,
+        metrics_extractor=_stage_b1_metrics,
+    )
+    if result.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Stage B1 memory proof failed"),
+        )
+    return result
+
+
+@router.post("/alpha/stage-b2-sonic-rehearsal")
+async def stage_b2_sonic_rehearsal() -> dict[str, Any]:
+    """Capture the Stage B sonic rehearsal connector packet for review."""
+
+    command = [sys.executable, "scripts/generate_stage_b_rehearsal_packet.py"]
+    result = await _run_stage_workflow(
+        _STAGE_B_ROOT,
+        "stage_b2_sonic_rehearsal",
+        command,
+        metrics_extractor=_stage_b2_metrics,
+    )
+    if result.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Stage B2 sonic rehearsal failed"),
+        )
+    return result
+
+
+@router.post("/alpha/stage-b3-connector-rotation")
+async def stage_b3_connector_rotation() -> dict[str, Any]:
+    """Run the Stage B connector rotation drill and surface handshake evidence."""
+
+    command = [sys.executable, "scripts/stage_b_smoke.py", "--json"]
+    result = await _run_stage_workflow(
+        _STAGE_B_ROOT,
+        "stage_b3_connector_rotation",
+        command,
+        metrics_extractor=_stage_b3_metrics,
+    )
+    if result.get("status") != "success":
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Stage B3 connector rotation failed"),
+        )
+    return result
 
 
 @router.get("/operator/status")
