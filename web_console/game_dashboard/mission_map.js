@@ -86,13 +86,19 @@ export default function MissionMap({ stages }) {
           { className: 'mission-stage__actions' },
           stage.actions.map((action) =>
             React.createElement(
-              'button',
-              {
-                id: `${action.id}-btn`,
-                key: action.id,
-                onClick: action.action,
-              },
-              action.label
+              React.Fragment,
+              { key: action.id },
+              React.createElement(
+                'button',
+                {
+                  id: `${action.id}-btn`,
+                  onClick: action.action,
+                },
+                action.label
+              ),
+              typeof action.renderDetails === 'function'
+                ? action.renderDetails() || null
+                : null
             )
           )
         ),

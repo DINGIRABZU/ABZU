@@ -82,6 +82,18 @@ function GameDashboard() {
       lines.push(`stdout lines: ${payload.stdout_lines}`);
     if (payload?.stderr_lines != null)
       lines.push(`stderr lines: ${payload.stderr_lines}`);
+    if (payload?.metrics) {
+      lines.push('metrics:');
+      try {
+        const metricsLines = JSON.stringify(payload.metrics, null, 2).split('\n');
+        metricsLines.forEach((line) => lines.push(`  ${line}`));
+      } catch (err) {
+        lines.push(`  [metrics JSON failed: ${err?.message ?? err}]`);
+      }
+    }
+    if (payload?.metrics_error) {
+      lines.push(`metrics error: ${payload.metrics_error}`);
+    }
     if (Array.isArray(payload?.stderr_tail) && payload.stderr_tail.length) {
       lines.push('stderr tail:');
       payload.stderr_tail.forEach((line) => lines.push(`  ${line}`));
@@ -148,6 +160,291 @@ function GameDashboard() {
     [appendLog, createLoggedAction, formatStageABlock]
   );
 
+  const [stageBResults, setStageBResults] = React.useState({});
+
+  const logStreamChunk = React.useCallback(
+    (label, chunk) => {
+      if (!chunk) return;
+      chunk
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .forEach((line) => {
+          appendLog(`[${new Date().toISOString()}] 📡 ${label}: ${line}`);
+        });
+    },
+    [appendLog]
+  );
+
+  const streamJsonPost = React.useCallback(
+    async (endpoint, label) => {
+      const response = await fetch(`${BASE_URL}${endpoint}`, { method: 'POST' });
+      let raw = '';
+      if (response.body && response.body.getReader) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            raw += decoder.decode();
+            break;
+          }
+          const chunk = decoder.decode(value, { stream: true });
+          raw += chunk;
+          logStreamChunk(label, chunk);
+        }
+      } else {
+        raw = await response.text();
+        logStreamChunk(label, raw);
+      }
+      let data = null;
+      let parseError = null;
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw);
+        } catch (err) {
+          parseError = err;
+        }
+      }
+      return { response, data, raw, parseError };
+    },
+    [logStreamChunk]
+  );
+
+  const renderStageBDetails = React.useCallback(
+    (id) => {
+      const entry = stageBResults[id];
+      if (!entry) return null;
+      const elements = [];
+      elements.push(
+        React.createElement(
+          'p',
+          { key: 'status', className: `mission-stage__status mission-stage__status--${entry.status}` },
+          `Status: ${entry.status}`
+        )
+      );
+      if (entry.responseStatus != null) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'http' },
+            `HTTP status: ${entry.responseStatus}`
+          )
+        );
+      }
+      if (entry.runId) {
+        elements.push(
+          React.createElement('p', { key: 'run' }, `Run ID: ${entry.runId}`)
+        );
+      }
+      if (entry.logDir) {
+        elements.push(
+          React.createElement('p', { key: 'logs' }, `Log dir: ${entry.logDir}`)
+        );
+      }
+      if (entry.summaryPath) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'summary-path' },
+            `Summary: ${entry.summaryPath}`
+          )
+        );
+      }
+      if (entry.stdoutPath) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'stdout-path' },
+            `Stdout: ${entry.stdoutPath}`
+          )
+        );
+      }
+      if (entry.stderrPath) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'stderr-path' },
+            `Stderr: ${entry.stderrPath}`
+          )
+        );
+      }
+      if (entry.startedAt) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'started' },
+            `Started: ${entry.startedAt}`
+          )
+        );
+      }
+      if (entry.completedAt) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'completed' },
+            `Completed: ${entry.completedAt}`
+          )
+        );
+      }
+      if (entry.error) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'error', className: 'mission-stage__error' },
+            `Error: ${entry.error}`
+          )
+        );
+      }
+      if (entry.metricsError) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'metrics-error', className: 'mission-stage__error' },
+            `Metrics error: ${entry.metricsError}`
+          )
+        );
+      }
+      if (entry.metrics) {
+        elements.push(
+          React.createElement(
+            'pre',
+            { key: 'metrics', className: 'mission-stage__metrics' },
+            JSON.stringify(entry.metrics, null, 2)
+          )
+        );
+      }
+      if (entry.rawResponse && !entry.metrics) {
+        elements.push(
+          React.createElement(
+            'pre',
+            { key: 'raw', className: 'mission-stage__metrics' },
+            entry.rawResponse
+          )
+        );
+      }
+      return React.createElement(
+        'div',
+        { className: 'mission-stage__details', key: `${id}-details` },
+        elements
+      );
+    },
+    [stageBResults]
+  );
+
+  const createStageBAction = React.useCallback(
+    ({ id, label, endpoint }) => {
+      const execute = async () => {
+        const startedAt = new Date().toISOString();
+        setStageBResults((prev) => ({
+          ...prev,
+          [id]: {
+            status: 'running',
+            startedAt,
+            completedAt: null,
+            error: null,
+            metrics: null,
+            metricsError: null,
+            runId: null,
+            logDir: null,
+            summaryPath: null,
+            stdoutPath: null,
+            stderrPath: null,
+            responseStatus: null,
+            rawResponse: null,
+          },
+        }));
+        const { response, data, raw, parseError } = await streamJsonPost(
+          endpoint,
+          label
+        );
+        if (parseError) {
+          const message = `Failed to parse response JSON: ${parseError.message}`;
+          const completedAt = new Date().toISOString();
+          setStageBResults((prev) => ({
+            ...prev,
+            [id]: {
+              ...(prev[id] ?? {}),
+              status: 'error',
+              startedAt,
+              completedAt,
+              error: message,
+              metrics: null,
+              metricsError: null,
+              responseStatus: response?.status ?? null,
+              rawResponse: raw,
+            },
+          }));
+          throw new Error(message);
+        }
+        const payload = {
+          status: response.ok ? 'success' : 'error',
+          status_code: response.status,
+          ...(data ?? {}),
+        };
+        appendLog(formatStageABlock(label, payload));
+        const completedAt = new Date().toISOString();
+        const baseUpdate = {
+          status: payload.status,
+          startedAt,
+          completedAt,
+          error: null,
+          metrics: payload.metrics ?? null,
+          metricsError: payload.metrics_error ?? null,
+          runId: payload.run_id ?? null,
+          logDir: payload.log_dir ?? null,
+          summaryPath: payload.summary_path ?? null,
+          stdoutPath: payload.stdout_path ?? null,
+          stderrPath: payload.stderr_path ?? null,
+          responseStatus: response.status,
+          rawResponse: raw,
+        };
+        if (payload.status !== 'success') {
+          baseUpdate.error =
+            payload.error || payload.detail || payload.metrics_error ||
+            `HTTP ${response.status}`;
+          setStageBResults((prev) => ({ ...prev, [id]: baseUpdate }));
+          const error = new Error(baseUpdate.error);
+          error.stageResult = payload;
+          throw error;
+        }
+        if (payload.metrics_error) {
+          baseUpdate.error = payload.metrics_error;
+          baseUpdate.status = 'error';
+          setStageBResults((prev) => ({ ...prev, [id]: baseUpdate }));
+          const error = new Error(payload.metrics_error);
+          error.stageResult = payload;
+          throw error;
+        }
+        setStageBResults((prev) => ({ ...prev, [id]: baseUpdate }));
+        return payload;
+      };
+
+      const action = createLoggedAction(id, label, execute, {
+        onError: (error) => {
+          if (error?.stageResult) {
+            return;
+          }
+          setStageBResults((prev) => ({
+            ...prev,
+            [id]: {
+              ...(prev[id] ?? {}),
+              status: 'error',
+              error: error?.message ?? String(error),
+              completedAt: new Date().toISOString(),
+            },
+          }));
+        },
+      });
+
+      return {
+        ...action,
+        renderDetails: () => renderStageBDetails(id),
+      };
+    },
+    [createLoggedAction, formatStageABlock, renderStageBDetails, streamJsonPost, appendLog]
+  );
+
   const logSuccess = React.useCallback(
     (label, detail) => {
       logLine('✅', `${label} ${detail}`);
@@ -182,6 +479,21 @@ function GameDashboard() {
         id: 'stage-b',
         title: stageTitles['stage-b'],
         actions: [
+          createStageBAction({
+            id: 'stage-b1-memory-proof',
+            label: 'Stage B1 – Memory Proof',
+            endpoint: '/alpha/stage-b1-memory-proof',
+          }),
+          createStageBAction({
+            id: 'stage-b2-sonic-rehearsal',
+            label: 'Stage B2 – Sonic Rehearsal',
+            endpoint: '/alpha/stage-b2-sonic-rehearsal',
+          }),
+          createStageBAction({
+            id: 'stage-b3-connector-rotation',
+            label: 'Stage B3 – Connector Rotation',
+            endpoint: '/alpha/stage-b3-connector-rotation',
+          }),
           createLoggedAction('ignite', 'Ignite', () =>
             fetch(`${BASE_URL}/start_ignition`, { method: 'POST' })
               .then((r) => r.json())
@@ -221,7 +533,7 @@ function GameDashboard() {
         ],
       },
     ],
-    [createLoggedAction, createStageAAction, logSuccess]
+    [createLoggedAction, createStageAAction, createStageBAction, logSuccess]
   );
   const [wizardDone, setWizardDone] = React.useState(() => localStorage.getItem('setupWizardCompleted') === 'true');
   const [missionDone, setMissionDone] = React.useState(() => localStorage.getItem('missionWizardCompleted') === 'true');

@@ -46,6 +46,32 @@ def mock_dispatch(monkeypatch: pytest.MonkeyPatch) -> Callable[..., None]:
     return _mock
 
 
+def configure_subprocess(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    stdout: bytes = b"",
+    stderr: bytes = b"",
+    returncode: int = 0,
+) -> None:
+    """Replace subprocess execution with a dummy process returning canned output."""
+
+    class DummyProcess:
+        def __init__(self) -> None:
+            self.returncode = returncode
+
+        async def communicate(self) -> tuple[bytes, bytes]:
+            return stdout, stderr
+
+    async def fake_create_subprocess_exec(*args: Any, **kwargs: Any) -> DummyProcess:
+        return DummyProcess()
+
+    monkeypatch.setattr(
+        operator_api.asyncio,
+        "create_subprocess_exec",
+        fake_create_subprocess_exec,
+    )
+
+
 def test_command_dispatches(
     client: TestClient, mock_dispatch: Callable[..., None]
 ) -> None:
@@ -55,7 +81,9 @@ def test_command_dispatches(
         json={"operator": "overlord", "agent": "crown", "command": "noop"},
     )
     assert resp.status_code == 200
-    assert resp.json() == {"result": {"ack": "noop"}}
+    body = resp.json()
+    assert body["result"] == {"ack": "noop"}
+    assert "command_id" in body
 
 
 def test_command_requires_fields(client: TestClient) -> None:
@@ -69,12 +97,18 @@ def test_upload_stores_and_forwards(
     captured: dict[str, dict] = {}
 
     def dispatch(
-        operator: str, agent: str, func: Callable[..., dict], *args: Any
+        operator: str,
+        agent: str,
+        func: Callable[..., dict],
+        *args: Any,
+        **kwargs: Any,
     ) -> dict:
+        kwargs.pop("command_id", None)
         if operator == "overlord" and agent == "crown":
-            return func(*args)
+            return func(*args, **kwargs)
         if operator == "crown" and agent == "razar":
-            captured["meta"] = args[0]
+            meta = args[0]
+            captured["meta"] = meta
             return {"ok": True}
         raise AssertionError("unexpected dispatch")
 
@@ -86,7 +120,10 @@ def test_upload_stores_and_forwards(
     )
     assert resp.status_code == 200
     assert resp.json()["stored"] == ["overlord/a.txt"]
-    assert captured["meta"] == {"x": 1, "files": ["overlord/a.txt"]}
+    meta = captured["meta"]
+    assert meta["x"] == 1
+    assert meta["files"] == ["overlord/a.txt"]
+    assert "command_id" in meta
     assert (Path("uploads") / "overlord" / "a.txt").read_text() == "hi"
 
 
@@ -128,10 +165,15 @@ def test_upload_metadata_only(
     captured: dict[str, dict] = {}
 
     def dispatch(
-        operator: str, agent: str, func: Callable[..., dict], meta: dict
+        operator: str,
+        agent: str,
+        func: Callable[..., dict],
+        meta: dict,
+        **kwargs: Any,
     ) -> dict:
+        kwargs.pop("command_id", None)
         if operator == "overlord" and agent == "crown":
-            return func(meta)
+            return func(meta, **kwargs)
         if operator == "crown" and agent == "razar":
             captured["meta"] = meta
             return {"ok": True}
@@ -144,7 +186,10 @@ def test_upload_metadata_only(
     )
     assert resp.status_code == 200
     assert resp.json()["stored"] == []
-    assert captured["meta"] == {"x": 1, "files": []}
+    meta = captured["meta"]
+    assert meta["x"] == 1
+    assert meta["files"] == []
+    assert "command_id" in meta
 
 
 def test_events_websocket(
@@ -159,12 +204,14 @@ def test_events_websocket(
             json={"operator": "overlord", "agent": "crown", "command": "noop"},
         )
         assert resp.status_code == 200
-        assert ws.receive_json() == {"event": "ack", "command": "noop"}
-        assert ws.receive_json() == {
-            "event": "progress",
-            "command": "noop",
-            "percent": 100,
-        }
+        ack = ws.receive_json()
+        assert ack["event"] == "ack"
+        assert ack["command"] == "noop"
+        assert "command_id" in ack
+        progress = ws.receive_json()
+        assert progress["event"] == "progress"
+        assert progress["command"] == "noop"
+        assert progress["percent"] == 100
 
 
 def test_status_endpoint(client: TestClient, tmp_path: Path) -> None:
@@ -202,7 +249,10 @@ def test_start_ignition_endpoint(
 ) -> None:
     called: dict[str, bool] = {}
     monkeypatch.setattr(
-        operator_api.boot_orchestrator, "start", lambda: called.setdefault("ok", True)
+        operator_api.boot_orchestrator,
+        "start",
+        lambda: called.setdefault("ok", True),
+        raising=False,
     )
     resp = client.post("/start_ignition")
     assert resp.status_code == 200
@@ -224,3 +274,126 @@ def test_handover_endpoint(client: TestClient, monkeypatch: pytest.MonkeyPatch) 
     resp = client.post("/handover", json={"component": "c", "error": "boom"})
     assert resp.status_code == 200
     assert resp.json() == {"handover": True}
+
+
+def test_stage_b1_memory_proof_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    summary = {
+        "dataset": "data/vector_memory_scaling/corpus.jsonl",
+        "total_records": 120,
+        "queries_timed": 115,
+        "init_duration_s": 1.23,
+        "latency_p50_s": 0.01,
+        "latency_p95_s": 0.05,
+        "latency_p99_s": 0.09,
+        "layers": {"total": 4, "ready": 4, "failed": 0},
+        "query_failures": 0,
+    }
+    stdout = ("INFO stage\n" + json.dumps(summary, indent=2) + "\n").encode("utf-8")
+    configure_subprocess(monkeypatch, stdout=stdout)
+
+    resp = client.post("/alpha/stage-b1-memory-proof")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["status"] == "success"
+    metrics = body["metrics"]
+    assert metrics["latency_ms"]["p95"] == 50.0
+    assert metrics["layers"]["total"] == 4
+    assert Path(body["log_dir"]).exists()
+
+
+def test_stage_b1_memory_proof_failure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configure_subprocess(
+        monkeypatch,
+        stdout=b"",
+        stderr=b"boom",
+        returncode=1,
+    )
+
+    resp = client.post("/alpha/stage-b1-memory-proof")
+    assert resp.status_code == 500
+    detail = resp.json()["detail"].lower()
+    assert "exited with code 1" in detail
+
+
+def test_stage_b2_sonic_rehearsal_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    packet = {
+        "generated_at": "2025-09-22T10:15:54Z",
+        "stage": "B",
+        "context": "stage-b-rehearsal",
+        "connectors": {
+            "operator_api": {
+                "module": "connectors.operator_api_stage_b",
+                "doctrine_ok": True,
+                "supported_channels": ["handshake", "heartbeat"],
+                "capabilities": ["register"],
+                "handshake_response": {
+                    "accepted_contexts": ["stage-b-rehearsal"],
+                },
+            }
+        },
+    }
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+    packet_path = logs_dir / "stage_b_rehearsal_packet.json"
+    packet_path.write_text(json.dumps(packet), encoding="utf-8")
+    configure_subprocess(monkeypatch, stdout=b"packet\n")
+
+    resp = client.post("/alpha/stage-b2-sonic-rehearsal")
+    assert resp.status_code == 200
+    body = resp.json()
+    metrics = body["metrics"]
+    assert metrics["connectors"]["operator_api"]["doctrine_ok"] is True
+    copied = Path(body["log_dir"]) / "stage_b_rehearsal_packet.json"
+    assert copied.exists()
+
+
+def test_stage_b2_sonic_rehearsal_failure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configure_subprocess(monkeypatch, stdout=b"", stderr=b"fail", returncode=2)
+    resp = client.post("/alpha/stage-b2-sonic-rehearsal")
+    assert resp.status_code == 500
+    assert "exited with code 2" in resp.json()["detail"].lower()
+
+
+def test_stage_b3_connector_rotation_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    result = {
+        "stage": "B",
+        "targets": ["operator_api"],
+        "handshake": {
+            "accepted_contexts": ["stage-b-rehearsal"],
+            "session": {"id": "sess-1"},
+        },
+        "doctrine_ok": True,
+        "doctrine_failures": [],
+    }
+    stdout = (json.dumps(result, indent=2) + "\n").encode("utf-8")
+    rotation_log = Path("logs") / "stage_b_rotation_drills.jsonl"
+    rotation_log.parent.mkdir(exist_ok=True)
+    rotation_log.write_text(json.dumps({"connector_id": "operator_api"}) + "\n")
+    configure_subprocess(monkeypatch, stdout=stdout)
+
+    resp = client.post("/alpha/stage-b3-connector-rotation")
+    assert resp.status_code == 200
+    body = resp.json()
+    metrics = body["metrics"]
+    assert metrics["accepted_contexts"] == ["stage-b-rehearsal"]
+    copied = Path(body["log_dir"]) / "stage_b_rotation_drills.jsonl"
+    assert copied.exists()
+
+
+def test_stage_b3_connector_rotation_failure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    configure_subprocess(monkeypatch, stdout=b"", stderr=b"err", returncode=3)
+    resp = client.post("/alpha/stage-b3-connector-rotation")
+    assert resp.status_code == 500
+    assert "exited with code 3" in resp.json()["detail"].lower()
