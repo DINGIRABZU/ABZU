@@ -1,5 +1,5 @@
 updated_from:
-  stage_c_demo: logs/stage_c_demo/20250921T172855Z/session_02
+  stage_c_demo: logs/stage_c/20250923T221242Z-stage_c2_demo_storyline/demo_storyline
   stage_b_rehearsal: logs/stage_b/20250921T230434Z/rehearsals/summary.json
 tones:
   albedo:
@@ -10,9 +10,9 @@ tones:
     audio_duration_s: 1.0
     video_duration_s: 1.0
     sync_offset_s: 0.0
-    audio_peak: 0.084036
-    audio_rms: 0.019911
-    audio_path: logs/stage_c_demo/20250921T172855Z/session_02/audio/2025-09-21T17:35:49.652+00:00_arrival.json
+    audio_peak: 0.073996
+    audio_rms: 0.019936
+    audio_path: logs/stage_c/20250923T221242Z-stage_c2_demo_storyline/demo_storyline/audio/2025-09-23T22:12:42.789+00:00_arrival.json
   rubedo:
     step_id: handoff
     emotion: focused
@@ -21,9 +21,9 @@ tones:
     audio_duration_s: 1.4
     video_duration_s: 1.333
     sync_offset_s: 0.067
-    audio_peak: 0.088647
-    audio_rms: 0.019971
-    audio_path: logs/stage_c_demo/20250921T172855Z/session_02/audio/2025-09-21T17:35:49.677+00:00_handoff.json
+    audio_peak: 0.08074
+    audio_rms: 0.019966
+    audio_path: logs/stage_c/20250923T221242Z-stage_c2_demo_storyline/demo_storyline/audio/2025-09-23T22:12:42.816+00:00_handoff.json
   lunar:
     step_id: closing
     emotion: resonant
@@ -32,9 +32,9 @@ tones:
     audio_duration_s: 1.6
     video_duration_s: 1.583
     sync_offset_s: 0.017
-    audio_peak: 0.07897
-    audio_rms: 0.019989
-    audio_path: logs/stage_c_demo/20250921T172855Z/session_02/audio/2025-09-21T17:35:49.685+00:00_closing.json
+    audio_peak: 0.079609
+    audio_rms: 0.020009
+    audio_path: logs/stage_c/20250923T221242Z-stage_c2_demo_storyline/demo_storyline/audio/2025-09-23T22:12:42.824+00:00_closing.json
   nigredo:
     step_id: stage_b_resonance
     emotion: resonant
