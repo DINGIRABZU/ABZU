@@ -13,6 +13,7 @@ import asyncio
 import contextlib
 import json
 import logging
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -470,7 +471,13 @@ def _stage_c1_metrics(
 ) -> dict[str, Any]:
     lines = [line.strip() for line in stdout_text.splitlines() if line.strip()]
     unchecked = [line for line in lines if line.startswith("- [ ]")]
-    completed = not unchecked
+    status_failure_pattern = re.compile(r"status:\s*(failed|blocked)\b", re.IGNORECASE)
+    failing = [
+        line
+        for line in lines
+        if line.startswith("- [") and status_failure_pattern.search(line)
+    ]
+    completed = not unchecked and not failing
     summary_line = next(
         (line for line in reversed(lines) if not line.startswith("- [ ]")), ""
     )
@@ -478,10 +485,16 @@ def _stage_c1_metrics(
         "completed": completed,
         "unchecked_count": len(unchecked),
         "unchecked_items": unchecked,
+        "failing_count": len(failing),
+        "failing_items": failing,
         "message": summary_line or None,
     }
-    if not completed:
+    if failing:
+        payload["error"] = "checklist contains failing items"
+        payload["status"] = "error"
+    elif not completed:
         payload["error"] = "checklist contains unchecked items"
+        payload["status"] = "error"
     return metrics
 
 
