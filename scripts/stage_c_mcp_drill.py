@@ -10,6 +10,10 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+from scripts._stage_runtime import bootstrap
+
+bootstrap()
+
 from connectors.operator_mcp_adapter import (
     ROTATION_WINDOW_HOURS,
     OperatorMCPAdapter,

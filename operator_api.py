@@ -61,6 +61,7 @@ from connectors.operator_mcp_adapter import (
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
 _dispatcher = OperatorDispatcher(
     {
         "overlord": ["cocytus", "victim", "crown"],
@@ -78,9 +79,12 @@ _MCP_HEARTBEAT_TASK: asyncio.Task[None] | None = None
 _MCP_LOCK: asyncio.Lock | None = None
 _LAST_CREDENTIAL_EXPIRY: datetime | None = None
 
-_STAGE_A_ROOT = Path("logs") / "stage_a"
-_STAGE_B_ROOT = Path("logs") / "stage_b"
-_STAGE_C_ROOT = Path("logs") / "stage_c"
+_REPO_ROOT = Path(__file__).resolve().parent
+_SCRIPTS_DIR = _REPO_ROOT / "scripts"
+
+_STAGE_A_ROOT = _REPO_ROOT / "logs" / "stage_a"
+_STAGE_B_ROOT = _REPO_ROOT / "logs" / "stage_b"
+_STAGE_C_ROOT = _REPO_ROOT / "logs" / "stage_c"
 _STAGE_C_BUNDLE_FILENAME = "readiness_bundle.json"
 
 
@@ -384,7 +388,7 @@ def _stage_b2_metrics(
     log_dir: Path,
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-    packet_path = Path("logs") / "stage_b_rehearsal_packet.json"
+    packet_path = _REPO_ROOT / "logs" / "stage_b_rehearsal_packet.json"
     if not packet_path.exists():
         raise FileNotFoundError(
             "Stage B rehearsal packet not found at logs/stage_b_rehearsal_packet.json"
@@ -430,7 +434,7 @@ def _stage_b3_metrics(
 ) -> dict[str, Any]:
     result = _extract_json_from_stdout(stdout_text)
 
-    rotation_log = Path("logs") / "stage_b_rotation_drills.jsonl"
+    rotation_log = _REPO_ROOT / "logs" / "stage_b_rotation_drills.jsonl"
     if rotation_log.exists():
         destination = log_dir / rotation_log.name
         shutil.copy2(rotation_log, destination)
@@ -795,7 +799,7 @@ async def _operator_mcp_shutdown() -> None:
 
 def _log_command(entry: dict[str, object]) -> None:
     """Append ``entry`` to ``logs/operator_commands.jsonl``."""
-    path = Path("logs") / "operator_commands.jsonl"
+    path = _REPO_ROOT / "logs" / "operator_commands.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, default=repr) + "\n")
@@ -964,7 +968,7 @@ async def handover_endpoint(payload: dict[str, str] | None = None) -> dict[str, 
 async def stage_a1_boot_telemetry() -> dict[str, Any]:
     """Execute the bootstrap telemetry sweep and archive logs under ``logs/stage_a``."""
 
-    command = [sys.executable, "scripts/bootstrap.py"]
+    command = [sys.executable, str(_SCRIPTS_DIR / "bootstrap.py")]
     return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a1_boot_telemetry", command)
 
 
@@ -972,7 +976,7 @@ async def stage_a1_boot_telemetry() -> dict[str, Any]:
 async def stage_a2_crown_replays() -> dict[str, Any]:
     """Capture Crown replay evidence for Stage A auditing."""
 
-    command = [sys.executable, "scripts/crown_capture_replays.py"]
+    command = [sys.executable, str(_SCRIPTS_DIR / "crown_capture_replays.py")]
     return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a2_crown_replays", command)
 
 
@@ -980,7 +984,7 @@ async def stage_a2_crown_replays() -> dict[str, Any]:
 async def stage_a3_gate_shakeout() -> dict[str, Any]:
     """Run the Alpha gate automation shakeout script."""
 
-    command = ["bash", "scripts/run_alpha_gate.sh"]
+    command = ["bash", str(_SCRIPTS_DIR / "run_alpha_gate.sh")]
     return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a3_gate_shakeout", command)
 
 
@@ -990,7 +994,7 @@ async def stage_b1_memory_proof() -> dict[str, Any]:
 
     command = [
         sys.executable,
-        "scripts/memory_load_proof.py",
+        str(_SCRIPTS_DIR / "memory_load_proof.py"),
         "data/vector_memory_scaling/corpus.jsonl",
         "--limit",
         "1000",
@@ -1013,7 +1017,10 @@ async def stage_b1_memory_proof() -> dict[str, Any]:
 async def stage_b2_sonic_rehearsal() -> dict[str, Any]:
     """Capture the Stage B sonic rehearsal connector packet for review."""
 
-    command = [sys.executable, "scripts/generate_stage_b_rehearsal_packet.py"]
+    command = [
+        sys.executable,
+        str(_SCRIPTS_DIR / "generate_stage_b_rehearsal_packet.py"),
+    ]
     result = await _run_stage_workflow(
         _STAGE_B_ROOT,
         "stage_b2_sonic_rehearsal",
@@ -1032,7 +1039,11 @@ async def stage_b2_sonic_rehearsal() -> dict[str, Any]:
 async def stage_b3_connector_rotation() -> dict[str, Any]:
     """Run the Stage B connector rotation drill and surface handshake evidence."""
 
-    command = [sys.executable, "scripts/stage_b_smoke.py", "--json"]
+    command = [
+        sys.executable,
+        str(_SCRIPTS_DIR / "stage_b_smoke.py"),
+        "--json",
+    ]
     result = await _run_stage_workflow(
         _STAGE_B_ROOT,
         "stage_b3_connector_rotation",
@@ -1051,7 +1062,7 @@ def _stage_c2_command(log_dir: Path) -> Sequence[str]:
     output_dir = log_dir / "demo_storyline"
     return [
         sys.executable,
-        "scripts/stage_c_scripted_demo.py",
+        str(_SCRIPTS_DIR / "stage_c_scripted_demo.py"),
         str(output_dir),
         "--seed",
         "42",
@@ -1061,7 +1072,7 @@ def _stage_c2_command(log_dir: Path) -> Sequence[str]:
 def _stage_c3_command(log_dir: Path) -> Sequence[str]:
     return [
         sys.executable,
-        "scripts/aggregate_stage_readiness.py",
+        str(_SCRIPTS_DIR / "aggregate_stage_readiness.py"),
         str(log_dir),
     ]
 
@@ -1069,7 +1080,7 @@ def _stage_c3_command(log_dir: Path) -> Sequence[str]:
 def _stage_c4_command(log_dir: Path) -> Sequence[str]:
     return [
         sys.executable,
-        "scripts/stage_c_mcp_drill.py",
+        str(_SCRIPTS_DIR / "stage_c_mcp_drill.py"),
         "--json",
         str(log_dir),
     ]
@@ -1079,7 +1090,10 @@ def _stage_c4_command(log_dir: Path) -> Sequence[str]:
 async def stage_c1_exit_checklist() -> dict[str, Any]:
     """Validate the Stage C exit checklist and archive the output."""
 
-    command = [sys.executable, "scripts/validate_absolute_protocol_checklist.py"]
+    command = [
+        sys.executable,
+        str(_SCRIPTS_DIR / "validate_absolute_protocol_checklist.py"),
+    ]
     result = await _run_stage_workflow(
         _STAGE_C_ROOT,
         "stage_c1_exit_checklist",
@@ -1164,7 +1178,7 @@ async def operator_status() -> dict[str, object]:
         components = []
 
     errors: list[str] = []
-    log_path = Path("logs") / "razar_mission.log"
+    log_path = _REPO_ROOT / "logs" / "razar_mission.log"
     if log_path.exists():
         lines = log_path.read_text().splitlines()[-20:]
         errors = [line for line in lines if "error" in line.lower()]
@@ -1227,7 +1241,7 @@ async def agent_interactions(
     agents: list[str] | None = None, limit: int = 100
 ) -> list[dict[str, object]]:
     """Return recent agent interactions filtered by ``agents``."""
-    path = Path("logs") / "agent_interactions.jsonl"
+    path = _REPO_ROOT / "logs" / "agent_interactions.jsonl"
     if not path.exists():
         return []
     records: list[dict[str, object]] = []

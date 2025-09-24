@@ -22,15 +22,17 @@ from .neo_apsu_connector_template import (
 
 LOGGER = logging.getLogger(__name__)
 
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+
 STAGE_B_TARGET_SERVICES: tuple[str, ...] = (
     "operator_api",
     "operator_upload",
     "crown_handshake",
 )
 ROTATION_WINDOW_HOURS = 48
-_ROTATION_LOG = Path("logs") / "stage_b_rotation_drills.jsonl"
-_CONNECTOR_INDEX = Path("docs") / "connectors" / "CONNECTOR_INDEX.md"
-_AUDIT_DOC = Path("docs") / "connectors" / "operator_mcp_audit.md"
+_ROTATION_LOG = _REPO_ROOT / "logs" / "stage_b_rotation_drills.jsonl"
+_CONNECTOR_INDEX = _REPO_ROOT / "docs" / "connectors" / "CONNECTOR_INDEX.md"
+_AUDIT_DOC = _REPO_ROOT / "docs" / "connectors" / "operator_mcp_audit.md"
 
 
 def _isoformat(value: datetime) -> str:
