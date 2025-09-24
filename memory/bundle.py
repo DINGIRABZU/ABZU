@@ -6,7 +6,25 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict
 
-from neoabzu_memory import MemoryBundle as _RustBundle
+try:
+    from neoabzu_memory import MemoryBundle as _NeoBundle  # type: ignore
+
+    def _bundle_factory() -> Any:
+        return _NeoBundle()
+
+    _BUNDLE_SOURCE = "neoabzu_memory"
+    _IMPORT_ERROR: ModuleNotFoundError | None = None
+except ModuleNotFoundError as exc:
+    from memory.optional.neoabzu_bundle import MemoryBundle as _StubBundle
+
+    _BUNDLE_SOURCE = "memory.optional.neoabzu_bundle"
+    _IMPORT_ERROR = exc
+
+    def _bundle_factory() -> Any:
+        return _StubBundle(import_error=_IMPORT_ERROR)
+
+
+from memory.tracing import get_tracer
 
 __version__ = "0.2.0"
 
@@ -18,7 +36,20 @@ class MemoryBundle:
     """Proxy class delegating to the Rust implementation."""
 
     def __init__(self) -> None:
-        self._bundle = _RustBundle()
+        self._bundle = _bundle_factory()
+        self._tracer = get_tracer(__name__)
+        self.stubbed: bool = getattr(self._bundle, "stubbed", False)
+        self.fallback_reason: str | None = getattr(
+            self._bundle, "fallback_reason", None
+        )
+        if _IMPORT_ERROR is not None:
+            logger.warning(
+                "neoabzu_memory unavailable – using stub bundle",
+                extra={
+                    "bundle_source": _BUNDLE_SOURCE,
+                    "error": repr(_IMPORT_ERROR),
+                },
+            )
         self.statuses: Dict[str, str] = {}
         self.diagnostics: Dict[str, Any] = {}
 
@@ -51,6 +82,11 @@ class MemoryBundle:
                 optional_fallbacks.append((layer, entry))
         self.statuses = statuses
         self.diagnostics = diagnostics
+        self.stubbed = bool(result.get("stubbed", self.stubbed))
+        if self.stubbed:
+            for layer in statuses:
+                statuses[layer] = "skipped"
+        self.fallback_reason = result.get("fallback_reason", self.fallback_reason)
         if optional_fallbacks:
             summary_pairs = []
             for layer, entry in optional_fallbacks:

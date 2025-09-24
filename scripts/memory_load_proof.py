@@ -60,6 +60,8 @@ class LoadProofResult:
     layer_ready: int
     layer_failed: int
     query_failures: int
+    stubbed: bool
+    fallback_reason: str | None
 
 
 def parse_args() -> argparse.Namespace:
@@ -193,10 +195,15 @@ def _record_metrics(
 
 def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
     bundle = MemoryBundle()
+    bundle_stubbed = getattr(bundle, "stubbed", False)
+    bundle_fallback = getattr(bundle, "fallback_reason", None)
 
     start_init = time.perf_counter()
     statuses = bundle.initialize()
     init_duration = time.perf_counter() - start_init
+
+    bundle_stubbed = bool(getattr(bundle, "stubbed", bundle_stubbed))
+    bundle_fallback = getattr(bundle, "fallback_reason", bundle_fallback)
 
     layer_total, layer_ready, layer_failed = _record_metrics(
         source=args.metrics_source,
@@ -266,11 +273,17 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
         layer_ready=layer_ready,
         layer_failed=layer_failed,
         query_failures=query_failures,
+        stubbed=bundle_stubbed,
+        fallback_reason=bundle_fallback if isinstance(bundle_fallback, str) else None,
     )
 
 
 def _append_pretest_report(
-    report: MemoryLayerCheckReport, dataset: Path, log_path: Path
+    report: MemoryLayerCheckReport,
+    dataset: Path,
+    log_path: Path,
+    *,
+    stubbed: bool,
 ) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -286,19 +299,30 @@ def _append_pretest_report(
             }
             for stub in report.optional_stubs
         ],
+        "stubbed_bundle": stubbed,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
         handle.write("\n")
 
 
-def _run_pretest_hook(dataset: Path, log_path: Path) -> None:
+def _run_pretest_hook(dataset: Path, log_path: Path) -> bool:
     report = verify_memory_layers()
+    stubbed_modules = [
+        stub for stub in report.optional_stubs if stub.module.endswith("neoabzu_bundle")
+    ]
+    stubbed = bool(stubbed_modules)
+    unexpected = [
+        stub
+        for stub in report.optional_stubs
+        if not stub.module.endswith("neoabzu_bundle")
+    ]
+
     if report.optional_stubs:
-        _append_pretest_report(report, dataset, log_path)
-        stub_summary = ", ".join(
-            f"{stub.layer}:{stub.module}" for stub in report.optional_stubs
-        )
+        _append_pretest_report(report, dataset, log_path, stubbed=stubbed)
+
+    if unexpected:
+        stub_summary = ", ".join(f"{stub.layer}:{stub.module}" for stub in unexpected)
         logger.error(
             "Optional memory stubs detected during preflight: %s", stub_summary
         )
@@ -306,7 +330,24 @@ def _run_pretest_hook(dataset: Path, log_path: Path) -> None:
             "Optional memory stubs detected. Halt load proof until primary layers"
             " are restored."
         )
-    logger.info("Memory layer preflight passed with %s layers", len(report.statuses))
+
+    if stubbed:
+        modules = ", ".join(f"{stub.layer}:{stub.module}" for stub in stubbed_modules)
+        logger.warning(
+            "Memory bundle running in stubbed mode – continuing",
+            extra={
+                "stubbed_layers": [stub.layer for stub in stubbed_modules],
+                "stubbed_modules": [stub.module for stub in stubbed_modules],
+            },
+        )
+        logger.info(
+            "Stubbed bundle detected for %s layers; continuing pretest", modules
+        )
+    else:
+        logger.info(
+            "Memory layer preflight passed with %s layers", len(report.statuses)
+        )
+    return stubbed
 
 
 def _append_log(result: LoadProofResult, log_path: Path) -> None:
@@ -324,6 +365,8 @@ def _append_log(result: LoadProofResult, log_path: Path) -> None:
         "layer_ready": result.layer_ready,
         "layer_failed": result.layer_failed,
         "query_failures": result.query_failures,
+        "stubbed_bundle": result.stubbed,
+        "fallback_reason": result.fallback_reason,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -337,7 +380,7 @@ def main() -> None:
         format="%(asctime)s %(levelname)s %(name)s :: %(message)s",
     )
 
-    _run_pretest_hook(args.dataset, args.log_path)
+    stubbed = _run_pretest_hook(args.dataset, args.log_path)
     result = run_load_proof(args)
     _append_log(result, args.log_path)
 
@@ -363,6 +406,8 @@ def main() -> None:
             "failed": result.layer_failed,
         },
         "query_failures": result.query_failures,
+        "stubbed_bundle": result.stubbed or stubbed,
+        "fallback_reason": result.fallback_reason,
     }
     print(json.dumps(summary, indent=2))
 
