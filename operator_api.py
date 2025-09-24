@@ -79,6 +79,7 @@ _LAST_CREDENTIAL_EXPIRY: datetime | None = None
 _STAGE_A_ROOT = Path("logs") / "stage_a"
 _STAGE_B_ROOT = Path("logs") / "stage_b"
 _STAGE_C_ROOT = Path("logs") / "stage_c"
+_STAGE_C_BUNDLE_FILENAME = "readiness_bundle.json"
 
 
 async def _ensure_lock() -> asyncio.Lock:
@@ -545,19 +546,104 @@ def _stage_c3_metrics(
     _log_dir: Path,
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-    stage_a_path, stage_a_summary = _latest_stage_summary(_STAGE_A_ROOT)
-    stage_b_path, stage_b_summary = _latest_stage_summary(_STAGE_B_ROOT)
-
+    bundle_path = _log_dir / _STAGE_C_BUNDLE_FILENAME
+    bundle_data: dict[str, Any] | None = None
     metrics: dict[str, Any] = {
-        "stage_a": {
+        "bundle_path": str(bundle_path) if bundle_path.exists() else None,
+    }
+
+    if bundle_path.exists():
+        try:
+            bundle_data = json.loads(bundle_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:  # pragma: no cover - defensive parse
+            payload["status"] = "error"
+            payload["error"] = f"invalid readiness bundle: {exc}"
+            metrics["bundle_error"] = str(exc)
+
+    if bundle_data:
+        stage_a_section = dict(bundle_data.get("stage_a") or {})
+        stage_b_section = dict(bundle_data.get("stage_b") or {})
+        stage_a_summary = stage_a_section.get("summary")
+        stage_b_summary = stage_b_section.get("summary")
+    else:
+        stage_a_path, stage_a_summary = _latest_stage_summary(_STAGE_A_ROOT)
+        stage_b_path, stage_b_summary = _latest_stage_summary(_STAGE_B_ROOT)
+
+        stage_a_section = {
             "summary": stage_a_summary,
             "summary_path": str(stage_a_path) if stage_a_path else None,
-        },
-        "stage_b": {
+            "artifacts": [],
+            "risk_notes": [] if stage_a_summary else ["readiness summary missing"],
+        }
+        stage_b_section = {
             "summary": stage_b_summary,
             "summary_path": str(stage_b_path) if stage_b_path else None,
-        },
-    }
+            "artifacts": [],
+            "risk_notes": [] if stage_b_summary else ["readiness summary missing"],
+        }
+
+    def _ensure_list(value: Any) -> list[str]:
+        if isinstance(value, list):
+            return [str(item) for item in value]
+        if value is None:
+            return []
+        return [str(value)]
+
+    stage_a_notes = _ensure_list(stage_a_section.get("risk_notes"))
+    stage_b_notes = _ensure_list(stage_b_section.get("risk_notes"))
+
+    def _build_merged(
+        summary_a: Mapping[str, Any] | None,
+        summary_b: Mapping[str, Any] | None,
+    ) -> dict[str, Any]:
+        def _get(summary: Mapping[str, Any] | None, key: str) -> Any:
+            if summary is None:
+                return None
+            return summary.get(key)
+
+        status_a = _get(summary_a, "status") or "missing"
+        status_b = _get(summary_b, "status") or "missing"
+        merged_payload = {
+            "run_ids": {
+                "stage_a": _get(summary_a, "run_id"),
+                "stage_b": _get(summary_b, "run_id"),
+            },
+            "completed_at": {
+                "stage_a": _get(summary_a, "completed_at"),
+                "stage_b": _get(summary_b, "completed_at"),
+            },
+            "status_flags": {
+                "stage_a": status_a,
+                "stage_b": status_b,
+            },
+            "risk_notes": {
+                "stage_a": stage_a_notes,
+                "stage_b": stage_b_notes,
+            },
+        }
+
+        statuses = [status_a, status_b]
+        if all(status == "success" for status in statuses):
+            merged_payload["overall_status"] = "ready"
+        else:
+            merged_payload["overall_status"] = "requires_attention"
+        return merged_payload
+
+    merged_snapshot = _build_merged(stage_a_summary, stage_b_summary)
+
+    metrics.update(
+        {
+            "stage_a": stage_a_section,
+            "stage_b": stage_b_section,
+            "merged": merged_snapshot,
+        }
+    )
+
+    if bundle_data:
+        bundle_data.setdefault("stage_a", stage_a_section)
+        bundle_data.setdefault("stage_b", stage_b_section)
+        bundle_data["merged"] = merged_snapshot
+        metrics["bundle"] = bundle_data
 
     missing = [
         stage
@@ -568,26 +654,23 @@ def _stage_c3_metrics(
         if summary is None
     ]
 
+    metrics["missing"] = missing
+
+    artifacts = payload.setdefault("artifacts", {})
+    if bundle_path.exists():
+        artifacts.setdefault("readiness_bundle", str(bundle_path))
+
+    for label, section in (("stage_a", stage_a_section), ("stage_b", stage_b_section)):
+        summary_path = section.get("summary_path")
+        if summary_path:
+            artifacts.setdefault(f"{label}_summary", summary_path)
+        for index, artifact_path in enumerate(section.get("artifacts") or []):
+            artifacts.setdefault(f"{label}_artifact_{index + 1}", artifact_path)
+
     if missing:
         payload["status"] = "error"
         payload["error"] = f"missing readiness summaries: {', '.join(missing)}"
-    else:
-        metrics["merged"] = {
-            "latest_runs": {
-                "stage_a": stage_a_summary.get("run_id"),
-                "stage_b": stage_b_summary.get("run_id"),
-            },
-            "completed_at": {
-                "stage_a": stage_a_summary.get("completed_at"),
-                "stage_b": stage_b_summary.get("completed_at"),
-            },
-            "statuses": {
-                "stage_a": stage_a_summary.get("status"),
-                "stage_b": stage_b_summary.get("status"),
-            },
-        }
 
-    metrics["missing"] = missing
     return metrics
 
 
@@ -961,8 +1044,12 @@ def _stage_c2_command(log_dir: Path) -> Sequence[str]:
     ]
 
 
-def _stage_c3_command(_log_dir: Path) -> Sequence[str]:
-    return [sys.executable, "-c", "print('Stage C readiness sync starting')"]
+def _stage_c3_command(log_dir: Path) -> Sequence[str]:
+    return [
+        sys.executable,
+        "scripts/aggregate_stage_readiness.py",
+        str(log_dir),
+    ]
 
 
 def _stage_c4_command(_log_dir: Path) -> Sequence[str]:
