@@ -10,6 +10,10 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 
+from scripts._stage_runtime import bootstrap
+
+bootstrap()
+
 from connectors.operator_mcp_adapter import (
     ROTATION_WINDOW_HOURS,
     STAGE_B_TARGET_SERVICES,

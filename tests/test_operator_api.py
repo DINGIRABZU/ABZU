@@ -1,6 +1,7 @@
 """Tests for operator api."""
 
 import json
+import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -437,18 +438,50 @@ def test_stage_b3_connector_rotation_success(
         "doctrine_failures": [],
     }
     stdout = (json.dumps(result, indent=2) + "\n").encode("utf-8")
-    rotation_log = Path("logs") / "stage_b_rotation_drills.jsonl"
-    rotation_log.parent.mkdir(exist_ok=True)
+    repo_root = Path(operator_api.__file__).resolve().parent
+    rotation_log = repo_root / "logs" / "stage_b_rotation_drills.jsonl"
+    rotation_log.parent.mkdir(parents=True, exist_ok=True)
+    original_text = (
+        rotation_log.read_text(encoding="utf-8") if rotation_log.exists() else ""
+    )
     rotation_log.write_text(json.dumps({"connector_id": "operator_api"}) + "\n")
-    configure_subprocess(monkeypatch, stdout=stdout)
 
-    resp = client.post("/alpha/stage-b3-connector-rotation")
-    assert resp.status_code == 200
-    body = resp.json()
-    metrics = body["metrics"]
-    assert metrics["accepted_contexts"] == ["stage-b-rehearsal"]
-    copied = Path(body["log_dir"]) / "stage_b_rotation_drills.jsonl"
-    assert copied.exists()
+    recorded: dict[str, Any] = {}
+
+    def _simulate_spawn(args: tuple[Any, ...]) -> None:
+        recorded["args"] = args
+        entry = {
+            "connector_id": "operator_api",
+            "rotated_at": "2025-10-01T00:00:00Z",
+            "window_hours": operator_api.ROTATION_WINDOW_HOURS,
+        }
+        with rotation_log.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(entry) + "\n")
+
+    configure_subprocess(monkeypatch, stdout=stdout, on_spawn=_simulate_spawn)
+
+    log_dir_path: Path | None = None
+    try:
+        resp = client.post("/alpha/stage-b3-connector-rotation")
+        assert resp.status_code == 200
+        body = resp.json()
+        metrics = body["metrics"]
+        assert metrics["accepted_contexts"] == ["stage-b-rehearsal"]
+        log_dir_path = Path(body["log_dir"])
+        copied = log_dir_path / "stage_b_rotation_drills.jsonl"
+        assert copied.exists()
+        args = recorded.get("args")
+        assert args is not None
+        assert Path(args[1]) == repo_root / "scripts" / "stage_b_smoke.py"
+        ledger_lines = rotation_log.read_text(encoding="utf-8").splitlines()
+        assert any("2025-10-01T00:00:00Z" in line for line in ledger_lines)
+    finally:
+        if log_dir_path and log_dir_path.exists():
+            shutil.rmtree(log_dir_path, ignore_errors=True)
+        if original_text:
+            rotation_log.write_text(original_text, encoding="utf-8")
+        else:
+            rotation_log.unlink(missing_ok=True)
 
 
 def test_stage_b3_connector_rotation_failure(
@@ -622,17 +655,58 @@ def test_stage_c4_operator_mcp_drill_success(
         operator_api._LAST_CREDENTIAL_EXPIRY = datetime.now(timezone.utc)
 
     monkeypatch.setattr(operator_api, "_ensure_mcp_ready_for_request", _ensure_ready)
-    configure_subprocess(monkeypatch, stdout=b"drill\n")
-    resp = client.post("/alpha/stage-c4-operator-mcp-drill")
-    assert resp.status_code == 200
-    body = resp.json()
-    metrics = body["metrics"]
-    assert metrics["handshake"]["session"]["id"] == "sess-1"
-    assert metrics["heartbeat_emitted"] is True
-    assert Path(body["log_dir"]).exists()
-    operator_api._MCP_ADAPTER = None
-    operator_api._MCP_SESSION = None
-    operator_api._LAST_CREDENTIAL_EXPIRY = None
+    repo_root = Path(operator_api.__file__).resolve().parent
+    recorded: dict[str, Any] = {}
+
+    def _simulate(args: tuple[Any, ...]) -> None:
+        recorded["args"] = args
+        output_dir = Path(args[-1])
+        output_dir.mkdir(parents=True, exist_ok=True)
+        handshake_path = output_dir / "mcp_handshake.json"
+        heartbeat_path = output_dir / "heartbeat.json"
+        handshake_payload = {
+            "session": {
+                "id": "sess-1",
+                "credential_expiry": "2025-12-01T00:00:00Z",
+            },
+            "accepted_contexts": ["stage-b-rehearsal"],
+        }
+        handshake_path.write_text(
+            json.dumps(handshake_payload),
+            encoding="utf-8",
+        )
+        heartbeat_path.write_text(
+            json.dumps(
+                {
+                    "event": "stage-c4-operator-mcp-drill",
+                    "payload": {"ok": True},
+                    "credential_expiry": "2025-12-01T00:00:00Z",
+                    "rotation_window_hours": operator_api.ROTATION_WINDOW_HOURS,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    configure_subprocess(monkeypatch, stdout=b"drill\n", on_spawn=_simulate)
+    log_dir_path: Path | None = None
+    try:
+        resp = client.post("/alpha/stage-c4-operator-mcp-drill")
+        assert resp.status_code == 200
+        body = resp.json()
+        metrics = body["metrics"]
+        assert metrics["handshake"]["session"]["id"] == "sess-1"
+        assert metrics["heartbeat_emitted"] is True
+        log_dir_path = Path(body["log_dir"])
+        assert log_dir_path.exists()
+        args = recorded.get("args")
+        assert args is not None
+        assert Path(args[1]) == repo_root / "scripts" / "stage_c_mcp_drill.py"
+    finally:
+        if log_dir_path and log_dir_path.exists():
+            shutil.rmtree(log_dir_path, ignore_errors=True)
+        operator_api._MCP_ADAPTER = None
+        operator_api._MCP_SESSION = None
+        operator_api._LAST_CREDENTIAL_EXPIRY = None
 
 
 def test_stage_c4_operator_mcp_drill_failure(
