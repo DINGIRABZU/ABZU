@@ -51,6 +51,7 @@ from memory import query_memory
 from razar import ai_invoker, boot_orchestrator
 from scripts.ingest_ethics import ingest_ethics as run_ingest_ethics
 from connectors.operator_mcp_adapter import (
+    ROTATION_WINDOW_HOURS,
     OperatorMCPAdapter,
     record_rotation_drill,
     stage_b_context_enabled,
@@ -691,61 +692,61 @@ async def _stage_c4_metrics(
             "error": exc.detail,
         }
 
-    adapter = _MCP_ADAPTER
-    handshake = _sanitize_for_json(_MCP_SESSION)
-    credential_expiry = (
-        _sanitize_for_json(_LAST_CREDENTIAL_EXPIRY) if _LAST_CREDENTIAL_EXPIRY else None
-    )
+    handshake_path = log_dir / "mcp_handshake.json"
+    heartbeat_path = log_dir / "heartbeat.json"
 
-    timestamp = (
-        datetime.now(timezone.utc)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z")
-    )
-    heartbeat_payload = {
-        "event": "stage-c-mcp-drill",
-        "service": "operator_api",
-        "timestamp": timestamp,
-    }
+    artifacts = payload.setdefault("artifacts", {})
+    if handshake_path.exists():
+        artifacts.setdefault("mcp_handshake", str(handshake_path))
+    if heartbeat_path.exists():
+        artifacts.setdefault("heartbeat", str(heartbeat_path))
 
+    handshake_data: Mapping[str, Any] | None = None
+    handshake_error: str | None = None
+    try:
+        handshake_data = json.loads(handshake_path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        handshake_error = f"missing handshake artifact: {handshake_path}"
+    except json.JSONDecodeError as exc:
+        handshake_error = f"invalid handshake artifact: {exc}"
+
+    heartbeat_data: Mapping[str, Any] | None = None
     heartbeat_error: str | None = None
-    heartbeat_emitted = False
-    if adapter is not None and hasattr(adapter, "emit_stage_b_heartbeat"):
-        try:
-            await adapter.emit_stage_b_heartbeat(
-                heartbeat_payload, credential_expiry=_LAST_CREDENTIAL_EXPIRY
-            )
-            heartbeat_emitted = True
-        except Exception as exc:  # pragma: no cover - defensive
-            heartbeat_error = str(exc)
+    heartbeat_payload: Any = None
+    credential_expiry: Any = None
+    try:
+        heartbeat_data = json.loads(heartbeat_path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        heartbeat_error = f"missing heartbeat artifact: {heartbeat_path}"
+    except json.JSONDecodeError as exc:
+        heartbeat_error = f"invalid heartbeat artifact: {exc}"
+    else:
+        heartbeat_payload = heartbeat_data.get("payload")
+        credential_expiry = heartbeat_data.get("credential_expiry")
+
+    heartbeat_emitted = bool(heartbeat_payload)
 
     metrics: dict[str, Any] = {
-        "handshake": handshake,
-        "credential_expiry": credential_expiry,
+        "handshake": _sanitize_for_json(handshake_data),
+        "credential_expiry": _sanitize_for_json(credential_expiry),
         "heartbeat_active": bool(
             _MCP_HEARTBEAT_TASK is not None and not _MCP_HEARTBEAT_TASK.done()
         ),
         "heartbeat_emitted": heartbeat_emitted,
+        "rotation_window_hours": ROTATION_WINDOW_HOURS,
     }
+    if heartbeat_payload is not None:
+        metrics["heartbeat_payload"] = _sanitize_for_json(heartbeat_payload)
+    if handshake_error:
+        metrics["handshake_error"] = handshake_error
     if heartbeat_error:
         metrics["heartbeat_error"] = heartbeat_error
-        payload["status"] = "error"
-        payload["error"] = heartbeat_error
-    else:
-        metrics["heartbeat_payload"] = heartbeat_payload
 
-    evidence = {
-        "handshake": handshake,
-        "credential_expiry": credential_expiry,
-        "heartbeat_payload": metrics.get("heartbeat_payload"),
-        "heartbeat_error": heartbeat_error,
-    }
-    evidence_path = log_dir / "mcp_handshake.json"
-    evidence_path.write_text(
-        json.dumps(evidence, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
-    payload.setdefault("artifacts", {})["handshake"] = str(evidence_path)
+    if handshake_error or heartbeat_error:
+        payload["status"] = "error"
+        payload["error"] = "; ".join(
+            message for message in (handshake_error, heartbeat_error) if message
+        )
 
     return metrics
 
@@ -1052,8 +1053,13 @@ def _stage_c3_command(log_dir: Path) -> Sequence[str]:
     ]
 
 
-def _stage_c4_command(_log_dir: Path) -> Sequence[str]:
-    return [sys.executable, "-c", "print('Stage C MCP drill handshake')"]
+def _stage_c4_command(log_dir: Path) -> Sequence[str]:
+    return [
+        sys.executable,
+        "scripts/stage_c_mcp_drill.py",
+        "--json",
+        str(log_dir),
+    ]
 
 
 @router.post("/alpha/stage-c1-exit-checklist")
