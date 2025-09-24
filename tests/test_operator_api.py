@@ -1,13 +1,20 @@
 """Tests for operator api."""
 
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from types import ModuleType
 from typing import Any, Callable
 
 import pytest
 from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
+
+_dummy_omegaconf = ModuleType("omegaconf")
+_dummy_omegaconf.OmegaConf = object  # type: ignore[attr-defined]
+_dummy_omegaconf.DictConfig = object  # type: ignore[attr-defined]
+sys.modules.setdefault("omegaconf", _dummy_omegaconf)
 
 import operator_api
 
@@ -74,6 +81,56 @@ def configure_subprocess(
         "create_subprocess_exec",
         fake_create_subprocess_exec,
     )
+
+
+def _load_summary(path: str) -> dict[str, Any]:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def test_stage_a1_boot_telemetry_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Stage A1 reports success even when environment-limited warnings surface."""
+
+    configure_subprocess(
+        monkeypatch,
+        stdout=b"bootstrap complete\n",
+        stderr=b"environment-limited: missing optional faiss\n",
+        returncode=0,
+    )
+
+    resp = client.post("/alpha/stage-a1-boot-telemetry")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["status"] == "success"
+    assert "environment-limited" in body.get("stderr", "")
+
+    summary = _load_summary(body["summary_path"])
+    assert summary["status"] == "success"
+    assert "environment-limited" in summary.get("stderr", "")
+
+
+def test_stage_a2_crown_replays_success(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Stage A2 capture succeeds with environment-limited stderr preserved."""
+
+    configure_subprocess(
+        monkeypatch,
+        stdout=b"crown replay bundle saved\n",
+        stderr=b"environment-limited: numpy shim active\n",
+        returncode=0,
+    )
+
+    resp = client.post("/alpha/stage-a2-crown-replays")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["status"] == "success"
+    assert "environment-limited" in body.get("stderr", "")
+
+    summary = _load_summary(body["summary_path"])
+    assert summary["status"] == "success"
+    assert "environment-limited" in summary.get("stderr", "")
 
 
 def test_command_dispatches(

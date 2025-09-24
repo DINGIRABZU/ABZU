@@ -9,6 +9,14 @@ import warnings
 from pathlib import Path
 from typing import Dict
 
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR.parent) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR.parent))
+
+from scripts import _stage_runtime
+
+ROOT = _stage_runtime.bootstrap(optional_modules=["env_validation"])
+
 from env_validation import check_required
 
 REQUIRED_VARS = ("HF_TOKEN", "GITHUB_TOKEN", "OPENAI_API_KEY")
@@ -67,7 +75,7 @@ def detect_device() -> str:
 
 
 def log_hardware_support(
-    device: str, path: str | Path = "docs/hardware_support.md"
+    device: str, path: str | Path = ROOT / "docs/hardware_support.md"
 ) -> None:
     """Record hardware probe results to a Markdown file."""
     path = Path(path)
