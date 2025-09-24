@@ -94,6 +94,7 @@
 ## Stage Gate Evidence Tracker
 
 - **Stage A ledger status** – The Alpha gate bundle ledger (see [PROJECT_STATUS.md#stage-a-evidence-register](PROJECT_STATUS.md#stage-a-evidence-register)) records a successful 2025-09-20 rehearsal at 92.95 % coverage alongside the preceding 2025-09-21 dry run that surfaced the `core.task_profiler` import regression while still capturing the audit artifacts in `logs/alpha_gate/20250921T220258Z/`. Synchronize hashes and run metadata with [roadmap.md#stage-a--alpha-gate-confidence](roadmap.md#stage-a--alpha-gate-confidence) before promoting Stage B evidence so Stage C planning inherits the confirmed guardrail baseline.
+- **Stage B readiness refresh (2025-09-24)** – [`logs/stage_b/latest/readiness_index.json`](../logs/stage_b/latest/readiness_index.json) now mirrors the latest Stage A/B summaries; Stage B1 lacks the `neoabzu_memory` bindings and Stage B3 still misses the `connectors` package, while Stage B2 successfully exports `stage_b_rehearsal_packet.json`. Keep the ledger aligned with [PROJECT_STATUS.md#stage-b-evidence](PROJECT_STATUS.md#stage-b-evidence) so the Stage C readiness sync can ingest the updated pointers.【F:logs/stage_b/latest/readiness_index.json†L1-L35】【F:logs/stage_b/20250924T115245Z-stage_b1_memory_proof/summary.json†L1-L33】【F:logs/stage_b/20250924T115254Z-stage_b2_sonic_rehearsal/summary.json†L1-L24】【F:logs/stage_b/20250924T115254Z-stage_b3_connector_rotation/summary.json†L1-L25】
 
 ### Stage B Rehearsal Tracker
 
