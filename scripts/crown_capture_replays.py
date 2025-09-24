@@ -9,12 +9,32 @@ import hashlib
 import json
 import logging
 import random
+import sys
 import tempfile
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, List
 from unittest import mock
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR.parent) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR.parent))
+
+from scripts import _stage_runtime
+
+ROOT = _stage_runtime.bootstrap(
+    optional_modules=[
+        "numpy",
+        "yaml",
+        "crown_decider",
+        "crown_prompt_orchestrator",
+        "emotional_state",
+        "servant_model_manager",
+        "state_transition_engine",
+        "tools.session_logger",
+    ]
+)
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
@@ -33,11 +53,14 @@ import servant_model_manager as smm
 from state_transition_engine import StateTransitionEngine
 from tools import session_logger
 
+session_logger.AUDIO_DIR = ROOT / "logs/audio"
+session_logger.VIDEO_DIR = ROOT / "logs/video"
+
 logger = logging.getLogger(__name__)
 
-LOG_DIR = Path("logs/crown_replays")
+LOG_DIR = ROOT / "logs/crown_replays"
 INDEX_FILE = LOG_DIR / "index.json"
-DEFAULT_SCENARIO_FILE = Path("crown/replay_scenarios.yaml")
+DEFAULT_SCENARIO_FILE = ROOT / "crown/replay_scenarios.yaml"
 
 
 @dataclass

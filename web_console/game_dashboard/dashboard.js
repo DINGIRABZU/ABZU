@@ -31,7 +31,8 @@ const stageAFallback = {
     stderrPath:
       'logs/stage_a/20250924T115244Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log',
     error: 'stage_a1_boot_telemetry exited with code 1',
-    notes: 'Bootstrap script failed: env_validation module missing in container.',
+    notes:
+      'environment-limited: Stage runtime shim missing—env_validation not on sys.path inside Codex sandbox.',
   },
   'stage-a2-crown-replays': {
     status: 'error',
@@ -43,7 +44,8 @@ const stageAFallback = {
     stderrPath:
       'logs/stage_a/20250924T115245Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log',
     error: 'stage_a2_crown_replays exited with code 1',
-    notes: 'Replay capture aborted: crown_decider import unavailable.',
+    notes:
+      'environment-limited: Stage runtime shim missing—Crown modules not importable from sandbox working directory.',
   },
   'stage-a3-gate-shakeout': {
     status: 'error',
