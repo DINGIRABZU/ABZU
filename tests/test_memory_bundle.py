@@ -15,8 +15,8 @@ from memory.bundle import MemoryBundle
 
 qm = importlib.import_module("memory.query_memory")
 import pytest
-from tests import conftest as conftest_module
 from pathlib import Path
+from tests import conftest as conftest_module
 
 conftest_module.ALLOWED_TESTS.update(
     {str(Path(__file__).resolve()), str(Path(__file__))}
@@ -70,6 +70,7 @@ def test_initialize_emits_event_and_sets_ready_statuses(monkeypatch):
     producer = DummyProducer()
     set_event_producer(producer)
     bundle = MemoryBundle()
+    stubbed = getattr(bundle, "stubbed", False)
 
     statuses = bundle.initialize()
 
@@ -80,13 +81,24 @@ def test_initialize_emits_event_and_sets_ready_statuses(monkeypatch):
     expected_layers = set(LAYERS) | {"core"}
     assert set(statuses) == expected_layers
     assert set(bundle.diagnostics) == expected_layers
-    for layer in LAYERS:
-        assert bundle.diagnostics[layer]["status"] == statuses[layer]
-    assert bundle.diagnostics["core"]["status"] == statuses["core"]
+    if stubbed:
+        for layer in statuses:
+            assert statuses[layer] == "skipped"
+            diag = bundle.diagnostics[layer]
+            assert diag["status"] == "skipped"
+            assert diag["loaded_module"].endswith("neoabzu_bundle")
+            assert diag["fallback_reason"]
+    else:
+        for layer in LAYERS:
+            assert bundle.diagnostics[layer]["status"] == statuses[layer]
+        assert bundle.diagnostics["core"]["status"] == statuses["core"]
     set_event_producer(None)
 
 
 def test_initialize_marks_skipped_layer(monkeypatch):
+    if getattr(MemoryBundle(), "stubbed", False):
+        pytest.skip("Global stub active; layer import fallbacks not exercised")
+
     producer = DummyProducer()
     set_event_producer(producer)
 
@@ -120,6 +132,9 @@ def test_initialize_marks_skipped_layer(monkeypatch):
 
 
 def test_initialize_handles_import_error(monkeypatch):
+    if getattr(MemoryBundle(), "stubbed", False):
+        pytest.skip("Global stub active; layer import fallbacks not exercised")
+
     producer = DummyProducer()
     set_event_producer(producer)
 
@@ -153,34 +168,52 @@ def test_query_aggregates_results(stub_layer_queries):
     producer = DummyProducer()
     set_event_producer(producer)
     bundle = MemoryBundle()
+    stubbed = getattr(bundle, "stubbed", False)
 
     result = bundle.query("text")
 
-    assert result == {
-        "cortex": ["c"],
-        "vector": ["v"],
-        "spiral": "s",
-        "emotional": ["e"],
-        "mental": ["m"],
-        "spiritual": ["p"],
-        "narrative": ["n"],
-        "core": "core",
-        "failed_layers": [],
-    }
-    assert stub_layer_queries == [
-        "cortex",
-        "vector",
-        "spiral",
-        "emotional",
-        "mental",
-        "spiritual",
-        "narrative",
-        "core",
-    ]
+    if stubbed:
+        assert result["stubbed"] is True
+        assert result["failed_layers"] == []
+        for layer in (
+            "cortex",
+            "vector",
+            "spiral",
+            "emotional",
+            "mental",
+            "spiritual",
+            "narrative",
+        ):
+            assert layer in result
+    else:
+        assert result == {
+            "cortex": ["c"],
+            "vector": ["v"],
+            "spiral": "s",
+            "emotional": ["e"],
+            "mental": ["m"],
+            "spiritual": ["p"],
+            "narrative": ["n"],
+            "core": "core",
+            "failed_layers": [],
+        }
+        assert stub_layer_queries == [
+            "cortex",
+            "vector",
+            "spiral",
+            "emotional",
+            "mental",
+            "spiritual",
+            "narrative",
+            "core",
+        ]
 
     assert len(producer.events) in (0, 1)
     if producer.events:
-        assert producer.events[0].event_type == "query"
+        if stubbed:
+            assert producer.events[0].event_type == "layer_init"
+        else:
+            assert producer.events[0].event_type == "query"
     set_event_producer(None)
 
 
@@ -205,16 +238,37 @@ def test_memory_bundle_traces(monkeypatch, stub_layer_queries, provider):
     assert set(statuses) == expected_layers
 
     result = bundle.query("text")
-    assert result == {
-        "cortex": ["c"],
-        "vector": ["v"],
-        "spiral": "s",
-        "emotional": ["e"],
-        "mental": ["m"],
-        "spiritual": ["p"],
-        "narrative": ["n"],
-        "core": "core",
-        "failed_layers": [],
-    }
+    if getattr(bundle, "stubbed", False):
+        assert result["stubbed"] is True
+    else:
+        assert result == {
+            "cortex": ["c"],
+            "vector": ["v"],
+            "spiral": "s",
+            "emotional": ["e"],
+            "mental": ["m"],
+            "spiritual": ["p"],
+            "narrative": ["n"],
+            "core": "core",
+            "failed_layers": [],
+        }
 
     set_event_producer(None)
+
+
+def test_stubbed_bundle_diagnostics():
+    bundle = MemoryBundle()
+    if not getattr(bundle, "stubbed", False):
+        pytest.skip("neoabzu_memory available; stub diagnostics not emitted")
+
+    statuses = bundle.initialize()
+    assert all(status == "skipped" for status in statuses.values())
+    for layer, diag in bundle.diagnostics.items():
+        assert diag["status"] == "skipped"
+        assert diag["fallback_reason"] == "neoabzu_memory_unavailable"
+        assert diag["loaded_module"].endswith("memory.optional.neoabzu_bundle")
+        attempts = diag["attempts"]
+        assert attempts[0]["module"] == "neoabzu_memory"
+        assert attempts[0]["outcome"] == "error"
+        assert attempts[1]["module"] == "memory.optional.neoabzu_bundle"
+        assert attempts[1]["outcome"] == "loaded"
