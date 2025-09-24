@@ -1,6 +1,6 @@
 # Roadmap
 
-_Last updated: 2025-10-19_
+_Last updated: 2025-10-24_
 
 This roadmap tracks five core milestones on the path to a stable release. Each stage lists its expected outcome so contributors know when to advance to the next phase.
 
@@ -45,6 +45,9 @@ Operator consoles now expose Stage A automation directly through the `operator
 `POST /alpha/stage-a3-gate-shakeout`. Each call archives stdout/stderr under
 `logs/stage_a/<run_id>/` with a JSON summary so Stage B reviewers can consume gate evidence without
 leaving the dashboard.
+
+> [!IMPORTANT]
+> **Codex sandbox dependency limits.** When Stage A or Stage B rehearsals require GPUs, DAW plugins, or external connectors that the Codex sandbox cannot provide, mark affected tests as `environment-limited`, capture the skipped command output in the alpha bundle, and log the pending validation in change notes. Escalate hardware-required follow-ups through the operator risk queue in [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-c-planning-snapshot) and align messaging with [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment).
 
 ### Stage B – Subsystem hardening
 

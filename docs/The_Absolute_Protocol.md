@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.110
-**Last updated:** 2025-10-19
+**Version:** v1.0.111
+**Last updated:** 2025-10-24
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -28,6 +28,18 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
   [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md).
 
 ### Stage Gate Alignment
+
+> [!IMPORTANT]
+> **Codex sandbox dependency limits.** The hosted Codex sandbox lacks many optional system libraries, GPU drivers, audio
+> backends, and connector credentials. Treat missing dependencies as **environment-limited** rather than test regressions by
+> skipping affected checks with an explicit marker such as
+> `pytest.skip("environment-limited: FFmpeg missing in Codex sandbox")` or
+> `@pytest.mark.skipif(missing_dep, reason="environment-limited: hardware constraint")`. When Stage A alpha evidence cannot
+> execute a step, capture the skipped command output, log bundle path, and skip rationale in the `logs/alpha_gate/<timestamp>/`
+> summary JSON so auditors see that the guardrail was acknowledged and deferred. Escalate hardware-only validations (GPU
+> renders, DAW-in-the-loop rehearsals, connector drills needing live credentials) to the operator channel documented in
+> [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-c-planning-snapshot) and include an "environment-limited" entry in the bundle to
+> unblock review while remediation is scheduled.
 
 - **Stage A guardrails validated** – Gate automation, coverage enforcement, and identity drift checks are now locked into the Alpha evidence bundle. Run `scripts/run_alpha_gate.sh` so packaging, health checks, `pytest --cov` exports, and the `python scripts/check_identity_sync.py` report land in `logs/alpha_gate/<timestamp>/`, matching the [Stage A roadmap commitments](roadmap.md#stage-a--alpha-gate-confidence). Maintain ≥ 90 % coverage through the feeds outlined in [system_blueprint.md#stage-gate-evidence](system_blueprint.md#stage-gate-evidence) and record bundle hashes in the [Doctrine Index](doctrine_index.md) to preserve the guardrail audit trail. The latest ledger (see [PROJECT_STATUS.md#stage-a-evidence-register](PROJECT_STATUS.md#stage-a-evidence-register)) confirms a successful 2025-09-20 rehearsal at 92.95 % coverage alongside the earlier 2025-09-21 dry run that logged an import regression while still capturing the audit bundle in `logs/alpha_gate/20250921T220258Z/`. Operators may now trigger the boot telemetry, replay capture, and gate shakeout directly from the console via `operator_api` (`POST /alpha/stage-a1-boot-telemetry`, `/alpha/stage-a2-crown-replays`, `/alpha/stage-a3-gate-shakeout`), which mirror the manual scripts and emit `logs/stage_a/<run_id>/summary.json` plus stdout/stderr for audit stitching.
 - **Stage A evidence synchronization** – Cross-link Alpha gate updates across [roadmap.md](roadmap.md#stage-a--alpha-gate-confidence), [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-a-evidence-register), and [`logs/alpha_gate/`](../logs/alpha_gate/) before requesting Stage B reviews so Stage C planning inherits the same bundle IDs and coverage notes.

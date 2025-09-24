@@ -270,7 +270,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [SOCIAL_INVESTOR_ONE_PAGER.md](SOCIAL_INVESTOR_ONE_PAGER.md) | ABZU: Social Investor One-Pager | --- | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.110 **Last updated:** 2025-10-19 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/crown_handshake_stage_b.py`, `../connectors/operator_api_stage_b.py`, `../connectors/operator_upload_stage_b.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py`, `../scripts/verify_blueprint_refs.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.111 **Last updated:** 2025-10-24 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/crown_handshake_stage_b.py`, `../connectors/operator_api_stage_b.py`, `../connectors/operator_upload_stage_b.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py`, `../scripts/verify_blueprint_refs.py` |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -496,7 +496,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
-| [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-10-19_ | - |
+| [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-10-24_ | - |
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
 | [runbooks/razar_escalation.md](runbooks/razar_escalation.md) | RAZAR Escalation Runbook | RAZAR escalates stubborn component failures through a remote ladder when on-host self-healing loops cannot restore se... | - |
 | [runbooks/sonic_rehearsal_guide.md](runbooks/sonic_rehearsal_guide.md) | Sonic Rehearsal Guide | The sonic rehearsal ritual validates the playback pipeline before Stage B sessions. The environment must honour the e... | - |

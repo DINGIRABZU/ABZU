@@ -20,5 +20,8 @@ Standard workflow for updating documentation and guides.
 10. **Run `python scripts/verify_docs_up_to_date.py`** to confirm the doctrine index timestamps and
     feature references are current before submitting a pull request.
 
+> [!IMPORTANT]
+> **Document environment-limited skips.** When the Codex sandbox blocks dependencies or hardware (GPU-only flows, DAW toolchains, connector credentials), call out the "environment-limited" skip in both the change log excerpt and PR summary. Reference the escalation workflow in [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment) and mirror the skip reason used in tests or gate scripts so reviewers can trace deferred validations.
+
 11. **Run `python scripts/check_connectors.py`** whenever files in `connectors/` or related modules change. The script fails on placeholder markers or missing MCP adoption. Every connector update must also refresh the corresponding documentation with protocol and heartbeat details.
 
