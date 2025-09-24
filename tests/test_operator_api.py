@@ -415,6 +415,8 @@ def test_stage_c1_exit_checklist_success(
     body = resp.json()
     assert body["metrics"]["completed"] is True
     assert body["metrics"]["unchecked_count"] == 0
+    assert body["metrics"]["failing_count"] == 0
+    assert body["metrics"]["failing_items"] == []
     assert Path(body["log_dir"]).exists()
 
 
@@ -432,6 +434,32 @@ def test_stage_c1_exit_checklist_failure(
     resp = client.post("/alpha/stage-c1-exit-checklist")
     assert resp.status_code == 500
     assert "checklist" in resp.json()["detail"]
+
+
+def test_stage_c1_exit_checklist_checked_failure(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    stdout = b"- [x] item resolved (Status: failed)\n"
+    configure_subprocess(
+        monkeypatch,
+        stdout=stdout,
+    )
+    resp = client.post("/alpha/stage-c1-exit-checklist")
+    assert resp.status_code == 500
+    assert "failing items" in resp.json()["detail"].lower()
+
+
+def test_stage_c1_metrics_marks_failing_status(tmp_path: Path) -> None:
+    payload: dict[str, Any] = {"status": "success"}
+    stdout = """
+    - [x] item one (Status: blocked)
+    - [x] item two (status: failed)
+    """.strip()
+    metrics = operator_api._stage_c1_metrics(stdout, "", tmp_path, payload)
+    assert metrics["failing_count"] == 2
+    assert metrics["completed"] is False
+    assert payload["status"] == "error"
+    assert payload["error"] == "checklist contains failing items"
 
 
 def test_stage_c2_demo_storyline_success(
