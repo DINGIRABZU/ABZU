@@ -79,6 +79,9 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 
 | Timestamp (UTC) | Location | Notes |
 | --- | --- | --- |
+| 2025-09-24T11:52:45Z | `logs/stage_a/20250924T115245Z-stage_a3_gate_shakeout/summary.json` | Stage A3 gate shakeout recorded the automation transcript but still exited with status 1; investigate the follow-up triage noted in the summary before re-running. |
+| 2025-09-24T11:52:45Z | `logs/stage_a/20250924T115245Z-stage_a2_crown_replays/summary.json` | Crown replay capture failed immediately because the `crown_decider` module is unavailable inside the container, leaving determinism checks blocked. |
+| 2025-09-24T11:52:45Z | `logs/stage_a/20250924T115244Z-stage_a1_boot_telemetry/summary.json` | Boot telemetry aborted during dependency validation; `env_validation` is missing so the bootstrap script cannot verify required environment variables. |
 | 2025-09-23T20:05:07Z | `logs/stage_a/20250923T200435Z-stage_a3_gate_shakeout/summary.json` | Stage A3 gate shakeout packaged the wheel and passed requirements checks, but the self-healing verification step reported no successful cycles in the prior 24 h, so the run exited with status 1 and acceptance tests were skipped. |
 | 2025-09-23T20:04:21Z | `logs/stage_a/20250923T200406Z-stage_a2_crown_replays/summary.json` | Stage A2 Crown replay capture again failed determinism: the `crown_glm_reflection` scenario hash diverged and the Neo4j driver remained unavailable, preventing task flow logging despite audio/video artifacts being captured. |
 | 2025-09-23T20:03:37Z | `logs/stage_a/20250923T200333Z-stage_a1_boot_telemetry/summary.json` | Stage A1 boot telemetry stalled after reinstalling `faiss-cpu`; the bootstrap script aborted because HF_TOKEN, GITHUB_TOKEN, and OPENAI_API_KEY environment variables were missing in the container. |
@@ -87,6 +90,7 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 
 ### Stage B evidence
 
+- **Readiness ledger refresh (2025-09-24)** – [`readiness_index.json`](../logs/stage_b/latest/readiness_index.json) records the newest Stage A/B summaries for Stage C ingestion. Stage B1 and Stage B3 runs still exit early because `neoabzu_memory` and the `connectors` package are missing, while Stage B2 succeeds and publishes `stage_b_rehearsal_packet.json` for review.【F:logs/stage_b/latest/readiness_index.json†L1-L35】【F:logs/stage_b/20250924T115245Z-stage_b1_memory_proof/summary.json†L1-L33】【F:logs/stage_b/20250924T115254Z-stage_b2_sonic_rehearsal/summary.json†L1-L24】【F:logs/stage_b/20250924T115254Z-stage_b3_connector_rotation/summary.json†L1-L25】
 - **Load test (2025-09-20)** – [`load_test_summary.json`](../logs/stage_b/20250920T222728Z/load_test_summary.json) captures the 10 k document vector memory ingestion with p95 query latency at 19.95 ms and fallback store p95 at 93.92 ms, confirming the CPU rehearsal meets the <100 ms goal while preserving write throughput margins.【F:logs/stage_b/20250920T222728Z/load_test_summary.json†L1-L61】
 - **Rehearsal bundle (2025-09-21)** – [`rehearsals/summary.json`](../logs/stage_b/20250921T230434Z/rehearsals/summary.json) documents two three-step sessions with ≤67 ms sync drift and no dropouts, but flags missing FFmpeg, simpleaudio, CLAP, and RAVE dependencies forcing NumPy audio fallbacks.【F:logs/stage_b/20250921T230434Z/rehearsals/summary.json†L1-L40】
 - **Connector rotation run (2025-09-21)** – [`rehearsal_summary.json`](../logs/stage_b/20250921T122529Z/rehearsal_summary.json) records successful Stage B smoke validation, refreshed operator and crown credentials, and 48 h rotations across operator_api, operator_upload, and crown_handshake, while doctrine automation still reports the missing MCP adapter status note.【F:logs/stage_b/20250921T122529Z/rehearsal_summary.json†L1-L63】
@@ -95,6 +99,7 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 
 - **Audio dependency remediation:** Rehearsal audio checks continue to report missing FFmpeg, simpleaudio, CLAP, and RAVE packages, locking media playback into fallback modes until the toolchain is provisioned.【F:logs/stage_b/20250921T230434Z/rehearsals/summary.json†L23-L40】
 - **Health automation activation:** Stage B rehearsal health checks remain skipped, indicating the automated probes still need wiring before Stage C gate reviews.【F:logs/stage_b/20250921T122529Z/rehearsal_summary.json†L4-L15】
+- **Memory and connector prerequisites:** The latest readiness sweep shows `neoabzu_memory` and the `connectors` package absent from the runtime, blocking Stage B1 and Stage B3; install the Rust bundle and ensure the repository root stays on `PYTHONPATH` ahead of the Stage C3 readiness sync.【F:logs/stage_b/latest/readiness_index.json†L1-L35】【F:logs/stage_b/20250924T115245Z-stage_b1_memory_proof/summary.json†L1-L33】【F:logs/stage_b/20250924T115254Z-stage_b3_connector_rotation/summary.json†L1-L25】
 
 ## Deprecation Roadmap
 

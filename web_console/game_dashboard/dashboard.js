@@ -20,6 +20,85 @@ const stageTitles = {
   'stage-c': 'Stage C – Continuity Planning',
 };
 
+const stageAFallback = {
+  'stage-a1-boot-telemetry': {
+    status: 'error',
+    runId: '20250924T115244Z-stage_a1_boot_telemetry',
+    logDir: 'logs/stage_a/20250924T115244Z-stage_a1_boot_telemetry',
+    summaryPath: 'logs/stage_a/20250924T115244Z-stage_a1_boot_telemetry/summary.json',
+    stdoutPath:
+      'logs/stage_a/20250924T115244Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stdout.log',
+    stderrPath:
+      'logs/stage_a/20250924T115244Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log',
+    error: 'stage_a1_boot_telemetry exited with code 1',
+    notes: 'Bootstrap script failed: env_validation module missing in container.',
+  },
+  'stage-a2-crown-replays': {
+    status: 'error',
+    runId: '20250924T115245Z-stage_a2_crown_replays',
+    logDir: 'logs/stage_a/20250924T115245Z-stage_a2_crown_replays',
+    summaryPath: 'logs/stage_a/20250924T115245Z-stage_a2_crown_replays/summary.json',
+    stdoutPath:
+      'logs/stage_a/20250924T115245Z-stage_a2_crown_replays/stage_a2_crown_replays.stdout.log',
+    stderrPath:
+      'logs/stage_a/20250924T115245Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log',
+    error: 'stage_a2_crown_replays exited with code 1',
+    notes: 'Replay capture aborted: crown_decider import unavailable.',
+  },
+  'stage-a3-gate-shakeout': {
+    status: 'error',
+    runId: '20250924T115245Z-stage_a3_gate_shakeout',
+    logDir: 'logs/stage_a/20250924T115245Z-stage_a3_gate_shakeout',
+    summaryPath: 'logs/stage_a/20250924T115245Z-stage_a3_gate_shakeout/summary.json',
+    stdoutPath:
+      'logs/stage_a/20250924T115245Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stdout.log',
+    stderrPath:
+      'logs/stage_a/20250924T115245Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stderr.log',
+    error: 'stage_a3_gate_shakeout exited with code 1',
+    notes: 'Gate shakeout logged completion but exited non-zero for follow-up triage.',
+  },
+};
+
+const stageBFallback = {
+  'stage-b1-memory-proof': {
+    status: 'error',
+    runId: '20250924T115245Z-stage_b1_memory_proof',
+    logDir: 'logs/stage_b/20250924T115245Z-stage_b1_memory_proof',
+    summaryPath: 'logs/stage_b/20250924T115245Z-stage_b1_memory_proof/summary.json',
+    stdoutPath:
+      'logs/stage_b/20250924T115245Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log',
+    stderrPath:
+      'logs/stage_b/20250924T115245Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log',
+    error: 'stage_b1_memory_proof exited with code 1',
+    metricsError: 'no JSON payload found in command stdout',
+    notes: "Rust neoabzu_memory bindings missing; load proof can't initialise bundle.",
+  },
+  'stage-b2-sonic-rehearsal': {
+    status: 'success',
+    runId: '20250924T115254Z-stage_b2_sonic_rehearsal',
+    logDir: 'logs/stage_b/20250924T115254Z-stage_b2_sonic_rehearsal',
+    summaryPath: 'logs/stage_b/20250924T115254Z-stage_b2_sonic_rehearsal/summary.json',
+    stdoutPath:
+      'logs/stage_b/20250924T115254Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stdout.log',
+    stderrPath:
+      'logs/stage_b/20250924T115254Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stderr.log',
+    notes: 'Rehearsal packet exported to stage_b_rehearsal_packet.json.',
+  },
+  'stage-b3-connector-rotation': {
+    status: 'error',
+    runId: '20250924T115254Z-stage_b3_connector_rotation',
+    logDir: 'logs/stage_b/20250924T115254Z-stage_b3_connector_rotation',
+    summaryPath: 'logs/stage_b/20250924T115254Z-stage_b3_connector_rotation/summary.json',
+    stdoutPath:
+      'logs/stage_b/20250924T115254Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stdout.log',
+    stderrPath:
+      'logs/stage_b/20250924T115254Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stderr.log',
+    error: 'stage_b3_connector_rotation exited with code 1',
+    metricsError: 'no JSON payload found in command stdout',
+    notes: 'Connector rehearsal blocked: connectors package import failed inside smoke script.',
+  },
+};
+
 function GameDashboard() {
   const appendLog = React.useCallback((lines) => {
     const logEl = document.getElementById('event-log');
@@ -115,61 +194,205 @@ function GameDashboard() {
     return lines;
   }, []);
 
-  const createStageAAction = React.useCallback(
-    ({ id, label, endpoint }) =>
-      createLoggedAction(
-        id,
-        label,
-        () =>
-          fetch(`${BASE_URL}${endpoint}`, { method: 'POST' })
-            .then(async (response) => {
-              const text = await response.text();
-              let data = {};
-              if (text) {
-                try {
-                  data = JSON.parse(text);
-                } catch (err) {
-                  data = {
-                    status: 'error',
-                    error: `Failed to parse response JSON: ${err}`,
-                    raw: text,
-                  };
-                }
-              }
-              const payload = {
-                status: response.ok ? 'success' : 'error',
-                status_code: response.status,
-                ...data,
-              };
-              appendLog(formatStageABlock(label, payload));
-              if (!response.ok || payload.status === 'error') {
-                const error = new Error(
-                  payload.error ||
-                    payload.detail ||
-                    `${label} failed with status ${response.status}`
-                );
-                error.stageAResult = payload;
-                throw error;
-              }
-              return payload;
-            }),
-        {
-          onError: (error) => {
-            if (error?.stageAResult) {
-              return;
-            }
-            const payload = {
-              status: 'error',
-              error: error?.message ?? String(error),
-            };
-            appendLog(formatStageABlock(label, payload));
-          },
-        }
-      ),
-    [appendLog, createLoggedAction, formatStageABlock]
+  const [stageAResults, setStageAResults] = React.useState(() => ({
+    ...stageAFallback,
+  }));
+  const renderStageADetails = React.useCallback(
+    (id) => {
+      const entry = stageAResults[id] ?? stageAFallback[id];
+      if (!entry) return null;
+      const elements = [];
+      if (entry.status) {
+        elements.push(
+          React.createElement(
+            'p',
+            {
+              key: 'status',
+              className: `mission-stage__status mission-stage__status--${entry.status}`,
+            },
+            `Status: ${entry.status}`
+          )
+        );
+      }
+      if (entry.runId) {
+        elements.push(
+          React.createElement('p', { key: 'run' }, `Run ID: ${entry.runId}`)
+        );
+      }
+      if (entry.logDir) {
+        elements.push(
+          React.createElement('p', { key: 'logs' }, `Log dir: ${entry.logDir}`)
+        );
+      }
+      if (entry.summaryPath) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'summary-path' },
+            `Summary: ${entry.summaryPath}`
+          )
+        );
+      }
+      if (entry.stdoutPath) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'stdout-path' },
+            `Stdout: ${entry.stdoutPath}`
+          )
+        );
+      }
+      if (entry.stderrPath) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'stderr-path' },
+            `Stderr: ${entry.stderrPath}`
+          )
+        );
+      }
+      if (entry.startedAt) {
+        elements.push(
+          React.createElement('p', { key: 'started' }, `Started: ${entry.startedAt}`)
+        );
+      }
+      if (entry.completedAt) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'completed' },
+            `Completed: ${entry.completedAt}`
+          )
+        );
+      }
+      if (entry.error) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'error', className: 'mission-stage__error' },
+            `Error: ${entry.error}`
+          )
+        );
+      }
+      if (entry.notes) {
+        elements.push(
+          React.createElement('p', { key: 'notes' }, `Notes: ${entry.notes}`)
+        );
+      }
+      return React.createElement(
+        'div',
+        { className: 'mission-stage__details', key: `${id}-details` },
+        elements
+      );
+    },
+    [stageAResults]
   );
 
-  const [stageBResults, setStageBResults] = React.useState({});
+  const createStageAAction = React.useCallback(
+    ({ id, label, endpoint }) => {
+      const execute = () => {
+        const startedAt = new Date().toISOString();
+        setStageAResults((prev) => ({
+          ...prev,
+          [id]: {
+            ...(prev[id] ?? stageAFallback[id] ?? {}),
+            status: 'running',
+            startedAt,
+            completedAt: null,
+            error: null,
+            responseStatus: null,
+          },
+        }));
+        return fetch(`${BASE_URL}${endpoint}`, { method: 'POST' })
+          .then(async (response) => {
+            const text = await response.text();
+            let data = {};
+            if (text) {
+              try {
+                data = JSON.parse(text);
+              } catch (err) {
+                data = {
+                  status: 'error',
+                  error: `Failed to parse response JSON: ${err}`,
+                  raw: text,
+                };
+              }
+            }
+            const payload = {
+              status: response.ok ? 'success' : 'error',
+              status_code: response.status,
+              ...data,
+            };
+            appendLog(formatStageABlock(label, payload));
+            const fallback = stageAFallback[id] ?? {};
+            const completedAt = new Date().toISOString();
+            const baseUpdate = {
+              status: payload.status,
+              startedAt,
+              completedAt,
+              runId: payload.run_id ?? fallback.runId ?? null,
+              logDir: payload.log_dir ?? fallback.logDir ?? null,
+              summaryPath: payload.summary_path ?? fallback.summaryPath ?? null,
+              stdoutPath: payload.stdout_path ?? fallback.stdoutPath ?? null,
+              stderrPath: payload.stderr_path ?? fallback.stderrPath ?? null,
+              responseStatus: response.status,
+              error: payload.error || payload.detail || null,
+              notes: fallback.notes ?? null,
+            };
+            setStageAResults((prev) => ({ ...prev, [id]: baseUpdate }));
+            if (!response.ok || payload.status === 'error') {
+              const error = new Error(
+                baseUpdate.error || `${label} failed with status ${response.status}`
+              );
+              error.stageAResult = payload;
+              throw error;
+            }
+            return payload;
+          })
+          .catch((error) => {
+            const fallback = stageAFallback[id] ?? {};
+            setStageAResults((prev) => ({
+              ...prev,
+              [id]: {
+                ...(prev[id] ?? fallback),
+                status: 'error',
+                completedAt: new Date().toISOString(),
+                error:
+                  error?.stageAResult?.error ||
+                  error?.stageAResult?.detail ||
+                  error?.message ||
+                  String(error),
+                notes: fallback.notes ?? null,
+              },
+            }));
+            throw error;
+          });
+      };
+
+      const action = createLoggedAction(id, label, execute, {
+        onError: (error) => {
+          if (error?.stageAResult) {
+            return;
+          }
+          const payload = {
+            status: 'error',
+            error: error?.message ?? String(error),
+          };
+          appendLog(formatStageABlock(label, payload));
+        },
+      });
+
+      return {
+        ...action,
+        renderDetails: () => renderStageADetails(id),
+      };
+    },
+    [appendLog, createLoggedAction, formatStageABlock, renderStageADetails]
+  );
+
+  const [stageBResults, setStageBResults] = React.useState(() => ({
+    ...stageBFallback,
+  }));
   const [stageCResults, setStageCResults] = React.useState({});
 
   const logStreamChunk = React.useCallback(
@@ -223,7 +446,7 @@ function GameDashboard() {
 
   const renderStageBDetails = React.useCallback(
     (id) => {
-      const entry = stageBResults[id];
+      const entry = stageBResults[id] ?? stageBFallback[id];
       if (!entry) return null;
       const elements = [];
       elements.push(
@@ -315,6 +538,11 @@ function GameDashboard() {
           )
         );
       }
+      if (entry.notes) {
+        elements.push(
+          React.createElement('p', { key: 'notes' }, `Notes: ${entry.notes}`)
+        );
+      }
       if (entry.metrics) {
         elements.push(
           React.createElement(
@@ -349,6 +577,7 @@ function GameDashboard() {
         setStageBResults((prev) => ({
           ...prev,
           [id]: {
+            ...(prev[id] ?? stageBFallback[id] ?? {}),
             status: 'running',
             startedAt,
             completedAt: null,
@@ -374,7 +603,7 @@ function GameDashboard() {
           setStageBResults((prev) => ({
             ...prev,
             [id]: {
-              ...(prev[id] ?? {}),
+              ...(prev[id] ?? stageBFallback[id] ?? {}),
               status: 'error',
               startedAt,
               completedAt,
@@ -394,6 +623,7 @@ function GameDashboard() {
         };
         appendLog(formatStageABlock(label, payload));
         const completedAt = new Date().toISOString();
+        const fallback = stageBFallback[id] ?? {};
         const baseUpdate = {
           status: payload.status,
           startedAt,
@@ -402,12 +632,13 @@ function GameDashboard() {
           metrics: payload.metrics ?? null,
           metricsError: payload.metrics_error ?? null,
           runId: payload.run_id ?? null,
-          logDir: payload.log_dir ?? null,
-          summaryPath: payload.summary_path ?? null,
-          stdoutPath: payload.stdout_path ?? null,
-          stderrPath: payload.stderr_path ?? null,
+          logDir: payload.log_dir ?? fallback.logDir ?? null,
+          summaryPath: payload.summary_path ?? fallback.summaryPath ?? null,
+          stdoutPath: payload.stdout_path ?? fallback.stdoutPath ?? null,
+          stderrPath: payload.stderr_path ?? fallback.stderrPath ?? null,
           responseStatus: response.status,
           rawResponse: raw,
+          notes: fallback.notes ?? null,
         };
         if (payload.status !== 'success') {
           baseUpdate.error =
@@ -438,7 +669,7 @@ function GameDashboard() {
           setStageBResults((prev) => ({
             ...prev,
             [id]: {
-              ...(prev[id] ?? {}),
+              ...(prev[id] ?? stageBFallback[id] ?? {}),
               status: 'error',
               error: error?.message ?? String(error),
               completedAt: new Date().toISOString(),

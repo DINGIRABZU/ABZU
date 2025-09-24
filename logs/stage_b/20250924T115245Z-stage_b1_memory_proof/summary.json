@@ -1,0 +1,34 @@
+{
+  "status": "error",
+  "stage": "stage_b1_memory_proof",
+  "run_id": "20250924T115245Z-stage_b1_memory_proof",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "scripts/memory_load_proof.py",
+    "data/vector_memory_scaling/corpus.jsonl",
+    "--limit",
+    "1000"
+  ],
+  "returncode": 1,
+  "started_at": "2025-09-24T11:52:45.616486+00:00",
+  "completed_at": "2025-09-24T11:52:54.403520+00:00",
+  "duration_seconds": 8.787034,
+  "log_dir": "logs/stage_b/20250924T115245Z-stage_b1_memory_proof",
+  "stdout_path": "logs/stage_b/20250924T115245Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+  "stderr_path": "logs/stage_b/20250924T115245Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+  "stdout_lines": 0,
+  "stderr_lines": 8,
+  "stderr_tail": [
+    "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)",
+    "  warnings.warn(",
+    "Traceback (most recent call last):",
+    "  File \"/workspace/ABZU/scripts/memory_load_proof.py\", line 34, in <module>",
+    "    from memory.bundle import MemoryBundle",
+    "  File \"/workspace/ABZU/memory/bundle.py\", line 9, in <module>",
+    "    from neoabzu_memory import MemoryBundle as _RustBundle",
+    "ModuleNotFoundError: No module named 'neoabzu_memory'"
+  ],
+  "stderr": "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)\n  warnings.warn(\nTraceback (most recent call last):\n  File \"/workspace/ABZU/scripts/memory_load_proof.py\", line 34, in <module>\n    from memory.bundle import MemoryBundle\n  File \"/workspace/ABZU/memory/bundle.py\", line 9, in <module>\n    from neoabzu_memory import MemoryBundle as _RustBundle\nModuleNotFoundError: No module named 'neoabzu_memory'\n",
+  "error": "stage_b1_memory_proof exited with code 1",
+  "metrics_error": "no JSON payload found in command stdout"
+}
