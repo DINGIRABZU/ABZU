@@ -583,6 +583,9 @@ def _stage_c3_metrics(
         stage_b_section = dict(bundle_data.get("stage_b") or {})
         stage_a_summary = stage_a_section.get("summary")
         stage_b_summary = stage_b_section.get("summary")
+        if bundle_data.get("generated_at"):
+            metrics["generated_at"] = bundle_data["generated_at"]
+        metrics["missing"] = list(bundle_data.get("missing") or [])
     else:
         stage_a_path, stage_a_summary = _latest_stage_summary(_STAGE_A_ROOT)
         stage_b_path, stage_b_summary = _latest_stage_summary(_STAGE_B_ROOT)
@@ -599,6 +602,14 @@ def _stage_c3_metrics(
             "artifacts": [],
             "risk_notes": [] if stage_b_summary else ["readiness summary missing"],
         }
+        metrics["missing"] = [
+            stage
+            for stage, summary in (
+                ("stage_a", stage_a_summary),
+                ("stage_b", stage_b_summary),
+            )
+            if summary is None
+        ]
 
     def _ensure_list(value: Any) -> list[str]:
         if isinstance(value, list):
@@ -622,7 +633,7 @@ def _stage_c3_metrics(
         status_a = _get(summary_a, "status") or "missing"
         status_b = _get(summary_b, "status") or "missing"
         merged_payload = {
-            "run_ids": {
+            "latest_runs": {
                 "stage_a": _get(summary_a, "run_id"),
                 "stage_b": _get(summary_b, "run_id"),
             },
@@ -663,17 +674,6 @@ def _stage_c3_metrics(
         bundle_data["merged"] = merged_snapshot
         metrics["bundle"] = bundle_data
 
-    missing = [
-        stage
-        for stage, summary in (
-            ("stage_a", stage_a_summary),
-            ("stage_b", stage_b_summary),
-        )
-        if summary is None
-    ]
-
-    metrics["missing"] = missing
-
     artifacts = payload.setdefault("artifacts", {})
     if bundle_path.exists():
         artifacts.setdefault("readiness_bundle", str(bundle_path))
@@ -685,9 +685,12 @@ def _stage_c3_metrics(
         for index, artifact_path in enumerate(section.get("artifacts") or []):
             artifacts.setdefault(f"{label}_artifact_{index + 1}", artifact_path)
 
-    if missing:
+    if metrics["missing"]:
         payload["status"] = "error"
-        payload["error"] = f"missing readiness summaries: {', '.join(missing)}"
+        payload["error"] = (
+            "missing readiness summaries: "
+            f"{', '.join(metrics['missing'])}"
+        )
 
     return metrics
 
