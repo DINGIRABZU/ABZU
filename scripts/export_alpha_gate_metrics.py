@@ -6,12 +6,58 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import warnings
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
 
-from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR.parent) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR.parent))
+
+from scripts import _stage_runtime
+
+_stage_runtime.bootstrap(optional_modules=[])
+
+try:  # pragma: no cover - optional dependency varies per sandbox
+    from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
+except Exception as exc:  # pragma: no cover - sandbox fallback
+    warnings.warn(
+        f"environment-limited: prometheus_client unavailable ({exc})",
+        _stage_runtime.EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+
+    class CollectorRegistry(dict):  # type: ignore[override]
+        """Minimal stub that stores registered metrics in-memory."""
+
+    class Gauge:  # type: ignore[override]
+        def __init__(
+            self,
+            _name: str,
+            _documentation: str,
+            labelnames: Iterable[str] | None = None,
+            *,
+            registry: CollectorRegistry | None = None,
+        ) -> None:
+            self._labels = {name: None for name in labelnames or []}
+            if registry is not None:
+                registry.setdefault(_name, self)
+
+        def labels(self, **labels: Any) -> "Gauge":
+            self._labels.update(labels)
+            return self
+
+        def set(self, _value: Any) -> None:
+            self._value = _value  # pragma: no cover - stored for completeness
+
+    def write_to_textfile(path: str, registry: CollectorRegistry) -> None:
+        Path(path).write_text(
+            "# sandbox stub: prometheus metrics unavailable\n",
+            encoding="utf-8",
+        )
+
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_PROM_PATH = REPO_ROOT / "monitoring" / "alpha_gate.prom"

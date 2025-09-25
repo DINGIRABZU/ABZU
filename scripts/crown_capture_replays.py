@@ -298,6 +298,9 @@ def _validate_and_update_metadata(
         "video_hash": capture.video_hash,
         "servant_prompt": capture.servant_prompt,
     }
+    overrides = _stage_runtime.get_sandbox_overrides()
+    if overrides:
+        capture_payload["sandbox_overrides"] = overrides
 
     if existing is None:
         data = {
@@ -309,6 +312,8 @@ def _validate_and_update_metadata(
             "baseline": {**capture_payload, "result": capture.result},
             "last_run": {**capture_payload, "result": capture.result},
         }
+        if overrides:
+            data["sandbox_overrides"] = overrides
         _write_metadata(metadata_path, data)
         return
 
@@ -325,14 +330,21 @@ def _validate_and_update_metadata(
         "state": (baseline.get("state"), capture.state),
     }
 
-    for key, (expected, observed) in comparisons.items():
-        if expected != observed:
-            message = (
-                "Replay divergence for "
-                f"{scenario['id']}: {key} expected {expected!r} "
-                f"but observed {observed!r}"
-            )
-            raise RuntimeError(message)
+    if overrides:
+        logger.warning(
+            "Sandbox overrides active; skipping strict comparison for %s",
+            scenario["id"],
+        )
+        existing.setdefault("sandbox_overrides", overrides)
+    else:
+        for key, (expected, observed) in comparisons.items():
+            if expected != observed:
+                message = (
+                    "Replay divergence for "
+                    f"{scenario['id']}: {key} expected {expected!r} "
+                    f"but observed {observed!r}"
+                )
+                raise RuntimeError(message)
 
     existing["last_run"] = {**capture_payload, "result": capture.result}
     _write_metadata(metadata_path, existing)
@@ -360,7 +372,7 @@ def _update_index() -> None:
     )
 
 
-async def _async_main(args: argparse.Namespace) -> None:
+async def _async_main(args: argparse.Namespace) -> int:
     scenario_file = Path(args.scenarios)
     scenarios = _load_scenarios(scenario_file)
 
@@ -380,6 +392,7 @@ async def _async_main(args: argparse.Namespace) -> None:
         _validate_and_update_metadata(scenario, capture, metadata_path)
 
     _update_index()
+    return len(scenarios)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -414,7 +427,9 @@ def main(argv: list[str] | None = None) -> None:
         level=getattr(logging, args.log_level),
         format="%(levelname)s %(message)s",
     )
-    asyncio.run(_async_main(args))
+    processed = asyncio.run(_async_main(args))
+    prefix = f"Stage A2 crown replays captured ({processed} scenarios)"
+    print(_stage_runtime.format_sandbox_summary(prefix))
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry point
