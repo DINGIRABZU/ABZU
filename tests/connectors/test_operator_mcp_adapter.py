@@ -36,8 +36,8 @@ def test_ensure_handshake_stores_session(monkeypatch):
         called["payload"] = payload
         called["kwargs"] = kwargs
 
-    monkeypatch.setattr(adapter, "template_handshake", fake_handshake)
-    monkeypatch.setattr(adapter, "template_send_heartbeat", fake_send)
+    monkeypatch.setattr(adapter, "operator_api_handshake", fake_handshake)
+    monkeypatch.setattr(adapter, "operator_api_send_heartbeat", fake_send)
 
     conn = adapter.OperatorMCPAdapter()
     result = asyncio.run(conn.ensure_handshake())
@@ -67,8 +67,8 @@ def test_emit_stage_b_heartbeat_reuses_session(monkeypatch):
         captured["payload"] = payload
         captured["kwargs"] = kwargs
 
-    monkeypatch.setattr(adapter, "template_handshake", fake_handshake)
-    monkeypatch.setattr(adapter, "template_send_heartbeat", fake_send)
+    monkeypatch.setattr(adapter, "operator_api_handshake", fake_handshake)
+    monkeypatch.setattr(adapter, "operator_api_send_heartbeat", fake_send)
 
     conn = adapter.OperatorMCPAdapter()
     asyncio.run(conn.emit_stage_b_heartbeat({"pulse": "ok"}))
@@ -90,12 +90,24 @@ def test_rotation_drill_logging(monkeypatch, tmp_path):
     monkeypatch.setattr(adapter, "_ROTATION_LOG", log_path)
     monkeypatch.setattr(adapter, "_CONNECTOR_INDEX", index_path)
     monkeypatch.setattr(adapter, "_AUDIT_DOC", audit_path)
-    monkeypatch.setattr(adapter, "template_doctrine", lambda: (True, []))
+    monkeypatch.setattr(adapter, "operator_api_doctrine", lambda: (True, []))
+    monkeypatch.setattr(adapter, "operator_upload_doctrine", lambda: (True, []))
+    monkeypatch.setattr(adapter, "crown_doctrine", lambda: (True, []))
 
     entry = adapter.record_rotation_drill(
         "operator_api",
         rotated_at=datetime(2025, 1, 1, tzinfo=timezone.utc),
+        handshake={
+            "echo": {
+                "rotation": {
+                    "last_rotated": "2025-01-01T00:00:00Z",
+                    "rotation_window": "PT48H",
+                }
+            }
+        },
     )
+    assert entry["rotation_window"]["duration"] == "PT48H"
+    assert entry["rotation_window"]["window_id"].endswith("-PT48H")
     history = adapter.load_rotation_history()
     assert history == [entry]
 

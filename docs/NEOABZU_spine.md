@@ -69,7 +69,11 @@ enters rehearsal: it must appear in `component_index.json` and
 [CONNECTOR_INDEX.md](connectors/CONNECTOR_INDEX.md), its heartbeat schema must
 align with [schemas/mcp_heartbeat_payload.schema.json](../schemas/mcp_heartbeat_payload.schema.json),
 and its MCP rotation metadata must confirm the credential was refreshed within
-the declared window.
+the declared window. The most recent Stage B3 drill logged
+`20250925T095833Z-PT48H` for the operator and Crown connectors (preceded by
+`20250925T094604Z-PT48H`, the follow-up refresh `20251024T174210Z-PT48H`, and the
+earlier `20250922T101554Z-PT48H` rehearsal) so auditors can see every rotation window in
+[`logs/stage_b_rotation_drills.jsonl`](../logs/stage_b_rotation_drills.jsonl).【F:logs/stage_b_rotation_drills.jsonl†L12-L23】
 `OperatorMCPAdapter` wraps `operator_api` and `operator_upload` in that
 checklist, delegating the Stage B handshake and heartbeat to the template
 helpers. The shared `scripts/stage_b_smoke.py` run exercises those adapters with

@@ -30,6 +30,12 @@ def test_run_stage_b_smoke_invokes_rotation(monkeypatch):
     handshake_payload = {
         "session": {"id": "sess"},
         "accepted_contexts": ["stage-b-rehearsal"],
+        "echo": {
+            "rotation": {
+                "last_rotated": "2025-10-24T17:42:10Z",
+                "rotation_window": "PT48H",
+            }
+        },
     }
     heartbeat_calls: list[SimpleNamespace] = []
 
@@ -49,9 +55,23 @@ def test_run_stage_b_smoke_invokes_rotation(monkeypatch):
 
     rotations: list[str] = []
 
+    def _fake_record(connector_id: str, **kwargs):
+        rotations.append(connector_id)
+        return {
+            "connector_id": connector_id,
+            "rotated_at": "2025-10-24T17:42:10Z",
+            "window_hours": stage_b_smoke.ROTATION_WINDOW_HOURS,
+            "rotation_window": {
+                "window_id": "20251024T174210Z-PT48H",
+                "started_at": "2025-10-24T17:42:10Z",
+                "expires_at": "2025-10-26T17:42:10Z",
+                "duration": "PT48H",
+            },
+        }
+
     monkeypatch.setattr(stage_b_smoke, "OperatorMCPAdapter", DummyAdapter)
     monkeypatch.setattr(stage_b_smoke, "stage_b_context_enabled", lambda: True)
-    monkeypatch.setattr(stage_b_smoke, "record_rotation_drill", rotations.append)
+    monkeypatch.setattr(stage_b_smoke, "record_rotation_drill", _fake_record)
     monkeypatch.setattr(stage_b_smoke, "evaluate_operator_doctrine", lambda: (True, []))
     monkeypatch.setattr(
         stage_b_smoke,
@@ -63,7 +83,10 @@ def test_run_stage_b_smoke_invokes_rotation(monkeypatch):
     assert (
         results["services"]["operator_api"]["session"] == handshake_payload["session"]
     )
-    assert rotations == ["operator_api", "operator_upload"]
+    assert rotations == ["operator_api", "operator_upload", "crown_handshake"]
+    assert set(results["rotation_ledger"].keys()) == set(
+        stage_b_smoke.STAGE_B_TARGET_SERVICES
+    )
     assert heartbeat_calls, "Heartbeat emission should be triggered"
 
 

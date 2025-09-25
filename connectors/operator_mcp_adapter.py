@@ -7,18 +7,20 @@ __version__ = "0.1.0"
 import json
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
 import httpx
 
 from .base import ConnectorHeartbeat
-from .neo_apsu_connector_template import (
-    doctrine_compliant as template_doctrine,
-    handshake as template_handshake,
-    send_heartbeat as template_send_heartbeat,
+from .crown_handshake_stage_b import doctrine_compliant as crown_doctrine
+from .operator_api_stage_b import (
+    doctrine_compliant as operator_api_doctrine,
+    handshake as operator_api_handshake,
+    send_heartbeat as operator_api_send_heartbeat,
 )
+from .operator_upload_stage_b import doctrine_compliant as operator_upload_doctrine
 
 LOGGER = logging.getLogger(__name__)
 
@@ -63,7 +65,7 @@ class OperatorMCPAdapter(ConnectorHeartbeat):
     async def ensure_handshake(self) -> dict[str, Any]:
         """Perform the Stage B handshake and store the resulting session."""
 
-        handshake_data = await template_handshake(self._client)
+        handshake_data = await operator_api_handshake(self._client)
         session_info = handshake_data.get("session")
         if isinstance(session_info, Mapping):
             self._session = session_info
@@ -87,7 +89,7 @@ class OperatorMCPAdapter(ConnectorHeartbeat):
                 self._session = session_candidate
 
         heartbeat_payload = dict(payload or {})
-        await template_send_heartbeat(
+        await operator_api_send_heartbeat(
             heartbeat_payload,
             session=self._session,
             credential_expiry=credential_expiry,
@@ -101,19 +103,86 @@ class OperatorMCPAdapter(ConnectorHeartbeat):
         return evaluate_operator_doctrine()
 
 
+def _parse_rotation_timestamp(value: Any) -> datetime | None:
+    """Return ``value`` parsed as an aware UTC datetime when possible."""
+
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            return value.replace(tzinfo=timezone.utc)
+        return value.astimezone(timezone.utc)
+    if isinstance(value, str) and value.strip():
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc)
+    return None
+
+
+def _extract_rotation_metadata(
+    handshake: Mapping[str, Any] | None
+) -> Mapping[str, Any]:
+    """Return rotation metadata contained within ``handshake``."""
+
+    if not isinstance(handshake, Mapping):
+        return {}
+    rotation_section: Any = handshake.get("rotation")
+    echo = handshake.get("echo")
+    if isinstance(echo, Mapping) and not rotation_section:
+        rotation_section = echo.get("rotation")
+    return rotation_section if isinstance(rotation_section, Mapping) else {}
+
+
+def _resolve_rotation_window(
+    *,
+    rotated_at: datetime,
+    window_hours: int,
+    duration_hint: str | None,
+) -> dict[str, str]:
+    """Return structured rotation window metadata for the ledger."""
+
+    duration = duration_hint or f"PT{window_hours}H"
+    expires_at = rotated_at + timedelta(hours=window_hours)
+    window_id = f"{rotated_at.strftime('%Y%m%dT%H%M%SZ')}-{duration}"
+    return {
+        "window_id": window_id,
+        "started_at": _isoformat(rotated_at),
+        "expires_at": _isoformat(expires_at),
+        "duration": duration,
+    }
+
+
 def record_rotation_drill(
     connector_id: str,
     *,
-    rotated_at: datetime | None = None,
+    rotated_at: datetime | str | None = None,
     window_hours: int = ROTATION_WINDOW_HOURS,
+    handshake: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Append a credential rotation drill entry for ``connector_id``."""
 
-    timestamp = rotated_at or datetime.now(timezone.utc)
+    rotation_metadata = _extract_rotation_metadata(handshake)
+    rotation_timestamp = _parse_rotation_timestamp(
+        rotated_at if rotated_at is not None else rotation_metadata.get("last_rotated")
+    )
+    timestamp = rotation_timestamp or datetime.now(timezone.utc)
+
+    duration_hint: str | None = None
+    rotation_window_raw = rotation_metadata.get("rotation_window")
+    if isinstance(rotation_window_raw, str):
+        duration_hint = rotation_window_raw
+
     entry = {
         "connector_id": connector_id,
         "rotated_at": _isoformat(timestamp),
         "window_hours": window_hours,
+        "rotation_window": _resolve_rotation_window(
+            rotated_at=timestamp,
+            window_hours=window_hours,
+            duration_hint=duration_hint,
+        ),
     }
     _ROTATION_LOG.parent.mkdir(parents=True, exist_ok=True)
     with _ROTATION_LOG.open("a", encoding="utf-8") as handle:
@@ -161,10 +230,22 @@ def evaluate_operator_doctrine() -> tuple[bool, list[str]]:
         latest = rotation_entries[-1]
         if latest.get("window_hours") != ROTATION_WINDOW_HOURS:
             failures.append("latest rotation drill does not confirm 48-hour window")
+        rotation_window = latest.get("rotation_window")
+        if not isinstance(rotation_window, Mapping):
+            failures.append("latest rotation drill missing rotation_window metadata")
+        else:
+            for field in ("window_id", "started_at", "expires_at", "duration"):
+                if field not in rotation_window:
+                    failures.append(f"rotation_window missing field: {field}")
 
-    template_ok, template_failures = template_doctrine()
-    if not template_ok:
-        failures.extend(template_failures)
+    for name, doctrine_check in (
+        ("operator_api_stage_b", operator_api_doctrine),
+        ("operator_upload_stage_b", operator_upload_doctrine),
+        ("crown_handshake_stage_b", crown_doctrine),
+    ):
+        ok, issues = doctrine_check()
+        if not ok:
+            failures.extend(f"{name}: {issue}" for issue in issues)
 
     return (not failures, failures)
 
