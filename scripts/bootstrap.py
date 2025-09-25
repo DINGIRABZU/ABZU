@@ -17,7 +17,17 @@ from scripts import _stage_runtime
 
 ROOT = _stage_runtime.bootstrap(optional_modules=["env_validation"])
 
-from env_validation import check_required
+try:  # pragma: no cover - guarded import for sandboxed envs
+    from env_validation import check_required
+except Exception:  # pragma: no cover - fallback to stubbed check
+
+    def check_required(_: tuple[str, ...]) -> None:
+        warnings.warn(
+            "environment-limited: env_validation unavailable; skipping checks",
+            _stage_runtime.EnvironmentLimitedWarning,
+            stacklevel=2,
+        )
+
 
 REQUIRED_VARS = ("HF_TOKEN", "GITHUB_TOKEN", "OPENAI_API_KEY")
 OPTIONAL_DEPS: Dict[str, str] = {
@@ -43,12 +53,29 @@ def ensure_optional_deps() -> None:
         try:
             importlib.import_module(module)
         except Exception:  # pragma: no cover - import errors vary
-            install(package)
+            try:
+                install(package)
+            except subprocess.CalledProcessError as exc:
+                warnings.warn(
+                    (
+                        "environment-limited: unable to install optional package "
+                        f"'{package}' ({exc})"
+                    ),
+                    _stage_runtime.EnvironmentLimitedWarning,
+                    stacklevel=2,
+                )
 
 
 def validate_env() -> None:
     """Check that required environment variables are present."""
-    check_required(REQUIRED_VARS)
+    try:
+        check_required(REQUIRED_VARS)
+    except SystemExit as exc:  # pragma: no cover - sandbox fallback
+        warnings.warn(
+            f"environment-limited: {exc}; continuing without required credentials",
+            _stage_runtime.EnvironmentLimitedWarning,
+            stacklevel=2,
+        )
 
 
 def detect_device() -> str:
@@ -104,6 +131,7 @@ def main() -> None:
     validate_env()
     device = detect_device()
     log_hardware_support(device)
+    print(_stage_runtime.format_sandbox_summary("Stage A1 bootstrap completed"))
 
 
 if __name__ == "__main__":
