@@ -7,6 +7,7 @@ import argparse
 import asyncio
 import json
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 
@@ -88,6 +89,8 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
         emit_heartbeat=emit_heartbeat
     )
 
+    gateway_base = os.getenv("MCP_GATEWAY_URL", "http://localhost:8001").rstrip("/")
+
     results: Dict[str, Any] = {
         "stage": "B",
         "targets": list(STAGE_B_TARGET_SERVICES),
@@ -102,6 +105,11 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
             },
             "crown_handshake": _collect_crown_metadata(),
         },
+        "endpoints": {
+            "gateway": gateway_base,
+            "handshake": f"{gateway_base}/handshake",
+            "heartbeat": f"{gateway_base}/heartbeat",
+        },
     }
 
     results["handshake"] = handshake
@@ -111,8 +119,13 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
             "credential_expiry": heartbeat_expiry,
         }
 
-    for connector_id in ("operator_api", "operator_upload", "crown_handshake"):
-        record_rotation_drill(connector_id)
+    rotation_receipts: Dict[str, Any] = {}
+    for connector_id in STAGE_B_TARGET_SERVICES:
+        rotation_receipts[connector_id] = record_rotation_drill(
+            connector_id,
+            handshake=handshake,
+        )
+    results["rotation_ledger"] = rotation_receipts
 
     doctrine_ok, doctrine_failures = evaluate_operator_doctrine()
     results["doctrine_ok"] = doctrine_ok
