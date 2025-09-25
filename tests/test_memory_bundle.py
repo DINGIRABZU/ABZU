@@ -79,15 +79,21 @@ def test_initialize_emits_event_and_sets_ready_statuses(monkeypatch):
     assert event.event_type == "layer_init"
     assert event.payload["layers"] == statuses
     expected_layers = set(LAYERS) | {"core"}
+    expected_diagnostics = expected_layers | {"__bundle__"}
     assert set(statuses) == expected_layers
-    assert set(bundle.diagnostics) == expected_layers
+    assert set(bundle.diagnostics) == expected_diagnostics
     if stubbed:
         for layer in statuses:
             assert statuses[layer] == "skipped"
             diag = bundle.diagnostics[layer]
             assert diag["status"] == "skipped"
-            assert diag["loaded_module"].endswith("neoabzu_bundle")
+            assert diag["loaded_module"].endswith(("neoabzu_bundle", "neoabzu_stub"))
             assert diag["fallback_reason"]
+        bundle_diag = bundle.diagnostics["__bundle__"]
+        assert bundle_diag["stubbed"] is True
+        assert bundle_diag["implementation"].endswith(
+            ("neoabzu_bundle", "neoabzu_stub")
+        )
     else:
         for layer in LAYERS:
             assert bundle.diagnostics[layer]["status"] == statuses[layer]
@@ -264,11 +270,20 @@ def test_stubbed_bundle_diagnostics():
     statuses = bundle.initialize()
     assert all(status == "skipped" for status in statuses.values())
     for layer, diag in bundle.diagnostics.items():
+        if layer == "__bundle__":
+            assert diag["implementation"].endswith(("neoabzu_bundle", "neoabzu_stub"))
+            assert diag["stubbed"] is True
+            assert diag["fallback_reason"] == "neoabzu_memory_unavailable"
+            continue
         assert diag["status"] == "skipped"
         assert diag["fallback_reason"] == "neoabzu_memory_unavailable"
-        assert diag["loaded_module"].endswith("memory.optional.neoabzu_bundle")
+        assert diag["loaded_module"].endswith(
+            ("memory.optional.neoabzu_bundle", "memory.optional.neoabzu_stub")
+        )
         attempts = diag["attempts"]
         assert attempts[0]["module"] == "neoabzu_memory"
         assert attempts[0]["outcome"] == "error"
-        assert attempts[1]["module"] == "memory.optional.neoabzu_bundle"
+        assert attempts[1]["module"].endswith(
+            ("memory.optional.neoabzu_bundle", "memory.optional.neoabzu_stub")
+        )
         assert attempts[1]["outcome"] == "loaded"

@@ -66,6 +66,7 @@ class MemoryLayerCheckReport:
 
     statuses: Dict[str, str]
     optional_stubs: List[OptionalStubActivation]
+    bundle_implementation: str
 
 
 def _gather_optional_stubs(bundle: MemoryBundle) -> List[OptionalStubActivation]:
@@ -114,7 +115,12 @@ def verify_memory_layers() -> MemoryLayerCheckReport:
             activation.reason or "unspecified",
         )
 
-    return MemoryLayerCheckReport(statuses=statuses, optional_stubs=optional)
+    implementation = getattr(bundle, "implementation", "neoabzu_memory")
+    return MemoryLayerCheckReport(
+        statuses=statuses,
+        optional_stubs=optional,
+        bundle_implementation=str(implementation),
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover - manual check

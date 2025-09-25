@@ -62,6 +62,7 @@ class LoadProofResult:
     query_failures: int
     stubbed: bool
     fallback_reason: str | None
+    implementation: str
 
 
 def parse_args() -> argparse.Namespace:
@@ -197,6 +198,7 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
     bundle = MemoryBundle()
     bundle_stubbed = getattr(bundle, "stubbed", False)
     bundle_fallback = getattr(bundle, "fallback_reason", None)
+    bundle_implementation = getattr(bundle, "implementation", "unknown")
 
     start_init = time.perf_counter()
     statuses = bundle.initialize()
@@ -204,6 +206,9 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
 
     bundle_stubbed = bool(getattr(bundle, "stubbed", bundle_stubbed))
     bundle_fallback = getattr(bundle, "fallback_reason", bundle_fallback)
+    bundle_implementation = str(
+        getattr(bundle, "implementation", bundle_implementation)
+    )
 
     layer_total, layer_ready, layer_failed = _record_metrics(
         source=args.metrics_source,
@@ -275,6 +280,7 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
         query_failures=query_failures,
         stubbed=bundle_stubbed,
         fallback_reason=bundle_fallback if isinstance(bundle_fallback, str) else None,
+        implementation=bundle_implementation,
     )
 
 
@@ -300,6 +306,7 @@ def _append_pretest_report(
             for stub in report.optional_stubs
         ],
         "stubbed_bundle": stubbed,
+        "bundle_implementation": report.bundle_implementation,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -308,14 +315,15 @@ def _append_pretest_report(
 
 def _run_pretest_hook(dataset: Path, log_path: Path) -> bool:
     report = verify_memory_layers()
+    stub_suffixes = ("neoabzu_bundle", "neoabzu_stub")
     stubbed_modules = [
-        stub for stub in report.optional_stubs if stub.module.endswith("neoabzu_bundle")
+        stub for stub in report.optional_stubs if stub.module.endswith(stub_suffixes)
     ]
     stubbed = bool(stubbed_modules)
     unexpected = [
         stub
         for stub in report.optional_stubs
-        if not stub.module.endswith("neoabzu_bundle")
+        if not stub.module.endswith(stub_suffixes)
     ]
 
     if report.optional_stubs:
@@ -367,6 +375,7 @@ def _append_log(result: LoadProofResult, log_path: Path) -> None:
         "query_failures": result.query_failures,
         "stubbed_bundle": result.stubbed,
         "fallback_reason": result.fallback_reason,
+        "bundle_implementation": result.implementation,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -408,6 +417,7 @@ def main() -> None:
         "query_failures": result.query_failures,
         "stubbed_bundle": result.stubbed or stubbed,
         "fallback_reason": result.fallback_reason,
+        "bundle_implementation": result.implementation,
     }
     print(json.dumps(summary, indent=2))
 
