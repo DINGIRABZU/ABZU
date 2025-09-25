@@ -18,6 +18,7 @@ from typing import Any, Iterable
 STAGE_A_ROOT = Path("logs") / "stage_a"
 STAGE_B_ROOT = Path("logs") / "stage_b"
 BUNDLE_FILENAME = "readiness_bundle.json"
+SUMMARY_FILENAME = "summary.json"
 
 
 def _latest_summary(stage_root: Path) -> tuple[Path | None, dict[str, Any] | None]:
@@ -99,7 +100,7 @@ def _merge_stage_data(stage_a: dict[str, Any], stage_b: dict[str, Any]) -> dict[
         return summary.get(attr)
 
     merged = {
-        "run_ids": {
+        "latest_runs": {
             "stage_a": _latest("run_id", stage_a),
             "stage_b": _latest("run_id", stage_b),
         },
@@ -125,7 +126,7 @@ def _merge_stage_data(stage_a: dict[str, Any], stage_b: dict[str, Any]) -> dict[
     return merged
 
 
-def aggregate(stage_c_log_dir: Path) -> Path:
+def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
     stage_c_log_dir.mkdir(parents=True, exist_ok=True)
 
     stage_a_path, stage_a_summary = _latest_summary(STAGE_A_ROOT)
@@ -134,16 +135,41 @@ def aggregate(stage_c_log_dir: Path) -> Path:
     stage_a_snapshot = _build_stage_snapshot("stage_a", stage_a_path, stage_a_summary)
     stage_b_snapshot = _build_stage_snapshot("stage_b", stage_b_path, stage_b_summary)
 
+    merged = _merge_stage_data(stage_a_snapshot, stage_b_snapshot)
+    missing = [
+        label
+        for label, snapshot in (
+            ("stage_a", stage_a_snapshot),
+            ("stage_b", stage_b_snapshot),
+        )
+        if not snapshot.get("summary")
+    ]
+
     bundle = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "stage_a": stage_a_snapshot,
         "stage_b": stage_b_snapshot,
-        "merged": _merge_stage_data(stage_a_snapshot, stage_b_snapshot),
+        "merged": merged,
+        "missing": missing,
     }
 
     bundle_path = stage_c_log_dir / BUNDLE_FILENAME
     bundle_path.write_text(json.dumps(bundle, indent=2), encoding="utf-8")
-    return bundle_path
+
+    summary_payload = {
+        "status": "success" if not missing else "error",
+        "generated_at": bundle["generated_at"],
+        "bundle_path": str(bundle_path),
+        "stage_a": stage_a_snapshot,
+        "stage_b": stage_b_snapshot,
+        "merged": merged,
+        "missing": missing,
+    }
+
+    summary_path = stage_c_log_dir / SUMMARY_FILENAME
+    summary_path.write_text(json.dumps(summary_payload, indent=2), encoding="utf-8")
+
+    return bundle_path, summary_payload
 
 
 def main() -> int:
@@ -155,11 +181,10 @@ def main() -> int:
     args = parser.parse_args()
 
     stage_c_log_dir = Path(args.stage_c_log_dir)
-    bundle_path = aggregate(stage_c_log_dir)
-    print(json.dumps({"bundle_path": str(bundle_path)}, indent=2))
+    bundle_path, summary_payload = aggregate(stage_c_log_dir)
+    print(json.dumps(summary_payload, indent=2))
 
-    stage_a_ready = bool(bundle_path.exists() and bundle_path.stat().st_size)
-    return 0 if stage_a_ready else 1
+    return 0 if summary_payload["status"] == "success" else 1
 
 
 if __name__ == "__main__":  # pragma: no cover - script entrypoint
