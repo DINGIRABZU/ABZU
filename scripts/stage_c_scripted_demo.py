@@ -562,6 +562,14 @@ def main() -> None:
             "(defaults to <output>/_stage_b_assets)."
         ),
     )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        help=(
+            "Deterministic seed used by higher-level launchers; "
+            "accepted for compatibility even when no randomization is required."
+        ),
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
