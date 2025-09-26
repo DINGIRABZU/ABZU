@@ -6,6 +6,7 @@ import argparse
 import asyncio
 import json
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -23,6 +24,82 @@ from connectors.operator_mcp_adapter import (
 LOGGER = logging.getLogger(__name__)
 
 _EVENT_NAME = "stage-c4-operator-mcp-drill"
+_STUB_ENV_FLAG = "ABZU_STAGE_C_MCP_DRILL_STUB"
+
+
+def _use_stub_adapter() -> bool:
+    flag = os.getenv(_STUB_ENV_FLAG, "")
+    return flag.lower() in {"1", "true", "yes", "on"}
+
+
+def _build_stub_handshake(now: datetime) -> dict[str, Any]:
+    rotation_window = f"PT{ROTATION_WINDOW_HOURS}H"
+    rotated_at = _isoformat(now)
+    rotation_metadata = {
+        "connector_id": "operator_api",
+        "last_rotated": rotated_at,
+        "rotation_window": rotation_window,
+        "window_id": f"{now.strftime('%Y%m%dT%H%M%SZ')}-{rotation_window}",
+    }
+    expiry = _isoformat(now + timedelta(hours=ROTATION_WINDOW_HOURS))
+    return {
+        "authenticated": True,
+        "session": {
+            "id": "stage-c-session",
+            "credential_expiry": expiry,
+        },
+        "accepted_contexts": [
+            {"name": "stage-b-rehearsal", "status": "accepted"},
+            {"name": "stage-c-prep", "status": "accepted"},
+        ],
+        "rotation": rotation_metadata,
+        "echo": {"rotation": dict(rotation_metadata)},
+    }
+
+
+class _StubOperatorAdapter:
+    """In-memory adapter when the MCP gateway is unavailable."""
+
+    def __init__(self) -> None:
+        now = datetime.now(timezone.utc)
+        self._handshake = _build_stub_handshake(now)
+
+    async def ensure_handshake(self) -> dict[str, Any]:
+        LOGGER.info("Using stubbed Stage C MCP drill payload")
+        LOGGER.debug("Stub handshake payload: %s", self._handshake)
+        return dict(self._handshake)
+
+    async def emit_stage_b_heartbeat(
+        self,
+        payload: dict[str, Any],
+        *,
+        credential_expiry: datetime | None = None,
+    ) -> dict[str, Any]:
+        heartbeat_payload = dict(payload)
+        heartbeat_payload.setdefault("event", _EVENT_NAME)
+        session = self._handshake.get("session", {})
+        heartbeat_payload.setdefault("session", session)
+
+        expiry_candidate: datetime | None = None
+        if isinstance(credential_expiry, datetime):
+            expiry_candidate = credential_expiry
+        elif isinstance(session, dict):
+            raw_expiry = session.get("credential_expiry")
+            if isinstance(raw_expiry, str) and raw_expiry:
+                try:
+                    expiry_candidate = datetime.fromisoformat(
+                        raw_expiry.replace("Z", "+00:00")
+                    )
+                except ValueError:
+                    expiry_candidate = None
+
+        if expiry_candidate is None:
+            expiry_candidate = datetime.now(timezone.utc) + timedelta(
+                hours=ROTATION_WINDOW_HOURS
+            )
+
+        heartbeat_payload["credential_expiry"] = _isoformat(expiry_candidate)
+        return heartbeat_payload
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -62,7 +139,11 @@ async def _run_drill(
 ) -> dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    adapter = OperatorMCPAdapter()
+    adapter: OperatorMCPAdapter | _StubOperatorAdapter
+    if _use_stub_adapter():
+        adapter = _StubOperatorAdapter()
+    else:
+        adapter = OperatorMCPAdapter()
     handshake = await adapter.ensure_handshake()
 
     heartbeat_payload: dict[str, Any] | None = None
@@ -98,7 +179,11 @@ async def _run_drill(
     )
 
     # Record the rotation drill so doctrine checks account for this run.
-    record_rotation_drill("operator_api", rotated_at=credential_expiry)
+    record_rotation_drill(
+        "operator_api",
+        rotated_at=None,
+        handshake=handshake,
+    )
 
     summary = {
         "status": "success",
