@@ -17,6 +17,7 @@ loop documented in [alpha_v0_1_charter.md](../alpha_v0_1_charter.md) and the
 - Review the Stage A runner requirements in
   [hardware_support.md](../hardware_support.md) to confirm firmware and
   exporter configuration before starting the gate.
+- During sprint planning, flag Stage A pipeline changes so operations can reserve the gate hardware or arrange alternate backlog. The Stage A1/A2/A3 failures cited in the [Stage A evidence register](../PROJECT_STATUS.md#stagea-evidence-register) (missing `env_validation`, unavailable `crown_decider`, aborted automation shakeouts) illustrate how unscheduled access blocks the workflow.
 
 ## Build Packaging
 

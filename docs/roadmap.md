@@ -40,6 +40,9 @@ alongside [`docs/PROJECT_STATUS.md`](PROJECT_STATUS.md), the
 | **A2. Crown replay verification** | @crown-core | Guarantee decider routing and session logs replay deterministically for gate reviews. | Sync the refreshed session logger API with Spiral OS boot stability milestones as documented in the charter interlocks. | Execute five cross-agent replay drills and deliver the resulting traces into the Alpha gate review packet. |
 | **A3. Gate automation shakeout** | @release-ops | Harden `scripts/run_alpha_gate.sh` and the acceptance coverage described in the workflow guide before promoting builds. | Stage the build tooling, secrets, and health-check prerequisites from the workflow doc on the automation host. | Record a full dry-run Alpha gate run with packaging, health, and acceptance logs handed to Stage B owners. |
 
+> [!NOTE]
+> **Sprint planning checklist:** Flag Stage A pipeline changes during sprint planning so operations can schedule the gate hardware or supply alternate backlog. The Stage A1/A2/A3 failures logged in the [Stage A evidence register](PROJECT_STATUS.md#stagea-evidence-register)—missing `env_validation`, unavailable `crown_decider`, and aborted automation shakeouts—show how unplanned access halts progress when this step is skipped.
+
 Operator consoles now expose Stage A automation directly through the `operator_api` endpoints:
 `POST /alpha/stage-a1-boot-telemetry`, `POST /alpha/stage-a2-crown-replays`, and
 `POST /alpha/stage-a3-gate-shakeout`. Each call archives stdout/stderr under
