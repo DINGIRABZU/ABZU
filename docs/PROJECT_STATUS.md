@@ -62,6 +62,7 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 - [Pydantic v2 migration](https://github.com/DINGIRABZU/ABZU/issues/211) — owner: @DINGIRABZU.
 - [FastAPI lifespan migration](https://github.com/DINGIRABZU/ABZU/issues/212) — owner: web team.
 - [Optional dependency stubs](https://github.com/DINGIRABZU/ABZU/issues/213) — owner: infra team.
+- **Sprint planning checklist:** Flag Stage A pipeline changes during sprint planning so operations can reserve the gate hardware or queue an alternative backlog slice. The Stage A1/A2/A3 failures in the [Stage A evidence register](#stagea-evidence-register)—missing `env_validation`, unavailable `crown_decider`, and aborted automation shakeouts—show how unplanned access stalls the sprint when this step is skipped.
 
 ## Planned Releases
 - v0.1 – minimal Spiral OS boot sequence and CLI tools (target: Q3 2025). **Status:** Charter baseline approved in [alpha_v0_1_charter.md](alpha_v0_1_charter.md); subsystem execution tracked through the [Alpha v0.1 execution plan](roadmap.md#alpha-v01-execution-plan). Stage snapshots: **Stage A** focuses on Alpha gate automation readiness, **Stage B** locks subsystem hardening for sonic core, memory, and connectors, and **Stage C** synchronizes exit checklist, demo assets, and readiness signals. See the [Milestone Stages overview](roadmap.md#milestone-stages) for task-level detail. Reference the [Python Alpha Squad dossier](onboarding/python_alpha_squad.md) for RAZAR boot ownership and daily reliability rituals feeding that plan.
