@@ -177,10 +177,10 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 4389967bffbb9cc4e341db0ac843a57e6b95dc57febb5410d8b26e198923e806
+    sha256: cd97e34fc8a66838cffb4e5bd2484aefd20fa6647747902a8d2d21720e29f917
     summary:
-      insight: Central doctrine coordinates versioning, MCP governance, and
-        documentation duties for every subsystem.
+      insight: Central doctrine coordinates versioning, MCP governance, and documentation
+        duties for every subsystem.
       key_rules: Declare `__version__` for modules, register connector changes in
         the indexes, and mirror architecture updates across blueprint files.
       purpose: Canonical contribution protocol and governance contract.
@@ -222,8 +222,8 @@ documents:
     commit: worktree
     sha256: 7dc3517a463373b3749b29848dc98cf3146e2b3c1d45f506c203c353ade6bd31
     summary:
-      insight: Highlights triadic stack and operator-first design, including the
-        MCP startup handshake and heartbeat loop for operator connectors.
+      insight: Highlights triadic stack and operator-first design, including the MCP
+        startup handshake and heartbeat loop for operator connectors.
       key_rules: Keep cross-links and diagrams synchronized.
       purpose: Deep-dive overview of mission, agents, and memory bundle.
       scope: System structure and narratives.
@@ -296,8 +296,8 @@ documents:
     commit: worktree
     sha256: b253fd93c3ae7a6afbb9e90efbc9b71bb1f8fb52c2b9f4e0986968e7f8b491a5
     summary:
-      insight: Links to Nazarick architecture, system blueprints, and the live
-        Operator MCP adoption audit.
+      insight: Links to Nazarick architecture, system blueprints, and the live Operator
+        MCP adoption audit.
       key_rules: Maintain curated documentation entry points.
       purpose: Curated documentation entry points.
       scope: Top-level docs index.
@@ -451,8 +451,8 @@ documents:
     commit: worktree
     sha256: c6e68868e08dd4f5bdf87ba003ae8ff2444f487a4507151cc18d45b05af7ca70
     summary:
-      insight: Describes heartbeat propagation and the MCP adapter startup flow
-        for operator services.
+      insight: Describes heartbeat propagation and the MCP adapter startup flow for
+        operator services.
       key_rules: Keep component changes reflected in blueprint.
       purpose: Operational architecture and recovery flows.
       scope: System components and lifecycle.

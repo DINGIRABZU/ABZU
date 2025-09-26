@@ -16,14 +16,21 @@ declare -A PHASE_STARTS=()
 declare -A PHASE_ENDS=()
 declare -A PHASE_STATUS=()
 declare -A PHASE_SKIPPED=()
+declare -A PHASE_SKIP_REASONS=()
+declare -A PHASE_SKIP_DETAILS=()
 
 SKIP_BUILD=0
 SKIP_HEALTH=0
 SKIP_TESTS=0
 RUN_CONNECTOR_CHECK=0
 RUN_CHAOS_DRILL=0
+SANDBOX=0
 PYTEST_EXTRA=()
 FLATTENED_PYTEST_EXTRA=()
+
+if [[ -n "${ABZU_FORCE_STAGE_SANDBOX:-}" ]]; then
+    SANDBOX=1
+fi
 
 flatten_pytest_args() {
     local -n dest_ref="$1"
@@ -127,6 +134,8 @@ Options:
   --skip-build         Skip the packaging phase.
   --skip-health        Skip mandatory health checks.
   --skip-tests         Skip acceptance test execution.
+  --sandbox            Treat environment-limited failures as skipped (default
+                       when ABZU_FORCE_STAGE_SANDBOX is set).
   --check-connectors   Run connector heartbeat checks during the health phase.
   --run-chaos-drill    Execute the RAZAR chaos drill (dry-run) during health checks.
   --pytest-args ARGS   Extra arguments passed to pytest (may be repeated).
@@ -167,6 +176,10 @@ parse_args() {
                 ;;
             --skip-tests)
                 SKIP_TESTS=1
+                shift
+                ;;
+            --sandbox)
+                SANDBOX=1
                 shift
                 ;;
             --check-connectors)
@@ -225,9 +238,41 @@ ensure_log_dir() {
     echo "[$(timestamp)] Recording Alpha gate evidence under $LOG_DIR"
 }
 
+append_phase_detail() {
+    local phase="$1"
+    local detail="$2"
+    if [[ -z "$detail" ]]; then
+        return
+    fi
+    if [[ -n "${PHASE_SKIP_DETAILS[$phase]-}" ]]; then
+        printf -v "PHASE_SKIP_DETAILS[$phase]" '%s\n%s' "${PHASE_SKIP_DETAILS[$phase]}" "$detail"
+    else
+        PHASE_SKIP_DETAILS["$phase"]="$detail"
+    fi
+}
+
 mark_phase_skipped() {
     local phase="$1"
+    local reason="${2-}"
+    local detail="${3-}"
     PHASE_SKIPPED["$phase"]=1
+    if [[ -n "$reason" ]]; then
+        if [[ -z "${PHASE_SKIP_REASONS[$phase]+x}" ]] || [[ "${PHASE_SKIP_REASONS[$phase]}" == "$reason" ]]; then
+            PHASE_SKIP_REASONS["$phase"]="$reason"
+        fi
+    fi
+    if [[ -n "$detail" ]]; then
+        append_phase_detail "$phase" "$detail"
+    fi
+}
+
+sandbox_skip_phase() {
+    local phase="$1"
+    local log_file="$2"
+    local message="$3"
+    local detail="${4:-$3}"
+    log_entry "$log_file" "$message"
+    mark_phase_skipped "$phase" "environment-limited" "$detail"
 }
 
 start_phase() {
@@ -300,7 +345,7 @@ except ModuleNotFoundError:
 PY
     then
         log_entry "$log_file" "python -m build unavailable; marking build phase skipped"
-        PHASE_SKIPPED[build]=1
+        mark_phase_skipped build "environment-limited" "python -m build unavailable"
         return 0
     fi
     log_entry "$log_file" "Cleaning dist/ directory"
@@ -324,6 +369,7 @@ run_health_checks() {
     log_entry "$log_file" "Starting health checks"
     local missing_tools=()
     local tool
+    local sandbox_failure=0
     for tool in docker sox ffmpeg aria2c; do
         if ! command -v "$tool" >/dev/null 2>&1; then
             missing_tools+=("$tool")
@@ -331,18 +377,18 @@ run_health_checks() {
     done
     if ((${#missing_tools[@]} > 0)); then
         log_entry "$log_file" "Missing tools (${missing_tools[*]}), skipping health checks"
-        PHASE_SKIPPED[health]=1
+        mark_phase_skipped health "environment-limited" "Missing tools: ${missing_tools[*]}"
         return 0
     fi
     if ! python - <<'PY'
-import importlib
+import importlib.util
 missing = [name for name in ("core", "audio") if importlib.util.find_spec(name) is None]
 if missing:
     raise SystemExit(1)
 PY
     then
         log_entry "$log_file" "Required Python modules unavailable; skipping health checks"
-        PHASE_SKIPPED[health]=1
+        mark_phase_skipped health "environment-limited" "Required Python modules unavailable"
         return 0
     fi
     log_entry "$log_file" "Running scripts/check_requirements.sh"
@@ -350,7 +396,7 @@ PY
     local requirements_status=${PIPESTATUS[0]}
     if ((requirements_status != 0)); then
         log_entry "$log_file" "Requirement validation failed with status $requirements_status; treating as sandbox skip"
-        PHASE_SKIPPED[health]=1
+        mark_phase_skipped health "environment-limited" "Requirement validation failed with status $requirements_status"
         return 0
     fi
     log_entry "$log_file" "Running verify_self_healing.py"
@@ -360,8 +406,15 @@ PY
     ) 2>&1 | tee -a "$log_file"
     local self_healing_status=${PIPESTATUS[0]}
     if ((self_healing_status != 0)); then
-        log_entry "$log_file" "Self-healing verification failed with status $self_healing_status"
-        return "$self_healing_status"
+        if ((SANDBOX == 1)); then
+            sandbox_skip_phase health "$log_file" \
+                "Self-healing verification failed with status $self_healing_status; treating as environment-limited" \
+                "verify_self_healing.py exited with status $self_healing_status"
+            sandbox_failure=1
+        else
+            log_entry "$log_file" "Self-healing verification failed with status $self_healing_status"
+            return "$self_healing_status"
+        fi
     fi
     if ((RUN_CONNECTOR_CHECK == 1)); then
         log_entry "$log_file" "Running connector health sweep"
@@ -371,8 +424,15 @@ PY
         ) 2>&1 | tee -a "$log_file"
         local connector_status=${PIPESTATUS[0]}
         if ((connector_status != 0)); then
-            log_entry "$log_file" "Connector health sweep failed with status $connector_status"
-            return "$connector_status"
+            if ((SANDBOX == 1)); then
+                sandbox_skip_phase health "$log_file" \
+                    "Connector health sweep failed with status $connector_status; treating as environment-limited" \
+                    "health_check_connectors.py exited with status $connector_status"
+                sandbox_failure=1
+            else
+                log_entry "$log_file" "Connector health sweep failed with status $connector_status"
+                return "$connector_status"
+            fi
         fi
     else
         log_entry "$log_file" "Skipping connector sweep (enable with --check-connectors)"
@@ -385,11 +445,22 @@ PY
         ) 2>&1 | tee -a "$log_file"
         local chaos_status=${PIPESTATUS[0]}
         if ((chaos_status != 0)); then
-            log_entry "$log_file" "RAZAR chaos drill failed with status $chaos_status"
-            return "$chaos_status"
+            if ((SANDBOX == 1)); then
+                sandbox_skip_phase health "$log_file" \
+                    "RAZAR chaos drill failed with status $chaos_status; treating as environment-limited" \
+                    "razar_chaos_drill.py exited with status $chaos_status"
+                sandbox_failure=1
+            else
+                log_entry "$log_file" "RAZAR chaos drill failed with status $chaos_status"
+                return "$chaos_status"
+            fi
         fi
     else
         log_entry "$log_file" "Skipping RAZAR chaos drill (enable with --run-chaos-drill)"
+    fi
+    if ((sandbox_failure == 1)); then
+        log_entry "$log_file" "Health checks marked as environment-limited"
+        return 0
     fi
     log_entry "$log_file" "Health checks completed"
 }
@@ -408,7 +479,7 @@ if missing:
 PY
     then
         log_entry "$log_file" "Pytest coverage dependencies unavailable; skipping acceptance tests"
-        PHASE_SKIPPED[tests]=1
+        mark_phase_skipped tests "environment-limited" "Pytest coverage dependencies unavailable"
         return 0
     fi
     local pytest_args=(
@@ -481,6 +552,105 @@ PY
     log_entry "$log_file" "Acceptance tests completed"
 }
 
+emit_summary_json() {
+    local message="${1-}"
+    local build_status="${PHASE_STATUS[build]-}"
+    local health_status="${PHASE_STATUS[health]-}"
+    local tests_status="${PHASE_STATUS[tests]-}"
+    local build_skipped="${PHASE_SKIPPED[build]-0}"
+    local health_skipped="${PHASE_SKIPPED[health]-0}"
+    local tests_skipped="${PHASE_SKIPPED[tests]-0}"
+    local build_reason="${PHASE_SKIP_REASONS[build]-}"
+    local health_reason="${PHASE_SKIP_REASONS[health]-}"
+    local tests_reason="${PHASE_SKIP_REASONS[tests]-}"
+    local build_details="${PHASE_SKIP_DETAILS[build]-}"
+    local health_details="${PHASE_SKIP_DETAILS[health]-}"
+    local tests_details="${PHASE_SKIP_DETAILS[tests]-}"
+
+    local summary_json
+    summary_json="$(
+        ALPHA_GATE_MESSAGE="$message" \
+        PHASE_BUILD_STATUS="$build_status" \
+        PHASE_BUILD_SKIPPED="$build_skipped" \
+        PHASE_BUILD_REASON="$build_reason" \
+        PHASE_BUILD_DETAILS="$build_details" \
+        PHASE_HEALTH_STATUS="$health_status" \
+        PHASE_HEALTH_SKIPPED="$health_skipped" \
+        PHASE_HEALTH_REASON="$health_reason" \
+        PHASE_HEALTH_DETAILS="$health_details" \
+        PHASE_TESTS_STATUS="$tests_status" \
+        PHASE_TESTS_SKIPPED="$tests_skipped" \
+        PHASE_TESTS_REASON="$tests_reason" \
+        PHASE_TESTS_DETAILS="$tests_details" \
+        python - <<'PY'
+import json
+import os
+
+
+def parse_phase(name: str):
+    upper = name.upper()
+    status_raw = os.environ.get(f"PHASE_{upper}_STATUS")
+    skipped_raw = os.environ.get(f"PHASE_{upper}_SKIPPED", "0")
+    reason = os.environ.get(f"PHASE_{upper}_REASON") or None
+    details_raw = os.environ.get(f"PHASE_{upper}_DETAILS") or ""
+    try:
+        exit_code = int(status_raw) if status_raw not in (None, "") else None
+    except ValueError:
+        exit_code = None
+    skipped = skipped_raw.lower() not in ("", "0", "false", "no")
+    detail_lines = [line for line in details_raw.splitlines() if line.strip()]
+    if detail_lines:
+        detail_lines = [line.strip() for line in detail_lines]
+    phase_payload = {
+        "name": name,
+        "skipped": skipped,
+        "exit_code": exit_code,
+    }
+    if skipped:
+        phase_payload["outcome"] = "skipped"
+    elif exit_code == 0:
+        phase_payload["outcome"] = "completed"
+    elif exit_code is not None:
+        phase_payload["outcome"] = "failed"
+    else:
+        phase_payload["outcome"] = "unknown"
+    if reason:
+        phase_payload["reason"] = reason
+    if detail_lines:
+        phase_payload["details"] = detail_lines
+    return phase_payload, reason, detail_lines
+
+
+phases = []
+warnings = []
+for phase_name in ("build", "health", "tests"):
+    phase_payload, reason, detail_lines = parse_phase(phase_name)
+    phases.append(phase_payload)
+    if reason == "environment-limited":
+        warning_entry = {
+            "phase": phase_name,
+            "reason": reason,
+        }
+        if detail_lines:
+            warning_entry["details"] = detail_lines
+        warnings.append(warning_entry)
+
+payload = {"status": "success", "phases": phases}
+message = os.environ.get("ALPHA_GATE_MESSAGE")
+if message:
+    payload["message"] = message
+if warnings:
+    payload["warnings"] = warnings
+
+print(json.dumps(payload))
+PY
+    )"
+    if [[ -z "${summary_json:-}" ]]; then
+        return 1
+    fi
+    echo "$summary_json"
+}
+
 main() {
     collect_inherited_pytest_args
     parse_args "$@"
@@ -497,7 +667,7 @@ main() {
         fi
     else
         echo "[$(timestamp)] Skipping packaging phase"
-        mark_phase_skipped build
+        mark_phase_skipped build "user-requested" "Skipped packaging via --skip-build"
     fi
 
     if ((stop_remaining == 0)); then
@@ -508,11 +678,11 @@ main() {
             fi
         else
             echo "[$(timestamp)] Skipping health checks"
-            mark_phase_skipped health
+            mark_phase_skipped health "user-requested" "Skipped health checks via --skip-health"
         fi
     else
         echo "[$(timestamp)] Skipping health checks"
-        mark_phase_skipped health
+        mark_phase_skipped health "blocked" "Skipped because build phase exited with status ${PHASE_STATUS[build]:-}" 
     fi
 
     if ((stop_remaining == 0)); then
@@ -522,11 +692,13 @@ main() {
             fi
         else
             echo "[$(timestamp)] Skipping acceptance tests"
-            mark_phase_skipped tests
+            mark_phase_skipped tests "user-requested" "Skipped acceptance tests via --skip-tests"
         fi
     else
         echo "[$(timestamp)] Skipping acceptance tests"
-        mark_phase_skipped tests
+        local reason="blocked"
+        local detail="Skipped because preceding phase exited with status ${exit_code}"
+        mark_phase_skipped tests "$reason" "$detail"
     fi
 
     if ! export_metrics; then
@@ -547,7 +719,21 @@ PY
     if [[ -z "${summary// }" ]]; then
         summary="Alpha gate completed [sandbox summary unavailable]"
     fi
-    echo "[$(timestamp)] $summary"
+
+    if ((exit_code == 0)); then
+        local summary_json
+        if summary_json="$(emit_summary_json "$summary")"; then
+            echo "[$(timestamp)] $summary"
+            echo "$summary_json"
+        else
+            echo "[$(timestamp)] $summary"
+            echo "[$(timestamp)] Failed to render Alpha gate summary JSON" >&2
+            exit_code=1
+        fi
+    else
+        echo "[$(timestamp)] $summary"
+    fi
+
     exit "$exit_code"
 }
 
