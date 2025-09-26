@@ -415,6 +415,7 @@ def test_handover_endpoint(client: TestClient, monkeypatch: pytest.MonkeyPatch) 
 def test_stage_b1_memory_proof_success(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    sys.modules.pop("neoabzu_memory", None)
     summary = {
         "dataset": "data/vector_memory_scaling/corpus.jsonl",
         "total_records": 120,
@@ -425,6 +426,7 @@ def test_stage_b1_memory_proof_success(
         "latency_p99_s": 0.09,
         "layers": {"total": 4, "ready": 4, "failed": 0},
         "query_failures": 0,
+        "stubbed_bundle": True,
     }
     stdout = ("INFO stage\n" + json.dumps(summary, indent=2) + "\n").encode("utf-8")
     configure_subprocess(monkeypatch, stdout=stdout)
@@ -436,6 +438,7 @@ def test_stage_b1_memory_proof_success(
     metrics = body["metrics"]
     assert metrics["latency_ms"]["p95"] == 50.0
     assert metrics["layers"]["total"] == 4
+    assert metrics["stubbed_bundle"] is True
     assert Path(body["log_dir"]).exists()
 
 

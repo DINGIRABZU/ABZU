@@ -371,6 +371,8 @@ def _stage_b1_metrics(
     payload: dict[str, Any],
 ) -> dict[str, Any]:
     summary = _extract_json_from_stdout(stdout_text)
+    stubbed_bundle = bool(summary.get("stubbed_bundle"))
+    fallback_reason = summary.get("fallback_reason")
     latency_ms = {
         "p50": _seconds_to_ms(summary.get("latency_p50_s")),
         "p95": _seconds_to_ms(summary.get("latency_p95_s")),
@@ -392,6 +394,8 @@ def _stage_b1_metrics(
         "latency_ms": latency_ms,
         "layers": layer_summary,
         "query_failures": summary.get("query_failures"),
+        "stubbed_bundle": stubbed_bundle,
+        "fallback_reason": fallback_reason,
     }
 
 

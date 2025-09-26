@@ -31,6 +31,11 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 
+from scripts import _stage_runtime as stage_runtime  # noqa: E402  (bootstrap first)
+
+stage_runtime.bootstrap(optional_modules=["neoabzu_memory"])
+
+
 from memory.bundle import MemoryBundle
 from monitoring.boot_metrics import (  # noqa: E402  (delayed import)
     MemoryInitMetricValues,
