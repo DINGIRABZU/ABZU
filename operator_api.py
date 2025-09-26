@@ -16,6 +16,7 @@ import logging
 import re
 import shutil
 import sys
+import os
 from pathlib import Path
 from uuid import uuid4
 from datetime import datetime, timezone
@@ -244,11 +245,23 @@ async def _run_stage_workflow(
     else:
         command_args = list(command)
 
+    env = os.environ.copy()
+    pythonpath_parts = [str(_REPO_ROOT)]
+    src_dir = _REPO_ROOT / "src"
+    if src_dir.exists():
+        pythonpath_parts.append(str(src_dir))
+    existing_pythonpath = env.get("PYTHONPATH")
+    if existing_pythonpath:
+        pythonpath_parts.append(existing_pythonpath)
+    env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
+    env["ABZU_FORCE_STAGE_SANDBOX"] = "1"
+
     try:
         process = await asyncio.create_subprocess_exec(
             *command_args,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
+            env=env,
         )
     except OSError as exc:
         completed_at = datetime.now(timezone.utc)
@@ -687,9 +700,8 @@ def _stage_c3_metrics(
 
     if metrics["missing"]:
         payload["status"] = "error"
-        payload["error"] = (
-            "missing readiness summaries: "
-            f"{', '.join(metrics['missing'])}"
+        payload["error"] = "missing readiness summaries: " + ", ".join(
+            metrics["missing"]
         )
 
     return metrics
