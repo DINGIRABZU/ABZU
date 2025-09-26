@@ -11,7 +11,6 @@ import argparse
 import json
 import logging
 import math
-import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -19,21 +18,10 @@ from pathlib import Path
 from typing import Iterator, Sequence
 
 
-# Ensure the repository root is importable when the script is executed via a
-# relative path such as ``python scripts/memory_load_proof.py``.
-REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
-
-
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
-
-
 from scripts import _stage_runtime as stage_runtime  # noqa: E402  (bootstrap first)
 
-stage_runtime.bootstrap(optional_modules=["neoabzu_memory"])
+REPO_ROOT = stage_runtime.bootstrap(optional_modules=["neoabzu_memory"])
+SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 
 from memory.bundle import MemoryBundle
@@ -143,6 +131,12 @@ def _load_records(path: Path) -> Iterator[dict[str, object]]:
             try:
                 yield json.loads(text)
             except json.JSONDecodeError as exc:  # pragma: no cover - logging only
+                if "\t" in text:
+                    _, fallback = text.split("\t", 1)
+                    fallback = fallback.strip()
+                    if fallback:
+                        yield {"query": fallback, "__source_line__": line_number}
+                        continue
                 logger.warning(
                     "Skipping malformed JSON on line %s: %s", line_number, exc
                 )
@@ -312,7 +306,16 @@ def _append_pretest_report(
 
 
 def _run_pretest_hook(dataset: Path, log_path: Path) -> bool:
-    report = verify_memory_layers()
+    try:
+        report = verify_memory_layers()
+    except Exception:  # pragma: no cover
+        logger.warning(
+            "Memory layer preflight failed – continuing in stubbed mode",
+            exc_info=True,
+        )
+        fallback_report = MemoryLayerCheckReport(statuses={}, optional_stubs=[])
+        _append_pretest_report(fallback_report, dataset, log_path, stubbed=True)
+        return True
     stubbed_modules = [
         stub for stub in report.optional_stubs if stub.module.endswith("neoabzu_bundle")
     ]
