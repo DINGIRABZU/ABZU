@@ -300,7 +300,22 @@ async def _run_stage_workflow(
     stdout_lines = stdout_text.splitlines()
     stderr_lines = stderr_text.splitlines()
 
-    summary_line = next((line for line in reversed(stdout_lines) if line.strip()), "")
+    summary_line = ""
+    summary_json: Mapping[str, Any] | None = None
+    for line in reversed(stdout_lines):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if not summary_line:
+            summary_line = stripped
+        if summary_json is None and stripped.startswith("{"):
+            try:
+                candidate = json.loads(stripped)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(candidate, Mapping):
+                summary_json = candidate
+                break
 
     payload = {
         "status": "success" if process.returncode == 0 else "error",
@@ -318,7 +333,15 @@ async def _run_stage_workflow(
         "stderr_lines": len(stderr_lines),
         "stderr_tail": stderr_lines[-10:],
     }
-    if summary_line:
+    if summary_json is not None:
+        payload["summary"] = summary_json
+        status_override = summary_json.get("status")
+        if isinstance(status_override, str):
+            payload["status"] = status_override
+        warnings = summary_json.get("warnings")
+        if warnings is not None:
+            payload["warnings"] = warnings
+    elif summary_line:
         payload["summary"] = summary_line
     if stderr_text.strip():
         payload["stderr"] = stderr_text
