@@ -120,6 +120,11 @@ def _register_default_overrides() -> None:
         _make_session_logger_stub,
         "session_logger: binary dumps without ffmpeg",
     )
+    register(
+        "prometheus_fastapi_instrumentator",
+        _make_prometheus_instrumentator_stub,
+        "prometheus instrumentation disabled in sandbox",
+    )
 
     _DEFAULT_OVERRIDES_REGISTERED = True
 
@@ -220,8 +225,19 @@ def bootstrap(optional_modules: Iterable[str] | None = None) -> Path:
 
     _prepare_overrides()
 
-    for name in optional_modules or ():
-        _maybe_stub(name, force=_should_force_override(name))
+    requested_modules = tuple(optional_modules or ())
+    for name in requested_modules:
+        if name in _SANDBOX_OVERRIDES:
+            _maybe_stub(name, force=True)
+            continue
+        try:
+            importlib.import_module(name)
+        except Exception:  # pragma: no cover - import errors vary per sandbox
+            warnings.warn(
+                f"environment-limited: optional module '{name}' unavailable",
+                EnvironmentLimitedWarning,
+                stacklevel=3,
+            )
 
     _publish_environment_metadata()
     return root
@@ -299,9 +315,35 @@ def _make_env_validation_stub() -> types.ModuleType:
 def _make_neoabzu_memory_stub() -> types.ModuleType:
     module = types.ModuleType("neoabzu_memory")
 
-    from memory.optional.neoabzu_bundle import MemoryBundle as _OptionalMemoryBundle
+    try:  # pragma: no cover - heavy optional import varies per sandbox
+        from memory.optional.neoabzu_bundle import (
+            MemoryBundle as _OptionalMemoryBundle,
+        )
+    except Exception:
+        warnings.warn(
+            (
+                "environment-limited: neoabzu optional bundle unavailable; "
+                "using in-memory sandbox MemoryBundle"
+            ),
+            EnvironmentLimitedWarning,
+            stacklevel=3,
+        )
 
-    module.MemoryBundle = _OptionalMemoryBundle  # type: ignore[attr-defined]
+        class _OptionalMemoryBundle:  # type: ignore[override]
+            def __init__(self, *args, **kwargs) -> None:
+                self.args = args
+                self.kwargs = kwargs
+
+            def load(self) -> dict[str, object]:
+                return {}
+
+            def dump(self) -> dict[str, object]:  # pragma: no cover - simple stub
+                return {"status": "sandbox"}
+
+        module.MemoryBundle = _OptionalMemoryBundle
+    else:
+        module.MemoryBundle = _OptionalMemoryBundle  # type: ignore[attr-defined]
+
     module.__all__ = ["MemoryBundle"]
     return module
 
@@ -401,7 +443,11 @@ def _make_emotional_state_stub() -> types.ModuleType:
 def _make_servant_model_manager_stub() -> types.ModuleType:
     module = types.ModuleType("servant_model_manager")
 
-    registry: dict[str, Callable[[str], str | object]] = {}
+    import asyncio as _asyncio
+    import hashlib
+    import inspect as _inspect
+
+    registry: dict[str, Callable[[str], object]] = {}
 
     def register_model(name: str, handler: Callable[[str], object]) -> None:
         registry[name] = handler
@@ -409,13 +455,89 @@ def _make_servant_model_manager_stub() -> types.ModuleType:
     def unregister_model(name: str) -> None:
         registry.pop(name, None)
 
+    def reload_model(name: str, handler: Callable[[str], object]) -> None:
+        registry[name] = handler
+
+    def register_subprocess_model(name: str, command: list[str]) -> None:
+        """Register a deterministic sandbox subprocess stub."""
+
+        def _handler(prompt: str) -> str:
+            digest = hashlib.sha256(" ".join(command + [prompt]).encode("utf-8"))
+            return f"{name}:{digest.hexdigest()[:12]}"
+
+        registry[name] = _handler
+
     def list_models() -> list[str]:
         return sorted(registry)
 
+    def has_model(name: str) -> bool:
+        return name in registry
+
+    async def invoke(name: str, prompt: str) -> str:
+        handler = registry.get(name)
+        if handler is None:
+            raise KeyError(name)
+        result = handler(prompt)
+        if _inspect.isawaitable(result):
+            result = await result  # pragma: no cover - async handler path
+        return str(result)
+
+    def invoke_sync(name: str, prompt: str) -> str:
+        handler = registry.get(name)
+        if handler is None:
+            raise KeyError(name)
+        result = handler(prompt)
+        if _inspect.isawaitable(result):
+            loop = _asyncio.new_event_loop()
+            try:
+                return str(loop.run_until_complete(result))
+            finally:
+                loop.close()
+        return str(result)
+
+    def _sandbox_digest(prefix: str, prompt: str) -> str:
+        digest = hashlib.sha256(f"{prefix}:{prompt}".encode("utf-8"))
+        return f"{prefix}:{digest.hexdigest()[:12]}"
+
+    def register_kimi_k2() -> None:
+        def _kimi_stub(prompt: str) -> str:
+            return _sandbox_digest("kimi_k2", prompt)
+
+        register_model("kimi_k2", _kimi_stub)
+
+    def register_opencode() -> None:
+        def _opencode_stub(prompt: str) -> str:
+            return _sandbox_digest("opencode", prompt)
+
+        register_model("opencode", _opencode_stub)
+
+    def pulse_metrics(name: str) -> dict[str, float]:
+        return {"avg_latency": 0.0, "failure_rate": 0.0}
+
     module.register_model = register_model
     module.unregister_model = unregister_model
+    module.reload_model = reload_model
+    module.register_subprocess_model = register_subprocess_model
     module.list_models = list_models
-    module.__all__ = ["register_model", "unregister_model", "list_models"]
+    module.has_model = has_model
+    module.invoke = invoke
+    module.invoke_sync = invoke_sync
+    module.register_kimi_k2 = register_kimi_k2
+    module.register_opencode = register_opencode
+    module.pulse_metrics = pulse_metrics
+    module.__all__ = [
+        "register_model",
+        "unregister_model",
+        "reload_model",
+        "register_subprocess_model",
+        "list_models",
+        "has_model",
+        "invoke",
+        "invoke_sync",
+        "register_kimi_k2",
+        "register_opencode",
+        "pulse_metrics",
+    ]
     return module
 
 
@@ -460,6 +582,21 @@ def _make_session_logger_stub() -> types.ModuleType:
     module.log_audio = log_audio
     module.log_video = log_video
     module.__all__ = ["log_audio", "log_video", "AUDIO_DIR", "VIDEO_DIR"]
+    return module
+
+
+def _make_prometheus_instrumentator_stub() -> types.ModuleType:
+    module = types.ModuleType("prometheus_fastapi_instrumentator")
+
+    class Instrumentator:  # pragma: no cover - simple sandbox stub
+        def instrument(self, app=None):  # type: ignore[override]
+            return self
+
+        def expose(self, app=None, **kwargs):  # type: ignore[override]
+            return self
+
+    module.Instrumentator = Instrumentator
+    module.__all__ = ["Instrumentator"]
     return module
 
 
