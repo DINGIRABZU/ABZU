@@ -1,6 +1,8 @@
 """Tests for operator api."""
 
+import inspect
 import json
+import os
 import shutil
 import sys
 from datetime import datetime, timezone
@@ -29,6 +31,9 @@ def client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
     app = FastAPI()
     app.include_router(operator_api.router)
     monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(operator_api, "_STAGE_A_ROOT", Path("logs") / "stage_a")
+    monkeypatch.setattr(operator_api, "_STAGE_B_ROOT", Path("logs") / "stage_b")
+    monkeypatch.setattr(operator_api, "_STAGE_C_ROOT", Path("logs") / "stage_c")
     operator_api._event_clients.clear()
     with TestClient(app) as c:
         yield c
@@ -61,7 +66,7 @@ def configure_subprocess(
     stdout: bytes = b"",
     stderr: bytes = b"",
     returncode: int = 0,
-    on_spawn: Callable[[tuple[Any, ...]], None] | None = None,
+    on_spawn: Callable[[tuple[Any, ...], dict[str, Any]], None] | None = None,
 ) -> None:
     """Replace subprocess execution with a dummy process returning canned output."""
 
@@ -74,7 +79,25 @@ def configure_subprocess(
 
     async def fake_create_subprocess_exec(*args: Any, **kwargs: Any) -> DummyProcess:
         if on_spawn is not None:
-            on_spawn(args)
+            call_with_kwargs = True
+            try:
+                signature = inspect.signature(on_spawn)
+            except (TypeError, ValueError):
+                call_with_kwargs = True
+            else:
+                params = list(signature.parameters.values())
+                positional = [
+                    p
+                    for p in params
+                    if p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)
+                ]
+                has_var_positional = any(p.kind == p.VAR_POSITIONAL for p in params)
+                if len(positional) < 2 and not has_var_positional:
+                    call_with_kwargs = False
+            if call_with_kwargs:
+                on_spawn(args, kwargs)
+            else:
+                on_spawn(args)
         return DummyProcess()
 
     monkeypatch.setattr(
@@ -132,6 +155,54 @@ def test_stage_a2_crown_replays_success(
     summary = _load_summary(body["summary_path"])
     assert summary["status"] == "success"
     assert "environment-limited" in summary.get("stderr", "")
+
+
+def test_stage_a_env_injection_and_module_isolation(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Stage A workflows inject sandbox env vars and work without cached modules."""
+
+    monkeypatch.setenv("PYTHONPATH", "/legacy/path")
+    monkeypatch.setenv("ABZU_SANDBOX_OVERRIDES", "sandbox=beta")
+
+    captured_envs: list[dict[str, Any]] = []
+
+    def on_spawn(_args: tuple[Any, ...], kwargs: dict[str, Any]) -> None:
+        env = kwargs.get("env")
+        assert env is not None
+        captured_envs.append(env)
+
+    configure_subprocess(
+        monkeypatch,
+        stdout=b"ok\n",
+        stderr=b"",
+        returncode=0,
+        on_spawn=on_spawn,
+    )
+
+    monkeypatch.delitem(sys.modules, "scripts.bootstrap", raising=False)
+    monkeypatch.delitem(sys.modules, "scripts.crown_capture_replays", raising=False)
+
+    resp_boot = client.post("/alpha/stage-a1-boot-telemetry")
+    resp_replays = client.post("/alpha/stage-a2-crown-replays")
+
+    assert resp_boot.status_code == 200
+    assert resp_replays.status_code == 200
+    assert resp_boot.json()["status"] == "success"
+    assert resp_replays.json()["status"] == "success"
+
+    repo_prefix = [str(operator_api._REPO_ROOT)]
+    src_dir = operator_api._REPO_ROOT / "src"
+    if src_dir.exists():
+        repo_prefix.append(str(src_dir))
+
+    assert len(captured_envs) >= 2
+    for env in captured_envs:
+        assert env["ABZU_FORCE_STAGE_SANDBOX"] == "1"
+        assert env.get("ABZU_SANDBOX_OVERRIDES") == "sandbox=beta"
+        pythonpath_parts = env["PYTHONPATH"].split(os.pathsep)
+        assert pythonpath_parts[: len(repo_prefix)] == repo_prefix
+        assert os.pathsep.join(pythonpath_parts[len(repo_prefix) :]) == "/legacy/path"
 
 
 def test_command_dispatches(
@@ -276,13 +347,16 @@ def test_events_websocket(
         assert progress["percent"] == 100
 
 
-def test_status_endpoint(client: TestClient, tmp_path: Path) -> None:
+def test_status_endpoint(
+    client: TestClient, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     log_dir = tmp_path / "logs"
     log_dir.mkdir()
     (log_dir / "razar_mission.log").write_text("error: boom\nok\n")
     mem_dir = tmp_path / "memory"
     mem_dir.mkdir()
     (mem_dir / "item.txt").write_text("data")
+    monkeypatch.setattr(operator_api, "_REPO_ROOT", Path.cwd())
     resp = client.get("/operator/status")
     assert resp.status_code == 200
     body = resp.json()
