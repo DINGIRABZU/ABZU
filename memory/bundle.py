@@ -15,9 +15,9 @@ try:
     _BUNDLE_SOURCE = "neoabzu_memory"
     _IMPORT_ERROR: ModuleNotFoundError | None = None
 except ModuleNotFoundError as exc:
-    from memory.optional.neoabzu_bundle import MemoryBundle as _StubBundle
+    from memory.optional.neoabzu_stub import MemoryBundle as _StubBundle
 
-    _BUNDLE_SOURCE = "memory.optional.neoabzu_bundle"
+    _BUNDLE_SOURCE = "memory.optional.neoabzu_stub"
     _IMPORT_ERROR = exc
 
     def _bundle_factory() -> Any:
@@ -39,6 +39,9 @@ class MemoryBundle:
         self._bundle = _bundle_factory()
         self._tracer = get_tracer(__name__)
         self.stubbed: bool = getattr(self._bundle, "stubbed", False)
+        self.implementation: str | None = getattr(
+            self._bundle, "implementation", _BUNDLE_SOURCE
+        )
         self.fallback_reason: str | None = getattr(
             self._bundle, "fallback_reason", None
         )
@@ -83,10 +86,25 @@ class MemoryBundle:
         self.statuses = statuses
         self.diagnostics = diagnostics
         self.stubbed = bool(result.get("stubbed", self.stubbed))
+        self.implementation = result.get("implementation", self.implementation)
         if self.stubbed:
             for layer in statuses:
                 statuses[layer] = "skipped"
         self.fallback_reason = result.get("fallback_reason", self.fallback_reason)
+        bundle_diag = {
+            "implementation": self.implementation,
+            "stubbed": self.stubbed,
+            "source_module": _BUNDLE_SOURCE,
+        }
+        existing_bundle_diag = diagnostics_raw.get("__bundle__")
+        if isinstance(existing_bundle_diag, dict):
+            for key, value in existing_bundle_diag.items():
+                bundle_diag.setdefault(key, value)
+        if self.fallback_reason:
+            bundle_diag["fallback_reason"] = self.fallback_reason
+        if _IMPORT_ERROR is not None:
+            bundle_diag["import_error"] = repr(_IMPORT_ERROR)
+        diagnostics["__bundle__"] = bundle_diag
         if optional_fallbacks:
             summary_pairs = []
             for layer, entry in optional_fallbacks:
