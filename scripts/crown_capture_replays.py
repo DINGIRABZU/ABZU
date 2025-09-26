@@ -11,6 +11,7 @@ import logging
 import random
 import sys
 import tempfile
+import warnings
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -21,9 +22,14 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 if str(_SCRIPT_DIR.parent) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIR.parent))
 
-from scripts import _stage_runtime
+from scripts._stage_runtime import (
+    EnvironmentLimitedWarning,
+    bootstrap,
+    format_sandbox_summary,
+    get_sandbox_overrides,
+)
 
-ROOT = _stage_runtime.bootstrap(
+ROOT = bootstrap(
     optional_modules=[
         "numpy",
         "yaml",
@@ -38,20 +44,293 @@ ROOT = _stage_runtime.bootstrap(
 
 try:  # pragma: no cover - optional dependency
     import numpy as np
-except Exception:  # pragma: no cover - numpy optional
+except Exception as exc:  # pragma: no cover - numpy optional
+    warnings.warn(
+        f"environment-limited: numpy unavailable ({exc}); using deterministic stub",
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
     np = None  # type: ignore[assignment]
 
 try:  # pragma: no cover - optional dependency
     import yaml
-except Exception as exc:  # pragma: no cover - yaml required at runtime
-    raise RuntimeError("PyYAML is required to load Crown replay scenarios") from exc
+except Exception as exc:  # pragma: no cover - yaml optional in sandbox
+    warnings.warn(
+        f"environment-limited: PyYAML unavailable ({exc}); using bundled scenarios",
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+    yaml = None  # type: ignore[assignment]
 
-import crown_decider
-import crown_prompt_orchestrator as cpo
-import emotional_state
-import servant_model_manager as smm
-from state_transition_engine import StateTransitionEngine
-from tools import session_logger
+try:
+    import crown_decider
+except Exception as exc:  # pragma: no cover - sandbox stub fallback
+    warnings.warn(
+        f"environment-limited: crown_decider unavailable ({exc}); using sandbox stub",
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+    crown_decider = sys.modules.get("crown_decider")  # type: ignore[assignment]
+    if crown_decider is None:
+        raise
+
+try:
+    import crown_prompt_orchestrator as cpo
+except Exception as exc:  # pragma: no cover - sandbox stub fallback
+    warnings.warn(
+        (
+            "environment-limited: crown_prompt_orchestrator unavailable "
+            f"({exc}); using sandbox stub"
+        ),
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+    cpo = sys.modules.get("crown_prompt_orchestrator")  # type: ignore[assignment]
+    if cpo is None:
+        raise
+
+try:
+    import emotional_state
+except Exception as exc:  # pragma: no cover - sandbox stub fallback
+    warnings.warn(
+        (
+            "environment-limited: emotional_state unavailable "
+            f"({exc}); using sandbox stub"
+        ),
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+    emotional_state = sys.modules.get("emotional_state")  # type: ignore[assignment]
+    if emotional_state is None:
+        raise
+
+try:
+    import servant_model_manager as smm
+except Exception as exc:  # pragma: no cover - sandbox stub fallback
+    warnings.warn(
+        (
+            "environment-limited: servant_model_manager unavailable "
+            f"({exc}); using sandbox stub"
+        ),
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+    smm = sys.modules.get("servant_model_manager")  # type: ignore[assignment]
+    if smm is None:
+        raise
+
+try:
+    from state_transition_engine import StateTransitionEngine
+except Exception as exc:  # pragma: no cover - sandbox stub fallback
+    warnings.warn(
+        "environment-limited: state_transition_engine unavailable "
+        f"({exc}); using sandbox stub",
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+    _state_mod = sys.modules.get("state_transition_engine")
+    if _state_mod is None or not hasattr(_state_mod, "StateTransitionEngine"):
+        raise RuntimeError("state_transition_engine stub missing") from exc
+    StateTransitionEngine = _state_mod.StateTransitionEngine  # type: ignore[assignment]
+
+try:
+    from tools import session_logger
+except Exception as exc:  # pragma: no cover - sandbox stub fallback
+    warnings.warn(
+        (
+            "environment-limited: session_logger unavailable "
+            f"({exc}); using sandbox stub"
+        ),
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
+    session_logger = sys.modules.get("tools.session_logger")  # type: ignore[assignment]
+    if session_logger is None:
+        raise
+
+FALLBACK_SCENARIO_PAYLOAD = {
+    "scenarios": [
+        {
+            "id": "crown_glm_reflection",
+            "description": "Baseline GLM reflection without servant escalation.",
+            "prompt": (
+                "Crown, offer a reflective meditation on how the mission "
+                "doctrine guides today's operator sync.\n"
+            ),
+            "expected_model": "glm",
+            "include_memory": False,
+            "seed": 1101,
+            "context": [
+                {"input": "Operator: confirm Crown identity assimilation transcript."},
+                {"input": "Crown: mission brief acknowledged; awaiting directives."},
+            ],
+        },
+        {
+            "id": "crown_kimicho_guidance",
+            "description": "Technical triage escalated to the Kimicho servant.",
+            "prompt": (
+                "Kimicho, diagnose this failure signature and outline a minimal "
+                "patch.\n"
+                "Traceback: ValueError: ritual binding missing during activation "
+                "stage.\n"
+            ),
+            "expected_model": "kimicho",
+            "include_memory": True,
+            "seed": 2102,
+            "memory": {
+                "spiral": (
+                    "Ritual ledger flagged missing binding during prior "
+                    "rehearsal."
+                ),
+                "cortex": [
+                    (
+                        "Kimicho heuristic: prefer minimal code insertion before "
+                        "escalation."
+                    ),
+                ],
+                "vector": [
+                    {
+                        "text": (
+                            "Operator note: retain existing bindings when applying "
+                            "Kimicho patch."
+                        ),
+                    }
+                ],
+            },
+            "context": [
+                {
+                    "input": (
+                        "Operator: escalation requested for ritual binding fault."
+                    ),
+                }
+            ],
+        },
+        {
+            "id": "crown_kimi_k2_revision",
+            "description": (
+                "Kimicho relays to the K2 Coder servant for code-first "
+                "repair."
+            ),
+            "prompt": (
+                "K2 Coder, rewrite the failing binding so the activation ritual "
+                "resolves\n"
+                "without additional side effects.\n"
+            ),
+            "expected_model": "kimi_k2",
+            "include_memory": True,
+            "seed": 3103,
+            "memory": {
+                "spiral": (
+                    "Kimicho report: binding lookup requires explicit null-guard."
+                ),
+                "cortex": [
+                    (
+                        "Prior K2 Coder patch inserted guard rails for activation "
+                        "step."
+                    ),
+                ],
+                "vector": [
+                    {
+                        "text": (
+                            "Telemetry: activation ritual fails after three attempts "
+                            "without guard."
+                        ),
+                    }
+                ],
+            },
+            "context": [
+                {
+                    "input": (
+                        "Kimicho: escalation to K2 coder triggered after minimal "
+                        "patch attempt."
+                    ),
+                }
+            ],
+        },
+        {
+            "id": "crown_air_star_validation",
+            "description": (
+                "Air Star reviews cross-file impact before final escalation."
+            ),
+            "prompt": (
+                "Air Star, evaluate the revised binding plan and stage validation "
+                "notes for\n"
+                "the operator review packet.\n"
+            ),
+            "expected_model": "air_star",
+            "include_memory": True,
+            "seed": 4104,
+            "memory": {
+                "spiral": "K2 Coder patch introduces guard_path parameter.",
+                "cortex": [
+                    (
+                        "Air Star directive: cross-verify companion modules before "
+                        "merge."
+                    ),
+                ],
+                "vector": [
+                    {
+                        "text": (
+                            "Review log: ensure guard_path maintains ritual state "
+                            "machine invariants."
+                        ),
+                    }
+                ],
+            },
+            "context": [
+                {
+                    "input": (
+                        "K2 Coder: patch candidate ready; requesting Air Star "
+                        "validation."
+                    ),
+                }
+            ],
+        },
+        {
+            "id": "crown_rstar_finalization",
+            "description": (
+                "Final rStar escalation capturing the terminal remediation "
+                "output."
+            ),
+            "prompt": (
+                "rStar, synthesize the final remediation script so the ritual "
+                "activation\n"
+                "completes even under degraded telemetry.\n"
+            ),
+            "expected_model": "rstar",
+            "include_memory": True,
+            "seed": 5105,
+            "memory": {
+                "spiral": (
+                    "Air Star verdict: guard_path needs resilience hooks for "
+                    "telemetry gaps."
+                ),
+                "cortex": [
+                    (
+                        "rStar escalation protocol: include rollback stanza in final "
+                        "patch."
+                    ),
+                ],
+                "vector": [
+                    {
+                        "text": (
+                            "Operator directive: archive final remediation in Stage A "
+                            "evidence bundle."
+                        ),
+                    }
+                ],
+            },
+            "context": [
+                {
+                    "input": (
+                        "Air Star: handing final remediation to rStar with validation "
+                        "notes."
+                    ),
+                }
+            ],
+        },
+    ]
+}
 
 session_logger.AUDIO_DIR = ROOT / "logs/audio"
 session_logger.VIDEO_DIR = ROOT / "logs/video"
@@ -121,7 +400,20 @@ def _sha256_result(result: dict[str, Any]) -> str:
 
 
 def _load_scenarios(path: Path) -> list[dict[str, Any]]:
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if yaml is None:
+        warnings.warn(
+            (
+                "environment-limited: falling back to bundled Crown replay scenarios"
+                " because PyYAML is unavailable"
+            ),
+            EnvironmentLimitedWarning,
+            stacklevel=2,
+        )
+        import json as _json
+
+        data = _json.loads(_json.dumps(FALLBACK_SCENARIO_PAYLOAD))
+    else:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict) or "scenarios" not in data:
         raise ValueError(f"Scenario file {path} is missing a 'scenarios' list")
     scenarios = data["scenarios"]
@@ -298,7 +590,7 @@ def _validate_and_update_metadata(
         "video_hash": capture.video_hash,
         "servant_prompt": capture.servant_prompt,
     }
-    overrides = _stage_runtime.get_sandbox_overrides()
+    overrides = get_sandbox_overrides()
     if overrides:
         capture_payload["sandbox_overrides"] = overrides
 
@@ -429,7 +721,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     processed = asyncio.run(_async_main(args))
     prefix = f"Stage A2 crown replays captured ({processed} scenarios)"
-    print(_stage_runtime.format_sandbox_summary(prefix))
+    print(format_sandbox_summary(prefix))
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry point

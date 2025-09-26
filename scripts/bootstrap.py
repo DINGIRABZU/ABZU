@@ -13,9 +13,13 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 if str(_SCRIPT_DIR.parent) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIR.parent))
 
-from scripts import _stage_runtime
+from scripts._stage_runtime import (
+    EnvironmentLimitedWarning,
+    bootstrap,
+    format_sandbox_summary,
+)
 
-ROOT = _stage_runtime.bootstrap(optional_modules=["env_validation"])
+ROOT = bootstrap(optional_modules=["env_validation"])
 
 try:  # pragma: no cover - guarded import for sandboxed envs
     from env_validation import check_required
@@ -24,7 +28,7 @@ except Exception:  # pragma: no cover - fallback to stubbed check
     def check_required(_: tuple[str, ...]) -> None:
         warnings.warn(
             "environment-limited: env_validation unavailable; skipping checks",
-            _stage_runtime.EnvironmentLimitedWarning,
+            EnvironmentLimitedWarning,
             stacklevel=2,
         )
 
@@ -61,7 +65,7 @@ def ensure_optional_deps() -> None:
                         "environment-limited: unable to install optional package "
                         f"'{package}' ({exc})"
                     ),
-                    _stage_runtime.EnvironmentLimitedWarning,
+                    EnvironmentLimitedWarning,
                     stacklevel=2,
                 )
 
@@ -73,7 +77,7 @@ def validate_env() -> None:
     except SystemExit as exc:  # pragma: no cover - sandbox fallback
         warnings.warn(
             f"environment-limited: {exc}; continuing without required credentials",
-            _stage_runtime.EnvironmentLimitedWarning,
+            EnvironmentLimitedWarning,
             stacklevel=2,
         )
 
@@ -131,7 +135,7 @@ def main() -> None:
     validate_env()
     device = detect_device()
     log_hardware_support(device)
-    print(_stage_runtime.format_sandbox_summary("Stage A1 bootstrap completed"))
+    print(format_sandbox_summary("Stage A1 bootstrap completed"))
 
 
 if __name__ == "__main__":

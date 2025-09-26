@@ -16,16 +16,19 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR.parent) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR.parent))
 
-from scripts import _stage_runtime
+from scripts._stage_runtime import (
+    EnvironmentLimitedWarning,
+    bootstrap,
+)
 
-_stage_runtime.bootstrap(optional_modules=[])
+bootstrap(optional_modules=[])
 
 try:  # pragma: no cover - optional dependency varies per sandbox
     from prometheus_client import CollectorRegistry, Gauge, write_to_textfile
 except Exception as exc:  # pragma: no cover - sandbox fallback
     warnings.warn(
         f"environment-limited: prometheus_client unavailable ({exc})",
-        _stage_runtime.EnvironmentLimitedWarning,
+        EnvironmentLimitedWarning,
         stacklevel=2,
     )
 
