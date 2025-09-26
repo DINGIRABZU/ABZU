@@ -80,6 +80,13 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 
 ### Stage A evidence register
 
+The 20250926 Stage A gate run (`logs/alpha_gate/20250926T115603Z/`) is the
+canonical review artifact for the alpha readiness gate; reviewers should cross
+check the accompanying Prometheus exports in
+[`monitoring/alpha_gate.prom`](../monitoring/alpha_gate.prom) and
+[`monitoring/alpha_gate_summary.json`](../monitoring/alpha_gate_summary.json) to
+see the recorded metrics snapshot from that bundle.
+
 | Timestamp (UTC) | Location | Notes |
 | --- | --- | --- |
 | 2025-09-24T11:52:45Z | `logs/stage_a/20250924T115245Z-stage_a3_gate_shakeout/summary.json` | Stage A3 gate shakeout recorded the automation transcript but still exited with status 1; investigate the follow-up triage noted in the summary before re-running. |
