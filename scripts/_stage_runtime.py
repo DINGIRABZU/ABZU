@@ -316,33 +316,58 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
     module = types.ModuleType("neoabzu_memory")
 
     try:  # pragma: no cover - heavy optional import varies per sandbox
-        from memory.optional.neoabzu_bundle import (
-            MemoryBundle as _OptionalMemoryBundle,
-        )
+        from memory.optional import neoabzu_bundle as _fallback_bundle
     except Exception:
         warnings.warn(
             (
                 "environment-limited: neoabzu optional bundle unavailable; "
-                "using in-memory sandbox MemoryBundle"
+                "using minimal sandbox MemoryBundle"
             ),
             EnvironmentLimitedWarning,
             stacklevel=3,
         )
 
-        class _OptionalMemoryBundle:  # type: ignore[override]
-            def __init__(self, *args, **kwargs) -> None:
+        class MemoryBundle:  # type: ignore[override]
+            """Emergency fallback when both the Rust and Python bundles fail."""
+
+            fallback_reason = "neoabzu_memory_unavailable"
+
+            def __init__(self, *args, **kwargs) -> None:  # pragma: no cover
                 self.args = args
                 self.kwargs = kwargs
+                self.stubbed = True
 
-            def load(self) -> dict[str, object]:
-                return {}
+            def initialize(self) -> dict[str, object]:
+                return {
+                    "statuses": {},
+                    "diagnostics": {},
+                    "stubbed": True,
+                    "fallback_reason": self.fallback_reason,
+                }
 
-            def dump(self) -> dict[str, object]:  # pragma: no cover - simple stub
-                return {"status": "sandbox"}
+            def query(self, _text: str) -> dict[str, object]:
+                return {"stubbed": True, "failed_layers": []}
 
-        module.MemoryBundle = _OptionalMemoryBundle
+        module.MemoryBundle = MemoryBundle
     else:
-        module.MemoryBundle = _OptionalMemoryBundle  # type: ignore[attr-defined]
+
+        class MemoryBundle(_fallback_bundle.MemoryBundle):  # type: ignore[misc]
+            """Stage sandbox shim delegating to the Python fallback bundle."""
+
+            def __init__(
+                self,
+                *args,
+                import_error: BaseException | None = None,
+                **kwargs,
+            ) -> None:
+                if import_error is None:
+                    import_error = ModuleNotFoundError(
+                        "neoabzu_memory extension not installed (sandbox shim)"
+                    )
+                super().__init__(import_error=import_error)  # type: ignore[arg-type]
+
+        MemoryBundle.__module__ = module.__name__
+        module.MemoryBundle = MemoryBundle
 
     module.__all__ = ["MemoryBundle"]
     return module
