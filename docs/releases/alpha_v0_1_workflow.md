@@ -137,6 +137,15 @@ writes the metrics to `monitoring/alpha_gate.prom` and a companion
 `monitoring/alpha_gate_summary.json` before copying them into the same
 timestamped directory.
 
+> [!REVIEWER NOTE]
+> The canonical Stage A evidence bundle lives under
+> `logs/alpha_gate/20250926T115603Z/`; reuse that directory (and the copied
+> metrics exports in [`monitoring/alpha_gate.prom`](../../monitoring/alpha_gate.prom)
+> and [`monitoring/alpha_gate_summary.json`](../../monitoring/alpha_gate_summary.json))
+> instead of re-running the gate in GitHub Actions or the Codex sandbox. The
+> bundle already includes the exported `.prom` textfile and JSON summary needed
+> for traceability reviews.
+
 ```bash
 ./scripts/run_alpha_gate.sh
 ```
