@@ -43,6 +43,7 @@ _FORCED_MODULES = {
     "crown_decider",
     "crown_prompt_orchestrator",
     "emotional_state",
+    "neoabzu_memory",
     "servant_model_manager",
     "state_transition_engine",
 }
@@ -98,6 +99,11 @@ def _register_default_overrides() -> None:
         "emotional_state",
         _make_emotional_state_stub,
         "emotional_state: in-memory state used",
+    )
+    register(
+        "neoabzu_memory",
+        _make_neoabzu_memory_stub,
+        "neoabzu_memory: optional bundle shim activated",
     )
     register(
         "servant_model_manager",
@@ -287,6 +293,16 @@ def _make_env_validation_stub() -> types.ModuleType:
         "check_rl_packages",
         "parse_servant_models",
     ]
+    return module
+
+
+def _make_neoabzu_memory_stub() -> types.ModuleType:
+    module = types.ModuleType("neoabzu_memory")
+
+    from memory.optional.neoabzu_bundle import MemoryBundle as _OptionalMemoryBundle
+
+    module.MemoryBundle = _OptionalMemoryBundle  # type: ignore[attr-defined]
+    module.__all__ = ["MemoryBundle"]
     return module
 
 
