@@ -164,7 +164,10 @@ def _prepare_overrides() -> None:
     for name in list(_SANDBOX_OVERRIDES):
         if name in sys.modules and not _should_force_override(name):
             continue
-        spec = importlib.util.find_spec(name)
+        try:
+            spec = importlib.util.find_spec(name)
+        except ValueError:  # pragma: no cover - malformed module spec
+            spec = None
         if spec is None or _should_force_override(name):
             _apply_override(name, force=_should_force_override(name))
 
@@ -452,8 +455,13 @@ def _make_crown_orchestrator_stub() -> types.ModuleType:
 
     state_mod = sys.modules.get("state_transition_engine")
     if state_mod is None:
-        _maybe_stub("state_transition_engine")
+        _apply_override(
+            "state_transition_engine",
+            force=_should_force_override("state_transition_engine"),
+        )
         state_mod = sys.modules.get("state_transition_engine")
+    if state_mod is None:  # pragma: no cover - defensive guard
+        raise RuntimeError("state_transition_engine sandbox stub unavailable")
     StateTransitionEngine = getattr(state_mod, "StateTransitionEngine")
 
     _STATE_ENGINE = StateTransitionEngine()
