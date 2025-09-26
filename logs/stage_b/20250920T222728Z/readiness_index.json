@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-24T11:52:54Z",
+  "generated_at": "2025-09-26T18:03:05Z",
   "stage_a": {
     "stage_a1_boot_telemetry": {
       "run_id": "20250924T115244Z-stage_a1_boot_telemetry",
@@ -39,11 +39,11 @@
       "notes": "Rehearsal packet exported to stage_b_rehearsal_packet.json."
     },
     "stage_b3_connector_rotation": {
-      "run_id": "20250924T115254Z-stage_b3_connector_rotation",
-      "summary_path": "logs/stage_b/20250924T115254Z-stage_b3_connector_rotation/summary.json",
-      "status": "error",
-      "log_dir": "logs/stage_b/20250924T115254Z-stage_b3_connector_rotation",
-      "notes": "Connector rotation smoke failed: connectors package import missing."
+      "run_id": "20250926T180250Z-stage_b3_connector_rotation",
+      "summary_path": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/summary.json",
+      "status": "success",
+      "log_dir": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation",
+      "notes": "Stage B smoke captured handshake and heartbeat payloads while appending rotation windows 20250926T180231Z-PT48H and 20250926T180300Z-PT48H to the ledger."
     }
   }
 }

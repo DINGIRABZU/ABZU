@@ -25,6 +25,7 @@ from connectors.operator_mcp_adapter import (
 )
 
 LOGGER = logging.getLogger(__name__)
+_STUB_ENV_FLAG = "ABZU_STAGE_B_SMOKE_STUB"
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -53,11 +54,89 @@ def _isoformat(value: datetime) -> str:
     )
 
 
+def _use_stub_adapter() -> bool:
+    flag = os.getenv(_STUB_ENV_FLAG, "")
+    return flag.lower() in {"1", "true", "yes", "on"}
+
+
+def _build_stub_handshake(now: datetime) -> dict[str, Any]:
+    rotation_window = f"PT{ROTATION_WINDOW_HOURS}H"
+    rotated_at = _isoformat(now)
+    rotation_metadata = {
+        "connector_id": "operator_api",
+        "last_rotated": rotated_at,
+        "rotation_window": rotation_window,
+        "window_id": f"{now.strftime('%Y%m%dT%H%M%SZ')}-{rotation_window}",
+    }
+    expiry = _isoformat(now + timedelta(hours=ROTATION_WINDOW_HOURS))
+    return {
+        "authenticated": True,
+        "session": {
+            "id": "stage-b-session",
+            "credential_expiry": expiry,
+        },
+        "accepted_contexts": [
+            {"name": "stage-b-rehearsal", "status": "accepted"},
+            {"name": "stage-c-prep", "status": "pending"},
+        ],
+        "rotation": rotation_metadata,
+        "echo": {"rotation": dict(rotation_metadata)},
+    }
+
+
+class _StubOperatorAdapter:
+    """In-memory adapter used when the MCP gateway is unavailable."""
+
+    def __init__(self) -> None:
+        now = datetime.now(timezone.utc)
+        self._handshake = _build_stub_handshake(now)
+
+    async def ensure_handshake(self) -> dict[str, Any]:
+        LOGGER.info("Using stubbed Stage B handshake payload")
+        LOGGER.debug("Stub handshake payload: %s", self._handshake)
+        return dict(self._handshake)
+
+    async def emit_stage_b_heartbeat(
+        self,
+        payload: dict[str, Any],
+        *,
+        credential_expiry: datetime | None = None,
+    ) -> dict[str, Any]:
+        heartbeat_payload = dict(payload)
+        heartbeat_payload.setdefault("event", "stage-b-smoke")
+        session = self._handshake.get("session", {})
+        heartbeat_payload.setdefault("session", session)
+        expiry_candidate: datetime | None = None
+        if isinstance(credential_expiry, datetime):
+            expiry_candidate = credential_expiry
+        elif isinstance(session, dict):
+            raw_expiry = session.get("credential_expiry")
+            if isinstance(raw_expiry, str) and raw_expiry:
+                try:
+                    expiry_candidate = datetime.fromisoformat(
+                        raw_expiry.replace("Z", "+00:00")
+                    )
+                except ValueError:
+                    expiry_candidate = None
+        if expiry_candidate is None:
+            expiry_candidate = datetime.now(timezone.utc) + timedelta(
+                hours=ROTATION_WINDOW_HOURS
+            )
+        heartbeat_payload["credential_expiry"] = _isoformat(expiry_candidate)
+        return heartbeat_payload
+
+
+def _build_adapter() -> OperatorMCPAdapter | _StubOperatorAdapter:
+    if _use_stub_adapter():
+        return _StubOperatorAdapter()
+    return OperatorMCPAdapter()
+
+
 async def _run_operator_checks(
     *,
     emit_heartbeat: bool,
 ) -> tuple[dict[str, Any], dict[str, Any] | None, str | None]:
-    adapter = OperatorMCPAdapter()
+    adapter = _build_adapter()
     handshake_data = await adapter.ensure_handshake()
 
     heartbeat_payload: dict[str, Any] | None = None

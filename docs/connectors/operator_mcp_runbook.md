@@ -94,7 +94,7 @@ must include `stage-b-rehearsal` or the template raises an exception, causing
 
 Use `python scripts/generate_stage_b_rehearsal_packet.py` when a dry-run rehearsal needs Stage B handshake and heartbeat artifacts without touching the live gateway. The script writes `logs/stage_b_rehearsal_packet.json`, capturing the outbound handshake payload, the mock gateway response, the emitted heartbeat, and the doctrine verdict for each connector.
 
-- The latest run (`run_id: 20250925T100029Z-stage_b3_connector_rotation`, rotation window `20250925T095833Z-PT48H`) recorded `doctrine_ok: true` for `operator_api`, `operator_upload`, and `crown_handshake`; the ledger also retains the prior windows `20250925T094604Z-PT48H`, `20250922T101554Z-PT48H`, and `20251024T174210Z-PT48H` for traceability.【F:logs/stage_b/20250925T100029Z-stage_b3_connector_rotation/summary.json†L1-L40】【F:logs/stage_b_rotation_drills.jsonl†L12-L23】
+- The latest run (`run_id: 20250926T180250Z-stage_b3_connector_rotation`, rotation windows `20250926T180300Z-PT48H` and `20250926T180231Z-PT48H`) recorded `doctrine_ok: true` for `operator_api`, `operator_upload`, and `crown_handshake`; the ledger also retains the prior windows `20250925T095833Z-PT48H`, `20250925T094604Z-PT48H`, `20250922T101554Z-PT48H`, and `20251024T174210Z-PT48H` for traceability.【F:logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/summary.json†L1-L55】【F:logs/stage_b_rotation_drills.jsonl†L24-L33】
 - If any future run surfaces entries in `doctrine_failures`, document the issue and the remediation steps in the rehearsal packet before attempting production rotations.
 
 Archive the JSON alongside the rotation ledger so auditors can confirm the MCP contract payloads used during the rehearsal.
