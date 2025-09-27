@@ -9,6 +9,7 @@ import json
 import logging
 import shutil
 import tarfile
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -32,6 +33,7 @@ class DemoStep:
     sync_offset_s: float
     dropout: bool
     source_event: dict[str, Any]
+    stage_b_manifest_entry: dict[str, Any]
 
 
 @dataclass
@@ -213,12 +215,8 @@ def _build_steps(
         manifest_entry = manifest_by_step.get(step_id)
         if not manifest_entry:
             raise StageBAssetError(f"No media manifest entry found for step {step_id}")
-        audio_entry = manifest_entry.get("audio_path")
-        video_entry = manifest_entry.get("video_path")
-        if not audio_entry or not video_entry:
-            raise StageBAssetError(
-                f"Media manifest entry for step {step_id} missing audio/video paths"
-            )
+        audio_entry = _resolve_media_path(manifest_entry, "audio")
+        video_entry = _resolve_media_path(manifest_entry, "video")
         prompt = row.get("prompt") or manifest_entry.get("prompt") or step_id
         emotion = row.get("emotion", "")
         timestamp = row.get("timestamp")
@@ -230,16 +228,67 @@ def _build_steps(
                 prompt=prompt,
                 emotion=emotion,
                 timestamp=timestamp,
-                audio_rel_path=Path(audio_entry),
-                video_rel_path=Path(video_entry),
+                audio_rel_path=audio_entry,
+                video_rel_path=video_entry,
                 audio_duration_s=float(row.get("audio_duration_s", 0.0) or 0.0),
                 video_duration_s=float(row.get("video_duration_s", 0.0) or 0.0),
                 sync_offset_s=float(row.get("sync_offset_s", 0.0) or 0.0),
                 dropout=bool(row.get("dropout", False)),
                 source_event=row,
+                stage_b_manifest_entry=manifest_entry,
             )
         )
     return steps
+
+
+def _resolve_media_path(entry: dict[str, Any], media_key: str) -> Path:
+    def _path_from_dict(candidate: dict[str, Any]) -> Path | None:
+        for key in ("path", "relative_path", "rel_path"):
+            value = candidate.get(key)
+            if isinstance(value, str) and value:
+                return Path(value)
+        source = candidate.get("source")
+        if isinstance(source, dict):
+            result = _path_from_dict(source)
+            if result is not None:
+                return result
+        # Some manifests may wrap assets under variant keys
+        for subvalue in candidate.values():
+            if isinstance(subvalue, dict):
+                result = _path_from_dict(subvalue)
+                if result is not None:
+                    return result
+        return None
+
+    direct = entry.get(f"{media_key}_path")
+    if isinstance(direct, str) and direct:
+        return Path(direct)
+
+    container = entry.get(media_key)
+    if isinstance(container, dict):
+        resolved = _path_from_dict(container)
+        if resolved is not None:
+            return resolved
+
+    assets_container = entry.get("assets")
+    if isinstance(assets_container, dict):
+        specific = assets_container.get(media_key)
+        if isinstance(specific, dict):
+            resolved = _path_from_dict(specific)
+            if resolved is not None:
+                return resolved
+    if isinstance(assets_container, list):
+        for asset in assets_container:
+            if not isinstance(asset, dict):
+                continue
+            if asset.get("kind") == media_key or asset.get("type") == media_key:
+                resolved = _path_from_dict(asset)
+                if resolved is not None:
+                    return resolved
+
+    raise StageBAssetError(
+        f"Media manifest entry for step {entry.get('step_id')} missing {media_key} path"
+    )
 
 
 def _copy_file(
@@ -389,32 +438,43 @@ def run_session(
                 },
             }
         )
-        media_manifest_entries.append(
-            {
-                "step_id": step.step_id,
-                "prompt": step.prompt,
-                "emotion": step.emotion,
-                "timestamp": step.timestamp,
-                "audio_path": str(audio_copy.destination_rel),
-                "video_path": str(video_copy.destination_rel),
-                "source": {
-                    "stage": stage_b_session.stage,
-                    "run_id": stage_b_session.run_id,
-                    "session": stage_b_session.session_id,
-                    "audio": {
-                        "path": str(audio_copy.source_rel),
-                        "sha256": audio_copy.sha256,
-                        "size_bytes": audio_copy.size_bytes,
-                    },
-                    "video": {
-                        "path": str(video_copy.source_rel),
-                        "sha256": video_copy.sha256,
-                        "size_bytes": video_copy.size_bytes,
-                    },
-                    "event_sha256": _hash_json(step.source_event),
+        entry = deepcopy(step.stage_b_manifest_entry)
+        entry.setdefault("step_id", step.step_id)
+        entry.setdefault("prompt", step.prompt)
+        entry.setdefault("emotion", step.emotion)
+        entry.setdefault("timestamp", step.timestamp)
+        entry["stage_c"] = {
+            "prompt": step.prompt,
+            "emotion": step.emotion,
+            "timestamp": step.timestamp,
+            "telemetry": {
+                "audio_duration_s": round(step.audio_duration_s, 3),
+                "video_duration_s": round(step.video_duration_s, 3),
+                "sync_offset_s": round(step.sync_offset_s, 3),
+                "dropout": step.dropout,
+                "event_sha256": _hash_json(step.source_event),
+            },
+            "assets": {
+                "audio": {
+                    "path": str(audio_copy.destination_rel),
+                    "sha256": audio_copy.sha256,
+                    "size_bytes": audio_copy.size_bytes,
                 },
-            }
-        )
+                "video": {
+                    "path": str(video_copy.destination_rel),
+                    "sha256": video_copy.sha256,
+                    "size_bytes": video_copy.size_bytes,
+                },
+            },
+            "source": {
+                "stage": stage_b_session.stage,
+                "run_id": stage_b_session.run_id,
+                "session": stage_b_session.session_id,
+                "audio_path": str(audio_copy.source_rel),
+                "video_path": str(video_copy.source_rel),
+            },
+        }
+        media_manifest_entries.append(entry)
 
     emotion_rows = _read_jsonl(stage_b_session.emotion_path)
     emotion_copy = _copy_file(
