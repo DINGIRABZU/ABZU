@@ -34,10 +34,12 @@ class MemoryBundle:
     """Stand-in for the Rust ``neoabzu_memory.MemoryBundle`` class."""
 
     fallback_reason = "neoabzu_memory_unavailable"
+    bundle_mode = "stubbed"
 
     def __init__(self, import_error: BaseException | None = None) -> None:
         self._import_error = import_error
         self.stubbed = True
+        self.bundle_source = "memory.optional.neoabzu_bundle"
         self._initialized = False
         self.statuses: Dict[str, str] = {}
         self.diagnostics: Dict[str, Dict[str, Any]] = {}
@@ -93,6 +95,8 @@ class MemoryBundle:
             },
             "stubbed": True,
             "fallback_reason": self.fallback_reason,
+            "bundle_source": self.bundle_source,
+            "bundle_mode": self.bundle_mode,
         }
 
     def query(self, text: str) -> Dict[str, Any]:

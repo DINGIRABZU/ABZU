@@ -12,4 +12,5 @@ __all__ = [
     "search_api",
     "music_memory",
     "sacred",
+    "neoabzu_bundle",
 ]

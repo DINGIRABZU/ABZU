@@ -13,11 +13,13 @@ try:
         return _NeoBundle()
 
     _BUNDLE_SOURCE = "neoabzu_memory"
-    _IMPORT_ERROR: ModuleNotFoundError | None = None
-except ModuleNotFoundError as exc:
+    _BUNDLE_MODE = "native"
+    _IMPORT_ERROR: ImportError | None = None
+except (ModuleNotFoundError, ImportError) as exc:
     from memory.optional.neoabzu_bundle import MemoryBundle as _StubBundle
 
     _BUNDLE_SOURCE = "memory.optional.neoabzu_bundle"
+    _BUNDLE_MODE = "stubbed"
     _IMPORT_ERROR = exc
 
     def _bundle_factory() -> Any:
@@ -38,7 +40,13 @@ class MemoryBundle:
     def __init__(self) -> None:
         self._bundle = _bundle_factory()
         self._tracer = get_tracer(__name__)
-        self.stubbed: bool = getattr(self._bundle, "stubbed", False)
+        self.bundle_source: str = getattr(
+            self._bundle, "bundle_source", _BUNDLE_SOURCE
+        )
+        self.bundle_mode: str = getattr(self._bundle, "bundle_mode", _BUNDLE_MODE)
+        self.stubbed: bool = bool(getattr(self._bundle, "stubbed", False)) or (
+            self.bundle_mode == "stubbed"
+        )
         self.fallback_reason: str | None = getattr(
             self._bundle, "fallback_reason", None
         )
@@ -47,6 +55,7 @@ class MemoryBundle:
                 "neoabzu_memory unavailable – using stub bundle",
                 extra={
                     "bundle_source": _BUNDLE_SOURCE,
+                    "bundle_mode": _BUNDLE_MODE,
                     "error": repr(_IMPORT_ERROR),
                 },
             )
@@ -80,9 +89,17 @@ class MemoryBundle:
                 "memory.optional."
             ):
                 optional_fallbacks.append((layer, entry))
+        bundle_source = result.get("bundle_source")
+        if isinstance(bundle_source, str):
+            self.bundle_source = bundle_source
+        bundle_mode = result.get("bundle_mode")
+        if isinstance(bundle_mode, str):
+            self.bundle_mode = bundle_mode
         self.statuses = statuses
         self.diagnostics = diagnostics
-        self.stubbed = bool(result.get("stubbed", self.stubbed))
+        self.stubbed = bool(result.get("stubbed", self.stubbed)) or (
+            self.bundle_mode == "stubbed"
+        )
         if self.stubbed:
             for layer in statuses:
                 statuses[layer] = "skipped"
