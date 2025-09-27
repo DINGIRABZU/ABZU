@@ -46,6 +46,7 @@ _FORCED_MODULES = {
     "neoabzu_memory",
     "servant_model_manager",
     "state_transition_engine",
+    "INANNA_AI.glm_integration",
 }
 
 
@@ -124,6 +125,11 @@ def _register_default_overrides() -> None:
         "prometheus_fastapi_instrumentator",
         _make_prometheus_instrumentator_stub,
         "prometheus instrumentation disabled in sandbox",
+    )
+    register(
+        "INANNA_AI.glm_integration",
+        _make_glm_integration_stub,
+        "glm_integration: remote health check bypassed",
     )
 
     _DEFAULT_OVERRIDES_REGISTERED = True
@@ -686,4 +692,57 @@ def _make_crown_orchestrator_stub() -> types.ModuleType:
         "query_memory",
         "_STATE_ENGINE",
     ]
+    return module
+
+
+def _make_glm_integration_stub() -> types.ModuleType:
+    module = types.ModuleType("INANNA_AI.glm_integration")
+
+    DEFAULT_ENDPOINT = "sandbox://glm"
+    SAFE_ERROR_MESSAGE = "GLM unavailable (sandbox stub)"
+
+    class GLMIntegration:
+        """Deterministic stand-in for the networked GLM integration."""
+
+        def __init__(
+            self,
+            endpoint: str | None = None,
+            api_key: str | None = None,
+            temperature: float = 0.8,
+        ) -> None:
+            self.endpoint = endpoint or DEFAULT_ENDPOINT
+            self.api_key = api_key
+            self.temperature = temperature
+            self._history: list[tuple[str, str | None]] = []
+
+        @property
+        def headers(self) -> dict[str, str] | None:
+            if self.api_key:
+                return {"Authorization": f"Bearer {self.api_key}"}
+            return None
+
+        def health_check(self) -> None:
+            """Pretend the remote health check succeeded."""
+
+        def _summarize(self, prompt: str) -> str:
+            preview = " ".join(prompt.strip().split())
+            if not preview:
+                preview = "<empty prompt>"
+            return preview[:120]
+
+        def complete(self, prompt: str, *, quantum_context: str | None = None) -> str:
+            self._history.append((prompt, quantum_context))
+            summary = self._summarize(prompt)
+            ctx = f" ctx={quantum_context}" if quantum_context else ""
+            return f"[sandbox-glm]{ctx} {summary}"
+
+        async def complete_async(
+            self, prompt: str, *, quantum_context: str | None = None
+        ) -> str:
+            return self.complete(prompt, quantum_context=quantum_context)
+
+    module.GLMIntegration = GLMIntegration
+    module.DEFAULT_ENDPOINT = DEFAULT_ENDPOINT
+    module.SAFE_ERROR_MESSAGE = SAFE_ERROR_MESSAGE
+    module.__all__ = ["GLMIntegration", "DEFAULT_ENDPOINT", "SAFE_ERROR_MESSAGE"]
     return module

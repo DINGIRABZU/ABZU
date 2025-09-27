@@ -1,0 +1,17 @@
+{
+  "dataset": "data/vector_memory_scaling/corpus.jsonl",
+  "total_records": 1000,
+  "queries_timed": 995,
+  "init_duration_s": 0.000735,
+  "latency_p50_s": 2e-06,
+  "latency_p95_s": 4e-06,
+  "latency_p99_s": 1.2e-05,
+  "layers": {
+    "total": 8,
+    "ready": 0,
+    "failed": 8
+  },
+  "query_failures": 0,
+  "stubbed_bundle": true,
+  "fallback_reason": "neoabzu_memory_unavailable"
+}

@@ -5,9 +5,27 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 import time
 from pathlib import Path
 from typing import Optional
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR.parent) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR.parent))
+
+from scripts._stage_runtime import bootstrap, format_sandbox_summary
+
+ROOT = bootstrap(
+    optional_modules=[
+        "crown_decider",
+        "crown_prompt_orchestrator",
+        "emotional_state",
+        "servant_model_manager",
+        "state_transition_engine",
+        "tools.session_logger",
+    ]
+)
 
 from agents.nazarick.service_launcher import launch_required_agents
 from init_crown_agent import initialize_crown
@@ -69,6 +87,7 @@ def main() -> None:
         logging.info("agent %s: %s", event.get("agent"), event.get("status"))
 
     logging.info("World bootstrap complete")
+    logging.info(format_sandbox_summary("Sandbox status"))
 
 
 def _initialize_with_metrics(bundle: MemoryBundle) -> dict[str, str]:

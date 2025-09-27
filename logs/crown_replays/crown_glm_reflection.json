@@ -23,5 +23,46 @@
       "glyph_phrase": "Glyph hash 1cd177d01b45",
       "spiral_recall": "Crown, offer a reflective meditation on how the mission doctrine guides\ntoday's operator sync.\n\n<spiral:d906207f71560217>"
     }
+  },
+  "sandbox_overrides": {
+    "crown_decider": "crown_decider: recommendation heuristics simplified",
+    "state_transition_engine": "state_transition_engine: deterministic rotation",
+    "crown_prompt_orchestrator": "crown_prompt_orchestrator: async pipeline stubbed",
+    "emotional_state": "emotional_state: in-memory state used",
+    "neoabzu_memory": "neoabzu_memory: optional bundle shim activated",
+    "servant_model_manager": "servant_model_manager: local registry only",
+    "prometheus_fastapi_instrumentator": "prometheus instrumentation disabled in sandbox",
+    "tools.session_logger": "session_logger: binary dumps without ffmpeg"
+  },
+  "last_run": {
+    "timestamp": "2025-09-27T20:07:29.896413",
+    "model": "glm",
+    "emotion": "neutral",
+    "state": "active",
+    "result_hash": "2eb4e9f7a1219495b2fff0cdb362f7cb7d8d5a2b0c92034a7ac19d3f97b0e1a5",
+    "audio_path": "logs/audio/20250927_200729.npy",
+    "audio_hash": "f1f16c23ed28e4213143b8c5a9bec2c9cc92d77aa910ed5c044abb426aa8e82b",
+    "video_path": "logs/video/20250927_200729.json",
+    "video_hash": "46ef9b6b5f3b84d3967c077e1ef09a18989b3e0c9d9602534ec6da917274f75a",
+    "servant_prompt": null,
+    "sandbox_overrides": {
+      "crown_decider": "crown_decider: recommendation heuristics simplified",
+      "state_transition_engine": "state_transition_engine: deterministic rotation",
+      "crown_prompt_orchestrator": "crown_prompt_orchestrator: async pipeline stubbed",
+      "emotional_state": "emotional_state: in-memory state used",
+      "neoabzu_memory": "neoabzu_memory: optional bundle shim activated",
+      "servant_model_manager": "servant_model_manager: local registry only",
+      "prometheus_fastapi_instrumentator": "prometheus instrumentation disabled in sandbox",
+      "tools.session_logger": "session_logger: binary dumps without ffmpeg"
+    },
+    "result": {
+      "model": "glm",
+      "text": "glm:cb2d2e751cb85f9f",
+      "emotion": "neutral",
+      "state": "active",
+      "timestamp": "2025-09-27T20:07:29.889359",
+      "sandbox": true,
+      "digest": "d906207f715602175316b72473fb5f1caf16a299d8ed42a4534fca98179bd884"
+    }
   }
 }

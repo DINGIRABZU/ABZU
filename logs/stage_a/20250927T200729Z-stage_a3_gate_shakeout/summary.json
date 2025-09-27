@@ -1,0 +1,91 @@
+{
+  "status": "success",
+  "stage": "stage_a3_gate_shakeout",
+  "run_id": "20250927T200729Z-stage_a3_gate_shakeout",
+  "command": [
+    "bash",
+    "/workspace/ABZU/scripts/run_alpha_gate.sh",
+    "--sandbox"
+  ],
+  "returncode": 0,
+  "started_at": "2025-09-27T20:07:29.994780+00:00",
+  "completed_at": "2025-09-27T20:07:32.241380+00:00",
+  "duration_seconds": 2.2466,
+  "log_dir": "/workspace/ABZU/logs/stage_a/20250927T200729Z-stage_a3_gate_shakeout",
+  "stdout_path": "/workspace/ABZU/logs/stage_a/20250927T200729Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_a/20250927T200729Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stderr.log",
+  "stdout_lines": 9,
+  "stderr_lines": 37,
+  "stderr_tail": [
+    "/workspace/ABZU/scripts/_stage_runtime.py:183: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle",
+    "  _apply_override(name, force=_should_force_override(name))",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)",
+    "  _prepare_overrides()"
+  ],
+  "summary": "{\"status\": \"success\", \"phases\": [{\"name\": \"build\", \"skipped\": true, \"exit_code\": 0, \"outcome\": \"skipped\", \"reason\": \"environment-limited\", \"details\": [\"python -m build unavailable\"]}, {\"name\": \"health\", \"skipped\": true, \"exit_code\": 0, \"outcome\": \"skipped\", \"reason\": \"environment-limited\", \"details\": [\"Missing tools: docker sox ffmpeg aria2c\"]}, {\"name\": \"tests\", \"skipped\": true, \"exit_code\": 0, \"outcome\": \"skipped\", \"reason\": \"environment-limited\", \"details\": [\"Pytest coverage dependencies unavailable\"]}], \"message\": \"Alpha gate completed [sandbox overrides active: crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]\", \"warnings\": [{\"phase\": \"build\", \"reason\": \"environment-limited\", \"details\": [\"python -m build unavailable\"]}, {\"phase\": \"health\", \"reason\": \"environment-limited\", \"details\": [\"Missing tools: docker sox ffmpeg aria2c\"]}, {\"phase\": \"tests\", \"reason\": \"environment-limited\", \"details\": [\"Pytest coverage dependencies unavailable\"]}]}",
+  "summary_json": {
+    "status": "success",
+    "phases": [
+      {
+        "name": "build",
+        "skipped": true,
+        "exit_code": 0,
+        "outcome": "skipped",
+        "reason": "environment-limited",
+        "details": [
+          "python -m build unavailable"
+        ]
+      },
+      {
+        "name": "health",
+        "skipped": true,
+        "exit_code": 0,
+        "outcome": "skipped",
+        "reason": "environment-limited",
+        "details": [
+          "Missing tools: docker sox ffmpeg aria2c"
+        ]
+      },
+      {
+        "name": "tests",
+        "skipped": true,
+        "exit_code": 0,
+        "outcome": "skipped",
+        "reason": "environment-limited",
+        "details": [
+          "Pytest coverage dependencies unavailable"
+        ]
+      }
+    ],
+    "message": "Alpha gate completed [sandbox overrides active: crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+    "warnings": [
+      {
+        "phase": "build",
+        "reason": "environment-limited",
+        "details": [
+          "python -m build unavailable"
+        ]
+      },
+      {
+        "phase": "health",
+        "reason": "environment-limited",
+        "details": [
+          "Missing tools: docker sox ffmpeg aria2c"
+        ]
+      },
+      {
+        "phase": "tests",
+        "reason": "environment-limited",
+        "details": [
+          "Pytest coverage dependencies unavailable"
+        ]
+      }
+    ]
+  }
+}
