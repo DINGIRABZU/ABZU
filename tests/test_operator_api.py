@@ -1,5 +1,6 @@
 """Tests for operator api."""
 
+import asyncio
 import inspect
 import json
 import os
@@ -109,6 +110,43 @@ def configure_subprocess(
 
 def _load_summary(path: str) -> dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def test_run_stage_workflow_parses_pretty_summary(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Multi-line JSON summaries are reconstructed from stdout tail."""
+
+    structured = {
+        "status": "success",
+        "summary": {"checks": ["alpha", "beta"]},
+        "warnings": ["environment-limited dependency"],
+    }
+    stdout_text = "\n".join(
+        [
+            "INFO stage: preparing summary payload",
+            json.dumps(structured, indent=2),
+            "INFO stage: emitted summary payload",
+        ]
+    )
+    configure_subprocess(
+        monkeypatch,
+        stdout=f"{stdout_text}\n".encode("utf-8"),
+        stderr=b"",
+        returncode=0,
+    )
+
+    payload = asyncio.run(
+        operator_api._run_stage_workflow(
+            tmp_path / "stage_a",
+            "stage_a_test",
+            ["python", "-m", "fake_module"],
+        )
+    )
+
+    assert isinstance(payload["summary"], dict)
+    assert payload["summary"] == structured
+    assert isinstance(payload["summary"]["summary"], dict)
 
 
 def test_stage_a1_boot_telemetry_success(
