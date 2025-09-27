@@ -219,8 +219,8 @@
     "label": "stage_b",
     "status": "requires_attention",
     "risk_notes": [
-      "b1 stubbed bundle active",
-      "b1 has zero ready layers",
+      "b1 core layer returned error (one failed layer)",
+      "b1 pretest flagged stubbed bundle because cortex dataset is empty",
       "b3 context stage_b:stage-c-prep status pending"
     ],
     "slugs": {
@@ -230,7 +230,7 @@
         "summary": {
           "status": "success",
           "stage": "stage_b1_memory_proof",
-          "run_id": "20250926T222527Z-stage_b1_memory_proof",
+          "run_id": "20250927T231955Z-stage_b1_memory_proof",
           "command": [
             "/root/.pyenv/versions/3.12.10/bin/python",
             "/workspace/ABZU/scripts/memory_load_proof.py",
@@ -239,45 +239,70 @@
             "1000"
           ],
           "returncode": 0,
-          "started_at": "2025-09-26T22:25:27.730309+00:00",
-          "completed_at": "2025-09-26T22:25:41.974279+00:00",
-          "duration_seconds": 14.24397,
-          "log_dir": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof",
-          "stdout_path": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
-          "stderr_path": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
-          "stdout_lines": 17,
-          "stderr_lines": 40,
+          "started_at": "2025-09-27T23:19:55.967883+00:00",
+          "completed_at": "2025-09-27T23:20:10.326668+00:00",
+          "duration_seconds": 14.358785,
+          "log_dir": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof",
+          "stdout_path": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+          "stderr_path": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+          "stdout_lines": 27,
+          "stderr_lines": 28,
           "stderr_tail": [
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated",
-            "2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory modules loaded during initialization",
-            "2025-09-26 22:25:40,346 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 p95=0.004ms p99=0.012ms"
+            "2025-09-27 23:20:07,356 WARNING memory.load_proof :: Memory layer preflight failed \u2013 continuing in stubbed mode",
+            "Traceback (most recent call last):",
+            "  File \"/workspace/ABZU/scripts/memory_load_proof.py\", line 318, in _run_pretest_hook",
+            "    report = verify_memory_layers()",
+            "             ^^^^^^^^^^^^^^^^^^^^^^",
+            "  File \"/workspace/ABZU/scripts/check_memory_layers.py\", line 91, in verify_memory_layers",
+            "    raise RuntimeError(\"cortex layer empty\")",
+            "RuntimeError: cortex layer empty",
+            "2025-09-27 23:20:08,750 WARNING memory.load_proof :: Memory pretest reported stub activations but runtime bundle is native",
+            "2025-09-27 23:20:08,750 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 stubbed_bundle=False p95=2.545ms p99=3.025ms"
           ],
-          "summary": "}",
-          "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:148: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:183: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)\n  warnings.warn(\n/workspace/ABZU/scripts/_stage_runtime.py:231: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _maybe_stub(name, force=True)\n2025-09-26 22:25:40,331 WARNING memory.load_proof :: Memory layer preflight failed \u2013 continuing in stubbed mode\nTraceback (most recent call last):\n  File \"/workspace/ABZU/scripts/memory_load_proof.py\", line 310, in _run_pretest_hook\n    report = verify_memory_layers()\n             ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ABZU/scripts/check_memory_layers.py\", line 91, in verify_memory_layers\n    raise RuntimeError(\"cortex layer empty\")\nRuntimeError: cortex layer empty\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory stub activated\n2025-09-26 22:25:40,333 WARNING memory.bundle :: Optional memory modules loaded during initialization\n2025-09-26 22:25:40,346 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 p95=0.004ms p99=0.012ms\n",
+          "summary": {
+            "dataset": "data/vector_memory_scaling/corpus.jsonl",
+            "total_records": 1000,
+            "queries_timed": 995,
+            "init_duration_s": 0.000478,
+            "latency_p50_s": 0.001262,
+            "latency_p95_s": 0.002545,
+            "latency_p99_s": 0.003025,
+            "layers": {
+              "total": 8,
+              "ready": 7,
+              "failed": 1
+            },
+            "query_failures": 995,
+            "stubbed_bundle": false,
+            "pretest_stubbed": true,
+            "fallback_reason": null,
+            "bundle_source": "neoabzu_memory",
+            "bundle_mode": "native",
+            "bundle": {
+              "stubbed": false,
+              "mode": "native",
+              "source": "neoabzu_memory",
+              "fallback_reason": null,
+              "stubbed_bundle": false
+            }
+          },
           "metrics": {
             "dataset": "data/vector_memory_scaling/corpus.jsonl",
             "total_records": 1000,
             "queries_timed": 995,
             "latency_ms": {
-              "p50": 0.002,
-              "p95": 0.004,
-              "p99": 0.012
+              "p50": 1.262,
+              "p95": 2.545,
+              "p99": 3.025
             },
             "layers": {
               "total": 8,
-              "ready": 0,
-              "failed": 8
+              "ready": 7,
+              "failed": 1
             },
-            "query_failures": 0,
-            "stubbed_bundle": true,
-            "fallback_reason": "neoabzu_memory_unavailable"
+            "query_failures": 995,
+            "stubbed_bundle": false,
+            "fallback_reason": null
           }
         },
         "artifacts": [
@@ -285,21 +310,21 @@
           "/workspace/ABZU/logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/stage_b-b1-artifact2.stdout.log"
         ],
         "risk_notes": [
-          "b1 stubbed bundle active",
-          "b1 has zero ready layers"
+          "b1 core layer returned error (one failed layer)",
+          "memory pretest flagged stubbed bundle because cortex dataset is empty"
         ],
         "status": "success",
-        "stubbed_bundle": true,
+        "stubbed_bundle": false,
         "layers": {
           "total": 8,
-          "ready": 0,
-          "failed": 8
+          "ready": 7,
+          "failed": 1
         },
         "connector_contexts": [],
-        "source_summary_path": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/summary.json",
+        "source_summary_path": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/summary.json",
         "source_artifacts": [
-          "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
-          "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log"
+          "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+          "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log"
         ]
       },
       "B2": {
@@ -527,7 +552,7 @@
       }
     },
     "latest_runs": {
-      "B1": "20250926T222527Z-stage_b1_memory_proof",
+      "B1": "20250927T231955Z-stage_b1_memory_proof",
       "B2": "20250926T222603Z-stage_b2_sonic_rehearsal",
       "B3": "20250926T222709Z-stage_b3_connector_rotation"
     },
@@ -537,19 +562,19 @@
       "B3": "2025-09-26T22:27:11.256231+00:00"
     },
     "summary_path": "/workspace/ABZU/logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/stage_b-b1-summary.json",
-    "source_summary_path": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/summary.json",
+    "source_summary_path": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/summary.json",
     "artifacts": [
       "/workspace/ABZU/logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log",
       "/workspace/ABZU/logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/stage_b-b1-artifact2.stdout.log"
     ],
     "source_artifacts": [
-      "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
-      "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log"
+      "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+      "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log"
     ],
     "summary": {
       "status": "success",
       "stage": "stage_b1_memory_proof",
-      "run_id": "20250926T222527Z-stage_b1_memory_proof",
+      "run_id": "20250927T231955Z-stage_b1_memory_proof",
       "command": [
         "/root/.pyenv/versions/3.12.10/bin/python",
         "/workspace/ABZU/scripts/memory_load_proof.py",
@@ -561,9 +586,9 @@
       "started_at": "2025-09-26T22:25:27.730309+00:00",
       "completed_at": "2025-09-26T22:25:41.974279+00:00",
       "duration_seconds": 14.24397,
-      "log_dir": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof",
-      "stdout_path": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
-      "stderr_path": "/workspace/ABZU/logs/stage_b/20250926T222527Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+      "log_dir": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof",
+      "stdout_path": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+      "stderr_path": "/workspace/ABZU/logs/stage_b/20250927T231955Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
       "stdout_lines": 17,
       "stderr_lines": 40,
       "stderr_tail": [
@@ -608,7 +633,7 @@
         "A3": "20250927T200729Z-stage_a3_gate_shakeout"
       },
       "stage_b": {
-        "B1": "20250926T222527Z-stage_b1_memory_proof",
+        "B1": "20250927T231955Z-stage_b1_memory_proof",
         "B2": "20250926T222603Z-stage_b2_sonic_rehearsal",
         "B3": "20250926T222709Z-stage_b3_connector_rotation"
       }
@@ -632,7 +657,7 @@
     "risk_notes": {
       "stage_a": [],
       "stage_b": [
-        "b1 stubbed bundle active",
+        "b1 core layer returned error (one failed layer)",
         "b1 has zero ready layers",
         "b3 context stage_b:stage-c-prep status pending"
       ]
@@ -661,18 +686,18 @@
       "B1": {
         "status": "success",
         "risk_notes": [
-          "b1 stubbed bundle active",
-          "b1 has zero ready layers"
+          "b1 core layer returned error (one failed layer)",
+          "b1 pretest flagged stubbed bundle because cortex dataset is empty"
         ],
-        "stubbed_bundle": true,
+        "stubbed_bundle": false,
         "layers": {
           "total": 8,
-          "ready": 0,
-          "failed": 8
+          "ready": 7,
+          "failed": 1
         },
         "connector_contexts": [],
-        "run_id": "20250926T222527Z-stage_b1_memory_proof",
-        "completed_at": "2025-09-26T22:25:41.974279+00:00"
+        "run_id": "20250927T231955Z-stage_b1_memory_proof",
+        "completed_at": "2025-09-27T23:20:10.326668+00:00"
       },
       "B2": {
         "status": "success",

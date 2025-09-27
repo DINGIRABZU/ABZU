@@ -3,28 +3,14 @@
 
 from __future__ import annotations
 
+import importlib.machinery
+import importlib.util
 import logging
-from typing import Any, Dict
-
-try:
-    from neoabzu_memory import MemoryBundle as _NeoBundle  # type: ignore
-
-    def _bundle_factory() -> Any:
-        return _NeoBundle()
-
-    _BUNDLE_SOURCE = "neoabzu_memory"
-    _BUNDLE_MODE = "native"
-    _IMPORT_ERROR: ImportError | None = None
-except (ModuleNotFoundError, ImportError) as exc:
-    from memory.optional.neoabzu_bundle import MemoryBundle as _StubBundle
-
-    _BUNDLE_SOURCE = "memory.optional.neoabzu_bundle"
-    _BUNDLE_MODE = "stubbed"
-    _IMPORT_ERROR = exc
-
-    def _bundle_factory() -> Any:
-        return _StubBundle(import_error=_IMPORT_ERROR)
-
+import os
+import sys
+from functools import lru_cache
+from pathlib import Path
+from typing import Any, Dict, Iterable
 
 from memory.tracing import get_tracer
 
@@ -32,6 +18,134 @@ __version__ = "0.2.0"
 
 
 logger = logging.getLogger("memory.bundle")
+
+
+@lru_cache(maxsize=1)
+def _bundle_search_roots() -> tuple[Path, ...]:
+    """Return directories that may contain the compiled bundle."""
+
+    roots: list[Path] = []
+    env_override = os.getenv("NEOABZU_MEMORY_LIB_DIR")
+    if env_override:
+        override = Path(env_override).resolve()
+        roots.append(override)
+
+    current = Path(__file__).resolve()
+    for candidate in [current, *current.parents]:
+        release_dir = candidate / "target" / "release"
+        if release_dir.exists():
+            roots.append(release_dir)
+            deps_dir = release_dir / "deps"
+            if deps_dir.exists():
+                roots.append(deps_dir)
+
+    seen: set[Path] = set()
+    ordered: list[Path] = []
+    for directory in roots:
+        if directory.exists():
+            resolved = directory.resolve()
+            if resolved not in seen:
+                seen.add(resolved)
+                ordered.append(resolved)
+    return tuple(ordered)
+
+
+def _iter_bundle_candidates(name: str) -> Iterable[Path]:
+    """Yield possible extension artifacts for ``name``."""
+
+    suffixes = tuple(importlib.machinery.EXTENSION_SUFFIXES)
+    prefixes = ("", "lib")
+    for directory in _bundle_search_roots():
+        for prefix in prefixes:
+            for suffix in suffixes:
+                candidate = directory / f"{prefix}{name}{suffix}"
+                if candidate.exists() and candidate.is_file():
+                    yield candidate
+        # Fall back to globbing for suffixed filenames (e.g. abi3 wheels).
+        for suffix in suffixes:
+            for prefix in prefixes:
+                pattern = f"{prefix}{name}*{suffix}"
+                for candidate in sorted(directory.glob(pattern)):
+                    if candidate.is_file():
+                        yield candidate
+
+
+def _load_extension_module(name: str, path: Path):
+    """Load ``name`` from ``path`` using the extension loader."""
+
+    loader = importlib.machinery.ExtensionFileLoader(name, str(path))
+    spec = importlib.util.spec_from_loader(name, loader)
+    if spec is None:
+        raise ImportError(f"Unable to create module spec for {name} at {path}")
+    module = importlib.util.module_from_spec(spec)
+    loader.exec_module(module)
+    sys.modules[name] = module
+    return module
+
+
+def _import_native_bundle() -> tuple[type[Any] | None, ImportError | None, Path | None]:
+    """Attempt to import the compiled Neo‑ABZU bundle."""
+
+    try:
+        from neoabzu_memory import MemoryBundle as bundle  # type: ignore
+
+    except (ModuleNotFoundError, ImportError) as exc:
+        last_error: ImportError | None = None
+        for candidate in _iter_bundle_candidates("neoabzu_memory"):
+            try:
+                module = _load_extension_module("neoabzu_memory", candidate)
+            except Exception as load_exc:  # pragma: no cover - loader errors vary
+                logger.debug(
+                    "Failed to load neoabzu_memory extension",  # pragma: no cover
+                    extra={"candidate": str(candidate)},
+                    exc_info=load_exc,
+                )
+                last_error = ImportError(
+                    f"neoabzu_memory extension at {candidate} failed to load"
+                )
+                last_error.__cause__ = load_exc
+                continue
+            bundle = getattr(module, "MemoryBundle", None)
+            if bundle is None:
+                last_error = ImportError(
+                    f"neoabzu_memory extension at {candidate} missing MemoryBundle"
+                )
+                continue
+            logger.info(
+                "neoabzu_memory extension loaded",
+                extra={"bundle_path": str(candidate)},
+            )
+            return bundle, None, candidate
+        if last_error is not None:
+            return None, last_error, None
+        message = (
+            "neoabzu_memory extension not found. Run "
+            "'cargo build -p neoabzu-memory --release' on the host to "
+            "compile the bundle."
+        )
+        error = ImportError(message)
+        error.__cause__ = exc
+        return None, error, None
+    else:
+        return bundle, None, None
+
+
+_NeoBundle_cls, _IMPORT_ERROR, _BUNDLE_ARTIFACT = _import_native_bundle()
+if _NeoBundle_cls is not None:
+
+    def _bundle_factory() -> Any:
+        return _NeoBundle_cls()
+
+    _BUNDLE_SOURCE = "neoabzu_memory"
+    _BUNDLE_MODE = "native"
+else:
+    from memory.optional.neoabzu_bundle import MemoryBundle as _StubBundle
+
+    _BUNDLE_SOURCE = "memory.optional.neoabzu_bundle"
+    _BUNDLE_MODE = "stubbed"
+
+    def _bundle_factory() -> Any:
+        return _StubBundle(import_error=_IMPORT_ERROR)
 
 
 class MemoryBundle:

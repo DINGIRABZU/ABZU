@@ -366,7 +366,9 @@ def _run_pretest_hook(dataset: Path, log_path: Path) -> bool:
     return stubbed
 
 
-def _append_log(result: LoadProofResult, log_path: Path) -> None:
+def _append_log(
+    result: LoadProofResult, log_path: Path, *, pretest_stubbed: bool
+) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -382,6 +384,7 @@ def _append_log(result: LoadProofResult, log_path: Path) -> None:
         "layer_failed": result.layer_failed,
         "query_failures": result.query_failures,
         "stubbed_bundle": result.stubbed,
+        "pretest_stubbed": pretest_stubbed,
         "fallback_reason": result.fallback_reason,
         "bundle_source": result.bundle_source,
         "bundle_mode": result.bundle_mode,
@@ -391,6 +394,7 @@ def _append_log(result: LoadProofResult, log_path: Path) -> None:
         "mode": result.bundle_mode or ("stubbed" if result.stubbed else "native"),
         "source": result.bundle_source,
         "fallback_reason": result.fallback_reason,
+        "pretest_stubbed": pretest_stubbed,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -404,19 +408,20 @@ def main() -> None:
         format="%(asctime)s %(levelname)s %(name)s :: %(message)s",
     )
 
-    stubbed = _run_pretest_hook(args.dataset, args.log_path)
+    pretest_stubbed = _run_pretest_hook(args.dataset, args.log_path)
     result = run_load_proof(args)
-    _append_log(result, args.log_path)
+    _append_log(result, args.log_path, pretest_stubbed=pretest_stubbed)
 
-    logger.info(
-        "Load proof complete: dataset=%s records=%s p95=%.3fms p99=%.3fms",
-        result.dataset,
-        result.total_records,
-        result.p95_latency_s * 1000,
-        result.p99_latency_s * 1000,
-    )
-
-    bundle_stubbed = result.stubbed or stubbed
+    bundle_stubbed = result.stubbed
+    if pretest_stubbed and not result.stubbed:
+        logger.warning(
+            "Memory pretest reported stub activations but runtime bundle is native",
+            extra={
+                "pretest_stubbed": pretest_stubbed,
+                "bundle_source": result.bundle_source,
+                "bundle_mode": result.bundle_mode,
+            },
+        )
     bundle_mode = result.bundle_mode or ("stubbed" if bundle_stubbed else "native")
     bundle_summary = {
         "stubbed": bundle_stubbed,
@@ -424,6 +429,17 @@ def main() -> None:
         "source": result.bundle_source,
         "fallback_reason": result.fallback_reason,
     }
+
+    logger.info(
+        "Load proof complete: dataset=%s records=%s stubbed_bundle=%s p95=%.3fms p99=%.3fms",
+        result.dataset,
+        result.total_records,
+        bundle_stubbed,
+        result.p95_latency_s * 1000,
+        result.p99_latency_s * 1000,
+    )
+
+    bundle_summary["stubbed_bundle"] = bundle_stubbed
 
     summary = {
         "dataset": str(result.dataset),
@@ -440,6 +456,7 @@ def main() -> None:
         },
         "query_failures": result.query_failures,
         "stubbed_bundle": bundle_stubbed,
+        "pretest_stubbed": pretest_stubbed,
         "fallback_reason": result.fallback_reason,
         "bundle_source": result.bundle_source,
         "bundle_mode": bundle_mode,
