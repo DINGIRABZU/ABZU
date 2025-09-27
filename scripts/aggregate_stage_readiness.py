@@ -560,6 +560,15 @@ def _merge_stage_data(
     stage_a_status = str(stage_a.get("status") or "missing")
     stage_b_status = str(stage_b.get("status") or "missing")
 
+    def _notes_present(value: Any) -> bool:
+        if isinstance(value, str):
+            return bool(value.strip())
+        if isinstance(value, Iterable) and not isinstance(value, (str, bytes)):
+            return any(_notes_present(item) for item in value)
+        if value is None:
+            return False
+        return bool(str(value).strip())
+
     stage_a_slugs = {
         slug: {
             "status": entry.get("status", "missing"),
@@ -622,8 +631,19 @@ def _merge_stage_data(
         "stage_b_slugs": stage_b_slugs,
     }
 
+    stage_a_warns = _notes_present(stage_a.get("risk_notes")) or any(
+        _notes_present(entry.get("risk_notes")) for entry in stage_a_slugs.values()
+    )
+    stage_b_warns = _notes_present(stage_b.get("risk_notes")) or any(
+        _notes_present(entry.get("risk_notes")) for entry in stage_b_slugs.values()
+    )
+
     stages = merged["status_flags"].values()
-    if all(status == "success" for status in stages):
+    if (
+        all(status == "success" for status in stages)
+        and not stage_a_warns
+        and not stage_b_warns
+    ):
         merged["overall_status"] = "ready"
     else:
         merged["overall_status"] = "requires_attention"

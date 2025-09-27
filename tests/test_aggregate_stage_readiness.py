@@ -278,3 +278,63 @@ def test_stage_b_rotation_promotes_stage_c_context(tmp_path, monkeypatch) -> Non
     )
     assert stage_c_context["status"] == "accepted"
     assert not any("status pending" in note for note in b3_entry["risk_notes"])
+
+
+def test_sandbox_warning_downgrades_overall_status(tmp_path, monkeypatch) -> None:
+    stage_a_root = tmp_path / "stage_a"
+    stage_b_root = tmp_path / "stage_b"
+    stage_c_dir = tmp_path / "stage_c"
+
+    stage_a_slug_dir = stage_a_root / "20240101T000000Z-stage_a1_boot_telemetry"
+    stage_a_slug_dir.mkdir(parents=True, exist_ok=True)
+    (stage_a_slug_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "slug": "A1",
+                "status": "success",
+                "run_id": "a1-run",
+                "completed_at": "2024-01-01T00:05:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    stage_b_dir = stage_b_root / "20240102T000000Z-stage_b1_memory_proof"
+    stage_b_dir.mkdir(parents=True, exist_ok=True)
+    (stage_b_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "stage": "stage_b1_memory_proof",
+                "status": "success",
+                "run_id": "b1-run",
+                "completed_at": "2024-01-02T00:05:00Z",
+                "warnings": [
+                    "sandbox skip: rehearsal asset cache reused",
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(readiness_aggregate, "STAGE_A_ROOT", stage_a_root)
+    monkeypatch.setattr(readiness_aggregate, "STAGE_B_ROOT", stage_b_root)
+    monkeypatch.setattr(readiness_aggregate, "STAGE_A_EXPECTED_SLUGS", ("A1",))
+    monkeypatch.setattr(readiness_aggregate, "STAGE_B_EXPECTED_SLUGS", ("B1",))
+
+    _, summary_payload = readiness_aggregate.aggregate(stage_c_dir)
+
+    merged_snapshot = summary_payload["merged"]
+    assert merged_snapshot["overall_status"] == "requires_attention"
+
+    assert summary_payload["stage_a"]["status"] == "success"
+    assert summary_payload["stage_b"]["status"] == "success"
+
+    stage_b_notes = summary_payload["stage_b"]["risk_notes"]
+    assert any("sandbox skip" in note for note in stage_b_notes)
+
+    payload: dict[str, object] = {}
+    metrics = operator_api._stage_c3_metrics("", "", stage_c_dir, payload)
+
+    assert metrics["merged"]["overall_status"] == "requires_attention"
+    merged_stage_b_notes = metrics["merged"]["risk_notes"]["stage_b"]
+    assert any("sandbox skip" in note for note in merged_stage_b_notes)
