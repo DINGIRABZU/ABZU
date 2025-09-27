@@ -55,6 +55,8 @@ class LoadProofResult:
     query_failures: int
     stubbed: bool
     fallback_reason: str | None
+    bundle_source: str | None
+    bundle_mode: str | None
 
 
 def parse_args() -> argparse.Namespace:
@@ -196,6 +198,8 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
     bundle = MemoryBundle()
     bundle_stubbed = getattr(bundle, "stubbed", False)
     bundle_fallback = getattr(bundle, "fallback_reason", None)
+    bundle_source = getattr(bundle, "bundle_source", None)
+    bundle_mode = getattr(bundle, "bundle_mode", None)
 
     start_init = time.perf_counter()
     statuses = bundle.initialize()
@@ -203,6 +207,8 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
 
     bundle_stubbed = bool(getattr(bundle, "stubbed", bundle_stubbed))
     bundle_fallback = getattr(bundle, "fallback_reason", bundle_fallback)
+    bundle_source = getattr(bundle, "bundle_source", bundle_source)
+    bundle_mode = getattr(bundle, "bundle_mode", bundle_mode)
 
     layer_total, layer_ready, layer_failed = _record_metrics(
         source=args.metrics_source,
@@ -274,6 +280,8 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
         query_failures=query_failures,
         stubbed=bundle_stubbed,
         fallback_reason=bundle_fallback if isinstance(bundle_fallback, str) else None,
+        bundle_source=bundle_source if isinstance(bundle_source, str) else None,
+        bundle_mode=bundle_mode if isinstance(bundle_mode, str) else None,
     )
 
 
@@ -375,6 +383,14 @@ def _append_log(result: LoadProofResult, log_path: Path) -> None:
         "query_failures": result.query_failures,
         "stubbed_bundle": result.stubbed,
         "fallback_reason": result.fallback_reason,
+        "bundle_source": result.bundle_source,
+        "bundle_mode": result.bundle_mode,
+    }
+    payload["bundle"] = {
+        "stubbed": result.stubbed,
+        "mode": result.bundle_mode or ("stubbed" if result.stubbed else "native"),
+        "source": result.bundle_source,
+        "fallback_reason": result.fallback_reason,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -400,6 +416,15 @@ def main() -> None:
         result.p99_latency_s * 1000,
     )
 
+    bundle_stubbed = result.stubbed or stubbed
+    bundle_mode = result.bundle_mode or ("stubbed" if bundle_stubbed else "native")
+    bundle_summary = {
+        "stubbed": bundle_stubbed,
+        "mode": bundle_mode,
+        "source": result.bundle_source,
+        "fallback_reason": result.fallback_reason,
+    }
+
     summary = {
         "dataset": str(result.dataset),
         "total_records": result.total_records,
@@ -414,8 +439,11 @@ def main() -> None:
             "failed": result.layer_failed,
         },
         "query_failures": result.query_failures,
-        "stubbed_bundle": result.stubbed or stubbed,
+        "stubbed_bundle": bundle_stubbed,
         "fallback_reason": result.fallback_reason,
+        "bundle_source": result.bundle_source,
+        "bundle_mode": bundle_mode,
+        "bundle": bundle_summary,
     }
     print(json.dumps(summary, indent=2))
 

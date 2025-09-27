@@ -1,0 +1,77 @@
+{
+  "status": "success",
+  "stage": "stage_b1_memory_proof",
+  "run_id": "20250927T203321Z-stage_b1_memory_proof",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/memory_load_proof.py",
+    "data/vector_memory_scaling/corpus.jsonl",
+    "--limit",
+    "1000"
+  ],
+  "returncode": 0,
+  "started_at": "2025-09-27T20:33:21.899400+00:00",
+  "completed_at": "2025-09-27T20:33:35.791065+00:00",
+  "duration_seconds": 13.891665,
+  "log_dir": "/workspace/ABZU/logs/stage_b/20250927T203321Z-stage_b1_memory_proof",
+  "stdout_path": "/workspace/ABZU/logs/stage_b/20250927T203321Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_b/20250927T203321Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+  "stdout_lines": 25,
+  "stderr_lines": 42,
+  "stderr_tail": [
+    "2025-09-27 20:33:33,593 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,593 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated",
+    "2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory modules loaded during initialization",
+    "2025-09-27 20:33:33,606 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 p95=0.002ms p99=0.019ms"
+  ],
+  "summary": {
+    "dataset": "data/vector_memory_scaling/corpus.jsonl",
+    "total_records": 1000,
+    "queries_timed": 995,
+    "init_duration_s": 0.001709,
+    "latency_p50_s": 2e-06,
+    "latency_p95_s": 2e-06,
+    "latency_p99_s": 1.9e-05,
+    "layers": {
+      "total": 8,
+      "ready": 0,
+      "failed": 8
+    },
+    "query_failures": 0,
+    "stubbed_bundle": true,
+    "fallback_reason": "neoabzu_memory_unavailable",
+    "bundle_source": "memory.optional.neoabzu_bundle",
+    "bundle_mode": "stubbed",
+    "bundle": {
+      "stubbed": true,
+      "mode": "stubbed",
+      "source": "memory.optional.neoabzu_bundle",
+      "fallback_reason": "neoabzu_memory_unavailable"
+    }
+  },
+  "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:154: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:189: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()\n/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)\n  warnings.warn(\n/workspace/ABZU/scripts/_stage_runtime.py:237: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _maybe_stub(name, force=True)\n2025-09-27 20:33:33,591 WARNING memory.load_proof :: Memory layer preflight failed \u2013 continuing in stubbed mode\nTraceback (most recent call last):\n  File \"/workspace/ABZU/scripts/memory_load_proof.py\", line 318, in _run_pretest_hook\n    report = verify_memory_layers()\n             ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ABZU/scripts/check_memory_layers.py\", line 91, in verify_memory_layers\n    raise RuntimeError(\"cortex layer empty\")\nRuntimeError: cortex layer empty\n2025-09-27 20:33:33,593 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,593 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory stub activated\n2025-09-27 20:33:33,594 WARNING memory.bundle :: Optional memory modules loaded during initialization\n2025-09-27 20:33:33,606 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 p95=0.002ms p99=0.019ms\n",
+  "metrics": {
+    "dataset": "data/vector_memory_scaling/corpus.jsonl",
+    "total_records": 1000,
+    "queries_timed": 995,
+    "latency_ms": {
+      "p50": 0.002,
+      "p95": 0.002,
+      "p99": 0.019
+    },
+    "layers": {
+      "total": 8,
+      "ready": 0,
+      "failed": 8
+    },
+    "query_failures": 0,
+    "stubbed_bundle": true,
+    "fallback_reason": "neoabzu_memory_unavailable"
+  }
+}
