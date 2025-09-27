@@ -543,15 +543,29 @@ def test_stage_b3_connector_rotation_success(
         assert resp.status_code == 200
         body = resp.json()
         metrics = body["metrics"]
+        summary_text = body["summary"]
         assert metrics["accepted_contexts"] == ["stage-b-rehearsal"]
+        assert metrics["rotation_summary"] == summary_text
+        assert "Rotated" in summary_text
+        assert "operator_api" in summary_text
         log_dir_path = Path(body["log_dir"])
         copied = log_dir_path / "stage_b_rotation_drills.jsonl"
         assert copied.exists()
         args = recorded.get("args")
         assert args is not None
         assert Path(args[1]) == repo_root / "scripts" / "stage_b_smoke.py"
-        ledger_lines = rotation_log.read_text(encoding="utf-8").splitlines()
-        assert any("2025-10-01T00:00:00Z" in line for line in ledger_lines)
+        ledger_entries = [
+            json.loads(line)
+            for line in rotation_log.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        assert any(
+            entry.get("rotated_at") == "2025-10-01T00:00:00Z"
+            for entry in ledger_entries
+        )
+        latest_entry = ledger_entries[-1]
+        assert latest_entry.get("rotation_summary") == summary_text
+        assert "credential_expiry" not in latest_entry
     finally:
         if log_dir_path and log_dir_path.exists():
             shutil.rmtree(log_dir_path, ignore_errors=True)
@@ -694,8 +708,30 @@ def test_stage_c3_readiness_sync_success(
         json.dumps({"run_id": "a", "status": "success", "completed_at": "2024"}),
         encoding="utf-8",
     )
+    rotation_window = {
+        "window_id": "win-1",
+        "started_at": "2024-01-01T00:00:00Z",
+        "expires_at": "2024-01-03T00:00:00Z",
+    }
+    rotation_summary = (
+        "Rotated operator_api/operator_upload (doctrine ok); "
+        "window win-1; rotation expires 2024-01-03T00:00:00Z; "
+        "credentials expire 2024-01-03T00:00:00Z"
+    )
     (stage_b_dir / "summary.json").write_text(
-        json.dumps({"run_id": "b", "status": "success", "completed_at": "2024"}),
+        json.dumps(
+            {
+                "run_id": "b",
+                "status": "success",
+                "completed_at": "2024",
+                "summary": rotation_summary,
+                "metrics": {
+                    "rotation_window": rotation_window,
+                    "rotation_summary": rotation_summary,
+                    "heartbeat_expiry": "2024-01-03T00:00:00Z",
+                },
+            }
+        ),
         encoding="utf-8",
     )
     configure_subprocess(monkeypatch, stdout=b"ready\n")
@@ -704,6 +740,11 @@ def test_stage_c3_readiness_sync_success(
     body = resp.json()
     merged = body["metrics"]["merged"]
     assert merged["latest_runs"] == {"stage_a": "a", "stage_b": "b"}
+    rotation_section = merged.get("rotation")
+    assert rotation_section is not None
+    assert rotation_section["summary"] == rotation_summary
+    assert rotation_section["window"] == rotation_window
+    assert rotation_section["credential_expiry"] == "2024-01-03T00:00:00Z"
 
 
 def test_stage_c3_readiness_sync_missing(
