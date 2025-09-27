@@ -463,16 +463,78 @@ def _stage_b2_metrics(
 
     connectors_summary: dict[str, Any] = {}
     connectors = data.get("connectors", {})
+    dropout_connectors: list[str] = []
+    fallback_warnings: list[str] = []
+
+    def _truthy(value: Any) -> bool:
+        if value is None:
+            return False
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return value > 0
+        if isinstance(value, str):
+            return value.strip().lower() not in {"", "0", "false", "none"}
+        return True
+
     if isinstance(connectors, Mapping):
         for connector_id, record in connectors.items():
             if not isinstance(record, Mapping):
                 continue
+            connector_key = str(connector_id)
             handshake = record.get("handshake_response")
             if isinstance(handshake, Mapping):
                 accepted = handshake.get("accepted_contexts")
             else:
                 accepted = None
-            connectors_summary[str(connector_id)] = {
+
+            doctrine_failures = record.get("doctrine_failures")
+            if doctrine_failures:
+                if isinstance(doctrine_failures, Sequence) and not isinstance(
+                    doctrine_failures, (str, bytes)
+                ):
+                    details = ", ".join(str(item) for item in doctrine_failures)
+                else:
+                    details = str(doctrine_failures)
+                fallback_warnings.append(
+                    f"{connector_key}: doctrine deviations recorded ({details})"
+                )
+
+            fallback_entries = record.get("fallbacks")
+            if isinstance(fallback_entries, Sequence) and not isinstance(
+                fallback_entries, (str, bytes)
+            ):
+                if fallback_entries:
+                    fallback_warnings.append(
+                        f"{connector_key}: fallback hints -> "
+                        + ", ".join(str(item) for item in fallback_entries)
+                    )
+
+            heartbeat = record.get("heartbeat_payload")
+            if isinstance(heartbeat, Mapping):
+                if (
+                    _truthy(heartbeat.get("dropout"))
+                    or _truthy(heartbeat.get("dropouts_detected"))
+                    or _truthy(heartbeat.get("dropouts"))
+                ):
+                    dropout_connectors.append(connector_key)
+
+                heartbeat_fallback = heartbeat.get("fallback")
+                if heartbeat_fallback:
+                    fallback_warnings.append(
+                        f"{connector_key}: heartbeat fallback -> {heartbeat_fallback}"
+                    )
+                heartbeat_fallbacks = heartbeat.get("fallbacks")
+                if isinstance(heartbeat_fallbacks, Sequence) and not isinstance(
+                    heartbeat_fallbacks, (str, bytes)
+                ):
+                    if heartbeat_fallbacks:
+                        fallback_warnings.append(
+                            f"{connector_key}: heartbeat fallbacks -> "
+                            + ", ".join(str(item) for item in heartbeat_fallbacks)
+                        )
+
+            connectors_summary[connector_key] = {
                 "module": record.get("module"),
                 "doctrine_ok": record.get("doctrine_ok"),
                 "supported_channels": record.get("supported_channels"),
@@ -480,11 +542,17 @@ def _stage_b2_metrics(
                 "accepted_contexts": accepted,
             }
 
+    dropout_connectors = sorted(set(dropout_connectors))
+    fallback_warnings = [warning for warning in fallback_warnings if warning.strip()]
+
     return {
         "generated_at": data.get("generated_at"),
         "stage": data.get("stage"),
         "context": data.get("context"),
         "connectors": connectors_summary,
+        "dropouts_detected": len(dropout_connectors),
+        "dropout_connectors": dropout_connectors,
+        "fallback_warnings": fallback_warnings,
     }
 
 
