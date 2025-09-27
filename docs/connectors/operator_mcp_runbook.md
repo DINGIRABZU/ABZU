@@ -57,13 +57,21 @@ Automation notes:
 rotation timestamp and the enforced window. `OperatorMCPAdapter.doctrine_report`
 confirms that these entries exist and that the most recent drill honors the
 48-hour rotation expectation.【F:connectors/operator_mcp_adapter.py†L120-L161】
+`operator_api` now enriches the latest ledger entries with the Stage B summary
+string and any surfaced credential expiry so Stage C aggregators can consume the
+rotation state without scraping raw stdout.【F:operator_api.py†L470-L575】
 
 To review the ledger:
 
 1. Tail `logs/stage_b_rotation_drills.jsonl` after a rehearsal.
 2. Confirm each entry lists `connector_id` (`operator_api` and
-   `operator_upload`), `rotated_at` (UTC ISO-8601), and `window_hours` (`48`).
-3. If the ledger is empty or the window deviates, re-run the smoke script after
+   `operator_upload`), `rotated_at` (UTC ISO-8601), `window_hours` (`48`), and
+   the appended `rotation_summary` string summarizing the connectors, rotation
+   window, and expiry timeline.
+3. Verify the most recent entries capture `credential_expiry` once the heartbeat
+   reports an expiry timestamp. Stage C readiness dashboards read this field to
+   display the human-friendly rotation status alongside Stage A artifacts.
+4. If the ledger is empty or the window deviates, re-run the smoke script after
    correcting the credentials.
 
 For scheduled credential rotations, operators must:
@@ -122,12 +130,14 @@ before production rollout.【F:connectors/neo_apsu_connector_template.py†L200-
 ### Rotation drill entry
 
 ```jsonl
-{"connector_id": "operator_api", "rotated_at": "2025-01-17T22:00:06Z", "window_hours": 48}
+{"connector_id": "operator_api", "rotated_at": "2025-01-17T22:00:06Z", "window_hours": 48, "rotation_summary": "Rotated operator_api/operator_upload (doctrine ok); window 20250117T220006Z-PT48H; rotation expires 2025-01-19T22:00:06Z; credentials expire 2025-01-19T22:00:06Z", "credential_expiry": "2025-01-19T22:00:06Z"}
 ```
 
 Each smoke run appends entries like the above. `doctrine_report` fails whenever
 no rotation history exists or the most recent `window_hours` diverges from the
 48-hour SLA, prompting immediate remediation.【F:connectors/operator_mcp_adapter.py†L120-L161】
+The additional summary and expiry fields align with the Stage B run metadata so
+Stage C3 can merge a single rotation headline into the readiness bundle.【F:operator_api.py†L470-L575】【F:operator_api.py†L640-L713】
 
 ## Rollback Procedure for MCP Gateway Failures
 

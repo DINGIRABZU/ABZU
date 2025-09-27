@@ -55,6 +55,7 @@ from scripts.ingest_ethics import ingest_ethics as run_ingest_ethics
 from connectors.operator_mcp_adapter import (
     ROTATION_WINDOW_HOURS,
     OperatorMCPAdapter,
+    load_rotation_history,
     record_rotation_drill,
     stage_b_context_enabled,
 )
@@ -475,11 +476,13 @@ def _stage_b3_metrics(
     result = _extract_json_from_stdout(stdout_text)
 
     rotation_log = _REPO_ROOT / "logs" / "stage_b_rotation_drills.jsonl"
+    rotation_history: list[dict[str, Any]] = []
     if rotation_log.exists():
-        destination = log_dir / rotation_log.name
-        shutil.copy2(rotation_log, destination)
-        artifacts = payload.setdefault("artifacts", {})
-        artifacts["rotation_log"] = str(destination)
+        try:
+            rotation_history = load_rotation_history()
+        except json.JSONDecodeError:  # pragma: no cover - defensive parsing
+            logger.warning("unable to parse rotation drill ledger", exc_info=True)
+            rotation_history = []
 
     handshake = result.get("handshake")
     accepted_contexts = None
@@ -495,6 +498,104 @@ def _stage_b3_metrics(
         heartbeat_payload = heartbeat.get("payload")
         credential_expiry = heartbeat.get("credential_expiry")
 
+    targets_raw = result.get("targets")
+    connectors: list[str] = []
+    if isinstance(targets_raw, Sequence) and not isinstance(targets_raw, (str, bytes)):
+        connectors = [str(target) for target in targets_raw]
+
+    latest_indices: dict[str, int] = {}
+    for index, entry in enumerate(rotation_history):
+        connector_id = entry.get("connector_id")
+        if isinstance(connector_id, str):
+            latest_indices[connector_id] = index
+
+    connector_entries: list[Mapping[str, Any]] = []
+    for connector_id in connectors:
+        index = latest_indices.get(connector_id)
+        if index is not None:
+            connector_entries.append(rotation_history[index])
+    if not connector_entries and rotation_history:
+        connector_entries.append(rotation_history[-1])
+
+    rotation_window_info: Mapping[str, Any] | None = None
+    for entry in reversed(connector_entries):
+        rotation_window = entry.get("rotation_window")
+        if isinstance(rotation_window, Mapping):
+            rotation_window_info = dict(rotation_window)
+            break
+
+    rotation_window_id = None
+    rotation_window_expires = None
+    if isinstance(rotation_window_info, Mapping):
+        rotation_window_id = rotation_window_info.get("window_id")
+        rotation_window_expires = rotation_window_info.get("expires_at")
+
+    if credential_expiry is None and isinstance(session_info, Mapping):
+        session_expiry = session_info.get("credential_expiry")
+        if isinstance(session_expiry, str):
+            credential_expiry = session_expiry
+
+    doctrine_ok = result.get("doctrine_ok")
+    if doctrine_ok is True:
+        doctrine_text = "doctrine ok"
+    elif doctrine_ok is False:
+        failures = result.get("doctrine_failures")
+        failure_text = ""
+        if isinstance(failures, Sequence) and not isinstance(failures, (str, bytes)):
+            failure_text = ", ".join(str(item) for item in failures if item)
+        elif failures:
+            failure_text = str(failures)
+        doctrine_text = (
+            f"doctrine issues: {failure_text}" if failure_text else "doctrine issues"
+        )
+    else:
+        doctrine_text = "doctrine status unknown"
+
+    connector_text = "/".join(connectors) if connectors else "no connectors reported"
+    window_text = (
+        f"window {rotation_window_id}" if rotation_window_id else "window unknown"
+    )
+    expiry_segments: list[str] = []
+    if rotation_window_expires:
+        expiry_segments.append(f"rotation expires {rotation_window_expires}")
+    if credential_expiry:
+        expiry_segments.append(f"credentials expire {credential_expiry}")
+    expiry_text = "; ".join(expiry_segments)
+
+    summary_parts = [f"Rotated {connector_text} ({doctrine_text})", window_text]
+    if expiry_text:
+        summary_parts.append(expiry_text)
+    rotation_summary = "; ".join(summary_parts)
+    payload["summary"] = rotation_summary
+
+    if rotation_history and rotation_summary:
+        updated = False
+        ledger_connectors = set(connectors) if connectors else set()
+        default_connector = (
+            rotation_history[-1].get("connector_id") if rotation_history else None
+        )
+        ledger_targets = ledger_connectors or {default_connector}
+        for connector_id in ledger_targets:
+            index = latest_indices.get(connector_id)
+            if index is None:
+                continue
+            entry = dict(rotation_history[index])
+            entry["rotation_summary"] = rotation_summary
+            if credential_expiry:
+                entry["credential_expiry"] = credential_expiry
+            rotation_history[index] = entry
+            updated = True
+        if updated:
+            with rotation_log.open("w", encoding="utf-8") as handle:
+                for item in rotation_history:
+                    handle.write(json.dumps(item) + "\n")
+
+    if rotation_log.exists():
+        destination = log_dir / rotation_log.name
+        shutil.copy2(rotation_log, destination)
+        artifacts = payload.setdefault("artifacts", {})
+        artifacts["rotation_log"] = str(destination)
+
     return {
         "stage": result.get("stage"),
         "targets": result.get("targets"),
@@ -504,6 +605,8 @@ def _stage_b3_metrics(
         "session": session_info,
         "heartbeat_payload": heartbeat_payload,
         "heartbeat_expiry": credential_expiry,
+        "rotation_window": rotation_window_info,
+        "rotation_summary": rotation_summary,
     }
 
 
@@ -690,6 +793,25 @@ def _stage_c3_metrics(
                 "stage_b": stage_b_notes,
             },
         }
+
+        rotation_info: dict[str, Any] = {}
+        rotation_summary_text = _get(summary_b, "summary")
+        if isinstance(rotation_summary_text, str) and rotation_summary_text.strip():
+            rotation_info["summary"] = rotation_summary_text
+
+        metrics_b = _get(summary_b, "metrics")
+        if isinstance(metrics_b, Mapping):
+            rotation_window = metrics_b.get("rotation_window")
+            if isinstance(rotation_window, Mapping):
+                rotation_info["window"] = dict(rotation_window)
+            credential_expiry_value = metrics_b.get(
+                "heartbeat_expiry"
+            ) or metrics_b.get("credential_expiry")
+            if credential_expiry_value:
+                rotation_info["credential_expiry"] = credential_expiry_value
+
+        if rotation_info:
+            merged_payload["rotation"] = rotation_info
 
         statuses = [status_a, status_b]
         if all(status == "success" for status in statuses):

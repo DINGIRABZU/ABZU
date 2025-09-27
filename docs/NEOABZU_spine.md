@@ -74,6 +74,9 @@ the declared window. The most recent Stage B3 drill logged
 `20250926T180231Z-PT48H`, `20250925T094604Z-PT48H`, the follow-up refresh
 `20251024T174210Z-PT48H`, and the earlier `20250922T101554Z-PT48H` rehearsal) so auditors
 can see every rotation window in [`logs/stage_b_rotation_drills.jsonl`](../logs/stage_b_rotation_drills.jsonl).【F:logs/stage_b_rotation_drills.jsonl†L24-L45】
+The API now annotates those ledger entries with the rotation headline and any
+credential expiry surfaced during the drill, letting Stage C readiness dashboards
+render a human-readable status without scraping raw stdout.【F:operator_api.py†L470-L575】【F:operator_api.py†L640-L713】
 `OperatorMCPAdapter` wraps `operator_api` and `operator_upload` in that
 checklist, delegating the Stage B handshake and heartbeat to the template
 helpers. The shared `scripts/stage_b_smoke.py` run exercises those adapters with
