@@ -1311,8 +1311,27 @@ async def stage_a2_crown_replays() -> dict[str, Any]:
 async def stage_a3_gate_shakeout() -> dict[str, Any]:
     """Run the Alpha gate automation shakeout script."""
 
-    command = ["bash", str(_SCRIPTS_DIR / "run_alpha_gate.sh")]
-    return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a3_gate_shakeout", command)
+    command = ["bash", str(_SCRIPTS_DIR / "run_alpha_gate.sh"), "--sandbox"]
+    result = await _run_stage_workflow(_STAGE_A_ROOT, "stage_a3_gate_shakeout", command)
+
+    summary = result.get("summary")
+    summary_warnings: Sequence[Any] | None = None
+    if isinstance(summary, Mapping):
+        warnings = summary.get("warnings")
+        if isinstance(warnings, Sequence) and not isinstance(warnings, (str, bytes)):
+            summary_warnings = list(warnings)
+
+    top_level_warnings = result.get("warnings")
+    if isinstance(top_level_warnings, Sequence) and not isinstance(
+        top_level_warnings, (str, bytes)
+    ):
+        summary_warnings = list(top_level_warnings)
+
+    if summary_warnings:
+        result["warnings"] = summary_warnings
+        result["sandbox_warnings"] = summary_warnings
+
+    return result
 
 
 @router.post("/alpha/stage-b1-memory-proof")

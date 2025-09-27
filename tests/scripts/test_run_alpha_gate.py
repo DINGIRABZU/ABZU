@@ -61,9 +61,14 @@ def test_run_alpha_gate_fails_when_coverage_export_errors(tmp_path) -> None:
     )
     pytest_stub.chmod(0o755)
 
+    module_dir = tmp_path / "python"
+    module_dir.mkdir(parents=True, exist_ok=True)
+    (module_dir / "pytest_cov.py").write_text("\n", encoding="utf-8")
+
     env = {
         **os.environ,
         "PATH": f"{stub_dir}{os.pathsep}{os.environ.get('PATH', '')}",
+        "PYTHONPATH": f"{module_dir}{os.pathsep}{os.environ.get('PYTHONPATH', '')}",
     }
 
     summary_path = repo_root / "monitoring" / "alpha_gate_summary.json"
@@ -120,6 +125,88 @@ def test_run_alpha_gate_fails_when_coverage_export_errors(tmp_path) -> None:
                             entry.unlink()
                         except FileNotFoundError:
                             pass
+
+
+def test_run_alpha_gate_sandbox_optional_failures(tmp_path) -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+
+    stub_dir = tmp_path / "bin"
+    stub_dir.mkdir(parents=True, exist_ok=True)
+
+    real_python = sys.executable
+    python_stub = stub_dir / "python"
+    python_stub.write_text(
+        "#!/usr/bin/env bash\n"
+        'if [[ "$1" == "scripts/export_coverage.py" ]]; then\n'
+        "  echo 'sandbox: export coverage failure' >&2\n"
+        "  exit 222\n"
+        "fi\n"
+        f'exec "{real_python}" "$@"\n',
+        encoding="utf-8",
+    )
+    python_stub.chmod(0o755)
+
+    pytest_stub = stub_dir / "pytest"
+    pytest_stub.write_text(
+        "#!/usr/bin/env bash\n" "echo 'sandbox pytest success' >&2\n" "exit 0\n",
+        encoding="utf-8",
+    )
+    pytest_stub.chmod(0o755)
+
+    module_dir = tmp_path / "python"
+    module_dir.mkdir(parents=True, exist_ok=True)
+    (module_dir / "pytest_cov.py").write_text("\n", encoding="utf-8")
+
+    env = {
+        **os.environ,
+        "PATH": f"{stub_dir}{os.pathsep}{os.environ.get('PATH', '')}",
+        "ABZU_ALPHA_GATE_LOG_ROOT": str(tmp_path / "logs"),
+        "PYTHONPATH": f"{module_dir}{os.pathsep}{os.environ.get('PYTHONPATH', '')}",
+    }
+
+    result = subprocess.run(
+        [
+            "bash",
+            "scripts/run_alpha_gate.sh",
+            "--sandbox",
+            "--skip-build",
+            "--skip-health",
+        ],
+        cwd=str(repo_root),
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+
+    log_root = tmp_path / "logs"
+    assert log_root.exists()
+    run_dirs = sorted(log_root.iterdir())
+    assert run_dirs, "no alpha gate run directory created"
+    summary_path = run_dirs[-1] / "summary.json"
+    assert summary_path.exists(), summary_path
+
+    summary_payload = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert summary_payload["status"] == "success"
+
+    phases = {entry["name"]: entry for entry in summary_payload["phases"]}
+    tests_phase = phases["tests"]
+    assert tests_phase["outcome"] == "skipped"
+    assert tests_phase["reason"] == "environment-limited"
+    details = tests_phase.get("details", [])
+    assert "export_coverage.py exited with status 222" in details
+
+    warnings = summary_payload.get("warnings")
+    assert warnings, summary_payload
+    tests_warning = next(
+        (warning for warning in warnings if warning.get("phase") == "tests"),
+        None,
+    )
+    assert tests_warning is not None
+    warning_details = tests_warning.get("details", [])
+    assert "export_coverage.py exited with status 222" in warning_details
 
 
 def test_run_alpha_gate_sandbox_reports_warnings(tmp_path) -> None:
