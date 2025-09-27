@@ -229,3 +229,52 @@ def test_stage_b_requires_attention_for_stubbed_bundle_and_pending_contexts(
 
     merged_flags = summary_payload["merged"]["status_flags"]
     assert merged_flags["stage_b"] == "requires_attention"
+
+
+def test_stage_b_rotation_promotes_stage_c_context(tmp_path, monkeypatch) -> None:
+    stage_a_root = tmp_path / "stage_a"
+    stage_b_root = tmp_path / "stage_b"
+    stage_c_dir = tmp_path / "stage_c"
+
+    stage_a_slug_dir = stage_a_root / "20240101T000000Z-stage_a1_boot_telemetry"
+    stage_a_slug_dir.mkdir(parents=True, exist_ok=True)
+    (stage_a_slug_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "slug": "A1",
+                "status": "success",
+                "run_id": "a1-run",
+                "completed_at": "2024-01-01T00:05:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    stage_b3_dir = stage_b_root / "20240103T000000Z-stage_b3_connector_rotation"
+    stage_b3_dir.mkdir(parents=True, exist_ok=True)
+    _write_stage_b_summary(
+        stage_b3_dir / "summary.json",
+        "stage_b3_connector_rotation",
+        accepted_contexts=[
+            {"name": "stage-b-rehearsal", "status": "accepted"},
+            {
+                "name": "stage-c-prep",
+                "status": "accepted",
+                "promoted_at": "2025-09-26T22:28:14Z",
+            },
+        ],
+    )
+
+    monkeypatch.setattr(readiness_aggregate, "STAGE_A_ROOT", stage_a_root)
+    monkeypatch.setattr(readiness_aggregate, "STAGE_B_ROOT", stage_b_root)
+
+    _, summary_payload = readiness_aggregate.aggregate(stage_c_dir)
+
+    stage_b_snapshot = summary_payload["stage_b"]
+    b3_entry = stage_b_snapshot["slugs"]["B3"]
+    contexts = b3_entry["connector_contexts"]
+    stage_c_context = next(
+        context for context in contexts if context.get("name") == "stage-c-prep"
+    )
+    assert stage_c_context["status"] == "accepted"
+    assert not any("status pending" in note for note in b3_entry["risk_notes"])

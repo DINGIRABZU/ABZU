@@ -78,6 +78,11 @@ def test_run_stage_b_smoke_invokes_rotation(monkeypatch):
         "_collect_crown_metadata",
         lambda: {"version": "0.0", "module": "stub"},
     )
+    monkeypatch.setattr(
+        stage_b_smoke,
+        "load_latest_stage_c_handshake",
+        lambda: (None, {}),
+    )
 
     results = asyncio.run(stage_b_smoke.run_stage_b_smoke())
     assert (

@@ -20,6 +20,7 @@ from connectors.operator_mcp_adapter import (
     STAGE_B_TARGET_SERVICES,
     OperatorMCPAdapter,
     evaluate_operator_doctrine,
+    load_latest_stage_c_handshake,
     record_rotation_drill,
     stage_b_context_enabled,
 )
@@ -126,6 +127,108 @@ class _StubOperatorAdapter:
         return heartbeat_payload
 
 
+def _normalize_contexts(value: Any) -> list[dict[str, Any]]:
+    """Return ``value`` coerced to a list of context dictionaries."""
+
+    contexts: list[dict[str, Any]] = []
+    iterable: list[Any]
+    if isinstance(value, list):
+        iterable = value
+    elif isinstance(value, tuple):
+        iterable = list(value)
+    else:
+        iterable = []
+
+    for entry in iterable:
+        if isinstance(entry, dict):
+            contexts.append(dict(entry))
+        elif isinstance(entry, str):
+            contexts.append({"name": entry, "status": "accepted"})
+
+    return contexts
+
+
+def _extract_stage_c_promotion(
+    stage_c_handshake: dict[str, Any] | None,
+    metadata: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    """Return promotion metadata derived from the Stage C handshake."""
+
+    if not isinstance(stage_c_handshake, dict):
+        return {}
+
+    contexts = _normalize_contexts(stage_c_handshake.get("accepted_contexts"))
+    promotion: dict[str, dict[str, Any]] = {}
+    for entry in contexts:
+        if entry.get("name") != "stage-c-prep":
+            continue
+        status = entry.get("status")
+        if not isinstance(status, str):
+            continue
+        if status.lower() != "accepted":
+            continue
+
+        promoted_at = None
+        rotation = stage_c_handshake.get("rotation")
+        if isinstance(rotation, dict):
+            last_rotated = rotation.get("last_rotated")
+            if isinstance(last_rotated, str) and last_rotated:
+                promoted_at = last_rotated
+        if promoted_at is None:
+            completed_at = metadata.get("completed_at")
+            if isinstance(completed_at, str) and completed_at:
+                promoted_at = completed_at
+
+        details: dict[str, Any] = {"status": status}
+        if promoted_at:
+            details["promoted_at"] = promoted_at
+        handshake_path = metadata.get("handshake_path")
+        if isinstance(handshake_path, str) and handshake_path:
+            details["evidence_path"] = handshake_path
+        summary_path = metadata.get("summary_path")
+        if isinstance(summary_path, str) and summary_path:
+            details["summary_path"] = summary_path
+
+        promotion["stage-c-prep"] = details
+        break
+
+    return promotion
+
+
+def _apply_promotion_to_handshake(
+    handshake: dict[str, Any],
+    promotion: dict[str, dict[str, Any]],
+) -> None:
+    if not promotion:
+        return
+
+    contexts = _normalize_contexts(handshake.get("accepted_contexts"))
+    stage_c_entry = promotion.get("stage-c-prep")
+    if stage_c_entry:
+        found = False
+        for context in contexts:
+            if context.get("name") == "stage-c-prep":
+                found = True
+                status = stage_c_entry.get("status")
+                if isinstance(status, str):
+                    context["status"] = status
+                promoted_at = stage_c_entry.get("promoted_at")
+                if isinstance(promoted_at, str) and promoted_at:
+                    context["promoted_at"] = promoted_at
+                evidence_path = stage_c_entry.get("evidence_path")
+                if isinstance(evidence_path, str) and evidence_path:
+                    context["evidence_path"] = evidence_path
+                summary_path = stage_c_entry.get("summary_path")
+                if isinstance(summary_path, str) and summary_path:
+                    context["summary_path"] = summary_path
+                break
+        if not found:
+            new_entry = {"name": "stage-c-prep", **stage_c_entry}
+            contexts.append(new_entry)
+
+    handshake["accepted_contexts"] = contexts
+
+
 def _build_adapter() -> OperatorMCPAdapter | _StubOperatorAdapter:
     if _use_stub_adapter():
         return _StubOperatorAdapter()
@@ -168,6 +271,18 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
         emit_heartbeat=emit_heartbeat
     )
 
+    stage_c_handshake, stage_c_metadata = load_latest_stage_c_handshake()
+    promotion_metadata = _extract_stage_c_promotion(
+        dict(stage_c_handshake) if stage_c_handshake else None,
+        stage_c_metadata,
+    )
+    if promotion_metadata:
+        LOGGER.info(
+            "Stage C drill promotion detected for Stage B contexts",
+            extra={"promotion": promotion_metadata},
+        )
+        _apply_promotion_to_handshake(handshake, promotion_metadata)
+
     gateway_base = os.getenv("MCP_GATEWAY_URL", "http://localhost:8001").rstrip("/")
 
     results: Dict[str, Any] = {
@@ -192,6 +307,8 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
     }
 
     results["handshake"] = handshake
+    if promotion_metadata:
+        results["context_promotions"] = promotion_metadata
     if heartbeat_payload is not None:
         results["heartbeat"] = {
             "payload": heartbeat_payload,
@@ -200,9 +317,11 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
 
     rotation_receipts: Dict[str, Any] = {}
     for connector_id in STAGE_B_TARGET_SERVICES:
+        context_status = promotion_metadata if connector_id == "operator_api" else None
         rotation_receipts[connector_id] = record_rotation_drill(
             connector_id,
             handshake=handshake,
+            context_status=context_status,
         )
     results["rotation_ledger"] = rotation_receipts
 

@@ -33,6 +33,10 @@ STAGE_B_TARGET_SERVICES: tuple[str, ...] = (
 )
 ROTATION_WINDOW_HOURS = 48
 _ROTATION_LOG = _REPO_ROOT / "logs" / "stage_b_rotation_drills.jsonl"
+_STAGE_C_ROOT = _REPO_ROOT / "logs" / "stage_c"
+_STAGE_C_DRILL_STAGE = "stage_c4_operator_mcp_drill"
+
+StageCHandshakeResult = tuple[Mapping[str, Any] | None, dict[str, str | None]]
 _CONNECTOR_INDEX = _REPO_ROOT / "docs" / "connectors" / "CONNECTOR_INDEX.md"
 _AUDIT_DOC = _REPO_ROOT / "docs" / "connectors" / "operator_mcp_audit.md"
 
@@ -122,7 +126,7 @@ def _parse_rotation_timestamp(value: Any) -> datetime | None:
 
 
 def _extract_rotation_metadata(
-    handshake: Mapping[str, Any] | None
+    handshake: Mapping[str, Any] | None,
 ) -> Mapping[str, Any]:
     """Return rotation metadata contained within ``handshake``."""
 
@@ -154,14 +158,115 @@ def _resolve_rotation_window(
     }
 
 
+def _resolve_repo_path(value: Any) -> Path | None:
+    """Return ``value`` as an absolute path when possible."""
+
+    if not value:
+        return None
+    try:
+        candidate = Path(str(value))
+    except TypeError:
+        return None
+    if not candidate.is_absolute():
+        candidate = (_REPO_ROOT / candidate).resolve()
+    return candidate
+
+
+def load_latest_stage_c_handshake() -> StageCHandshakeResult:
+    """Return the latest successful Stage C MCP drill handshake and metadata."""
+
+    handshake: Mapping[str, Any] | None = None
+    metadata: dict[str, str | None] = {
+        "summary_path": None,
+        "handshake_path": None,
+        "completed_at": None,
+    }
+    if not _STAGE_C_ROOT.exists():
+        return handshake, metadata
+
+    best_sort_key: tuple[int, datetime, str] | None = None
+    for summary_path in sorted(_STAGE_C_ROOT.glob("*/summary.json")):
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+
+        if summary.get("stage") != _STAGE_C_DRILL_STAGE:
+            continue
+        if summary.get("status") != "success":
+            continue
+
+        completed_at_raw = summary.get("completed_at")
+        completed_at = _parse_rotation_timestamp(completed_at_raw)
+        artifacts = summary.get("artifacts")
+        handshake_candidate: Mapping[str, Any] | None = None
+        handshake_path: Path | None = None
+        if isinstance(artifacts, Mapping):
+            handshake_value = artifacts.get("mcp_handshake")
+            handshake_path = _resolve_repo_path(handshake_value)
+            if handshake_path and handshake_path.exists():
+                try:
+                    handshake_candidate = json.loads(
+                        handshake_path.read_text(encoding="utf-8")
+                    )
+                except (OSError, json.JSONDecodeError):
+                    handshake_candidate = None
+
+        if handshake_candidate is None:
+            metrics = summary.get("metrics")
+            if isinstance(metrics, Mapping):
+                metrics_handshake = metrics.get("handshake")
+                if isinstance(metrics_handshake, Mapping):
+                    handshake_candidate = metrics_handshake
+
+        if handshake_candidate is None:
+            continue
+
+        iso_completed: str | None = None
+        if completed_at:
+            iso_completed = _isoformat(completed_at)
+        elif isinstance(completed_at_raw, str):
+            try:
+                fallback_dt = datetime.fromisoformat(
+                    completed_at_raw.replace("Z", "+00:00")
+                )
+            except ValueError:
+                fallback_dt = None
+            if fallback_dt is not None:
+                if fallback_dt.tzinfo is None:
+                    fallback_dt = fallback_dt.replace(tzinfo=timezone.utc)
+                iso_completed = _isoformat(fallback_dt)
+
+        candidate_key = (
+            1 if completed_at else 0,
+            completed_at or datetime(1970, 1, 1, tzinfo=timezone.utc),
+            summary_path.name,
+        )
+        if best_sort_key is None or candidate_key > best_sort_key:
+            handshake = handshake_candidate
+            metadata = {
+                "summary_path": str(summary_path),
+                "handshake_path": str(handshake_path) if handshake_path else None,
+                "completed_at": iso_completed,
+            }
+            best_sort_key = candidate_key
+
+    return handshake, metadata
+
+
 def record_rotation_drill(
     connector_id: str,
     *,
     rotated_at: datetime | str | None = None,
     window_hours: int = ROTATION_WINDOW_HOURS,
     handshake: Mapping[str, Any] | None = None,
+    context_status: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Append a credential rotation drill entry for ``connector_id``."""
+    """Append a credential rotation drill entry for ``connector_id``.
+
+    ``context_status`` can embed downstream promotion metadata (for example,
+    Stage C adoption evidence) that should travel with the ledger entry.
+    """
 
     rotation_metadata = _extract_rotation_metadata(handshake)
     rotation_timestamp = _parse_rotation_timestamp(
@@ -184,6 +289,13 @@ def record_rotation_drill(
             duration_hint=duration_hint,
         ),
     }
+    if context_status:
+        entry["context_status"] = {
+            key: dict(value)
+            for key, value in context_status.items()
+            if isinstance(key, str) and isinstance(value, Mapping)
+        }
+
     _ROTATION_LOG.parent.mkdir(parents=True, exist_ok=True)
     with _ROTATION_LOG.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(entry) + "\n")
@@ -262,6 +374,7 @@ __all__ = [
     "ROTATION_WINDOW_HOURS",
     "record_rotation_drill",
     "load_rotation_history",
+    "load_latest_stage_c_handshake",
     "evaluate_operator_doctrine",
     "stage_b_context_enabled",
 ]
