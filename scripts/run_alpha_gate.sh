@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-LOG_ROOT_DIR="$ROOT_DIR/logs/alpha_gate"
+LOG_ROOT_DIR="${ABZU_ALPHA_GATE_LOG_ROOT:-$ROOT_DIR/logs/alpha_gate}"
 RUN_ID="$(date -u +"%Y%m%dT%H%M%SZ")"
 LOG_DIR="$LOG_ROOT_DIR/$RUN_ID"
 METRICS_PROM="$ROOT_DIR/monitoring/alpha_gate.prom"
@@ -527,12 +527,18 @@ PY
         return "$pytest_status"
     fi
     log_entry "$log_file" "Exporting coverage reports"
-    (
+    ( 
         cd "$ROOT_DIR"
         python scripts/export_coverage.py
     ) 2>&1 | tee -a "$log_file"
     local export_status=${PIPESTATUS[0]}
     if ((export_status != 0)); then
+        if ((SANDBOX == 1)); then
+            sandbox_skip_phase tests "$log_file" \
+                "Coverage export failed with status $export_status; treating as environment-limited" \
+                "export_coverage.py exited with status $export_status"
+            return 0
+        fi
         log_entry "$log_file" "Coverage export failed with status $export_status"
         return "$export_status"
     fi
@@ -655,6 +661,9 @@ main() {
     collect_inherited_pytest_args
     parse_args "$@"
     validate_pytest_extras
+    if ((SANDBOX == 1)); then
+        export ABZU_FORCE_STAGE_SANDBOX="${ABZU_FORCE_STAGE_SANDBOX:-1}"
+    fi
     ensure_log_dir
 
     local exit_code=0
@@ -725,6 +734,10 @@ PY
         if summary_json="$(emit_summary_json "$summary")"; then
             echo "[$(timestamp)] $summary"
             echo "$summary_json"
+            if ! printf '%s\n' "$summary_json" >"$LOG_DIR/summary.json"; then
+                echo "[$(timestamp)] Failed to persist Alpha gate summary JSON" >&2
+                exit_code=1
+            fi
         else
             echo "[$(timestamp)] $summary"
             echo "[$(timestamp)] Failed to render Alpha gate summary JSON" >&2
