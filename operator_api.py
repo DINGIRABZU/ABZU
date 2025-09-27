@@ -940,6 +940,15 @@ def _stage_c3_metrics(
             stage_a_slug_status[slug_key] = str(slug_entry.get("status", "missing"))
             stage_a_slug_notes[slug_key] = _ensure_list(slug_entry.get("risk_notes"))
 
+        def _notes_present(value: Any) -> bool:
+            if value is None:
+                return False
+            if isinstance(value, str):
+                return bool(value.strip())
+            if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+                return any(_notes_present(item) for item in value)
+            return bool(str(value).strip())
+
         stage_b_summary_mapping = stage_b if isinstance(stage_b, Mapping) else None
         stage_b_run_id = None
         stage_b_completed_at = None
@@ -1000,7 +1009,28 @@ def _stage_c3_metrics(
         if rotation_info:
             merged_payload["rotation"] = rotation_info
 
-        if stage_a_status == "success" and stage_b_status == "success":
+        stage_a_warns = _notes_present(stage_a_notes) or any(
+            _notes_present(notes) for notes in stage_a_slug_notes.values()
+        )
+        stage_b_warns = _notes_present(stage_b_notes)
+        stage_b_slug_entries = (
+            stage_b_section.get("slugs")
+            if isinstance(stage_b_section.get("slugs"), Mapping)
+            else {}
+        )
+        for slug_entry in stage_b_slug_entries.values():
+            if not isinstance(slug_entry, Mapping):
+                continue
+            if _notes_present(_ensure_list(slug_entry.get("risk_notes"))):
+                stage_b_warns = True
+                break
+
+        if (
+            stage_a_status == "success"
+            and stage_b_status == "success"
+            and not stage_a_warns
+            and not stage_b_warns
+        ):
             merged_payload["overall_status"] = "ready"
         else:
             merged_payload["overall_status"] = "requires_attention"
