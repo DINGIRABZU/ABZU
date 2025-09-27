@@ -1,0 +1,84 @@
+{
+  "status": "success",
+  "stage": "stage_c4_operator_mcp_drill",
+  "run_id": "20250926T222813Z-stage_c4_operator_mcp_drill",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/stage_c_mcp_drill.py",
+    "--json",
+    "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill"
+  ],
+  "returncode": 0,
+  "started_at": "2025-09-26T22:28:13.152139+00:00",
+  "completed_at": "2025-09-26T22:28:14.202878+00:00",
+  "duration_seconds": 1.050739,
+  "log_dir": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill",
+  "stdout_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/stage_c4_operator_mcp_drill.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/stage_c4_operator_mcp_drill.stderr.log",
+  "stdout_lines": 49,
+  "stderr_lines": 18,
+  "stderr_tail": [
+    "/workspace/ABZU/scripts/_stage_runtime.py:183: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle",
+    "  _apply_override(name, force=_should_force_override(name))",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)",
+    "  _prepare_overrides()"
+  ],
+  "summary": "}",
+  "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:148: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:183: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:226: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n",
+  "artifacts": {
+    "mcp_handshake": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+    "heartbeat": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/heartbeat.json"
+  },
+  "metrics": {
+    "handshake": {
+      "authenticated": true,
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-09-28T22:28:14Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "accepted"
+        }
+      ],
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-26T22:28:14Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250926T222814Z-PT48H"
+      },
+      "echo": {
+        "rotation": {
+          "connector_id": "operator_api",
+          "last_rotated": "2025-09-26T22:28:14Z",
+          "rotation_window": "PT48H",
+          "window_id": "20250926T222814Z-PT48H"
+        }
+      }
+    },
+    "credential_expiry": "2025-09-28T22:28:14Z",
+    "heartbeat_active": false,
+    "heartbeat_emitted": true,
+    "rotation_window_hours": 48,
+    "heartbeat_payload": {
+      "event": "stage-c4-operator-mcp-drill",
+      "stage": "C",
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-09-28T22:28:14Z"
+      },
+      "credential_expiry": "2025-09-28T22:28:14Z"
+    }
+  }
+}

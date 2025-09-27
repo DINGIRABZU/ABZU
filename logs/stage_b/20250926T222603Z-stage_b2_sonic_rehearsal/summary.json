@@ -1,0 +1,81 @@
+{
+  "status": "success",
+  "stage": "stage_b2_sonic_rehearsal",
+  "run_id": "20250926T222603Z-stage_b2_sonic_rehearsal",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/generate_stage_b_rehearsal_packet.py"
+  ],
+  "returncode": 0,
+  "started_at": "2025-09-26T22:26:03.508683+00:00",
+  "completed_at": "2025-09-26T22:26:03.859016+00:00",
+  "duration_seconds": 0.350333,
+  "log_dir": "/workspace/ABZU/logs/stage_b/20250926T222603Z-stage_b2_sonic_rehearsal",
+  "stdout_path": "/workspace/ABZU/logs/stage_b/20250926T222603Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_b/20250926T222603Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stderr.log",
+  "stdout_lines": 1,
+  "stderr_lines": 0,
+  "stderr_tail": [],
+  "summary": "Stage B rehearsal packet written to logs/stage_b_rehearsal_packet.json",
+  "artifacts": {
+    "rehearsal_packet": "/workspace/ABZU/logs/stage_b/20250926T222603Z-stage_b2_sonic_rehearsal/stage_b_rehearsal_packet.json"
+  },
+  "metrics": {
+    "generated_at": "2025-09-26T22:26:03Z",
+    "stage": "B",
+    "context": "stage-b-rehearsal",
+    "connectors": {
+      "operator_api": {
+        "module": "connectors.operator_api_stage_b",
+        "doctrine_ok": true,
+        "supported_channels": [
+          "handshake",
+          "heartbeat",
+          "command"
+        ],
+        "capabilities": [
+          "register",
+          "telemetry",
+          "command"
+        ],
+        "accepted_contexts": [
+          "stage-b-rehearsal"
+        ]
+      },
+      "operator_upload": {
+        "module": "connectors.operator_upload_stage_b",
+        "doctrine_ok": true,
+        "supported_channels": [
+          "handshake",
+          "heartbeat",
+          "upload"
+        ],
+        "capabilities": [
+          "register",
+          "telemetry",
+          "upload"
+        ],
+        "accepted_contexts": [
+          "stage-b-rehearsal"
+        ]
+      },
+      "crown_handshake": {
+        "module": "connectors.crown_handshake_stage_b",
+        "doctrine_ok": true,
+        "supported_channels": [
+          "handshake",
+          "heartbeat",
+          "mission-brief"
+        ],
+        "capabilities": [
+          "register",
+          "telemetry",
+          "mission-brief"
+        ],
+        "accepted_contexts": [
+          "stage-b-rehearsal"
+        ]
+      }
+    }
+  }
+}
