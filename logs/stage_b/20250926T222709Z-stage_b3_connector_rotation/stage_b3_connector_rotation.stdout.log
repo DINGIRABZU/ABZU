@@ -1,0 +1,118 @@
+{
+  "stage": "B",
+  "targets": [
+    "operator_api",
+    "operator_upload",
+    "crown_handshake"
+  ],
+  "services": {
+    "operator_api": {
+      "session": {
+        "id": "stage-b-session",
+        "credential_expiry": "2025-09-28T22:27:10Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "pending"
+        }
+      ]
+    },
+    "operator_upload": {
+      "session_reused": true,
+      "notes": "Upload operations share the operator MCP session."
+    },
+    "crown_handshake": {
+      "version": "0.2.5",
+      "module": "/workspace/ABZU/razar/crown_handshake.py"
+    }
+  },
+  "endpoints": {
+    "gateway": "http://localhost:8001",
+    "handshake": "http://localhost:8001/handshake",
+    "heartbeat": "http://localhost:8001/heartbeat"
+  },
+  "handshake": {
+    "authenticated": true,
+    "session": {
+      "id": "stage-b-session",
+      "credential_expiry": "2025-09-28T22:27:10Z"
+    },
+    "accepted_contexts": [
+      {
+        "name": "stage-b-rehearsal",
+        "status": "accepted"
+      },
+      {
+        "name": "stage-c-prep",
+        "status": "pending"
+      }
+    ],
+    "rotation": {
+      "connector_id": "operator_api",
+      "last_rotated": "2025-09-26T22:27:10Z",
+      "rotation_window": "PT48H",
+      "window_id": "20250926T222710Z-PT48H"
+    },
+    "echo": {
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-26T22:27:10Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250926T222710Z-PT48H"
+      }
+    }
+  },
+  "heartbeat": {
+    "payload": {
+      "event": "stage-b-smoke",
+      "session": {
+        "id": "stage-b-session",
+        "credential_expiry": "2025-09-28T22:27:10Z"
+      },
+      "credential_expiry": "2025-09-28T22:27:10Z"
+    },
+    "credential_expiry": "2025-09-28T22:27:10Z"
+  },
+  "rotation_ledger": {
+    "operator_api": {
+      "connector_id": "operator_api",
+      "rotated_at": "2025-09-26T22:27:10Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20250926T222710Z-PT48H",
+        "started_at": "2025-09-26T22:27:10Z",
+        "expires_at": "2025-09-28T22:27:10Z",
+        "duration": "PT48H"
+      }
+    },
+    "operator_upload": {
+      "connector_id": "operator_upload",
+      "rotated_at": "2025-09-26T22:27:10Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20250926T222710Z-PT48H",
+        "started_at": "2025-09-26T22:27:10Z",
+        "expires_at": "2025-09-28T22:27:10Z",
+        "duration": "PT48H"
+      }
+    },
+    "crown_handshake": {
+      "connector_id": "crown_handshake",
+      "rotated_at": "2025-09-26T22:27:10Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20250926T222710Z-PT48H",
+        "started_at": "2025-09-26T22:27:10Z",
+        "expires_at": "2025-09-28T22:27:10Z",
+        "duration": "PT48H"
+      }
+    }
+  },
+  "doctrine_ok": true,
+  "doctrine_failures": []
+}
