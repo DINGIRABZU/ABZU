@@ -23,6 +23,7 @@ STAGE_B_ROOT = Path("logs") / "stage_b"
 BUNDLE_FILENAME = "readiness_bundle.json"
 SUMMARY_FILENAME = "summary.json"
 STAGE_A_EXPECTED_SLUGS = ("A1", "A2", "A3")
+STAGE_B_EXPECTED_SLUGS = ("B1", "B2", "B3")
 
 
 LOGGER = logging.getLogger(__name__)
@@ -114,10 +115,10 @@ def _parse_datetime(value: Any) -> datetime | None:
 
 
 def _slug_from_text(text: str) -> str | None:
-    match = re.search(r"stage[_-]?(a\d)", text, re.IGNORECASE)
+    match = re.search(r"stage[_-]?([ab]\d)", text, re.IGNORECASE)
     if match:
         return match.group(1).upper()
-    match = re.search(r"\b(a\d)\b", text, re.IGNORECASE)
+    match = re.search(r"\b([ab]\d)\b", text, re.IGNORECASE)
     if match:
         return match.group(1).upper()
     return None
@@ -223,6 +224,124 @@ def _extract_risk_notes(summary: Mapping[str, Any] | None) -> list[str]:
     return notes
 
 
+def _coerce_bool(value: Any) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in {"true", "1", "yes", "y"}:
+            return True
+        if lowered in {"false", "0", "no", "n"}:
+            return False
+    return None
+
+
+def _coerce_int(value: Any) -> int | None:
+    if isinstance(value, bool):  # bool is also int
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str):
+        try:
+            return int(value)
+        except ValueError:
+            return None
+    return None
+
+
+def _dig(mapping: Mapping[str, Any] | None, *keys: str) -> Any:
+    current: Any = mapping
+    for key in keys:
+        if not isinstance(current, Mapping):
+            return None
+        current = current.get(key)
+    return current
+
+
+def _extract_layers(summary: Mapping[str, Any] | None) -> dict[str, int | None]:
+    layers_summary = _dig(summary, "summary", "layers")
+    layers_metrics = _dig(summary, "metrics", "layers")
+    total = _coerce_int(_dig(layers_summary, "total"))
+    ready = _coerce_int(_dig(layers_summary, "ready"))
+    failed = _coerce_int(_dig(layers_summary, "failed"))
+    if total is None:
+        total = _coerce_int(_dig(layers_metrics, "total"))
+    if ready is None:
+        ready = _coerce_int(_dig(layers_metrics, "ready"))
+    if failed is None:
+        failed = _coerce_int(_dig(layers_metrics, "failed"))
+    return {"total": total, "ready": ready, "failed": failed}
+
+
+def _extract_stubbed_bundle(summary: Mapping[str, Any] | None) -> bool | None:
+    for section in ("summary", "metrics"):
+        value = _dig(summary, section, "stubbed_bundle")
+        result = _coerce_bool(value)
+        if result is not None:
+            return result
+    return None
+
+
+def _normalize_context_entry(
+    connector: str, entry: Any
+) -> dict[str, str | None] | None:
+    if isinstance(entry, Mapping):
+        name_value = entry.get("name")
+        status_value = entry.get("status")
+        name = str(name_value) if isinstance(name_value, str) else None
+        status = str(status_value) if isinstance(status_value, str) else None
+        return {"connector": connector, "name": name, "status": status}
+    if isinstance(entry, str):
+        return {"connector": connector, "name": entry, "status": "accepted"}
+    return None
+
+
+def _extract_connector_contexts(
+    summary: Mapping[str, Any] | None,
+) -> list[dict[str, str | None]]:
+    contexts: list[dict[str, str | None]] = []
+    metrics = summary.get("metrics") if isinstance(summary, Mapping) else None
+    if not isinstance(metrics, Mapping):
+        return contexts
+
+    connectors = metrics.get("connectors")
+    if isinstance(connectors, Mapping):
+        for connector_name, connector_details in connectors.items():
+            if not isinstance(connector_details, Mapping):
+                continue
+            accepted = connector_details.get("accepted_contexts")
+            if isinstance(accepted, Iterable) and not isinstance(
+                accepted, (str, bytes)
+            ):
+                for entry in accepted:
+                    normalized = _normalize_context_entry(str(connector_name), entry)
+                    if normalized:
+                        contexts.append(normalized)
+            elif isinstance(accepted, (str, bytes)):
+                normalized = _normalize_context_entry(
+                    str(connector_name), str(accepted)
+                )
+                if normalized:
+                    contexts.append(normalized)
+
+    accepted_contexts = metrics.get("accepted_contexts")
+    if isinstance(accepted_contexts, Iterable) and not isinstance(
+        accepted_contexts, (str, bytes)
+    ):
+        for entry in accepted_contexts:
+            normalized = _normalize_context_entry("stage_b", entry)
+            if normalized:
+                contexts.append(normalized)
+    elif isinstance(accepted_contexts, (str, bytes)):
+        normalized = _normalize_context_entry("stage_b", str(accepted_contexts))
+        if normalized:
+            contexts.append(normalized)
+
+    return contexts
+
+
 def _build_stage_snapshot(
     stage_label: str,
     summary_path: Path | None,
@@ -254,6 +373,117 @@ def _build_stage_snapshot(
         "completed_at": completed_at,
     }
     return snapshot
+
+
+def _build_stage_b_snapshot() -> tuple[dict[str, Any], list[str]]:
+    latest = _latest_by_slug(STAGE_B_ROOT)
+    slugs = sorted({*latest.keys(), *STAGE_B_EXPECTED_SLUGS})
+    slug_entries: dict[str, dict[str, Any]] = {}
+    missing: list[str] = []
+    aggregated_risk_notes: list[str] = []
+    latest_runs: dict[str, str | None] = {}
+    completed_at: dict[str, str | None] = {}
+    attention_triggered = False
+
+    for slug in slugs:
+        summary_path: Path | None = None
+        summary: Mapping[str, Any] | None = None
+        if slug in latest:
+            summary_path, summary = latest[slug]
+
+        artifacts = _collect_supporting_artifacts(summary)
+        risk_notes = _extract_risk_notes(summary)
+        status = "missing"
+        run_id: str | None = None
+        completed: str | None = None
+        stubbed_bundle = _extract_stubbed_bundle(summary)
+        layers = _extract_layers(summary)
+        connector_contexts = _extract_connector_contexts(summary)
+        attention_reasons: list[str] = []
+
+        if summary:
+            run_id = (
+                summary.get("run_id")
+                if isinstance(summary.get("run_id"), str)
+                else None
+            )
+            completed = (
+                summary.get("completed_at")
+                if isinstance(summary.get("completed_at"), str)
+                else None
+            )
+            status = str(summary.get("status") or "missing")
+        else:
+            missing.append(f"stage_b:{slug.lower()}")
+
+        if stubbed_bundle is True:
+            reason = f"{slug.lower()} stubbed bundle active"
+            attention_reasons.append(reason)
+
+        ready_layers = layers.get("ready")
+        if ready_layers is not None and ready_layers == 0:
+            reason = f"{slug.lower()} has zero ready layers"
+            attention_reasons.append(reason)
+
+        for context in connector_contexts:
+            status_value = context.get("status")
+            if status_value and status_value.lower() != "accepted":
+                context_name = context.get("name") or "unknown"
+                connector = context.get("connector") or slug.lower()
+                reason = (
+                    f"{slug.lower()} context {connector}:{context_name} status "
+                    f"{status_value}"
+                )
+                attention_reasons.append(reason)
+
+        if attention_reasons:
+            attention_triggered = True
+
+        entry_risk_notes = list(dict.fromkeys([*risk_notes, *attention_reasons]))
+        aggregated_risk_notes.extend(entry_risk_notes)
+
+        latest_runs[slug] = run_id
+        completed_at[slug] = completed
+        slug_entries[slug] = {
+            "slug": slug,
+            "summary_path": str(summary_path) if summary_path else None,
+            "summary": summary,
+            "artifacts": artifacts,
+            "risk_notes": entry_risk_notes,
+            "status": status,
+            "stubbed_bundle": stubbed_bundle,
+            "layers": layers,
+            "connector_contexts": connector_contexts,
+        }
+
+    if not slug_entries:
+        overall_status = "missing"
+    else:
+        statuses = [entry["status"] for entry in slug_entries.values()]
+        if all(status == "missing" for status in statuses):
+            overall_status = "missing"
+        elif attention_triggered:
+            overall_status = "requires_attention"
+        elif all(status == "success" for status in statuses):
+            overall_status = "success"
+        else:
+            overall_status = "requires_attention"
+
+    aggregated_risk_notes = list(dict.fromkeys(aggregated_risk_notes))
+
+    snapshot = {
+        "label": "stage_b",
+        "status": overall_status,
+        "risk_notes": aggregated_risk_notes,
+        "slugs": slug_entries,
+        "latest_runs": latest_runs,
+        "completed_at": completed_at,
+    }
+
+    if overall_status == "missing" and not missing:
+        missing.append("stage_b")
+
+    return snapshot, missing
 
 
 def _build_stage_a_snapshot() -> tuple[dict[str, Any], list[str]]:
@@ -349,6 +579,28 @@ def _merge_stage_data(
         if isinstance(entry, Mapping)
     }
 
+    stage_b_slugs = {
+        slug: {
+            "status": entry.get("status", "missing"),
+            "risk_notes": entry.get("risk_notes", []),
+            "stubbed_bundle": entry.get("stubbed_bundle"),
+            "layers": entry.get("layers"),
+            "connector_contexts": entry.get("connector_contexts", []),
+            "run_id": (
+                entry.get("summary", {}).get("run_id")
+                if isinstance(entry.get("summary"), Mapping)
+                else None
+            ),
+            "completed_at": (
+                entry.get("summary", {}).get("completed_at")
+                if isinstance(entry.get("summary"), Mapping)
+                else None
+            ),
+        }
+        for slug, entry in stage_b.get("slugs", {}).items()
+        if isinstance(entry, Mapping)
+    }
+
     merged = {
         "latest_runs": {
             "stage_a": stage_a.get("latest_runs"),
@@ -367,6 +619,7 @@ def _merge_stage_data(
             "stage_b": stage_b.get("risk_notes", []),
         },
         "stage_a_slugs": stage_a_slugs,
+        "stage_b_slugs": stage_b_slugs,
     }
 
     stages = merged["status_flags"].values()
@@ -381,12 +634,7 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
     stage_c_log_dir.mkdir(parents=True, exist_ok=True)
 
     stage_a_snapshot, stage_a_missing = _build_stage_a_snapshot()
-    stage_b_path, stage_b_summary = _latest_summary(STAGE_B_ROOT)
-
-    stage_b_snapshot = _build_stage_snapshot("stage_b", stage_b_path, stage_b_summary)
-
-    if isinstance(stage_b_snapshot, dict):
-        _materialize_entry_files(stage_b_snapshot, stage_c_log_dir, "stage_b")
+    stage_b_snapshot, stage_b_missing = _build_stage_b_snapshot()
 
     stage_a_slugs = stage_a_snapshot.get("slugs")
     if isinstance(stage_a_slugs, Mapping):
@@ -395,10 +643,37 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
     else:
         _materialize_entry_files(stage_a_snapshot, stage_c_log_dir, "stage_a")
 
+    stage_b_slugs = stage_b_snapshot.get("slugs")
+    if isinstance(stage_b_slugs, Mapping):
+        for slug, slug_entry in stage_b_slugs.items():
+            _materialize_entry_files(slug_entry, stage_c_log_dir, "stage_b", str(slug))
+    else:
+        _materialize_entry_files(stage_b_snapshot, stage_c_log_dir, "stage_b")
+
+    canonical_slug: str | None = None
+    if isinstance(stage_b_slugs, Mapping):
+        for candidate in STAGE_B_EXPECTED_SLUGS:
+            if candidate in stage_b_slugs:
+                canonical_slug = candidate
+                break
+        if canonical_slug is None and stage_b_slugs:
+            canonical_slug = next(iter(stage_b_slugs))
+        if canonical_slug:
+            canonical_entry = stage_b_slugs.get(canonical_slug)
+            if isinstance(canonical_entry, Mapping):
+                for key in (
+                    "summary_path",
+                    "source_summary_path",
+                    "artifacts",
+                    "source_artifacts",
+                    "summary",
+                ):
+                    value = canonical_entry.get(key)
+                    if value is not None:
+                        stage_b_snapshot[key] = value
+
     merged = _merge_stage_data(stage_a_snapshot, stage_b_snapshot)
-    missing = list(stage_a_missing)
-    if not stage_b_snapshot.get("summary"):
-        missing.append("stage_b")
+    missing = [*stage_a_missing, *stage_b_missing]
 
     bundle = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
