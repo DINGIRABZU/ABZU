@@ -12,13 +12,78 @@ import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable
+import re
+from typing import Any, Iterable, Mapping
 
 
 STAGE_A_ROOT = Path("logs") / "stage_a"
 STAGE_B_ROOT = Path("logs") / "stage_b"
 BUNDLE_FILENAME = "readiness_bundle.json"
 SUMMARY_FILENAME = "summary.json"
+STAGE_A_EXPECTED_SLUGS = ("A1", "A2", "A3")
+
+
+def _parse_datetime(value: Any) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    candidate = value
+    if candidate.endswith("Z"):
+        candidate = candidate[:-1] + "+00:00"
+    try:
+        return datetime.fromisoformat(candidate)
+    except ValueError:
+        return None
+
+
+def _slug_from_text(text: str) -> str | None:
+    match = re.search(r"stage[_-]?(a\d)", text, re.IGNORECASE)
+    if match:
+        return match.group(1).upper()
+    match = re.search(r"\b(a\d)\b", text, re.IGNORECASE)
+    if match:
+        return match.group(1).upper()
+    return None
+
+
+def _extract_slug(summary: Mapping[str, Any] | None, summary_path: Path) -> str:
+    if summary is not None:
+        for key in ("slug", "stage", "run_id"):
+            value = summary.get(key)
+            if isinstance(value, str):
+                slug = _slug_from_text(value)
+                if slug:
+                    return slug
+    slug = _slug_from_text(summary_path.parent.name)
+    if slug:
+        return slug
+    return "UNKNOWN"
+
+
+def _latest_by_slug(stage_root: Path) -> dict[str, tuple[Path, dict[str, Any]]]:
+    results: dict[str, tuple[Path, dict[str, Any]]] = {}
+    if not stage_root.exists():
+        return results
+    for summary_path in sorted(stage_root.glob("*/summary.json")):
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        slug = _extract_slug(summary, summary_path)
+        existing = results.get(slug)
+        if existing:
+            _, existing_summary = existing
+            existing_completed = _parse_datetime(existing_summary.get("completed_at"))
+            current_completed = _parse_datetime(summary.get("completed_at"))
+            if existing_completed and current_completed:
+                if current_completed <= existing_completed:
+                    continue
+            elif existing_completed and not current_completed:
+                continue
+            elif not existing_completed and not current_completed:
+                if str(summary_path) <= str(existing[0]):
+                    continue
+        results[slug] = (summary_path, summary)
+    return results
 
 
 def _latest_summary(stage_root: Path) -> tuple[Path | None, dict[str, Any] | None]:
@@ -32,7 +97,7 @@ def _latest_summary(stage_root: Path) -> tuple[Path | None, dict[str, Any] | Non
     return latest, data
 
 
-def _collect_supporting_artifacts(summary: dict[str, Any] | None) -> list[str]:
+def _collect_supporting_artifacts(summary: Mapping[str, Any] | None) -> list[str]:
     if not summary:
         return []
 
@@ -52,7 +117,7 @@ def _collect_supporting_artifacts(summary: dict[str, Any] | None) -> list[str]:
     return artifacts
 
 
-def _extract_risk_notes(summary: dict[str, Any] | None) -> list[str]:
+def _extract_risk_notes(summary: Mapping[str, Any] | None) -> list[str]:
     if not summary:
         return ["readiness summary missing"]
 
@@ -64,7 +129,9 @@ def _extract_risk_notes(summary: dict[str, Any] | None) -> list[str]:
             notes.append(str(error))
 
         stderr_tail = summary.get("stderr_tail")
-        if isinstance(stderr_tail, Iterable) and not isinstance(stderr_tail, (str, bytes)):
+        if isinstance(stderr_tail, Iterable) and not isinstance(
+            stderr_tail, (str, bytes)
+        ):
             notes.extend(str(line) for line in stderr_tail if str(line).strip())
         elif isinstance(stderr_tail, (str, bytes)) and stderr_tail:
             notes.append(str(stderr_tail))
@@ -81,41 +148,147 @@ def _extract_risk_notes(summary: dict[str, Any] | None) -> list[str]:
 def _build_stage_snapshot(
     stage_label: str,
     summary_path: Path | None,
-    summary: dict[str, Any] | None,
+    summary: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
     artifacts = _collect_supporting_artifacts(summary)
+    status = "missing"
+    latest_run: str | None = None
+    completed_at: str | None = None
+    if summary:
+        status = str(summary.get("status") or "missing")
+        latest_run = (
+            summary.get("run_id") if isinstance(summary.get("run_id"), str) else None
+        )
+        completed_at = (
+            summary.get("completed_at")
+            if isinstance(summary.get("completed_at"), str)
+            else None
+        )
+
     snapshot: dict[str, Any] = {
         "label": stage_label,
         "summary_path": str(summary_path) if summary_path else None,
         "summary": summary,
         "artifacts": artifacts,
         "risk_notes": _extract_risk_notes(summary),
+        "status": status,
+        "latest_runs": latest_run,
+        "completed_at": completed_at,
     }
     return snapshot
 
 
-def _merge_stage_data(stage_a: dict[str, Any], stage_b: dict[str, Any]) -> dict[str, Any]:
-    def _latest(attr: str, data: dict[str, Any]) -> Any:
-        summary = data.get("summary") or {}
-        return summary.get(attr)
+def _build_stage_a_snapshot() -> tuple[dict[str, Any], list[str]]:
+    latest = _latest_by_slug(STAGE_A_ROOT)
+    slugs = sorted({*latest.keys(), *STAGE_A_EXPECTED_SLUGS})
+    slug_entries: dict[str, dict[str, Any]] = {}
+    missing: list[str] = []
+    aggregated_risk_notes: list[str] = []
+    latest_runs: dict[str, str | None] = {}
+    completed_at: dict[str, str | None] = {}
+    for slug in slugs:
+        summary_path: Path | None = None
+        summary: Mapping[str, Any] | None = None
+        if slug in latest:
+            summary_path, summary = latest[slug]
+        artifacts = _collect_supporting_artifacts(summary)
+        risk_notes = _extract_risk_notes(summary)
+        status = "missing"
+        run_id: str | None = None
+        completed: str | None = None
+        if summary:
+            run_id = (
+                summary.get("run_id")
+                if isinstance(summary.get("run_id"), str)
+                else None
+            )
+            completed = (
+                summary.get("completed_at")
+                if isinstance(summary.get("completed_at"), str)
+                else None
+            )
+            status = str(summary.get("status") or "missing")
+        else:
+            missing.append(f"stage_a:{slug.lower()}")
+        aggregated_risk_notes.extend(risk_notes)
+        latest_runs[slug] = run_id
+        completed_at[slug] = completed
+        slug_entries[slug] = {
+            "slug": slug,
+            "summary_path": str(summary_path) if summary_path else None,
+            "summary": summary,
+            "artifacts": artifacts,
+            "risk_notes": risk_notes,
+            "status": status,
+        }
+
+    if not slug_entries:
+        overall_status = "missing"
+    else:
+        statuses = [entry["status"] for entry in slug_entries.values()]
+        if all(status == "missing" for status in statuses):
+            overall_status = "missing"
+        elif all(status == "success" for status in statuses):
+            overall_status = "success"
+        else:
+            overall_status = "requires_attention"
+
+    snapshot = {
+        "label": "stage_a",
+        "status": overall_status,
+        "risk_notes": aggregated_risk_notes,
+        "slugs": slug_entries,
+        "latest_runs": latest_runs,
+        "completed_at": completed_at,
+    }
+    if overall_status == "missing" and not missing:
+        missing.append("stage_a")
+    return snapshot, missing
+
+
+def _merge_stage_data(
+    stage_a: dict[str, Any], stage_b: dict[str, Any]
+) -> dict[str, Any]:
+    stage_a_status = str(stage_a.get("status") or "missing")
+    stage_b_status = str(stage_b.get("status") or "missing")
+
+    stage_a_slugs = {
+        slug: {
+            "status": entry.get("status", "missing"),
+            "risk_notes": entry.get("risk_notes", []),
+            "run_id": (
+                entry.get("summary", {}).get("run_id")
+                if isinstance(entry.get("summary"), Mapping)
+                else None
+            ),
+            "completed_at": (
+                entry.get("summary", {}).get("completed_at")
+                if isinstance(entry.get("summary"), Mapping)
+                else None
+            ),
+        }
+        for slug, entry in stage_a.get("slugs", {}).items()
+        if isinstance(entry, Mapping)
+    }
 
     merged = {
         "latest_runs": {
-            "stage_a": _latest("run_id", stage_a),
-            "stage_b": _latest("run_id", stage_b),
+            "stage_a": stage_a.get("latest_runs"),
+            "stage_b": stage_b.get("latest_runs"),
         },
         "completed_at": {
-            "stage_a": _latest("completed_at", stage_a),
-            "stage_b": _latest("completed_at", stage_b),
+            "stage_a": stage_a.get("completed_at"),
+            "stage_b": stage_b.get("completed_at"),
         },
         "status_flags": {
-            "stage_a": _latest("status", stage_a) or "missing",
-            "stage_b": _latest("status", stage_b) or "missing",
+            "stage_a": stage_a_status,
+            "stage_b": stage_b_status,
         },
         "risk_notes": {
             "stage_a": stage_a.get("risk_notes", []),
             "stage_b": stage_b.get("risk_notes", []),
         },
+        "stage_a_slugs": stage_a_slugs,
     }
 
     stages = merged["status_flags"].values()
@@ -129,21 +302,15 @@ def _merge_stage_data(stage_a: dict[str, Any], stage_b: dict[str, Any]) -> dict[
 def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
     stage_c_log_dir.mkdir(parents=True, exist_ok=True)
 
-    stage_a_path, stage_a_summary = _latest_summary(STAGE_A_ROOT)
+    stage_a_snapshot, stage_a_missing = _build_stage_a_snapshot()
     stage_b_path, stage_b_summary = _latest_summary(STAGE_B_ROOT)
 
-    stage_a_snapshot = _build_stage_snapshot("stage_a", stage_a_path, stage_a_summary)
     stage_b_snapshot = _build_stage_snapshot("stage_b", stage_b_path, stage_b_summary)
 
     merged = _merge_stage_data(stage_a_snapshot, stage_b_snapshot)
-    missing = [
-        label
-        for label, snapshot in (
-            ("stage_a", stage_a_snapshot),
-            ("stage_b", stage_b_snapshot),
-        )
-        if not snapshot.get("summary")
-    ]
+    missing = list(stage_a_missing)
+    if not stage_b_snapshot.get("summary"):
+        missing.append("stage_b")
 
     bundle = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -156,8 +323,23 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
     bundle_path = stage_c_log_dir / BUNDLE_FILENAME
     bundle_path.write_text(json.dumps(bundle, indent=2), encoding="utf-8")
 
+    status = (
+        "success" if merged["overall_status"] == "ready" and not missing else "error"
+    )
+    error: str | None = None
+    if missing:
+        error = "missing readiness summaries: " + ", ".join(missing)
+    elif merged["overall_status"] != "ready":
+        attention_parts: list[str] = []
+        if merged["status_flags"].get("stage_a") != "success":
+            attention_parts.append("stage_a")
+        if merged["status_flags"].get("stage_b") != "success":
+            attention_parts.append("stage_b")
+        if attention_parts:
+            error = "readiness requires_attention: " + ", ".join(attention_parts)
+
     summary_payload = {
-        "status": "success" if not missing else "error",
+        "status": status,
         "generated_at": bundle["generated_at"],
         "bundle_path": str(bundle_path),
         "stage_a": stage_a_snapshot,
@@ -165,6 +347,8 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
         "merged": merged,
         "missing": missing,
     }
+    if error:
+        summary_payload["error"] = error
 
     summary_path = stage_c_log_dir / SUMMARY_FILENAME
     summary_path.write_text(json.dumps(summary_payload, indent=2), encoding="utf-8")

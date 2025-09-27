@@ -700,12 +700,44 @@ def test_stage_c2_demo_storyline_failure(
 def test_stage_c3_readiness_sync_success(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    stage_a_dir = Path("logs") / "stage_a" / "20240101T000000Z-stage"
+    shutil.rmtree(Path("logs"), ignore_errors=True)
+    stage_a1_dir = Path("logs") / "stage_a" / "20240101T000000Z-stage_a1_boot_telemetry"
+    stage_a2_dir = Path("logs") / "stage_a" / "20240101T000500Z-stage_a2_crown_replays"
+    stage_a3_dir = Path("logs") / "stage_a" / "20240101T001000Z-stage_a3_gate_shakeout"
     stage_b_dir = Path("logs") / "stage_b" / "20240102T000000Z-stage"
-    stage_a_dir.mkdir(parents=True, exist_ok=True)
-    stage_b_dir.mkdir(parents=True, exist_ok=True)
-    (stage_a_dir / "summary.json").write_text(
-        json.dumps({"run_id": "a", "status": "success", "completed_at": "2024"}),
+    for directory in (stage_a1_dir, stage_a2_dir, stage_a3_dir, stage_b_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+    (stage_a1_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "run_id": "a1-run",
+                "status": "success",
+                "completed_at": "2024-01-01T00:10:00Z",
+                "stage": "stage_a1_boot_telemetry",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (stage_a2_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "run_id": "a2-run",
+                "status": "success",
+                "completed_at": "2024-01-01T00:15:00Z",
+                "stage": "stage_a2_crown_replays",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (stage_a3_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "run_id": "a3-run",
+                "status": "success",
+                "completed_at": "2024-01-01T00:20:00Z",
+                "stage": "stage_a3_gate_shakeout",
+            }
+        ),
         encoding="utf-8",
     )
     rotation_window = {
@@ -739,7 +771,17 @@ def test_stage_c3_readiness_sync_success(
     assert resp.status_code == 200
     body = resp.json()
     merged = body["metrics"]["merged"]
-    assert merged["latest_runs"] == {"stage_a": "a", "stage_b": "b"}
+    assert merged["latest_runs"]["stage_a"] == {
+        "A1": "a1-run",
+        "A2": "a2-run",
+        "A3": "a3-run",
+    }
+    assert merged["latest_runs"]["stage_b"] == "b"
+    assert merged["status_flags"]["stage_a"] == "success"
+    stage_a_slugs = merged["stage_a_slugs"]
+    assert stage_a_slugs["A1"]["status"] == "success"
+    assert stage_a_slugs["A2"]["status"] == "success"
+    assert stage_a_slugs["A3"]["status"] == "success"
     rotation_section = merged.get("rotation")
     assert rotation_section is not None
     assert rotation_section["summary"] == rotation_summary
@@ -754,6 +796,63 @@ def test_stage_c3_readiness_sync_missing(
     resp = client.post("/alpha/stage-c3-readiness-sync")
     assert resp.status_code == 500
     assert "missing readiness" in resp.json()["detail"]
+
+
+def test_stage_c3_readiness_sync_requires_attention_when_stage_a_slug_fails(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    shutil.rmtree(Path("logs"), ignore_errors=True)
+    stage_a_root = Path("logs") / "stage_a"
+    stage_b_root = Path("logs") / "stage_b"
+    stage_a1_dir = stage_a_root / "20240101T010000Z-stage_a1_boot_telemetry"
+    stage_a2_dir = stage_a_root / "20240101T010500Z-stage_a2_crown_replays"
+    stage_a3_dir = stage_a_root / "20240101T011000Z-stage_a3_gate_shakeout"
+    stage_b_dir = stage_b_root / "20240102T010000Z-stage"
+    for directory in (stage_a1_dir, stage_a2_dir, stage_a3_dir, stage_b_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+    (stage_a1_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "run_id": "a1-failure",
+                "status": "error",
+                "completed_at": "2024-01-01T01:05:00Z",
+                "stage": "stage_a1_boot_telemetry",
+                "error": "boot telemetry failed",
+                "stderr_tail": ["traceback..."],
+            }
+        ),
+        encoding="utf-8",
+    )
+    for slug_dir, run_id, stage_name in (
+        (stage_a2_dir, "a2-run", "stage_a2_crown_replays"),
+        (stage_a3_dir, "a3-run", "stage_a3_gate_shakeout"),
+    ):
+        (slug_dir / "summary.json").write_text(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "status": "success",
+                    "completed_at": "2024-01-01T01:10:00Z",
+                    "stage": stage_name,
+                }
+            ),
+            encoding="utf-8",
+        )
+    (stage_b_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "run_id": "b",
+                "status": "success",
+                "completed_at": "2024-01-02T01:15:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+    configure_subprocess(monkeypatch, stdout=b"ready\n")
+    resp = client.post("/alpha/stage-c3-readiness-sync")
+    assert resp.status_code == 500
+    detail = resp.json()["detail"]
+    assert "requires_attention" in detail
 
 
 def test_stage_c4_operator_mcp_drill_success(

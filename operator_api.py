@@ -724,35 +724,24 @@ def _stage_c3_metrics(
     if bundle_data:
         stage_a_section = dict(bundle_data.get("stage_a") or {})
         stage_b_section = dict(bundle_data.get("stage_b") or {})
-        stage_a_summary = stage_a_section.get("summary")
-        stage_b_summary = stage_b_section.get("summary")
         if bundle_data.get("generated_at"):
             metrics["generated_at"] = bundle_data["generated_at"]
-        metrics["missing"] = list(bundle_data.get("missing") or [])
+        missing_entries = list(bundle_data.get("missing") or [])
     else:
-        stage_a_path, stage_a_summary = _latest_stage_summary(_STAGE_A_ROOT)
-        stage_b_path, stage_b_summary = _latest_stage_summary(_STAGE_B_ROOT)
+        from scripts import aggregate_stage_readiness as readiness_aggregate
 
-        stage_a_section = {
-            "summary": stage_a_summary,
-            "summary_path": str(stage_a_path) if stage_a_path else None,
-            "artifacts": [],
-            "risk_notes": [] if stage_a_summary else ["readiness summary missing"],
-        }
-        stage_b_section = {
-            "summary": stage_b_summary,
-            "summary_path": str(stage_b_path) if stage_b_path else None,
-            "artifacts": [],
-            "risk_notes": [] if stage_b_summary else ["readiness summary missing"],
-        }
-        metrics["missing"] = [
-            stage
-            for stage, summary in (
-                ("stage_a", stage_a_summary),
-                ("stage_b", stage_b_summary),
-            )
-            if summary is None
-        ]
+        stage_a_section, stage_a_missing = readiness_aggregate._build_stage_a_snapshot()
+        stage_b_path, stage_b_summary = readiness_aggregate._latest_summary(
+            readiness_aggregate.STAGE_B_ROOT
+        )
+        stage_b_section = readiness_aggregate._build_stage_snapshot(
+            "stage_b", stage_b_path, stage_b_summary
+        )
+        missing_entries = list(stage_a_missing)
+        if not stage_b_section.get("summary"):
+            missing_entries.append("stage_b")
+
+    metrics["missing"] = missing_entries
 
     def _ensure_list(value: Any) -> list[str]:
         if isinstance(value, list):
@@ -764,63 +753,202 @@ def _stage_c3_metrics(
     stage_a_notes = _ensure_list(stage_a_section.get("risk_notes"))
     stage_b_notes = _ensure_list(stage_b_section.get("risk_notes"))
 
-    def _build_merged(
-        summary_a: Mapping[str, Any] | None,
-        summary_b: Mapping[str, Any] | None,
-    ) -> dict[str, Any]:
-        def _get(summary: Mapping[str, Any] | None, key: str) -> Any:
-            if summary is None:
-                return None
-            return summary.get(key)
+    stage_a_slugs_raw = stage_a_section.get("slugs")
+    normalized_stage_a_slugs: dict[str, dict[str, Any]] = {}
+    if isinstance(stage_a_slugs_raw, Mapping):
+        for slug, slug_section in stage_a_slugs_raw.items():
+            if not isinstance(slug_section, Mapping):
+                continue
+            slug_key = str(slug).upper()
+            slug_summary = slug_section.get("summary")
+            if not isinstance(slug_summary, Mapping):
+                slug_summary = None
+            slug_notes = _ensure_list(slug_section.get("risk_notes"))
+            slug_status = slug_section.get("status")
+            if not isinstance(slug_status, str) and slug_summary is not None:
+                slug_status = slug_summary.get("status")
+            if not isinstance(slug_status, str):
+                slug_status = "missing"
+            slug_artifacts_value = slug_section.get("artifacts")
+            if isinstance(slug_artifacts_value, list):
+                slug_artifacts = [str(item) for item in slug_artifacts_value]
+            elif slug_artifacts_value is None:
+                slug_artifacts = []
+            else:
+                slug_artifacts = [str(slug_artifacts_value)]
+            normalized_stage_a_slugs[slug_key] = {
+                "summary": slug_summary,
+                "summary_path": slug_section.get("summary_path"),
+                "artifacts": slug_artifacts,
+                "risk_notes": slug_notes,
+                "status": slug_status,
+            }
 
-        status_a = _get(summary_a, "status") or "missing"
-        status_b = _get(summary_b, "status") or "missing"
-        merged_payload = {
+    if not normalized_stage_a_slugs:
+        summary = stage_a_section.get("summary")
+        summary_mapping = summary if isinstance(summary, Mapping) else None
+        slug_status = stage_a_section.get("status")
+        if not isinstance(slug_status, str) and summary_mapping is not None:
+            slug_status = summary_mapping.get("status")
+        if not isinstance(slug_status, str):
+            slug_status = "missing"
+        fallback_notes = stage_a_notes or ["readiness summary missing"]
+        artifacts_value = stage_a_section.get("artifacts")
+        if isinstance(artifacts_value, list):
+            artifacts_list = [str(item) for item in artifacts_value]
+        elif artifacts_value is None:
+            artifacts_list = []
+        else:
+            artifacts_list = [str(artifacts_value)]
+        normalized_stage_a_slugs["UNKNOWN"] = {
+            "summary": summary_mapping,
+            "summary_path": stage_a_section.get("summary_path"),
+            "artifacts": artifacts_list,
+            "risk_notes": fallback_notes,
+            "status": slug_status,
+        }
+
+    stage_a_section["slugs"] = normalized_stage_a_slugs
+
+    if not stage_a_notes:
+        aggregated = []
+        for slug_entry in normalized_stage_a_slugs.values():
+            aggregated.extend(slug_entry.get("risk_notes", []))
+        stage_a_notes = aggregated
+    stage_a_section["risk_notes"] = stage_a_notes
+
+    stage_a_status = stage_a_section.get("status")
+    if not isinstance(stage_a_status, str):
+        if normalized_stage_a_slugs:
+            slug_statuses = [
+                entry.get("status", "missing")
+                for entry in normalized_stage_a_slugs.values()
+            ]
+            if slug_statuses and all(status == "success" for status in slug_statuses):
+                stage_a_status = "success"
+            elif slug_statuses and all(status == "missing" for status in slug_statuses):
+                stage_a_status = "missing"
+            else:
+                stage_a_status = "requires_attention"
+        else:
+            stage_a_status = "missing"
+    stage_a_section["status"] = stage_a_status
+
+    stage_b_status = stage_b_section.get("status")
+    stage_b_summary = stage_b_section.get("summary")
+    if not isinstance(stage_b_summary, Mapping):
+        stage_b_summary = None
+    if not isinstance(stage_b_status, str):
+        if stage_b_summary is not None:
+            status_candidate = stage_b_summary.get("status")
+            stage_b_status = (
+                status_candidate if isinstance(status_candidate, str) else None
+            )
+        if not isinstance(stage_b_status, str):
+            stage_b_status = "missing"
+    stage_b_section["status"] = stage_b_status
+    stage_b_section["risk_notes"] = stage_b_notes
+
+    def _build_merged(
+        stage_a: Mapping[str, Any], stage_b: Mapping[str, Any] | None
+    ) -> dict[str, Any]:
+        stage_a_slugs = (
+            stage_a.get("slugs") if isinstance(stage_a.get("slugs"), Mapping) else {}
+        )
+        stage_a_latest_runs: dict[str, Any] = {}
+        stage_a_completed: dict[str, Any] = {}
+        stage_a_slug_status: dict[str, str] = {}
+        stage_a_slug_notes: dict[str, list[str]] = {}
+        for slug, slug_entry in stage_a_slugs.items():
+            if not isinstance(slug_entry, Mapping):
+                continue
+            slug_key = str(slug).upper()
+            slug_summary = slug_entry.get("summary")
+            if not isinstance(slug_summary, Mapping):
+                slug_summary = None
+            run_id = None
+            completed_at = None
+            if slug_summary is not None:
+                run_id = slug_summary.get("run_id")
+                completed_at = slug_summary.get("completed_at")
+            latest_runs_section = stage_a.get("latest_runs")
+            if run_id is None and isinstance(latest_runs_section, Mapping):
+                run_id = latest_runs_section.get(slug_key)
+            completed_section = stage_a.get("completed_at")
+            if completed_at is None and isinstance(completed_section, Mapping):
+                completed_at = completed_section.get(slug_key)
+            stage_a_latest_runs[slug_key] = run_id
+            stage_a_completed[slug_key] = completed_at
+            stage_a_slug_status[slug_key] = str(slug_entry.get("status", "missing"))
+            stage_a_slug_notes[slug_key] = _ensure_list(slug_entry.get("risk_notes"))
+
+        stage_b_summary_mapping = stage_b if isinstance(stage_b, Mapping) else None
+        stage_b_run_id = None
+        stage_b_completed_at = None
+        if stage_b_summary_mapping is not None:
+            summary_payload = stage_b_summary_mapping.get("summary")
+            if isinstance(summary_payload, Mapping):
+                stage_b_run_id = summary_payload.get("run_id")
+                stage_b_completed_at = summary_payload.get("completed_at")
+            else:
+                run_id_candidate = stage_b_summary_mapping.get("latest_runs")
+                if isinstance(run_id_candidate, Mapping):
+                    stage_b_run_id = run_id_candidate.get("stage_b")
+                completed_candidate = stage_b_summary_mapping.get("completed_at")
+                if isinstance(completed_candidate, Mapping):
+                    stage_b_completed_at = completed_candidate.get("stage_b")
+
+        merged_payload: dict[str, Any] = {
             "latest_runs": {
-                "stage_a": _get(summary_a, "run_id"),
-                "stage_b": _get(summary_b, "run_id"),
+                "stage_a": stage_a_latest_runs or stage_a.get("latest_runs"),
+                "stage_b": stage_b_run_id or stage_b_section.get("latest_runs"),
             },
             "completed_at": {
-                "stage_a": _get(summary_a, "completed_at"),
-                "stage_b": _get(summary_b, "completed_at"),
+                "stage_a": stage_a_completed or stage_a.get("completed_at"),
+                "stage_b": stage_b_completed_at or stage_b_section.get("completed_at"),
             },
             "status_flags": {
-                "stage_a": status_a,
-                "stage_b": status_b,
+                "stage_a": stage_a_status,
+                "stage_b": stage_b_status,
             },
             "risk_notes": {
                 "stage_a": stage_a_notes,
                 "stage_b": stage_b_notes,
             },
+            "stage_a_slugs": {
+                slug: {
+                    "status": stage_a_slug_status.get(slug, "missing"),
+                    "risk_notes": stage_a_slug_notes.get(slug, []),
+                }
+                for slug in stage_a_slug_status
+            },
         }
 
         rotation_info: dict[str, Any] = {}
-        rotation_summary_text = _get(summary_b, "summary")
-        if isinstance(rotation_summary_text, str) and rotation_summary_text.strip():
-            rotation_info["summary"] = rotation_summary_text
-
-        metrics_b = _get(summary_b, "metrics")
-        if isinstance(metrics_b, Mapping):
-            rotation_window = metrics_b.get("rotation_window")
-            if isinstance(rotation_window, Mapping):
-                rotation_info["window"] = dict(rotation_window)
-            credential_expiry_value = metrics_b.get(
-                "heartbeat_expiry"
-            ) or metrics_b.get("credential_expiry")
-            if credential_expiry_value:
-                rotation_info["credential_expiry"] = credential_expiry_value
-
+        if stage_b_summary is not None:
+            summary_text = stage_b_summary.get("summary")
+            if isinstance(summary_text, str) and summary_text.strip():
+                rotation_info["summary"] = summary_text
+            metrics_block = stage_b_summary.get("metrics")
+            if isinstance(metrics_block, Mapping):
+                rotation_window = metrics_block.get("rotation_window")
+                if isinstance(rotation_window, Mapping):
+                    rotation_info["window"] = dict(rotation_window)
+                credential_expiry_value = metrics_block.get(
+                    "heartbeat_expiry"
+                ) or metrics_block.get("credential_expiry")
+                if credential_expiry_value:
+                    rotation_info["credential_expiry"] = credential_expiry_value
         if rotation_info:
             merged_payload["rotation"] = rotation_info
 
-        statuses = [status_a, status_b]
-        if all(status == "success" for status in statuses):
+        if stage_a_status == "success" and stage_b_status == "success":
             merged_payload["overall_status"] = "ready"
         else:
             merged_payload["overall_status"] = "requires_attention"
         return merged_payload
 
-    merged_snapshot = _build_merged(stage_a_summary, stage_b_summary)
+    merged_snapshot = _build_merged(stage_a_section, stage_b_section)
 
     metrics.update(
         {
@@ -840,18 +968,53 @@ def _stage_c3_metrics(
     if bundle_path.exists():
         artifacts.setdefault("readiness_bundle", str(bundle_path))
 
-    for label, section in (("stage_a", stage_a_section), ("stage_b", stage_b_section)):
-        summary_path = section.get("summary_path")
+    stage_a_slug_sections = stage_a_section.get("slugs")
+    if isinstance(stage_a_slug_sections, Mapping) and stage_a_slug_sections:
+        for slug, slug_section in stage_a_slug_sections.items():
+            if not isinstance(slug_section, Mapping):
+                continue
+            slug_key = str(slug).lower()
+            summary_path = slug_section.get("summary_path")
+            if summary_path:
+                artifacts.setdefault(f"stage_a_{slug_key}_summary", str(summary_path))
+            artifacts_list = slug_section.get("artifacts") or []
+            for index, artifact_path in enumerate(artifacts_list):
+                artifacts.setdefault(
+                    f"stage_a_{slug_key}_artifact_{index + 1}",
+                    str(artifact_path),
+                )
+    else:
+        summary_path = stage_a_section.get("summary_path")
         if summary_path:
-            artifacts.setdefault(f"{label}_summary", summary_path)
-        for index, artifact_path in enumerate(section.get("artifacts") or []):
-            artifacts.setdefault(f"{label}_artifact_{index + 1}", artifact_path)
+            artifacts.setdefault("stage_a_summary", str(summary_path))
+        for index, artifact_path in enumerate(stage_a_section.get("artifacts") or []):
+            artifacts.setdefault(f"stage_a_artifact_{index + 1}", str(artifact_path))
 
+    summary_path_b = stage_b_section.get("summary_path")
+    if summary_path_b:
+        artifacts.setdefault("stage_b_summary", str(summary_path_b))
+    for index, artifact_path in enumerate(stage_b_section.get("artifacts") or []):
+        artifacts.setdefault(f"stage_b_artifact_{index + 1}", str(artifact_path))
+
+    error_messages: list[str] = []
     if metrics["missing"]:
-        payload["status"] = "error"
-        payload["error"] = "missing readiness summaries: " + ", ".join(
-            metrics["missing"]
+        error_messages.append(
+            "missing readiness summaries: " + ", ".join(metrics["missing"])
         )
+
+    attention_targets = []
+    if stage_a_status != "success":
+        attention_targets.append("stage_a")
+    if stage_b_status != "success":
+        attention_targets.append("stage_b")
+    if attention_targets:
+        error_messages.append(
+            "readiness requires_attention: " + ", ".join(attention_targets)
+        )
+
+    if error_messages:
+        payload["status"] = "error"
+        payload["error"] = "; ".join(error_messages)
 
     return metrics
 
