@@ -22,6 +22,7 @@ Standard workflow for updating documentation and guides.
 
 > [!IMPORTANT]
 > **Document environment-limited skips.** When the Codex sandbox blocks dependencies or hardware (GPU-only flows, DAW toolchains, connector credentials), call out the "environment-limited" skip in both the change log excerpt and PR summary. Reference the escalation workflow in [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment) and mirror the skip reason used in tests or gate scripts so reviewers can trace deferred validations.
+> Change logs and readiness packets must also state when results rely on stubs or deferred hardware validation, naming the affected step, the rehearsal host that will close the gap, and the sign-off trio documented in [The Absolute Protocol](The_Absolute_Protocol.md#sandbox-to-hardware-rehearsal-bridge).
 
 11. **Run `python scripts/check_connectors.py`** whenever files in `connectors/` or related modules change. The script fails on placeholder markers or missing MCP adoption. Every connector update must also refresh the corresponding documentation with protocol and heartbeat details.
 

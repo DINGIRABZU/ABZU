@@ -40,6 +40,27 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 > renders, DAW-in-the-loop rehearsals, connector drills needing live credentials) to the operator channel documented in
 > [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-c-planning-snapshot) and include an "environment-limited" entry in the bundle to
 > unblock review while remediation is scheduled.
+>
+> #### Sandbox-to-Hardware Rehearsal Bridge
+> When sandbox evidence cannot exercise a hardware step, explicitly map the deferred work to the Stage B rehearsal plan so
+> auditors see how the guardrail will be satisfied:
+>
+> - Record the sandbox command, the skipped output, and the remediation owner in the Alpha evidence bundle alongside a
+>   pointer to the Stage B rehearsal checklist that will re-run the step on hardware.
+> - Add a `hardware_escalation` block to the bundle JSON capturing the expected device, rehearsal host, and staged run ID so
+>   the hardware rehearsal inherits the same telemetry context.
+> - Capture a rehearsal dry-run transcript (even if stubbed) showing the exact command sequence that will be executed once
+>   hardware is available, and attach the transcript path to the Alpha bundle summary.
+>
+> Before ignition on real systems, obtain written sign-off from the operator lead, hardware owner, and QA reviewer confirming:
+>
+> 1. The sandbox bundle includes the deferred evidence, command transcript, and telemetry placeholders described above.
+> 2. The rehearsal window, host, and rollback plan are documented in [roadmap.md](roadmap.md#stage-b--subsystem-hardening).
+> 3. Recovery procedures and rollback checkpoints are rehearsed under the sandbox configuration so the hardware run has a
+>    proven mitigation path.
+>
+> Archive the signed approvals in the readiness packet and reference them in the Stage B rehearsal summary before promoting the
+> gate.
 
 - **Stage A guardrails validated** – Gate automation, coverage enforcement, and identity drift checks are now locked into the Alpha evidence bundle. Run `scripts/run_alpha_gate.sh` so packaging, health checks, `pytest --cov` exports, and the `python scripts/check_identity_sync.py` report land in `logs/alpha_gate/<timestamp>/`, matching the [Stage A roadmap commitments](roadmap.md#stage-a--alpha-gate-confidence). Maintain ≥ 90 % coverage through the feeds outlined in [system_blueprint.md#stage-gate-evidence](system_blueprint.md#stage-gate-evidence) and record bundle hashes in the [Doctrine Index](doctrine_index.md) to preserve the guardrail audit trail. The latest ledger (see [PROJECT_STATUS.md#stage-a-evidence-register](PROJECT_STATUS.md#stage-a-evidence-register)) confirms a successful 2025-09-20 rehearsal at 92.95 % coverage alongside the earlier 2025-09-21 dry run that logged an import regression while still capturing the audit bundle in `logs/alpha_gate/20250921T220258Z/`. Operators may now trigger the boot telemetry, replay capture, and gate shakeout directly from the console via `operator_api` (`POST /alpha/stage-a1-boot-telemetry`, `/alpha/stage-a2-crown-replays`, `/alpha/stage-a3-gate-shakeout`), which mirror the manual scripts and emit `logs/stage_a/<run_id>/summary.json` plus stdout/stderr for audit stitching.
 - **Stage A evidence synchronization** – Cross-link Alpha gate updates across [roadmap.md](roadmap.md#stage-a--alpha-gate-confidence), [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-a-evidence-register), and [`logs/alpha_gate/`](../logs/alpha_gate/) before requesting Stage B reviews so Stage C planning inherits the same bundle IDs and coverage notes.
