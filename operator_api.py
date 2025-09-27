@@ -303,20 +303,41 @@ async def _run_stage_workflow(
 
     summary_line = ""
     summary_json: Mapping[str, Any] | None = None
+    json_buffer: list[str] = []
+    collecting_json = False
     for line in reversed(stdout_lines):
         stripped = line.strip()
         if not stripped:
+            if collecting_json:
+                json_buffer.insert(0, line)
             continue
         if not summary_line:
             summary_line = stripped
-        if summary_json is None and stripped.startswith("{"):
-            try:
-                candidate = json.loads(stripped)
-            except json.JSONDecodeError:
-                continue
-            if isinstance(candidate, Mapping):
-                summary_json = candidate
-                break
+        if summary_json is not None:
+            break
+
+        should_collect = collecting_json or stripped.startswith(("{", "}"))
+        if should_collect:
+            if not collecting_json:
+                collecting_json = True
+            json_buffer.insert(0, line)
+            candidate_text = "\n".join(json_buffer).strip()
+            if (
+                candidate_text.startswith("{")
+                and candidate_text.endswith("}")
+                and candidate_text.count("{") == candidate_text.count("}")
+            ):
+                try:
+                    candidate = json.loads(candidate_text)
+                except json.JSONDecodeError:
+                    continue
+                if isinstance(candidate, Mapping):
+                    summary_json = candidate
+                    break
+            continue
+
+        json_buffer.clear()
+        collecting_json = False
 
     payload = {
         "status": "success" if process.returncode == 0 else "error",
