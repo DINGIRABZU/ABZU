@@ -1,1 +1,107 @@
-[]
+[
+  {
+    "agent": "orchestration_master",
+    "command": "./launch_servants.sh orchestration_master",
+    "channel": "#throne-room",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "launched"
+  },
+  {
+    "agent": "prompt_orchestrator",
+    "command": "./launch_servants.sh crown_prompt_orchestrator",
+    "channel": "#signal-hall",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "launched"
+  },
+  {
+    "agent": "qnl_engine",
+    "command": "./launch_servants.sh qnl_engine",
+    "channel": "#insight-observatory",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "launched"
+  },
+  {
+    "agent": "memory_scribe",
+    "command": "./launch_servants.sh memory_scribe",
+    "channel": "#memory-vault",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "launched"
+  },
+  {
+    "agent": "narrative_scribe",
+    "command": "./launch_servants.sh narrative_scribe",
+    "channel": "#story-forge",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "launched"
+  },
+  {
+    "agent": "albedo",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "cocytus",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "demiurge",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "gargantua",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "pandora",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "pleiades",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "sebas_tiara",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "shalltear",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "victim",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  },
+  {
+    "agent": "zohar-zero",
+    "command": "",
+    "channel": "",
+    "timestamp": "2025-09-27T20:08:54Z",
+    "status": "skipped"
+  }
+]

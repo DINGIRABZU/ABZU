@@ -1,0 +1,68 @@
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:154: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  module = override.factory()
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:189: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle
+  _apply_override(name, force=_should_force_override(name))
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:232: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:237: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)
+  _maybe_stub(name, force=True)
+/workspace/ABZU/scripts/_stage_runtime.py:237: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)
+  _maybe_stub(name, force=True)
+/workspace/ABZU/scripts/_stage_runtime.py:237: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)
+  _maybe_stub(name, force=True)
+/workspace/ABZU/scripts/_stage_runtime.py:237: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)
+  _maybe_stub(name, force=True)
+/workspace/ABZU/scripts/_stage_runtime.py:237: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  _maybe_stub(name, force=True)
+/workspace/ABZU/scripts/_stage_runtime.py:237: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'tools.session_logger' (session_logger: binary dumps without ffmpeg)
+  _maybe_stub(name, force=True)
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+INFO:scripts.bootstrap_world:Memory bundle initialization finished in 0.000s (0/0 ready, 0 failed)
+INFO:root:Starting Crown services...
+INFO:init_crown_agent:GLM health check succeeded
+INFO:init_crown_agent:identity fingerprint published to /workspace/ABZU/state/crown_identity_fingerprint.json
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]
+Batches: 100%|██████████| 1/1 [00:00<00:00, 24.02it/s]
+INFO:corpus_memory_logging:logged interaction to data/interactions.jsonl
+INFO:init_crown_agent:identity summary stored in corpus memory
+INFO:root:Launching agent profiles...
+INFO:agents.nazarick.service_launcher:Launched orchestration_master
+INFO:agents.nazarick.service_launcher:Launched prompt_orchestrator
+INFO:agents.nazarick.service_launcher:Launched qnl_engine
+INFO:agents.nazarick.service_launcher:Launched memory_scribe
+INFO:agents.nazarick.service_launcher:Launched narrative_scribe
+INFO:root:agent orchestration_master: launched
+INFO:root:agent prompt_orchestrator: launched
+INFO:root:agent qnl_engine: launched
+INFO:root:agent memory_scribe: launched
+INFO:root:agent narrative_scribe: launched
+INFO:root:agent albedo: skipped
+INFO:root:agent cocytus: skipped
+INFO:root:agent demiurge: skipped
+INFO:root:agent gargantua: skipped
+INFO:root:agent pandora: skipped
+INFO:root:agent pleiades: skipped
+INFO:root:agent sebas_tiara: skipped
+INFO:root:agent shalltear: skipped
+INFO:root:agent victim: skipped
+INFO:root:agent zohar-zero: skipped
+INFO:root:World bootstrap complete
+INFO:root:Sandbox status [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation), tools.session_logger (session_logger: binary dumps without ffmpeg)]

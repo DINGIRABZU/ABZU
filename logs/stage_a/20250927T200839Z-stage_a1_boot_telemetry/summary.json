@@ -1,0 +1,31 @@
+{
+  "status": "success",
+  "stage": "stage_a1_boot_telemetry",
+  "run_id": "20250927T200839Z-stage_a1_boot_telemetry",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/bootstrap_world.py"
+  ],
+  "returncode": 0,
+  "started_at": "2025-09-27T20:08:39.195172+00:00",
+  "completed_at": "2025-09-27T20:08:56.770589+00:00",
+  "duration_seconds": 17.575417,
+  "log_dir": "/workspace/ABZU/logs/stage_a/20250927T200839Z-stage_a1_boot_telemetry",
+  "stdout_path": "/workspace/ABZU/logs/stage_a/20250927T200839Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_a/20250927T200839Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log",
+  "stdout_lines": 15,
+  "stderr_lines": 68,
+  "stderr_tail": [
+    "INFO:root:agent demiurge: skipped",
+    "INFO:root:agent gargantua: skipped",
+    "INFO:root:agent pandora: skipped",
+    "INFO:root:agent pleiades: skipped",
+    "INFO:root:agent sebas_tiara: skipped",
+    "INFO:root:agent shalltear: skipped",
+    "INFO:root:agent victim: skipped",
+    "INFO:root:agent zohar-zero: skipped",
+    "INFO:root:World bootstrap complete",
+    "INFO:root:Sandbox status [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation), tools.session_logger (session_logger: binary dumps without ffmpeg)]"
+  ],
+  "summary": "RAZAR failed to start"
+}
