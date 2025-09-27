@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib
+import importlib.machinery
 import importlib.util
 import json
 import os
@@ -43,7 +44,6 @@ _FORCED_MODULES = {
     "crown_decider",
     "crown_prompt_orchestrator",
     "emotional_state",
-    "neoabzu_memory",
     "servant_model_manager",
     "state_transition_engine",
     "INANNA_AI.glm_integration",
@@ -66,6 +66,102 @@ def _ensure_path(path: Path) -> None:
     resolved = str(path)
     if resolved not in sys.path:
         sys.path.insert(0, resolved)
+
+
+def _neoabzu_candidate_dirs(root: Path) -> list[Path]:
+    """Return directories that may contain the neoabzu_memory artifact."""
+
+    candidates: list[Path] = []
+    override = os.getenv("NEOABZU_MEMORY_LIB_DIR")
+    if override:
+        candidates.append(Path(override))
+    release_root = root / "target" / "release"
+    candidates.append(release_root)
+    candidates.append(release_root / "deps")
+    neo_root = root / "NEOABZU" / "target" / "release"
+    candidates.append(neo_root)
+    candidates.append(neo_root / "deps")
+    seen: set[Path] = set()
+    ordered: list[Path] = []
+    for candidate in candidates:
+        if candidate.exists():
+            resolved = candidate.resolve()
+            if resolved not in seen:
+                seen.add(resolved)
+                ordered.append(resolved)
+    return ordered
+
+
+def _locate_neoabzu_memory(root: Path) -> Path | None:
+    """Find the compiled neoabzu_memory library under ``root``."""
+
+    suffixes = tuple(importlib.machinery.EXTENSION_SUFFIXES)
+    prefixes = ("", "lib")
+    for directory in _neoabzu_candidate_dirs(root):
+        for prefix in prefixes:
+            for suffix in suffixes:
+                candidate = directory / f"{prefix}neoabzu_memory{suffix}"
+                if candidate.exists() and candidate.is_file():
+                    return candidate
+        for suffix in suffixes:
+            for prefix in prefixes:
+                for candidate in sorted(directory.glob(f"{prefix}neoabzu_memory*{suffix}")):
+                    if candidate.is_file():
+                        return candidate
+    return None
+
+
+def _load_native_module(name: str, path: Path) -> types.ModuleType:
+    """Load a compiled extension module from ``path``."""
+
+    loader = importlib.machinery.ExtensionFileLoader(name, str(path))
+    spec = importlib.util.spec_from_loader(name, loader)
+    if spec is None:
+        raise ImportError(f"Unable to create module spec for {name} from {path}")
+    module = importlib.util.module_from_spec(spec)
+    loader.exec_module(module)
+    sys.modules[name] = module
+    return module
+
+
+def _ensure_native_module(name: str, root: Path) -> bool:
+    """Attempt to load the native implementation for ``name`` if present."""
+
+    module = sys.modules.get(name)
+    if module is not None and not getattr(module, "__neoabzu_sandbox__", False):
+        return True
+
+    try:
+        module = importlib.import_module(name)
+    except ModuleNotFoundError:
+        module = None
+    except ImportError:
+        module = None
+    if module is not None and not getattr(module, "__neoabzu_sandbox__", False):
+        return True
+
+    if name != "neoabzu_memory":
+        return False
+
+    artifact = _locate_neoabzu_memory(root)
+    if artifact is None:
+        return False
+
+    try:
+        module = _load_native_module(name, artifact)
+    except Exception as exc:  # pragma: no cover - loader failures vary
+        warnings.warn(
+            (
+                "environment-limited: failed to load neoabzu_memory from "
+                f"{artifact}: {exc}"
+            ),
+            EnvironmentLimitedWarning,
+            stacklevel=3,
+        )
+        return False
+
+    _APPLIED_OVERRIDES.pop(name, None)
+    return True
 
 
 def _register_default_overrides() -> None:
@@ -225,6 +321,8 @@ def bootstrap(optional_modules: Iterable[str] | None = None) -> Path:
     root = _detect_repo_root()
     _ensure_path(root)
 
+    _ensure_native_module("neoabzu_memory", root)
+
     src_dir = root / "src"
     if src_dir.exists():
         _ensure_path(src_dir)
@@ -234,7 +332,8 @@ def bootstrap(optional_modules: Iterable[str] | None = None) -> Path:
     requested_modules = tuple(optional_modules or ())
     for name in requested_modules:
         if name in _SANDBOX_OVERRIDES:
-            _maybe_stub(name, force=True)
+            if not _ensure_native_module(name, root):
+                _maybe_stub(name, force=True)
             continue
         try:
             importlib.import_module(name)
@@ -375,6 +474,7 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
         MemoryBundle.__module__ = module.__name__
         module.MemoryBundle = MemoryBundle
 
+    module.__neoabzu_sandbox__ = True
     module.__all__ = ["MemoryBundle"]
     return module
 

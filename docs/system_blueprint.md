@@ -582,6 +582,9 @@ graph TD
 
 `MemoryBundle` links the Cortex, Emotional, Mental, Spiritual, and Narrative layers behind a common bus. `broadcast_layer_event("layer_init")` announces readiness, while the `query_memory` façade fans out recalls and returns a merged view for Crown and operator agents. The vector shard now caches its fallback embeddings as a NumPy matrix so pure-Python searches remain within the 120 ms P95 retrieval contract even when FAISS is unavailable.
 
+> [!TIP]
+> **Host prerequisites for the Neo-ABZU bundle.** Install the Rust toolchain (Cargo 1.77 or newer), ensure the active Python interpreter exposes development headers (for example `python3.12-dev` plus `pkg-config` on Debian-family hosts), then build the library with `cargo build -p neoabzu-memory --release`. The Stage runtime now auto-detects the resulting `target/release/libneoabzu_memory.so`, letting Python services bind to the native crate and report the non-stubbed `bundle_mode`/`stubbed_bundle` diagnostics captured in the latest Stage B rehearsal.【F:NEOABZU/memory/README.md†L7-L13】【F:logs/stage_b/20250927T231955Z-stage_b1_memory_proof/summary.json†L1-L33】
+
 ### Document Map
 
 - **High‑level docs**
