@@ -1,0 +1,1 @@
+{"timestamp": "2025-09-27T21:40:41Z", "error": "Stage C3 readiness requires attention: Stage B memory proof stubbed (zero ready layers) and Stage B3 context pending", "count": 1, "notified": false, "stage_c_run": "20250927T213721Z-stage_c3_readiness_sync", "stage_b_risks": ["b1 stubbed bundle active", "b1 has zero ready layers", "b3 context stage_b:stage-c-prep status pending"]}
