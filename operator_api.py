@@ -849,6 +849,43 @@ def _stage_c3_metrics(
     stage_b_section["status"] = stage_b_status
     stage_b_section["risk_notes"] = stage_b_notes
 
+    def _coerce_path(value: Any) -> Path | None:
+        if isinstance(value, Path):
+            return value
+        if isinstance(value, str) and value.strip():
+            return Path(value)
+        return None
+
+    def _preferred_artifact_path(primary: Any, fallback: Any, label: str) -> str | None:
+        primary_path = _coerce_path(primary)
+        fallback_path = _coerce_path(fallback)
+        if primary_path and primary_path.exists():
+            return str(primary_path)
+        if fallback_path and fallback_path.exists():
+            if primary_path:
+                logger.warning(
+                    "bundle copy missing for %s at %s; using fallback %s",
+                    label,
+                    primary_path,
+                    fallback_path,
+                )
+            else:
+                logger.warning(
+                    "bundle copy missing for %s; using fallback %s",
+                    label,
+                    fallback_path,
+                )
+            return str(fallback_path)
+        if primary_path:
+            return str(primary_path)
+        if fallback_path:
+            logger.warning(
+                "bundle artifact missing for %s; no fallback at %s",
+                label,
+                fallback_path,
+            )
+        return None
+
     def _build_merged(
         stage_a: Mapping[str, Any], stage_b: Mapping[str, Any] | None
     ) -> dict[str, Any]:
@@ -974,27 +1011,82 @@ def _stage_c3_metrics(
             if not isinstance(slug_section, Mapping):
                 continue
             slug_key = str(slug).lower()
-            summary_path = slug_section.get("summary_path")
+            summary_path = _preferred_artifact_path(
+                slug_section.get("summary_path"),
+                slug_section.get("source_summary_path"),
+                f"stage_a:{slug_key} summary",
+            )
             if summary_path:
-                artifacts.setdefault(f"stage_a_{slug_key}_summary", str(summary_path))
+                artifacts.setdefault(f"stage_a_{slug_key}_summary", summary_path)
             artifacts_list = slug_section.get("artifacts") or []
+            fallback_artifacts = (
+                slug_section.get("source_artifacts")
+                if isinstance(slug_section.get("source_artifacts"), list)
+                else []
+            )
             for index, artifact_path in enumerate(artifacts_list):
-                artifacts.setdefault(
-                    f"stage_a_{slug_key}_artifact_{index + 1}",
-                    str(artifact_path),
+                resolved_artifact = _preferred_artifact_path(
+                    artifact_path,
+                    (
+                        fallback_artifacts[index]
+                        if index < len(fallback_artifacts)
+                        else None
+                    ),
+                    f"stage_a:{slug_key} artifact {index + 1}",
                 )
+                if resolved_artifact:
+                    artifacts.setdefault(
+                        f"stage_a_{slug_key}_artifact_{index + 1}",
+                        resolved_artifact,
+                    )
     else:
-        summary_path = stage_a_section.get("summary_path")
+        summary_path = _preferred_artifact_path(
+            stage_a_section.get("summary_path"),
+            stage_a_section.get("source_summary_path"),
+            "stage_a summary",
+        )
         if summary_path:
-            artifacts.setdefault("stage_a_summary", str(summary_path))
+            artifacts.setdefault("stage_a_summary", summary_path)
+        fallback_artifacts = (
+            stage_a_section.get("source_artifacts")
+            if isinstance(stage_a_section.get("source_artifacts"), list)
+            else []
+        )
         for index, artifact_path in enumerate(stage_a_section.get("artifacts") or []):
-            artifacts.setdefault(f"stage_a_artifact_{index + 1}", str(artifact_path))
+            resolved_artifact = _preferred_artifact_path(
+                artifact_path,
+                fallback_artifacts[index] if index < len(fallback_artifacts) else None,
+                f"stage_a artifact {index + 1}",
+            )
+            if resolved_artifact:
+                artifacts.setdefault(
+                    f"stage_a_artifact_{index + 1}",
+                    resolved_artifact,
+                )
 
-    summary_path_b = stage_b_section.get("summary_path")
+    summary_path_b = _preferred_artifact_path(
+        stage_b_section.get("summary_path"),
+        stage_b_section.get("source_summary_path"),
+        "stage_b summary",
+    )
     if summary_path_b:
-        artifacts.setdefault("stage_b_summary", str(summary_path_b))
+        artifacts.setdefault("stage_b_summary", summary_path_b)
+    fallback_stage_b = (
+        stage_b_section.get("source_artifacts")
+        if isinstance(stage_b_section.get("source_artifacts"), list)
+        else []
+    )
     for index, artifact_path in enumerate(stage_b_section.get("artifacts") or []):
-        artifacts.setdefault(f"stage_b_artifact_{index + 1}", str(artifact_path))
+        resolved_artifact = _preferred_artifact_path(
+            artifact_path,
+            fallback_stage_b[index] if index < len(fallback_stage_b) else None,
+            f"stage_b artifact {index + 1}",
+        )
+        if resolved_artifact:
+            artifacts.setdefault(
+                f"stage_b_artifact_{index + 1}",
+                resolved_artifact,
+            )
 
     error_messages: list[str] = []
     if metrics["missing"]:

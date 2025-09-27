@@ -11,7 +11,9 @@ from __future__ import annotations
 import argparse
 import json
 from datetime import datetime, timezone
+import logging
 from pathlib import Path
+import shutil
 import re
 from typing import Any, Iterable, Mapping
 
@@ -21,6 +23,82 @@ STAGE_B_ROOT = Path("logs") / "stage_b"
 BUNDLE_FILENAME = "readiness_bundle.json"
 SUMMARY_FILENAME = "summary.json"
 STAGE_A_EXPECTED_SLUGS = ("A1", "A2", "A3")
+
+
+LOGGER = logging.getLogger(__name__)
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _resolve_path(value: Any) -> Path | None:
+    if not value:
+        return None
+    try:
+        candidate = Path(str(value))
+    except TypeError:
+        return None
+    if not candidate.is_absolute():
+        candidate = (REPO_ROOT / candidate).resolve()
+    return candidate
+
+
+def _copy_into_stage_c(source: Path, stage_c_dir: Path, base_name: str) -> Path:
+    suffix = "".join(source.suffixes)
+    destination_name = base_name + suffix if suffix else base_name
+    destination = stage_c_dir / destination_name
+    try:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+    except FileNotFoundError:
+        LOGGER.warning("stage readiness copy missing source: %s", source)
+    except OSError as exc:
+        LOGGER.warning(
+            "stage readiness failed to copy %s -> %s: %s", source, destination, exc
+        )
+    return destination
+
+
+def _materialize_entry_files(
+    entry: Mapping[str, Any] | None,
+    stage_c_dir: Path,
+    stage_label: str,
+    slug: str | None = None,
+) -> None:
+    if not isinstance(entry, dict):
+        return
+
+    target_key = f"{stage_label}"
+    if slug:
+        target_key = f"{target_key}-{slug.lower()}"
+
+    summary_path_value = entry.get("summary_path") if isinstance(entry, dict) else None
+    if summary_path_value:
+        source_summary = _resolve_path(summary_path_value)
+        if source_summary:
+            entry["source_summary_path"] = str(source_summary)
+            copied_summary = _copy_into_stage_c(
+                source_summary, stage_c_dir, f"{target_key}-summary"
+            )
+            entry["summary_path"] = str(copied_summary)
+
+    artifacts_value = entry.get("artifacts")
+    if isinstance(artifacts_value, list):
+        copied_artifacts: list[str] = []
+        source_artifacts: list[str] = []
+        for index, artifact in enumerate(artifacts_value, start=1):
+            if not artifact:
+                continue
+            source_artifact = _resolve_path(artifact)
+            if source_artifact:
+                source_artifacts.append(str(source_artifact))
+                copied_artifact = _copy_into_stage_c(
+                    source_artifact, stage_c_dir, f"{target_key}-artifact{index}"
+                )
+                copied_artifacts.append(str(copied_artifact))
+            else:
+                source_artifacts.append(str(artifact))
+                copied_artifacts.append(str(artifact))
+        entry["source_artifacts"] = source_artifacts
+        entry["artifacts"] = copied_artifacts
 
 
 def _parse_datetime(value: Any) -> datetime | None:
@@ -306,6 +384,16 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
     stage_b_path, stage_b_summary = _latest_summary(STAGE_B_ROOT)
 
     stage_b_snapshot = _build_stage_snapshot("stage_b", stage_b_path, stage_b_summary)
+
+    if isinstance(stage_b_snapshot, dict):
+        _materialize_entry_files(stage_b_snapshot, stage_c_log_dir, "stage_b")
+
+    stage_a_slugs = stage_a_snapshot.get("slugs")
+    if isinstance(stage_a_slugs, Mapping):
+        for slug, slug_entry in stage_a_slugs.items():
+            _materialize_entry_files(slug_entry, stage_c_log_dir, "stage_a", str(slug))
+    else:
+        _materialize_entry_files(stage_a_snapshot, stage_c_log_dir, "stage_a")
 
     merged = _merge_stage_data(stage_a_snapshot, stage_b_snapshot)
     missing = list(stage_a_missing)
