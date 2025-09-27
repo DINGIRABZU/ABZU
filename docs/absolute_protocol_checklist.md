@@ -2,6 +2,8 @@
 
 Complete this checklist before tagging a release. Mark each item with `[x]` once satisfied.
 
+Review the [Sandbox-to-Hardware Rehearsal Bridge](The_Absolute_Protocol.md#sandbox-to-hardware-rehearsal-bridge) before finalizing the readiness packet so deferred hardware steps, rehearsal hosts, and operator/hardware/QA sign-offs are embedded alongside the environment-limited evidence bundle.
+
 - [x] `docs/INDEX.md` regenerated and committed — regenerated with `python tools/doc_indexer.py` on 2025-01-22 and verified the file updated.
 - [x] All tests pass (`pytest`) — **Status: environment-limited.** The 2025-09-25 run aborts during argument parsing because `pytest-cov` is unavailable in the sandbox, so the `--cov` options configured in `pytest.ini` cannot be applied; full test execution (and the optional `neoabzu_kimicho`, `omegaconf`, `websockets`, Vanna credentials, FFmpeg/SoX extras) remains deferred until CI restores the required dependencies. Transcript captured in `logs/stage_c/20250925T101638Z-stage_c1_exit_checklist/pytest.log` for the Stage C evidence bundle.
 - [x] Code coverage meets project threshold — **Status: blocked by pytest failure.** Coverage exports were not generated because `pytest` exited before collection. The last successful Alpha gate capture at 92.89 % remains published via the Prometheus textfile exports so the dashboards retain historical coverage telemetry.
