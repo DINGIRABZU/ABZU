@@ -1,0 +1,6 @@
+Requirement missing: docker is not installed or not in PATH.
+Requirement missing: sox is not installed or not in PATH.
+Requirement missing: ffmpeg is not installed or not in PATH.
+Requirement missing: aria2c is not installed or not in PATH.
+Python module 'core' is missing. Install it or ensure it's on PYTHONPATH.
+Python module 'audio' is missing. Install it or ensure it's on PYTHONPATH.

@@ -1,0 +1,4 @@
+WARNING monitoring.alerts.razar_failover: Connector probe returned 503 for https://stage-b.operator-api.abzu.dev
+WARNING monitoring.alerts.razar_failover: Connector probe returned 503 for https://stage-b.operator-upload.abzu.dev
+WARNING monitoring.alerts.razar_failover: Connector probe returned 503 for https://stage-b.crown-handshake.abzu.dev
+{"crown_handshake": false, "operator_api": false, "operator_upload": false}

@@ -38,6 +38,9 @@ Contributors must propose operator-facing improvements alongside system enhancem
 - **Resuscitator flows** streamline rollback and restart procedures; see the [recovery playbook](recovery_playbook.md).
 - **Signal bus** enables cross-core pub/sub messaging (see [../connectors/signal_bus.py](../connectors/signal_bus.py)).
 - **Neoabzu crates** released at **v0.1.2**; CI now enforces PyO3 exposure and `cargo check` on workspace crates.
+- **Rust workspace PyO3 bridge audit** – The `numeric`, `neoabzu_persona_layers`, `neoabzu_crown`, and `neoabzu_rag` crates
+  expose Python modules via PyO3 while pulling tracing from `neoabzu-instrumentation`; the pure Rust `fusion` crate
+  fuses invariant streams for both symbolic and numeric callers.【F:numeric/src/lib.rs†L1-L38】【F:persona/src/lib.rs†L1-L27】【F:crown/src/lib.rs†L1-L53】【F:rag/src/lib.rs†L1-L66】【F:instrumentation/src/lib.rs†L1-L29】【F:fusion/src/lib.rs†L1-L29】
 - **Blueprint governance** – Architecture commits must update this blueprint, [The_Absolute_Protocol.md](The_Absolute_Protocol.md#architecture-change-doctrine), [blueprint_spine.md](blueprint_spine.md), [NEOABZU_spine.md](NEOABZU_spine.md), and both [index.md](index.md) and [INDEX.md](INDEX.md) so reviewers see synchronized narratives and indexes.
 - **Stage A guardrails** – `scripts/run_alpha_gate.sh` now packages coverage exports, health checks, and identity sync results into the Alpha evidence bundle catalogued in the [Stage gate evidence ledger](#stage-gate-evidence).
 - **Stage B memory proof** – Memory rehearsals archive latency dashboards and ingestion audits next to the [Memory Bundle Architecture](#memory-bundle-architecture) callouts and the Stage gate evidence ledger.
