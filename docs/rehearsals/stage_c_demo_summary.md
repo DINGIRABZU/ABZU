@@ -14,7 +14,9 @@ never land in git.【F:logs/stage_c/20250928T162716Z-stage_c2_demo_storyline/dem
 Downloaders should rely on the recorded evidence URI from the Stage B manifest
 and hydrate the stems on demand with
 `scripts/stage_c_scripted_demo.py --copy-media` when local playback is
-necessary.【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L7-L19】【F:evidence_manifests/stage-b-audio.json†L2-L40】【F:scripts/stage_c_scripted_demo.py†L369-L441】
+necessary. Set `EVIDENCE_GATEWAY_BASE_URL` to the evidence proxy before running
+the harness so it can download the bundle automatically when no local assets
+are present.【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L7-L19】【F:evidence_manifests/stage-b-audio.json†L2-L40】【F:scripts/stage_c_scripted_demo.py†L152-L208】
 
 The Stage B rehearsal summary confirms the storyline covers three scripted
 beats, finishes without dropouts, and tops out at a 67 ms sync offset, which the
@@ -35,9 +37,13 @@ auditors.【F:scripts/stage_c_scripted_demo.py†L369-L441】【F:scripts/stage_
 
 To fetch stems locally when deep inspection is required:
 
-1. Pull the Stage B evidence bundle recorded in the session manifest at
+1. Point `EVIDENCE_GATEWAY_BASE_URL` at the evidence proxy and pull the Stage B
+   bundle referenced in the session manifest at
    `evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz`
-   (SHA-256 `0a862de4…`).【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L7-L19】
+   (SHA-256 `0a862de4…`). If the proxy is unavailable, request the
+   `demo_storyline.tar.gz` artifact from
+   `evidence://stage-c/stage_c/20250928T210033Z-stage_c2_demo_storyline/` and
+   unpack it outside the repository before copying stems into place.【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L7-L19】【F:evidence_manifests/stage-c-demo-storyline.json†L1-L23】
 2. Run the harness with `--copy-media` to materialize audio/video alongside the
    Stage C telemetry, e.g.:
 

@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import logging
+import os
 import shutil
 import tarfile
 from copy import deepcopy
@@ -14,6 +15,9 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Sequence
+from urllib.error import URLError
+from urllib.parse import urlparse
+from urllib.request import urlopen
 
 logger = logging.getLogger(__name__)
 
@@ -136,6 +140,64 @@ def _has_required_assets(base: Path) -> bool:
     return True
 
 
+def _resolve_artifact_url(artifact_uri: str) -> str:
+    parsed = urlparse(artifact_uri)
+    if parsed.scheme in {"http", "https"}:
+        return artifact_uri
+    if parsed.scheme in {"", "file"}:
+        return Path(parsed.path).resolve().as_uri()
+    if parsed.scheme == "evidence":
+        base = os.getenv("EVIDENCE_GATEWAY_BASE_URL")
+        if not base:
+            raise StageBAssetError(
+                "Set EVIDENCE_GATEWAY_BASE_URL to fetch evidence:// artifacts "
+                "or download the bundle manually."
+            )
+        prefix = base.rstrip("/")
+        joined = f"{parsed.netloc}/{parsed.path.lstrip('/')}" if parsed.netloc else parsed.path.lstrip("/")
+        return f"{prefix}/{joined}"
+    raise StageBAssetError(
+        f"Unsupported artifact URI scheme for Stage B bundle: {artifact_uri}"
+    )
+
+
+def _download_stage_b_bundle(
+    artifact_uri: str,
+    bundle_name: str,
+    download_root: Path,
+    expected_sha256: str | None = None,
+) -> Path:
+    download_root.mkdir(parents=True, exist_ok=True)
+    destination = download_root / bundle_name
+    if destination.exists():
+        if expected_sha256 is None or _sha256(destination) == expected_sha256:
+            logger.info("Reusing cached Stage B bundle %s", destination)
+            return destination
+        logger.warning(
+            "Discarding cached Stage B bundle %s due to checksum mismatch",
+            destination,
+        )
+        destination.unlink()
+    url = _resolve_artifact_url(artifact_uri)
+    logger.info("Downloading Stage B bundle %s -> %s", artifact_uri, destination)
+    try:
+        with urlopen(url) as response, destination.open("wb") as handle:  # noqa: S310,PTH123
+            shutil.copyfileobj(response, handle)
+    except URLError as exc:  # pragma: no cover - network failures depend on env
+        raise StageBAssetError(
+            f"Failed to download Stage B bundle from {artifact_uri}: {exc}"
+        ) from exc
+    if expected_sha256 is not None:
+        checksum = _sha256(destination)
+        if checksum != expected_sha256:
+            destination.unlink(missing_ok=True)
+            raise StageBAssetError(
+                "Downloaded Stage B bundle checksum mismatch: "
+                f"expected {expected_sha256} but got {checksum}"
+            )
+    return destination
+
+
 def _safe_extract(archive: tarfile.TarFile, target_dir: Path) -> None:
     target_dir.mkdir(parents=True, exist_ok=True)
     root = target_dir.resolve()
@@ -178,11 +240,23 @@ def _locate_stage_b_assets(
     if bundle_override is not None:
         bundle_path = bundle_override
     else:
-        bundle_name = manifest.get("bundle", {}).get("name")
+        bundle_info = manifest.get("bundle", {})
+        bundle_name = bundle_info.get("name")
         if bundle_name:
             candidate = session_dir / "bundles" / bundle_name
             if candidate.exists():
                 bundle_path = candidate
+            else:
+                artifact_uri = bundle_info.get("artifact_uri")
+                if artifact_uri:
+                    checksum = bundle_info.get("sha256")
+                    download_root = extraction_base / "_bundle_cache"
+                    bundle_path = _download_stage_b_bundle(
+                        artifact_uri,
+                        bundle_name,
+                        download_root,
+                        expected_sha256=checksum,
+                    )
     if bundle_path is not None:
         extraction_root = (
             extraction_base
