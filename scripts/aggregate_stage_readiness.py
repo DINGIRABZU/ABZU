@@ -699,26 +699,58 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
         _materialize_entry_files(stage_b_snapshot, stage_c_log_dir, "stage_b")
 
     canonical_slug: str | None = None
+    canonical_entry: Mapping[str, Any] | None = None
     if isinstance(stage_b_slugs, Mapping):
-        for candidate in STAGE_B_EXPECTED_SLUGS:
-            if candidate in stage_b_slugs:
-                canonical_slug = candidate
-                break
-        if canonical_slug is None and stage_b_slugs:
-            canonical_slug = next(iter(stage_b_slugs))
-        if canonical_slug:
-            canonical_entry = stage_b_slugs.get(canonical_slug)
-            if isinstance(canonical_entry, Mapping):
-                for key in (
-                    "summary_path",
-                    "source_summary_path",
-                    "artifacts",
-                    "source_artifacts",
-                    "summary",
+        b3_entry = stage_b_slugs.get("B3")
+        if isinstance(b3_entry, Mapping):
+            canonical_slug = "B3"
+            canonical_entry = b3_entry
+        else:
+            best_completed_at: datetime | None = None
+            best_priority = len(STAGE_B_EXPECTED_SLUGS)
+            for slug, slug_entry in stage_b_slugs.items():
+                completed_raw = (
+                    slug_entry.get("completed_at") if isinstance(slug_entry, Mapping) else None
+                )
+                completed_at = _parse_datetime(completed_raw)
+                priority = (
+                    STAGE_B_EXPECTED_SLUGS.index(slug)
+                    if slug in STAGE_B_EXPECTED_SLUGS
+                    else len(STAGE_B_EXPECTED_SLUGS)
+                )
+                if completed_at is None and best_completed_at is not None:
+                    continue
+                if (
+                    completed_at is not None
+                    and (
+                        best_completed_at is None
+                        or completed_at > best_completed_at
+                        or (completed_at == best_completed_at and priority < best_priority)
+                    )
                 ):
-                    value = canonical_entry.get(key)
-                    if value is not None:
-                        stage_b_snapshot[key] = value
+                    canonical_slug = slug
+                    canonical_entry = slug_entry
+                    best_completed_at = completed_at
+                    best_priority = priority
+            if canonical_slug is None:
+                for candidate in STAGE_B_EXPECTED_SLUGS:
+                    if candidate in stage_b_slugs:
+                        canonical_slug = candidate
+                        canonical_entry = stage_b_slugs.get(candidate)
+                        break
+            if canonical_slug is None and stage_b_slugs:
+                canonical_slug, canonical_entry = next(iter(stage_b_slugs.items()))
+    if isinstance(canonical_entry, Mapping):
+        for key in (
+            "summary_path",
+            "source_summary_path",
+            "artifacts",
+            "source_artifacts",
+            "summary",
+        ):
+            value = canonical_entry.get(key)
+            if value is not None:
+                stage_b_snapshot[key] = value
 
     merged = _merge_stage_data(stage_a_snapshot, stage_b_snapshot)
     missing = [*stage_a_missing, *stage_b_missing]
