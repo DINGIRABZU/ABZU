@@ -9,6 +9,8 @@ prometheus-fastapi-instrumentator==6.1.0
     # via spiral-os (pyproject.toml)
 opentelemetry-api==1.36.0
     # via spiral-os (pyproject.toml)
+grpcio==1.62.0
+    # provides gRPC transport for operator_api pilot
 opentelemetry-exporter-otlp==1.36.0
     # via spiral-os (pyproject.toml)
 psutil==7.0.0

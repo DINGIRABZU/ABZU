@@ -50,6 +50,14 @@ Exporter textfile collector at the directory to surface the gauges on the Boot
 Ops Grafana board (panels titled *Boot First Attempt Successes*, *Boot Retry
 Attempts*, and *Boot Total Time*).
 
+## Operator transport pilot dashboard
+
+The dual REST/gRPC pilot for `operator_api` emits latency, error, and fallback
+metrics plus span events that document when the gRPC handler falls back to the
+REST implementation. See `operator_transport_pilot.md` for dashboard
+recommendations, metric names, and log correlation tips that align with the
+Stage C readiness ledger.
+
 ## Stage B rehearsal scheduler
 
 Run `python scripts/rehearsal_scheduler.py` to orchestrate the Stage B rehearsal

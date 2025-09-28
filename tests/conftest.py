@@ -253,6 +253,7 @@ allow_tests(
     ROOT / "tests" / "agents" / "razar" / "test_state_validator.py",
     ROOT / "tests" / "test_operator_api.py",
     ROOT / "tests" / "test_operator_command_route.py",
+    ROOT / "tests" / "test_operator_transport_contract.py",
     ROOT / "tests" / "ignition" / "test_full_stack.py",
     ROOT / "tests" / "ignition" / "test_validate_ignition_script.py",
     ROOT / "tests" / "bana" / "test_event_structurizer.py",

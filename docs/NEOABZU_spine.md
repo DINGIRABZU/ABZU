@@ -99,11 +99,15 @@ The same console lanes now cover Stage C by exposing `/alpha/stage-c1-exit-che
 `/alpha/stage-c4-operator-mcp-drill` so operators can validate the exit checklist,
 capture the scripted demo harness, merge Stage A/B readiness snapshots, and record
 MCP drill evidence under `logs/stage_c/<run_id>/` without leaving the dashboard.
- Dedicated rehearsal modules ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
- [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
- [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) build on
- the shared helper to emit the canonical heartbeat payloads while keeping
- production adapters lean.
+Dedicated rehearsal modules ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
+[operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
+[crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) build on
+the shared helper to emit the canonical heartbeat payloads while keeping
+production adapters lean.
+The transport pilot now instruments REST and gRPC paths with shared latency,
+error, and fallback metrics so the Grafana runbook in
+`monitoring/operator_transport_pilot.md` can compare both channels before the
+rollout expands beyond the initial connectors.【F:operator_api.py†L54-L374】【F:operator_api_grpc.py†L1-L148】【F:monitoring/operator_transport_pilot.md†L1-L39】
 
 ## Version History
 - v0.1.2 (2025-10-09): Linked RAZAR blueprint spine to dedicated `KIMI2_API_KEY`,
