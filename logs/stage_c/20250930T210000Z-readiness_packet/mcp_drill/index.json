@@ -1,0 +1,9 @@
+{
+  "trial_summary": "logs/stage_c/20251031T000000Z-test/summary.json",
+  "artifacts": {
+    "rest_handshake": "logs/stage_c/20251031T000000Z-test/rest_handshake_with_expiry.json",
+    "grpc_handshake": "logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json",
+    "diff": "logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json"
+  },
+  "notes": "Stage C4 operator MCP drill recorded REST and gRPC parity with rotation window 20250928T173339Z-PT48H."
+}

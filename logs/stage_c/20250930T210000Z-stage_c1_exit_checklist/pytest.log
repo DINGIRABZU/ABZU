@@ -1,0 +1,7 @@
+== Stage C1 Exit Checklist — Pytest Replay ==
+command: pytest --maxfail=1 --cov --cov-report=xml
+result: SKIPPED (environment-limited)
+reason: pytest-cov not installed in Codex sandbox; hardware rerun scheduled for 2025-10-02 18:00Z on gate-runner-02.
+notes:
+  - Maintained sandbox transcript for readiness packet.
+  - Pending rerun tracked in review minutes and readiness bundle hardware schedule.
