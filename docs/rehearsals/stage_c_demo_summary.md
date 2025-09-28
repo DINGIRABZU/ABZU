@@ -7,6 +7,15 @@ default. Audio and video directories under
 only guard `.gitignore` files, while telemetry references the Stage B evidence
 bundle recorded in the session manifest.【F:logs/stage_c/20250928T130000Z-stage_c2_demo_storyline/demo_storyline/audio/.gitignore†L1-L3】【F:logs/stage_c/20250928T130000Z-stage_c2_demo_storyline/demo_storyline/video/.gitignore†L1-L3】【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L1-L19】
 
+The follow-up capture `20250928T162716Z-stage_c2_demo_storyline` keeps only
+sentinel `.gitignore` files in its audio/video directories while the
+corresponding manifest points reviewers back to the Stage B bundle so binaries
+never land in git.【F:logs/stage_c/20250928T162716Z-stage_c2_demo_storyline/demo_storyline/audio/.gitignore†L1-L3】【F:logs/stage_c/20250928T162716Z-stage_c2_demo_storyline/demo_storyline/video/.gitignore†L1-L3】【F:evidence_manifests/stage-c-demo-storyline.json†L1-L19】
+Downloaders should rely on the recorded evidence URI from the Stage B manifest
+and hydrate the stems on demand with
+`scripts/stage_c_scripted_demo.py --copy-media` when local playback is
+necessary.【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L7-L19】【F:evidence_manifests/stage-b-audio.json†L2-L40】【F:scripts/stage_c_scripted_demo.py†L369-L441】
+
 The Stage B rehearsal summary confirms the storyline covers three scripted
 beats, finishes without dropouts, and tops out at a 67 ms sync offset, which the
 Stage C replay reproduces when sourcing media from the bundle.【F:logs/stage_b/20250921T230434Z/rehearsals/summary.json†L1-L23】
