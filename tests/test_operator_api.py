@@ -1034,9 +1034,31 @@ def test_stage_c4_operator_mcp_drill_success(
     repo_root = Path(operator_api.__file__).resolve().parent
     recorded: dict[str, Any] = {}
 
+    repo_rotation_log_path = (
+        Path(operator_api._REPO_ROOT) / "logs" / "stage_b_rotation_drills.jsonl"
+    )
+    repo_rotation_log_path.parent.mkdir(parents=True, exist_ok=True)
+    rotation_log_backup = None
+    if repo_rotation_log_path.exists():
+        rotation_log_backup = repo_rotation_log_path.read_text(encoding="utf-8")
+    rotation_entry = {
+        "connector_id": "operator_api",
+        "rotated_at": "2024-05-01T00:00:00Z",
+        "window_hours": operator_api.ROTATION_WINDOW_HOURS,
+        "rotation_window": {
+            "window_id": "20240501T000000Z-PT48H",
+            "started_at": "2024-05-01T00:00:00Z",
+            "expires_at": "2024-05-03T00:00:00Z",
+            "duration": "PT48H",
+        },
+    }
+    repo_rotation_log_path.write_text(
+        json.dumps(rotation_entry) + "\n", encoding="utf-8"
+    )
+
     def _simulate(args: tuple[Any, ...]) -> None:
         recorded["args"] = args
-        output_dir = Path(args[-1])
+        output_dir = Path(args[-2])
         output_dir.mkdir(parents=True, exist_ok=True)
         handshake_path = output_dir / "mcp_handshake.json"
         heartbeat_path = output_dir / "heartbeat.json"
@@ -1046,6 +1068,7 @@ def test_stage_c4_operator_mcp_drill_success(
                 "credential_expiry": "2025-12-01T00:00:00Z",
             },
             "accepted_contexts": ["stage-b-rehearsal"],
+            "rotation": rotation_entry["rotation_window"],
         }
         handshake_path.write_text(
             json.dumps(handshake_payload),
@@ -1072,14 +1095,31 @@ def test_stage_c4_operator_mcp_drill_success(
         metrics = body["metrics"]
         assert metrics["handshake"]["session"]["id"] == "sess-1"
         assert metrics["heartbeat_emitted"] is True
+        assert metrics["rotation_window_verified"] is True
+        assert metrics["rotation_window_id"] == "20240501T000000Z-PT48H"
         log_dir_path = Path(body["log_dir"])
         assert log_dir_path.exists()
         args = recorded.get("args")
         assert args is not None
         assert Path(args[1]) == repo_root / "scripts" / "stage_c_mcp_drill.py"
+        artifacts = body["artifacts"]
+        handshake_artifact = Path(artifacts["mcp_handshake"])
+        heartbeat_artifact = Path(artifacts["heartbeat"])
+        rotation_artifact = Path(artifacts["rotation_metadata"])
+        assert handshake_artifact.exists()
+        assert heartbeat_artifact.exists()
+        assert rotation_artifact.exists()
+        rotation_payload = json.loads(rotation_artifact.read_text(encoding="utf-8"))
+        assert (
+            rotation_payload["rotation_window"]["window_id"] == "20240501T000000Z-PT48H"
+        )
     finally:
         if log_dir_path and log_dir_path.exists():
             shutil.rmtree(log_dir_path, ignore_errors=True)
+        if rotation_log_backup is not None:
+            repo_rotation_log_path.write_text(rotation_log_backup, encoding="utf-8")
+        elif repo_rotation_log_path.exists():
+            repo_rotation_log_path.unlink()
         operator_api._MCP_ADAPTER = None
         operator_api._MCP_SESSION = None
         operator_api._LAST_CREDENTIAL_EXPIRY = None
@@ -1096,3 +1136,64 @@ def test_stage_c4_operator_mcp_drill_failure(
     resp = client.post("/alpha/stage-c4-operator-mcp-drill")
     assert resp.status_code == 500
     assert resp.json()["detail"] == "handshake failed"
+
+
+def test_stage_c4_operator_mcp_drill_missing_artifacts(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class DummyAdapter:
+        async def emit_stage_b_heartbeat(
+            self, payload: dict, credential_expiry: Any
+        ) -> None:
+            self.payload = payload
+
+    adapter = DummyAdapter()
+
+    async def _ensure_ready() -> None:
+        operator_api._MCP_ADAPTER = adapter
+        operator_api._MCP_SESSION = {"session": {"id": "sess-1"}}
+        operator_api._LAST_CREDENTIAL_EXPIRY = datetime.now(timezone.utc)
+
+    monkeypatch.setattr(operator_api, "_ensure_mcp_ready_for_request", _ensure_ready)
+
+    repo_rotation_log_path = (
+        Path(operator_api._REPO_ROOT) / "logs" / "stage_b_rotation_drills.jsonl"
+    )
+    repo_rotation_log_path.parent.mkdir(parents=True, exist_ok=True)
+    rotation_log_backup = None
+    if repo_rotation_log_path.exists():
+        rotation_log_backup = repo_rotation_log_path.read_text(encoding="utf-8")
+    rotation_entry = {
+        "connector_id": "operator_api",
+        "rotated_at": "2024-05-01T00:00:00Z",
+        "window_hours": operator_api.ROTATION_WINDOW_HOURS,
+        "rotation_window": {
+            "window_id": "20240501T000000Z-PT48H",
+            "started_at": "2024-05-01T00:00:00Z",
+            "expires_at": "2024-05-03T00:00:00Z",
+            "duration": "PT48H",
+        },
+    }
+    repo_rotation_log_path.write_text(
+        json.dumps(rotation_entry) + "\n", encoding="utf-8"
+    )
+
+    def _simulate(args: tuple[Any, ...]) -> None:
+        output_dir = Path(args[-2])
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+    configure_subprocess(monkeypatch, stdout=b"drill\n", on_spawn=_simulate)
+    try:
+        resp = client.post("/alpha/stage-c4-operator-mcp-drill")
+        assert resp.status_code == 500
+        detail = resp.json()["detail"]
+        assert "missing handshake artifact" in detail
+    finally:
+        if rotation_log_backup is not None:
+            repo_rotation_log_path.write_text(rotation_log_backup, encoding="utf-8")
+        elif repo_rotation_log_path.exists():
+            repo_rotation_log_path.unlink()
+        shutil.rmtree(Path("logs") / "stage_c", ignore_errors=True)
+        operator_api._MCP_ADAPTER = None
+        operator_api._MCP_SESSION = None
+        operator_api._LAST_CREDENTIAL_EXPIRY = None

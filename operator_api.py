@@ -1328,6 +1328,90 @@ async def _stage_c4_metrics(
 
     heartbeat_emitted = bool(heartbeat_payload)
 
+    rotation_log_path = _REPO_ROOT / "logs" / "stage_b_rotation_drills.jsonl"
+    rotation_metadata_path = log_dir / "rotation_metadata.json"
+    rotation_entries: list[Mapping[str, Any]] = []
+    rotation_entry: Mapping[str, Any] | None = None
+    rotation_error: str | None = None
+    ledger_window_id: str | None = None
+
+    try:
+        if rotation_log_path.exists():
+            for line in rotation_log_path.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                rotation_entries.append(json.loads(line))
+        else:
+            rotation_error = f"rotation drill ledger missing: {rotation_log_path}"
+    except OSError as exc:
+        rotation_error = f"failed to read rotation drill ledger: {exc}"
+    except json.JSONDecodeError as exc:
+        rotation_error = f"invalid rotation drill ledger: {exc}"
+
+    if not rotation_error:
+        if rotation_entries:
+            rotation_entry = rotation_entries[-1]
+            rotation_window = rotation_entry.get("rotation_window")
+            if isinstance(rotation_window, Mapping):
+                window_id_value = rotation_window.get("window_id")
+                if isinstance(window_id_value, str) and window_id_value.strip():
+                    ledger_window_id = window_id_value
+                else:
+                    rotation_error = (
+                        "latest rotation drill missing rotation_window.window_id"
+                    )
+            else:
+                rotation_error = (
+                    "latest rotation drill missing rotation_window metadata"
+                )
+        else:
+            rotation_error = "rotation drill ledger empty"
+
+    handshake_rotation: Mapping[str, Any] | None = None
+    if isinstance(handshake_data, Mapping):
+        candidate_rotation = handshake_data.get("rotation")
+        if isinstance(candidate_rotation, Mapping):
+            handshake_rotation = candidate_rotation
+        else:
+            echo_section = handshake_data.get("echo")
+            if isinstance(echo_section, Mapping):
+                echo_rotation = echo_section.get("rotation")
+                if isinstance(echo_rotation, Mapping):
+                    handshake_rotation = echo_rotation
+
+    handshake_window_id: str | None = None
+    if handshake_rotation is not None:
+        window_candidate = handshake_rotation.get("window_id")
+        if isinstance(window_candidate, str) and window_candidate.strip():
+            handshake_window_id = window_candidate
+
+    if rotation_entry is not None and rotation_error is None:
+        try:
+            rotation_metadata_path.write_text(
+                json.dumps(rotation_entry, indent=2),
+                encoding="utf-8",
+            )
+        except OSError as exc:
+            rotation_error = f"failed to persist rotation metadata: {exc}"
+        else:
+            artifacts.setdefault("rotation_metadata", str(rotation_metadata_path))
+
+    rotation_verified = bool(
+        ledger_window_id
+        and handshake_window_id
+        and ledger_window_id == handshake_window_id
+    )
+    if not rotation_error and not rotation_verified:
+        if ledger_window_id and handshake_window_id:
+            rotation_error = (
+                "rotation window mismatch: "
+                f"handshake={handshake_window_id} ledger={ledger_window_id}"
+            )
+        elif ledger_window_id:
+            rotation_error = "handshake rotation window missing"
+        elif handshake_window_id:
+            rotation_error = "rotation ledger window missing"
+
     metrics: dict[str, Any] = {
         "handshake": _sanitize_for_json(handshake_data),
         "credential_expiry": _sanitize_for_json(credential_expiry),
@@ -1339,15 +1423,28 @@ async def _stage_c4_metrics(
     }
     if heartbeat_payload is not None:
         metrics["heartbeat_payload"] = _sanitize_for_json(heartbeat_payload)
+    if rotation_entry is not None:
+        metrics["rotation_metadata"] = _sanitize_for_json(rotation_entry)
+    if ledger_window_id:
+        metrics["ledger_window_id"] = ledger_window_id
+    if handshake_window_id:
+        metrics["rotation_window_id"] = handshake_window_id
+    elif ledger_window_id:
+        metrics["rotation_window_id"] = ledger_window_id
+    metrics["rotation_window_verified"] = rotation_verified
     if handshake_error:
         metrics["handshake_error"] = handshake_error
     if heartbeat_error:
         metrics["heartbeat_error"] = heartbeat_error
+    if rotation_error:
+        metrics["rotation_error"] = rotation_error
 
-    if handshake_error or heartbeat_error:
+    if handshake_error or heartbeat_error or rotation_error:
         payload["status"] = "error"
         payload["error"] = "; ".join(
-            message for message in (handshake_error, heartbeat_error) if message
+            message
+            for message in (handshake_error, heartbeat_error, rotation_error)
+            if message
         )
 
     return metrics
@@ -1711,11 +1808,14 @@ def _stage_c3_command(log_dir: Path) -> Sequence[str]:
 
 
 def _stage_c4_command(log_dir: Path) -> Sequence[str]:
+    """Return the Stage C4 drill command writing artifacts into ``log_dir``."""
+
+    script_path = _SCRIPTS_DIR / "stage_c_mcp_drill.py"
     return [
         sys.executable,
-        str(_SCRIPTS_DIR / "stage_c_mcp_drill.py"),
-        "--json",
+        str(script_path),
         str(log_dir),
+        "--json",
     ]
 
 
