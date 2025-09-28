@@ -69,7 +69,7 @@ def _ensure_path(path: Path) -> None:
 
 
 def _neoabzu_candidate_dirs(root: Path) -> list[Path]:
-    """Return directories that may contain the neoabzu_memory artifact."""
+    """Return directories that may contain Neo‑ABZU extension artifacts."""
 
     candidates: list[Path] = []
     override = os.getenv("NEOABZU_MEMORY_LIB_DIR")
@@ -78,9 +78,13 @@ def _neoabzu_candidate_dirs(root: Path) -> list[Path]:
     release_root = root / "target" / "release"
     candidates.append(release_root)
     candidates.append(release_root / "deps")
-    neo_root = root / "NEOABZU" / "target" / "release"
-    candidates.append(neo_root)
-    candidates.append(neo_root / "deps")
+    neo_root = root / "NEOABZU"
+    candidates.append(neo_root / "target" / "release")
+    candidates.append(neo_root / "target" / "release" / "deps")
+    candidates.append(neo_root / "memory" / "target" / "release")
+    candidates.append(neo_root / "memory" / "target" / "release" / "deps")
+    candidates.append(neo_root / "core" / "target" / "release")
+    candidates.append(neo_root / "core" / "target" / "release" / "deps")
     seen: set[Path] = set()
     ordered: list[Path] = []
     for candidate in candidates:
@@ -92,20 +96,20 @@ def _neoabzu_candidate_dirs(root: Path) -> list[Path]:
     return ordered
 
 
-def _locate_neoabzu_memory(root: Path) -> Path | None:
-    """Find the compiled neoabzu_memory library under ``root``."""
+def _locate_extension(name: str, root: Path) -> Path | None:
+    """Find the compiled extension ``name`` under ``root``."""
 
     suffixes = tuple(importlib.machinery.EXTENSION_SUFFIXES)
     prefixes = ("", "lib")
     for directory in _neoabzu_candidate_dirs(root):
         for prefix in prefixes:
             for suffix in suffixes:
-                candidate = directory / f"{prefix}neoabzu_memory{suffix}"
+                candidate = directory / f"{prefix}{name}{suffix}"
                 if candidate.exists() and candidate.is_file():
                     return candidate
         for suffix in suffixes:
             for prefix in prefixes:
-                for candidate in sorted(directory.glob(f"{prefix}neoabzu_memory*{suffix}")):
+                for candidate in sorted(directory.glob(f"{prefix}{name}*{suffix}")):
                     if candidate.is_file():
                         return candidate
     return None
@@ -140,10 +144,7 @@ def _ensure_native_module(name: str, root: Path) -> bool:
     if module is not None and not getattr(module, "__neoabzu_sandbox__", False):
         return True
 
-    if name != "neoabzu_memory":
-        return False
-
-    artifact = _locate_neoabzu_memory(root)
+    artifact = _locate_extension(name, root)
     if artifact is None:
         return False
 
@@ -321,7 +322,13 @@ def bootstrap(optional_modules: Iterable[str] | None = None) -> Path:
     root = _detect_repo_root()
     _ensure_path(root)
 
-    _ensure_native_module("neoabzu_memory", root)
+    for module_name in ("neoabzu_memory", "neoabzu_core"):
+        if _ensure_native_module(module_name, root):
+            continue
+
+    for candidate in _neoabzu_candidate_dirs(root):
+        if candidate.exists():
+            _ensure_path(candidate)
 
     src_dir = root / "src"
     if src_dir.exists():

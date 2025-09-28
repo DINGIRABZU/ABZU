@@ -1,0 +1,52 @@
+{
+  "status": "success",
+  "stage": "stage_b1_memory_proof",
+  "run_id": "20250928T153749Z-stage_b1_memory_proof",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/memory_load_proof.py",
+    "data/vector_memory_scaling/corpus.jsonl",
+    "--limit",
+    "1000"
+  ],
+  "returncode": 0,
+  "started_at": "2025-09-28T15:37:48.366000+00:00",
+  "completed_at": "2025-09-28T15:37:49.889000+00:00",
+  "duration_seconds": 1.523,
+  "log_dir": "/workspace/ABZU/logs/stage_b/20250928T153749Z-stage_b1_memory_proof",
+  "stdout_path": "/workspace/ABZU/logs/stage_b/20250928T153749Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_b/20250928T153749Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+  "stdout_lines": 27,
+  "stderr_lines": 16,
+  "stderr_tail": [
+    "2025-09-28 15:37:48,366 INFO memory.load_proof :: Memory layer preflight passed with 8 layers",
+    "2025-09-28 15:37:49,889 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 stubbed_bundle=False p95=2.246ms p99=2.757ms"
+  ],
+  "summary": {
+    "dataset": "data/vector_memory_scaling/corpus.jsonl",
+    "total_records": 1000,
+    "queries_timed": 995,
+    "init_duration_s": 0.000208,
+    "latency_p50_s": 0.001428,
+    "latency_p95_s": 0.002246,
+    "latency_p99_s": 0.002757,
+    "layers": {
+      "total": 8,
+      "ready": 8,
+      "failed": 0
+    },
+    "query_failures": 0,
+    "stubbed_bundle": false,
+    "pretest_stubbed": false,
+    "fallback_reason": null,
+    "bundle_source": "neoabzu_memory",
+    "bundle_mode": "native",
+    "bundle": {
+      "stubbed": false,
+      "mode": "native",
+      "source": "neoabzu_memory",
+      "fallback_reason": null,
+      "stubbed_bundle": false
+    }
+  }
+}

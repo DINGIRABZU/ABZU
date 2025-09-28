@@ -1,0 +1,16 @@
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  module = override.factory()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)
+  _prepare_overrides()
+2025-09-28 15:37:48,366 INFO memory.load_proof :: Memory layer preflight passed with 8 layers
+2025-09-28 15:37:49,889 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 stubbed_bundle=False p95=2.246ms p99=2.757ms

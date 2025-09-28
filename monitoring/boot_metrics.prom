@@ -19,3 +19,21 @@ razar_boot_component_success_total 2.0
 # HELP razar_boot_component_failure_total Components that failed in the latest boot run.
 # TYPE razar_boot_component_failure_total gauge
 razar_boot_component_failure_total 0.0
+# HELP razar_memory_init_duration_seconds Duration of MemoryBundle.initialize grouped by source in seconds.
+# TYPE razar_memory_init_duration_seconds gauge
+razar_memory_init_duration_seconds{source="memory-load-proof"} 0.0002124559996445896
+# HELP razar_memory_init_layer_total Total memory layers observed during initialization by source.
+# TYPE razar_memory_init_layer_total gauge
+razar_memory_init_layer_total{source="memory-load-proof"} 8.0
+# HELP razar_memory_init_layer_ready_total Memory layers reporting ready status during initialization.
+# TYPE razar_memory_init_layer_ready_total gauge
+razar_memory_init_layer_ready_total{source="memory-load-proof"} 8.0
+# HELP razar_memory_init_layer_failed_total Memory layers reporting failure status during initialization.
+# TYPE razar_memory_init_layer_failed_total gauge
+razar_memory_init_layer_failed_total{source="memory-load-proof"} 0.0
+# HELP razar_memory_init_error Flag indicating whether initialization surfaced errors or failures.
+# TYPE razar_memory_init_error gauge
+razar_memory_init_error{source="memory-load-proof"} 0.0
+# HELP razar_memory_init_invocations_total Cumulative MemoryBundle.initialize invocations grouped by source.
+# TYPE razar_memory_init_invocations_total gauge
+razar_memory_init_invocations_total{source="memory-load-proof"} 1.0
