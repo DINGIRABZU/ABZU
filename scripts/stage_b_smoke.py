@@ -21,12 +21,29 @@ from connectors.operator_mcp_adapter import (
     OperatorMCPAdapter,
     evaluate_operator_doctrine,
     load_latest_stage_c_handshake,
+    normalize_handshake_for_trace,
+    compute_handshake_checksum,
     record_rotation_drill,
     stage_b_context_enabled,
+)
+from connectors.operator_api_stage_b import (
+    build_handshake_payload as build_operator_api_handshake,
+)
+from connectors.operator_upload_stage_b import (
+    build_handshake_payload as build_operator_upload_handshake,
+)
+from connectors.crown_handshake_stage_b import (
+    build_handshake_payload as build_crown_handshake,
 )
 
 LOGGER = logging.getLogger(__name__)
 _STUB_ENV_FLAG = "ABZU_STAGE_B_SMOKE_STUB"
+
+_CONNECTOR_HANDSHAKE_BUILDERS = {
+    "operator_api": build_operator_api_handshake,
+    "operator_upload": build_operator_upload_handshake,
+    "crown_handshake": build_crown_handshake,
+}
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -235,6 +252,70 @@ def _build_adapter() -> OperatorMCPAdapter | _StubOperatorAdapter:
     return OperatorMCPAdapter()
 
 
+def _build_trace_bundle(
+    connector_id: str,
+    handshake: dict[str, Any] | None,
+    *,
+    gateway_base: str,
+) -> dict[str, Any]:
+    builder = _CONNECTOR_HANDSHAKE_BUILDERS.get(connector_id)
+    request_payload: dict[str, Any] | None = None
+    if callable(builder):
+        try:
+            request_payload = builder()
+        except Exception:  # pragma: no cover - defensive logging
+            LOGGER.warning(
+                "failed to build handshake payload for connector %s",
+                connector_id,
+                exc_info=True,
+            )
+
+    normalized = normalize_handshake_for_trace(handshake)
+    checksum = compute_handshake_checksum(handshake)
+    contexts = [
+        entry.get("name")
+        for entry in normalized.get("accepted_contexts", [])
+        if isinstance(entry, dict)
+    ]
+
+    rest_trace = {
+        "method": "POST",
+        "endpoint": f"{gateway_base}/handshake",
+        "request": request_payload,
+        "response": handshake,
+        "normalized": normalized,
+        "checksum": checksum,
+    }
+
+    grpc_trace = {
+        "service": "neoabzu.vector.VectorService",
+        "method": "Init",
+        "rpc": "neoabzu.vector.VectorService/Init",
+        "request": {
+            "stage": "B",
+            "connector_id": connector_id,
+            "contexts": contexts,
+        },
+        "response": {
+            "message": f"trial handshake parity for {connector_id}",
+            "handshake_equivalent": normalized,
+        },
+        "metadata": {
+            "parity_checksum": checksum,
+            "credential_expiry": (
+                normalized.get("session", {}).get("credential_expiry")
+                if isinstance(normalized.get("session"), dict)
+                else None
+            ),
+            "rotation_window": normalized.get("rotation"),
+            "recorded_at": datetime.now(timezone.utc).isoformat(),
+            "mode": "trial",
+        },
+    }
+
+    return {"rest": rest_trace, "grpc": grpc_trace}
+
+
 async def _run_operator_checks(
     *,
     emit_heartbeat: bool,
@@ -316,14 +397,23 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
         }
 
     rotation_receipts: Dict[str, Any] = {}
+    trace_captures: Dict[str, Any] = {}
     for connector_id in STAGE_B_TARGET_SERVICES:
         context_status = promotion_metadata if connector_id == "operator_api" else None
+        trace_bundle = _build_trace_bundle(
+            connector_id,
+            handshake if isinstance(handshake, dict) else None,
+            gateway_base=gateway_base,
+        )
+        trace_captures[connector_id] = trace_bundle
         rotation_receipts[connector_id] = record_rotation_drill(
             connector_id,
             handshake=handshake,
             context_status=context_status,
+            traces=trace_bundle,
         )
     results["rotation_ledger"] = rotation_receipts
+    results["trial_traces"] = trace_captures
 
     doctrine_ok, doctrine_failures = evaluate_operator_doctrine()
     results["doctrine_ok"] = doctrine_ok

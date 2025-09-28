@@ -92,6 +92,13 @@ def test_run_stage_b_smoke_invokes_rotation(monkeypatch):
     assert set(results["rotation_ledger"].keys()) == set(
         stage_b_smoke.STAGE_B_TARGET_SERVICES
     )
+    trial_traces = results.get("trial_traces")
+    assert isinstance(trial_traces, dict)
+    for connector_id, trace in trial_traces.items():
+        assert connector_id in stage_b_smoke.STAGE_B_TARGET_SERVICES
+        assert trace["grpc"]["service"] == "neoabzu.vector.VectorService"
+        assert trace["grpc"]["metadata"]["mode"] == "trial"
+        assert trace["rest"]["method"] == "POST"
     assert heartbeat_calls, "Heartbeat emission should be triggered"
 
 

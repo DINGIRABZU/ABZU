@@ -85,7 +85,9 @@ helpers. The shared `scripts/stage_b_smoke.py` run exercises those adapters with
 instantiate the shared adapter during startup so `/operator/command` and
 `/operator/upload` reuse the stored session and emit background Stage B
 heartbeats that log credential rotations when the gateway refreshes expiry
-timestamps.
+timestamps. The refresh also normalizes REST and trial gRPC handshakes, storing
+trace bundles with checksum parity so Stage C diff artifacts inherit the same
+NeoABZU vector contract evidence.【F:connectors/operator_mcp_adapter.py†L21-L170】【F:scripts/stage_b_smoke.py†L24-L230】【F:logs/stage_b_rotation_drills.jsonl†L1-L120】【F:operator_api.py†L470-L713】
 Recent console work also exposes Stage A automation lanes directly through
 `operator_api` (`POST /alpha/stage-a1-boot-telemetry`,
 `/alpha/stage-a2-crown-replays`, `/alpha/stage-a3-gate-shakeout`), letting

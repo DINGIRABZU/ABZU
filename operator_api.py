@@ -56,6 +56,9 @@ from connectors.operator_mcp_adapter import (
     ROTATION_WINDOW_HOURS,
     OperatorMCPAdapter,
     load_rotation_history,
+    latest_rotation_entry,
+    normalize_handshake_for_trace,
+    compute_handshake_checksum,
     record_rotation_drill,
     stage_b_context_enabled,
 )
@@ -1452,6 +1455,266 @@ async def _stage_c4_metrics(
     return metrics
 
 
+def _format_diff_path(segments: Sequence[str]) -> str:
+    """Return a human-readable dotted path for diff segments."""
+
+    if not segments:
+        return "<root>"
+
+    parts: list[str] = []
+    for segment in segments:
+        if not segment:
+            continue
+        if segment.startswith("["):
+            if parts:
+                parts[-1] = parts[-1] + segment
+            else:
+                parts.append(segment)
+        else:
+            parts.append(segment)
+
+    if not parts:
+        return "<root>"
+
+    formatted = parts[0]
+    for token in parts[1:]:
+        if token.startswith("["):
+            formatted += token
+        else:
+            formatted += f".{token}"
+    return formatted
+
+
+def _diff_handshake_payloads(
+    rest_payload: Mapping[str, Any],
+    grpc_payload: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Return structural differences between REST and gRPC handshake payloads."""
+
+    differences: list[dict[str, Any]] = []
+
+    def _compare(path: list[str], left: Any, right: Any) -> None:
+        if isinstance(left, Mapping) and isinstance(right, Mapping):
+            keys = sorted(
+                {str(key) for key in left.keys()} | {str(key) for key in right.keys()}
+            )
+            for key in keys:
+                left_has = key in left
+                right_has = key in right
+                next_path = path + [key]
+                if left_has and right_has:
+                    _compare(next_path, left[key], right[key])  # type: ignore[index]
+                elif left_has:
+                    differences.append(
+                        {
+                            "path": _format_diff_path(next_path),
+                            "rest": _sanitize_for_json(left[key]),
+                            "grpc": None,
+                        }
+                    )
+                else:
+                    differences.append(
+                        {
+                            "path": _format_diff_path(next_path),
+                            "rest": None,
+                            "grpc": _sanitize_for_json(right[key]),
+                        }
+                    )
+            return
+
+        if isinstance(left, list) and isinstance(right, list):
+            max_len = max(len(left), len(right))
+            for index in range(max_len):
+                token = f"[{index}]"
+                next_path = path + [token]
+                if index >= len(left):
+                    differences.append(
+                        {
+                            "path": _format_diff_path(next_path),
+                            "rest": None,
+                            "grpc": _sanitize_for_json(right[index]),
+                        }
+                    )
+                elif index >= len(right):
+                    differences.append(
+                        {
+                            "path": _format_diff_path(next_path),
+                            "rest": _sanitize_for_json(left[index]),
+                            "grpc": None,
+                        }
+                    )
+                else:
+                    _compare(next_path, left[index], right[index])
+            return
+
+        if left != right:
+            differences.append(
+                {
+                    "path": _format_diff_path(path),
+                    "rest": _sanitize_for_json(left),
+                    "grpc": _sanitize_for_json(right),
+                }
+            )
+
+    _compare([], rest_payload, grpc_payload)
+    return differences
+
+
+def _attach_rest_grpc_parity(payload: dict[str, Any]) -> None:
+    """Persist REST and gRPC handshake parity attachments for Stage C4 runs."""
+
+    log_dir_raw = payload.get("log_dir")
+    if not isinstance(log_dir_raw, str) or not log_dir_raw:
+        raise ValueError("stage C4 drill payload missing log directory")
+    log_dir = Path(log_dir_raw)
+
+    summary = payload.get("summary")
+    summary_dict = dict(summary) if isinstance(summary, Mapping) else {}
+
+    handshake_path_raw = summary_dict.get("handshake_path") if summary_dict else None
+    if isinstance(handshake_path_raw, str) and handshake_path_raw:
+        handshake_path = Path(handshake_path_raw)
+    else:
+        handshake_path = log_dir / "mcp_handshake.json"
+
+    try:
+        handshake_data = json.loads(handshake_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:  # pragma: no cover - defensive guard
+        raise ValueError(f"missing handshake artifact: {handshake_path}") from exc
+    except json.JSONDecodeError as exc:  # pragma: no cover - defensive guard
+        raise ValueError(f"invalid handshake artifact: {exc}") from exc
+
+    normalized_rest = normalize_handshake_for_trace(handshake_data)
+    rest_checksum = compute_handshake_checksum(handshake_data)
+
+    rotation_entry = latest_rotation_entry("operator_api")
+    if rotation_entry is None:
+        raise ValueError("rotation ledger missing operator_api entry for parity diff")
+    traces = rotation_entry.get("traces")
+    if not isinstance(traces, Mapping):
+        raise ValueError("rotation ledger entry missing trace captures")
+    grpc_trace = traces.get("grpc")
+    if not isinstance(grpc_trace, Mapping):
+        raise ValueError("rotation ledger entry missing gRPC trial trace")
+
+    grpc_response = grpc_trace.get("response")
+    handshake_equivalent: Mapping[str, Any] = {}
+    if isinstance(grpc_response, Mapping):
+        candidate = grpc_response.get("handshake_equivalent")
+        if isinstance(candidate, Mapping):
+            handshake_equivalent = candidate
+
+    metadata = grpc_trace.get("metadata")
+    if not isinstance(metadata, Mapping):
+        metadata = {}
+    grpc_checksum = metadata.get("parity_checksum")
+
+    parity = normalized_rest == handshake_equivalent
+    differences = (
+        []
+        if parity
+        else _diff_handshake_payloads(normalized_rest, handshake_equivalent)
+    )
+    checksum_match = bool(
+        rest_checksum and grpc_checksum and rest_checksum == grpc_checksum
+    )
+
+    diff_payload = {
+        "parity": parity,
+        "differences": differences,
+        "rest_checksum": rest_checksum,
+        "grpc_checksum": grpc_checksum,
+        "checksum_match": checksum_match,
+        "rotation_window": metadata.get("rotation_window"),
+    }
+
+    rest_session = normalized_rest.get("session")
+    rest_expiry = (
+        rest_session.get("credential_expiry")
+        if isinstance(rest_session, Mapping)
+        else None
+    )
+
+    rest_attachment = {
+        "protocol": "REST",
+        "handshake": handshake_data,
+        "normalized": normalized_rest,
+        "credential_expiry": rest_expiry,
+        "checksum": rest_checksum,
+    }
+
+    grpc_attachment = {
+        "protocol": "gRPC",
+        "trace": grpc_trace,
+        "handshake_equivalent": handshake_equivalent,
+        "ledger_connector_id": rotation_entry.get("connector_id"),
+        "ledger_rotated_at": rotation_entry.get("rotated_at"),
+        "credential_expiry": metadata.get("credential_expiry"),
+        "checksum": grpc_checksum,
+    }
+
+    rest_path = log_dir / "rest_handshake_with_expiry.json"
+    grpc_path = log_dir / "grpc_trial_handshake.json"
+    diff_path = log_dir / "rest_grpc_handshake_diff.json"
+
+    rest_path.write_text(
+        json.dumps(rest_attachment, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    grpc_path.write_text(
+        json.dumps(grpc_attachment, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    diff_path.write_text(
+        json.dumps(diff_payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    artifacts = payload.setdefault("artifacts", {})
+    artifacts.setdefault("rest_handshake_with_expiry", str(rest_path))
+    artifacts.setdefault("grpc_trial_handshake", str(grpc_path))
+    artifacts.setdefault("rest_grpc_diff", str(diff_path))
+
+    metrics = payload.get("metrics")
+    if isinstance(metrics, dict):
+        metrics["rest_grpc_parity"] = parity
+        metrics["rest_grpc_checksum_match"] = checksum_match
+        if differences:
+            metrics["rest_grpc_differences"] = differences
+
+    attachments = {
+        "rest": str(rest_path),
+        "grpc": str(grpc_path),
+        "diff": str(diff_path),
+    }
+
+    payload["handshake_artifacts"] = attachments
+    payload["handshake_parity"] = diff_payload
+
+    summary_dict["rest_handshake_with_expiry"] = str(rest_path)
+    summary_dict["grpc_trial_handshake"] = str(grpc_path)
+    summary_dict["rest_grpc_diff"] = str(diff_path)
+    summary_dict["rest_grpc_parity"] = parity
+    summary_dict["rest_checksum"] = rest_checksum
+    summary_dict["grpc_checksum"] = grpc_checksum
+    payload["summary"] = summary_dict
+
+    summary_path_raw = payload.get("summary_path")
+    if isinstance(summary_path_raw, str) and summary_path_raw:
+        summary_path = Path(summary_path_raw)
+        try:
+            summary_payload = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):  # pragma: no cover - defensive guard
+            summary_payload = {}
+        summary_payload["summary"] = summary_dict
+        summary_payload["handshake_artifacts"] = attachments
+        summary_payload["handshake_parity"] = diff_payload
+        summary_path.write_text(
+            json.dumps(summary_payload, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+
+
 @router.on_event("startup")
 async def _operator_mcp_startup() -> None:
     try:
@@ -1892,6 +2155,11 @@ async def stage_c4_operator_mcp_drill() -> dict[str, Any]:
         _stage_c4_command,
         metrics_extractor=_stage_c4_metrics,
     )
+    if result.get("status") == "success":
+        try:
+            _attach_rest_grpc_parity(result)
+        except ValueError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
     if result.get("status") != "success":
         raise HTTPException(
             status_code=500,
