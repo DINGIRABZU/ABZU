@@ -24,3 +24,7 @@
 - Memory guild to present a remediation plan that restores at least one ready NeoABZU layer before beta planning can proceed.
 - Integration guild to secure Stage C prep acceptance for the operator connectors and report the final credential promotion timeline.
 - Ops to confirm sandbox overrides lifted (or documented with rehearsal hosts) for the affected subsystems before recommending Stage D entry.
+
+## Media provenance update
+- Stage C2 scripted demo outputs now reference the Stage B bundle instead of committing audio/video directly; use `--copy-media` when running `scripts/stage_c_scripted_demo.py` if reviewers require local stems.【F:scripts/stage_c_scripted_demo.py†L369-L441】【F:scripts/stage_c_scripted_demo.py†L441-L472】
+- The Stage C evidence tree retains `.gitignore` sentinels for media directories so auditors know to fetch stems from the Stage B archive rather than git.【F:logs/stage_c/20250928T130000Z-stage_c2_demo_storyline/demo_storyline/audio/.gitignore†L1-L3】【F:logs/stage_c/20250928T130000Z-stage_c2_demo_storyline/demo_storyline/video/.gitignore†L1-L3】【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L7-L19】

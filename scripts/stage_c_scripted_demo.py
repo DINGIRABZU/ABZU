@@ -372,6 +372,7 @@ def run_session(
     stage_b_assets: Path | None = None,
     stage_b_bundle: Path | None = None,
     bundle_extract_dir: Path | None = None,
+    copy_media: bool = False,
 ) -> dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     if stage_b_assets is not None and not stage_b_assets.exists():
@@ -394,29 +395,69 @@ def run_session(
 
     telemetry_rows: list[dict[str, Any]] = []
     media_manifest_entries: list[dict[str, Any]] = []
-    audio_assets: list[CopiedFile] = []
-    video_assets: list[CopiedFile] = []
+    audio_assets: list[dict[str, Any]] = []
+    video_assets: list[dict[str, Any]] = []
     max_sync_offset = 0.0
     dropouts_detected = False
+
+    bundle_info = stage_b_session.manifest.get("bundle", {})
+
+    def _record_asset(
+        source_path: Path,
+        *,
+        source_rel: Path,
+        dest_rel: Path | None = None,
+        include_bundle: bool = False,
+    ) -> dict[str, Any]:
+        if not source_path.is_file():
+            raise StageBAssetError(f"Required Stage B asset missing: {source_path}")
+        stat = source_path.stat()
+        metadata: dict[str, Any] = {
+            "source_path": str(source_rel),
+            "size_bytes": stat.st_size,
+            "sha256": _sha256(source_path),
+            "available_locally": False,
+        }
+        if include_bundle and bundle_info:
+            if "artifact_uri" in bundle_info:
+                metadata["bundle_uri"] = bundle_info["artifact_uri"]
+            if "sha256" in bundle_info:
+                metadata["bundle_sha256"] = bundle_info["sha256"]
+            if "name" in bundle_info:
+                metadata["bundle_name"] = bundle_info["name"]
+            if "size_bytes" in bundle_info:
+                metadata["bundle_size_bytes"] = bundle_info["size_bytes"]
+            metadata["bundle_member"] = str(source_rel)
+        if copy_media:
+            destination = output_dir / (dest_rel or source_rel)
+            copied = _copy_file(
+                source_path,
+                destination,
+                output_root=output_dir,
+                source_rel=source_rel,
+            )
+            metadata["path"] = str(copied.destination_rel)
+            metadata["available_locally"] = True
+        return metadata
 
     for step in stage_b_session.steps:
         logger.info(
             '[%s] prompt="%s" emotion=%s', step.step_id, step.prompt, step.emotion
         )
-        audio_copy = _copy_file(
+        audio_meta = _record_asset(
             stage_b_session.data_root / step.audio_rel_path,
-            output_dir / step.audio_rel_path,
-            output_root=output_dir,
             source_rel=step.audio_rel_path,
+            dest_rel=step.audio_rel_path,
+            include_bundle=True,
         )
-        video_copy = _copy_file(
+        video_meta = _record_asset(
             stage_b_session.data_root / step.video_rel_path,
-            output_dir / step.video_rel_path,
-            output_root=output_dir,
             source_rel=step.video_rel_path,
+            dest_rel=step.video_rel_path,
+            include_bundle=True,
         )
-        audio_assets.append(audio_copy)
-        video_assets.append(video_copy)
+        audio_assets.append(audio_meta)
+        video_assets.append(video_meta)
         max_sync_offset = max(max_sync_offset, abs(step.sync_offset_s))
         dropouts_detected = dropouts_detected or step.dropout
         telemetry_rows.append(
@@ -443,6 +484,19 @@ def run_session(
         entry.setdefault("prompt", step.prompt)
         entry.setdefault("emotion", step.emotion)
         entry.setdefault("timestamp", step.timestamp)
+        source_block = {
+            "stage": stage_b_session.stage,
+            "run_id": stage_b_session.run_id,
+            "session": stage_b_session.session_id,
+            "audio_path": str(step.audio_rel_path),
+            "video_path": str(step.video_rel_path),
+        }
+        if "artifact_uri" in bundle_info:
+            source_block["bundle_uri"] = bundle_info["artifact_uri"]
+        if "sha256" in bundle_info:
+            source_block["bundle_sha256"] = bundle_info["sha256"]
+        if "name" in bundle_info:
+            source_block["bundle_name"] = bundle_info["name"]
         entry["stage_c"] = {
             "prompt": step.prompt,
             "emotion": step.emotion,
@@ -455,51 +509,38 @@ def run_session(
                 "event_sha256": _hash_json(step.source_event),
             },
             "assets": {
-                "audio": {
-                    "path": str(audio_copy.destination_rel),
-                    "sha256": audio_copy.sha256,
-                    "size_bytes": audio_copy.size_bytes,
-                },
-                "video": {
-                    "path": str(video_copy.destination_rel),
-                    "sha256": video_copy.sha256,
-                    "size_bytes": video_copy.size_bytes,
-                },
+                "audio": deepcopy(audio_meta),
+                "video": deepcopy(video_meta),
             },
-            "source": {
-                "stage": stage_b_session.stage,
-                "run_id": stage_b_session.run_id,
-                "session": stage_b_session.session_id,
-                "audio_path": str(audio_copy.source_rel),
-                "video_path": str(video_copy.source_rel),
-            },
+            "source": source_block,
+            "media_copy_enabled": copy_media,
         }
         media_manifest_entries.append(entry)
 
     emotion_rows = _read_jsonl(stage_b_session.emotion_path)
-    emotion_copy = _copy_file(
+    emotion_meta = _record_asset(
         stage_b_session.emotion_path,
-        output_dir / "emotion" / "stream.jsonl",
-        output_root=output_dir,
         source_rel=Path("emotion/stream.jsonl"),
+        dest_rel=Path("emotion/stream.jsonl"),
+        include_bundle=True,
     )
-    stage_b_events_copy = _copy_file(
+    stage_b_events_meta = _record_asset(
         stage_b_session.events_path,
-        output_dir / "telemetry" / "stage_b_events.jsonl",
-        output_root=output_dir,
         source_rel=Path("telemetry/events.jsonl"),
+        dest_rel=Path("telemetry/stage_b_events.jsonl"),
+        include_bundle=True,
     )
-    stage_b_media_manifest_copy = _copy_file(
+    stage_b_media_manifest_meta = _record_asset(
         stage_b_session.media_manifest_path,
-        output_dir / "telemetry" / "stage_b_media_manifest.json",
-        output_root=output_dir,
         source_rel=Path("telemetry/media_manifest.json"),
+        dest_rel=Path("telemetry/stage_b_media_manifest.json"),
+        include_bundle=True,
     )
-    stage_b_session_manifest_copy = _copy_file(
+    stage_b_session_manifest_meta = _record_asset(
         stage_b_session.manifest_path,
-        output_dir / "telemetry" / "stage_b_session_manifest.json",
-        output_root=output_dir,
         source_rel=Path(stage_b_session.manifest_path.name),
+        dest_rel=Path("telemetry/stage_b_session_manifest.json"),
+        include_bundle=False,
     )
 
     telemetry_path = output_dir / "telemetry" / "events.jsonl"
@@ -522,32 +563,21 @@ def run_session(
             "run_id": stage_b_session.run_id,
             "session": stage_b_session.session_id,
             "manifest_path": str(stage_b_session.manifest_path),
-            "manifest_sha256": stage_b_session_manifest_copy.sha256,
+            "manifest_sha256": stage_b_session_manifest_meta["sha256"],
             "bundle": stage_b_session.manifest.get("bundle", {}),
             "assets": {
                 "audio_files": len(audio_assets),
-                "audio_bytes": sum(asset.size_bytes for asset in audio_assets),
+                "audio_bytes": sum(asset["size_bytes"] for asset in audio_assets),
+                "audio_available_locally": copy_media,
                 "video_files": len(video_assets),
-                "video_bytes": sum(asset.size_bytes for asset in video_assets),
+                "video_bytes": sum(asset["size_bytes"] for asset in video_assets),
+                "video_available_locally": copy_media,
                 "emotion_stream": {
-                    "path": str(emotion_copy.destination_rel),
-                    "source_path": str(emotion_copy.source_rel),
-                    "sha256": emotion_copy.sha256,
-                    "size_bytes": emotion_copy.size_bytes,
+                    **emotion_meta,
                     "samples": len(emotion_rows),
                 },
-                "telemetry_events": {
-                    "path": str(stage_b_events_copy.destination_rel),
-                    "source_path": str(stage_b_events_copy.source_rel),
-                    "sha256": stage_b_events_copy.sha256,
-                    "size_bytes": stage_b_events_copy.size_bytes,
-                },
-                "telemetry_media_manifest": {
-                    "path": str(stage_b_media_manifest_copy.destination_rel),
-                    "source_path": str(stage_b_media_manifest_copy.source_rel),
-                    "sha256": stage_b_media_manifest_copy.sha256,
-                    "size_bytes": stage_b_media_manifest_copy.size_bytes,
-                },
+                "telemetry_events": stage_b_events_meta,
+                "telemetry_media_manifest": stage_b_media_manifest_meta,
             },
         },
         "replay": {
@@ -556,6 +586,7 @@ def run_session(
             "media_manifest_path": str(manifest_path.relative_to(output_dir)),
             "media_manifest_sha256": stage_c_media_manifest_sha,
         },
+        "configuration": {"copy_media": copy_media},
     }
 
     telemetry_summary_path = output_dir / "telemetry" / "summary.json"
@@ -623,6 +654,14 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--copy-media",
+        action="store_true",
+        help=(
+            "Copy Stage B audio/video assets into the Stage C output directory. "
+            "When omitted, the run emits provenance pointing at the Stage B bundle."
+        ),
+    )
+    parser.add_argument(
         "--seed",
         type=int,
         help=(
@@ -653,6 +692,7 @@ def main() -> None:
             stage_b_assets=args.stage_b_assets,
             stage_b_bundle=args.stage_b_bundle,
             bundle_extract_dir=args.bundle_extract_dir,
+            copy_media=args.copy_media,
         )
     except StageBAssetError as exc:
         logger.error("Stage B asset resolution failed: %s", exc)
