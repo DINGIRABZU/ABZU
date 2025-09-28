@@ -2535,12 +2535,14 @@
         "neoabzu-instrumentation",
         "tracing"
       ],
-      "tests": [],
+      "tests": [
+        "cargo test -p fusion"
+      ],
       "metrics": {
         "coverage": 0.0
       },
-      "status": "deprecated",
-      "issues": "No tests found",
+      "status": "alpha",
+      "issues": "Depends on neoabzu-instrumentation tracing during unit tests",
       "adr": null
     },
     {
@@ -4258,12 +4260,14 @@
         "pyo3",
         "tracing"
       ],
-      "tests": [],
+      "tests": [
+        "cargo test -p neoabzu-crown"
+      ],
       "metrics": {
         "coverage": 0.0
       },
-      "status": "deprecated",
-      "issues": "No tests found",
+      "status": "alpha",
+      "issues": "PyO3 bridge expects the neoabzu_memory Python extension at runtime",
       "adr": null
     },
     {
@@ -4377,12 +4381,14 @@
         "tracing-opentelemetry",
         "tracing-subscriber"
       ],
-      "tests": [],
+      "tests": [
+        "cargo test -p neoabzu-instrumentation"
+      ],
       "metrics": {
         "coverage": 0.0
       },
-      "status": "deprecated",
-      "issues": "No tests found",
+      "status": "alpha",
+      "issues": "Requires OpenTelemetry exporters when running integration demos",
       "adr": null
     },
     {
@@ -4500,12 +4506,14 @@
         "pyo3",
         "tracing"
       ],
-      "tests": [],
+      "tests": [
+        "cargo test -p neoabzu-persona-layers"
+      ],
       "metrics": {
         "coverage": 0.0
       },
-      "status": "deprecated",
-      "issues": "No tests found",
+      "status": "alpha",
+      "issues": "Exports PyO3 functions for persona routing; needs instrumentation when tracing feature enabled",
       "adr": null
     },
     {
@@ -4521,12 +4529,14 @@
         "pyo3",
         "tracing"
       ],
-      "tests": [],
+      "tests": [
+        "cargo test -p neoabzu-rag"
+      ],
       "metrics": {
         "coverage": 0.0
       },
-      "status": "deprecated",
-      "issues": "No tests found",
+      "status": "alpha",
+      "issues": "Requires neoabzu_memory PyO3 module for bundle queries",
       "adr": null
     },
     {
@@ -4618,12 +4628,14 @@
         "pyo3",
         "tracing"
       ],
-      "tests": [],
+      "tests": [
+        "cargo test -p numeric"
+      ],
       "metrics": {
         "coverage": 0.0
       },
-      "status": "deprecated",
-      "issues": "No tests found",
+      "status": "alpha",
+      "issues": "PyO3 extension compiles for abi3 Py39; requires Python host for runtime",
       "adr": null
     },
     {
