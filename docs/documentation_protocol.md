@@ -23,6 +23,9 @@ Standard workflow for updating documentation and guides.
 > [!IMPORTANT]
 > **Document environment-limited skips.** When the Codex sandbox blocks dependencies or hardware (GPU-only flows, DAW toolchains, connector credentials), call out the "environment-limited" skip in both the change log excerpt and PR summary. Reference the escalation workflow in [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment) and mirror the skip reason used in tests or gate scripts so reviewers can trace deferred validations.
 > Change logs and readiness packets must also state when results rely on stubs or deferred hardware validation, naming the affected step, the rehearsal host that will close the gap, and the sign-off trio documented in [The Absolute Protocol](The_Absolute_Protocol.md#sandbox-to-hardware-rehearsal-bridge).
+> Reference the latest Stage C1 exit checklist summary and readiness review minutes when documenting these skips so every doctrine update points to the gate-runner-02 hardware window and the owning leads recorded in the evidence bundle.【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L35】【F:logs/stage_c/20250930T210000Z-readiness_packet/review_minutes.md†L14-L40】
+
+Document updates must also cite the aggregated readiness packet (`logs/stage_c/20250930T210000Z-readiness_packet/`) whenever summarizing sandbox vs hardware status so reviewers inherit the same MCP parity artifacts and scheduled hardware reruns traced in doctrine ledgers.【F:logs/stage_c/20250930T210000Z-readiness_packet/readiness_bundle/readiness_bundle.json†L175-L227】【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L222】
 
 11. **Run `python scripts/check_connectors.py`** whenever files in `connectors/` or related modules change. The script fails on placeholder markers or missing MCP adoption. Every connector update must also refresh the corresponding documentation with protocol and heartbeat details.
 
