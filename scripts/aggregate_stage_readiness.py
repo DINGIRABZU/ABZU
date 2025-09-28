@@ -560,6 +560,26 @@ def _merge_stage_data(
     stage_a_status = str(stage_a.get("status") or "missing")
     stage_b_status = str(stage_b.get("status") or "missing")
 
+    rotation_info: dict[str, Any] = {}
+
+    def _collect_rotation(summary: Mapping[str, Any] | None) -> None:
+        if not isinstance(summary, Mapping):
+            return
+        metrics_block = summary.get("metrics")
+        if not isinstance(metrics_block, Mapping):
+            return
+        rotation_summary = metrics_block.get("rotation_summary")
+        if isinstance(rotation_summary, str) and rotation_summary.strip():
+            rotation_info["summary"] = rotation_summary
+        rotation_window = metrics_block.get("rotation_window")
+        if isinstance(rotation_window, Mapping):
+            rotation_info["window"] = dict(rotation_window)
+        credential_expiry = metrics_block.get("heartbeat_expiry") or metrics_block.get(
+            "credential_expiry"
+        )
+        if credential_expiry:
+            rotation_info["credential_expiry"] = credential_expiry
+
     def _notes_present(value: Any) -> bool:
         if isinstance(value, str):
             return bool(value.strip())
@@ -610,6 +630,12 @@ def _merge_stage_data(
         if isinstance(entry, Mapping)
     }
 
+    _collect_rotation(stage_b.get("summary"))
+    if isinstance(stage_b.get("slugs"), Mapping):
+        for slug_entry in stage_b["slugs"].values():
+            if isinstance(slug_entry, Mapping):
+                _collect_rotation(slug_entry.get("summary"))
+
     merged = {
         "latest_runs": {
             "stage_a": stage_a.get("latest_runs"),
@@ -647,6 +673,8 @@ def _merge_stage_data(
         merged["overall_status"] = "ready"
     else:
         merged["overall_status"] = "requires_attention"
+    if rotation_info:
+        merged["rotation"] = rotation_info
     return merged
 
 

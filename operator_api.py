@@ -592,6 +592,13 @@ def _stage_b3_metrics(
     if isinstance(targets_raw, Sequence) and not isinstance(targets_raw, (str, bytes)):
         connectors = [str(target) for target in targets_raw]
 
+    rotation_ledger_raw = result.get("rotation_ledger")
+    ledger_entries: dict[str, Mapping[str, Any]] = {}
+    if isinstance(rotation_ledger_raw, Mapping):
+        for connector_id, entry in rotation_ledger_raw.items():
+            if isinstance(connector_id, str) and isinstance(entry, Mapping):
+                ledger_entries[connector_id] = dict(entry)
+
     latest_indices: dict[str, int] = {}
     for index, entry in enumerate(rotation_history):
         connector_id = entry.get("connector_id")
@@ -600,11 +607,18 @@ def _stage_b3_metrics(
 
     connector_entries: list[Mapping[str, Any]] = []
     for connector_id in connectors:
+        ledger_entry = ledger_entries.get(connector_id)
+        if ledger_entry is not None:
+            connector_entries.append(ledger_entry)
+            continue
         index = latest_indices.get(connector_id)
         if index is not None:
             connector_entries.append(rotation_history[index])
-    if not connector_entries and rotation_history:
-        connector_entries.append(rotation_history[-1])
+    if not connector_entries:
+        if ledger_entries:
+            connector_entries.extend(ledger_entries.values())
+        elif rotation_history:
+            connector_entries.append(rotation_history[-1])
 
     rotation_window_info: Mapping[str, Any] | None = None
     for entry in reversed(connector_entries):
@@ -1061,11 +1075,15 @@ def _stage_c3_metrics(
 
         rotation_info: dict[str, Any] = {}
         if stage_b_summary is not None:
-            summary_text = stage_b_summary.get("summary")
-            if isinstance(summary_text, str) and summary_text.strip():
-                rotation_info["summary"] = summary_text
+            summary_text: str | None = None
             metrics_block = stage_b_summary.get("metrics")
             if isinstance(metrics_block, Mapping):
+                rotation_summary_value = metrics_block.get("rotation_summary")
+                if (
+                    isinstance(rotation_summary_value, str)
+                    and rotation_summary_value.strip()
+                ):
+                    summary_text = rotation_summary_value
                 rotation_window = metrics_block.get("rotation_window")
                 if isinstance(rotation_window, Mapping):
                     rotation_info["window"] = dict(rotation_window)
@@ -1074,6 +1092,12 @@ def _stage_c3_metrics(
                 ) or metrics_block.get("credential_expiry")
                 if credential_expiry_value:
                     rotation_info["credential_expiry"] = credential_expiry_value
+            if summary_text is None:
+                summary_candidate = stage_b_summary.get("summary")
+                if isinstance(summary_candidate, str) and summary_candidate.strip():
+                    summary_text = summary_candidate
+            if summary_text:
+                rotation_info["summary"] = summary_text
         if rotation_info:
             merged_payload["rotation"] = rotation_info
 
