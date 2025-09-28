@@ -112,6 +112,14 @@ def _load_summary(path: str) -> dict[str, Any]:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def _configure_stage_readiness_paths(monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts import aggregate_stage_readiness as readiness_aggregate
+
+    monkeypatch.setattr(readiness_aggregate, "STAGE_A_ROOT", Path("logs") / "stage_a")
+    monkeypatch.setattr(readiness_aggregate, "STAGE_B_ROOT", Path("logs") / "stage_b")
+    monkeypatch.setattr(readiness_aggregate, "REPO_ROOT", Path.cwd())
+
+
 def test_run_stage_workflow_parses_pretty_summary(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -739,45 +747,46 @@ def test_stage_c3_readiness_sync_success(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     shutil.rmtree(Path("logs"), ignore_errors=True)
+    _configure_stage_readiness_paths(monkeypatch)
+
     stage_a1_dir = Path("logs") / "stage_a" / "20240101T000000Z-stage_a1_boot_telemetry"
     stage_a2_dir = Path("logs") / "stage_a" / "20240101T000500Z-stage_a2_crown_replays"
     stage_a3_dir = Path("logs") / "stage_a" / "20240101T001000Z-stage_a3_gate_shakeout"
-    stage_b_dir = Path("logs") / "stage_b" / "20240102T000000Z-stage"
-    for directory in (stage_a1_dir, stage_a2_dir, stage_a3_dir, stage_b_dir):
+    stage_b1_dir = Path("logs") / "stage_b" / "20240102T000000Z-stage_b1_memory_proof"
+    stage_b2_dir = (
+        Path("logs") / "stage_b" / "20240102T000500Z-stage_b2_sonic_rehearsal"
+    )
+    stage_b3_dir = (
+        Path("logs") / "stage_b" / "20240102T001000Z-stage_b3_connector_rotation"
+    )
+
+    for directory in (
+        stage_a1_dir,
+        stage_a2_dir,
+        stage_a3_dir,
+        stage_b1_dir,
+        stage_b2_dir,
+        stage_b3_dir,
+    ):
         directory.mkdir(parents=True, exist_ok=True)
-    (stage_a1_dir / "summary.json").write_text(
-        json.dumps(
-            {
-                "run_id": "a1-run",
-                "status": "success",
-                "completed_at": "2024-01-01T00:10:00Z",
-                "stage": "stage_a1_boot_telemetry",
-            }
-        ),
-        encoding="utf-8",
-    )
-    (stage_a2_dir / "summary.json").write_text(
-        json.dumps(
-            {
-                "run_id": "a2-run",
-                "status": "success",
-                "completed_at": "2024-01-01T00:15:00Z",
-                "stage": "stage_a2_crown_replays",
-            }
-        ),
-        encoding="utf-8",
-    )
-    (stage_a3_dir / "summary.json").write_text(
-        json.dumps(
-            {
-                "run_id": "a3-run",
-                "status": "success",
-                "completed_at": "2024-01-01T00:20:00Z",
-                "stage": "stage_a3_gate_shakeout",
-            }
-        ),
-        encoding="utf-8",
-    )
+
+    for slug_dir, run_id, stage_name, completed in (
+        (stage_a1_dir, "a1-run", "stage_a1_boot_telemetry", "2024-01-01T00:10:00Z"),
+        (stage_a2_dir, "a2-run", "stage_a2_crown_replays", "2024-01-01T00:15:00Z"),
+        (stage_a3_dir, "a3-run", "stage_a3_gate_shakeout", "2024-01-01T00:20:00Z"),
+    ):
+        (slug_dir / "summary.json").write_text(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "status": "success",
+                    "completed_at": completed,
+                    "stage": stage_name,
+                }
+            ),
+            encoding="utf-8",
+        )
+
     rotation_window = {
         "window_id": "win-1",
         "started_at": "2024-01-01T00:00:00Z",
@@ -788,13 +797,14 @@ def test_stage_c3_readiness_sync_success(
         "window win-1; rotation expires 2024-01-03T00:00:00Z; "
         "credentials expire 2024-01-03T00:00:00Z"
     )
-    (stage_b_dir / "summary.json").write_text(
+
+    (stage_b1_dir / "summary.json").write_text(
         json.dumps(
             {
-                "run_id": "b",
+                "run_id": "b1-run",
                 "status": "success",
-                "completed_at": "2024",
-                "summary": rotation_summary,
+                "completed_at": "2024-01-02T00:10:00Z",
+                "stage": "stage_b1_memory_proof",
                 "metrics": {
                     "rotation_window": rotation_window,
                     "rotation_summary": rotation_summary,
@@ -804,49 +814,103 @@ def test_stage_c3_readiness_sync_success(
         ),
         encoding="utf-8",
     )
-    configure_subprocess(monkeypatch, stdout=b"ready\n")
+    for slug_dir, run_id, stage_name in (
+        (stage_b2_dir, "b2-run", "stage_b2_sonic_rehearsal"),
+        (stage_b3_dir, "b3-run", "stage_b3_connector_rotation"),
+    ):
+        (slug_dir / "summary.json").write_text(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "status": "success",
+                    "completed_at": "2024-01-02T00:20:00Z",
+                    "stage": stage_name,
+                }
+            ),
+            encoding="utf-8",
+        )
+
     resp = client.post("/alpha/stage-c3-readiness-sync")
     assert resp.status_code == 200
     body = resp.json()
     merged = body["metrics"]["merged"]
+    assert merged["overall_status"] == "ready"
     assert merged["latest_runs"]["stage_a"] == {
         "A1": "a1-run",
         "A2": "a2-run",
         "A3": "a3-run",
     }
-    assert merged["latest_runs"]["stage_b"] == "b"
+    assert merged["latest_runs"]["stage_b"] == "b1-run"
     assert merged["status_flags"]["stage_a"] == "success"
-    stage_a_slugs = merged["stage_a_slugs"]
-    assert stage_a_slugs["A1"]["status"] == "success"
-    assert stage_a_slugs["A2"]["status"] == "success"
-    assert stage_a_slugs["A3"]["status"] == "success"
+    assert merged["status_flags"]["stage_b"] == "success"
     rotation_section = merged.get("rotation")
     assert rotation_section is not None
     assert rotation_section["summary"] == rotation_summary
     assert rotation_section["window"] == rotation_window
     assert rotation_section["credential_expiry"] == "2024-01-03T00:00:00Z"
 
+    artifacts = body["artifacts"]
+    readiness_bundle = Path(artifacts["readiness_bundle"])
+    readiness_summary = Path(artifacts["readiness_summary"])
+    assert readiness_bundle.exists()
+    assert readiness_summary.exists()
+    assert Path(body["summary_path"]) == readiness_summary
+
 
 def test_stage_c3_readiness_sync_missing(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    configure_subprocess(monkeypatch, stdout=b"ready\n")
+    _configure_stage_readiness_paths(monkeypatch)
     resp = client.post("/alpha/stage-c3-readiness-sync")
     assert resp.status_code == 500
     assert "missing readiness" in resp.json()["detail"]
+
+
+def _write_successful_stage_b_slugs(root: Path) -> None:
+    stage_b1_dir = root / "20240102T000000Z-stage_b1_memory_proof"
+    stage_b2_dir = root / "20240102T000500Z-stage_b2_sonic_rehearsal"
+    stage_b3_dir = root / "20240102T001000Z-stage_b3_connector_rotation"
+    for directory in (stage_b1_dir, stage_b2_dir, stage_b3_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+    (stage_b1_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "run_id": "b1-run",
+                "status": "success",
+                "completed_at": "2024-01-02T01:05:00Z",
+                "stage": "stage_b1_memory_proof",
+            }
+        ),
+        encoding="utf-8",
+    )
+    for slug_dir, run_id, stage_name in (
+        (stage_b2_dir, "b2-run", "stage_b2_sonic_rehearsal"),
+        (stage_b3_dir, "b3-run", "stage_b3_connector_rotation"),
+    ):
+        (slug_dir / "summary.json").write_text(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "status": "success",
+                    "completed_at": "2024-01-02T01:10:00Z",
+                    "stage": stage_name,
+                }
+            ),
+            encoding="utf-8",
+        )
 
 
 def test_stage_c3_readiness_sync_requires_attention_when_stage_a_slug_fails(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     shutil.rmtree(Path("logs"), ignore_errors=True)
+    _configure_stage_readiness_paths(monkeypatch)
     stage_a_root = Path("logs") / "stage_a"
     stage_b_root = Path("logs") / "stage_b"
     stage_a1_dir = stage_a_root / "20240101T010000Z-stage_a1_boot_telemetry"
     stage_a2_dir = stage_a_root / "20240101T010500Z-stage_a2_crown_replays"
     stage_a3_dir = stage_a_root / "20240101T011000Z-stage_a3_gate_shakeout"
-    stage_b_dir = stage_b_root / "20240102T010000Z-stage"
-    for directory in (stage_a1_dir, stage_a2_dir, stage_a3_dir, stage_b_dir):
+    for directory in (stage_a1_dir, stage_a2_dir, stage_a3_dir):
         directory.mkdir(parents=True, exist_ok=True)
     (stage_a1_dir / "summary.json").write_text(
         json.dumps(
@@ -876,17 +940,74 @@ def test_stage_c3_readiness_sync_requires_attention_when_stage_a_slug_fails(
             ),
             encoding="utf-8",
         )
-    (stage_b_dir / "summary.json").write_text(
+
+    _write_successful_stage_b_slugs(stage_b_root)
+
+    resp = client.post("/alpha/stage-c3-readiness-sync")
+    assert resp.status_code == 500
+    detail = resp.json()["detail"]
+    assert "requires_attention" in detail
+
+
+def test_stage_c3_readiness_sync_requires_attention_for_upstream_risk_notes(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    shutil.rmtree(Path("logs"), ignore_errors=True)
+    _configure_stage_readiness_paths(monkeypatch)
+    stage_a_root = Path("logs") / "stage_a"
+    stage_b_root = Path("logs") / "stage_b"
+    for slug, stage_name in (
+        ("A1", "stage_a1_boot_telemetry"),
+        ("A2", "stage_a2_crown_replays"),
+        ("A3", "stage_a3_gate_shakeout"),
+    ):
+        run_dir = stage_a_root / f"20240101T020000Z-{stage_name}"
+        run_dir.mkdir(parents=True, exist_ok=True)
+        (run_dir / "summary.json").write_text(
+            json.dumps(
+                {
+                    "run_id": f"{slug.lower()}-run",
+                    "status": "success",
+                    "completed_at": "2024-01-01T02:10:00Z",
+                    "stage": stage_name,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    stage_b1_dir = stage_b_root / "20240102T020000Z-stage_b1_memory_proof"
+    stage_b2_dir = stage_b_root / "20240102T020500Z-stage_b2_sonic_rehearsal"
+    stage_b3_dir = stage_b_root / "20240102T021000Z-stage_b3_connector_rotation"
+    for directory in (stage_b1_dir, stage_b2_dir, stage_b3_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+    (stage_b1_dir / "summary.json").write_text(
         json.dumps(
             {
-                "run_id": "b",
+                "run_id": "b1-run",
                 "status": "success",
-                "completed_at": "2024-01-02T01:15:00Z",
+                "completed_at": "2024-01-02T02:10:00Z",
+                "stage": "stage_b1_memory_proof",
+                "warnings": ["connector latency requires review"],
             }
         ),
         encoding="utf-8",
     )
-    configure_subprocess(monkeypatch, stdout=b"ready\n")
+    for slug_dir, run_id, stage_name in (
+        (stage_b2_dir, "b2-run", "stage_b2_sonic_rehearsal"),
+        (stage_b3_dir, "b3-run", "stage_b3_connector_rotation"),
+    ):
+        (slug_dir / "summary.json").write_text(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "status": "success",
+                    "completed_at": "2024-01-02T02:15:00Z",
+                    "stage": stage_name,
+                }
+            ),
+            encoding="utf-8",
+        )
+
     resp = client.post("/alpha/stage-c3-readiness-sync")
     assert resp.status_code == 500
     detail = resp.json()["detail"]

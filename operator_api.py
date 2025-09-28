@@ -88,6 +88,7 @@ _STAGE_A_ROOT = _REPO_ROOT / "logs" / "stage_a"
 _STAGE_B_ROOT = _REPO_ROOT / "logs" / "stage_b"
 _STAGE_C_ROOT = _REPO_ROOT / "logs" / "stage_c"
 _STAGE_C_BUNDLE_FILENAME = "readiness_bundle.json"
+_STAGE_C_SUMMARY_FILENAME = "summary.json"
 
 
 async def _ensure_lock() -> asyncio.Lock:
@@ -811,9 +812,11 @@ def _stage_c3_metrics(
     payload: dict[str, Any],
 ) -> dict[str, Any]:
     bundle_path = _log_dir / _STAGE_C_BUNDLE_FILENAME
+    summary_path = _log_dir / _STAGE_C_SUMMARY_FILENAME
     bundle_data: dict[str, Any] | None = None
     metrics: dict[str, Any] = {
         "bundle_path": str(bundle_path) if bundle_path.exists() else None,
+        "summary_path": str(summary_path) if summary_path.exists() else None,
     }
 
     if bundle_path.exists():
@@ -855,6 +858,12 @@ def _stage_c3_metrics(
 
     stage_a_notes = _ensure_list(stage_a_section.get("risk_notes"))
     stage_b_notes = _ensure_list(stage_b_section.get("risk_notes"))
+
+    def _list_has_risk(notes: Sequence[str]) -> bool:
+        return any(str(item).strip() for item in notes)
+
+    stage_a_has_risk = _list_has_risk(stage_a_notes)
+    stage_b_has_risk = _list_has_risk(stage_b_notes)
 
     stage_a_slugs_raw = stage_a_section.get("slugs")
     normalized_stage_a_slugs: dict[str, dict[str, Any]] = {}
@@ -1147,6 +1156,8 @@ def _stage_c3_metrics(
     artifacts = payload.setdefault("artifacts", {})
     if bundle_path.exists():
         artifacts.setdefault("readiness_bundle", str(bundle_path))
+    if summary_path.exists():
+        artifacts.setdefault("readiness_summary", str(summary_path))
 
     stage_a_slug_sections = stage_a_section.get("slugs")
     if isinstance(stage_a_slug_sections, Mapping) and stage_a_slug_sections:
@@ -1250,6 +1261,18 @@ def _stage_c3_metrics(
     if error_messages:
         payload["status"] = "error"
         payload["error"] = "; ".join(error_messages)
+    elif merged_snapshot.get("overall_status") == "requires_attention":
+        attention_reasons: list[str] = []
+        if stage_a_has_risk:
+            attention_reasons.append("stage_a risk notes present")
+        if stage_b_has_risk:
+            attention_reasons.append("stage_b risk notes present")
+        if not attention_reasons:
+            attention_reasons.append("upstream readiness warnings present")
+        payload["status"] = "error"
+        payload["error"] = "readiness requires_attention: " + ", ".join(
+            attention_reasons
+        )
 
     return metrics
 
@@ -1651,11 +1674,40 @@ def _stage_c2_command(log_dir: Path) -> Sequence[str]:
 
 
 def _stage_c3_command(log_dir: Path) -> Sequence[str]:
-    return [
-        sys.executable,
-        str(_SCRIPTS_DIR / "aggregate_stage_readiness.py"),
-        str(log_dir),
-    ]
+    from scripts import aggregate_stage_readiness as readiness_aggregate
+
+    summary_path = log_dir / readiness_aggregate.SUMMARY_FILENAME
+    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+    try:
+        _bundle_path, summary_payload = readiness_aggregate.aggregate(log_dir)
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logger.exception("stage readiness aggregation crashed: %s", exc)
+        fallback_payload = {
+            "status": "error",
+            "stage": "stage_c3_readiness_sync",
+            "generated_at": generated_at,
+            "error": f"stage readiness aggregation failed: {exc}",
+        }
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        summary_path.write_text(
+            json.dumps(fallback_payload, indent=2), encoding="utf-8"
+        )
+    else:
+        if not summary_path.exists():
+            summary_path.write_text(
+                json.dumps(summary_payload, indent=2), encoding="utf-8"
+            )
+
+    runner = (
+        "import json, pathlib, sys; "
+        "path = pathlib.Path(sys.argv[1]); "
+        "data = json.loads(path.read_text(encoding='utf-8')); "
+        "print(json.dumps(data)); "
+        "sys.exit(0 if data.get('status') == 'success' else 1)"
+    )
+
+    return [sys.executable, "-c", runner, str(summary_path)]
 
 
 def _stage_c4_command(log_dir: Path) -> Sequence[str]:
