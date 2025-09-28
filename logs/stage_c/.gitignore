@@ -1,0 +1,7 @@
+# Ignore bundled media archives generated during rehearsals.
+*.tar.gz
+*.tgz
+
+# Keep other generated binaries out of version control.
+*.zip
+*.tar
