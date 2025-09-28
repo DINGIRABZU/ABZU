@@ -1,0 +1,6 @@
+{
+  "event": "stage-c4-operator-mcp-drill",
+  "payload": null,
+  "credential_expiry": null,
+  "rotation_window_hours": 48
+}

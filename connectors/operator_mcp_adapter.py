@@ -4,12 +4,13 @@ from __future__ import annotations
 
 __version__ = "0.1.0"
 
+import hashlib
 import json
 import logging
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 import httpx
 
@@ -261,6 +262,7 @@ def record_rotation_drill(
     window_hours: int = ROTATION_WINDOW_HOURS,
     handshake: Mapping[str, Any] | None = None,
     context_status: Mapping[str, Mapping[str, Any]] | None = None,
+    traces: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Append a credential rotation drill entry for ``connector_id``.
 
@@ -295,6 +297,9 @@ def record_rotation_drill(
             for key, value in context_status.items()
             if isinstance(key, str) and isinstance(value, Mapping)
         }
+
+    if traces:
+        entry["traces"] = _coerce_trace_payload(traces)
 
     _ROTATION_LOG.parent.mkdir(parents=True, exist_ok=True)
     with _ROTATION_LOG.open("a", encoding="utf-8") as handle:
@@ -368,6 +373,121 @@ def stage_b_context_enabled() -> bool:
     return os.getenv("ABZU_USE_MCP") == "1"
 
 
+def _coerce_trace_payload(value: Mapping[str, Any]) -> dict[str, Any]:
+    """Return ``value`` coerced to a JSON-serialisable mapping."""
+
+    def _convert(item: Any) -> Any:
+        if isinstance(item, Mapping):
+            return {
+                str(key): _convert(val)
+                for key, val in item.items()
+                if isinstance(key, str)
+            }
+        if isinstance(item, (list, tuple, set)):
+            return [_convert(element) for element in item]
+        return item
+
+    return _convert(value)
+
+
+def normalize_handshake_for_trace(
+    handshake: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Return ``handshake`` normalised for REST↔gRPC parity checks."""
+
+    if not isinstance(handshake, Mapping):
+        return {}
+
+    normalized: dict[str, Any] = {}
+
+    authenticated = handshake.get("authenticated")
+    if isinstance(authenticated, bool):
+        normalized["authenticated"] = authenticated
+
+    session = handshake.get("session")
+    if isinstance(session, Mapping):
+        session_view: dict[str, Any] = {}
+        for key in ("id", "credential_expiry", "issued_at"):
+            value = session.get(key)
+            if value is not None:
+                session_view[key] = value
+        if session_view:
+            normalized["session"] = session_view
+
+    contexts = handshake.get("accepted_contexts")
+    context_entries: list[dict[str, Any]] = []
+    if isinstance(contexts, Sequence):
+        for raw in contexts:
+            if isinstance(raw, Mapping):
+                entry: dict[str, Any] = {}
+                for key in (
+                    "name",
+                    "status",
+                    "promoted_at",
+                    "evidence_path",
+                    "summary_path",
+                ):
+                    value = raw.get(key)
+                    if value is not None:
+                        entry[key] = value
+                if entry:
+                    context_entries.append(entry)
+            elif isinstance(raw, str):
+                context_entries.append({"name": raw, "status": "accepted"})
+    if context_entries:
+        context_entries.sort(key=lambda item: item.get("name", ""))
+        normalized["accepted_contexts"] = context_entries
+
+    rotation = _extract_rotation_metadata(handshake)
+    if rotation:
+        rotation_view: dict[str, Any] = {}
+        for key in ("connector_id", "last_rotated", "rotation_window", "window_id"):
+            value = rotation.get(key)
+            if value is not None:
+                rotation_view[key] = value
+        if rotation_view:
+            normalized["rotation"] = rotation_view
+
+    echo = handshake.get("echo")
+    if isinstance(echo, Mapping):
+        echo_view: dict[str, Any] = {}
+        rotation_echo = echo.get("rotation")
+        if isinstance(rotation_echo, Mapping):
+            echo_rotation: dict[str, Any] = {}
+            for key in ("connector_id", "last_rotated", "rotation_window", "window_id"):
+                value = rotation_echo.get(key)
+                if value is not None:
+                    echo_rotation[key] = value
+            if echo_rotation:
+                echo_view["rotation"] = echo_rotation
+        if echo_view:
+            normalized["echo"] = echo_view
+
+    return normalized
+
+
+def compute_handshake_checksum(handshake: Mapping[str, Any] | None) -> str | None:
+    """Return a SHA-256 checksum for ``handshake`` after normalisation."""
+
+    normalized = normalize_handshake_for_trace(handshake)
+    if not normalized:
+        return None
+    payload = json.dumps(normalized, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
+    return hashlib.sha256(payload).hexdigest()
+
+
+def latest_rotation_entry(connector_id: str) -> Mapping[str, Any] | None:
+    """Return the most recent rotation ledger entry for ``connector_id``."""
+
+    history = load_rotation_history()
+    for entry in reversed(history):
+        if entry.get("connector_id") == connector_id:
+            return entry
+    return None
+
+
 __all__ = [
     "OperatorMCPAdapter",
     "STAGE_B_TARGET_SERVICES",
@@ -377,4 +497,7 @@ __all__ = [
     "load_latest_stage_c_handshake",
     "evaluate_operator_doctrine",
     "stage_b_context_enabled",
+    "normalize_handshake_for_trace",
+    "compute_handshake_checksum",
+    "latest_rotation_entry",
 ]

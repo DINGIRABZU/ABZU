@@ -1,0 +1,97 @@
+{
+  "protocol": "gRPC",
+  "trace": {
+    "service": "neoabzu.vector.VectorService",
+    "method": "Init",
+    "rpc": "neoabzu.vector.VectorService/Init",
+    "request": {
+      "stage": "C",
+      "connector_id": "operator_api",
+      "contexts": [
+        "stage-b-rehearsal",
+        "stage-c-prep"
+      ]
+    },
+    "response": {
+      "message": "stage C trial handshake parity",
+      "handshake_equivalent": {
+        "authenticated": true,
+        "session": {
+          "id": "stage-c-session",
+          "credential_expiry": "2025-09-30T17:33:39Z"
+        },
+        "accepted_contexts": [
+          {
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "name": "stage-c-prep",
+            "status": "accepted"
+          }
+        ],
+        "rotation": {
+          "connector_id": "operator_api",
+          "last_rotated": "2025-09-28T17:33:39Z",
+          "rotation_window": "PT48H",
+          "window_id": "20250928T173339Z-PT48H"
+        },
+        "echo": {
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-28T17:33:39Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250928T173339Z-PT48H"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "parity_checksum": "a749c938943e83755733c7b4eed68e8467b2a5d2b21b4afc6763c5a39f85761d",
+      "credential_expiry": "2025-09-30T17:33:39Z",
+      "rotation_window": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-28T17:33:39Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250928T173339Z-PT48H"
+      },
+      "recorded_at": "2025-09-28T17:33:39.220418+00:00",
+      "mode": "trial"
+    }
+  },
+  "handshake_equivalent": {
+    "authenticated": true,
+    "session": {
+      "id": "stage-c-session",
+      "credential_expiry": "2025-09-30T17:33:39Z"
+    },
+    "accepted_contexts": [
+      {
+        "name": "stage-b-rehearsal",
+        "status": "accepted"
+      },
+      {
+        "name": "stage-c-prep",
+        "status": "accepted"
+      }
+    ],
+    "rotation": {
+      "connector_id": "operator_api",
+      "last_rotated": "2025-09-28T17:33:39Z",
+      "rotation_window": "PT48H",
+      "window_id": "20250928T173339Z-PT48H"
+    },
+    "echo": {
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-28T17:33:39Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250928T173339Z-PT48H"
+      }
+    }
+  },
+  "ledger_connector_id": "operator_api",
+  "ledger_rotated_at": "2025-09-28T17:33:39Z",
+  "credential_expiry": "2025-09-30T17:33:39Z",
+  "checksum": "a749c938943e83755733c7b4eed68e8467b2a5d2b21b4afc6763c5a39f85761d"
+}

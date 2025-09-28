@@ -20,6 +20,13 @@ _dummy_omegaconf.OmegaConf = object  # type: ignore[attr-defined]
 _dummy_omegaconf.DictConfig = object  # type: ignore[attr-defined]
 sys.modules.setdefault("omegaconf", _dummy_omegaconf)
 
+_multipart_stub = ModuleType("multipart")
+_multipart_submodule = ModuleType("multipart.multipart")
+_multipart_stub.__version__ = "0.0.1"
+_multipart_submodule.parse_options_header = staticmethod(lambda value: (value, {}))
+sys.modules.setdefault("multipart", _multipart_stub)
+sys.modules.setdefault("multipart.multipart", _multipart_submodule)
+
 import operator_api
 
 __version__ = "0.1.0"
@@ -1049,15 +1056,46 @@ def test_stage_c4_operator_mcp_drill_success(
     rotation_log_backup = None
     if repo_rotation_log_path.exists():
         rotation_log_backup = repo_rotation_log_path.read_text(encoding="utf-8")
+    rotation_window = {
+        "window_id": "20240501T000000Z-PT48H",
+        "started_at": "2024-05-01T00:00:00Z",
+        "expires_at": "2024-05-03T00:00:00Z",
+        "duration": "PT48H",
+    }
+    handshake_payload = {
+        "session": {
+            "id": "sess-1",
+            "credential_expiry": "2025-12-01T00:00:00Z",
+        },
+        "accepted_contexts": ["stage-b-rehearsal"],
+        "rotation": rotation_window,
+    }
+    normalized = operator_api.normalize_handshake_for_trace(handshake_payload)
+    checksum = operator_api.compute_handshake_checksum(handshake_payload)
     rotation_entry = {
         "connector_id": "operator_api",
         "rotated_at": "2024-05-01T00:00:00Z",
         "window_hours": operator_api.ROTATION_WINDOW_HOURS,
-        "rotation_window": {
-            "window_id": "20240501T000000Z-PT48H",
-            "started_at": "2024-05-01T00:00:00Z",
-            "expires_at": "2024-05-03T00:00:00Z",
-            "duration": "PT48H",
+        "rotation_window": rotation_window,
+        "traces": {
+            "rest": {
+                "method": "POST",
+                "normalized": normalized,
+            },
+            "grpc": {
+                "service": "neoabzu.vector.VectorService",
+                "method": "Init",
+                "rpc": "neoabzu.vector.VectorService/Init",
+                "response": {"handshake_equivalent": normalized},
+                "metadata": {
+                    "parity_checksum": checksum,
+                    "credential_expiry": handshake_payload["session"][
+                        "credential_expiry"
+                    ],
+                    "rotation_window": rotation_window,
+                    "mode": "trial",
+                },
+            },
         },
     }
     repo_rotation_log_path.write_text(
@@ -1070,14 +1108,6 @@ def test_stage_c4_operator_mcp_drill_success(
         output_dir.mkdir(parents=True, exist_ok=True)
         handshake_path = output_dir / "mcp_handshake.json"
         heartbeat_path = output_dir / "heartbeat.json"
-        handshake_payload = {
-            "session": {
-                "id": "sess-1",
-                "credential_expiry": "2025-12-01T00:00:00Z",
-            },
-            "accepted_contexts": ["stage-b-rehearsal"],
-            "rotation": rotation_entry["rotation_window"],
-        }
         handshake_path.write_text(
             json.dumps(handshake_payload),
             encoding="utf-8",
@@ -1105,6 +1135,8 @@ def test_stage_c4_operator_mcp_drill_success(
         assert metrics["heartbeat_emitted"] is True
         assert metrics["rotation_window_verified"] is True
         assert metrics["rotation_window_id"] == "20240501T000000Z-PT48H"
+        assert metrics["rest_grpc_parity"] is True
+        assert metrics["rest_grpc_checksum_match"] is True
         log_dir_path = Path(body["log_dir"])
         assert log_dir_path.exists()
         args = recorded.get("args")
@@ -1114,13 +1146,25 @@ def test_stage_c4_operator_mcp_drill_success(
         handshake_artifact = Path(artifacts["mcp_handshake"])
         heartbeat_artifact = Path(artifacts["heartbeat"])
         rotation_artifact = Path(artifacts["rotation_metadata"])
+        rest_attachment = Path(artifacts["rest_handshake_with_expiry"])
+        grpc_attachment = Path(artifacts["grpc_trial_handshake"])
+        diff_attachment = Path(artifacts["rest_grpc_diff"])
         assert handshake_artifact.exists()
         assert heartbeat_artifact.exists()
         assert rotation_artifact.exists()
+        assert rest_attachment.exists()
+        assert grpc_attachment.exists()
+        assert diff_attachment.exists()
         rotation_payload = json.loads(rotation_artifact.read_text(encoding="utf-8"))
         assert (
             rotation_payload["rotation_window"]["window_id"] == "20240501T000000Z-PT48H"
         )
+        parity = body.get("handshake_parity")
+        assert isinstance(parity, dict)
+        assert parity["parity"] is True
+        assert parity["checksum_match"] is True
+        summary_payload = _load_summary(body["summary_path"])
+        assert summary_payload["handshake_parity"]["parity"] is True
     finally:
         if log_dir_path and log_dir_path.exists():
             shutil.rmtree(log_dir_path, ignore_errors=True)

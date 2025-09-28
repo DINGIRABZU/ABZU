@@ -18,7 +18,12 @@ bootstrap()
 from connectors.operator_mcp_adapter import (
     ROTATION_WINDOW_HOURS,
     OperatorMCPAdapter,
+    normalize_handshake_for_trace,
+    compute_handshake_checksum,
     record_rotation_drill,
+)
+from connectors.operator_api_stage_b import (
+    build_handshake_payload as build_operator_api_handshake,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -132,6 +137,63 @@ def _isoformat(value: datetime | None) -> str | None:
     )
 
 
+def _build_trace_bundle(
+    handshake: dict[str, Any] | None,
+    *,
+    gateway_base: str,
+) -> dict[str, Any]:
+    request_payload: dict[str, Any] | None = None
+    try:
+        request_payload = build_operator_api_handshake()
+    except Exception:  # pragma: no cover - defensive logging
+        LOGGER.warning("unable to build operator_api handshake payload", exc_info=True)
+
+    normalized = normalize_handshake_for_trace(handshake)
+    checksum = compute_handshake_checksum(handshake)
+    contexts = [
+        entry.get("name")
+        for entry in normalized.get("accepted_contexts", [])
+        if isinstance(entry, dict)
+    ]
+
+    rest_trace = {
+        "method": "POST",
+        "endpoint": f"{gateway_base}/handshake",
+        "request": request_payload,
+        "response": handshake,
+        "normalized": normalized,
+        "checksum": checksum,
+    }
+
+    grpc_trace = {
+        "service": "neoabzu.vector.VectorService",
+        "method": "Init",
+        "rpc": "neoabzu.vector.VectorService/Init",
+        "request": {
+            "stage": "C",
+            "connector_id": "operator_api",
+            "contexts": contexts,
+        },
+        "response": {
+            "message": "stage C trial handshake parity",
+            "handshake_equivalent": normalized,
+        },
+        "metadata": {
+            "parity_checksum": checksum,
+            "credential_expiry": (
+                normalized.get("session", {}).get("credential_expiry")
+                if isinstance(normalized.get("session"), dict)
+                else None
+            ),
+            "rotation_window": normalized.get("rotation"),
+            "recorded_at": datetime.now(timezone.utc).isoformat(),
+            "mode": "trial",
+        },
+    }
+
+    return {"rest": rest_trace, "grpc": grpc_trace}
+
+
 async def _run_drill(
     output_dir: Path,
     *,
@@ -179,10 +241,16 @@ async def _run_drill(
     )
 
     # Record the rotation drill so doctrine checks account for this run.
+    gateway_base = os.getenv("MCP_GATEWAY_URL", "http://localhost:8001").rstrip("/")
+    traces = _build_trace_bundle(
+        handshake if isinstance(handshake, dict) else None, gateway_base=gateway_base
+    )
+
     record_rotation_drill(
         "operator_api",
         rotated_at=None,
         handshake=handshake,
+        traces=traces,
     )
 
     summary = {
@@ -195,6 +263,7 @@ async def _run_drill(
         "heartbeat_emitted": heartbeat_payload is not None,
         "handshake": handshake,
         "heartbeat_payload": heartbeat_payload,
+        "trial_trace": traces,
     }
 
     return summary
