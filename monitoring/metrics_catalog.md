@@ -12,6 +12,9 @@
 | `neoabzu_vector_init_latency_seconds` | Histogram | _none_ | Init RPC latency distribution | Vector service |
 | `neoabzu_vector_search_latency_seconds` | Histogram | _none_ | Search RPC latency distribution | Vector service |
 | `neoabzu_vector_store_size` | Gauge | _none_ | Embeddings loaded across vector shards | Vector service |
+| `operator_api_transport_latency_ms` | Histogram | `transport`, `operation` | Operator API latency split by transport and operation | Operator transport pilot |
+| `operator_api_transport_errors_total` | Counter | `transport`, `operation`, `reason` | Operator API error counts including handshake and dispatcher failures | Operator transport pilot |
+| `operator_api_transport_fallback_total` | Counter | `transport`, `operation` | Operator API fallback executions from gRPC to REST | Operator transport pilot |
 | `alpha_gate_phase_start_timestamp_seconds` | Gauge | `phase` | UTC start time for each Alpha gate phase | Alpha gate |
 | `alpha_gate_phase_end_timestamp_seconds` | Gauge | `phase` | UTC completion time for each Alpha gate phase | Alpha gate |
 | `alpha_gate_phase_duration_seconds` | Gauge | `phase` | Elapsed seconds for each Alpha gate phase | Alpha gate |

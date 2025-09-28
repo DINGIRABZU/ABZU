@@ -71,6 +71,13 @@ leaving the dashboard.
 
 The cross-team readiness review on **2025-09-30 19:00 UTC** delivered a _conditional GO_: beta kickoff proceeds once the 2025-10-02 hardware replay completes, and the `operator_api` gRPC pilot advances using the parity traces captured in the latest readiness packet.【F:logs/stage_c/20250930T210000Z-readiness_packet/review_minutes.md†L1-L33】【F:logs/stage_c/20250930T210000Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L138】
 
+The pilot now instruments both transports with shared latency, error, and fallback
+metrics plus span events, unlocking a dedicated Grafana board that compares the
+REST baseline to the gRPC trial while logging fallback metadata for the Stage C
+ledger.【F:operator_api.py†L54-L374】【F:operator_api_grpc.py†L1-L148】【F:monitoring/operator_transport_pilot.md†L1-L39】 The
+contract tests cover parity and fallback behaviour, keeping the roadmap
+commitments tied to executable checks as adoption expands.【F:tests/test_operator_transport_contract.py†L1-L78】
+
 ### Stage C – Alpha exit prep
 
 | Task | Owner | Objective | Step 0 Look-ahead | Next up |

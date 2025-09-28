@@ -13,14 +13,16 @@ import asyncio
 import contextlib
 import json
 import logging
+import os
 import re
 import shutil
 import sys
-import os
-from pathlib import Path
-from uuid import uuid4
+import time
 from datetime import datetime, timezone
+from enum import Enum
+from pathlib import Path
 from typing import Any, Awaitable, Callable, Mapping, Sequence
+from uuid import uuid4
 
 import inspect
 
@@ -33,6 +35,25 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
+
+try:  # pragma: no cover - optional metrics shim
+    from opentelemetry import metrics, trace
+except ImportError:  # pragma: no cover - fallback to repo stub without metrics
+    metrics = None  # type: ignore[assignment]
+    from opentelemetry import trace  # type: ignore[no-redef]
+try:  # pragma: no cover - optional trace status shim
+    from opentelemetry.trace import Status, StatusCode
+except ImportError:  # pragma: no cover - fallback when Status classes missing
+
+    class StatusCode(Enum):
+        OK = "OK"
+        ERROR = "ERROR"
+
+    class Status:  # type: ignore[override]
+        def __init__(self, status_code: StatusCode, description: str | None = None):
+            self.status_code = status_code
+            self.description = description
+
 
 from agents.operator_dispatcher import OperatorDispatcher
 from agents.interaction_log import log_agent_interaction
@@ -67,6 +88,41 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+_tracer = trace.get_tracer(__name__)
+_meter = metrics.get_meter(__name__) if metrics is not None else None
+
+if _meter is not None:
+    try:
+        _transport_latency = _meter.create_histogram(
+            "operator_api_transport_latency_ms",
+            unit="ms",
+            description="Latency for operator_api operations segmented by transport.",
+        )
+    except Exception:  # pragma: no cover - metrics provider missing
+        _transport_latency = None
+
+    try:
+        _transport_errors = _meter.create_counter(
+            "operator_api_transport_errors_total",
+            description=(
+                "Total operator_api transport errors grouped by operation and reason."
+            ),
+        )
+    except Exception:  # pragma: no cover - metrics provider missing
+        _transport_errors = None
+
+    try:
+        _transport_fallbacks = _meter.create_counter(
+            "operator_api_transport_fallback_total",
+            description="Count of fallback executions by transport and operation.",
+        )
+    except Exception:  # pragma: no cover - metrics provider missing
+        _transport_fallbacks = None
+else:  # pragma: no cover - metrics API unavailable
+    _transport_latency = None
+    _transport_errors = None
+    _transport_fallbacks = None
+
 _dispatcher = OperatorDispatcher(
     {
         "overlord": ["cocytus", "victim", "crown"],
@@ -83,6 +139,60 @@ _MCP_SESSION: Mapping[str, Any] | None = None
 _MCP_HEARTBEAT_TASK: asyncio.Task[None] | None = None
 _MCP_LOCK: asyncio.Lock | None = None
 _LAST_CREDENTIAL_EXPIRY: datetime | None = None
+
+
+class CommandValidationError(ValueError):
+    """Raised when a command payload is missing required fields."""
+
+
+class CommandDispatchError(RuntimeError):
+    """Raised when the dispatcher encounters an unexpected failure."""
+
+
+class MCPHandshakeError(RuntimeError):
+    """Raised when the MCP handshake fails for a transport request."""
+
+    def __init__(self, status_code: int, detail: str):
+        super().__init__(detail)
+        self.status_code = status_code
+        self.detail = detail
+
+
+def _record_latency(operation: str, transport: str, duration_ms: float) -> None:
+    if _transport_latency is None:  # pragma: no cover - metrics disabled
+        return
+    try:
+        _transport_latency.record(
+            duration_ms,
+            {"operation": operation, "transport": transport},
+        )
+    except Exception:  # pragma: no cover - metrics provider failure
+        logger.debug("failed to record latency metric", exc_info=True)
+
+
+def _record_error(operation: str, transport: str, reason: str) -> None:
+    if _transport_errors is None:  # pragma: no cover - metrics disabled
+        return
+    try:
+        _transport_errors.add(
+            1,
+            {"operation": operation, "transport": transport, "reason": reason},
+        )
+    except Exception:  # pragma: no cover - metrics provider failure
+        logger.debug("failed to record error metric", exc_info=True)
+
+
+def _record_fallback(operation: str, transport: str) -> None:
+    if _transport_fallbacks is None:  # pragma: no cover - metrics disabled
+        return
+    try:
+        _transport_fallbacks.add(
+            1,
+            {"operation": operation, "transport": transport},
+        )
+    except Exception:  # pragma: no cover - metrics provider failure
+        logger.debug("failed to record fallback metric", exc_info=True)
+
 
 _REPO_ROOT = Path(__file__).resolve().parent
 _SCRIPTS_DIR = _REPO_ROOT / "scripts"
@@ -1832,56 +1942,213 @@ async def chat_page(agents: str) -> HTMLResponse:  # pragma: no cover - simple
     return HTMLResponse(path.read_text(encoding="utf-8"))
 
 
+async def execute_command_for_transport(
+    data: Mapping[str, str],
+    *,
+    transport: str,
+    fallback: bool = False,
+) -> dict[str, object]:
+    """Execute the operator command using shared transport-aware logic."""
+
+    payload = dict(data) if isinstance(data, Mapping) else {}
+    operator = str(payload.get("operator", ""))
+    agent = str(payload.get("agent", ""))
+    command_name = str(payload.get("command", ""))
+
+    start = time.perf_counter()
+    if not operator or not agent or not command_name:
+        _record_error("dispatch_command", transport, "validation")
+        _record_latency(
+            "dispatch_command", transport, (time.perf_counter() - start) * 1000.0
+        )
+        raise CommandValidationError("operator, agent and command required")
+
+    attributes = {
+        "transport": transport,
+        "operator": operator,
+        "agent": agent,
+        "command": command_name,
+    }
+
+    with _tracer.start_as_current_span(
+        "operator_api.dispatch_command", attributes=attributes
+    ) as span:
+        span.set_attribute("operator_api.transport.fallback", fallback)
+        if fallback:
+            span.add_event("fallback-engaged", {"transport": transport})
+            logger.info(
+                "operator_api %s fallback engaged for %s→%s",
+                transport,
+                operator,
+                agent,
+            )
+
+        try:
+            try:
+                await _ensure_mcp_ready_for_request()
+            except HTTPException as exc:
+                detail = str(exc.detail)
+                span.record_exception(exc)
+                span.set_status(Status(StatusCode.ERROR, detail))
+                _record_error("dispatch_command", transport, "handshake")
+                raise MCPHandshakeError(exc.status_code, detail) from exc
+
+            command_id = str(uuid4())
+            span.set_attribute("operator_api.command_id", command_id)
+            started_at = datetime.utcnow().isoformat()
+
+            def _noop() -> dict[str, str]:
+                return {"ack": command_name}
+
+            await broadcast_event(
+                {
+                    "event": "ack",
+                    "command": command_name,
+                    "command_id": command_id,
+                }
+            )
+            span.add_event("command-ack", {"command_id": command_id})
+
+            try:
+                result = _dispatcher.dispatch(
+                    operator, agent, _noop, command_id=command_id
+                )
+            except PermissionError as exc:
+                span.record_exception(exc)
+                span.set_status(Status(StatusCode.ERROR, str(exc)))
+                _record_error("dispatch_command", transport, "permission")
+                raise
+            except Exception as exc:  # pragma: no cover - dispatcher failure
+                span.record_exception(exc)
+                span.set_status(Status(StatusCode.ERROR, "dispatch failed"))
+                logger.error("dispatch failed: %s", exc)
+                _record_error("dispatch_command", transport, "exception")
+                raise CommandDispatchError("dispatch failed") from exc
+
+            completed_at = datetime.utcnow().isoformat()
+            _log_command(
+                {
+                    "command_id": command_id,
+                    "agent": agent,
+                    "result": result,
+                    "started_at": started_at,
+                    "completed_at": completed_at,
+                }
+            )
+
+            await broadcast_event(
+                {
+                    "event": "progress",
+                    "command": command_name,
+                    "percent": 100,
+                    "command_id": command_id,
+                }
+            )
+            span.add_event(
+                "command-progress", {"command_id": command_id, "percent": 100}
+            )
+            span.set_status(Status(StatusCode.OK))
+
+            response = {"command_id": command_id, "result": result}
+            return response
+        finally:
+            duration_ms = (time.perf_counter() - start) * 1000.0
+            _record_latency("dispatch_command", transport, duration_ms)
+            if fallback:
+                _record_fallback("dispatch_command", transport)
+
+
+def execute_memory_query_for_transport(
+    query: str,
+    *,
+    transport: str,
+    fallback: bool = False,
+) -> dict[str, object]:
+    """Execute a memory query for the given ``transport``."""
+
+    start = time.perf_counter()
+    attributes = {"transport": transport, "fallback": fallback}
+    with _tracer.start_as_current_span(
+        "operator_api.memory_query", attributes=attributes
+    ) as span:
+        if fallback:
+            span.add_event("fallback-engaged", {"transport": transport})
+            logger.info("operator_api %s memory fallback engaged", transport)
+
+        try:
+            results = query_memory(query)
+            span.set_status(Status(StatusCode.OK))
+            return {"results": results}
+        except Exception as exc:  # pragma: no cover - defensive logging
+            span.record_exception(exc)
+            span.set_status(Status(StatusCode.ERROR, str(exc)))
+            _record_error("memory_query", transport, "exception")
+            raise
+        finally:
+            duration_ms = (time.perf_counter() - start) * 1000.0
+            _record_latency("memory_query", transport, duration_ms)
+            if fallback:
+                _record_fallback("memory_query", transport)
+
+
+def execute_handover_for_transport(
+    payload: Mapping[str, str] | None,
+    *,
+    transport: str,
+    fallback: bool = False,
+) -> dict[str, object]:
+    """Execute the handover flow and emit telemetry attributes."""
+
+    data = dict(payload or {})
+    component = str(data.get("component", "unknown"))
+    error = str(data.get("error", "operator initiated"))
+
+    start = time.perf_counter()
+    attributes = {
+        "transport": transport,
+        "component": component,
+        "fallback": fallback,
+    }
+    with _tracer.start_as_current_span(
+        "operator_api.handover", attributes=attributes
+    ) as span:
+        if fallback:
+            span.add_event("fallback-engaged", {"transport": transport})
+            logger.info(
+                "operator_api %s handover fallback engaged for %s",
+                transport,
+                component,
+            )
+
+        try:
+            result = ai_invoker.handover(component, error)
+            span.set_status(Status(StatusCode.OK))
+            return {"handover": result}
+        except Exception as exc:  # pragma: no cover - defensive logging
+            span.record_exception(exc)
+            span.set_status(Status(StatusCode.ERROR, str(exc)))
+            _record_error("handover", transport, "exception")
+            raise
+        finally:
+            duration_ms = (time.perf_counter() - start) * 1000.0
+            _record_latency("handover", transport, duration_ms)
+            if fallback:
+                _record_fallback("handover", transport)
+
+
 @router.post("/operator/command")
 async def dispatch_command(data: dict[str, str]) -> dict[str, object]:
     """Dispatch an operator command to a target agent."""
-    await _ensure_mcp_ready_for_request()
-    operator = data.get("operator", "")
-    agent = data.get("agent", "")
-    command_name = data.get("command", "")
-    if not operator or not agent or not command_name:
-        raise HTTPException(
-            status_code=400, detail="operator, agent and command required"
-        )
-    command_id = str(uuid4())
-    started_at = datetime.utcnow().isoformat()
-
-    def _noop() -> dict[str, str]:
-        return {"ack": command_name}
-
-    await broadcast_event(
-        {"event": "ack", "command": command_name, "command_id": command_id}
-    )
-
     try:
-        result = _dispatcher.dispatch(operator, agent, _noop, command_id=command_id)
+        return await execute_command_for_transport(data, transport="rest")
+    except CommandValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except MCPHandshakeError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=exc.detail) from exc
     except PermissionError as exc:
         raise HTTPException(status_code=403, detail=str(exc)) from exc
-    except Exception as exc:  # pragma: no cover - dispatcher failure
-        logger.error("dispatch failed: %s", exc)
-        raise HTTPException(status_code=500, detail="dispatch failed") from exc
-
-    completed_at = datetime.utcnow().isoformat()
-    _log_command(
-        {
-            "command_id": command_id,
-            "agent": agent,
-            "result": result,
-            "started_at": started_at,
-            "completed_at": completed_at,
-        }
-    )
-
-    await broadcast_event(
-        {
-            "event": "progress",
-            "command": command_name,
-            "percent": 100,
-            "command_id": command_id,
-        }
-    )
-
-    return {"command_id": command_id, "result": result}
+    except CommandDispatchError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
 @router.post("/start_ignition")
@@ -1897,18 +2164,14 @@ async def memory_query_endpoint(payload: dict[str, str]) -> dict[str, object]:
     """Return aggregated memory search results via :func:`query_memory`."""
 
     query = payload.get("query", "")
-    return {"results": query_memory(query)}
+    return execute_memory_query_for_transport(query, transport="rest")
 
 
 @router.post("/handover")
 async def handover_endpoint(payload: dict[str, str] | None = None) -> dict[str, object]:
     """Escalate failure context to AI handover."""
 
-    data = payload or {}
-    component = data.get("component", "unknown")
-    error = data.get("error", "operator initiated")
-    result = ai_invoker.handover(component, error)
-    return {"handover": result}
+    return execute_handover_for_transport(payload, transport="rest")
 
 
 @router.post("/alpha/stage-a1-boot-telemetry")

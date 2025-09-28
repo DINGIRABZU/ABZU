@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
+  annotations:
+    operator.abzu.ai/pilot-connectors: "operator_api,operator_upload"
+    operator.abzu.ai/transports: "rest,grpc"
+    operator.abzu.ai/pilot-phase: "stage-c"
 spec:
   replicas: 3
   selector:
@@ -16,15 +20,32 @@ spec:
         - name: api
           image: api-image:latest
           ports:
-            - containerPort: 8000
+            - name: http-rest
+              containerPort: 8000
+            - name: grpc
+              containerPort: 9000
+          env:
+            - name: OPERATOR_API_REST_PORT
+              value: "8000"
+            - name: OPERATOR_API_GRPC_PORT
+              value: "9000"
+            - name: OPERATOR_API_PILOT_CONNECTORS
+              value: "operator_api,operator_upload"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: api
+  annotations:
+    operator.abzu.ai/pilot-connectors: "operator_api,operator_upload"
+    operator.abzu.ai/transports: "rest,grpc"
 spec:
   selector:
     app: api
   ports:
-    - port: 8000
+    - name: http-rest
+      port: 8000
       targetPort: 8000
+    - name: grpc
+      port: 9000
+      targetPort: 9000

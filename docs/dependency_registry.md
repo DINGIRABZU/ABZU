@@ -11,6 +11,7 @@ Track CVE monitoring links to ensure timely vulnerability remediation. Update th
 | opencv-python | 4.12.0.88 | 4.12.0.88 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=opencv-python) | Computer vision operations |
 | opentelemetry-api | 1.36.0 | 1.36.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=opentelemetry-api) | Tracing API |
 | opentelemetry-exporter-otlp | 1.36.0 | 1.36.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=opentelemetry-exporter-otlp) | OTLP exporter |
+| grpcio | 1.62.0 | 1.62.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=grpcio) | gRPC transport for operator pilot |
 | requests | 2.32.4 | 2.32.4 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=requests) | HTTP client |
 | prometheus-client | 0.20.0 | 0.20.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=prometheus-client) | Metrics export |
 | prometheus-fastapi-instrumentator | 6.1.0 | 6.1.0 | [OSV](https://osv.dev/list?ecosystem=PyPI&q=prometheus-fastapi-instrumentator) | FastAPI metrics middleware |

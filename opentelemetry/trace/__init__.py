@@ -18,12 +18,26 @@ class _DummySpan:
     def set_attribute(self, _key: str, _value: object) -> None:
         return None
 
+    def set_status(self, _status) -> None:  # pragma: no cover - behaviourless shim
+        return None
+
+    def record_exception(self, _exc: BaseException) -> None:  # pragma: no cover
+        return None
+
+    def add_event(
+        self,
+        _name: str,
+        attributes: dict[str, object] | None = None,
+        **_kwargs,
+    ) -> None:  # pragma: no cover
+        return None
+
 
 class _DummyTracer:
     """Tracer returning inert spans for test usage."""
 
     @contextmanager
-    def start_as_current_span(self, _name: str) -> Iterator[_DummySpan]:
+    def start_as_current_span(self, _name: str, **_ignored) -> Iterator[_DummySpan]:
         span = _DummySpan()
         try:
             yield span

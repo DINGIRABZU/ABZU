@@ -16,6 +16,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
+| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -555,6 +556,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |
+| [../monitoring/operator_transport_pilot.md](../monitoring/operator_transport_pilot.md) | Operator transport pilot observability | The operator transport pilot introduces a dual-stack surface for the `operator_api` service so the Stage C rehearsal... | - |
 | [../nazarick/agents/Bana_narrative_engine.md](../nazarick/agents/Bana_narrative_engine.md) | **PROJECT BRIEF: BANA NARRATIVE ENGINE** | **Version:** 1.0 | - |
 | [../nazarick/agents/Nazarick_agents_chart.md](../nazarick/agents/Nazarick_agents_chart.md) | Nazarick_agents_chart.md | - | - |
 | [../nazarick/agents/Nazarick_agents_project_brief.md](../nazarick/agents/Nazarick_agents_project_brief.md) | Sacred Connection System | womb_reconnection_engine.py# Eternal return to source nursing_interface.py# Continuous nourishment from ZOHAR quantum... | - |

@@ -3,38 +3,38 @@
 pytest_test_failures_total 0.0
 # HELP pytest_test_failures_created Total test failures
 # TYPE pytest_test_failures_created gauge
-pytest_test_failures_created 1.7585752617204201e+09
+pytest_test_failures_created 1.759087749562783e+09
 # HELP pytest_test_passes_total Total test passes
 # TYPE pytest_test_passes_total counter
-pytest_test_passes_total 88.0
+pytest_test_passes_total 5.0
 # HELP pytest_test_passes_created Total test passes
 # TYPE pytest_test_passes_created gauge
-pytest_test_passes_created 1.7585752617205102e+09
+pytest_test_passes_created 1.7590877495628607e+09
 # HELP pytest_test_duration_seconds Test duration in seconds
 # TYPE pytest_test_duration_seconds histogram
-pytest_test_duration_seconds_bucket{le="0.005"} 65.0
-pytest_test_duration_seconds_bucket{le="0.01"} 70.0
-pytest_test_duration_seconds_bucket{le="0.025"} 86.0
-pytest_test_duration_seconds_bucket{le="0.05"} 88.0
-pytest_test_duration_seconds_bucket{le="0.075"} 88.0
-pytest_test_duration_seconds_bucket{le="0.1"} 88.0
-pytest_test_duration_seconds_bucket{le="0.25"} 88.0
-pytest_test_duration_seconds_bucket{le="0.5"} 88.0
-pytest_test_duration_seconds_bucket{le="0.75"} 88.0
-pytest_test_duration_seconds_bucket{le="1.0"} 88.0
-pytest_test_duration_seconds_bucket{le="2.5"} 88.0
-pytest_test_duration_seconds_bucket{le="5.0"} 88.0
-pytest_test_duration_seconds_bucket{le="7.5"} 88.0
-pytest_test_duration_seconds_bucket{le="10.0"} 88.0
-pytest_test_duration_seconds_bucket{le="+Inf"} 88.0
-pytest_test_duration_seconds_count 88.0
-pytest_test_duration_seconds_sum 0.4123884660039039
+pytest_test_duration_seconds_bucket{le="0.005"} 0.0
+pytest_test_duration_seconds_bucket{le="0.01"} 1.0
+pytest_test_duration_seconds_bucket{le="0.025"} 1.0
+pytest_test_duration_seconds_bucket{le="0.05"} 1.0
+pytest_test_duration_seconds_bucket{le="0.075"} 2.0
+pytest_test_duration_seconds_bucket{le="0.1"} 3.0
+pytest_test_duration_seconds_bucket{le="0.25"} 5.0
+pytest_test_duration_seconds_bucket{le="0.5"} 5.0
+pytest_test_duration_seconds_bucket{le="0.75"} 5.0
+pytest_test_duration_seconds_bucket{le="1.0"} 5.0
+pytest_test_duration_seconds_bucket{le="2.5"} 5.0
+pytest_test_duration_seconds_bucket{le="5.0"} 5.0
+pytest_test_duration_seconds_bucket{le="7.5"} 5.0
+pytest_test_duration_seconds_bucket{le="10.0"} 5.0
+pytest_test_duration_seconds_bucket{le="+Inf"} 5.0
+pytest_test_duration_seconds_count 5.0
+pytest_test_duration_seconds_sum 0.37976543200420565
 # HELP pytest_test_duration_seconds_created Test duration in seconds
 # TYPE pytest_test_duration_seconds_created gauge
-pytest_test_duration_seconds_created 1.7585752617206075e+09
+pytest_test_duration_seconds_created 1.7590877495629427e+09
 # HELP pytest_session_duration_seconds Total pytest session runtime
 # TYPE pytest_session_duration_seconds gauge
-pytest_session_duration_seconds 2.7616686439996556
+pytest_session_duration_seconds 5.035187803001463
 # HELP pytest_coverage_percent Overall coverage percentage
 # TYPE pytest_coverage_percent gauge
-pytest_coverage_percent 92.89377289377289
+pytest_coverage_percent 0.936768149882904
