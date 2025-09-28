@@ -1,0 +1,227 @@
+{
+  "generated_at": "2025-09-28T18:40:03Z",
+  "stage_a": {
+    "status": "attention",
+    "risk_notes": [
+      {
+        "phase": "build",
+        "reason": "environment-limited",
+        "details": [
+          "python -m build unavailable"
+        ]
+      },
+      {
+        "phase": "health",
+        "reason": "environment-limited",
+        "details": [
+          "Missing tools: docker sox ffmpeg aria2c"
+        ]
+      },
+      {
+        "phase": "tests",
+        "reason": "environment-limited",
+        "details": [
+          "Pytest coverage dependencies unavailable"
+        ]
+      }
+    ],
+    "runs": [
+      {
+        "slug": "A1",
+        "run_id": "20250928T004644Z-stage_a1_boot_telemetry",
+        "status": "success",
+        "summary_path": "logs/stage_a/20250928T004644Z-stage_a1_boot_telemetry/summary.json",
+        "stdout_path": "logs/stage_a/20250928T004644Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stdout.log",
+        "stderr_path": "logs/stage_a/20250928T004644Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log",
+        "notes": "Stage A1 bootstrap completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]"
+      },
+      {
+        "slug": "A2",
+        "run_id": "20250928T004714Z-stage_a2_crown_replays",
+        "status": "success",
+        "summary_path": "logs/stage_a/20250928T004714Z-stage_a2_crown_replays/summary.json",
+        "stdout_path": "logs/stage_a/20250928T004714Z-stage_a2_crown_replays/stage_a2_crown_replays.stdout.log",
+        "stderr_path": "logs/stage_a/20250928T004714Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log",
+        "notes": "Stage A2 crown replays captured (5 scenarios) [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]"
+      },
+      {
+        "slug": "A3",
+        "run_id": "20250928T004738Z-stage_a3_gate_shakeout",
+        "status": "success",
+        "summary_path": "logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/summary.json",
+        "stdout_path": "logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stdout.log",
+        "stderr_path": "logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stderr.log",
+        "notes": {
+          "status": "success",
+          "phases": [
+            {
+              "name": "build",
+              "skipped": true,
+              "exit_code": 0,
+              "outcome": "skipped",
+              "reason": "environment-limited",
+              "details": [
+                "python -m build unavailable"
+              ]
+            },
+            {
+              "name": "health",
+              "skipped": true,
+              "exit_code": 0,
+              "outcome": "skipped",
+              "reason": "environment-limited",
+              "details": [
+                "Missing tools: docker sox ffmpeg aria2c"
+              ]
+            },
+            {
+              "name": "tests",
+              "skipped": true,
+              "exit_code": 0,
+              "outcome": "skipped",
+              "reason": "environment-limited",
+              "details": [
+                "Pytest coverage dependencies unavailable"
+              ]
+            }
+          ],
+          "message": "Alpha gate completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+          "warnings": [
+            {
+              "phase": "build",
+              "reason": "environment-limited",
+              "details": [
+                "python -m build unavailable"
+              ]
+            },
+            {
+              "phase": "health",
+              "reason": "environment-limited",
+              "details": [
+                "Missing tools: docker sox ffmpeg aria2c"
+              ]
+            },
+            {
+              "phase": "tests",
+              "reason": "environment-limited",
+              "details": [
+                "Pytest coverage dependencies unavailable"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "stage_b": {
+    "status": "success",
+    "runs": [
+      {
+        "slug": "B1",
+        "run_id": "20250928T155301Z-stage_b1_memory_proof",
+        "status": "success",
+        "summary_path": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/summary.json",
+        "stdout_path": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+        "stderr_path": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+        "metrics": {
+          "dataset": "data/vector_memory_scaling/corpus.jsonl",
+          "total_records": 1000,
+          "queries_timed": 995,
+          "init_duration_s": 0.000212,
+          "latency_p50_s": 0.001578,
+          "latency_p95_s": 0.002501,
+          "latency_p99_s": 0.003579,
+          "layers": {
+            "total": 8,
+            "ready": 8,
+            "failed": 0
+          },
+          "query_failures": 0,
+          "stubbed_bundle": false,
+          "pretest_stubbed": false,
+          "fallback_reason": null,
+          "bundle_source": "neoabzu_memory",
+          "bundle_mode": "native",
+          "bundle": {
+            "stubbed": false,
+            "mode": "native",
+            "source": "neoabzu_memory",
+            "fallback_reason": null,
+            "stubbed_bundle": false
+          }
+        }
+      },
+      {
+        "slug": "B2",
+        "run_id": "20250927T211008Z-stage_b2_sonic_rehearsal",
+        "status": "success",
+        "summary_path": "logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/summary.json",
+        "stdout_path": "logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stdout.log",
+        "stderr_path": "logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stderr.log",
+        "metrics": "Stage B rehearsal packet written to logs/stage_b_rehearsal_packet.json"
+      },
+      {
+        "slug": "B3",
+        "run_id": "20250926T180250Z-stage_b3_connector_rotation",
+        "status": "success",
+        "summary_path": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/summary.json",
+        "stdout_path": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stdout.log",
+        "stderr_path": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stderr.log",
+        "metrics": "}"
+      }
+    ],
+    "readiness_index": "logs/stage_b/latest/readiness_index.json"
+  },
+  "stage_c": {
+    "status": "error",
+    "readiness_sync": {
+      "run_id": "20250928T004857Z-stage_c3_readiness_sync",
+      "status": "error",
+      "summary_path": "logs/stage_c/20250928T004857Z-stage_c3_readiness_sync/summary.json",
+      "stdout_path": "logs/stage_c/20250928T004857Z-stage_c3_readiness_sync/stage_c3_readiness_sync.stdout.log",
+      "stderr_path": "logs/stage_c/20250928T004857Z-stage_c3_readiness_sync/stage_c3_readiness_sync.stderr.log"
+    },
+    "mcp_pilot": {
+      "summary_path": "logs/stage_c/20251031T000000Z-test/summary.json",
+      "status": "success",
+      "rest_artifact": "logs/stage_c/20251031T000000Z-test/rest_handshake_with_expiry.json",
+      "grpc_artifact": "logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json",
+      "diff_artifact": "logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json",
+      "rotation_window": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-28T17:33:39Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250928T173339Z-PT48H"
+      }
+    }
+  },
+  "hardware_reruns": [
+    {
+      "name": "Stage B1 Memory Load Proof",
+      "status": "success",
+      "artifact": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/summary.json",
+      "captured_at": "2025-09-28T15:53:01.848000+00:00",
+      "notes": "Vector memory load proof rerun on sandbox hardware profile; retained for beta gate replay."
+    },
+    {
+      "name": "Stage C MCP gRPC Parity Trial",
+      "status": "success",
+      "artifact": "logs/stage_c/20251031T000000Z-test/summary.json",
+      "captured_at": "2025-09-28T17:33:39.220418+00:00",
+      "notes": "REST vs gRPC handshake parity validated ahead of pilot roll-out."
+    },
+    {
+      "name": "Stage A Hardware Coverage Replay",
+      "status": "scheduled",
+      "artifact": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json",
+      "window_start": "2025-10-02T18:00:00Z",
+      "host": "gate-runner-02",
+      "notes": "Hardware rerun scheduled per cross-team review; will replay python -m build and pytest --cov."
+    }
+  ],
+  "checklist": {
+    "summary": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json",
+    "packet_entry": "logs/stage_c/20250930T210000Z-readiness_packet/checklist_logs/stage_c1_exit_checklist_summary.json"
+  },
+  "review_minutes": "logs/stage_c/20250930T210000Z-readiness_packet/review_minutes.md"
+}
