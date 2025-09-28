@@ -38,7 +38,7 @@ from agents.operator_dispatcher import OperatorDispatcher
 from agents.interaction_log import log_agent_interaction
 from bana import narrative as bana_narrative
 from agents.task_orchestrator import run_mission
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from servant_model_manager import (
     has_model,
     list_models,
@@ -723,11 +723,12 @@ def _stage_c1_metrics(
     lines = [line.strip() for line in stdout_text.splitlines() if line.strip()]
     unchecked = [line for line in lines if line.startswith("- [ ]")]
     status_failure_pattern = re.compile(r"status:\s*(failed|blocked)\b", re.IGNORECASE)
-    failing = [
-        line
-        for line in lines
-        if line.startswith("- [") and status_failure_pattern.search(line)
-    ]
+    failing: list[str] = []
+    for line in lines:
+        if not line.startswith("- ["):
+            continue
+        if status_failure_pattern.search(line):
+            failing.append(line)
     completed = not unchecked and not failing
     summary_line = next(
         (line for line in reversed(lines) if not line.startswith("- [ ]")), ""
@@ -740,6 +741,7 @@ def _stage_c1_metrics(
         "failing_items": failing,
         "message": summary_line or None,
     }
+    payload["failures"] = failing
     if failing:
         payload["error"] = "checklist contains failing items"
         payload["status"] = "error"
@@ -1834,6 +1836,9 @@ async def stage_c1_exit_checklist() -> dict[str, Any]:
         metrics_extractor=_stage_c1_metrics,
     )
     if result.get("status") != "success":
+        failures = result.get("failures") or []
+        if failures:
+            return JSONResponse(status_code=400, content=result)
         raise HTTPException(
             status_code=500,
             detail=result.get("error", "Stage C1 exit checklist failed"),
