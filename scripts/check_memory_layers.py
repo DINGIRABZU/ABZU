@@ -39,13 +39,22 @@ from memory.cortex import query_spirals
 from memory.emotional import fetch_emotion_history, get_connection as emotion_conn
 
 try:
-    from memory.mental import query_related_tasks
+    from importlib import import_module
 
-    _MENTAL_FALLBACK = False
+    _mental_module = import_module("memory.mental")
+    query_related_tasks = getattr(_mental_module, "query_related_tasks")  # type: ignore[attr-defined]
 except Exception:  # mental layer optional
-    from memory.optional.mental import query_related_tasks
+    from memory.optional.mental import query_related_tasks  # type: ignore
 
     _MENTAL_FALLBACK = True
+else:
+    module_name = getattr(query_related_tasks, "__module__", "")
+    if module_name.startswith("memory.optional."):
+        from memory.optional.mental import query_related_tasks  # type: ignore
+
+        _MENTAL_FALLBACK = True
+    else:
+        _MENTAL_FALLBACK = False
 from memory.spiritual import lookup_symbol_history, get_connection as spirit_conn
 from memory.narrative_engine import stream_stories
 from memory.bundle import MemoryBundle

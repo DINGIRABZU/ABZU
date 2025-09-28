@@ -1,0 +1,23 @@
+{
+  "corpus_file": "data/vector_memory_scaling/corpus.jsonl",
+  "metrics": [
+    {
+      "mode": "stage_b1_memory_proof",
+      "corpus_size": 1000,
+      "query_count": 995,
+      "duration_seconds": 1.784,
+      "query_latency": {
+        "count": 995,
+        "p50": 0.001578,
+        "p95": 0.002501,
+        "p99": 0.003579
+      },
+      "layers": {
+        "total": 8,
+        "ready": 8,
+        "failed": 0
+      },
+      "query_failures": 0
+    }
+  ]
+}
