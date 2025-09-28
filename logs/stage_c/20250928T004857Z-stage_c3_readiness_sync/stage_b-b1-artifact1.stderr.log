@@ -1,0 +1,28 @@
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:250: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  module = override.factory()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)
+  _prepare_overrides()
+2025-09-27 23:20:07,356 WARNING memory.load_proof :: Memory layer preflight failed – continuing in stubbed mode
+Traceback (most recent call last):
+  File "/workspace/ABZU/scripts/memory_load_proof.py", line 318, in _run_pretest_hook
+    report = verify_memory_layers()
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ABZU/scripts/check_memory_layers.py", line 91, in verify_memory_layers
+    raise RuntimeError("cortex layer empty")
+RuntimeError: cortex layer empty
+2025-09-27 23:20:08,750 WARNING memory.load_proof :: Memory pretest reported stub activations but runtime bundle is native
+2025-09-27 23:20:08,750 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 stubbed_bundle=False p95=2.545ms p99=3.025ms
