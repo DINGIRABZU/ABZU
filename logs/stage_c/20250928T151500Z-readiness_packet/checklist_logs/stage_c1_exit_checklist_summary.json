@@ -1,0 +1,35 @@
+{
+  "run_id": "20250925T101638Z-stage_c1_exit_checklist",
+  "captured_at": "2025-09-25T10:16:38Z",
+  "status": "success",
+  "sources": {
+    "summary": "logs/stage_c/20250925T101638Z-stage_c1_exit_checklist/summary.json",
+    "pytest_log": "logs/stage_c/20250925T101638Z-stage_c1_exit_checklist/pytest.log",
+    "rollback_drill": "logs/stage_c/20250925T101638Z-stage_c1_exit_checklist/razar_chaos_drill.json"
+  },
+  "sandbox_snapshot": {
+    "present_in_repo": false,
+    "note": "Sandbox export referenced in documentation; raw files stored on release-ops share outside Codex sandbox scope."
+  },
+  "environment_limited": [
+    {
+      "phase": "tests",
+      "reason": "pytest-cov unavailable in sandbox",
+      "impact": "coverage export blocked; historical 92.89% from 2025-09-20 retained"
+    },
+    {
+      "phase": "build",
+      "reason": "python -m build missing",
+      "impact": "wheel packaging deferred to hardware rehearsal"
+    }
+  ],
+  "checklist_alignment": {
+    "absolute_protocol_checklist": "docs/absolute_protocol_checklist.md",
+    "status": "complete",
+    "notes": "Checklist items marked [x]; environment-limited skips documented inline."
+  },
+  "next_steps": [
+    "Schedule hardware pytest run once pytest-cov dependencies land in CI",
+    "Run chaos drill against production-like MCP endpoints after credential escrow review"
+  ]
+}

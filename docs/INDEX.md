@@ -271,6 +271,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
 | [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.111 **Last updated:** 2025-10-24 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/crown_handshake_stage_b.py`, `../connectors/operator_api_stage_b.py`, `../connectors/operator_upload_stage_b.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py`, `../scripts/verify_blueprint_refs.py` |
+| [The_Absolute_Protocol_addendum.md](The_Absolute_Protocol_addendum.md) | The Absolute Protocol Addendum — Stage C Sandbox Review | - | - |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
 | [WISH_BOX_CHARTER.md](WISH_BOX_CHARTER.md) | Wish Box Charter | - | - |
@@ -487,7 +488,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [registry_audit.md](registry_audit.md) | Registry Audit | This guide describes how to validate `logs/task_registry.jsonl` to keep the task log accurate. | - |
 | [rehearsal_asset_packaging.md](rehearsal_asset_packaging.md) | Rehearsal Asset Packaging Protocol | The stage B rehearsal directories accumulate large numbers of per-frame JSON artifacts for audio, video, and emotiona... | - |
 | [rehearsals/stage_b_20250921_summary.md](rehearsals/stage_b_20250921_summary.md) | Stage B Rehearsal Refresh — 2025-09-21 | - | - |
-| [rehearsals/stage_c_demo_summary.md](rehearsals/stage_c_demo_summary.md) | Stage C Scripted Demo Rehearsal Summary | The Stage C scripted demo storyline was executed through the operator Stage C2 workflow, which invokes `scripts/stage... | - |
+| [rehearsals/stage_c_demo_summary.md](rehearsals/stage_c_demo_summary.md) | Stage C Scripted Demo Rehearsal Summary | The Stage C2 scripted demo storyline replays Stage B session `session_01` from run `20250921T230434Z`, but the harnes... | - |
 | [rehearsals/stage_c_readiness_review_packet.md](rehearsals/stage_c_readiness_review_packet.md) | Stage C Readiness Review Packet — 2025-09-27 | - | - |
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
 | [release_process.md](release_process.md) | Release Process | This guide covers signing build artifacts and verifying their integrity. | - |
@@ -545,6 +546,8 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../logs/alpha_gate/20250919T221803Z/coverage.mmd](../logs/alpha_gate/20250919T221803Z/coverage.mmd) | coverage.mmd | - | - |
 | [../logs/alpha_gate/20250920T065519Z/coverage.mmd](../logs/alpha_gate/20250920T065519Z/coverage.mmd) | coverage.mmd | - | - |
 | [../logs/alpha_gate/20250922T181919Z/coverage.mmd](../logs/alpha_gate/20250922T181919Z/coverage.mmd) | coverage.mmd | - | - |
+| [../logs/alpha_gate/20250927T235425Z/command_log.md](../logs/alpha_gate/20250927T235425Z/command_log.md) | Alpha Gate Run 20250927T235425Z | - rm -rf dist/ (exit 0) - python -m build --wheel (exit 1) - bash scripts/check_requirements.sh (exit 1) - python scr... | - |
+| [../logs/stage_c/20250928T151500Z-readiness_packet/checklist_logs/README.md](../logs/stage_c/20250928T151500Z-readiness_packet/checklist_logs/README.md) | Stage C Checklist Evidence | This directory consolidates Stage C1 exit checklist metadata for the 2025-09-25 rehearsal. The raw sandbox exports li... | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |

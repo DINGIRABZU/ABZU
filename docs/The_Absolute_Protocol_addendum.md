@@ -1,0 +1,14 @@
+# The Absolute Protocol Addendum — Stage C Sandbox Review
+
+## Readiness packet snapshot
+- `logs/stage_c/20250928T151500Z-readiness_packet/` now aggregates the Stage C3 readiness summary, Stage C2 demo storyline, Stage C4 MCP drill transcripts, and the Stage C1 checklist stub so reviewers inherit a single evidence bundle while preparing the beta bridge hand-off.【F:logs/stage_c/20250928T151500Z-readiness_packet/readiness_bundle/stage_c3_readiness_sync_summary.json†L1-L120】【F:logs/stage_c/20250928T151500Z-readiness_packet/mcp_drill/stage_c4_operator_mcp_drill_summary.json†L1-L60】
+- The readiness summary reiterates the sandbox `environment-limited` skips for build, health, and pytest phases; keep the same markers in downstream checklists so deferred hardware validation stays traceable.【F:logs/stage_c/20250928T151500Z-readiness_packet/readiness_bundle/stage_c3_readiness_sync_summary.json†L32-L120】
+- The Stage C1 checklist stub documents that raw exit-checklist logs remain on the release-ops share until the hardware rehearsal replays the pytest coverage and packaging steps, mirroring the guidance in the checklist itself.【F:logs/stage_c/20250928T151500Z-readiness_packet/checklist_logs/stage_c1_exit_checklist_summary.json†L1-L32】【F:logs/stage_c/20250928T151500Z-readiness_packet/checklist_logs/README.md†L1-L11】
+
+## Cross-team readiness review
+- Release Ops, Memory, and Connector leads scheduled the cross-team readiness review for **2025-09-30 19:00 UTC** to approve the beta bridge hand-off, unblock the hardware pytest rerun, and green-light the first `operator_api` gRPC pilot within the Stage B3 rotation window.【F:logs/stage_c/20250928T151500Z-readiness_packet/readiness_bundle/stage_c3_readiness_sync_summary.json†L84-L120】
+- Capture the review decisions in `docs/PROJECT_STATUS.md` and `docs/roadmap.md` immediately after the meeting so the sandbox-to-hardware bridge owners, gRPC adoption timeline, and credential rotation SLAs remain synchronized with doctrine.【F:docs/PROJECT_STATUS.md†L228-L244】【F:docs/roadmap.md†L76-L108】
+
+## Required follow-ups
+- Coordinate with CI to restore `pytest-cov`, `python -m build`, and connector credential fixtures so future Stage A runs clear the environment-limited skips called out in the readiness summary.【F:logs/stage_c/20250928T151500Z-readiness_packet/readiness_bundle/stage_c3_readiness_sync_summary.json†L32-L120】
+- Stage B3 rotation owners must fold the gRPC pilot telemetry into the readiness ledger during the next 48-hour window; attach the new handshake and heartbeat payloads to the readiness packet after the review to keep doctrine references current.【F:logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json†L1-L17】【F:logs/stage_b_rotation_drills.jsonl†L30-L35】
