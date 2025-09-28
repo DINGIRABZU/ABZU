@@ -1,0 +1,40 @@
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:250: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  module = override.factory()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)
+  _prepare_overrides()
+/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)
+  _prepare_overrides()
+INFO Running scenario crown_glm_reflection (model=glm, seed=1101)
+INFO logged audio to /workspace/ABZU/logs/audio/20250928_004721.npy
+INFO logged video to /workspace/ABZU/logs/video/20250928_004721.npz
+/workspace/ABZU/scripts/crown_capture_replays.py:542: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  timestamp = datetime.utcnow().isoformat()
+WARNING Sandbox overrides active; skipping strict comparison for crown_glm_reflection
+INFO Running scenario crown_kimicho_guidance (model=kimicho, seed=2102)
+INFO logged audio to /workspace/ABZU/logs/audio/20250928_004721.npy
+INFO logged video to /workspace/ABZU/logs/video/20250928_004721.npz
+WARNING Sandbox overrides active; skipping strict comparison for crown_kimicho_guidance
+INFO Running scenario crown_kimi_k2_revision (model=kimi_k2, seed=3103)
+INFO logged audio to /workspace/ABZU/logs/audio/20250928_004721.npy
+INFO logged video to /workspace/ABZU/logs/video/20250928_004721.npz
+WARNING Sandbox overrides active; skipping strict comparison for crown_kimi_k2_revision
+INFO Running scenario crown_air_star_validation (model=air_star, seed=4104)
+INFO logged audio to /workspace/ABZU/logs/audio/20250928_004721.npy
+INFO logged video to /workspace/ABZU/logs/video/20250928_004721.npz
+WARNING Sandbox overrides active; skipping strict comparison for crown_air_star_validation
+INFO Running scenario crown_rstar_finalization (model=rstar, seed=5105)
+INFO logged audio to /workspace/ABZU/logs/audio/20250928_004721.npy
+INFO logged video to /workspace/ABZU/logs/video/20250928_004721.npz
+WARNING Sandbox overrides active; skipping strict comparison for crown_rstar_finalization

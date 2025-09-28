@@ -1,0 +1,45 @@
+# HELP alpha_gate_phase_start_timestamp_seconds UTC start time for an Alpha gate phase (seconds since epoch).
+# TYPE alpha_gate_phase_start_timestamp_seconds gauge
+alpha_gate_phase_start_timestamp_seconds{phase="build"} 1.759020458e+09
+alpha_gate_phase_start_timestamp_seconds{phase="health"} 1.759020458e+09
+alpha_gate_phase_start_timestamp_seconds{phase="tests"} 1.759020458e+09
+# HELP alpha_gate_phase_end_timestamp_seconds UTC completion time for an Alpha gate phase (seconds since epoch).
+# TYPE alpha_gate_phase_end_timestamp_seconds gauge
+alpha_gate_phase_end_timestamp_seconds{phase="build"} 1.759020458e+09
+alpha_gate_phase_end_timestamp_seconds{phase="health"} 1.759020458e+09
+alpha_gate_phase_end_timestamp_seconds{phase="tests"} 1.759020459e+09
+# HELP alpha_gate_phase_duration_seconds Elapsed seconds per Alpha gate phase.
+# TYPE alpha_gate_phase_duration_seconds gauge
+alpha_gate_phase_duration_seconds{phase="build"} 0.0
+alpha_gate_phase_duration_seconds{phase="health"} 0.0
+alpha_gate_phase_duration_seconds{phase="tests"} 1.0
+# HELP alpha_gate_phase_success 1 when the Alpha gate phase succeeded, 0 when it failed or was skipped.
+# TYPE alpha_gate_phase_success gauge
+alpha_gate_phase_success{phase="build"} 0.0
+alpha_gate_phase_success{phase="health"} 0.0
+alpha_gate_phase_success{phase="tests"} 0.0
+# HELP alpha_gate_phase_exit_code Exit code reported by each Alpha gate phase.
+# TYPE alpha_gate_phase_exit_code gauge
+alpha_gate_phase_exit_code{phase="build"} 0.0
+alpha_gate_phase_exit_code{phase="health"} 0.0
+alpha_gate_phase_exit_code{phase="tests"} 0.0
+# HELP alpha_gate_phase_skipped 1 when the Alpha gate phase was explicitly skipped.
+# TYPE alpha_gate_phase_skipped gauge
+alpha_gate_phase_skipped{phase="build"} 1.0
+alpha_gate_phase_skipped{phase="health"} 1.0
+alpha_gate_phase_skipped{phase="tests"} 1.0
+# HELP alpha_gate_overall_success 1 when all executed Alpha gate phases succeeded.
+# TYPE alpha_gate_overall_success gauge
+alpha_gate_overall_success 0.0
+# HELP alpha_gate_coverage_percent Line coverage percentage captured during Alpha gate tests.
+# TYPE alpha_gate_coverage_percent gauge
+alpha_gate_coverage_percent 92.89377289377289
+# HELP alpha_gate_coverage_lines_covered Covered lines reported by coverage.py during the Alpha gate run.
+# TYPE alpha_gate_coverage_lines_covered gauge
+alpha_gate_coverage_lines_covered 1005.0
+# HELP alpha_gate_coverage_statements Total measured statements during the Alpha gate run.
+# TYPE alpha_gate_coverage_statements gauge
+alpha_gate_coverage_statements 1059.0
+# HELP alpha_gate_coverage_missing_lines Missing lines reported by coverage.py during the Alpha gate run.
+# TYPE alpha_gate_coverage_missing_lines gauge
+alpha_gate_coverage_missing_lines 54.0
