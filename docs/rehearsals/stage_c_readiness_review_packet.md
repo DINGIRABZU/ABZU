@@ -1,17 +1,18 @@
-# Stage C Readiness Review Packet — 2025-09-27
+# Stage C Readiness Review Packet — 2025-09-28
 
 ## Run overview
-- Stage C3 readiness sync `20250927T201020Z` generated the consolidated bundle but flagged the overall status as `error` because Stage B inputs still carry risk notes while Stage A tasks closed cleanly.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L1-L218】
-- The readiness bundle at `logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/readiness_bundle.json` remains the source of record for individual slug summaries and artifact pointers feeding this packet.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L3-L8】【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L209-L218】
+- Stage C3 readiness sync `20250928T202834Z` rebuilt the consolidated bundle and now reports `requires_attention` only because Stage A sandbox warnings persist—the Stage B snapshot cleared prior risk notes after the refreshed memory proof and connector rotation finished cleanly.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/summary.json†L1-L210】
+- The readiness bundle at `logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/readiness_bundle.json` remains the source of record for individual slug summaries and artifact pointers feeding this packet.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/summary.json†L6-L24】
 
 ## Stage A recap
-- **A1 boot telemetry** completed successfully in 17.6 s, archiving both stdout/stderr artifacts and noting sandbox overrides covering GLM integration, Crown orchestration, memory, and session logger instrumentation.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L12-L55】
-- **A2 crown replays** captured all five scripted scenarios with the sandbox override banner preserved in the stderr tail for traceability in the packet.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L56-L100】
-- **A3 alpha gate shakeout** finished in 2.25 s and documents environment-limited skips (build/health/tests) alongside the sandbox override roster so reviewers can trace deferred hardware validations.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L101-L207】
+- **A1 boot telemetry** completed successfully in 12.7 s with sandbox overrides recorded alongside stdout/stderr artifacts for traceability.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_a-a1-summary.json†L1-L47】
+- **A2 crown replays** captured the scripted scenarios with the sandbox override banner mirrored in the stderr tail preserved inside the bundle.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_a-a2-summary.json†L1-L46】
+- **A3 alpha gate shakeout** documents the environment-limited skips (build/health/tests) and the active sandbox overrides so hardware follow-ups remain visible to reviewers.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_a-a3-summary.json†L1-L83】
 
-## Stage B risks to resolve
-- **B1 memory proof** executed against 1,000 vector records but stayed in a stubbed bundle with zero ready layers, raising the risk notes that block Stage B sign-off until the NeoABZU memory backend is restored.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L220-L305】
-- **B3 connector rotation** keeps Stage B rehearsal contexts accepted yet leaves the Stage C prep context pending; the readiness sync highlights this outstanding promotion step for the cross-team agenda.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L220-L283】
+## Stage B readiness snapshot
+- **B1 memory proof** rebuilt the cortex dataset against 1,000 vector records with all eight layers ready, zero query failures, and the native bundle restored.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-summary.json†L1-L40】
+- **B2 sonic rehearsal** exported a fresh `stage_b_rehearsal_packet.json` with every connector marked `doctrine_ok`, no dropouts, and accepted contexts for the rehearsal bridge.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b2-summary.json†L1-L38】
+- **B3 connector rotation** captured the accepted `stage-b-rehearsal` and `stage-c-prep` contexts while logging the `20250928T001910Z-PT48H` rotation window that holds credential expiry at 2025-09-30T00:19:10Z.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b3-summary.json†L1-L66】
 
 ## MCP drill artifacts
 - The Stage C4 operator MCP drill `20250927T225213Z` produced fresh handshake and heartbeat payloads, confirming accepted contexts for both Stage B rehearsal and Stage C prep while locking the credential expiry at `2025-09-29T22:52:24Z`.【F:logs/stage_c/20250927T225213Z-stage_c4_operator_mcp_drill/summary.json†L1-L131】
