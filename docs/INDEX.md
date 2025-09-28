@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -490,7 +489,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [rehearsal_asset_packaging.md](rehearsal_asset_packaging.md) | Rehearsal Asset Packaging Protocol | The stage B rehearsal directories accumulate large numbers of per-frame JSON artifacts for audio, video, and emotiona... | - |
 | [rehearsals/stage_b_20250921_summary.md](rehearsals/stage_b_20250921_summary.md) | Stage B Rehearsal Refresh — 2025-09-21 | - | - |
 | [rehearsals/stage_c_demo_summary.md](rehearsals/stage_c_demo_summary.md) | Stage C Scripted Demo Rehearsal Summary | The Stage C2 scripted demo storyline replays Stage B session `session_01` from run `20250921T230434Z`, but the harnes... | - |
-| [rehearsals/stage_c_readiness_review_packet.md](rehearsals/stage_c_readiness_review_packet.md) | Stage C Readiness Review Packet — 2025-09-27 | - | - |
+| [rehearsals/stage_c_readiness_review_packet.md](rehearsals/stage_c_readiness_review_packet.md) | Stage C Readiness Review Packet — 2025-09-28 | - | - |
 | [release_notes.md](release_notes.md) | Release Notes | - | - |
 | [release_process.md](release_process.md) | Release Process | This guide covers signing build artifacts and verifying their integrity. | - |
 | [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
