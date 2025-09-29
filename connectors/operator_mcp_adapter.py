@@ -140,6 +140,68 @@ def _extract_rotation_metadata(
     return rotation_section if isinstance(rotation_section, Mapping) else {}
 
 
+def _format_duration_iso(delta: timedelta) -> str:
+    """Return ``delta`` encoded as an ISO-8601 duration string."""
+
+    total_seconds = int(delta.total_seconds())
+    seconds = total_seconds % 60
+    minutes = (total_seconds // 60) % 60
+    hours = (total_seconds // 3600) % 24
+    days = total_seconds // 86400
+
+    parts: list[str] = ["P"]
+    if days:
+        parts.append(f"{days}D")
+    time_parts: list[str] = []
+    if hours:
+        time_parts.append(f"{hours}H")
+    if minutes:
+        time_parts.append(f"{minutes}M")
+    if seconds or not (days or hours or minutes):
+        time_parts.append(f"{seconds}S")
+    if time_parts:
+        parts.append("T")
+        parts.extend(time_parts)
+    return "".join(parts)
+
+
+def _extract_credential_window(
+    handshake: Mapping[str, Any] | None,
+    *,
+    fallback_start: datetime | None = None,
+) -> Mapping[str, Any]:
+    """Return credential validity window details for ``handshake``."""
+
+    if not isinstance(handshake, Mapping):
+        return {}
+
+    session = handshake.get("session")
+    issued_at_raw: Any = None
+    if isinstance(session, Mapping):
+        issued_at_raw = session.get("issued_at")
+    rotation = _extract_rotation_metadata(handshake)
+    if issued_at_raw is None and isinstance(rotation, Mapping):
+        issued_at_raw = rotation.get("last_rotated")
+
+    issued_at = _parse_rotation_timestamp(issued_at_raw) or fallback_start
+
+    expiry_raw: Any = None
+    if isinstance(session, Mapping):
+        expiry_raw = session.get("credential_expiry")
+    expiry_at = _parse_rotation_timestamp(expiry_raw)
+
+    window: dict[str, Any] = {}
+    if issued_at is not None:
+        window["issued_at"] = _isoformat(issued_at)
+    if expiry_raw:
+        window["expires_at"] = expiry_raw
+    if issued_at is not None and expiry_at is not None and expiry_at >= issued_at:
+        window["duration"] = _format_duration_iso(expiry_at - issued_at)
+    if rotation:
+        window.setdefault("rotation_window_id", rotation.get("window_id"))
+    return window
+
+
 def _resolve_rotation_window(
     *,
     rotated_at: datetime,
@@ -536,6 +598,10 @@ def record_rotation_drill(
     if isinstance(rotation_window_raw, str):
         duration_hint = rotation_window_raw
 
+    credential_window = _extract_credential_window(
+        handshake, fallback_start=rotation_timestamp
+    )
+
     entry = {
         "connector_id": connector_id,
         "rotated_at": _isoformat(timestamp),
@@ -546,6 +612,8 @@ def record_rotation_drill(
             duration_hint=duration_hint,
         ),
     }
+    if credential_window:
+        entry["credential_window"] = dict(credential_window)
     if context_status:
         entry["context_status"] = {
             key: dict(value)

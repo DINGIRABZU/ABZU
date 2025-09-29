@@ -1,0 +1,36 @@
+{
+  "run_id": "20250930T210000Z-stage_c1_exit_checklist",
+  "captured_at": "2025-09-30T21:00:00Z",
+  "status": "success",
+  "sources": {
+    "checklist_export": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/checklist_export.md",
+    "pytest_log": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/pytest.log",
+    "rollback_drill": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/razar_chaos_drill.json"
+  },
+  "environment_limited": [
+    {
+      "phase": "tests",
+      "reason": "pytest-cov unavailable in sandbox",
+      "impact": "coverage export deferred to hardware run",
+      "scheduled_rerun": "2025-10-02T18:00:00Z",
+      "host": "gate-runner-02"
+    },
+    {
+      "phase": "build",
+      "reason": "python -m build missing",
+      "impact": "wheel packaging requires hardware toolchain",
+      "scheduled_rerun": "2025-10-02T18:00:00Z",
+      "host": "gate-runner-02"
+    }
+  ],
+  "checklist_alignment": {
+    "absolute_protocol_checklist": "docs/absolute_protocol_checklist.md",
+    "status": "complete",
+    "notes": "All checklist items reviewed with cross-team stakeholders; deferred items logged with hardware schedule."
+  },
+  "next_steps": [
+    "Execute hardware coverage and packaging rerun on gate-runner-02",
+    "Distribute gRPC pilot trace pack to integration guild for beta rehearsal",
+    "Reconfirm rollback drill parity after hardware validation"
+  ]
+}

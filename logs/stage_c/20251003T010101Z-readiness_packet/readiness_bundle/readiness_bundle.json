@@ -1,0 +1,213 @@
+{
+  "generated_at": "2025-10-03T01:01:01Z",
+  "stage_a": {
+    "status": "attention",
+    "risk_notes": [
+      {
+        "phase": "build",
+        "reason": "environment-limited",
+        "details": [
+          "python -m build unavailable in sandbox; gate-runner-02 toolchain unreachable",
+          "Hardware rerun scheduled for 2025-10-02 18:00Z on gate-runner-02"
+        ]
+      },
+      {
+        "phase": "health",
+        "reason": "environment-limited",
+        "details": [
+          "Missing tools: docker, SoX, FFmpeg, aria2c",
+          "Hardware rerun scheduled for 2025-10-02 18:00Z on gate-runner-02"
+        ]
+      },
+      {
+        "phase": "tests",
+        "reason": "environment-limited",
+        "details": [
+          "Pytest coverage dependencies unavailable (pytest-cov)",
+          "Hardware rerun scheduled for 2025-10-02 18:00Z on gate-runner-02"
+        ]
+      }
+    ],
+    "runs": [
+      {
+        "slug": "A1",
+        "run_id": "20251002T180000Z-stage_a1_boot_telemetry",
+        "status": "blocked",
+        "summary_path": "logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.json",
+        "stdout_path": null,
+        "stderr_path": null,
+        "notes": "Hardware rerun could not start; sandbox lacks python -m build, docker, SoX, FFmpeg, aria2c, pytest-cov and has no route to gate-runner-02."
+      },
+      {
+        "slug": "A2",
+        "run_id": "20251002T181000Z-stage_a2_crown_replays",
+        "status": "blocked",
+        "summary_path": "logs/stage_a/20251002T181000Z-stage_a2_crown_replays/summary.json",
+        "stdout_path": null,
+        "stderr_path": null,
+        "notes": "Hardware crown replay capture skipped; sandbox cannot reach gate-runner-02 and required media tooling is unavailable."
+      },
+      {
+        "slug": "A3",
+        "run_id": "20251002T182000Z-stage_a3_gate_shakeout",
+        "status": "blocked",
+        "summary_path": "logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json",
+        "stdout_path": null,
+        "stderr_path": null,
+        "notes": "Alpha gate hardware shakeout deferred pending hardware toolchain availability."
+      }
+    ]
+  },
+  "stage_b": {
+    "status": "success",
+    "runs": [
+      {
+        "slug": "B1",
+        "run_id": "20250928T155301Z-stage_b1_memory_proof",
+        "status": "success",
+        "summary_path": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/summary.json",
+        "stdout_path": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+        "stderr_path": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+        "metrics": {
+          "dataset": "data/vector_memory_scaling/corpus.jsonl",
+          "total_records": 1000,
+          "queries_timed": 995,
+          "init_duration_s": 0.000212,
+          "latency_p50_s": 0.001578,
+          "latency_p95_s": 0.002501,
+          "latency_p99_s": 0.003579,
+          "layers": {
+            "total": 8,
+            "ready": 8,
+            "failed": 0
+          },
+          "query_failures": 0,
+          "stubbed_bundle": false,
+          "pretest_stubbed": false,
+          "fallback_reason": null,
+          "bundle_source": "neoabzu_memory",
+          "bundle_mode": "native",
+          "bundle": {
+            "stubbed": false,
+            "mode": "native",
+            "source": "neoabzu_memory",
+            "fallback_reason": null,
+            "stubbed_bundle": false
+          }
+        }
+      },
+      {
+        "slug": "B2",
+        "run_id": "20250927T211008Z-stage_b2_sonic_rehearsal",
+        "status": "success",
+        "summary_path": "logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/summary.json",
+        "stdout_path": "logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stdout.log",
+        "stderr_path": "logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stderr.log",
+        "metrics": "Stage B rehearsal packet written to logs/stage_b_rehearsal_packet.json"
+      },
+      {
+        "slug": "B3",
+        "run_id": "20250926T180250Z-stage_b3_connector_rotation",
+        "status": "success",
+        "summary_path": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/summary.json",
+        "stdout_path": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stdout.log",
+        "stderr_path": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stderr.log",
+        "metrics": "logs/stage_b/20250926T180250Z-stage_b3_connector_rotation/summary.json"
+      }
+    ],
+    "readiness_index": "logs/stage_b/latest/readiness_index.json",
+    "rotation_drill_snapshot": {
+      "ledger_path": "logs/stage_b_rotation_drills.jsonl",
+      "latest_entry": "logs/stage_c/20251003T010101Z-readiness_packet/mcp_drill/rotation_metadata.json",
+      "credential_window": "logs/stage_c/20251003T010101Z-readiness_packet/mcp_drill/credential_window.json"
+    }
+  },
+  "stage_c": {
+    "status": "requires_attention",
+    "readiness_sync": {
+      "run_id": "20251001T010101Z-stage_c3_readiness_sync",
+      "status": "error",
+      "summary_path": "logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/summary.json",
+      "stdout_path": null,
+      "stderr_path": null,
+      "notes": "Readiness sync completed with environment-limited Stage A risk notes; sandbox artifacts copied into packet for review."
+    },
+    "mcp_pilot": {
+      "summary_path": "logs/stage_c/20251031T000000Z-test/summary.json",
+      "status": "success",
+      "rest_artifact": "logs/stage_c/20251031T000000Z-test/rest_handshake_with_expiry.json",
+      "grpc_artifact": "logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json",
+      "diff_artifact": "logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json",
+      "rotation_window": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-26T22:28:14Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250926T222814Z-PT48H"
+      },
+      "credential_window": {
+        "issued_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "P2D",
+        "rotation_window_id": "20250926T222814Z-PT48H"
+      },
+      "rotation_metadata": "logs/stage_c/20251003T010101Z-readiness_packet/mcp_drill/rotation_metadata.json",
+      "credential_window_path": "logs/stage_c/20251003T010101Z-readiness_packet/mcp_drill/credential_window.json",
+      "index": "logs/stage_c/20251003T010101Z-readiness_packet/mcp_drill/index.json"
+    },
+    "readiness_packet": "logs/stage_c/20251003T010101Z-readiness_packet/"
+  },
+  "hardware_reruns": [
+    {
+      "name": "Stage B1 Memory Load Proof",
+      "status": "success",
+      "artifact": "logs/stage_b/20250928T155301Z-stage_b1_memory_proof/summary.json",
+      "captured_at": "2025-09-28T15:53:01.848000+00:00",
+      "notes": "Vector memory load proof rerun on sandbox hardware profile; retained for beta gate replay."
+    },
+    {
+      "name": "Stage C MCP gRPC Parity Trial",
+      "status": "success",
+      "artifact": "logs/stage_c/20251031T000000Z-test/summary.json",
+      "captured_at": "2025-09-28T17:33:39.220418+00:00",
+      "notes": "REST vs gRPC handshake parity validated ahead of pilot roll-out."
+    },
+    {
+      "name": "Stage A Hardware Coverage Replay",
+      "status": "blocked",
+      "artifact": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json",
+      "host": "gate-runner-02",
+      "notes": "Sandbox attempt documented; gate-runner-02 unreachable and required toolchain missing (python -m build, docker, SoX, FFmpeg, aria2c, pytest-cov).",
+      "attempted_at": "2025-10-02T18:20:00Z"
+    }
+  ],
+  "checklist": {
+    "summary": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json",
+    "packet_entry": "logs/stage_c/20251003T010101Z-readiness_packet/checklist_logs/stage_c1_exit_checklist_summary.json"
+  },
+  "review_minutes": "logs/stage_c/20251003T010101Z-readiness_packet/review_minutes.md",
+  "merged": {
+    "overall_status": "requires_attention",
+    "status_flags": {
+      "stage_a": "attention",
+      "stage_b": "success",
+      "stage_c": "requires_attention"
+    },
+    "latest_runs": {
+      "stage_a": {
+        "A1": "20250928T004644Z-stage_a1_boot_telemetry",
+        "A2": "20250928T004714Z-stage_a2_crown_replays",
+        "A3": "20250928T004738Z-stage_a3_gate_shakeout"
+      },
+      "stage_b": {
+        "B1": "20250928T155301Z-stage_b1_memory_proof",
+        "B2": "20250927T211008Z-stage_b2_sonic_rehearsal",
+        "B3": "20250926T180250Z-stage_b3_connector_rotation"
+      },
+      "stage_c": {
+        "readiness_sync": "20251001T010101Z-stage_c3_readiness_sync",
+        "mcp_pilot": "20251031T000000Z-test"
+      }
+    }
+  },
+  "missing": []
+}
