@@ -116,7 +116,7 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No known issues",
+      "issues": "Stage C readiness 20250928 activated sandbox stub (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); migrate to neoabzu_crown::route_decision per docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
       "adr": null
     },
     {
@@ -147,7 +147,7 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No known issues",
+      "issues": "Stage C evidence kept the async pipeline stubbed (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); follow the neoabzu_rag MoGEOrchestrator plan in docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
       "adr": null
     },
     {
@@ -214,7 +214,7 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No known issues",
+      "issues": "Stage C evidence kept the async pipeline stubbed (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); follow the neoabzu_rag MoGEOrchestrator plan in docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
       "adr": null
     },
     {
@@ -262,7 +262,7 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No known issues",
+      "issues": "Stage C evidence kept the async pipeline stubbed (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); follow the neoabzu_rag MoGEOrchestrator plan in docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
       "adr": null
     },
     {
@@ -301,7 +301,7 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No known issues",
+      "issues": "Stage C readiness 20250928 activated sandbox stub (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); migrate to neoabzu_crown::route_decision per docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
       "adr": null
     },
     {
@@ -1871,7 +1871,7 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No known issues",
+      "issues": "Stage C readiness 20250928 activated sandbox stub (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); migrate to neoabzu_crown::route_decision per docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
       "adr": null
     },
     {
@@ -2007,7 +2007,124 @@
         "coverage": 0.0
       },
       "status": "deprecated",
-      "issues": "No known issues",
+      "issues": "Stage C evidence kept the async pipeline stubbed (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); follow the neoabzu_rag MoGEOrchestrator plan in docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
+      "adr": null
+    },
+    {
+      "id": "state_transition_engine",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "state_transition_engine.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "INANNA_AI",
+        "__future__",
+        "typing"
+      ],
+      "tests": [
+        "tests/test_state_transition_engine.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "deprecated",
+      "issues": "Stage C readiness kept deterministic sandbox rotation (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); migrate to neoabzu_crown::route_inevitability per docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
+      "adr": null
+    },
+    {
+      "id": "servant_model_manager",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "servant_model_manager.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "asyncio",
+        "collections",
+        "dataclasses",
+        "threading",
+        "time",
+        "typing",
+        "tools"
+      ],
+      "tests": [
+        "tests/test_servant_model_manager.py",
+        "tests/test_kimi_k2_servant.py",
+        "tests/test_kimi_servant.py",
+        "tests/test_servant_download.py",
+        "tests/crown/test_servant_routing.py",
+        "tests/crown/test_servant_registration.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "deprecated",
+      "issues": "Stage C readiness relied on the local-registry sandbox stub (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); adopt the neoabzu_crown servant bridge per docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
+      "adr": null
+    },
+    {
+      "id": "emotional_state",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "emotional_state.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "asyncio",
+        "json",
+        "logging",
+        "os",
+        "secrets",
+        "threading",
+        "pathlib",
+        "typing",
+        "soul_state_manager",
+        "cryptography"
+      ],
+      "tests": [
+        "tests/test_memory_snapshot.py",
+        "tests/test_video.py",
+        "tests/test_self_correction_engine.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "deprecated",
+      "issues": "Stage C readiness downgraded to the in-memory sandbox stub (logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log); align with the neoabzu_crown expression pipeline in docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
+      "adr": null
+    },
+    {
+      "id": "memory_store",
+      "chakra": "unknown",
+      "type": "module",
+      "path": "memory_store.py",
+      "version": "0.1.0",
+      "dependencies": [
+        "__future__",
+        "json",
+        "logging",
+        "shutil",
+        "sqlite3",
+        "threading",
+        "contextlib",
+        "pathlib",
+        "queue",
+        "typing",
+        "opentelemetry",
+        "numpy",
+        "faiss"
+      ],
+      "tests": [
+        "tests/test_memory_store.py",
+        "tests/memory/test_memory_store_fallback.py",
+        "tests/memory/test_vector_persistence.py",
+        "tests/memory/test_sharded_memory_store.py"
+      ],
+      "metrics": {
+        "coverage": 0.0
+      },
+      "status": "deprecated",
+      "issues": "Stage C readiness logged cortex layer empty with optional stubs (logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json); port to neoabzu_memory::MemoryBundle per docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep.",
       "adr": null
     },
     {
