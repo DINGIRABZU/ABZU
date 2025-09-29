@@ -19,5 +19,7 @@ Catalog of APSU and Neo-APSU resources across the repository. Each entry notes t
 | [CHANGELOG.md](../CHANGELOG.md) | Release history. | Records updates to Neo-APSU connectors in the mission stack. |
 | [NEOABZU/docs/index.md](../NEOABZU/docs/index.md) | NEOABZU documentation index. | References APSU architecture supporting RAZAR modules. |
 | [onboarding_confirm.yml](../onboarding_confirm.yml) | Registry of doc confirmations. | Tracks acknowledgment of Neo-APSU materials tied to RAZAR agents. |
+| [docs/system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep](system_blueprint.md#neo-apsu-migration-crosswalk-stage-d-prep) | Legacy-to-Rust migration crosswalk with Stage C defect inventory. | Guides Stage D squads to the Neo-APSU replacements and doctrine requirements cited during rehearsals. |
+| [docs/PROJECT_STATUS.md#stage-d-neo-apsu-migration-backlog](PROJECT_STATUS.md#stage-d-neo-apsu-migration-backlog) | Stage D backlog of rewrites, deprecations, and validation work. | Schedules migration sprints against the readiness evidence bundle. |
 
 Backlinks: [System Blueprint](system_blueprint.md)
