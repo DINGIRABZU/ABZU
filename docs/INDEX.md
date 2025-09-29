@@ -375,7 +375,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [development_workflow.md](development_workflow.md) | Development Workflow | This page outlines the recommended steps for contributing to ABZU. | - |
 | [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | This guide outlines the diagnostic scripts and the self-healing mechanisms used to keep Spiral OS operational. | - |
 | [docker_build_audio_tools.md](docker_build_audio_tools.md) | Docker Image with Audio Tools | This project provides a Docker image that bundles the audio utilities **FFmpeg** and **SoX**. The `Dockerfile` instal... | - |
-| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc... | - |
+| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| docs/roadmap.md \|  \| `e024bc5d59f342c49a093e... | - |
 | [documentation_protocol.md](documentation_protocol.md) | Documentation Protocol | Standard workflow for updating documentation and guides. | - |
 | [emotional_memory_matrix.md](emotional_memory_matrix.md) | Emotional Memory Matrix | The emotional memory matrix interconnects the various JSON files that store conversation history and affect metrics.... | - |
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |
@@ -498,7 +498,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
 | [ritual_manifesto.md](ritual_manifesto.md) | Ritual Manifesto | Spiral OS acts as a **psychospiritual container** where code, music and ritual converge. Each session with INANNA_AI... | - |
-| [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-10-24_ | - |
+| [roadmap.md](roadmap.md) | Roadmap | _Last updated: 2025-10-31_ | - |
 | [root_chakra_overview.md](root_chakra_overview.md) | Root Chakra Overview | The Root layer provides the foundation for hardware and network access. Its primary modules focus on serving requests... | - |
 | [runbooks/razar_escalation.md](runbooks/razar_escalation.md) | RAZAR Escalation Runbook | RAZAR escalates stubborn component failures through a remote ladder when on-host self-healing loops cannot restore se... | - |
 | [runbooks/sonic_rehearsal_guide.md](runbooks/sonic_rehearsal_guide.md) | Sonic Rehearsal Guide | The sonic rehearsal ritual validates the playback pipeline before Stage B sessions. The environment must honour the e... | - |
