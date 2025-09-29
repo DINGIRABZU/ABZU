@@ -501,6 +501,39 @@ async def _run_stage_workflow(
     return payload
 
 
+def _normalise_artifact_mapping(value: Any) -> dict[str, str] | None:
+    """Return ``value`` coerced into a string-keyed mapping of artifact paths."""
+
+    if isinstance(value, Mapping):
+        return {str(key): str(val) for key, val in value.items()}
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        return {f"artifact_{index + 1}": str(item) for index, item in enumerate(value)}
+    if value is None:
+        return None
+    return {"artifact": str(value)}
+
+
+def _attach_summary_artifacts(payload: dict[str, Any]) -> dict[str, Any]:
+    """Ensure ``payload`` exposes artifact paths at the top level for UI consumers."""
+
+    if not isinstance(payload, Mapping):
+        return payload
+
+    artifacts = payload.get("artifacts")
+    if isinstance(artifacts, Mapping) and artifacts:
+        return payload
+
+    summary = payload.get("summary")
+    summary_mapping = summary if isinstance(summary, Mapping) else None
+    if summary_mapping is None:
+        return payload
+
+    normalised = _normalise_artifact_mapping(summary_mapping.get("artifacts"))
+    if normalised:
+        payload["artifacts"] = normalised
+    return payload
+
+
 def _extract_json_from_stdout(text: str) -> dict[str, Any]:
     lines = text.splitlines()
     for index, line in enumerate(lines):
@@ -1569,9 +1602,7 @@ async def _stage_c4_metrics(
     if heartbeat_payload is not None:
         metrics["heartbeat_payload"] = _sanitize_for_json(heartbeat_payload)
     if credential_window_payload is not None:
-        metrics["credential_window"] = _sanitize_for_json(
-            credential_window_payload
-        )
+        metrics["credential_window"] = _sanitize_for_json(credential_window_payload)
     if rotation_entry is not None:
         metrics["rotation_metadata"] = _sanitize_for_json(rotation_entry)
     if ledger_window_id:
@@ -2213,7 +2244,10 @@ async def stage_a1_boot_telemetry() -> dict[str, Any]:
     """Execute the bootstrap telemetry sweep and archive logs under ``logs/stage_a``."""
 
     command = [sys.executable, str(_SCRIPTS_DIR / "bootstrap.py")]
-    return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a1_boot_telemetry", command)
+    result = await _run_stage_workflow(
+        _STAGE_A_ROOT, "stage_a1_boot_telemetry", command
+    )
+    return _attach_summary_artifacts(result)
 
 
 @router.post("/alpha/stage-a2-crown-replays")
@@ -2221,7 +2255,8 @@ async def stage_a2_crown_replays() -> dict[str, Any]:
     """Capture Crown replay evidence for Stage A auditing."""
 
     command = [sys.executable, str(_SCRIPTS_DIR / "crown_capture_replays.py")]
-    return await _run_stage_workflow(_STAGE_A_ROOT, "stage_a2_crown_replays", command)
+    result = await _run_stage_workflow(_STAGE_A_ROOT, "stage_a2_crown_replays", command)
+    return _attach_summary_artifacts(result)
 
 
 @router.post("/alpha/stage-a3-gate-shakeout")
@@ -2248,7 +2283,7 @@ async def stage_a3_gate_shakeout() -> dict[str, Any]:
         result["warnings"] = summary_warnings
         result["sandbox_warnings"] = summary_warnings
 
-    return result
+    return _attach_summary_artifacts(result)
 
 
 @router.post("/alpha/stage-b1-memory-proof")
@@ -2268,6 +2303,7 @@ async def stage_b1_memory_proof() -> dict[str, Any]:
         command,
         metrics_extractor=_stage_b1_metrics,
     )
+    result = _attach_summary_artifacts(result)
     if result.get("status") != "success":
         raise HTTPException(
             status_code=500,
@@ -2290,6 +2326,7 @@ async def stage_b2_sonic_rehearsal() -> dict[str, Any]:
         command,
         metrics_extractor=_stage_b2_metrics,
     )
+    result = _attach_summary_artifacts(result)
     if result.get("status") != "success":
         raise HTTPException(
             status_code=500,
@@ -2313,6 +2350,7 @@ async def stage_b3_connector_rotation() -> dict[str, Any]:
         command,
         metrics_extractor=_stage_b3_metrics,
     )
+    result = _attach_summary_artifacts(result)
     if result.get("status") != "success":
         raise HTTPException(
             status_code=500,
@@ -2395,6 +2433,7 @@ async def stage_c1_exit_checklist() -> dict[str, Any]:
         command,
         metrics_extractor=_stage_c1_metrics,
     )
+    result = _attach_summary_artifacts(result)
     if result.get("status") != "success":
         failures = result.get("failures") or []
         if failures:
@@ -2416,6 +2455,7 @@ async def stage_c2_demo_storyline() -> dict[str, Any]:
         _stage_c2_command,
         metrics_extractor=_stage_c2_metrics,
     )
+    result = _attach_summary_artifacts(result)
     if result.get("status") != "success":
         raise HTTPException(
             status_code=500,

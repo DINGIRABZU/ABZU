@@ -1,15 +1,43 @@
 import React from 'https://esm.sh/react@18';
 
 export default function MissionMap({ stages }) {
+  const normalizedStages = React.useMemo(
+    () =>
+      stages.map((stage) => {
+        const sourceGroups =
+          Array.isArray(stage.groups) && stage.groups.length
+            ? stage.groups
+            : [
+                {
+                  id: `${stage.id}-default-group`,
+                  title: null,
+                  actions: Array.isArray(stage.actions) ? stage.actions : [],
+                },
+              ];
+        const groups = sourceGroups.map((group, index) => ({
+          id: group.id ?? `${stage.id}-group-${index}`,
+          title: group.title ?? null,
+          actions: Array.isArray(group.actions) ? group.actions : [],
+        }));
+        return { ...stage, groups };
+      }),
+    [stages]
+  );
+
   const flattened = React.useMemo(
     () =>
-      stages.flatMap((stage) =>
-        stage.actions.map((action) => ({
-          ...action,
-          stageId: stage.id,
-        }))
+      normalizedStages.flatMap((stage) =>
+        stage.groups.flatMap((group) =>
+          group.actions
+            .filter((action) => action && action.id)
+            .map((action) => ({
+              ...action,
+              stageId: stage.id,
+              groupId: group.id,
+            }))
+        )
       ),
-    [stages]
+    [normalizedStages]
   );
   const [focusIndex, setFocusIndex] = React.useState(0);
 
@@ -76,16 +104,22 @@ export default function MissionMap({ stages }) {
   return React.createElement(
     'div',
     { className: 'mission-map' },
-    stages.map((stage) =>
-      React.createElement(
-        'section',
-        { key: stage.id, className: 'mission-stage' },
-        React.createElement('h3', { className: 'mission-stage__title' }, stage.title),
+    normalizedStages.map((stage) => {
+      const stageChildren = [
         React.createElement(
-          'div',
-          { className: 'mission-stage__actions' },
-          stage.actions.map((action) =>
-            React.createElement(
+          'h3',
+          { key: `${stage.id}-title`, className: 'mission-stage__title' },
+          stage.title
+        ),
+      ];
+
+      stage.groups.forEach((group) => {
+        const actionNodes = group.actions
+          .map((action) => {
+            if (!action || !action.id) {
+              return null;
+            }
+            return React.createElement(
               React.Fragment,
               { key: action.id },
               React.createElement(
@@ -105,18 +139,57 @@ export default function MissionMap({ stages }) {
               typeof action.renderDetails === 'function'
                 ? action.renderDetails() || null
                 : null
+            );
+          })
+          .filter(Boolean);
+
+        const groupChildren = [];
+        if (group.title) {
+          groupChildren.push(
+            React.createElement(
+              'h4',
+              {
+                key: `${group.id}-title`,
+                className: 'mission-stage__group-title',
+              },
+              group.title
             )
+          );
+        }
+        groupChildren.push(
+          React.createElement(
+            'div',
+            { key: `${group.id}-actions`, className: 'mission-stage__actions' },
+            actionNodes
           )
-        ),
-        stage.actions.length === 0
-          ? React.createElement(
+        );
+        if (actionNodes.length === 0) {
+          groupChildren.push(
+            React.createElement(
               'p',
-              { className: 'mission-stage__empty' },
+              {
+                key: `${group.id}-empty`,
+                className: 'mission-stage__empty',
+              },
               'No actions available yet.'
             )
-          : null
-      )
-    )
+          );
+        }
+        stageChildren.push(
+          React.createElement(
+            'div',
+            { key: group.id, className: 'mission-stage__group' },
+            groupChildren
+          )
+        );
+      });
+
+      return React.createElement(
+        'section',
+        { key: stage.id, className: 'mission-stage' },
+        stageChildren
+      );
+    })
   );
 }
 

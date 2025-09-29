@@ -310,3 +310,53 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-28: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
 
 - 2025-09-29: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+
+- 2025-09-29: ERROR    audio.segment:segment.py:61 FFmpeg binary missing; falling back to NumPy audio backend
+- 2025-09-29: ERROR    fastapi:utils.py:120 Form data requires "python-multipart" to be installed.
+- 2025-09-29: ERROR    fastapi:utils.py:120 Form data requires "python-multipart" to be installed.
+- 2025-09-29: ERROR tests/agents/razar/test_crown_kimicho.py
+- 2025-09-29: ERROR tests/crown/server/test_openwebui_bridge.py
+- 2025-09-29: ERROR tests/crown/server/test_server.py
+- 2025-09-29: ERROR tests/crown/test_console_streaming.py
+- 2025-09-29: ERROR tests/crown/test_initialization.py
+- 2025-09-29: ERROR tests/crown/test_orchestrator_music.py
+- 2025-09-29: ERROR tests/integration/test_core_regressions.py
+- 2025-09-29: ERROR tests/monitoring/test_chakra_heartbeat.py
+- 2025-09-29: ERROR tests/monitoring/test_chakra_watchdog.py - TypeError: unhashable type: 'list'
+- 2025-09-29: ERROR tests/monitoring/test_escalation_notifier.py - RuntimeError: Form data requires "python-multipart" to be installed.
+- 2025-09-29: ERROR tests/razar/test_ai_invoker.py
+- 2025-09-29: ERROR tests/razar/test_crown_handshake.py
+- 2025-09-29: ERROR tests/root/test_metrics_logging.py
+- 2025-09-29: ERROR tests/test_aggregate_stage_readiness.py - RuntimeError: Form data requires "python-multipart" to be installed.
+- 2025-09-29: ERROR tests/test_auto_retrain.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
+- 2025-09-29: ERROR tests/test_autoretrain_full.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
+- 2025-09-29: ERROR tests/test_avatar_state_logging.py
+- 2025-09-29: ERROR tests/test_console_reflection.py
+- 2025-09-29: ERROR tests/test_console_sandbox_command.py
+- 2025-09-29: ERROR tests/test_initial_listen.py
+- 2025-09-29: ERROR tests/test_interconnectivity.py
+- 2025-09-29: ERROR tests/test_memory_bus.py - AttributeError: module 'conftest' has no attribute 'ALLOWED_TESTS'
+- 2025-09-29: ERROR tests/test_model_benchmarking.py
+- 2025-09-29: ERROR tests/test_music_llm_interface_prompt.py
+- 2025-09-29: ERROR tests/test_numeric_cosine_similarity.py
+- 2025-09-29: ERROR tests/test_orchestrator.py
+- 2025-09-29: ERROR tests/test_orchestrator_handle.py
+- 2025-09-29: ERROR tests/test_orchestrator_memory.py
+- 2025-09-29: ERROR tests/test_orchestrator_routing.py
+- 2025-09-29: ERROR tests/test_orchestrator_suggestions_logging.py
+- 2025-09-29: ERROR tests/test_personality_layers.py
+- 2025-09-29: ERROR tests/test_rag_retriever.py
+- 2025-09-29: ERROR tests/test_reflection_integration.py
+- 2025-09-29: ERROR tests/test_retrain_model.py - AttributeError: module 'feedback_logging' has no attribute 'NOVELTY_THRESHOLD'
+- 2025-09-29: ERROR tests/test_ritual_cli.py
+- 2025-09-29: ERROR tests/test_server_endpoints.py
+- 2025-09-29: ERROR tests/test_session_logger.py
+- 2025-09-29: ERROR tests/test_silence_ritual.py
+- 2025-09-29: ERROR tests/test_soul_ritual.py
+- 2025-09-29: ERROR tests/test_spiral_cortex_memory.py
+- 2025-09-29: ERROR tests/test_transformers_generate.py - ValueError: essentia.__spec__ is None
+- 2025-09-29: ERROR tests/test_vast_pipeline.py
+- 2025-09-29: ERROR tests/test_video_stream_audio.py - TypeError: NoneType takes no arguments
+- 2025-09-29: ERROR tests/test_voice_cloner_cli.py - pydantic_core._pydantic_core.ValidationError: 2 validation errors for Config
+- 2025-09-29: ERROR tests/web_console/test_multi_avatar_stream.py - TypeError: NoneType takes no arguments
+- 2025-09-29: ERROR tests/web_console/test_webrtc_gateway.py - TypeError: NoneType takes no arguments

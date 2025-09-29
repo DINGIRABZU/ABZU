@@ -99,6 +99,9 @@ The same console lanes now cover Stage C by exposing `/alpha/stage-c1-exit-che
 `/alpha/stage-c4-operator-mcp-drill` so operators can validate the exit checklist,
 capture the scripted demo harness, merge Stage A/B readiness snapshots, and record
 MCP drill evidence under `logs/stage_c/<run_id>/` without leaving the dashboard.
+The Mission Map stitches these Stage A/B/C milestone runs into a single "Milestone Controls"
+group so the UI can call the REST endpoints asynchronously and push the returned artifact
+paths straight into the event log, keeping doctrine bundles and dashboard telemetry aligned.【F:web_console/game_dashboard/dashboard.js†L180-L356】【F:web_console/game_dashboard/mission_map.js†L1-L144】【F:operator_api.py†L2184-L2421】
 Dedicated rehearsal modules ([operator_api_stage_b.py](../connectors/operator_api_stage_b.py),
 [operator_upload_stage_b.py](../connectors/operator_upload_stage_b.py), and
 [crown_handshake_stage_b.py](../connectors/crown_handshake_stage_b.py)) build on
