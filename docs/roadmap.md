@@ -116,6 +116,10 @@ avatar fidelity is flagged early for demo stakeholders.【F:docs/sonic_core_harm
 > [!TIP]
 > Stage D inherits the sandbox-to-hardware bridge instructions from [The Absolute Protocol](The_Absolute_Protocol.md#sandbox-to-hardware-rehearsal-bridge). Rehearsal bundles should mirror the Stage C ledger structure so downstream auditors replay parity results without bespoke tooling.
 
+Recent sandbox remediation captured an explicit before/after of the Stage B1 memory proof in `logs/stage_b/20250929T210655Z-stage_b1_memory_refresh/`. The baseline run remained stubbed (`environment_mode="sandbox"`) with the optional bundle, while the post-rebuild metrics show the native `neoabzu_memory` crate exporting hardware-grade readiness figures (`environment_mode="hardware"`) alongside sandbox override flags for the remaining shims.【F:logs/stage_b/20250929T210655Z-stage_b1_memory_refresh/before/summary.json†L1-L32】【F:logs/stage_b/20250929T210655Z-stage_b1_memory_refresh/after/summary.json†L1-L38】 Stage D reviewers should pull these snapshots into the bridge ledger so parity packets inherit the hardware/native distinction.
+
+The emotional telemetry path is still fronted by sandbox shims, as shown by the persisted `emotional_state` override in the refreshed summary; clearing that flag requires replaying the load proof on the gate-runner hardware before Stage D can certify aura logging for the bridge.【F:logs/stage_b/20250929T210655Z-stage_b1_memory_refresh/after/summary.json†L20-L29】
+
 ### Stage E – Transport/beta readiness
 
 | Task | Owner | Objective | Step 0 Look-ahead | Next up |

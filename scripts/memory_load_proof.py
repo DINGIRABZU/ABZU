@@ -15,7 +15,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterator, Sequence
+from typing import Iterator, Mapping, Sequence
 
 
 from scripts import _stage_runtime as stage_runtime  # noqa: E402  (bootstrap first)
@@ -57,6 +57,32 @@ class LoadProofResult:
     fallback_reason: str | None
     bundle_source: str | None
     bundle_mode: str | None
+    sandbox_overrides: dict[str, str]
+    environment_mode: str
+
+
+def _collect_sandbox_overrides() -> dict[str, str]:
+    """Return a copy of the active sandbox overrides."""
+
+    try:
+        overrides = stage_runtime.get_sandbox_overrides()
+    except Exception:  # pragma: no cover - defensive fallback
+        return {}
+    return dict(overrides)
+
+
+def _derive_environment_mode(
+    *,
+    stubbed: bool,
+    overrides: Mapping[str, str],
+) -> str:
+    """Return ``"hardware"`` when the run uses native bundles."""
+
+    if stubbed:
+        return "sandbox"
+    if "neoabzu_memory" in overrides:
+        return "sandbox"
+    return "hardware"
 
 
 def parse_args() -> argparse.Namespace:
@@ -200,6 +226,7 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
     bundle_fallback = getattr(bundle, "fallback_reason", None)
     bundle_source = getattr(bundle, "bundle_source", None)
     bundle_mode = getattr(bundle, "bundle_mode", None)
+    sandbox_overrides = _collect_sandbox_overrides()
 
     start_init = time.perf_counter()
     statuses = bundle.initialize()
@@ -266,6 +293,11 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
     p95 = _percentile(latencies, 95)
     p99 = _percentile(latencies, 99)
 
+    environment_mode = _derive_environment_mode(
+        stubbed=bundle_stubbed,
+        overrides=sandbox_overrides,
+    )
+
     return LoadProofResult(
         dataset=args.dataset,
         total_records=len(queries),
@@ -282,6 +314,8 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
         fallback_reason=bundle_fallback if isinstance(bundle_fallback, str) else None,
         bundle_source=bundle_source if isinstance(bundle_source, str) else None,
         bundle_mode=bundle_mode if isinstance(bundle_mode, str) else None,
+        sandbox_overrides=sandbox_overrides,
+        environment_mode=environment_mode,
     )
 
 
@@ -293,6 +327,7 @@ def _append_pretest_report(
     stubbed: bool,
 ) -> None:
     log_path.parent.mkdir(parents=True, exist_ok=True)
+    overrides = _collect_sandbox_overrides()
     payload = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "dataset": str(dataset),
@@ -307,6 +342,11 @@ def _append_pretest_report(
             for stub in report.optional_stubs
         ],
         "stubbed_bundle": stubbed,
+        "sandbox_overrides": overrides,
+        "environment_mode": _derive_environment_mode(
+            stubbed=stubbed,
+            overrides=overrides,
+        ),
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -388,6 +428,8 @@ def _append_log(
         "fallback_reason": result.fallback_reason,
         "bundle_source": result.bundle_source,
         "bundle_mode": result.bundle_mode,
+        "sandbox_overrides": result.sandbox_overrides,
+        "environment_mode": result.environment_mode,
     }
     payload["bundle"] = {
         "stubbed": result.stubbed,
@@ -395,6 +437,7 @@ def _append_log(
         "source": result.bundle_source,
         "fallback_reason": result.fallback_reason,
         "pretest_stubbed": pretest_stubbed,
+        "environment_mode": result.environment_mode,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -428,6 +471,7 @@ def main() -> None:
         "mode": bundle_mode,
         "source": result.bundle_source,
         "fallback_reason": result.fallback_reason,
+        "environment_mode": result.environment_mode,
     }
 
     logger.info(
@@ -460,6 +504,8 @@ def main() -> None:
         "fallback_reason": result.fallback_reason,
         "bundle_source": result.bundle_source,
         "bundle_mode": bundle_mode,
+        "sandbox_overrides": result.sandbox_overrides,
+        "environment_mode": result.environment_mode,
         "bundle": bundle_summary,
     }
     print(json.dumps(summary, indent=2))

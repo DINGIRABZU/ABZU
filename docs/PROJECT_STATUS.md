@@ -163,6 +163,7 @@ is restored.【F:logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.j
 | Hardware slot slip on gate-runner-02 delays parity replay. | @ops-team | Hardware rehearsal blocks Neo-APSU launch and Stage E countdown. | Reserve backup window and mirror the Stage C1 checklist artifacts in the production bridge ledger for rapid reschedule. | 🔄 Pending scheduling 【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L35】 |
 | Neo-APSU crate drift from rehearsal checksums. | @neoabzu-core | Divergent binaries invalidate transport parity traces. | Compare SHA-256 fingerprints against the Stage B rotation ledger before copying crates into hardware. | ⚠️ Watch list 【F:logs/stage_b_rotation_drills.jsonl†L24-L58】 |
 | Transport metrics omit hardware spans after bridge cutover. | @release-ops | Beta readiness packet lacks production telemetry. | Attach the Stage D handshake diff to Grafana dashboards and verify parity metrics stream alongside sandbox history. | 🛠️ In progress 【F:logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json†L1-L12】 |
+| Emotional telemetry still routes through sandbox shims. | @ops-team | Aura logging remains uncertified for Stage D until gate-runner sensors feed the native pipeline. | Reserve gate-runner execution to replay the memory load proof with hardware instrumentation and refresh the readiness packet. | ⚠️ Watch list 【F:logs/stage_b/20250929T210655Z-stage_b1_memory_refresh/after/summary.json†L20-L29】 |
 
 ### Stage E beta readiness snapshot
 
