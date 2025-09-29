@@ -141,6 +141,34 @@ is restored.【F:logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.j
 - **Stakeholder alert (2025-09-27T21:40:41Z):** Logged the Stage B memory stub and connector context risks to `logs/operator_escalations.jsonl` so downstream reviewers see the `requires_attention` escalation while remediation is scheduled.【F:logs/operator_escalations.jsonl†L1-L1】
 - **Stage C4 operator MCP drill (2025-09-26T22:28:13Z):** The sandbox drill stored fresh `mcp_handshake.json` and `heartbeat.json` artifacts under the Stage C log while appending the `20250926T183842Z-PT48H` operator rotation window to the ledger. The heartbeat mirrors the Stage C drill event and keeps the credential expiry aligned with the readiness bundle review.【F:logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json†L1-L17】【F:logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/heartbeat.json†L1-L9】【F:logs/stage_b_rotation_drills.jsonl†L30-L35】
 
+### Stage D bridge snapshot
+
+- **Hardware parity rehearsal:** Stage C1 locked the production bridge on `gate-runner-02`, so Stage D hardware parity must replay the same readiness bundle while mirroring checklist evidence on the production racks.【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L35】【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】
+- **Neo-APSU rollout prep:** The Stage B rotation ledger still lists mixed REST/gRPC traces, providing the checksum baseline that Stage D Neo-APSU deployments must match before widening hardware access.【F:logs/stage_b_rotation_drills.jsonl†L24-L58】【F:operator_api_grpc.py†L1-L148】
+- **Transport dashboard wiring:** The transport pilot dashboards already compare REST and gRPC parity; Stage D needs the production bridge handshake diff attached so hardware metrics appear alongside sandbox telemetry.【F:monitoring/operator_transport_pilot.md†L1-L39】【F:logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json†L1-L12】
+
+#### Stage D risk register
+
+| Risk | Owner | Impact | Mitigation | Status |
+| --- | --- | --- | --- | --- |
+| Hardware slot slip on gate-runner-02 delays parity replay. | @ops-team | Hardware rehearsal blocks Neo-APSU launch and Stage E countdown. | Reserve backup window and mirror the Stage C1 checklist artifacts in the production bridge ledger for rapid reschedule. | 🔄 Pending scheduling 【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L35】 |
+| Neo-APSU crate drift from rehearsal checksums. | @neoabzu-core | Divergent binaries invalidate transport parity traces. | Compare SHA-256 fingerprints against the Stage B rotation ledger before copying crates into hardware. | ⚠️ Watch list 【F:logs/stage_b_rotation_drills.jsonl†L24-L58】 |
+| Transport metrics omit hardware spans after bridge cutover. | @release-ops | Beta readiness packet lacks production telemetry. | Attach the Stage D handshake diff to Grafana dashboards and verify parity metrics stream alongside sandbox history. | 🛠️ In progress 【F:logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json†L1-L12】 |
+
+### Stage E beta readiness snapshot
+
+- **Parity enforcement gates:** Contract tests for REST↔gRPC parity already guard the transport pilot; Stage E promotes them to beta entry criteria and requires checksum-matched trace bundles during weekly reviews.【F:tests/test_operator_transport_contract.py†L1-L103】【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】
+- **Telemetry ledger merge:** The readiness packet and MCP drill index catalog the contexts and credential windows that Stage E must merge into a beta rehearsal bundle for stakeholder dashboards.【F:logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md†L1-L44】【F:logs/stage_c/20251003T010101Z-readiness_packet/mcp_drill/index.json†L1-L11】
+- **External comms alignment:** Stage E’s go/no-go packet draws on the Stage D bridge ledger plus the transport handshake artifacts already logged in the Stage C trial so communication owners can cite identical evidence in stakeholder updates.【F:logs/stage_c/20251031T000000Z-test/rest_handshake_with_expiry.json†L1-L41】【F:logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json†L1-L71】
+
+#### Stage E risk register
+
+| Risk | Owner | Impact | Mitigation | Status |
+| --- | --- | --- | --- | --- |
+| Missing parity trace uploads for weekly reviews. | @ops-team | Beta gate cannot confirm transport stability. | Automate uploading Stage D/E trace bundles to the evidence ledger and cross-link in roadmap/PROJECT_STATUS updates. | 🛠️ In progress 【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】 |
+| Telemetry schemas diverge across rehearsal bundles. | @monitoring-guild | Grafana dashboards drop fields during beta rehearsals. | Validate schemas against readiness packet structure before exporting the beta rehearsal bundle. | ⚠️ Watch list 【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】 |
+| Beta comms lack signed transport approvals. | @release-ops | External announcement slips without documented sign-off. | Capture signatures in the beta readiness packet and archive alongside Stage D bridge sign-offs. | 🔄 Pending approval 【F:logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json†L1-L71】 |
+
 ## Deprecation Roadmap
 
 - **Pydantic field aliases** – migrate remaining models away from deprecated

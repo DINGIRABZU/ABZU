@@ -1,6 +1,6 @@
 # Roadmap
 
-_Last updated: 2025-10-24_
+_Last updated: 2025-10-31_
 
 This roadmap tracks five core milestones on the path to a stable release. Each stage lists its expected outcome so contributors know when to advance to the next phase.
 
@@ -104,6 +104,27 @@ commitments tied to executable checks as adoption expands.【F:tests/test_operat
 Stage C planners should review the Sonic Core optional component inventory and
 the rehearsal evidence packet before go/no-go reviews so degraded audio or
 avatar fidelity is flagged early for demo stakeholders.【F:docs/sonic_core_harmonics.md†L23-L51】【F:logs/stage_b_rehearsal_packet.json†L217-L344】
+
+### Stage D – Production bridge
+
+| Task | Owner | Objective | Step 0 Look-ahead | Next up |
+| --- | --- | --- | --- | --- |
+| **D1. Hardware parity audit** | @ops-team | Confirm gate-runner and production racks emit matching telemetry, paving the bridge from Stage C rehearsal evidence into the hardware window. | Schedule hardware parity windows against the `gate-runner-02` slot logged for the Stage C1 checklist and mirror the readiness packet bundle on the production host. | Replay the Stage C readiness packet on the production runners, archive parity diffs under `logs/stage_d/<run_id>/`, and sign off the bridge ledger before Neo-APSU activation.【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L35】 |
+| **D2. Neo-APSU rollout rehearsal** | @neoabzu-core | Promote the Neo-APSU control plane and workspace crates into the bridge environment with parity against the Stage B rehearsal bundles. | Align crate fingerprints and PyO3 bindings against the readiness ledger and Stage B rotation manifests before copying binaries. | Deploy the Neo-APSU release candidates, execute connector rotations with REST↔gRPC parity captures, and publish the rollout manifest with checksum matches to the doctrine ledger.【F:logs/stage_b_rotation_drills.jsonl†L24-L58】【F:operator_api.py†L54-L374】【F:operator_api_grpc.py†L1-L148】 |
+| **D3. Production telemetry handshake** | @release-ops | Extend the transport parity drill into the production bridge so dashboards reflect hardware metrics alongside sandbox trails. | Wire the Grafana transport board to accept Stage C payloads and Stage B rehearsal telemetry so alerts survive the environment swap. | Run the production bridge handshake, emit latency/error/fallback metrics to the shared dashboards, and document the parity diff for weekly risk reviews.【F:monitoring/operator_transport_pilot.md†L1-L39】【F:logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json†L1-L12】 |
+
+> [!TIP]
+> Stage D inherits the sandbox-to-hardware bridge instructions from [The Absolute Protocol](The_Absolute_Protocol.md#sandbox-to-hardware-rehearsal-bridge). Rehearsal bundles should mirror the Stage C ledger structure so downstream auditors replay parity results without bespoke tooling.
+
+### Stage E – Transport/beta readiness
+
+| Task | Owner | Objective | Step 0 Look-ahead | Next up |
+| --- | --- | --- | --- | --- |
+| **E1. Transport parity enforcement** | @ops-team | Lock REST and gRPC parity for operator surfaces ahead of the beta external window. | Import Stage D bridge diffs into the transport pilot dashboards and stage contract tests beside the readiness ledger. | Execute the transport parity suite across connectors, archive checksum-matched traces, and gate beta kickoff on the resulting ledger status.【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】【F:tests/test_operator_transport_contract.py†L1-L103】 |
+| **E2. Beta rehearsal telemetry bundle** | @monitoring-guild | Publish a consolidated telemetry packet spanning Stage B rehearsals through Stage D bridges so beta stakeholders inherit the same metrics. | Align telemetry schemas with the Stage C readiness packet and Stage D bridge manifests; verify dashboards accept the combined payload. | Export the beta rehearsal bundle, stamp Grafana dashboards, and append checksum/timestamp metadata to the doctrine ledger for review.【F:logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md†L1-L44】【F:logs/stage_c/20251003T010101Z-readiness_packet/mcp_drill/index.json†L1-L11】 |
+| **E3. External beta launch readiness** | @release-ops | Compile the go/no-go packet that merges production bridge sign-offs with beta transport parity commitments. | Draft the beta readiness outline referencing the Stage D ledger and transport enforcement plan while capturing outstanding environment-limited skips. | Present the beta readiness packet during weekly reviews, capture risk acknowledgements, and trigger the external beta announcement once signatures are archived.【F:logs/stage_c/20251031T000000Z-test/rest_handshake_with_expiry.json†L1-L41】【F:logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json†L1-L71】 |
+
+Stage E extends the Stage C transport pilot: contract tests and dashboards now act as beta gatekeepers, and the weekly review agenda should add the Stage D bridge ledger alongside the existing parity drill recap.
 
 ## Maintenance
 
