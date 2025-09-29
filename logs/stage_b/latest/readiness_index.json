@@ -38,12 +38,12 @@
       "log_dir": "logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal",
       "notes": "Stage B rehearsal packet written to logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b_rehearsal_packet.json."
     },
-    "stage_b3_connector_rotation": {
-      "run_id": "20250927T234018Z-stage_b3_connector_rotation",
-      "summary_path": "logs/stage_b/20250927T234018Z-stage_b3_connector_rotation/summary.json",
-      "status": "success",
-      "log_dir": "logs/stage_b/20250927T234018Z-stage_b3_connector_rotation",
-      "notes": "Rotation drill accepted stage-b-rehearsal and stage-c-prep contexts; window 20250928T001910Z-PT48H keeps credentials valid through 2025-09-30T00:19:10Z."
-    }
+  "stage_b3_connector_rotation": {
+    "run_id": "20250929T105142Z-stage_b3_connector_rotation",
+    "summary_path": "logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/summary.json",
+    "status": "success",
+    "log_dir": "logs/stage_b/20250929T105142Z-stage_b3_connector_rotation",
+    "notes": "Rotation drill accepted stage-b-rehearsal and stage-c-prep contexts; window 20250926T222814Z-PT48H keeps credentials valid through 2025-09-28T22:28:14Z."
+  }
   }
 }
