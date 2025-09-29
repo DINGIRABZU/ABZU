@@ -1,0 +1,7 @@
+{
+  "run_id": "a1-run",
+  "status": "success",
+  "completed_at": "2024-01-01T00:10:00Z",
+  "stage": "stage_a1_boot_telemetry",
+  "log_dir": "stage_readiness/stage_a/20240101T000000Z-stage_a1_boot_telemetry"
+}

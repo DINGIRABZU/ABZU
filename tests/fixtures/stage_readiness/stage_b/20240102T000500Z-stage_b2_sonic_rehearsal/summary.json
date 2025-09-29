@@ -1,0 +1,7 @@
+{
+  "run_id": "b2-run",
+  "status": "success",
+  "completed_at": "2024-01-02T00:15:00Z",
+  "stage": "stage_b2_sonic_rehearsal",
+  "log_dir": "stage_readiness/stage_b/20240102T000500Z-stage_b2_sonic_rehearsal"
+}
