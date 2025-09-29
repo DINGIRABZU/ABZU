@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import importlib
 import importlib.util
 import json
 import os
@@ -19,6 +20,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 CONNECTORS_DIR = ROOT / "connectors"
+STUB_DIR = Path(__file__).resolve().parent / "_dependency_stubs"
 
 # Ensure Stage B connectors treat MCP as enabled during the dry-run.
 os.environ.setdefault("ABZU_USE_MCP", "1")
@@ -29,6 +31,87 @@ connectors_stub = types.ModuleType("connectors")
 connectors_stub.__file__ = str(CONNECTORS_DIR / "__init__.py")
 connectors_stub.__path__ = [str(CONNECTORS_DIR)]
 sys.modules.setdefault("connectors", connectors_stub)
+
+
+_OPTIONAL_DEPENDENCIES: dict[str, str] = {
+    "torch": "PyTorch tensor runtime used by audio codecs",
+    "simpleaudio": "Simpleaudio playback backend",
+    "clap": "Contrastive Language-Audio Pretraining interface",
+    "rave": "Realtime Audio Variational autoEncoder shim",
+}
+
+_dependency_imports: dict[str, dict[str, Any]] = {}
+
+
+def _load_stub_module(name: str) -> types.ModuleType:
+    """Import ``name`` from the local stub directory."""
+
+    stub_path = STUB_DIR / name / "__init__.py"
+    if not stub_path.exists():
+        raise ImportError(f"fallback stub not available for {name}")
+    spec = importlib.util.spec_from_file_location(name, stub_path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"unable to load fallback stub for {name}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _import_optional_dependency(name: str) -> None:
+    """Import ``name`` tracking whether the fallback stub was required."""
+
+    if name in _dependency_imports:
+        return
+
+    error: str | None = None
+    try:
+        module = importlib.import_module(name)
+        stubbed = False
+    except Exception as exc:  # pragma: no cover - defensive import guard
+        error = f"{exc.__class__.__name__}: {exc}"
+        module = _load_stub_module(name)
+        stubbed = True
+
+    _dependency_imports[name] = {
+        "module": module,
+        "stubbed": stubbed or bool(getattr(module, "__ABZU_FALLBACK__", False)),
+        "error": error,
+    }
+
+
+for dependency in _OPTIONAL_DEPENDENCIES:
+    _import_optional_dependency(dependency)
+
+
+def _dependency_status() -> list[dict[str, Any]]:
+    """Return metadata describing optional dependency availability."""
+
+    statuses: list[dict[str, Any]] = []
+    for name, description in _OPTIONAL_DEPENDENCIES.items():
+        record = _dependency_imports.get(name)
+        if record is None:
+            continue
+        module = record["module"]
+        module_path = getattr(module, "__file__", None)
+        resolved_path = (
+            str(Path(module_path).resolve()) if isinstance(module_path, str) else None
+        )
+        stubbed = bool(record.get("stubbed")) or bool(
+            getattr(module, "__ABZU_FALLBACK__", False)
+        )
+        status = {
+            "module": name,
+            "description": description,
+            "available": not stubbed,
+            "stubbed": stubbed,
+            "version": getattr(module, "__version__", None),
+            "path": resolved_path,
+        }
+        if stubbed:
+            status["notes"] = record.get("error") or "fallback stub injected"
+        statuses.append(status)
+    return statuses
 
 
 def _load_connector_module(name: str, relative_path: str) -> Any:
@@ -196,11 +279,30 @@ async def _generate_report() -> dict[str, Any]:
         record = await _exercise_connector(module, **params)
         results[record["connector_id"]] = record
 
+    dependencies = _dependency_status()
+    fallback_notes: list[str] = []
+    for status in dependencies:
+        if status.get("stubbed"):
+            detail = status.get("notes")
+            if detail and detail != "fallback stub injected":
+                fallback_notes.append(
+                    f"{status['module']}: fallback stub active ({detail})"
+                )
+            else:
+                fallback_notes.append(f"{status['module']}: fallback stub active")
+
+    if fallback_notes:
+        for record in results.values():
+            existing = list(record.get("fallbacks", []))
+            existing.extend(fallback_notes)
+            record["fallbacks"] = existing
+
     return {
         "generated_at": _iso_now(),
         "stage": "B",
         "context": neo_apsu_stage_b._STAGE_B_CONTEXT,
         "connectors": results,
+        "dependencies": dependencies,
     }
 
 
