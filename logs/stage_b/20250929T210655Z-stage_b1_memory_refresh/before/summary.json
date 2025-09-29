@@ -1,0 +1,32 @@
+{
+  "dataset": "data/vector_memory_scaling/corpus.jsonl",
+  "total_records": 1000,
+  "queries_timed": 995,
+  "init_duration_s": 0.001057,
+  "latency_p50_s": 2e-06,
+  "latency_p95_s": 4e-06,
+  "latency_p99_s": 6e-06,
+  "layers": {
+    "total": 8,
+    "ready": 0,
+    "failed": 8
+  },
+  "query_failures": 0,
+  "stubbed_bundle": true,
+  "pretest_stubbed": true,
+  "fallback_reason": "neoabzu_memory_unavailable",
+  "bundle_source": "memory.optional.neoabzu_bundle",
+  "bundle_mode": "stubbed",
+  "bundle": {
+    "stubbed": true,
+    "mode": "stubbed",
+    "source": "memory.optional.neoabzu_bundle",
+    "fallback_reason": "neoabzu_memory_unavailable",
+    "stubbed_bundle": true,
+    "environment_mode": "sandbox"
+  },
+  "sandbox_overrides": {
+    "neoabzu_memory": "neoabzu_memory: optional bundle shim activated"
+  },
+  "environment_mode": "sandbox"
+}
