@@ -22,7 +22,5 @@
       "Alpha gate shakeout requires the hardware builder image with docker-in-docker enabled; the sandbox forbids docker daemon access.",
       "Coverage publishing depends on pytest-cov and FFmpeg/SoX hooks to mirror the hardware telemetry, all of which remain unavailable here."
     ]
-  },
-  "log_dir": "/workspace/ABZU/logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout",
-  "summary_path": "/workspace/ABZU/logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json"
+  }
 }

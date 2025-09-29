@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-28T18:40:03Z",
+  "generated_at": "2025-10-02T18:30:00Z",
   "stage_a": {
     "status": "attention",
     "risk_notes": [
@@ -7,109 +7,54 @@
         "phase": "build",
         "reason": "environment-limited",
         "details": [
-          "python -m build unavailable"
+          "python -m build unavailable",
+          "2025-10-02 hardware rerun blocked in sandbox; gate-runner toolchain unavailable"
         ]
       },
       {
         "phase": "health",
         "reason": "environment-limited",
         "details": [
-          "Missing tools: docker sox ffmpeg aria2c"
+          "Missing tools: docker sox ffmpeg aria2c",
+          "2025-10-02 hardware rerun blocked in sandbox; gate-runner toolchain unavailable"
         ]
       },
       {
         "phase": "tests",
         "reason": "environment-limited",
         "details": [
-          "Pytest coverage dependencies unavailable"
+          "Pytest coverage dependencies unavailable",
+          "2025-10-02 hardware rerun blocked in sandbox; gate-runner toolchain unavailable"
         ]
       }
     ],
     "runs": [
       {
         "slug": "A1",
-        "run_id": "20250928T004644Z-stage_a1_boot_telemetry",
-        "status": "success",
-        "summary_path": "logs/stage_a/20250928T004644Z-stage_a1_boot_telemetry/summary.json",
-        "stdout_path": "logs/stage_a/20250928T004644Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stdout.log",
-        "stderr_path": "logs/stage_a/20250928T004644Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log",
-        "notes": "Stage A1 bootstrap completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]"
+        "run_id": "20251002T180000Z-stage_a1_boot_telemetry",
+        "status": "blocked",
+        "summary_path": "logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.json",
+        "stdout_path": null,
+        "stderr_path": null,
+        "notes": "Hardware rerun blocked: gate-runner toolchain unavailable in sandbox (python -m build, docker, SoX, FFmpeg, aria2c, pytest-cov)."
       },
       {
         "slug": "A2",
-        "run_id": "20250928T004714Z-stage_a2_crown_replays",
-        "status": "success",
-        "summary_path": "logs/stage_a/20250928T004714Z-stage_a2_crown_replays/summary.json",
-        "stdout_path": "logs/stage_a/20250928T004714Z-stage_a2_crown_replays/stage_a2_crown_replays.stdout.log",
-        "stderr_path": "logs/stage_a/20250928T004714Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log",
-        "notes": "Stage A2 crown replays captured (5 scenarios) [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]"
+        "run_id": "20251002T181000Z-stage_a2_crown_replays",
+        "status": "blocked",
+        "summary_path": "logs/stage_a/20251002T181000Z-stage_a2_crown_replays/summary.json",
+        "stdout_path": null,
+        "stderr_path": null,
+        "notes": "Hardware crown replay capture skipped: docker/SoX/FFmpeg/aria2c unavailable; no route to gate-runner-02."
       },
       {
         "slug": "A3",
-        "run_id": "20250928T004738Z-stage_a3_gate_shakeout",
-        "status": "success",
-        "summary_path": "logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/summary.json",
-        "stdout_path": "logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stdout.log",
-        "stderr_path": "logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stderr.log",
-        "notes": {
-          "status": "success",
-          "phases": [
-            {
-              "name": "build",
-              "skipped": true,
-              "exit_code": 0,
-              "outcome": "skipped",
-              "reason": "environment-limited",
-              "details": [
-                "python -m build unavailable"
-              ]
-            },
-            {
-              "name": "health",
-              "skipped": true,
-              "exit_code": 0,
-              "outcome": "skipped",
-              "reason": "environment-limited",
-              "details": [
-                "Missing tools: docker sox ffmpeg aria2c"
-              ]
-            },
-            {
-              "name": "tests",
-              "skipped": true,
-              "exit_code": 0,
-              "outcome": "skipped",
-              "reason": "environment-limited",
-              "details": [
-                "Pytest coverage dependencies unavailable"
-              ]
-            }
-          ],
-          "message": "Alpha gate completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
-          "warnings": [
-            {
-              "phase": "build",
-              "reason": "environment-limited",
-              "details": [
-                "python -m build unavailable"
-              ]
-            },
-            {
-              "phase": "health",
-              "reason": "environment-limited",
-              "details": [
-                "Missing tools: docker sox ffmpeg aria2c"
-              ]
-            },
-            {
-              "phase": "tests",
-              "reason": "environment-limited",
-              "details": [
-                "Pytest coverage dependencies unavailable"
-              ]
-            }
-          ]
-        }
+        "run_id": "20251002T182000Z-stage_a3_gate_shakeout",
+        "status": "blocked",
+        "summary_path": "logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json",
+        "stdout_path": null,
+        "stderr_path": null,
+        "notes": "Alpha gate hardware shakeout deferred: missing python -m build, docker, pytest-cov; sandbox cannot access gate-runner-02."
       }
     ]
   },
@@ -212,11 +157,11 @@
     },
     {
       "name": "Stage A Hardware Coverage Replay",
-      "status": "scheduled",
+      "status": "blocked",
       "artifact": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json",
-      "window_start": "2025-10-02T18:00:00Z",
       "host": "gate-runner-02",
-      "notes": "Hardware rerun scheduled per cross-team review; will replay python -m build and pytest --cov."
+      "notes": "Sandbox attempt documented; gate-runner-02 unreachable and required toolchain missing (python -m build, docker, SoX, FFmpeg, aria2c, pytest-cov).",
+      "attempted_at": "2025-10-02T18:20:00Z"
     }
   ],
   "checklist": {

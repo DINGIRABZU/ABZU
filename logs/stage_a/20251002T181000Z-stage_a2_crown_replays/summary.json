@@ -21,7 +21,5 @@
       "Replay scenarios require the crown audio/video codecs installed on gate-runner hardware; these binaries are absent from the sandbox container.",
       "Without outbound network access or docker privileges the sandbox cannot attach to gate-runner-02 or pull the rehearsal images, so the hardware validation remains pending."
     ]
-  },
-  "log_dir": "/workspace/ABZU/logs/stage_a/20251002T181000Z-stage_a2_crown_replays",
-  "summary_path": "/workspace/ABZU/logs/stage_a/20251002T181000Z-stage_a2_crown_replays/summary.json"
+  }
 }
