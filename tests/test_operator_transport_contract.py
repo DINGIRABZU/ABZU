@@ -10,6 +10,10 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from connectors.operator_mcp_adapter import (
+    collect_transport_parity_artifacts,
+    compute_handshake_checksum,
+)
 import operator_api
 from operator_api_grpc import OperatorApiGrpcService
 
@@ -118,3 +122,19 @@ def test_grpc_fallback_emits_metadata(
         assert calls["count"] == 2
 
     asyncio.run(_run())
+
+
+def test_stage_c_transport_parity_checksums_align() -> None:
+    entries = collect_transport_parity_artifacts()
+    assert entries, "expected Stage C transport parity artifacts"
+    latest = entries[-1]
+    rest_normalized = latest["normalized"]["rest"]
+    grpc_normalized = latest["normalized"]["grpc"]
+    assert rest_normalized == grpc_normalized
+    rest_checksum = compute_handshake_checksum(rest_normalized)
+    grpc_checksum = compute_handshake_checksum(grpc_normalized)
+    assert rest_checksum == latest["rest_checksum"] == latest["grpc_checksum"]
+    assert rest_checksum == grpc_checksum
+    assert latest["parity"] is True
+    assert latest["differences"] == []
+    assert latest["checksum_match"] is True

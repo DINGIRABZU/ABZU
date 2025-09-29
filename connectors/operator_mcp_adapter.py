@@ -173,6 +173,261 @@ def _resolve_repo_path(value: Any) -> Path | None:
     return candidate
 
 
+def _load_json(path: Path | None) -> Mapping[str, Any] | None:
+    """Safely load JSON from ``path`` when the file exists."""
+
+    if path is None or not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _extract_latency(trace: Mapping[str, Any] | None) -> float | None:
+    """Return a latency value in milliseconds when present in ``trace``."""
+
+    if not isinstance(trace, Mapping):
+        return None
+    for key in ("latency_ms", "duration_ms", "elapsed_ms", "latency"):
+        value = trace.get(key)
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            try:
+                return float(value)
+            except ValueError:
+                continue
+    metrics_section = trace.get("metrics")
+    if isinstance(metrics_section, Mapping):
+        for key in ("latency_ms", "duration_ms", "elapsed_ms"):
+            value = metrics_section.get(key)
+            if isinstance(value, (int, float)):
+                return float(value)
+            if isinstance(value, str):
+                try:
+                    return float(value)
+                except ValueError:
+                    continue
+    return None
+
+
+def collect_transport_parity_artifacts(
+    stage_c_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Return Stage C transport parity artifacts summarised for monitoring."""
+
+    root = Path(stage_c_root) if stage_c_root is not None else _STAGE_C_ROOT
+    entries: list[dict[str, Any]] = []
+    if not root.exists():
+        return entries
+
+    for summary_path in sorted(root.glob("*/summary.json")):
+        summary_data = _load_json(summary_path)
+        if not isinstance(summary_data, Mapping):
+            continue
+
+        summary_section = summary_data.get("summary")
+        if not isinstance(summary_section, Mapping):
+            continue
+
+        artifacts = summary_section.get("handshake_artifacts")
+        if not isinstance(artifacts, Mapping):
+            continue
+
+        rest_path = _resolve_repo_path(artifacts.get("rest"))
+        grpc_path = _resolve_repo_path(artifacts.get("grpc"))
+        diff_path = _resolve_repo_path(artifacts.get("diff"))
+
+        rest_payload = _load_json(rest_path)
+        grpc_payload = _load_json(grpc_path)
+        diff_payload = _load_json(diff_path)
+
+        rest_handshake: Mapping[str, Any] | None = None
+        if isinstance(rest_payload, Mapping):
+            candidate = rest_payload.get("normalized")
+            if isinstance(candidate, Mapping):
+                rest_handshake = candidate
+            else:
+                candidate = rest_payload.get("handshake")
+                rest_handshake = candidate if isinstance(candidate, Mapping) else None
+
+        grpc_handshake: Mapping[str, Any] | None = None
+        grpc_metadata: Mapping[str, Any] | None = None
+        if isinstance(grpc_payload, Mapping):
+            candidate = grpc_payload.get("handshake_equivalent")
+            if not isinstance(candidate, Mapping):
+                trace_section = grpc_payload.get("trace")
+                if isinstance(trace_section, Mapping):
+                    response = trace_section.get("response")
+                    if isinstance(response, Mapping):
+                        candidate = response.get("handshake_equivalent")
+            if isinstance(candidate, Mapping):
+                grpc_handshake = candidate
+            metadata_section = grpc_payload.get("metadata")
+            if isinstance(metadata_section, Mapping):
+                grpc_metadata = metadata_section
+
+        rest_normalized = normalize_handshake_for_trace(rest_handshake)
+        grpc_normalized = normalize_handshake_for_trace(grpc_handshake)
+
+        rest_checksum = None
+        if isinstance(rest_payload, Mapping):
+            checksum_value = rest_payload.get("checksum")
+            if isinstance(checksum_value, str):
+                rest_checksum = checksum_value
+        if rest_checksum is None:
+            rest_checksum = compute_handshake_checksum(rest_handshake)
+
+        grpc_checksum = None
+        if isinstance(grpc_payload, Mapping):
+            checksum_value = grpc_payload.get("checksum")
+            if isinstance(checksum_value, str):
+                grpc_checksum = checksum_value
+            elif isinstance(grpc_metadata, Mapping):
+                parity_checksum = grpc_metadata.get("parity_checksum")
+                if isinstance(parity_checksum, str):
+                    grpc_checksum = parity_checksum
+        if grpc_checksum is None:
+            grpc_checksum = compute_handshake_checksum(grpc_handshake)
+
+        parity_flag = None
+        checksum_match: bool | None = None
+        differences: list[Any] = []
+        rotation_window: Mapping[str, Any] | None = None
+        if isinstance(diff_payload, Mapping):
+            parity_candidate = diff_payload.get("parity")
+            if isinstance(parity_candidate, bool):
+                parity_flag = parity_candidate
+            checksum_candidate = diff_payload.get("checksum_match")
+            if isinstance(checksum_candidate, bool):
+                checksum_match = checksum_candidate
+            raw_differences = diff_payload.get("differences")
+            if isinstance(raw_differences, Sequence) and not isinstance(
+                raw_differences, (str, bytes)
+            ):
+                differences = list(raw_differences)
+            rotation_candidate = diff_payload.get("rotation_window")
+            if isinstance(rotation_candidate, Mapping):
+                rotation_window = rotation_candidate
+
+        if parity_flag is None:
+            parity_value = summary_section.get("rest_grpc_parity")
+            if isinstance(parity_value, bool):
+                parity_flag = parity_value
+
+        if checksum_match is None and rest_checksum and grpc_checksum:
+            checksum_match = rest_checksum == grpc_checksum
+
+        trial_trace = summary_section.get("trial_trace")
+        rest_trace: Mapping[str, Any] | None = None
+        grpc_trace: Mapping[str, Any] | None = None
+        if isinstance(trial_trace, Mapping):
+            rest_trace_candidate = trial_trace.get("rest")
+            if isinstance(rest_trace_candidate, Mapping):
+                rest_trace = rest_trace_candidate
+            grpc_trace_candidate = trial_trace.get("grpc")
+            if isinstance(grpc_trace_candidate, Mapping):
+                grpc_trace = grpc_trace_candidate
+
+        rest_latency = _extract_latency(rest_trace)
+        grpc_latency = _extract_latency(grpc_trace)
+
+        monitoring_gaps: list[str] = []
+        if rest_latency is None:
+            monitoring_gaps.append("rest_latency_missing")
+        if grpc_latency is None:
+            monitoring_gaps.append("grpc_latency_missing")
+
+        heartbeat_emitted_raw = summary_section.get("heartbeat_emitted")
+        heartbeat_emitted = bool(heartbeat_emitted_raw)
+        if not heartbeat_emitted:
+            monitoring_gaps.append("heartbeat_missing")
+
+        entry = {
+            "run_id": summary_path.parent.name,
+            "summary_path": str(summary_path),
+            "rest_path": str(rest_path) if rest_path else None,
+            "grpc_path": str(grpc_path) if grpc_path else None,
+            "diff_path": str(diff_path) if diff_path else None,
+            "rest_checksum": rest_checksum,
+            "grpc_checksum": grpc_checksum,
+            "checksum_match": checksum_match,
+            "parity": parity_flag if parity_flag is not None else bool(checksum_match),
+            "differences": differences,
+            "normalized": {
+                "rest": rest_normalized,
+                "grpc": grpc_normalized,
+            },
+            "latency_ms": {
+                "rest": rest_latency,
+                "grpc": grpc_latency,
+            },
+            "monitoring_gaps": monitoring_gaps,
+            "heartbeat_emitted": heartbeat_emitted,
+            "metadata": {
+                "rest": {
+                    "credential_expiry": (
+                        rest_payload.get("credential_expiry")
+                        if isinstance(rest_payload, Mapping)
+                        else None
+                    ),
+                },
+                "grpc": {
+                    "recorded_at": (
+                        grpc_metadata.get("recorded_at")
+                        if isinstance(grpc_metadata, Mapping)
+                        else None
+                    ),
+                    "credential_expiry": (
+                        grpc_metadata.get("credential_expiry")
+                        if isinstance(grpc_metadata, Mapping)
+                        else None
+                    ),
+                },
+                "rotation_window": rotation_window,
+            },
+        }
+
+        entries.append(entry)
+
+    return entries
+
+
+def build_transport_parity_monitoring_payload(
+    stage_c_root: Path | None = None,
+) -> dict[str, Any]:
+    """Return monitoring metadata for the latest Stage C transport parity run."""
+
+    entries = collect_transport_parity_artifacts(stage_c_root=stage_c_root)
+    if not entries:
+        return {
+            "parity": False,
+            "alerts": ["no_stage_c_transport_artifacts"],
+        }
+
+    latest = entries[-1]
+    alerts = list(latest.get("monitoring_gaps") or [])
+    if latest.get("differences"):
+        alerts.append("handshake_differences_detected")
+    if latest.get("checksum_match") is False:
+        alerts.append("checksum_mismatch")
+
+    payload = {
+        "parity": bool(latest.get("parity")),
+        "checksum_match": latest.get("checksum_match"),
+        "rest_checksum": latest.get("rest_checksum"),
+        "grpc_checksum": latest.get("grpc_checksum"),
+        "latency_ms": latest.get("latency_ms"),
+        "alerts": alerts,
+        "run_id": latest.get("run_id"),
+        "summary_path": latest.get("summary_path"),
+        "heartbeat_emitted": latest.get("heartbeat_emitted"),
+    }
+
+    return payload
+
+
 def load_latest_stage_c_handshake() -> StageCHandshakeResult:
     """Return the latest successful Stage C MCP drill handshake and metadata."""
 
@@ -495,6 +750,8 @@ __all__ = [
     "record_rotation_drill",
     "load_rotation_history",
     "load_latest_stage_c_handshake",
+    "collect_transport_parity_artifacts",
+    "build_transport_parity_monitoring_payload",
     "evaluate_operator_doctrine",
     "stage_b_context_enabled",
     "normalize_handshake_for_trace",
