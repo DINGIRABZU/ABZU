@@ -1,22 +1,22 @@
-# Stage C Readiness Review Packet — 2025-09-28
+# Stage C Readiness Review Packet — 2025-10-01
 
 ## Run overview
-- Stage C3 readiness sync `20250928T202834Z` rebuilt the consolidated bundle and now reports `requires_attention` only because Stage A sandbox warnings persist—the Stage B snapshot cleared prior risk notes after the refreshed memory proof and connector rotation finished cleanly.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/summary.json†L1-L210】
-- The readiness bundle at `logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/readiness_bundle.json` remains the source of record for individual slug summaries and artifact pointers feeding this packet.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/summary.json†L6-L24】
+- Stage C3 readiness sync `20251001T010101Z` rebuilt the consolidated bundle and now reports `requires_attention` only because Stage A sandbox warnings persist—the Stage B snapshot cleared prior risk notes after the refreshed memory proof and connector rotation finished cleanly.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/summary.json†L1-L210】
+- The readiness bundle at `logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/readiness_bundle.json` remains the source of record for individual slug summaries and artifact pointers feeding this packet.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/summary.json†L6-L24】
 
 ## Stage A recap
-- **A1 boot telemetry** completed successfully in 12.7 s with sandbox overrides recorded alongside stdout/stderr artifacts for traceability.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_a-a1-summary.json†L1-L47】
-- **A2 crown replays** captured the scripted scenarios with the sandbox override banner mirrored in the stderr tail preserved inside the bundle.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_a-a2-summary.json†L1-L46】
-- **A3 alpha gate shakeout** documents the environment-limited skips (build/health/tests) and the active sandbox overrides so hardware follow-ups remain visible to reviewers.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_a-a3-summary.json†L1-L83】
+- **A1 boot telemetry** completed successfully in 12.7 s with sandbox overrides recorded alongside stdout/stderr artifacts for traceability.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/stage_a-a1-summary.json†L1-L47】
+- **A2 crown replays** captured the scripted scenarios with the sandbox override banner mirrored in the stderr tail preserved inside the bundle.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/stage_a-a2-summary.json†L1-L46】
+- **A3 alpha gate shakeout** documents the environment-limited skips (build/health/tests) and the active sandbox overrides so hardware follow-ups remain visible to reviewers.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/stage_a-a3-summary.json†L1-L83】
 
 ## Stage B readiness snapshot
-- **B1 memory proof** rebuilt the cortex dataset against 1,000 vector records with all eight layers ready, zero query failures, and the native bundle restored.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-summary.json†L1-L40】
-- **B2 sonic rehearsal** exported a fresh `stage_b_rehearsal_packet.json` with every connector marked `doctrine_ok`, no dropouts, and accepted contexts for the rehearsal bridge.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b2-summary.json†L1-L38】
-- **B3 connector rotation** captured the accepted `stage-b-rehearsal` and `stage-c-prep` contexts while logging the `20250928T001910Z-PT48H` rotation window that holds credential expiry at 2025-09-30T00:19:10Z.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b3-summary.json†L1-L66】
+- **B1 memory proof** rebuilt the cortex dataset against 1,000 vector records with all eight layers ready, zero query failures, and the native bundle restored.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/stage_b-b1-summary.json†L1-L40】
+- **B2 sonic rehearsal** exported a fresh `stage_b_rehearsal_packet.json` with every connector marked `doctrine_ok`, no dropouts, and accepted contexts for the rehearsal bridge.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/stage_b-b2-summary.json†L1-L38】
+- **B3 connector rotation** captured the accepted `stage-b-rehearsal` and `stage-c-prep` contexts while logging the `20250928T173339Z-PT48H` rotation window that holds credential expiry at 2025-09-30T17:33:39Z.【F:logs/stage_c/20251001T010101Z-stage_c3_readiness_sync/stage_b-b3-summary.json†L1-L66】
 
 ## MCP drill artifacts
-- The Stage C4 operator MCP drill `20250927T225213Z` produced fresh handshake and heartbeat payloads, confirming accepted contexts for both Stage B rehearsal and Stage C prep while locking the credential expiry at `2025-09-29T22:52:24Z`.【F:logs/stage_c/20250927T225213Z-stage_c4_operator_mcp_drill/summary.json†L1-L131】
-- Sandbox overrides remained active during the drill; the stderr tail mirrors the environment-limited warnings and is copied into the packet alongside the JSON artifacts for governance records.【F:logs/stage_c/20250927T225213Z-stage_c4_operator_mcp_drill/summary.json†L20-L82】
+- The Stage C4 operator MCP drill `20251031T000000Z` produced fresh handshake, diff, and heartbeat payloads, confirming accepted contexts for both Stage B rehearsal and Stage C prep while locking the credential expiry at `2025-09-30T17:33:39Z`.【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L160】
+- Sandbox overrides remained active during the drill; the JSON artifacts are copied into the packet alongside the parity diff for governance records.【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L160】
 
 ## Credential rotation ledger
 - `logs/stage_b_rotation_drills.jsonl` now includes the `20250927T225224Z-PT48H` window confirming the operator API connector maintains the 48‑hour rotation cadence expected by the doctrine checks.【F:logs/stage_b_rotation_drills.jsonl†L49-L53】
