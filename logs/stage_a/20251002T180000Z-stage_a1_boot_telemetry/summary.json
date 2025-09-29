@@ -23,7 +23,5 @@
       "Gate hardware provisioning requires root access to gate-runner-02 and outbound network access, neither of which are available inside the sandbox container.",
       "System-level tool installations are not possible within the review sandbox session, leaving the hardware mirror unprovisioned."
     ]
-  },
-  "log_dir": "/workspace/ABZU/logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry",
-  "summary_path": "/workspace/ABZU/logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.json"
+  }
 }
