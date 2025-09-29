@@ -12,6 +12,7 @@ import argparse
 import json
 from datetime import datetime, timezone
 import logging
+import os
 from pathlib import Path
 import shutil
 import re
@@ -28,6 +29,45 @@ STAGE_B_EXPECTED_SLUGS = ("B1", "B2", "B3")
 
 LOGGER = logging.getLogger(__name__)
 REPO_ROOT = Path(__file__).resolve().parents[1]
+STAGE_READINESS_ROOT_ENV = "STAGE_READINESS_ROOT"
+_STAGE_ENV_OVERRIDES = {
+    "stage_a": "STAGE_A_READINESS_ROOT",
+    "stage_b": "STAGE_B_READINESS_ROOT",
+}
+
+
+def _override_stage_root(stage_label: str) -> Path | None:
+    specific_key = _STAGE_ENV_OVERRIDES.get(stage_label)
+    if specific_key:
+        specific_value = os.environ.get(specific_key)
+        if specific_value:
+            specific_path = _resolve_path(specific_value)
+            if specific_path:
+                return specific_path
+    base_override = os.environ.get(STAGE_READINESS_ROOT_ENV)
+    if base_override:
+        base_path = _resolve_path(base_override)
+        if base_path:
+            return base_path / stage_label
+    return None
+
+
+def get_stage_a_root(stage_root: Path | None = None) -> Path:
+    if stage_root is not None:
+        return Path(stage_root)
+    override = _override_stage_root("stage_a")
+    if override is not None:
+        return override
+    return STAGE_A_ROOT
+
+
+def get_stage_b_root(stage_root: Path | None = None) -> Path:
+    if stage_root is not None:
+        return Path(stage_root)
+    override = _override_stage_root("stage_b")
+    if override is not None:
+        return override
+    return STAGE_B_ROOT
 
 
 def _resolve_path(value: Any) -> Path | None:
@@ -375,8 +415,11 @@ def _build_stage_snapshot(
     return snapshot
 
 
-def _build_stage_b_snapshot() -> tuple[dict[str, Any], list[str]]:
-    latest = _latest_by_slug(STAGE_B_ROOT)
+def _build_stage_b_snapshot(
+    stage_root: Path | None = None,
+) -> tuple[dict[str, Any], list[str]]:
+    effective_stage_root = get_stage_b_root(stage_root)
+    latest = _latest_by_slug(effective_stage_root)
     slugs = sorted({*latest.keys(), *STAGE_B_EXPECTED_SLUGS})
     slug_entries: dict[str, dict[str, Any]] = {}
     missing: list[str] = []
@@ -486,8 +529,11 @@ def _build_stage_b_snapshot() -> tuple[dict[str, Any], list[str]]:
     return snapshot, missing
 
 
-def _build_stage_a_snapshot() -> tuple[dict[str, Any], list[str]]:
-    latest = _latest_by_slug(STAGE_A_ROOT)
+def _build_stage_a_snapshot(
+    stage_root: Path | None = None,
+) -> tuple[dict[str, Any], list[str]]:
+    effective_stage_root = get_stage_a_root(stage_root)
+    latest = _latest_by_slug(effective_stage_root)
     slugs = sorted({*latest.keys(), *STAGE_A_EXPECTED_SLUGS})
     slug_entries: dict[str, dict[str, Any]] = {}
     missing: list[str] = []
@@ -678,11 +724,19 @@ def _merge_stage_data(
     return merged
 
 
-def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
+def aggregate(
+    stage_c_log_dir: Path,
+    *,
+    stage_a_root: Path | None = None,
+    stage_b_root: Path | None = None,
+) -> tuple[Path, dict[str, Any]]:
     stage_c_log_dir.mkdir(parents=True, exist_ok=True)
 
-    stage_a_snapshot, stage_a_missing = _build_stage_a_snapshot()
-    stage_b_snapshot, stage_b_missing = _build_stage_b_snapshot()
+    effective_stage_a_root = get_stage_a_root(stage_a_root)
+    effective_stage_b_root = get_stage_b_root(stage_b_root)
+
+    stage_a_snapshot, stage_a_missing = _build_stage_a_snapshot(effective_stage_a_root)
+    stage_b_snapshot, stage_b_missing = _build_stage_b_snapshot(effective_stage_b_root)
 
     stage_a_slugs = stage_a_snapshot.get("slugs")
     if isinstance(stage_a_slugs, Mapping):
@@ -710,7 +764,9 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
             best_priority = len(STAGE_B_EXPECTED_SLUGS)
             for slug, slug_entry in stage_b_slugs.items():
                 completed_raw = (
-                    slug_entry.get("completed_at") if isinstance(slug_entry, Mapping) else None
+                    slug_entry.get("completed_at")
+                    if isinstance(slug_entry, Mapping)
+                    else None
                 )
                 completed_at = _parse_datetime(completed_raw)
                 priority = (
@@ -720,13 +776,13 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
                 )
                 if completed_at is None and best_completed_at is not None:
                     continue
-                if (
-                    completed_at is not None
-                    and (
-                        best_completed_at is None
-                        or completed_at > best_completed_at
-                        or (completed_at == best_completed_at and priority < best_priority)
-                    )
+                is_same_completed = (
+                    completed_at == best_completed_at and priority < best_priority
+                )
+                if completed_at is not None and (
+                    best_completed_at is None
+                    or completed_at > best_completed_at
+                    or is_same_completed
                 ):
                     canonical_slug = slug
                     canonical_entry = slug_entry
@@ -802,13 +858,44 @@ def aggregate(stage_c_log_dir: Path) -> tuple[Path, dict[str, Any]]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--stage-root",
+        dest="stage_root",
+        help=(
+            "Base directory containing stage_a and stage_b readiness runs. "
+            "Overrides both stages unless a specific override is provided."
+        ),
+    )
+    parser.add_argument(
+        "--stage-a-root",
+        dest="stage_a_root",
+        help="Override the Stage A readiness run directory.",
+    )
+    parser.add_argument(
+        "--stage-b-root",
+        dest="stage_b_root",
+        help="Override the Stage B readiness run directory.",
+    )
+    parser.add_argument(
         "stage_c_log_dir",
         help="Path to the Stage C run directory where the bundle should be written.",
     )
     args = parser.parse_args()
 
     stage_c_log_dir = Path(args.stage_c_log_dir)
-    bundle_path, summary_payload = aggregate(stage_c_log_dir)
+    stage_root_override = _resolve_path(args.stage_root) if args.stage_root else None
+    stage_a_override = _resolve_path(args.stage_a_root) if args.stage_a_root else None
+    stage_b_override = _resolve_path(args.stage_b_root) if args.stage_b_root else None
+    if stage_root_override:
+        if stage_a_override is None:
+            stage_a_override = stage_root_override / "stage_a"
+        if stage_b_override is None:
+            stage_b_override = stage_root_override / "stage_b"
+
+    bundle_path, summary_payload = aggregate(
+        stage_c_log_dir,
+        stage_a_root=stage_a_override,
+        stage_b_root=stage_b_override,
+    )
     print(json.dumps(summary_payload, indent=2))
 
     return 0 if summary_payload["status"] == "success" else 1

@@ -1,0 +1,7 @@
+{
+  "run_id": "a2-run",
+  "status": "success",
+  "completed_at": "2024-01-01T00:15:00Z",
+  "stage": "stage_a2_crown_replays",
+  "log_dir": "stage_readiness/stage_a/20240101T000500Z-stage_a2_crown_replays"
+}

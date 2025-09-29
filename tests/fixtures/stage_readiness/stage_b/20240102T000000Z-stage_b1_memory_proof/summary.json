@@ -1,0 +1,16 @@
+{
+  "run_id": "b1-run",
+  "status": "success",
+  "completed_at": "2024-01-02T00:10:00Z",
+  "stage": "stage_b1_memory_proof",
+  "log_dir": "stage_readiness/stage_b/20240102T000000Z-stage_b1_memory_proof",
+  "metrics": {
+    "rotation_window": {
+      "window_id": "win-1",
+      "started_at": "2024-01-01T00:00:00Z",
+      "expires_at": "2024-01-03T00:00:00Z"
+    },
+    "rotation_summary": "Rotated operator_api/operator_upload (doctrine ok); window win-1; rotation expires 2024-01-03T00:00:00Z; credentials expire 2024-01-03T00:00:00Z",
+    "heartbeat_expiry": "2024-01-03T00:00:00Z"
+  }
+}
