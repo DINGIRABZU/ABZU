@@ -9,7 +9,8 @@ import json
 import logging
 import os
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict
+from pathlib import Path
+from typing import Any, Dict, Mapping
 
 from scripts._stage_runtime import bootstrap
 
@@ -163,6 +164,71 @@ def _normalize_contexts(value: Any) -> list[dict[str, Any]]:
             contexts.append({"name": entry, "status": "accepted"})
 
     return contexts
+
+
+def _load_stage_c_handshake_artifact(metadata: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Return the Stage C handshake artifact referenced by ``metadata`` when available."""
+
+    handshake_path = metadata.get("handshake_path")
+    if not isinstance(handshake_path, str) or not handshake_path:
+        return None
+
+    try:
+        path = Path(handshake_path)
+    except (TypeError, ValueError):
+        return None
+
+    if not path.is_absolute():
+        path = (Path.cwd() / path).resolve()
+    if not path.exists():
+        return None
+
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _annotate_contexts(
+    handshake: dict[str, Any] | None,
+    metadata: Mapping[str, Any],
+    *,
+    accepted_via: str = "stage_c4_operator_mcp_drill",
+) -> list[dict[str, Any]]:
+    """Return accepted contexts annotated with Stage C evidence paths."""
+
+    contexts = _normalize_contexts(handshake.get("accepted_contexts") if handshake else [])
+    if not contexts:
+        return []
+
+    handshake_path = metadata.get("handshake_path")
+    summary_path = metadata.get("summary_path")
+
+    for entry in contexts:
+        entry.setdefault("status", "accepted")
+        if isinstance(handshake_path, str) and handshake_path:
+            entry.setdefault("evidence_path", handshake_path)
+        if isinstance(summary_path, str) and summary_path:
+            entry.setdefault("summary_path", summary_path)
+        entry.setdefault("accepted_via", accepted_via)
+
+    if handshake is not None:
+        handshake["accepted_contexts"] = list(contexts)
+
+    return contexts
+
+
+def _index_context_status(contexts: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Return a mapping of context name to metadata for ``contexts``."""
+
+    indexed: dict[str, dict[str, Any]] = {}
+    for entry in contexts:
+        name = entry.get("name")
+        if not isinstance(name, str) or not name:
+            continue
+        details = {key: value for key, value in entry.items() if key != "name"}
+        indexed[name] = details
+    return indexed
 
 
 def _extract_stage_c_promotion(
@@ -406,6 +472,16 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
     )
 
     stage_c_handshake, stage_c_metadata = load_latest_stage_c_handshake()
+    stage_c_artifact_handshake = _load_stage_c_handshake_artifact(stage_c_metadata)
+    if stage_c_artifact_handshake:
+        stage_c_handshake = stage_c_artifact_handshake
+    if stage_c_handshake:
+        stage_c_handshake = dict(stage_c_handshake)
+    stage_c_contexts = _annotate_contexts(
+        stage_c_handshake if stage_c_handshake else None,
+        stage_c_metadata,
+    )
+    stage_c_context_status = _index_context_status(stage_c_contexts)
     promotion_metadata = _extract_stage_c_promotion(
         dict(stage_c_handshake) if stage_c_handshake else None,
         stage_c_metadata,
@@ -465,7 +541,11 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
     rotation_receipts: Dict[str, Any] = {}
     trace_captures: Dict[str, Any] = {}
     for connector_id in STAGE_B_TARGET_SERVICES:
-        context_status = promotion_metadata if connector_id == "operator_api" else None
+        context_status = None
+        if connector_id == "operator_api":
+            context_status = (
+                stage_c_context_status if stage_c_context_status else promotion_metadata
+            )
         trace_bundle = _build_trace_bundle(
             connector_id,
             handshake if isinstance(handshake, dict) else None,

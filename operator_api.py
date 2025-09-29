@@ -1441,6 +1441,18 @@ async def _stage_c4_metrics(
         heartbeat_payload = heartbeat_data.get("payload")
         credential_expiry = heartbeat_data.get("credential_expiry")
 
+    heartbeat_payload_path = log_dir / "heartbeat_payload.json"
+    if heartbeat_payload is not None and heartbeat_error is None:
+        try:
+            heartbeat_payload_path.write_text(
+                json.dumps(heartbeat_payload, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+        except OSError as exc:
+            heartbeat_error = f"failed to persist heartbeat payload: {exc}"
+        else:
+            artifacts.setdefault("heartbeat_payload", str(heartbeat_payload_path))
+
     heartbeat_emitted = bool(heartbeat_payload)
 
     rotation_log_path = _REPO_ROOT / "logs" / "stage_b_rotation_drills.jsonl"
@@ -1500,6 +1512,14 @@ async def _stage_c4_metrics(
         if isinstance(window_candidate, str) and window_candidate.strip():
             handshake_window_id = window_candidate
 
+    credential_window_payload: Mapping[str, Any] | None = None
+    if isinstance(rotation_entry, Mapping):
+        candidate_window = rotation_entry.get("credential_window")
+        if isinstance(candidate_window, Mapping):
+            credential_window_payload = candidate_window
+
+    credential_window_path = log_dir / "credential_window.json"
+
     if rotation_entry is not None and rotation_error is None:
         try:
             rotation_metadata_path.write_text(
@@ -1510,6 +1530,16 @@ async def _stage_c4_metrics(
             rotation_error = f"failed to persist rotation metadata: {exc}"
         else:
             artifacts.setdefault("rotation_metadata", str(rotation_metadata_path))
+        if credential_window_payload is not None and rotation_error is None:
+            try:
+                credential_window_path.write_text(
+                    json.dumps(credential_window_payload, indent=2),
+                    encoding="utf-8",
+                )
+            except OSError as exc:
+                rotation_error = f"failed to persist credential window: {exc}"
+            else:
+                artifacts.setdefault("credential_window", str(credential_window_path))
 
     rotation_verified = bool(
         ledger_window_id
@@ -1538,6 +1568,10 @@ async def _stage_c4_metrics(
     }
     if heartbeat_payload is not None:
         metrics["heartbeat_payload"] = _sanitize_for_json(heartbeat_payload)
+    if credential_window_payload is not None:
+        metrics["credential_window"] = _sanitize_for_json(
+            credential_window_payload
+        )
     if rotation_entry is not None:
         metrics["rotation_metadata"] = _sanitize_for_json(rotation_entry)
     if ledger_window_id:

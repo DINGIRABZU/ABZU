@@ -9,7 +9,7 @@ import logging
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from scripts._stage_runtime import bootstrap
 
@@ -30,6 +30,62 @@ LOGGER = logging.getLogger(__name__)
 
 _EVENT_NAME = "stage-c4-operator-mcp-drill"
 _STUB_ENV_FLAG = "ABZU_STAGE_C_MCP_DRILL_STUB"
+
+
+def _normalize_contexts(value: Any) -> list[dict[str, Any]]:
+    """Return ``value`` coerced into a list of context dictionaries."""
+
+    results: list[dict[str, Any]] = []
+    if isinstance(value, Mapping):
+        for key, entry in value.items():
+            if isinstance(entry, Mapping):
+                payload = {"name": key, **dict(entry)}
+                results.append(payload)
+    elif isinstance(value, (list, tuple)):
+        for entry in value:
+            if isinstance(entry, Mapping):
+                results.append(dict(entry))
+            elif isinstance(entry, str):
+                results.append({"name": entry, "status": "accepted"})
+    return results
+
+
+def _annotate_contexts(
+    handshake: Mapping[str, Any] | None,
+    *,
+    handshake_path: str | None = None,
+    summary_path: str | None = None,
+) -> list[dict[str, Any]]:
+    """Return accepted contexts with evidence metadata applied."""
+
+    if not isinstance(handshake, Mapping):
+        return []
+
+    contexts = _normalize_contexts(handshake.get("accepted_contexts"))
+    if not contexts:
+        return []
+
+    for entry in contexts:
+        entry.setdefault("status", "accepted")
+        entry.setdefault("accepted_via", _EVENT_NAME)
+        if handshake_path:
+            entry.setdefault("evidence_path", handshake_path)
+        if summary_path:
+            entry.setdefault("summary_path", summary_path)
+
+    return list(contexts)
+
+
+def _context_status_from(contexts: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Return a mapping from context name to metadata for ``contexts``."""
+
+    indexed: dict[str, dict[str, Any]] = {}
+    for entry in contexts:
+        name = entry.get("name")
+        if not isinstance(name, str) or not name:
+            continue
+        indexed[name] = {key: value for key, value in entry.items() if key != "name"}
+    return indexed
 
 
 def _use_stub_adapter() -> bool:
@@ -206,7 +262,12 @@ async def _run_drill(
         adapter = _StubOperatorAdapter()
     else:
         adapter = OperatorMCPAdapter()
-    handshake = await adapter.ensure_handshake()
+    handshake_raw = await adapter.ensure_handshake()
+    handshake: dict[str, Any]
+    if isinstance(handshake_raw, Mapping):
+        handshake = dict(handshake_raw)
+    else:
+        handshake = {}
 
     heartbeat_payload: dict[str, Any] | None = None
     credential_expiry: datetime | None = None
@@ -223,6 +284,13 @@ async def _run_drill(
         )
 
     handshake_path = output_dir / "mcp_handshake.json"
+    annotated_contexts = _annotate_contexts(
+        handshake,
+        handshake_path=str(handshake_path),
+    )
+    if annotated_contexts:
+        handshake["accepted_contexts"] = annotated_contexts
+
     handshake_path.write_text(
         json.dumps(handshake, indent=2, ensure_ascii=False),
         encoding="utf-8",
@@ -246,10 +314,12 @@ async def _run_drill(
         handshake if isinstance(handshake, dict) else None, gateway_base=gateway_base
     )
 
+    context_status = _context_status_from(annotated_contexts)
     record_rotation_drill(
         "operator_api",
         rotated_at=None,
         handshake=handshake,
+        context_status=context_status if context_status else None,
         traces=traces,
     )
 
