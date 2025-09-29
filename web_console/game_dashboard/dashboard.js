@@ -281,6 +281,24 @@ function GameDashboard() {
           React.createElement('p', { key: 'notes' }, `Notes: ${entry.notes}`)
         );
       }
+      if (entry.artifacts && Object.keys(entry.artifacts).length) {
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'artifacts' },
+            [
+              React.createElement('p', { key: 'artifacts-label' }, 'Artifacts:'),
+              React.createElement(
+                'ul',
+                { key: 'artifacts-list' },
+                Object.entries(entry.artifacts).map(([key, value]) =>
+                  React.createElement('li', { key }, `${key}: ${value}`)
+                )
+              ),
+            ]
+          )
+        );
+      }
       return React.createElement(
         'div',
         { className: 'mission-stage__details', key: `${id}-details` },
@@ -303,6 +321,7 @@ function GameDashboard() {
             completedAt: null,
             error: null,
             responseStatus: null,
+            artifacts: null,
           },
         }));
         return fetch(`${BASE_URL}${endpoint}`, { method: 'POST' })
@@ -340,6 +359,7 @@ function GameDashboard() {
               responseStatus: response.status,
               error: payload.error || payload.detail || null,
               notes: fallback.notes ?? null,
+              artifacts: payload.artifacts ?? fallback.artifacts ?? null,
             };
             setStageAResults((prev) => ({ ...prev, [id]: baseUpdate }));
             if (!response.ok || payload.status === 'error') {
@@ -365,6 +385,7 @@ function GameDashboard() {
                   error?.message ||
                   String(error),
                 notes: fallback.notes ?? null,
+                artifacts: fallback.artifacts ?? null,
               },
             }));
             throw error;
@@ -386,10 +407,17 @@ function GameDashboard() {
 
       return {
         ...action,
+        status: stageAResults[id]?.status ?? stageAFallback[id]?.status ?? null,
         renderDetails: () => renderStageADetails(id),
       };
     },
-    [appendLog, createLoggedAction, formatStageABlock, renderStageADetails]
+    [
+      appendLog,
+      createLoggedAction,
+      formatStageABlock,
+      renderStageADetails,
+      stageAResults,
+    ]
   );
 
   const [stageBResults, setStageBResults] = React.useState(() => ({
@@ -545,6 +573,24 @@ function GameDashboard() {
           React.createElement('p', { key: 'notes' }, `Notes: ${entry.notes}`)
         );
       }
+      if (entry.artifacts && Object.keys(entry.artifacts).length) {
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'artifacts' },
+            [
+              React.createElement('p', { key: 'artifacts-label' }, 'Artifacts:'),
+              React.createElement(
+                'ul',
+                { key: 'artifacts-list' },
+                Object.entries(entry.artifacts).map(([key, value]) =>
+                  React.createElement('li', { key }, `${key}: ${value}`)
+                )
+              ),
+            ]
+          )
+        );
+      }
       if (entry.metrics) {
         elements.push(
           React.createElement(
@@ -593,6 +639,8 @@ function GameDashboard() {
             stderrPath: null,
             responseStatus: null,
             rawResponse: null,
+            stderrTail: null,
+            artifacts: null,
           },
         }));
         const { response, data, raw, parseError } = await streamJsonPost(
@@ -614,8 +662,18 @@ function GameDashboard() {
               metricsError: null,
               responseStatus: response?.status ?? null,
               rawResponse: raw,
+              stderrTail: null,
+              artifacts:
+                (prev[id] ?? stageBFallback[id] ?? {}).artifacts ?? null,
             },
           }));
+          appendLog(
+            formatStageABlock(label, {
+              status: 'error',
+              error: message,
+              raw,
+            })
+          );
           throw new Error(message);
         }
         const payload = {
@@ -641,6 +699,8 @@ function GameDashboard() {
           responseStatus: response.status,
           rawResponse: raw,
           notes: fallback.notes ?? null,
+          stderrTail: payload.stderr_tail ?? null,
+          artifacts: payload.artifacts ?? fallback.artifacts ?? null,
         };
         if (payload.status !== 'success') {
           baseUpdate.error =
@@ -675,17 +735,33 @@ function GameDashboard() {
               status: 'error',
               error: error?.message ?? String(error),
               completedAt: new Date().toISOString(),
+              artifacts:
+                (prev[id] ?? stageBFallback[id] ?? {}).artifacts ?? null,
             },
           }));
+          appendLog(
+            formatStageABlock(label, {
+              status: 'error',
+              error: error?.message ?? String(error),
+            })
+          );
         },
       });
 
       return {
         ...action,
+        status: stageBResults[id]?.status ?? stageBFallback[id]?.status ?? null,
         renderDetails: () => renderStageBDetails(id),
       };
     },
-    [createLoggedAction, formatStageABlock, renderStageBDetails, streamJsonPost, appendLog]
+    [
+      createLoggedAction,
+      formatStageABlock,
+      renderStageBDetails,
+      streamJsonPost,
+      appendLog,
+      stageBResults,
+    ]
   );
 
   const renderStageCDetails = React.useCallback(
@@ -870,6 +946,7 @@ function GameDashboard() {
               completedAt,
               responseStatus: response.status,
               rawResponse: raw,
+              artifacts: (prev[id] ?? {}).artifacts ?? null,
             },
           }));
           appendLog(
@@ -929,6 +1006,7 @@ function GameDashboard() {
               status: 'error',
               error: error?.message ?? String(error),
               completedAt: new Date().toISOString(),
+              artifacts: (prev[id] ?? {}).artifacts ?? null,
             },
           }));
           appendLog(
@@ -961,99 +1039,141 @@ function GameDashboard() {
       {
         id: 'stage-a',
         title: stageTitles['stage-a'],
-        actions: [
-          createStageAAction({
-            id: 'stage-a1-boot-telemetry',
-            label: 'Stage A1 – Boot Telemetry',
-            endpoint: '/alpha/stage-a1-boot-telemetry',
-          }),
-          createStageAAction({
-            id: 'stage-a2-crown-replays',
-            label: 'Stage A2 – Crown Replays',
-            endpoint: '/alpha/stage-a2-crown-replays',
-          }),
-          createStageAAction({
-            id: 'stage-a3-gate-shakeout',
-            label: 'Stage A3 – Gate Shakeout',
-            endpoint: '/alpha/stage-a3-gate-shakeout',
-          }),
+        groups: [
+          {
+            id: 'stage-a-milestones',
+            title: 'Milestone Controls',
+            actions: [
+              createStageAAction({
+                id: 'stage-a1-boot-telemetry',
+                label: 'Stage A1 – Boot Telemetry',
+                endpoint: '/alpha/stage-a1-boot-telemetry',
+              }),
+              createStageAAction({
+                id: 'stage-a2-crown-replays',
+                label: 'Stage A2 – Crown Replays',
+                endpoint: '/alpha/stage-a2-crown-replays',
+              }),
+            ],
+          },
+          {
+            id: 'stage-a-extended',
+            title: 'Extended Automation',
+            actions: [
+              createStageAAction({
+                id: 'stage-a3-gate-shakeout',
+                label: 'Stage A3 – Gate Shakeout',
+                endpoint: '/alpha/stage-a3-gate-shakeout',
+              }),
+            ],
+          },
         ],
       },
       {
         id: 'stage-b',
         title: stageTitles['stage-b'],
-        actions: [
-          createStageBAction({
-            id: 'stage-b1-memory-proof',
-            label: 'Stage B1 – Memory Proof',
-            endpoint: '/alpha/stage-b1-memory-proof',
-          }),
-          createStageBAction({
-            id: 'stage-b2-sonic-rehearsal',
-            label: 'Stage B2 – Sonic Rehearsal',
-            endpoint: '/alpha/stage-b2-sonic-rehearsal',
-          }),
-          createStageBAction({
-            id: 'stage-b3-connector-rotation',
-            label: 'Stage B3 – Connector Rotation',
-            endpoint: '/alpha/stage-b3-connector-rotation',
-          }),
-          createLoggedAction('ignite', 'Ignite', () =>
-            fetch(`${BASE_URL}/start_ignition`, { method: 'POST' })
-              .then((r) => r.json())
-              .then((d) => {
-                logSuccess('Ignite', `status: ${d.status ?? 'acknowledged'}`);
-                return d;
-              })
-          ),
-          createLoggedAction('memory', 'Memory Query', () =>
-            fetch(`${BASE_URL}/memory/query`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ query: 'demo' }),
-            })
-              .then((r) => r.json())
-              .then((d) => {
-                const count = Array.isArray(d?.results) ? d.results.length : 0;
-                logSuccess('Memory Query', `returned ${count} result(s)`);
-                return d;
-              })
-          ),
+        groups: [
+          {
+            id: 'stage-b-milestones',
+            title: 'Milestone Controls',
+            actions: [
+              createStageBAction({
+                id: 'stage-b1-memory-proof',
+                label: 'Stage B1 – Memory Proof',
+                endpoint: '/alpha/stage-b1-memory-proof',
+              }),
+              createStageBAction({
+                id: 'stage-b2-sonic-rehearsal',
+                label: 'Stage B2 – Sonic Rehearsal',
+                endpoint: '/alpha/stage-b2-sonic-rehearsal',
+              }),
+              createStageBAction({
+                id: 'stage-b3-connector-rotation',
+                label: 'Stage B3 – Connector Rotation',
+                endpoint: '/alpha/stage-b3-connector-rotation',
+              }),
+            ],
+          },
+          {
+            id: 'stage-b-operations',
+            title: 'Operational Utilities',
+            actions: [
+              createLoggedAction('ignite', 'Ignite', () =>
+                fetch(`${BASE_URL}/start_ignition`, { method: 'POST' })
+                  .then((r) => r.json())
+                  .then((d) => {
+                    logSuccess('Ignite', `status: ${d.status ?? 'acknowledged'}`);
+                    return d;
+                  })
+              ),
+              createLoggedAction('memory', 'Memory Query', () =>
+                fetch(`${BASE_URL}/memory/query`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ query: 'demo' }),
+                })
+                  .then((r) => r.json())
+                  .then((d) => {
+                    const count = Array.isArray(d?.results) ? d.results.length : 0;
+                    logSuccess('Memory Query', `returned ${count} result(s)`);
+                    return d;
+                  })
+              ),
+            ],
+          },
         ],
       },
       {
         id: 'stage-c',
         title: stageTitles['stage-c'],
-        actions: [
-          createStageCAction({
-            id: 'stage-c1-exit-checklist',
-            label: 'Stage C1 – Exit Checklist',
-            endpoint: '/alpha/stage-c1-exit-checklist',
-          }),
-          createStageCAction({
-            id: 'stage-c2-demo-storyline',
-            label: 'Stage C2 – Demo Storyline',
-            endpoint: '/alpha/stage-c2-demo-storyline',
-          }),
-          createStageCAction({
-            id: 'stage-c3-readiness-sync',
-            label: 'Stage C3 – Readiness Sync',
-            endpoint: '/alpha/stage-c3-readiness-sync',
-          }),
-          createStageCAction({
-            id: 'stage-c4-operator-mcp-drill',
-            label: 'Stage C4 – Operator MCP Drill',
-            endpoint: '/alpha/stage-c4-operator-mcp-drill',
-          }),
-          createLoggedAction('handover', 'Handover', () =>
-            fetch(`${BASE_URL}/handover`, { method: 'POST' })
-              .then((r) => r.json())
-              .then((d) => {
-                const target = d?.handover?.target ?? 'escalation queued';
-                logSuccess('Handover', `response: ${target}`);
-                return d;
-              })
-          ),
+        groups: [
+          {
+            id: 'stage-c-milestones',
+            title: 'Milestone Controls',
+            actions: [
+              createStageCAction({
+                id: 'stage-c1-exit-checklist',
+                label: 'Stage C1 – Exit Checklist',
+                endpoint: '/alpha/stage-c1-exit-checklist',
+              }),
+              createStageCAction({
+                id: 'stage-c2-demo-storyline',
+                label: 'Stage C2 – Demo Storyline',
+                endpoint: '/alpha/stage-c2-demo-storyline',
+              }),
+            ],
+          },
+          {
+            id: 'stage-c-readiness',
+            title: 'Readiness & MCP Drills',
+            actions: [
+              createStageCAction({
+                id: 'stage-c3-readiness-sync',
+                label: 'Stage C3 – Readiness Sync',
+                endpoint: '/alpha/stage-c3-readiness-sync',
+              }),
+              createStageCAction({
+                id: 'stage-c4-operator-mcp-drill',
+                label: 'Stage C4 – Operator MCP Drill',
+                endpoint: '/alpha/stage-c4-operator-mcp-drill',
+              }),
+            ],
+          },
+          {
+            id: 'stage-c-escalation',
+            title: 'Escalation',
+            actions: [
+              createLoggedAction('handover', 'Handover', () =>
+                fetch(`${BASE_URL}/handover`, { method: 'POST' })
+                  .then((r) => r.json())
+                  .then((d) => {
+                    const target = d?.handover?.target ?? 'escalation queued';
+                    logSuccess('Handover', `response: ${target}`);
+                    return d;
+                  })
+              ),
+            ],
+          },
         ],
       },
     ],

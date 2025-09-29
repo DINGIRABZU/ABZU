@@ -152,7 +152,7 @@ documents:
       scope: Crown-to-RAZAR interaction.
   docs/INDEX.md:
     commit: worktree
-    sha256: 9759f3be3ed39028849a953d88ee03c28d6aa63f199b01eb135eb4414d0dde46
+    sha256: a1cfde0ad512855997cf88812f701878327effd28a9c1ea2a7d3be3bbf44d95f
     summary:
       insight: Regenerate with tools/doc_indexer.py after updating docs.
       key_rules: Regenerate index after documentation updates.
@@ -177,7 +177,7 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 5542ab431b83a605beaab28ed0c813c9914919b9db364d6636ca8dbf09e9fd56
+    sha256: 7641d3d0916a6154a0be50db29e304ba6a9e832702d6dbc32a8cd8c32bde0688
     summary:
       insight: Central doctrine coordinates versioning, MCP governance, and documentation
         duties for every subsystem.
@@ -220,7 +220,7 @@ documents:
       scope: Training data and workflow.
   docs/blueprint_spine.md:
     commit: worktree
-    sha256: 7dc3517a463373b3749b29848dc98cf3146e2b3c1d45f506c203c353ade6bd31
+    sha256: a2a39a69b34af95df939787233b3257025a42c5d41837ec0e314c4c00a3e0d08
     summary:
       insight: Highlights triadic stack and operator-first design, including the MCP
         startup handshake and heartbeat loop for operator connectors.
@@ -344,8 +344,8 @@ documents:
         biosignals into narratives.
       scope: Nazarick narrative system.
   docs/onboarding/README.md:
-    commit: b3b80343640e18d6ff3ae9eabdee3b082400e9e9
-    sha256: c076d51890edea8aacc029e680ca356f1feeefb9a1266ec35da5c66f797787de
+    commit: worktree
+    sha256: 31d3e85d3020293c1bd80731507eb63c4ff311d7bffe5ccb839219be4bcf5b77
     summary:
       insight: Use checklist to verify setup.
       key_rules: Complete checklist before coding.
@@ -449,7 +449,7 @@ documents:
       scope: Terminal interface.
   docs/system_blueprint.md:
     commit: worktree
-    sha256: c6e68868e08dd4f5bdf87ba003ae8ff2444f487a4507151cc18d45b05af7ca70
+    sha256: 48e5e5e212eb171f4b1e5447d347544cd572c0bbe5c9e4e7d526c3e45ac38172
     summary:
       insight: Describes heartbeat propagation and the MCP adapter startup flow for
         operator services.

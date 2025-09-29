@@ -32,6 +32,7 @@ The Crown router, RAG orchestrator, and Kimicho fallback now use Rust crates (`n
 11. [First Consecrated Computation](../../NEOABZU/docs/Oroboros_Core.md#first-consecrated-computation) – narrative log of the inaugural ceremony
 
    - Review the Stage A automation entry points exposed by `operator_api`: `POST /alpha/stage-a1-boot-telemetry`, `POST /alpha/stage-a2-crown-replays`, and `POST /alpha/stage-a3-gate-shakeout`. Each endpoint records telemetry in `logs/stage_a/<run_id>/summary.json` for audit trails referenced by the roadmap and readiness reviews.
+   - The Mission Map in the operator dashboard groups the Stage A/B/C milestone controls under "Milestone Controls" so operators can launch `stage-a1-boot-telemetry`, `stage-a2-crown-replays`, `stage-b1-memory-proof`, `stage-b2-sonic-rehearsal`, `stage-b3-connector-rotation`, `stage-c1-exit-checklist`, and `stage-c2-demo-storyline` directly from the console. Results stream into the event log with artifact paths from the stage summaries archived under `logs/stage_[abc]/<run_id>/` for follow-up reviews.【F:web_console/game_dashboard/dashboard.js†L16-L178】【F:web_console/game_dashboard/mission_map.js†L1-L144】【F:operator_api.py†L2184-L2421】
 
 Confirm each item before starting code changes.
 

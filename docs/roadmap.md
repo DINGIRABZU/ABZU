@@ -49,6 +49,13 @@ Operator consoles now expose Stage A automation directly through the `operator
 `logs/stage_a/<run_id>/` with a JSON summary so Stage B reviewers can consume gate evidence without
 leaving the dashboard.
 
+The Mission Map also collects the Stage B (`stage-b1-memory-proof`, `stage-b2-sonic-rehearsal`,
+`stage-b3-connector-rotation`) and Stage C (`stage-c1-exit-checklist`, `stage-c2-demo-storyline`)
+milestone controls under dedicated "Milestone Controls" groupings. Triggering any of these buttons
+streams structured results into the event log and surfaces the artifact paths returned by the
+corresponding `operator_api` handlers, keeping the roadmap audit trail anchored to
+`logs/stage_[abc]/<run_id>/` evidence bundles.【F:web_console/game_dashboard/dashboard.js†L180-L356】【F:web_console/game_dashboard/mission_map.js†L1-L144】【F:operator_api.py†L2184-L2421】
+
 > [!IMPORTANT]
 > **Codex sandbox dependency limits.** When Stage A or Stage B rehearsals require GPUs, DAW plugins, or external connectors that the Codex sandbox cannot provide, mark affected tests as `environment-limited`, capture the skipped command output in the alpha bundle, and log the pending validation in change notes. Escalate hardware-required follow-ups through the operator risk queue in [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-c-planning-snapshot) and align messaging with [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment).
 

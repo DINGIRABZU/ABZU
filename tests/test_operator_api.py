@@ -243,6 +243,67 @@ def test_stage_a2_crown_replays_success(
     assert "environment-limited" in summary.get("stderr", "")
 
 
+@pytest.mark.parametrize(
+    "endpoint,slug,stage_root_attr",
+    [
+        ("/alpha/stage-a1-boot-telemetry", "stage_a1_boot_telemetry", "_STAGE_A_ROOT"),
+        ("/alpha/stage-a2-crown-replays", "stage_a2_crown_replays", "_STAGE_A_ROOT"),
+        ("/alpha/stage-b1-memory-proof", "stage_b1_memory_proof", "_STAGE_B_ROOT"),
+        (
+            "/alpha/stage-b2-sonic-rehearsal",
+            "stage_b2_sonic_rehearsal",
+            "_STAGE_B_ROOT",
+        ),
+        (
+            "/alpha/stage-b3-connector-rotation",
+            "stage_b3_connector_rotation",
+            "_STAGE_B_ROOT",
+        ),
+        ("/alpha/stage-c1-exit-checklist", "stage_c1_exit_checklist", "_STAGE_C_ROOT"),
+        ("/alpha/stage-c2-demo-storyline", "stage_c2_demo_storyline", "_STAGE_C_ROOT"),
+    ],
+)
+def test_mission_milestone_endpoints_archive_artifacts(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+    endpoint: str,
+    slug: str,
+    stage_root_attr: str,
+) -> None:
+    """Milestone endpoints surface artifacts and use the expected stage roots."""
+
+    stage_root = getattr(operator_api, stage_root_attr)
+    recorded: dict[str, Any] = {}
+
+    async def fake_run(stage_root_arg, slug_arg, command, *, metrics_extractor=None):
+        recorded["stage_root"] = stage_root_arg
+        recorded["slug"] = slug_arg
+        recorded["command"] = command
+        run_id = f"20250101T000000Z-{slug_arg}"
+        log_dir = stage_root_arg / run_id
+        return {
+            "status": "success",
+            "stage": slug_arg,
+            "run_id": run_id,
+            "log_dir": str(log_dir),
+            "summary_path": str(log_dir / "summary.json"),
+            "artifacts": {"summary": str(log_dir / "summary.json")},
+        }
+
+    monkeypatch.setattr(operator_api, "_run_stage_workflow", fake_run)
+
+    response = client.post(endpoint)
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "success"
+    assert recorded["stage_root"] == stage_root
+    assert recorded["slug"] == slug
+    assert payload["stage"] == slug
+    assert payload["log_dir"].startswith(str(stage_root))
+    assert payload["summary_path"].endswith("summary.json")
+    assert payload.get("artifacts") == {"summary": payload["summary_path"]}
+
+
 def test_stage_a_env_injection_and_module_isolation(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
