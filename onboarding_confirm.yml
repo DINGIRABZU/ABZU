@@ -177,7 +177,7 @@ documents:
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
     commit: worktree
-    sha256: 7641d3d0916a6154a0be50db29e304ba6a9e832702d6dbc32a8cd8c32bde0688
+    sha256: 4b1af28faae3f7d850310099d087e8f2d8a917f23c8ebce33debab11f2f09ef9
     summary:
       insight: Central doctrine coordinates versioning, MCP governance, and documentation
         duties for every subsystem.

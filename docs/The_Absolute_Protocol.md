@@ -57,6 +57,7 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
   trail for packaging, coverage, and connector pilots remains auditable.【F:logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md†L14-L44】
 - Keep the MCP parity artifacts from the latest Stage C drill bundled with the readiness packet so sandbox evidence links to
   the connector state scheduled for hardware replay.【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L123-L185】【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L222】
+> - Stage E transport audits must ship continuous REST↔gRPC parity dashboards and heartbeat telemetry alongside the readiness packet so beta reviewers inherit the same evidence used to gate the sandbox drills.【F:docs/roadmap.md†L129-L147】【F:monitoring/operator_transport_pilot.md†L1-L66】【F:tests/test_operator_transport_contract.py†L1-L210】
 >
 > Before ignition on real systems, obtain written sign-off from the operator lead, hardware owner, and QA reviewer confirming:
 >
