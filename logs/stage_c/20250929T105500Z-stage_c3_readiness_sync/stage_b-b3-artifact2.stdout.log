@@ -1,0 +1,1072 @@
+{
+  "stage": "B",
+  "targets": [
+    "operator_api",
+    "operator_upload",
+    "crown_handshake"
+  ],
+  "services": {
+    "operator_api": {
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-09-28T22:28:14Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "accepted"
+        }
+      ]
+    },
+    "operator_upload": {
+      "session_reused": true,
+      "notes": "Upload operations share the operator MCP session."
+    },
+    "crown_handshake": {
+      "version": "0.2.5",
+      "module": "/workspace/ABZU/razar/crown_handshake.py"
+    }
+  },
+  "endpoints": {
+    "gateway": "http://localhost:8001",
+    "handshake": "http://localhost:8001/handshake",
+    "heartbeat": "http://localhost:8001/heartbeat"
+  },
+  "handshake": {
+    "authenticated": true,
+    "session": {
+      "id": "stage-c-session",
+      "credential_expiry": "2025-09-28T22:28:14Z"
+    },
+    "accepted_contexts": [
+      {
+        "name": "stage-b-rehearsal",
+        "status": "accepted"
+      },
+      {
+        "name": "stage-c-prep",
+        "status": "accepted"
+      }
+    ],
+    "rotation": {
+      "connector_id": "operator_api",
+      "last_rotated": "2025-09-26T22:28:14Z",
+      "rotation_window": "PT48H",
+      "window_id": "20250926T222814Z-PT48H"
+    },
+    "echo": {
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-26T22:28:14Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250926T222814Z-PT48H"
+      }
+    }
+  },
+  "context_promotions": {
+    "stage-c-prep": {
+      "status": "accepted",
+      "promoted_at": "2025-09-26T22:28:14Z",
+      "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+      "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json"
+    }
+  },
+  "heartbeat": {
+    "payload": {
+      "event": "stage-b-smoke",
+      "session": {
+        "id": "stage-b-session",
+        "credential_expiry": "2025-09-28T22:28:14Z"
+      },
+      "credential_expiry": "2025-09-28T22:28:14Z"
+    },
+    "credential_expiry": "2025-09-28T22:28:14Z"
+  },
+  "rotation_ledger": {
+    "operator_api": {
+      "connector_id": "operator_api",
+      "rotated_at": "2025-09-26T22:28:14Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20250926T222814Z-PT48H",
+        "started_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "PT48H"
+      },
+      "context_status": {
+        "stage-c-prep": {
+          "status": "accepted",
+          "promoted_at": "2025-09-26T22:28:14Z",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+          "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json"
+        }
+      },
+      "traces": {
+        "rest": {
+          "method": "POST",
+          "endpoint": "http://localhost:8001/handshake",
+          "request": {
+            "identity": {
+              "connector_id": "operator_api",
+              "version": "0.1.0",
+              "instance": "local"
+            },
+            "supported_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "channels": [
+                  "handshake",
+                  "heartbeat",
+                  "command"
+                ],
+                "capabilities": [
+                  "register",
+                  "telemetry",
+                  "command"
+                ]
+              }
+            ],
+            "rotation": {
+              "last_rotated": "2025-09-29T10:50:08Z",
+              "rotation_window": "PT48H",
+              "supports_hot_swap": true,
+              "token_hint": "operator"
+            }
+          },
+          "response": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          },
+          "normalized": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          },
+          "checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d"
+        },
+        "grpc": {
+          "service": "neoabzu.vector.VectorService",
+          "method": "Init",
+          "rpc": "neoabzu.vector.VectorService/Init",
+          "request": {
+            "stage": "B",
+            "connector_id": "operator_api",
+            "contexts": [
+              "stage-b-rehearsal",
+              "stage-c-prep"
+            ]
+          },
+          "response": {
+            "message": "trial handshake parity for operator_api",
+            "handshake_equivalent": {
+              "authenticated": true,
+              "session": {
+                "id": "stage-c-session",
+                "credential_expiry": "2025-09-28T22:28:14Z"
+              },
+              "accepted_contexts": [
+                {
+                  "name": "stage-b-rehearsal",
+                  "status": "accepted"
+                },
+                {
+                  "name": "stage-c-prep",
+                  "status": "accepted"
+                }
+              ],
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              },
+              "echo": {
+                "rotation": {
+                  "connector_id": "operator_api",
+                  "last_rotated": "2025-09-26T22:28:14Z",
+                  "rotation_window": "PT48H",
+                  "window_id": "20250926T222814Z-PT48H"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "parity_checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d",
+            "credential_expiry": "2025-09-28T22:28:14Z",
+            "rotation_window": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "recorded_at": "2025-09-29T10:50:08.975744+00:00",
+            "mode": "trial"
+          }
+        }
+      }
+    },
+    "operator_upload": {
+      "connector_id": "operator_upload",
+      "rotated_at": "2025-09-26T22:28:14Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20250926T222814Z-PT48H",
+        "started_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "PT48H"
+      },
+      "traces": {
+        "rest": {
+          "method": "POST",
+          "endpoint": "http://localhost:8001/handshake",
+          "request": {
+            "identity": {
+              "connector_id": "operator_upload",
+              "version": "0.1.0",
+              "instance": "local"
+            },
+            "supported_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "channels": [
+                  "handshake",
+                  "heartbeat",
+                  "upload"
+                ],
+                "capabilities": [
+                  "register",
+                  "telemetry",
+                  "upload"
+                ]
+              }
+            ],
+            "rotation": {
+              "last_rotated": "2025-09-29T10:50:08Z",
+              "rotation_window": "PT48H",
+              "supports_hot_swap": true,
+              "token_hint": "operator-upload"
+            }
+          },
+          "response": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          },
+          "normalized": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          },
+          "checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d"
+        },
+        "grpc": {
+          "service": "neoabzu.vector.VectorService",
+          "method": "Init",
+          "rpc": "neoabzu.vector.VectorService/Init",
+          "request": {
+            "stage": "B",
+            "connector_id": "operator_upload",
+            "contexts": [
+              "stage-b-rehearsal",
+              "stage-c-prep"
+            ]
+          },
+          "response": {
+            "message": "trial handshake parity for operator_upload",
+            "handshake_equivalent": {
+              "authenticated": true,
+              "session": {
+                "id": "stage-c-session",
+                "credential_expiry": "2025-09-28T22:28:14Z"
+              },
+              "accepted_contexts": [
+                {
+                  "name": "stage-b-rehearsal",
+                  "status": "accepted"
+                },
+                {
+                  "name": "stage-c-prep",
+                  "status": "accepted"
+                }
+              ],
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              },
+              "echo": {
+                "rotation": {
+                  "connector_id": "operator_api",
+                  "last_rotated": "2025-09-26T22:28:14Z",
+                  "rotation_window": "PT48H",
+                  "window_id": "20250926T222814Z-PT48H"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "parity_checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d",
+            "credential_expiry": "2025-09-28T22:28:14Z",
+            "rotation_window": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "recorded_at": "2025-09-29T10:50:08.976575+00:00",
+            "mode": "trial"
+          }
+        }
+      }
+    },
+    "crown_handshake": {
+      "connector_id": "crown_handshake",
+      "rotated_at": "2025-09-26T22:28:14Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20250926T222814Z-PT48H",
+        "started_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "PT48H"
+      },
+      "traces": {
+        "rest": {
+          "method": "POST",
+          "endpoint": "http://localhost:8001/handshake",
+          "request": {
+            "identity": {
+              "connector_id": "crown_handshake",
+              "version": "0.1.0",
+              "instance": "local"
+            },
+            "supported_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "channels": [
+                  "handshake",
+                  "heartbeat",
+                  "mission-brief"
+                ],
+                "capabilities": [
+                  "register",
+                  "telemetry",
+                  "mission-brief"
+                ]
+              }
+            ],
+            "rotation": {
+              "last_rotated": "2025-09-29T10:50:08Z",
+              "rotation_window": "PT48H",
+              "supports_hot_swap": true,
+              "token_hint": "crown"
+            }
+          },
+          "response": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          },
+          "normalized": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          },
+          "checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d"
+        },
+        "grpc": {
+          "service": "neoabzu.vector.VectorService",
+          "method": "Init",
+          "rpc": "neoabzu.vector.VectorService/Init",
+          "request": {
+            "stage": "B",
+            "connector_id": "crown_handshake",
+            "contexts": [
+              "stage-b-rehearsal",
+              "stage-c-prep"
+            ]
+          },
+          "response": {
+            "message": "trial handshake parity for crown_handshake",
+            "handshake_equivalent": {
+              "authenticated": true,
+              "session": {
+                "id": "stage-c-session",
+                "credential_expiry": "2025-09-28T22:28:14Z"
+              },
+              "accepted_contexts": [
+                {
+                  "name": "stage-b-rehearsal",
+                  "status": "accepted"
+                },
+                {
+                  "name": "stage-c-prep",
+                  "status": "accepted"
+                }
+              ],
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              },
+              "echo": {
+                "rotation": {
+                  "connector_id": "operator_api",
+                  "last_rotated": "2025-09-26T22:28:14Z",
+                  "rotation_window": "PT48H",
+                  "window_id": "20250926T222814Z-PT48H"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "parity_checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d",
+            "credential_expiry": "2025-09-28T22:28:14Z",
+            "rotation_window": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "recorded_at": "2025-09-29T10:50:08.976961+00:00",
+            "mode": "trial"
+          }
+        }
+      }
+    }
+  },
+  "trial_traces": {
+    "operator_api": {
+      "rest": {
+        "method": "POST",
+        "endpoint": "http://localhost:8001/handshake",
+        "request": {
+          "identity": {
+            "connector_id": "operator_api",
+            "version": "0.1.0",
+            "instance": "local"
+          },
+          "supported_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "channels": [
+                "handshake",
+                "heartbeat",
+                "command"
+              ],
+              "capabilities": [
+                "register",
+                "telemetry",
+                "command"
+              ]
+            }
+          ],
+          "rotation": {
+            "last_rotated": "2025-09-29T10:50:08Z",
+            "rotation_window": "PT48H",
+            "supports_hot_swap": true,
+            "token_hint": "operator"
+          }
+        },
+        "response": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-09-28T22:28:14Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            }
+          }
+        },
+        "normalized": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-09-28T22:28:14Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            }
+          }
+        },
+        "checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d"
+      },
+      "grpc": {
+        "service": "neoabzu.vector.VectorService",
+        "method": "Init",
+        "rpc": "neoabzu.vector.VectorService/Init",
+        "request": {
+          "stage": "B",
+          "connector_id": "operator_api",
+          "contexts": [
+            "stage-b-rehearsal",
+            "stage-c-prep"
+          ]
+        },
+        "response": {
+          "message": "trial handshake parity for operator_api",
+          "handshake_equivalent": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          }
+        },
+        "metadata": {
+          "parity_checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d",
+          "credential_expiry": "2025-09-28T22:28:14Z",
+          "rotation_window": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "recorded_at": "2025-09-29T10:50:08.975744+00:00",
+          "mode": "trial"
+        }
+      }
+    },
+    "operator_upload": {
+      "rest": {
+        "method": "POST",
+        "endpoint": "http://localhost:8001/handshake",
+        "request": {
+          "identity": {
+            "connector_id": "operator_upload",
+            "version": "0.1.0",
+            "instance": "local"
+          },
+          "supported_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "channels": [
+                "handshake",
+                "heartbeat",
+                "upload"
+              ],
+              "capabilities": [
+                "register",
+                "telemetry",
+                "upload"
+              ]
+            }
+          ],
+          "rotation": {
+            "last_rotated": "2025-09-29T10:50:08Z",
+            "rotation_window": "PT48H",
+            "supports_hot_swap": true,
+            "token_hint": "operator-upload"
+          }
+        },
+        "response": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-09-28T22:28:14Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            }
+          }
+        },
+        "normalized": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-09-28T22:28:14Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            }
+          }
+        },
+        "checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d"
+      },
+      "grpc": {
+        "service": "neoabzu.vector.VectorService",
+        "method": "Init",
+        "rpc": "neoabzu.vector.VectorService/Init",
+        "request": {
+          "stage": "B",
+          "connector_id": "operator_upload",
+          "contexts": [
+            "stage-b-rehearsal",
+            "stage-c-prep"
+          ]
+        },
+        "response": {
+          "message": "trial handshake parity for operator_upload",
+          "handshake_equivalent": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          }
+        },
+        "metadata": {
+          "parity_checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d",
+          "credential_expiry": "2025-09-28T22:28:14Z",
+          "rotation_window": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "recorded_at": "2025-09-29T10:50:08.976575+00:00",
+          "mode": "trial"
+        }
+      }
+    },
+    "crown_handshake": {
+      "rest": {
+        "method": "POST",
+        "endpoint": "http://localhost:8001/handshake",
+        "request": {
+          "identity": {
+            "connector_id": "crown_handshake",
+            "version": "0.1.0",
+            "instance": "local"
+          },
+          "supported_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "channels": [
+                "handshake",
+                "heartbeat",
+                "mission-brief"
+              ],
+              "capabilities": [
+                "register",
+                "telemetry",
+                "mission-brief"
+              ]
+            }
+          ],
+          "rotation": {
+            "last_rotated": "2025-09-29T10:50:08Z",
+            "rotation_window": "PT48H",
+            "supports_hot_swap": true,
+            "token_hint": "crown"
+          }
+        },
+        "response": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-09-28T22:28:14Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            }
+          }
+        },
+        "normalized": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-09-28T22:28:14Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            }
+          }
+        },
+        "checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d"
+      },
+      "grpc": {
+        "service": "neoabzu.vector.VectorService",
+        "method": "Init",
+        "rpc": "neoabzu.vector.VectorService/Init",
+        "request": {
+          "stage": "B",
+          "connector_id": "crown_handshake",
+          "contexts": [
+            "stage-b-rehearsal",
+            "stage-c-prep"
+          ]
+        },
+        "response": {
+          "message": "trial handshake parity for crown_handshake",
+          "handshake_equivalent": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-09-26T22:28:14Z",
+              "rotation_window": "PT48H",
+              "window_id": "20250926T222814Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-09-26T22:28:14Z",
+                "rotation_window": "PT48H",
+                "window_id": "20250926T222814Z-PT48H"
+              }
+            }
+          }
+        },
+        "metadata": {
+          "parity_checksum": "631c744e94af3e5c1fc57446cac038b0805c739e2537130c822da792fe64250d",
+          "credential_expiry": "2025-09-28T22:28:14Z",
+          "rotation_window": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-09-26T22:28:14Z",
+            "rotation_window": "PT48H",
+            "window_id": "20250926T222814Z-PT48H"
+          },
+          "recorded_at": "2025-09-29T10:50:08.976961+00:00",
+          "mode": "trial"
+        }
+      }
+    }
+  },
+  "doctrine_ok": true,
+  "doctrine_failures": []
+}

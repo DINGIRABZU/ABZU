@@ -212,6 +212,59 @@ def _extract_stage_c_promotion(
     return promotion
 
 
+def _synchronize_stage_c_handshake(
+    handshake: dict[str, Any] | None,
+    stage_c_handshake: dict[str, Any] | None,
+) -> str | None:
+    """Merge Stage C handshake metadata into the Stage B handshake payload.
+
+    Returns the Stage C credential expiry when available so heartbeat payloads
+    can mirror the drill metadata that triggered the promotion.
+    """
+
+    if not isinstance(handshake, dict) or not isinstance(stage_c_handshake, dict):
+        return None
+
+    credential_expiry: str | None = None
+
+    stage_c_session = stage_c_handshake.get("session")
+    if isinstance(stage_c_session, dict):
+        session_section: dict[str, Any]
+        if isinstance(handshake.get("session"), dict):
+            session_section = dict(handshake["session"])
+        else:
+            session_section = {}
+        for key, value in stage_c_session.items():
+            if isinstance(key, str):
+                session_section[key] = value
+        handshake["session"] = session_section
+        expiry_candidate = stage_c_session.get("credential_expiry")
+        if isinstance(expiry_candidate, str) and expiry_candidate:
+            credential_expiry = expiry_candidate
+
+    stage_c_rotation = stage_c_handshake.get("rotation")
+    if isinstance(stage_c_rotation, dict):
+        handshake["rotation"] = dict(stage_c_rotation)
+
+    stage_c_echo = stage_c_handshake.get("echo")
+    if isinstance(stage_c_echo, dict):
+        echo_section: dict[str, Any]
+        if isinstance(handshake.get("echo"), dict):
+            echo_section = dict(handshake["echo"])
+        else:
+            echo_section = {}
+        rotation_echo = stage_c_echo.get("rotation")
+        if isinstance(rotation_echo, dict):
+            echo_section["rotation"] = dict(rotation_echo)
+        handshake["echo"] = echo_section
+
+    stage_c_contexts = _normalize_contexts(stage_c_handshake.get("accepted_contexts"))
+    if stage_c_contexts:
+        handshake["accepted_contexts"] = stage_c_contexts
+
+    return credential_expiry
+
+
 def _apply_promotion_to_handshake(
     handshake: dict[str, Any],
     promotion: dict[str, dict[str, Any]],
@@ -363,6 +416,19 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
             extra={"promotion": promotion_metadata},
         )
         _apply_promotion_to_handshake(handshake, promotion_metadata)
+
+    stage_c_expiry = _synchronize_stage_c_handshake(handshake, stage_c_handshake)
+    if stage_c_expiry:
+        heartbeat_expiry = stage_c_expiry
+        if heartbeat_payload is not None:
+            heartbeat_payload["credential_expiry"] = stage_c_expiry
+            heartbeat_session = heartbeat_payload.get("session")
+            if isinstance(heartbeat_session, dict):
+                heartbeat_session["credential_expiry"] = stage_c_expiry
+            elif stage_c_handshake:
+                heartbeat_payload["session"] = dict(
+                    stage_c_handshake.get("session") or {}
+                )
 
     gateway_base = os.getenv("MCP_GATEWAY_URL", "http://localhost:8001").rstrip("/")
 
