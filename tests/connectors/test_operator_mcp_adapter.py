@@ -113,3 +113,40 @@ def test_rotation_drill_logging(monkeypatch, tmp_path):
 
     ok, failures = adapter.evaluate_operator_doctrine()
     assert ok, failures
+
+
+def test_collect_transport_parity_artifacts_reports_stage_c_trial():
+    entries = adapter.collect_transport_parity_artifacts()
+    assert entries, "expected Stage C parity artifacts"
+    latest = entries[-1]
+    assert latest["parity"] is True
+    assert latest["differences"] == []
+    assert latest["rest_checksum"] == latest["grpc_checksum"]
+    gaps = set(latest["monitoring_gaps"])
+    expected_alerts = {
+        "rest_latency_missing",
+        "grpc_latency_missing",
+        "heartbeat_missing",
+    }
+    assert expected_alerts <= gaps
+    assert latest["heartbeat_emitted"] is False
+    assert latest["rest_path"].endswith("rest_handshake_with_expiry.json")
+    assert latest["grpc_path"].endswith("grpc_trial_handshake.json")
+    assert latest["diff_path"].endswith("rest_grpc_handshake_diff.json")
+    assert latest["metadata"]["rotation_window"]["rotation_window"] == "PT48H"
+
+
+def test_build_transport_parity_monitoring_payload_surface_alerts():
+    payload = adapter.build_transport_parity_monitoring_payload()
+    assert payload["parity"] is True
+    assert payload["checksum_match"] is True
+    assert payload["rest_checksum"] == payload["grpc_checksum"]
+    alerts = set(payload["alerts"])
+    expected_alerts = {
+        "rest_latency_missing",
+        "grpc_latency_missing",
+        "heartbeat_missing",
+    }
+    assert expected_alerts <= alerts
+    assert payload["heartbeat_emitted"] is False
+    assert payload["summary_path"].endswith("20251031T000000Z-test/summary.json")
