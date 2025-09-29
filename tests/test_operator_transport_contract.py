@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator, Mapping
 
 import pytest
 from fastapi import FastAPI
@@ -16,6 +17,77 @@ from connectors.operator_mcp_adapter import (
 )
 import operator_api
 from operator_api_grpc import OperatorApiGrpcService
+
+
+STAGE_E_CONNECTORS: tuple[str, ...] = (
+    "operator_api",
+    "operator_upload",
+    "crown_handshake",
+)
+
+
+def _load_stage_c_trial_entries() -> list[dict[str, Any]]:
+    """Return transport parity entries using Stage C trial artifacts.
+
+    The helper prefers ``collect_transport_parity_artifacts`` but also
+    understands the newer Stage C summary layout where the handshake
+    artifacts live at the top level of ``summary.json``.
+    """
+
+    entries = collect_transport_parity_artifacts()
+    if entries:
+        return entries
+
+    stage_c_root = Path("logs") / "stage_c"
+    trial_entries: list[dict[str, Any]] = []
+    for summary_path in sorted(stage_c_root.glob("*/summary.json")):
+        try:
+            data = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        summary = data.get("summary")
+        if not isinstance(summary, dict):
+            continue
+        rest_path = summary.get("rest_handshake_with_expiry")
+        grpc_path = summary.get("grpc_trial_handshake")
+        diff_path = summary.get("rest_grpc_diff")
+        if not all(isinstance(p, str) and p for p in (rest_path, grpc_path, diff_path)):
+            continue
+        trial_entries.append(
+            {
+                "run_id": summary_path.parent.name,
+                "rest_path": rest_path,
+                "grpc_path": grpc_path,
+                "diff_path": diff_path,
+                "summary": summary,
+                "handshake_parity": (
+                    data.get("handshake_parity")
+                    if isinstance(data.get("handshake_parity"), dict)
+                    else {}
+                ),
+            }
+        )
+    return trial_entries
+
+
+def _load_json(path_hint: str) -> Mapping[str, Any] | None:
+    path = Path(path_hint)
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _iter_stage_c_summaries() -> Iterator[dict[str, Any]]:
+    stage_c_root = Path("logs") / "stage_c"
+    for summary_path in sorted(stage_c_root.glob("*/summary.json")):
+        try:
+            data = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        yield data
 
 
 def _rest_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
@@ -125,16 +197,91 @@ def test_grpc_fallback_emits_metadata(
 
 
 def test_stage_c_transport_parity_checksums_align() -> None:
-    entries = collect_transport_parity_artifacts()
+    entries = _load_stage_c_trial_entries()
     assert entries, "expected Stage C transport parity artifacts"
     latest = entries[-1]
-    rest_normalized = latest["normalized"]["rest"]
-    grpc_normalized = latest["normalized"]["grpc"]
+
+    rest_payload = _load_json(latest["rest_path"])
+    grpc_payload = _load_json(latest["grpc_path"])
+    diff_payload = _load_json(latest["diff_path"])
+
+    assert isinstance(rest_payload, Mapping)
+    assert isinstance(grpc_payload, Mapping)
+    assert isinstance(diff_payload, Mapping)
+
+    rest_normalized = rest_payload.get("normalized")
+    if not isinstance(rest_normalized, Mapping):
+        rest_normalized = rest_payload.get("handshake")
+    grpc_normalized = grpc_payload.get("handshake_equivalent")
+    if not isinstance(grpc_normalized, Mapping):
+        grpc_normalized = grpc_payload.get("handshake")
+
     assert rest_normalized == grpc_normalized
     rest_checksum = compute_handshake_checksum(rest_normalized)
     grpc_checksum = compute_handshake_checksum(grpc_normalized)
-    assert rest_checksum == latest["rest_checksum"] == latest["grpc_checksum"]
+
     assert rest_checksum == grpc_checksum
-    assert latest["parity"] is True
-    assert latest["differences"] == []
-    assert latest["checksum_match"] is True
+    assert rest_checksum == diff_payload.get("rest_checksum")
+    assert grpc_checksum == diff_payload.get("grpc_checksum")
+    assert diff_payload.get("parity") is True
+    assert diff_payload.get("differences") == []
+    assert diff_payload.get("checksum_match") is True
+
+
+def test_stage_e_connector_parity_coverage_pending() -> None:
+    connectors_seen: set[str] = set()
+    for data in _iter_stage_c_summaries():
+        handshake_sources = []
+        summary_section = data.get("summary")
+        if isinstance(summary_section, Mapping):
+            handshake_sources.append(summary_section.get("handshake"))
+        handshake_parity = data.get("handshake_parity")
+        if isinstance(handshake_parity, Mapping):
+            handshake_sources.append(handshake_parity.get("rotation_window"))
+        metrics = data.get("metrics")
+        if isinstance(metrics, Mapping):
+            handshake_sources.append(metrics.get("handshake"))
+
+        for source in handshake_sources:
+            if not isinstance(source, Mapping):
+                continue
+            rotation = source.get("rotation")
+            if isinstance(rotation, Mapping):
+                connector_id = rotation.get("connector_id")
+                if isinstance(connector_id, str):
+                    connectors_seen.add(connector_id)
+            connector_id = source.get("connector_id")
+            if isinstance(connector_id, str):
+                connectors_seen.add(connector_id)
+
+    missing = sorted({c for c in STAGE_E_CONNECTORS if c not in connectors_seen})
+    assert missing == ["crown_handshake", "operator_upload"], missing
+
+
+def test_stage_e_transport_monitoring_gaps_acknowledged() -> None:
+    entries = _load_stage_c_trial_entries()
+    assert entries, "expected Stage C transport parity artifacts"
+    latest_summary = entries[-1]["summary"]
+    assert isinstance(latest_summary, Mapping)
+
+    trial_trace = latest_summary.get("trial_trace")
+    rest_trace = trial_trace.get("rest") if isinstance(trial_trace, Mapping) else None
+    grpc_trace = trial_trace.get("grpc") if isinstance(trial_trace, Mapping) else None
+
+    missing_metrics = set()
+    if not isinstance(rest_trace, Mapping) or rest_trace.get("latency_ms") is None:
+        missing_metrics.add("rest_latency_missing")
+    if not isinstance(grpc_trace, Mapping) or grpc_trace.get("latency_ms") is None:
+        missing_metrics.add("grpc_latency_missing")
+    if not latest_summary.get("heartbeat_emitted"):
+        missing_metrics.add("heartbeat_missing")
+    heartbeat_payload = latest_summary.get("heartbeat_payload")
+    if not heartbeat_payload or not isinstance(heartbeat_payload, Mapping):
+        missing_metrics.add("heartbeat_latency_missing")
+
+    assert missing_metrics == {
+        "rest_latency_missing",
+        "grpc_latency_missing",
+        "heartbeat_missing",
+        "heartbeat_latency_missing",
+    }
