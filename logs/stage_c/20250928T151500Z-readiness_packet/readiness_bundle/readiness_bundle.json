@@ -779,5 +779,21 @@
       "credential_expiry": "2025-09-30T00:19:10Z"
     }
   },
+  "stage_e": {
+    "status": "warning",
+    "summary_path": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json",
+    "dashboard_url": "https://grafana.ops.abzu.dev/d/operator-transport-parity/continuous-stage-e",
+    "telemetry_hash": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+    "heartbeat_gaps": [
+      "operator_api",
+      "operator_upload",
+      "crown_handshake"
+    ],
+    "environment_notes": [
+      "environment-limited: transport latency metrics unavailable in sandbox traces",
+      "environment-limited: connector heartbeat instrumentation pending",
+      "environment-limited: heartbeat payload unavailable for operator_api"
+    ]
+  },
   "missing": []
 }

@@ -1,0 +1,143 @@
+{
+  "status": "warning",
+  "stage": "stage_e_transport_readiness",
+  "run_id": "20250930T121727Z-stage_e_transport_readiness",
+  "generated_at": "2025-09-30T12:17:27.407340+00:00",
+  "dashboard": {
+    "url": "https://grafana.ops.abzu.dev/d/operator-transport-parity/continuous-stage-e",
+    "updated_at": "2025-09-30T12:17:27.407340+00:00"
+  },
+  "source_stage_c": {
+    "run_id": "20251031T000000Z-test",
+    "summary_path": "logs/stage_c/20251031T000000Z-test/summary.json",
+    "artifacts": {
+      "rest": "logs/stage_c/20251031T000000Z-test/rest_handshake_with_expiry.json",
+      "grpc": "logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json",
+      "diff": "logs/stage_c/20251031T000000Z-test/rest_grpc_handshake_diff.json"
+    }
+  },
+  "connectors": {
+    "operator_api": {
+      "connector_id": "operator_api",
+      "rotation_window": {
+        "window_id": "20250926T222814Z-PT48H",
+        "started_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "PT48H"
+      },
+      "rotated_at": "2025-09-26T22:28:14Z",
+      "parity": true,
+      "checksum_match": true,
+      "rest_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "grpc_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "differences": [],
+      "latency_ms": {
+        "rest": null,
+        "grpc": null
+      },
+      "monitoring_gaps": [
+        "rest_latency_missing",
+        "grpc_latency_missing",
+        "heartbeat_latency_missing",
+        "heartbeat_missing"
+      ],
+      "artifacts": {
+        "rest": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_api/rest_trace.json",
+        "grpc": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_api/grpc_trace.json",
+        "diff": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_api/rest_grpc_diff.json"
+      },
+      "heartbeat_emitted": false,
+      "heartbeat_latency_ms": null
+    },
+    "operator_upload": {
+      "connector_id": "operator_upload",
+      "rotation_window": {
+        "window_id": "20250926T222814Z-PT48H",
+        "started_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "PT48H"
+      },
+      "rotated_at": "2025-09-26T22:28:14Z",
+      "parity": true,
+      "checksum_match": true,
+      "rest_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "grpc_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "differences": [],
+      "latency_ms": {
+        "rest": null,
+        "grpc": null
+      },
+      "monitoring_gaps": [
+        "rest_latency_missing",
+        "grpc_latency_missing",
+        "heartbeat_latency_missing",
+        "heartbeat_missing"
+      ],
+      "artifacts": {
+        "rest": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_upload/rest_trace.json",
+        "grpc": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_upload/grpc_trace.json",
+        "diff": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_upload/rest_grpc_diff.json"
+      },
+      "heartbeat_emitted": false,
+      "heartbeat_latency_ms": null
+    },
+    "crown_handshake": {
+      "connector_id": "crown_handshake",
+      "rotation_window": {
+        "window_id": "20250926T222814Z-PT48H",
+        "started_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "PT48H"
+      },
+      "rotated_at": "2025-09-26T22:28:14Z",
+      "parity": true,
+      "checksum_match": true,
+      "rest_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "grpc_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "differences": [],
+      "latency_ms": {
+        "rest": null,
+        "grpc": null
+      },
+      "monitoring_gaps": [
+        "rest_latency_missing",
+        "grpc_latency_missing",
+        "heartbeat_latency_missing",
+        "heartbeat_missing"
+      ],
+      "artifacts": {
+        "rest": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/crown_handshake/rest_trace.json",
+        "grpc": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/crown_handshake/grpc_trace.json",
+        "diff": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/crown_handshake/rest_grpc_diff.json"
+      },
+      "heartbeat_emitted": false,
+      "heartbeat_latency_ms": null
+    }
+  },
+  "missing_connectors": [],
+  "parity_failures": [],
+  "heartbeat_gaps": [
+    "operator_api",
+    "operator_upload",
+    "crown_handshake"
+  ],
+  "telemetry_hashes": {
+    "operator_api": {
+      "rest": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "grpc": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8"
+    },
+    "operator_upload": {
+      "rest": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "grpc": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8"
+    },
+    "crown_handshake": {
+      "rest": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+      "grpc": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8"
+    }
+  },
+  "environment_notes": [
+    "environment-limited: connector heartbeat instrumentation pending",
+    "environment-limited: heartbeat payload unavailable for operator_api",
+    "environment-limited: transport latency metrics unavailable in sandbox traces"
+  ]
+}

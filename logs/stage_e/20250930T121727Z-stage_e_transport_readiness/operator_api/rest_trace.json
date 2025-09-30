@@ -1,0 +1,144 @@
+{
+  "protocol": "REST",
+  "trace": {
+    "method": "POST",
+    "endpoint": "http://localhost:8001/handshake",
+    "request": {
+      "identity": {
+        "connector_id": "operator_api",
+        "version": "0.1.0",
+        "instance": "local"
+      },
+      "supported_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "channels": [
+            "handshake",
+            "heartbeat",
+            "command"
+          ],
+          "capabilities": [
+            "register",
+            "telemetry",
+            "command"
+          ]
+        }
+      ],
+      "rotation": {
+        "last_rotated": "2025-09-29T19:04:38Z",
+        "rotation_window": "PT48H",
+        "supports_hot_swap": true,
+        "token_hint": "operator"
+      }
+    },
+    "response": {
+      "authenticated": true,
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-09-28T22:28:14Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+          "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json",
+          "accepted_via": "stage_c4_operator_mcp_drill"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "accepted",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+          "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json",
+          "accepted_via": "stage_c4_operator_mcp_drill"
+        }
+      ],
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-26T22:28:14Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250926T222814Z-PT48H"
+      },
+      "echo": {
+        "rotation": {
+          "connector_id": "operator_api",
+          "last_rotated": "2025-09-26T22:28:14Z",
+          "rotation_window": "PT48H",
+          "window_id": "20250926T222814Z-PT48H"
+        }
+      }
+    },
+    "normalized": {
+      "authenticated": true,
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-09-28T22:28:14Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+          "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "accepted",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+          "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json"
+        }
+      ],
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-26T22:28:14Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250926T222814Z-PT48H"
+      },
+      "echo": {
+        "rotation": {
+          "connector_id": "operator_api",
+          "last_rotated": "2025-09-26T22:28:14Z",
+          "rotation_window": "PT48H",
+          "window_id": "20250926T222814Z-PT48H"
+        }
+      }
+    },
+    "checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8"
+  },
+  "normalized": {
+    "authenticated": true,
+    "session": {
+      "id": "stage-c-session",
+      "credential_expiry": "2025-09-28T22:28:14Z"
+    },
+    "accepted_contexts": [
+      {
+        "name": "stage-b-rehearsal",
+        "status": "accepted",
+        "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+        "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json"
+      },
+      {
+        "name": "stage-c-prep",
+        "status": "accepted",
+        "evidence_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+        "summary_path": "/workspace/ABZU/logs/stage_c/20250926T222813Z-stage_c4_operator_mcp_drill/summary.json"
+      }
+    ],
+    "rotation": {
+      "connector_id": "operator_api",
+      "last_rotated": "2025-09-26T22:28:14Z",
+      "rotation_window": "PT48H",
+      "window_id": "20250926T222814Z-PT48H"
+    },
+    "echo": {
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-09-26T22:28:14Z",
+        "rotation_window": "PT48H",
+        "window_id": "20250926T222814Z-PT48H"
+      }
+    }
+  },
+  "checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8"
+}
