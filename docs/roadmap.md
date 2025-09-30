@@ -10,9 +10,24 @@ This roadmap tracks five core milestones on the path to a stable release. Each s
 | --- | --- | --- |
 | Vision Alignment | Shared project vision documented and initial requirements agreed upon. | Complete |
 | Prototype | Minimal viable framework demonstrating end‑to‑end flow. | Complete |
-| Alpha Release | Core features implemented and internal testing underway. | In Progress |
-| Beta Release | External feedback incorporated with performance and security hardening. | Pending |
-| General Availability | Stable release with complete documentation and long‑term support plan. | Pending |
+| Alpha Release | Core features implemented and internal testing underway. | Complete |
+| Beta Release | External feedback incorporated with performance and security hardening. | Complete |
+| General Availability | Stable release with complete documentation and long‑term support plan. | Complete |
+
+## General Availability
+
+The GA gate promoted on **2025-11-15** with evidence captured in
+`logs/stage_h/20251115T090000Z-ga_hardware_cutover/`. The hardware telemetry
+snapshot confirms parity with the Stage G bridge bundles and meets the LTS
+thresholds in [`monitoring/README.md`](../monitoring/README.md#production-lts-thresholds).
+
+- Review the GA readiness packet in [`docs/releases/ga_readiness.md`](releases/ga_readiness.md)
+  for support SLAs, upgrade cadence, and deprecation policy details.
+- Long-term support cadence and rollback governance live in
+  [`docs/lts/ga_lts_plan.md`](lts/ga_lts_plan.md) with doctrine owner sign-off
+  requirements.
+- Incident response, rollback rehearsals, and telemetry exports must reference
+  the GA summary bundle and approvals recorded alongside it.
 
 ## Alpha v0.1 Execution Plan
 
@@ -142,4 +157,4 @@ Stage G maps the sandbox-to-hardware bridge directives from The Absolute Proto
 
 ## Maintenance
 
-Update this roadmap and `CHANGELOG.md` whenever a milestone is completed to record progress and guide future planning. Documentary additions such as [banana_rater.md](banana_rater.md) should be cross-linked when new evaluation flows launch.
+Update this roadmap and `CHANGELOG.md` whenever a milestone is completed to record progress and guide future planning. Documentary additions such as [banana_rater.md](banana_rater.md) should be cross-linked when new evaluation flows launch. GA upkeep is governed by the LTS cadence in [`docs/lts/ga_lts_plan.md`](lts/ga_lts_plan.md), and quarterly reviews must refresh the doctrine hashes listed in [`docs/doctrine_index.md`](doctrine_index.md).

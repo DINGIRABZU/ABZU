@@ -199,6 +199,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented Nazarick agent triggers for Albedo state transitions and added
   state-to-channel table; refreshed `docs/INDEX.md`.
 
+## [1.0.0] - 2025-11-15
+
+### Added
+- GA readiness handbook in `docs/releases/ga_readiness.md` detailing support SLAs,
+  upgrade cadence, and deprecation governance with cross-links to architecture
+  blueprints.
+- GA long-term support plan archived at `docs/lts/ga_lts_plan.md`, including
+  monitoring thresholds, incident response loops, and rollback doctrine
+  references.
+- Hardware telemetry bundle under `logs/stage_h/20251115T090000Z-ga_hardware_cutover/`
+  capturing parity metrics, rehearsal diffs, and approvals for the GA cutover.
+
+### Changed
+- Marked all roadmap milestones as complete and introduced a GA section that
+  references the LTS cadence, telemetry bundle, and doctrine sign-offs.
+- Updated `monitoring/README.md` with production-grade LTS thresholds, GA
+  incident response procedures, and guidance for exporting hardware telemetry.
+- Synced `docs/doctrine_index.md` timestamps and hashes after refreshing GA
+  doctrine entries.
+
 
 ### Documentation
 

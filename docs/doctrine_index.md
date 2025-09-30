@@ -2,12 +2,14 @@
 
 | File | Version | Checksum | Last Updated |
 | --- | --- | --- | --- |
-| docs/roadmap.md |  | `f34cec435233a4a9604d6afd5600ffb8a680174f64f2f14e2a1bd9cc33f721a6` | 2025-11-02T10:05:00Z |
+| docs/roadmap.md |  | `f01746db10c76e69157dba5742ee738936a836084ff06c1ef01e9c7b560932fe` | 2025-11-15T12:00:00Z |
 | docs/PROJECT_STATUS.md |  | `c7b2fb61b87066d031d11a259ec60654df034b5b7b9ceeace5c44042c7b990cf` | 2025-11-02T10:05:00Z |
 | docs/The_Absolute_Protocol.md | v1.0.111 | `01217d982ef574c57bf87474b8435fffa0dd0d8ee4bcf0b97d518b4511ace6ae` | 2025-11-02T10:05:00Z |
 | docs/documentation_protocol.md |  | `7a1630c22fc044942d36491cb3c80c64cbe8a5f3682ae05f25ed606925bd6300` | 2025-11-02T10:05:00Z |
 | docs/system_blueprint.md |  | `48e5e5e212eb171f4b1e5447d347544cd572c0bbe5c9e4e7d526c3e45ac38172` | 2025-10-31T00:00:00Z |
 | docs/releases/beta_launch_plan.md |  | `fe7f0cf3a0557bf44b00f3502896a8f38e251dcc3f30c8354382e87252be9dcb` | 2025-11-01T12:00:00Z |
+| docs/releases/ga_readiness.md |  | `e5308609f1a5dff00e31671f6ade5ec11f3f19be97013bff1527e972b11ff037` | 2025-11-15T12:00:00Z |
+| docs/lts/ga_lts_plan.md |  | `f4d401158d0e33b2d4914df64ebff1192be34300c5b652f199747b3b92beb02b` | 2025-11-15T12:00:00Z |
 | CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md |  | `d46a551d4e1fb1b3e056bf14f051793e6faaa6191b268f84e3a0e054fe432c60` | 2025-09-21T15:59:59+02:00 |
 | CODEX/ACTIVATIONS/OATHS 1dd45dfc251d80bcae6ed621d4d09b4d.md |  | `89237b0cf133fc4e30d5d6aeb3e365f966aefd98fbee7815b8a52d85733207ec` | 2025-09-21T15:59:59+02:00 |
 | CODEX/ACTIVATIONS/OATHS_.md |  | `89237b0cf133fc4e30d5d6aeb3e365f966aefd98fbee7815b8a52d85733207ec` | 2025-09-21T15:59:59+02:00 |

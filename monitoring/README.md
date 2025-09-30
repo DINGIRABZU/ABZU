@@ -50,6 +50,23 @@ Exporter textfile collector at the directory to surface the gauges on the Boot
 Ops Grafana board (panels titled *Boot First Attempt Successes*, *Boot Retry
 Attempts*, and *Boot Total Time*).
 
+## Production LTS thresholds
+
+The GA release enforces the following baseline thresholds. Prometheus rules and
+Grafana panels must alert whenever these bars are crossed for two consecutive
+scrapes. Update `monitoring/alerts/` and archive diffs in
+`logs/stage_h/<run_id>/alert_rules.json` after every quarterly review.
+
+| Surface | Metric | Threshold | Alert window |
+| --- | --- | --- | --- |
+| Mission-critical APIs (`operator_api`, `operator_upload`, `crown_handshake`) | `http_request_duration_seconds_bucket{le="0.5"}` | ≥ 99% of requests under 500 ms | 5 minutes |
+| Creative synthesis surfaces (`bana`, `avatar_stream`) | `stream_frame_drop_ratio` | ≤ 1.5% frame loss | 10 minutes |
+| Narrative and memory stores (`memory_store`, `spiral_memory`) | `memory_query_latency_seconds_bucket{le="0.2"}` | ≥ 98% of queries under 200 ms | 15 minutes |
+| Hardware telemetry | `node_cpu_seconds_total{mode="idle"}` | ≥ 30% idle across GA racks | 15 minutes |
+
+For long-term support reviews, snapshot the Grafana dashboards that visualize
+these thresholds and store them under `logs/stage_h/<run_id>/grafana_snapshots/`.
+
 ## Operator transport pilot dashboard
 
 The dual REST/gRPC pilot for `operator_api` emits latency, error, and fallback
@@ -116,3 +133,20 @@ defined in `monitoring/alerts/beta_feedback.yml`.
 
 3. Point Grafana or alerting rules at the Pushgateway-hosted series to watch
    coverage and phase success trends between promotions.
+
+## GA incident response
+
+1. Page the incident commander in `#ops-ga-bridge` and open a timeline in the
+   operator console.
+2. Export the latest hardware telemetry bundle from
+   `logs/stage_h/20251115T090000Z-ga_hardware_cutover/summary.json` and attach it
+   to the incident record.
+3. Compare live metrics against the LTS thresholds above. If thresholds are
+   breached for longer than the alert window, initiate the rollback drill
+   described in [`docs/lts/ga_lts_plan.md`](../docs/lts/ga_lts_plan.md#rollback-governance).
+4. Capture remediation actions, Grafana snapshots, and parity diffs in
+   `logs/stage_h/<incident_id>/evidence/` before closing the incident.
+
+Rollback rehearsals must be performed quarterly and logged under
+`logs/stage_h/<run_id>/rehearsal_diff.json` with sign-off recorded in
+`logs/stage_h/<run_id>/approvals.yaml`.
