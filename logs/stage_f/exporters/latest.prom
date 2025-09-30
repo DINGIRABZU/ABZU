@@ -1,0 +1,39 @@
+# HELP beta_feedback_latency_ms External beta feedback response latency in milliseconds.
+# TYPE beta_feedback_latency_ms histogram
+beta_feedback_latency_ms_bucket{channel="operator_api",stage="beta",le="50"} 18
+beta_feedback_latency_ms_bucket{channel="operator_api",stage="beta",le="100"} 62
+beta_feedback_latency_ms_bucket{channel="operator_api",stage="beta",le="200"} 188
+beta_feedback_latency_ms_bucket{channel="operator_api",stage="beta",le="250"} 236
+beta_feedback_latency_ms_bucket{channel="operator_api",stage="beta",le="500"} 256
+beta_feedback_latency_ms_bucket{channel="operator_api",stage="beta",le="+Inf"} 256
+beta_feedback_latency_ms_sum{channel="operator_api",stage="beta"} 32840
+beta_feedback_latency_ms_count{channel="operator_api",stage="beta"} 256
+beta_feedback_latency_ms_bucket{channel="operator_upload",stage="beta",le="50"} 12
+beta_feedback_latency_ms_bucket{channel="operator_upload",stage="beta",le="100"} 48
+beta_feedback_latency_ms_bucket{channel="operator_upload",stage="beta",le="200"} 132
+beta_feedback_latency_ms_bucket{channel="operator_upload",stage="beta",le="250"} 178
+beta_feedback_latency_ms_bucket{channel="operator_upload",stage="beta",le="500"} 212
+beta_feedback_latency_ms_bucket{channel="operator_upload",stage="beta",le="+Inf"} 212
+beta_feedback_latency_ms_sum{channel="operator_upload",stage="beta"} 24760
+beta_feedback_latency_ms_count{channel="operator_upload",stage="beta"} 212
+beta_feedback_latency_ms_bucket{channel="crown_handshake",stage="beta",le="50"} 15
+beta_feedback_latency_ms_bucket{channel="crown_handshake",stage="beta",le="100"} 60
+beta_feedback_latency_ms_bucket{channel="crown_handshake",stage="beta",le="200"} 170
+beta_feedback_latency_ms_bucket{channel="crown_handshake",stage="beta",le="250"} 205
+beta_feedback_latency_ms_bucket{channel="crown_handshake",stage="beta",le="500"} 238
+beta_feedback_latency_ms_bucket{channel="crown_handshake",stage="beta",le="+Inf"} 238
+beta_feedback_latency_ms_sum{channel="crown_handshake",stage="beta"} 28910
+beta_feedback_latency_ms_count{channel="crown_handshake",stage="beta"} 238
+# HELP beta_feedback_error_budget_ratio Remaining error budget for beta feedback integrations.
+# TYPE beta_feedback_error_budget_ratio gauge
+beta_feedback_error_budget_ratio{channel="operator_api",stage="beta"} 0.91
+beta_feedback_error_budget_ratio{channel="operator_upload",stage="beta"} 0.88
+beta_feedback_error_budget_ratio{channel="crown_handshake",stage="beta"} 0.86
+# HELP beta_feedback_satisfaction_score Aggregated satisfaction signals collected from external testers.
+# TYPE beta_feedback_satisfaction_score gauge
+beta_feedback_satisfaction_score{channel="operator_api",signal="csat",stage="beta"} 4.35
+beta_feedback_satisfaction_score{channel="operator_api",signal="nps",stage="beta"} 47
+beta_feedback_satisfaction_score{channel="operator_upload",signal="csat",stage="beta"} 4.21
+beta_feedback_satisfaction_score{channel="operator_upload",signal="nps",stage="beta"} 42
+beta_feedback_satisfaction_score{channel="crown_handshake",signal="csat",stage="beta"} 4.18
+beta_feedback_satisfaction_score{channel="crown_handshake",signal="nps",stage="beta"} 39
