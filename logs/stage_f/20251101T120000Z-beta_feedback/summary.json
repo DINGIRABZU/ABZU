@@ -1,0 +1,38 @@
+{
+  "run_id": "20251101T120000Z-beta_feedback",
+  "source_stage_e": "20250930T121727Z-stage_e_transport_readiness",
+  "telemetry_hash": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+  "generated_at": "2025-11-01T12:00:00Z",
+  "metrics_file": "external_feedback.prom",
+  "channels": [
+    {
+      "channel": "operator_api",
+      "p95_latency_ms": 215,
+      "error_budget_ratio": 0.91,
+      "csat": 4.35,
+      "nps": 47,
+      "notes": [
+        "Two sandbox testers flagged sluggish auth callbacks; mitigation tracked in ops backlog.",
+        "Heartbeat latency still pending hardware rehearsal to clear environment flag."
+      ]
+    },
+    {
+      "channel": "operator_upload",
+      "p95_latency_ms": 232,
+      "error_budget_ratio": 0.88,
+      "csat": 4.21,
+      "nps": 42,
+      "notes": [
+        "Upload retries tied to checksum validation; beta error budget holding at 12% burn."]
+    },
+    {
+      "channel": "crown_handshake",
+      "p95_latency_ms": 241,
+      "error_budget_ratio": 0.86,
+      "csat": 4.18,
+      "nps": 39,
+      "notes": [
+        "Satisfaction dip tracked to avatar switching bug; fix targeted for next rehearsal."]
+    }
+  ]
+}

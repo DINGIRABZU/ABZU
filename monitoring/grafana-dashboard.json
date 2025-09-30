@@ -208,6 +208,43 @@
           "unit": "s"
         }
       }
+    },
+    {
+      "type": "graph",
+      "title": "Beta External Feedback Latency (p95)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(beta_feedback_latency_ms_bucket[5m])) by (le, channel))",
+          "legendFormat": "{{channel}}"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Beta Feedback Error Budget",
+      "targets": [
+        {
+          "expr": "avg by (channel) (beta_feedback_error_budget_ratio)",
+          "legendFormat": "{{channel}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    {
+      "type": "graph",
+      "title": "Beta Feedback Satisfaction",
+      "targets": [
+        {
+          "expr": "avg by (channel, signal) (beta_feedback_satisfaction_score)",
+          "legendFormat": "{{channel}} {{signal}}"
+        }
+      ]
     }
   ]
 }

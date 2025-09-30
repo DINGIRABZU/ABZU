@@ -1,0 +1,43 @@
+groups:
+  - name: beta-feedback
+    rules:
+      - alert: BetaFeedbackLatencyRegression
+        expr: histogram_quantile(0.95, sum(rate(beta_feedback_latency_ms_bucket[10m])) by (le, channel)) > 250
+        for: 10m
+        labels:
+          severity: critical
+          service: beta-feedback
+        annotations:
+          summary: "Beta feedback latency regression for {{ $labels.channel }}"
+          description: |
+            The p95 latency for {{ $labels.channel }} exceeded the 250 ms beta SLO for ten minutes.
+            Investigate exporter snapshots under logs/stage_f/ and confirm transport parity evidence remains intact
+            before widening beta access.
+          runbook: docs/releases/beta_launch_plan.md#performance-guardrails
+      - alert: BetaFeedbackErrorBudgetBurn
+        expr: avg_over_time(beta_feedback_error_budget_ratio[30m]) < 0.85
+        for: 15m
+        labels:
+          severity: warning
+          service: beta-feedback
+        annotations:
+          summary: "Beta feedback error budget below threshold for {{ $labels.channel }}"
+          description: |
+            The remaining error budget for {{ $labels.channel }} dropped below 85% during the last 30 minutes.
+            Pause external experiments or tighten throttles until the next exporter snapshot recovers the ratio.
+          runbook: docs/releases/beta_launch_plan.md#performance-guardrails
+      - alert: BetaFeedbackSatisfactionDrop
+        expr: |
+          (beta_feedback_satisfaction_score{signal="csat"} < 4.2)
+            or
+          (beta_feedback_satisfaction_score{signal="nps"} < 40)
+        for: 30m
+        labels:
+          severity: warning
+          service: beta-feedback
+        annotations:
+          summary: "Beta feedback satisfaction drop detected for {{ $labels.channel }} {{ $labels.signal }}"
+          description: |
+            External satisfaction scores for {{ $labels.channel }} fell below the agreed beta baseline.
+            Capture user notes in docs/PROJECT_STATUS.md#beta-feedback-tracking and coordinate mitigation with ops.
+          runbook: docs/releases/beta_launch_plan.md#performance-guardrails

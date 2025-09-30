@@ -36,4 +36,7 @@
 | `razar_boot_component_total` | Gauge | _none_ | Components evaluated during the most recent boot run | Boot Ops |
 | `razar_boot_component_success_total` | Gauge | _none_ | Components that completed successfully in the most recent boot run | Boot Ops |
 | `razar_boot_component_failure_total` | Gauge | _none_ | Components that failed in the most recent boot run | Boot Ops |
+| `beta_feedback_latency_ms` | Histogram | `channel`, `stage` | External beta feedback latency distribution grouped by channel | Beta feedback |
+| `beta_feedback_error_budget_ratio` | Gauge | `channel`, `stage` | Remaining error budget for beta channels (1.0 = full budget) | Beta feedback |
+| `beta_feedback_satisfaction_score` | Gauge | `channel`, `signal`, `stage` | Satisfaction signals (CSAT, NPS) gathered from external testers | Beta feedback |
 

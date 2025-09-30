@@ -76,6 +76,11 @@ monitoring team can follow when the gRPC handler rolls back to REST.【F:operato
   snapshot, so the heartbeat latency graph should explicitly display “data
   pending” until the metric lands; copy the annotation into risk reviews so the
   missing metric remains visible.【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L31-L63】
+- Stage F beta feedback exporters extend the dashboard with latency, error-budget,
+  and satisfaction panels fed by `beta_feedback_*` metrics sourced from
+  `logs/stage_f/exporters/`. Wire the new alerts in `monitoring/alerts/beta_feedback.yml`
+  to the same review cadence so regressions block beta access until mitigated.
+  【F:logs/stage_f/exporters/latest.prom†L1-L39】【F:monitoring/alerts/beta_feedback.yml†L1-L43】
 
 
 

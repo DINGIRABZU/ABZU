@@ -181,6 +181,35 @@ is restored.【F:logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.j
 | Telemetry schemas diverge across rehearsal bundles. | @monitoring-guild | Grafana dashboards drop fields during beta rehearsals. | Validate schemas against readiness packet structure before exporting the beta rehearsal bundle. | ⚠️ Watch list 【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】 |
 | Beta comms lack signed transport approvals. | @release-ops | External announcement slips without documented sign-off. | Capture signatures in the beta readiness packet and archive alongside Stage D bridge sign-offs. | 🔄 Pending approval 【F:logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json†L1-L71】 |
 
+### Beta launch checklist
+
+Refer to the [Beta Launch Playbook](releases/beta_launch_plan.md) for guardrail
+definitions and escalation instructions. Weekly reviews should confirm the
+following items remain on track.【F:docs/releases/beta_launch_plan.md†L1-L111】
+
+| Checklist Item | Owner | Evidence | Status | Notes |
+| --- | --- | --- | --- | --- |
+| Stage E transport parity bundle referenced in every beta decision | @ops-team | `logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json` | ✅ Anchored | Checksum `30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8` verified against dashboards.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L1-L87】 |
+| Heartbeat latency remediation plan tracked | @integration-guild | Stage E summary + transport dashboard | ⚠️ Environment-limited | Latency metrics still absent in sandbox exporters; annotate dashboards until hardware rehearsal lands the signals.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L31-L63】【F:monitoring/operator_transport_pilot.md†L34-L66】 |
+| External feedback exporter refreshed with latest run | @monitoring-guild | `logs/stage_f/exporters/latest.prom` | ✅ Captured | Histogram and gauges published for latency, error budgets, and satisfaction this week.【F:logs/stage_f/exporters/latest.prom†L1-L33】 |
+| Security approvals mirrored in readiness minutes | @release-ops | Stage C readiness minutes + beta playbook | 🔄 Pending signatures | Awaiting updated credential attestations before widening beta access.【F:logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md†L1-L44】【F:docs/releases/beta_launch_plan.md†L47-L76】 |
+
+### Beta risk tracker
+
+| Risk | Owner | Impact | Mitigation | Status |
+| --- | --- | --- | --- | --- |
+| Beta feedback latency exceeds 250 ms p95 for any connector. | @ops-team | External testers experience sluggish workflows, eroding trust ahead of GA. | Investigate `beta_feedback_latency_regression` alerts, replay exporter snapshot, and align with transport parity traces before re-opening access. | 🛠️ In mitigation – monitoring alerts wired.【F:monitoring/alerts/beta_feedback.yml†L1-L20】【F:logs/stage_f/exporters/latest.prom†L1-L24】 |
+| Error-budget ratio drops below 0.85 for consecutive reviews. | @monitoring-guild | Beta error budget burns down, forcing throttling or cohort reductions. | Pause new cohorts, ship fix, and document recovery steps in weekly review notes. | ⚠️ Watch – operator upload trending near threshold.【F:monitoring/alerts/beta_feedback.yml†L17-L28】【F:logs/stage_f/exporters/latest.prom†L25-L33】 |
+| Satisfaction scores fall below CSAT 4.2 or NPS 40. | @release-ops | Stakeholder sentiment declines and blocks GA promotion. | Route `beta_feedback_satisfaction_drop` alerts through escalation notifier and capture remediation in feedback table. | 🔄 Monitoring – crown_handshake flagged for follow-up.【F:monitoring/alerts/beta_feedback.yml†L29-L43】【F:logs/stage_f/20251101T120000Z-beta_feedback/summary.json†L1-L34】 |
+
+### Beta feedback tracking
+
+| Channel | Telemetry Hash | p95 Latency (ms) | Error-Budget Ratio | CSAT | NPS | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| `operator_api` | `30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8` | 215 | 0.91 | 4.35 | 47 | Sandbox testers reporting sluggish auth callbacks; hardware rehearsal scheduled.【F:logs/stage_f/20251101T120000Z-beta_feedback/summary.json†L1-L20】 |
+| `operator_upload` | `30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8` | 232 | 0.88 | 4.21 | 42 | Upload retries tied to checksum validation; watching budget burn.【F:logs/stage_f/20251101T120000Z-beta_feedback/summary.json†L20-L27】 |
+| `crown_handshake` | `30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8` | 241 | 0.86 | 4.18 | 39 | Avatar switching bug depressing satisfaction; fix slated for next rehearsal.【F:logs/stage_f/20251101T120000Z-beta_feedback/summary.json†L27-L34】 |
+
 ## Deprecation Roadmap
 
 - **Pydantic field aliases** – migrate remaining models away from deprecated

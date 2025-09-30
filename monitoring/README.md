@@ -82,6 +82,19 @@ The pipeline archives the entire `monitoring/stage_b/` directory as
 `logs/stage_b_rehearsal_artifacts.tgz` after the scheduler completes so ops
 teams can attach the run artifacts to Stage B readiness reviews.
 
+## Stage F beta feedback exporters
+
+The beta launch window introduces external feedback exporters under
+`logs/stage_f/`. Each weekly rehearsal drops a `.prom` file (for example
+`logs/stage_f/exporters/latest.prom`) alongside a JSON summary capturing the
+telemetry hash, latency percentiles, error-budget ratios, and satisfaction
+notes inherited from the Stage E parity bundle. Mount the `logs/stage_f/exporters`
+directory into Node Exporter and enable the textfile collector so Prometheus can
+scrape the new `beta_feedback_*` metrics. The provided `docker-compose.yml`
+already maps the directory and passes `--collector.textfile.directory=/textfile`
+to Node Exporter, wiring the gauges and histograms into Grafana and alert rules
+defined in `monitoring/alerts/beta_feedback.yml`.
+
 ### File-based scraping
 
 1. Add a [`textfile` collector job](https://prometheus.io/docs/instrumenting/writing_exporters/#textfile-collector)

@@ -38,6 +38,11 @@ logs/stage_b/**/rehearsals/**/bundles/**
 !logs/stage_c/**
 !logs/stage_c_demo/
 !logs/stage_c_demo/**
+!logs/stage_f/
+!logs/stage_f/exporters/
+!logs/stage_f/exporters/*.prom
+!logs/stage_f/**/external_feedback.prom
+!logs/stage_f/**/summary.json
 !logs/stage_e/
 !logs/stage_e/**
 
