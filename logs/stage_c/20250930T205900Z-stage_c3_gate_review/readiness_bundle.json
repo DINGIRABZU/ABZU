@@ -1,0 +1,773 @@
+{
+  "generated_at": "2025-09-30T20:58:56+00:00",
+  "stage_a": {
+    "label": "stage_a",
+    "status": "success",
+    "risk_notes": [
+      "{'phase': 'build', 'reason': 'environment-limited', 'details': ['python -m build unavailable']}",
+      "{'phase': 'health', 'reason': 'environment-limited', 'details': ['Missing tools: docker sox ffmpeg aria2c']}",
+      "{'phase': 'tests', 'reason': 'environment-limited', 'details': ['Pytest coverage dependencies unavailable']}"
+    ],
+    "slugs": {
+      "A1": {
+        "slug": "A1",
+        "summary_path": "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_a-a1-summary.json",
+        "summary": {
+          "status": "success",
+          "stage": "stage_a1_boot_telemetry",
+          "run_id": "20250930T203412Z-stage_a1_boot_telemetry",
+          "command": [
+            "/root/.pyenv/versions/3.12.10/bin/python",
+            "/workspace/ABZU/scripts/bootstrap.py"
+          ],
+          "returncode": 0,
+          "started_at": "2025-09-30T20:34:12.562948+00:00",
+          "completed_at": "2025-09-30T20:34:15.834847+00:00",
+          "duration_seconds": 3.271899,
+          "log_dir": "/workspace/ABZU/logs/stage_a/20250930T203412Z-stage_a1_boot_telemetry",
+          "stdout_path": "/workspace/ABZU/logs/stage_a/20250930T203412Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stdout.log",
+          "stderr_path": "/workspace/ABZU/logs/stage_a/20250930T203412Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log",
+          "stdout_lines": 1,
+          "stderr_lines": 24,
+          "stderr_tail": [
+            "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/bootstrap.py:194: EnvironmentLimitedWarning: environment-limited: Missing required environment variables: HF_TOKEN, GITHUB_TOKEN, OPENAI_API_KEY; continuing without required credentials",
+            "  validate_env()",
+            "/workspace/ABZU/scripts/bootstrap.py:104: UserWarning: No supported GPU detected; using CPU",
+            "  warnings.warn(\"No supported GPU detected; using CPU\")"
+          ],
+          "summary": "Stage A1 bootstrap completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+          "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:286: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/bootstrap.py:194: EnvironmentLimitedWarning: environment-limited: Missing required environment variables: HF_TOKEN, GITHUB_TOKEN, OPENAI_API_KEY; continuing without required credentials\n  validate_env()\n/workspace/ABZU/scripts/bootstrap.py:104: UserWarning: No supported GPU detected; using CPU\n  warnings.warn(\"No supported GPU detected; using CPU\")\n"
+        },
+        "artifacts": [
+          "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_a-a1-artifact1.stderr.log",
+          "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_a-a1-artifact2.stdout.log"
+        ],
+        "risk_notes": [],
+        "status": "success",
+        "source_summary_path": "/workspace/ABZU/logs/stage_a/20250930T203412Z-stage_a1_boot_telemetry/summary.json",
+        "source_artifacts": [
+          "/workspace/ABZU/logs/stage_a/20250930T203412Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log",
+          "/workspace/ABZU/logs/stage_a/20250930T203412Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stdout.log"
+        ]
+      },
+      "A2": {
+        "slug": "A2",
+        "summary_path": "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_a-a2-summary.json",
+        "summary": {
+          "status": "success",
+          "stage": "stage_a2_crown_replays",
+          "run_id": "20250930T205834Z-stage_a2_crown_replays",
+          "command": [
+            "/root/.pyenv/versions/3.12.10/bin/python",
+            "/workspace/ABZU/scripts/crown_capture_replays.py"
+          ],
+          "returncode": 0,
+          "started_at": "2025-09-30T20:58:34.740007+00:00",
+          "completed_at": "2025-09-30T20:58:35.593184+00:00",
+          "duration_seconds": 0.853177,
+          "log_dir": "/workspace/ABZU/logs/stage_a/20250930T205834Z-stage_a2_crown_replays",
+          "stdout_path": "/workspace/ABZU/logs/stage_a/20250930T205834Z-stage_a2_crown_replays/stage_a2_crown_replays.stdout.log",
+          "stderr_path": "/workspace/ABZU/logs/stage_a/20250930T205834Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log",
+          "stdout_lines": 1,
+          "stderr_lines": 42,
+          "stderr_tail": [
+            "INFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz",
+            "WARNING Sandbox overrides active; skipping strict comparison for crown_kimi_k2_revision",
+            "INFO Running scenario crown_air_star_validation (model=air_star, seed=4104)",
+            "INFO logged audio to /workspace/ABZU/logs/audio/20250930_205835.npy",
+            "INFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz",
+            "WARNING Sandbox overrides active; skipping strict comparison for crown_air_star_validation",
+            "INFO Running scenario crown_rstar_finalization (model=rstar, seed=5105)",
+            "INFO logged audio to /workspace/ABZU/logs/audio/20250930_205835.npy",
+            "INFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz",
+            "WARNING Sandbox overrides active; skipping strict comparison for crown_rstar_finalization"
+          ],
+          "summary": "Stage A2 crown replays captured (5 scenarios) [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+          "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:286: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()\nINFO Running scenario crown_glm_reflection (model=glm, seed=1101)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205835.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz\n/workspace/ABZU/scripts/crown_capture_replays.py:542: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  timestamp = datetime.utcnow().isoformat()\nWARNING Sandbox overrides active; skipping strict comparison for crown_glm_reflection\nINFO Running scenario crown_kimicho_guidance (model=kimicho, seed=2102)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205835.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_kimicho_guidance\nINFO Running scenario crown_kimi_k2_revision (model=kimi_k2, seed=3103)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205835.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_kimi_k2_revision\nINFO Running scenario crown_air_star_validation (model=air_star, seed=4104)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205835.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_air_star_validation\nINFO Running scenario crown_rstar_finalization (model=rstar, seed=5105)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205835.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205835.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_rstar_finalization\n"
+        },
+        "artifacts": [
+          "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_a-a2-artifact1.stderr.log",
+          "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_a-a2-artifact2.stdout.log"
+        ],
+        "risk_notes": [],
+        "status": "success",
+        "source_summary_path": "/workspace/ABZU/logs/stage_a/20250930T205834Z-stage_a2_crown_replays/summary.json",
+        "source_artifacts": [
+          "/workspace/ABZU/logs/stage_a/20250930T205834Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log",
+          "/workspace/ABZU/logs/stage_a/20250930T205834Z-stage_a2_crown_replays/stage_a2_crown_replays.stdout.log"
+        ]
+      },
+      "A3": {
+        "slug": "A3",
+        "summary_path": "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_a-a3-summary.json",
+        "summary": {
+          "status": "success",
+          "stage": "stage_a3_gate_shakeout",
+          "run_id": "20250928T004738Z-stage_a3_gate_shakeout",
+          "command": [
+            "bash",
+            "/workspace/ABZU/scripts/run_alpha_gate.sh",
+            "--sandbox"
+          ],
+          "returncode": 0,
+          "started_at": "2025-09-28T00:47:38.821542+00:00",
+          "completed_at": "2025-09-28T00:47:57.497064+00:00",
+          "duration_seconds": 18.675522,
+          "log_dir": "/workspace/ABZU/logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout",
+          "stdout_path": "/workspace/ABZU/logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stdout.log",
+          "stderr_path": "/workspace/ABZU/logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/stage_a3_gate_shakeout.stderr.log",
+          "stdout_lines": 9,
+          "stderr_lines": 36,
+          "stderr_tail": [
+            "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)",
+            "  warnings.warn(",
+            "/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)",
+            "  _prepare_overrides()"
+          ],
+          "summary": {
+            "status": "success",
+            "phases": [
+              {
+                "name": "build",
+                "skipped": true,
+                "exit_code": 0,
+                "outcome": "skipped",
+                "reason": "environment-limited",
+                "details": [
+                  "python -m build unavailable"
+                ]
+              },
+              {
+                "name": "health",
+                "skipped": true,
+                "exit_code": 0,
+                "outcome": "skipped",
+                "reason": "environment-limited",
+                "details": [
+                  "Missing tools: docker sox ffmpeg aria2c"
+                ]
+              },
+              {
+                "name": "tests",
+                "skipped": true,
+                "exit_code": 0,
+                "outcome": "skipped",
+                "reason": "environment-limited",
+                "details": [
+                  "Pytest coverage dependencies unavailable"
+                ]
+              }
+            ],
+            "message": "Alpha gate completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+            "warnings": [
+              {
+                "phase": "build",
+                "reason": "environment-limited",
+                "details": [
+                  "python -m build unavailable"
+                ]
+              },
+              {
+                "phase": "health",
+                "reason": "environment-limited",
+                "details": [
+                  "Missing tools: docker sox ffmpeg aria2c"
+                ]
+              },
+              {
+                "phase": "tests",
+                "reason": "environment-limited",
+                "details": [
+                  "Pytest coverage dependencies unavailable"
+                ]
+              }
+            ]
+          },
+          "warnings": [
+            {
+              "phase": "build",
+              "reason": "environment-limited",
+              "details": [
+                "python -m build unavailable"
+              ]
+            },
+            {
+              "phase": "health",
+              "reason": "environment-limited",
+              "details": [
+                "Missing tools: docker sox ffmpeg aria2c"
+              ]
+            },
+            {
+              "phase": "tests",
+              "reason": "environment-limited",
+              "details": [
+                "Pytest coverage dependencies unavailable"
+              ]
+            }
+          ],
+          "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:250: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)\n  warnings.warn(\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:250: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)\n  warnings.warn(\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:330: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()\n"
+        },
+        "artifacts": [],
+        "risk_notes": [
+          "{'phase': 'build', 'reason': 'environment-limited', 'details': ['python -m build unavailable']}",
+          "{'phase': 'health', 'reason': 'environment-limited', 'details': ['Missing tools: docker sox ffmpeg aria2c']}",
+          "{'phase': 'tests', 'reason': 'environment-limited', 'details': ['Pytest coverage dependencies unavailable']}"
+        ],
+        "status": "success",
+        "source_summary_path": "/workspace/ABZU/logs/stage_a/20250928T004738Z-stage_a3_gate_shakeout/summary.json",
+        "source_artifacts": []
+      }
+    },
+    "latest_runs": {
+      "A1": "20250930T203412Z-stage_a1_boot_telemetry",
+      "A2": "20250930T205834Z-stage_a2_crown_replays",
+      "A3": "20250928T004738Z-stage_a3_gate_shakeout"
+    },
+    "completed_at": {
+      "A1": "2025-09-30T20:34:15.834847+00:00",
+      "A2": "2025-09-30T20:58:35.593184+00:00",
+      "A3": "2025-09-28T00:47:57.497064+00:00"
+    }
+  },
+  "stage_b": {
+    "label": "stage_b",
+    "status": "success",
+    "risk_notes": [],
+    "slugs": {
+      "B1": {
+        "slug": "B1",
+        "summary_path": "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_b-b1-summary.json",
+        "summary": {
+          "status": "success",
+          "stage": "stage_b1_memory_proof",
+          "run_id": "20250928T155301Z-stage_b1_memory_proof",
+          "command": [
+            "/root/.pyenv/versions/3.12.10/bin/python",
+            "/workspace/ABZU/scripts/memory_load_proof.py",
+            "data/vector_memory_scaling/corpus.jsonl",
+            "--limit",
+            "1000"
+          ],
+          "returncode": 0,
+          "started_at": "2025-09-28T15:53:00.064000+00:00",
+          "completed_at": "2025-09-28T15:53:01.848000+00:00",
+          "duration_seconds": 1.784,
+          "log_dir": "/workspace/ABZU/logs/stage_b/20250928T155301Z-stage_b1_memory_proof",
+          "stdout_path": "/workspace/ABZU/logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+          "stderr_path": "/workspace/ABZU/logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+          "stdout_lines": 27,
+          "stderr_lines": 18,
+          "stderr_tail": [
+            "2025-09-28 15:53:00,064 INFO memory.load_proof :: Memory layer preflight passed with 8 layers",
+            "2025-09-28 15:53:01,848 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 stubbed_bundle=False p95=2.501ms p99=3.579ms"
+          ],
+          "summary": {
+            "dataset": "data/vector_memory_scaling/corpus.jsonl",
+            "total_records": 1000,
+            "queries_timed": 995,
+            "init_duration_s": 0.000212,
+            "latency_p50_s": 0.001578,
+            "latency_p95_s": 0.002501,
+            "latency_p99_s": 0.003579,
+            "layers": {
+              "total": 8,
+              "ready": 8,
+              "failed": 0
+            },
+            "query_failures": 0,
+            "stubbed_bundle": false,
+            "pretest_stubbed": false,
+            "fallback_reason": null,
+            "bundle_source": "neoabzu_memory",
+            "bundle_mode": "native",
+            "bundle": {
+              "stubbed": false,
+              "mode": "native",
+              "source": "neoabzu_memory",
+              "fallback_reason": null,
+              "stubbed_bundle": false
+            }
+          }
+        },
+        "artifacts": [
+          "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_b-b1-artifact1.stderr.log",
+          "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_b-b1-artifact2.stdout.log"
+        ],
+        "risk_notes": [],
+        "status": "success",
+        "stubbed_bundle": false,
+        "layers": {
+          "total": 8,
+          "ready": 8,
+          "failed": 0
+        },
+        "connector_contexts": [],
+        "source_summary_path": "/workspace/ABZU/logs/stage_b/20250928T155301Z-stage_b1_memory_proof/summary.json",
+        "source_artifacts": [
+          "/workspace/ABZU/logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+          "/workspace/ABZU/logs/stage_b/20250928T155301Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log"
+        ]
+      },
+      "B2": {
+        "slug": "B2",
+        "summary_path": "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_b-b2-summary.json",
+        "summary": {
+          "status": "success",
+          "stage": "stage_b2_sonic_rehearsal",
+          "run_id": "20250927T211008Z-stage_b2_sonic_rehearsal",
+          "command": [
+            "/root/.pyenv/versions/3.12.10/bin/python",
+            "/workspace/ABZU/scripts/generate_stage_b_rehearsal_packet.py"
+          ],
+          "returncode": 0,
+          "started_at": "2025-09-27T21:10:08.148292+00:00",
+          "completed_at": "2025-09-27T21:10:08.429691+00:00",
+          "duration_seconds": 0.281399,
+          "log_dir": "/workspace/ABZU/logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal",
+          "stdout_path": "/workspace/ABZU/logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stdout.log",
+          "stderr_path": "/workspace/ABZU/logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b2_sonic_rehearsal.stderr.log",
+          "stdout_lines": 1,
+          "stderr_lines": 0,
+          "stderr_tail": [],
+          "summary": "Stage B rehearsal packet written to logs/stage_b_rehearsal_packet.json",
+          "artifacts": {
+            "rehearsal_packet": "/workspace/ABZU/logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/stage_b_rehearsal_packet.json"
+          },
+          "metrics": {
+            "generated_at": "2025-09-27T21:10:08Z",
+            "stage": "B",
+            "context": "stage-b-rehearsal",
+            "connectors": {
+              "operator_api": {
+                "module": "connectors.operator_api_stage_b",
+                "doctrine_ok": true,
+                "supported_channels": [
+                  "handshake",
+                  "heartbeat",
+                  "command"
+                ],
+                "capabilities": [
+                  "register",
+                  "telemetry",
+                  "command"
+                ],
+                "accepted_contexts": [
+                  "stage-b-rehearsal"
+                ]
+              },
+              "operator_upload": {
+                "module": "connectors.operator_upload_stage_b",
+                "doctrine_ok": true,
+                "supported_channels": [
+                  "handshake",
+                  "heartbeat",
+                  "upload"
+                ],
+                "capabilities": [
+                  "register",
+                  "telemetry",
+                  "upload"
+                ],
+                "accepted_contexts": [
+                  "stage-b-rehearsal"
+                ]
+              },
+              "crown_handshake": {
+                "module": "connectors.crown_handshake_stage_b",
+                "doctrine_ok": true,
+                "supported_channels": [
+                  "handshake",
+                  "heartbeat",
+                  "mission-brief"
+                ],
+                "capabilities": [
+                  "register",
+                  "telemetry",
+                  "mission-brief"
+                ],
+                "accepted_contexts": [
+                  "stage-b-rehearsal"
+                ]
+              }
+            },
+            "dropouts_detected": 0,
+            "dropout_connectors": [],
+            "fallback_warnings": []
+          }
+        },
+        "artifacts": [],
+        "risk_notes": [],
+        "status": "success",
+        "stubbed_bundle": null,
+        "layers": {
+          "total": null,
+          "ready": null,
+          "failed": null
+        },
+        "connector_contexts": [
+          {
+            "connector": "operator_api",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "connector": "operator_upload",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "connector": "crown_handshake",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          }
+        ],
+        "source_summary_path": "/workspace/ABZU/logs/stage_b/20250927T211008Z-stage_b2_sonic_rehearsal/summary.json",
+        "source_artifacts": []
+      },
+      "B3": {
+        "slug": "B3",
+        "summary_path": "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_b-b3-summary.json",
+        "summary": {
+          "status": "success",
+          "stage": "stage_b3_connector_rotation",
+          "run_id": "20250929T105142Z-stage_b3_connector_rotation",
+          "command": [
+            "/root/.pyenv/versions/3.12.10/bin/python",
+            "/workspace/ABZU/scripts/stage_b_smoke.py",
+            "--json"
+          ],
+          "returncode": 0,
+          "started_at": "2025-09-29T10:51:42.094853+00:00",
+          "completed_at": "2025-09-29T10:51:43.094853+00:00",
+          "duration_seconds": 1.0,
+          "log_dir": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation",
+          "stdout_path": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stdout.log",
+          "stderr_path": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stderr.log",
+          "stdout_lines": 1072,
+          "stderr_lines": 20,
+          "stderr_tail": [
+            "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)",
+            "  _prepare_overrides()",
+            "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)",
+            "  _prepare_overrides()"
+          ],
+          "summary": "Rotated operator_api/operator_upload/crown_handshake (doctrine ok); window 20250926T222814Z-PT48H; rotation expires 2025-09-28T22:28:14Z; credentials expire 2025-09-28T22:28:14Z",
+          "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:286: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()",
+          "artifacts": {
+            "rotation_log": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/stage_b_rotation_drills.jsonl"
+          },
+          "metrics": {
+            "stage": "B",
+            "targets": [
+              "operator_api",
+              "operator_upload",
+              "crown_handshake"
+            ],
+            "doctrine_ok": true,
+            "doctrine_failures": [],
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted"
+              }
+            ],
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "heartbeat_payload": {
+              "event": "stage-b-smoke",
+              "session": {
+                "id": "stage-b-session",
+                "credential_expiry": "2025-09-28T22:28:14Z"
+              },
+              "credential_expiry": "2025-09-28T22:28:14Z"
+            },
+            "heartbeat_expiry": "2025-09-28T22:28:14Z",
+            "rotation_window": {
+              "window_id": "20250926T222814Z-PT48H",
+              "started_at": "2025-09-26T22:28:14Z",
+              "expires_at": "2025-09-28T22:28:14Z",
+              "duration": "PT48H"
+            },
+            "rotation_summary": "Rotated operator_api/operator_upload/crown_handshake (doctrine ok); window 20250926T222814Z-PT48H; rotation expires 2025-09-28T22:28:14Z; credentials expire 2025-09-28T22:28:14Z"
+          }
+        },
+        "artifacts": [],
+        "risk_notes": [],
+        "status": "success",
+        "stubbed_bundle": null,
+        "layers": {
+          "total": null,
+          "ready": null,
+          "failed": null
+        },
+        "connector_contexts": [
+          {
+            "connector": "stage_b",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "connector": "stage_b",
+            "name": "stage-c-prep",
+            "status": "accepted"
+          }
+        ],
+        "source_summary_path": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/summary.json",
+        "source_artifacts": []
+      }
+    },
+    "latest_runs": {
+      "B1": "20250928T155301Z-stage_b1_memory_proof",
+      "B2": "20250927T211008Z-stage_b2_sonic_rehearsal",
+      "B3": "20250929T105142Z-stage_b3_connector_rotation"
+    },
+    "completed_at": {
+      "B1": "2025-09-28T15:53:01.848000+00:00",
+      "B2": "2025-09-27T21:10:08.429691+00:00",
+      "B3": "2025-09-29T10:51:43.094853+00:00"
+    },
+    "summary_path": "logs/stage_c/20250930T205900Z-stage_c3_gate_review/stage_b-b3-summary.json",
+    "source_summary_path": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/summary.json",
+    "artifacts": [],
+    "source_artifacts": [],
+    "summary": {
+      "status": "success",
+      "stage": "stage_b3_connector_rotation",
+      "run_id": "20250929T105142Z-stage_b3_connector_rotation",
+      "command": [
+        "/root/.pyenv/versions/3.12.10/bin/python",
+        "/workspace/ABZU/scripts/stage_b_smoke.py",
+        "--json"
+      ],
+      "returncode": 0,
+      "started_at": "2025-09-29T10:51:42.094853+00:00",
+      "completed_at": "2025-09-29T10:51:43.094853+00:00",
+      "duration_seconds": 1.0,
+      "log_dir": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation",
+      "stdout_path": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stdout.log",
+      "stderr_path": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/stage_b3_connector_rotation.stderr.log",
+      "stdout_lines": 1072,
+      "stderr_lines": 20,
+      "stderr_tail": [
+        "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)",
+        "  _prepare_overrides()",
+        "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)",
+        "  _prepare_overrides()",
+        "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)",
+        "  _prepare_overrides()",
+        "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)",
+        "  _prepare_overrides()"
+      ],
+      "summary": "Rotated operator_api/operator_upload/crown_handshake (doctrine ok); window 20250926T222814Z-PT48H; rotation expires 2025-09-28T22:28:14Z; credentials expire 2025-09-28T22:28:14Z",
+      "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:286: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()",
+      "artifacts": {
+        "rotation_log": "/workspace/ABZU/logs/stage_b/20250929T105142Z-stage_b3_connector_rotation/stage_b_rotation_drills.jsonl"
+      },
+      "metrics": {
+        "stage": "B",
+        "targets": [
+          "operator_api",
+          "operator_upload",
+          "crown_handshake"
+        ],
+        "doctrine_ok": true,
+        "doctrine_failures": [],
+        "accepted_contexts": [
+          {
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "name": "stage-c-prep",
+            "status": "accepted"
+          }
+        ],
+        "session": {
+          "id": "stage-c-session",
+          "credential_expiry": "2025-09-28T22:28:14Z"
+        },
+        "heartbeat_payload": {
+          "event": "stage-b-smoke",
+          "session": {
+            "id": "stage-b-session",
+            "credential_expiry": "2025-09-28T22:28:14Z"
+          },
+          "credential_expiry": "2025-09-28T22:28:14Z"
+        },
+        "heartbeat_expiry": "2025-09-28T22:28:14Z",
+        "rotation_window": {
+          "window_id": "20250926T222814Z-PT48H",
+          "started_at": "2025-09-26T22:28:14Z",
+          "expires_at": "2025-09-28T22:28:14Z",
+          "duration": "PT48H"
+        },
+        "rotation_summary": "Rotated operator_api/operator_upload/crown_handshake (doctrine ok); window 20250926T222814Z-PT48H; rotation expires 2025-09-28T22:28:14Z; credentials expire 2025-09-28T22:28:14Z"
+      }
+    }
+  },
+  "merged": {
+    "latest_runs": {
+      "stage_a": {
+        "A1": "20250930T203412Z-stage_a1_boot_telemetry",
+        "A2": "20250930T205834Z-stage_a2_crown_replays",
+        "A3": "20250928T004738Z-stage_a3_gate_shakeout"
+      },
+      "stage_b": {
+        "B1": "20250928T155301Z-stage_b1_memory_proof",
+        "B2": "20250927T211008Z-stage_b2_sonic_rehearsal",
+        "B3": "20250929T105142Z-stage_b3_connector_rotation"
+      }
+    },
+    "completed_at": {
+      "stage_a": {
+        "A1": "2025-09-30T20:34:15.834847+00:00",
+        "A2": "2025-09-30T20:58:35.593184+00:00",
+        "A3": "2025-09-28T00:47:57.497064+00:00"
+      },
+      "stage_b": {
+        "B1": "2025-09-28T15:53:01.848000+00:00",
+        "B2": "2025-09-27T21:10:08.429691+00:00",
+        "B3": "2025-09-29T10:51:43.094853+00:00"
+      }
+    },
+    "status_flags": {
+      "stage_a": "success",
+      "stage_b": "success"
+    },
+    "risk_notes": {
+      "stage_a": [
+        "{'phase': 'build', 'reason': 'environment-limited', 'details': ['python -m build unavailable']}",
+        "{'phase': 'health', 'reason': 'environment-limited', 'details': ['Missing tools: docker sox ffmpeg aria2c']}",
+        "{'phase': 'tests', 'reason': 'environment-limited', 'details': ['Pytest coverage dependencies unavailable']}"
+      ],
+      "stage_b": []
+    },
+    "stage_a_slugs": {
+      "A1": {
+        "status": "success",
+        "risk_notes": [],
+        "run_id": "20250930T203412Z-stage_a1_boot_telemetry",
+        "completed_at": "2025-09-30T20:34:15.834847+00:00"
+      },
+      "A2": {
+        "status": "success",
+        "risk_notes": [],
+        "run_id": "20250930T205834Z-stage_a2_crown_replays",
+        "completed_at": "2025-09-30T20:58:35.593184+00:00"
+      },
+      "A3": {
+        "status": "success",
+        "risk_notes": [
+          "{'phase': 'build', 'reason': 'environment-limited', 'details': ['python -m build unavailable']}",
+          "{'phase': 'health', 'reason': 'environment-limited', 'details': ['Missing tools: docker sox ffmpeg aria2c']}",
+          "{'phase': 'tests', 'reason': 'environment-limited', 'details': ['Pytest coverage dependencies unavailable']}"
+        ],
+        "run_id": "20250928T004738Z-stage_a3_gate_shakeout",
+        "completed_at": "2025-09-28T00:47:57.497064+00:00"
+      }
+    },
+    "stage_b_slugs": {
+      "B1": {
+        "status": "success",
+        "risk_notes": [],
+        "stubbed_bundle": false,
+        "layers": {
+          "total": 8,
+          "ready": 8,
+          "failed": 0
+        },
+        "connector_contexts": [],
+        "run_id": "20250928T155301Z-stage_b1_memory_proof",
+        "completed_at": "2025-09-28T15:53:01.848000+00:00"
+      },
+      "B2": {
+        "status": "success",
+        "risk_notes": [],
+        "stubbed_bundle": null,
+        "layers": {
+          "total": null,
+          "ready": null,
+          "failed": null
+        },
+        "connector_contexts": [
+          {
+            "connector": "operator_api",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "connector": "operator_upload",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "connector": "crown_handshake",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          }
+        ],
+        "run_id": "20250927T211008Z-stage_b2_sonic_rehearsal",
+        "completed_at": "2025-09-27T21:10:08.429691+00:00"
+      },
+      "B3": {
+        "status": "success",
+        "risk_notes": [],
+        "stubbed_bundle": null,
+        "layers": {
+          "total": null,
+          "ready": null,
+          "failed": null
+        },
+        "connector_contexts": [
+          {
+            "connector": "stage_b",
+            "name": "stage-b-rehearsal",
+            "status": "accepted"
+          },
+          {
+            "connector": "stage_b",
+            "name": "stage-c-prep",
+            "status": "accepted"
+          }
+        ],
+        "run_id": "20250929T105142Z-stage_b3_connector_rotation",
+        "completed_at": "2025-09-29T10:51:43.094853+00:00"
+      }
+    },
+    "overall_status": "requires_attention",
+    "rotation": {
+      "summary": "Rotated operator_api/operator_upload/crown_handshake (doctrine ok); window 20250926T222814Z-PT48H; rotation expires 2025-09-28T22:28:14Z; credentials expire 2025-09-28T22:28:14Z",
+      "window": {
+        "window_id": "20250926T222814Z-PT48H",
+        "started_at": "2025-09-26T22:28:14Z",
+        "expires_at": "2025-09-28T22:28:14Z",
+        "duration": "PT48H"
+      },
+      "credential_expiry": "2025-09-28T22:28:14Z"
+    }
+  },
+  "missing": []
+}

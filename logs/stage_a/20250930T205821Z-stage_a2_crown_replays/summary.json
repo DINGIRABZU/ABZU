@@ -1,0 +1,32 @@
+{
+  "status": "success",
+  "stage": "stage_a2_crown_replays",
+  "run_id": "20250930T205821Z-stage_a2_crown_replays",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/crown_capture_replays.py"
+  ],
+  "returncode": 0,
+  "started_at": "2025-09-30T20:58:21.636806+00:00",
+  "completed_at": "2025-09-30T20:58:22.473390+00:00",
+  "duration_seconds": 0.836584,
+  "log_dir": "/workspace/ABZU/logs/stage_a/20250930T205821Z-stage_a2_crown_replays",
+  "stdout_path": "/workspace/ABZU/logs/stage_a/20250930T205821Z-stage_a2_crown_replays/stage_a2_crown_replays.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_a/20250930T205821Z-stage_a2_crown_replays/stage_a2_crown_replays.stderr.log",
+  "stdout_lines": 1,
+  "stderr_lines": 42,
+  "stderr_tail": [
+    "INFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz",
+    "WARNING Sandbox overrides active; skipping strict comparison for crown_kimi_k2_revision",
+    "INFO Running scenario crown_air_star_validation (model=air_star, seed=4104)",
+    "INFO logged audio to /workspace/ABZU/logs/audio/20250930_205822.npy",
+    "INFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz",
+    "WARNING Sandbox overrides active; skipping strict comparison for crown_air_star_validation",
+    "INFO Running scenario crown_rstar_finalization (model=rstar, seed=5105)",
+    "INFO logged audio to /workspace/ABZU/logs/audio/20250930_205822.npy",
+    "INFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz",
+    "WARNING Sandbox overrides active; skipping strict comparison for crown_rstar_finalization"
+  ],
+  "summary": "Stage A2 crown replays captured (5 scenarios) [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+  "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:286: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle\n  _apply_override(name, force=_should_force_override(name))\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()\nINFO Running scenario crown_glm_reflection (model=glm, seed=1101)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205822.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz\n/workspace/ABZU/scripts/crown_capture_replays.py:542: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  timestamp = datetime.utcnow().isoformat()\nWARNING Sandbox overrides active; skipping strict comparison for crown_glm_reflection\nINFO Running scenario crown_kimicho_guidance (model=kimicho, seed=2102)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205822.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_kimicho_guidance\nINFO Running scenario crown_kimi_k2_revision (model=kimi_k2, seed=3103)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205822.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_kimi_k2_revision\nINFO Running scenario crown_air_star_validation (model=air_star, seed=4104)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205822.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_air_star_validation\nINFO Running scenario crown_rstar_finalization (model=rstar, seed=5105)\nINFO logged audio to /workspace/ABZU/logs/audio/20250930_205822.npy\nINFO logged video to /workspace/ABZU/logs/video/20250930_205822.npz\nWARNING Sandbox overrides active; skipping strict comparison for crown_rstar_finalization\n"
+}

@@ -1,0 +1,85 @@
+{
+  "generated_at": "2025-09-30T20:58:56+00:00",
+  "run_count": 5,
+  "unique_route_signatures": [
+    "4428fa0700c82eb71d308ae9539673e83350d422f88e6d8d7bee7b9724dd1a82"
+  ],
+  "consistent_routes": true,
+  "records": [
+    {
+      "run_id": "20250930T205739Z-stage_a2_crown_replays",
+      "completed_at": "2025-09-30T20:57:39.934879+00:00",
+      "scenario_count": 5,
+      "scenarios": [
+        "crown_glm_reflection",
+        "crown_kimicho_guidance",
+        "crown_kimi_k2_revision",
+        "crown_air_star_validation",
+        "crown_rstar_finalization"
+      ],
+      "route_signature": "4428fa0700c82eb71d308ae9539673e83350d422f88e6d8d7bee7b9724dd1a82",
+      "warning_count": 5,
+      "duration_seconds": 0.877132
+    },
+    {
+      "run_id": "20250930T205753Z-stage_a2_crown_replays",
+      "completed_at": "2025-09-30T20:57:54.815631+00:00",
+      "scenario_count": 5,
+      "scenarios": [
+        "crown_glm_reflection",
+        "crown_kimicho_guidance",
+        "crown_kimi_k2_revision",
+        "crown_air_star_validation",
+        "crown_rstar_finalization"
+      ],
+      "route_signature": "4428fa0700c82eb71d308ae9539673e83350d422f88e6d8d7bee7b9724dd1a82",
+      "warning_count": 5,
+      "duration_seconds": 0.98782
+    },
+    {
+      "run_id": "20250930T205808Z-stage_a2_crown_replays",
+      "completed_at": "2025-09-30T20:58:09.011558+00:00",
+      "scenario_count": 5,
+      "scenarios": [
+        "crown_glm_reflection",
+        "crown_kimicho_guidance",
+        "crown_kimi_k2_revision",
+        "crown_air_star_validation",
+        "crown_rstar_finalization"
+      ],
+      "route_signature": "4428fa0700c82eb71d308ae9539673e83350d422f88e6d8d7bee7b9724dd1a82",
+      "warning_count": 5,
+      "duration_seconds": 0.988748
+    },
+    {
+      "run_id": "20250930T205821Z-stage_a2_crown_replays",
+      "completed_at": "2025-09-30T20:58:22.473390+00:00",
+      "scenario_count": 5,
+      "scenarios": [
+        "crown_glm_reflection",
+        "crown_kimicho_guidance",
+        "crown_kimi_k2_revision",
+        "crown_air_star_validation",
+        "crown_rstar_finalization"
+      ],
+      "route_signature": "4428fa0700c82eb71d308ae9539673e83350d422f88e6d8d7bee7b9724dd1a82",
+      "warning_count": 5,
+      "duration_seconds": 0.836584
+    },
+    {
+      "run_id": "20250930T205834Z-stage_a2_crown_replays",
+      "completed_at": "2025-09-30T20:58:35.593184+00:00",
+      "scenario_count": 5,
+      "scenarios": [
+        "crown_glm_reflection",
+        "crown_kimicho_guidance",
+        "crown_kimi_k2_revision",
+        "crown_air_star_validation",
+        "crown_rstar_finalization"
+      ],
+      "route_signature": "4428fa0700c82eb71d308ae9539673e83350d422f88e6d8d7bee7b9724dd1a82",
+      "warning_count": 5,
+      "duration_seconds": 0.853177
+    }
+  ]
+}
