@@ -181,6 +181,15 @@ is restored.【F:logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.j
 | Telemetry schemas diverge across rehearsal bundles. | @monitoring-guild | Grafana dashboards drop fields during beta rehearsals. | Validate schemas against readiness packet structure before exporting the beta rehearsal bundle. | ⚠️ Watch list 【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】 |
 | Beta comms lack signed transport approvals. | @release-ops | External announcement slips without documented sign-off. | Capture signatures in the beta readiness packet and archive alongside Stage D bridge sign-offs. | 🔄 Pending approval 【F:logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json†L1-L71】 |
 
+### Stage G
+
+| Run | Operator Lead | Hardware/Service Owner | QA Reviewer | Approvals | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `20251102T090000Z-stage_g_gate_runner_hardware` | @ops-team (signed 2025-11-02T09:32:10Z) | @infrastructure-hardware (signed 2025-11-02T09:33:45Z) | @qa-alliance (signed 2025-11-02T09:34:20Z) | `logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/approvals.yaml` | `summary.json`, `parity_diff.json`, and `rollback_drill.md` confirm the gate-runner replay matched the Stage C readiness bundle and exercised the rollback drill before hardware promotion.【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/approvals.yaml†L1-L12】【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/rollback_drill.md†L1-L24】 |
+| `20251102T094500Z-stage_g_neo_apsu_parity` | @ops-team (signed 2025-11-02T09:59:41Z) | @neoabzu-core (signed 2025-11-02T10:00:17Z) | @qa-alliance (signed 2025-11-02T10:01:03Z) | `logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/approvals.yaml` | `summary.json`, `parity_diff.json`, and `transport_contract.json` show hardware parity against Stage B rotation windows plus the sandbox rollback transcript required by The Absolute Protocol.【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/summary.json†L1-L13】【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/approvals.yaml†L1-L12】【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/transport_contract.json†L1-L20】【F:docs/The_Absolute_Protocol.md†L54-L114】 |
+
+Stage G approvals demonstrate that sandbox-to-hardware bridge requirements have been satisfied with documented rollback drills, checksum parity diffs, and signed evidence bundles ahead of production bridge activities. Weekly status reviews should verify the approvals YAML files remain in sync with roadmap Stage G tasks and the doctrine checkpoint list in [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment).
+
 ### Beta launch checklist
 
 Refer to the [Beta Launch Playbook](releases/beta_launch_plan.md) for guardrail

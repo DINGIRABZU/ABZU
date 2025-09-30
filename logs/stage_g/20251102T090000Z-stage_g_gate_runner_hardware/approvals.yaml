@@ -1,0 +1,13 @@
+approvals:
+  - role: operator_lead
+    owner: "@ops-team"
+    signed_off_at: "2025-11-02T09:32:10Z"
+    notes: "Hardware replay matched sandbox metrics; rollback drill completed."
+  - role: hardware_owner
+    owner: "@infrastructure-hardware"
+    signed_off_at: "2025-11-02T09:33:45Z"
+    notes: "Gate-runner instrumentation mirrored Stage C1 checklist." 
+  - role: qa_reviewer
+    owner: "@qa-alliance"
+    signed_off_at: "2025-11-02T09:34:20Z"
+    notes: "Rollback transcript archived with parity diff and console log export."

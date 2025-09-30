@@ -1,0 +1,23 @@
+{
+  "tests": [
+    {
+      "name": "operator_api",
+      "status": "passed",
+      "sandbox_checksum": "9fa1b2a0ca4377e9c11e89c7d3b6a4b492b114c457a4c61222fd5ea17f833751",
+      "hardware_checksum": "9fa1b2a0ca4377e9c11e89c7d3b6a4b492b114c457a4c61222fd5ea17f833751"
+    },
+    {
+      "name": "operator_upload",
+      "status": "passed",
+      "sandbox_checksum": "7b22cfe04be85a9e6d7c3f02fb161ce3fe7337706c73f22ddc4f457f14a4b675",
+      "hardware_checksum": "7b22cfe04be85a9e6d7c3f02fb161ce3fe7337706c73f22ddc4f457f14a4b675"
+    },
+    {
+      "name": "crown_handshake",
+      "status": "passed",
+      "sandbox_checksum": "2b06f4ad44d87872187a3302caba8eccfba6a3cd19171c39fc129b17f4e8d2fa",
+      "hardware_checksum": "2b06f4ad44d87872187a3302caba8eccfba6a3cd19171c39fc129b17f4e8d2fa"
+    }
+  ],
+  "environment_limited": false
+}

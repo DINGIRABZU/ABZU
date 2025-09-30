@@ -1,0 +1,12 @@
+{
+  "sandbox_trace_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+  "hardware_trace_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+  "diff_summary": "No payload differences detected; heartbeat latency recovered in hardware stream.",
+  "metrics": {
+    "rest_latency_p95_ms": 118,
+    "grpc_latency_p95_ms": 117,
+    "heartbeat_latency_ms": 520,
+    "coverage": 92.95
+  },
+  "rollback_checkpoint": "logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/rollback_drill.md"
+}

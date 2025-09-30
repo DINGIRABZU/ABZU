@@ -1,0 +1,15 @@
+{
+  "run_id": "20251102T094500Z-stage_g_neo_apsu_parity",
+  "hardware_hosts": ["neo-apsu-gamma", "neo-apsu-delta"],
+  "sandbox_bundle_reference": "logs/stage_b_rotation_drills.jsonl",
+  "readiness_minutes_reference": "logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md",
+  "parity_status": "matched-with-heartbeat",
+  "parity_diff": "parity_diff.json",
+  "rollback_drill": "rollback_drill.md",
+  "approvals": "approvals.yaml",
+  "notes": [
+    "Neo-APSU control plane replayed Stage B rotation windows with checksum parity.",
+    "Heartbeat latency recovered to <600ms on hardware connectors.",
+    "Service failover rehearsal executed with REST↔gRPC fallback logs archived."],
+  "recorded_at": "2025-11-02T09:58:03Z"
+}

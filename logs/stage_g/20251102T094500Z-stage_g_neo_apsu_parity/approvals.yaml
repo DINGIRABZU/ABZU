@@ -1,0 +1,13 @@
+approvals:
+  - role: operator_lead
+    owner: "@ops-team"
+    signed_off_at: "2025-11-02T09:59:41Z"
+    notes: "Neo-APSU parity captured; sandbox rollback validated via stage_b_smoke replay."
+  - role: neo_apsu_owner
+    owner: "@neoabzu-core"
+    signed_off_at: "2025-11-02T10:00:17Z"
+    notes: "Hardware manifest fingerprinted against Stage B rotation ledger."
+  - role: qa_reviewer
+    owner: "@qa-alliance"
+    signed_off_at: "2025-11-02T10:01:03Z"
+    notes: "Fallback contract artefacts archived; heartbeat telemetry meets threshold."
