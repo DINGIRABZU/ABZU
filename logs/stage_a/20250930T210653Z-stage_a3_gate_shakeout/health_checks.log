@@ -1,0 +1,2 @@
+[2025-09-30T21:07:00Z] Starting health checks
+[2025-09-30T21:07:00Z] Missing tools (docker sox ffmpeg aria2c), skipping health checks
