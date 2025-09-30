@@ -1,0 +1,20 @@
+{
+  "session_logger_version": "0.1.0",
+  "session_logger_module": "tools.session_logger",
+  "sandbox_overrides": {
+    "crown_decider": "crown_decider: recommendation heuristics simplified",
+    "state_transition_engine": "state_transition_engine: deterministic rotation",
+    "crown_prompt_orchestrator": "crown_prompt_orchestrator: async pipeline stubbed",
+    "emotional_state": "emotional_state: in-memory state used",
+    "neoabzu_memory": "neoabzu_memory: optional bundle shim activated",
+    "servant_model_manager": "servant_model_manager: local registry only",
+    "prometheus_fastapi_instrumentator": "prometheus instrumentation disabled in sandbox",
+    "INANNA_AI.glm_integration": "glm_integration: remote health check bypassed"
+  },
+  "sandbox_summary": "session_logger staging deployment [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+  "boot_path_validation": {
+    "boot_config_path": "/workspace/ABZU/razar/boot_config.json",
+    "schema_path": "/workspace/ABZU/docs/schemas/boot_config.schema.json",
+    "status": "success"
+  }
+}

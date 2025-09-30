@@ -35,24 +35,25 @@
     "tools.session_logger": "session_logger: binary dumps without ffmpeg"
   },
   "last_run": {
-    "timestamp": "2025-09-27T20:07:29.906271",
+    "timestamp": "2025-09-30T20:58:35.515486",
     "model": "glm",
     "emotion": "neutral",
     "state": "dormant",
-    "result_hash": "5c88a6800c9474a761f2a9437c3961655145be8dc00305ee41294267af40cef8",
-    "audio_path": "logs/audio/20250927_200729.npy",
+    "result_hash": "5c7fe8fa2ebd151e6dd52bb700d392f1a77b2def5ca762f74c2fe6485701c6ce",
+    "audio_path": "logs/audio/20250930_205835.npy",
     "audio_hash": "d02d14debe804b01b2936a3b1a4dd7cc45a391cc025ffdad233099f4549bf50b",
-    "video_path": "logs/video/20250927_200729.json",
-    "video_hash": "c52a85a5bd8ea84e05d78fbf60c6bd3d96104c8afef0eae1e8b73437129ac854",
+    "video_path": "logs/video/20250930_205835.npz",
+    "video_hash": "8b85b6b479019bda6f683dc65874af509b436cae3622e3f828dad537a881aa28",
     "servant_prompt": null,
     "sandbox_overrides": {
+      "INANNA_AI.glm_integration": "glm_integration: remote health check bypassed",
       "crown_decider": "crown_decider: recommendation heuristics simplified",
-      "state_transition_engine": "state_transition_engine: deterministic rotation",
       "crown_prompt_orchestrator": "crown_prompt_orchestrator: async pipeline stubbed",
       "emotional_state": "emotional_state: in-memory state used",
       "neoabzu_memory": "neoabzu_memory: optional bundle shim activated",
-      "servant_model_manager": "servant_model_manager: local registry only",
       "prometheus_fastapi_instrumentator": "prometheus instrumentation disabled in sandbox",
+      "servant_model_manager": "servant_model_manager: local registry only",
+      "state_transition_engine": "state_transition_engine: deterministic rotation",
       "tools.session_logger": "session_logger: binary dumps without ffmpeg"
     },
     "result": {
@@ -60,7 +61,7 @@
       "text": "glm:53382c4018b8a614",
       "emotion": "neutral",
       "state": "dormant",
-      "timestamp": "2025-09-27T20:07:29.902508",
+      "timestamp": "2025-09-30T20:58:35.513989",
       "sandbox": true,
       "digest": "86ea6a313b2567db1a8a6f0095b6564e47a7460596e330ab72349bfe4f6a2607"
     }
