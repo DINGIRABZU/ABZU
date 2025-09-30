@@ -1,0 +1,46 @@
+{
+  "run_id": "20251115T090000Z-ga_hardware_cutover",
+  "environment_mode": "hardware",
+  "gate_runner": "gate-runner-02",
+  "parity_source_bundle": "logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json",
+  "hardware_metrics": {
+    "operator_api": {
+      "availability_rolling_30d": 0.996,
+      "p95_latency_ms": 382,
+      "error_budget_remaining": 0.42
+    },
+    "operator_upload": {
+      "availability_rolling_30d": 0.995,
+      "p95_latency_ms": 405,
+      "error_budget_remaining": 0.39
+    },
+    "crown_handshake": {
+      "availability_rolling_30d": 0.997,
+      "p95_latency_ms": 348,
+      "error_budget_remaining": 0.45
+    },
+    "bana_stream": {
+      "frame_drop_ratio": 0.012,
+      "avg_render_latency_ms": 146
+    },
+    "avatar_stream": {
+      "frame_drop_ratio": 0.013,
+      "avg_render_latency_ms": 158
+    },
+    "memory_store": {
+      "p95_query_latency_ms": 171,
+      "checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8"
+    }
+  },
+  "telemetry_hash": "5c7d7cb6b18f4a0f70d0f3eb9b4f3f9c1a0dd9be7e50c6c9512ff70bf6f870ab",
+  "doctrine_signoff": {
+    "operator": "@ops-team",
+    "hardware": "@infrastructure-hardware",
+    "qa": "@qa-alliance"
+  },
+  "notes": [
+    "GA thresholds met across operator and creative surfaces.",
+    "Memory store parity matched Stage G hardware ledger.",
+    "No rollback required; rehearsal diff archived alongside approvals."
+  ]
+}

@@ -375,7 +375,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [development_workflow.md](development_workflow.md) | Development Workflow | This page outlines the recommended steps for contributing to ABZU. | - |
 | [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | This guide outlines the diagnostic scripts and the self-healing mechanisms used to keep Spiral OS operational. | - |
 | [docker_build_audio_tools.md](docker_build_audio_tools.md) | Docker Image with Audio Tools | This project provides a Docker image that bundles the audio utilities **FFmpeg** and **SoX**. The `Dockerfile` instal... | - |
-| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| docs/roadmap.md \|  \| `f34cec435233a4a9604d6a... | - |
+| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| docs/roadmap.md \|  \| `f01746db10c76e69157dba... | - |
 | [documentation_protocol.md](documentation_protocol.md) | Documentation Protocol | Standard workflow for updating documentation and guides. | - |
 | [emotional_memory_matrix.md](emotional_memory_matrix.md) | Emotional Memory Matrix | The emotional memory matrix interconnects the various JSON files that store conversation history and affect metrics.... | - |
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |
@@ -416,6 +416,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ip_registry.md](ip_registry.md) | IP Registry | The following modules are tagged with `@ip-sensitive` and require tracking in this registry. | - |
 | [learning_pipeline.md](learning_pipeline.md) | Learning Pipeline | The learning pipeline pairs two utilities: | - |
 | [logging_guidelines.md](logging_guidelines.md) | RAZAR Logging Guidelines | The mission logger records component activity in `logs/razar.log` using one JSON object per line. Each entry contains: | - |
+| [lts/ga_lts_plan.md](lts/ga_lts_plan.md) | GA Long-Term Support Plan | The GA long-term support (LTS) plan anchors the maintenance cadence, doctrine ownership, and rollback governance for... | - |
 | [mcp_connectors.md](mcp_connectors.md) | MCP Connectors | Assessment of tools and services for Model Context Protocol integration. | - |
 | [mcp_overview.md](mcp_overview.md) | MCP Gateway Overview | The MCP gateway bridges existing FastAPI services with the Model Context Protocol. It exposes context registration an... | - |
 | [memory_architecture.md](memory_architecture.md) | Memory Architecture | The system layers multiple specialised stores, each recording a different facet of experience. Every layer supports t... | `../memory/cortex.py`, `../memory/emotional.py`, `../memory/mental.py`, `../memory/narrative_engine.py`, `../memory/spiritual.py`, `../scripts/init_memory_layers.py` |
@@ -495,6 +496,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
 | [releases/alpha_v0_1_workflow.md](releases/alpha_v0_1_workflow.md) | Alpha v0.1 Workflow Gate | Alpha v0.1 establishes the first end-to-end readiness gate for the Spiral OS stack. This workflow packages the build,... | `../../start_spiral_os.py` |
 | [releases/beta_launch_plan.md](releases/beta_launch_plan.md) | Beta Launch Playbook | Stage E parity enforcement and transport readiness provide the baseline for widening access during the beta window. T... | - |
+| [releases/ga_readiness.md](releases/ga_readiness.md) | General Availability Readiness Handbook | The GA handbook consolidates service guarantees, release governance, and doctrine links required for the production l... | - |
 | [repository_blueprint.md](repository_blueprint.md) | Repository Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | - |
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |

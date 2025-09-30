@@ -1,0 +1,11 @@
+{
+  "sandbox_hash": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+  "hardware_hash": "5c7d7cb6b18f4a0f70d0f3eb9b4f3f9c1a0dd9be7e50c6c9512ff70bf6f870ab",
+  "parity_status": "matched",
+  "fallback_exercised": true,
+  "rollback_required": false,
+  "notes": [
+    "Validated sandbox rehearsal bundle before GA cutover.",
+    "Hardware telemetry matched Stage G parity metrics with no drift detected."
+  ]
+}
