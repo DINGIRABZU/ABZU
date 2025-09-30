@@ -105,6 +105,58 @@ def detect_device() -> str:
     return "cpu"
 
 
+HARDWARE_PROFILE_HEADER = """# Hardware Support
+
+## Stage A Runner Profile
+
+| Component | Specification |
+| --- | --- |
+| Chassis | Supermicro SYS-510P-ML with redundant 750 W PSUs |
+| CPU | Intel Xeon Silver 4410Y (12 cores / 24 threads, 2.0 GHz base, 3.5 GHz turbo) |
+| Memory | 128 GB DDR5-4800 ECC (4 × 32 GB) |
+| Storage | 2 × 1 TB NVMe (RAID1) for OS, 1 × 2 TB NVMe scratch volume |
+| Networking | Dual-port 10 GbE (SFP+) uplinks with bonded LACP |
+| Accelerator | None (Stage A runs in CPU-only mode) |
+"""
+
+
+HARDWARE_PROFILE_GUIDANCE = """## Required Firmware and BIOS Settings
+
+- BIOS version 2.5c with microcode package `14.0.45`.
+- Enable `VT-d`, `SR-IOV`, and `Turbo Boost` while keeping `C-States` on `Auto` to
+  reduce boot jitter.
+- Update the BMC to 01.14.12 for correct power telemetry streaming into the
+  Node Exporter panels.
+- Stage A runners boot from UEFI with Secure Boot disabled to allow the
+  telemetry sidecar to attach early in the initramfs.
+
+## Exporter Configuration
+
+- Install `node_exporter` with the textfile collector pointed at
+  `/var/lib/node_exporter/textfile_collector/` and grant the CI user write
+  access.
+- Symlink `monitoring/boot_metrics.prom` into the collector directory after each
+  gate run so Prometheus scrapes the first-attempt success, retry totals, and
+  boot duration gauges.
+- Add the following scrape job to `prometheus.yml` on the runner:
+
+  ```yaml
+  - job_name: "stage-a-boot-metrics"
+    static_configs:
+      - targets: ["localhost:9100"]
+        labels:
+          runner: "stage-a"
+    params:
+      collect[]:
+        - textfile
+  ```
+
+- Include `monitoring/grafana-dashboard.json` in the Grafana provisioning
+  config so the Boot Ops board automatically surfaces the new gauges alongside
+  the Alpha gate summaries.
+"""
+
+
 def log_hardware_support(
     device: str, path: str | Path = ROOT / "docs/hardware_support.md"
 ) -> None:
@@ -120,12 +172,19 @@ def log_hardware_support(
     except Exception:  # pragma: no cover - torch may not be installed
         cuda_available = rocm_available = intel_available = False
 
-    with path.open("w", encoding="utf-8") as f:
-        f.write("# Hardware Support\n\n")
-        f.write(f"- CUDA available: {cuda_available}\n")
-        f.write(f"- ROCm available: {rocm_available}\n")
-        f.write(f"- Intel GPU available: {intel_available}\n")
-        f.write(f"- Selected device: {device}\n")
+    runtime_flags = (
+        f"- CUDA available: {cuda_available}",
+        f"- ROCm available: {rocm_available}",
+        f"- Intel GPU available: {intel_available}",
+        f"- Selected device: {device}",
+    )
+
+    with path.open("w", encoding="utf-8") as handle:
+        handle.write(HARDWARE_PROFILE_HEADER)
+        handle.write("\n### Runtime Flags\n\n")
+        handle.write("\n".join(runtime_flags))
+        handle.write("\n\n")
+        handle.write(HARDWARE_PROFILE_GUIDANCE)
 
 
 def main() -> None:

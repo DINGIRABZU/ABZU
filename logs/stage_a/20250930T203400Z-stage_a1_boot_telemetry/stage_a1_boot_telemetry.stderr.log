@@ -1,0 +1,25 @@
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  module = override.factory()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:286: EnvironmentLimitedWarning: environment-limited: neoabzu optional bundle unavailable; using minimal sandbox MemoryBundle
+  _apply_override(name, force=_should_force_override(name))
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'prometheus_fastapi_instrumentator' (prometheus instrumentation disabled in sandbox)
+  _prepare_overrides()
+/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)
+  _prepare_overrides()
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+/workspace/ABZU/scripts/bootstrap.py:194: EnvironmentLimitedWarning: environment-limited: Missing required environment variables: HF_TOKEN, GITHUB_TOKEN, OPENAI_API_KEY; continuing without required credentials
+  validate_env()
+/workspace/ABZU/scripts/bootstrap.py:104: UserWarning: No supported GPU detected; using CPU
+  warnings.warn("No supported GPU detected; using CPU")

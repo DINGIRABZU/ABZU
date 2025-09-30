@@ -1,0 +1,9 @@
+Collecting faiss-cpu
+  Downloading faiss_cpu-1.12.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+Requirement already satisfied: numpy<3.0,>=1.25.0 in /root/.pyenv/versions/3.12.10/lib/python3.12/site-packages (from faiss-cpu) (2.2.6)
+Requirement already satisfied: packaging in /root/.pyenv/versions/3.12.10/lib/python3.12/site-packages (from faiss-cpu) (25.0)
+Downloading faiss_cpu-1.12.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (31.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 31.4/31.4 MB 18.4 MB/s  0:00:01
+Installing collected packages: faiss-cpu
+Successfully installed faiss-cpu-1.12.0
+Stage A1 bootstrap completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]
