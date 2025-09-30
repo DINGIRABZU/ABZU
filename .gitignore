@@ -31,6 +31,8 @@ logs/stage_b/**/rehearsals/**/bundles/**
 !logs/stage_b/**/health_checks.json
 !logs/stage_b/**/rehearsal_manifest.json
 !logs/stage_b/**/session_manifest.json
+!logs/alpha_gate/
+!logs/alpha_gate/**
 !logs/stage_a/
 !logs/stage_a/**/
 !logs/stage_a/**/summary.json

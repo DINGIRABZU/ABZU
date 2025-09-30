@@ -1,0 +1,33 @@
+{
+  "bundle": "stage_a1_boot_telemetry",
+  "created_at": "2025-09-30T20:35:18.530042Z",
+  "runs": [
+    {
+      "run_id": "20250930T203400Z-stage_a1_boot_telemetry",
+      "summary": "20250930T203400Z-stage_a1_boot_telemetry-summary.json",
+      "stderr_tail": "20250930T203400Z-stage_a1_boot_telemetry-stderr-tail.log",
+      "stderr_full": "20250930T203400Z-stage_a1_boot_telemetry-stderr.log",
+      "stdout": "20250930T203400Z-stage_a1_boot_telemetry-stdout.log"
+    },
+    {
+      "run_id": "20250930T203409Z-stage_a1_boot_telemetry",
+      "summary": "20250930T203409Z-stage_a1_boot_telemetry-summary.json",
+      "stderr_tail": "20250930T203409Z-stage_a1_boot_telemetry-stderr-tail.log",
+      "stderr_full": "20250930T203409Z-stage_a1_boot_telemetry-stderr.log",
+      "stdout": "20250930T203409Z-stage_a1_boot_telemetry-stdout.log"
+    },
+    {
+      "run_id": "20250930T203412Z-stage_a1_boot_telemetry",
+      "summary": "20250930T203412Z-stage_a1_boot_telemetry-summary.json",
+      "stderr_tail": "20250930T203412Z-stage_a1_boot_telemetry-stderr-tail.log",
+      "stderr_full": "20250930T203412Z-stage_a1_boot_telemetry-stderr.log",
+      "stdout": "20250930T203412Z-stage_a1_boot_telemetry-stdout.log"
+    }
+  ],
+  "prometheus_exports": [
+    "prometheus/boot_metrics.prom",
+    "prometheus/alpha_gate.prom",
+    "prometheus/alpha_gate_summary.json"
+  ],
+  "success_rate": 1.0
+}
