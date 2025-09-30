@@ -1,0 +1,17 @@
+{
+  "hosts": [
+    {
+      "name": "neo-apsu-gamma",
+      "role": "control-plane",
+      "image": "neo-apsu:2025.10.31",
+      "sha256": "4c3c8c61dc53e1b0215d65e4d795fe90c0d2ec72405366ecb2f748506166e8f7"
+    },
+    {
+      "name": "neo-apsu-delta",
+      "role": "workspace",
+      "image": "neo-apsu:2025.10.31",
+      "sha256": "4c3c8c61dc53e1b0215d65e4d795fe90c0d2ec72405366ecb2f748506166e8f7"
+    }
+  ],
+  "sandbox_reference_sha": "d847b706c5ac316238bb07d7db7f4aaecf1d4c915e4ed8fdeeea07dd66b61e33"
+}

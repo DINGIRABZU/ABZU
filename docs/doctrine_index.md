@@ -2,8 +2,10 @@
 
 | File | Version | Checksum | Last Updated |
 | --- | --- | --- | --- |
-| docs/roadmap.md |  | `e024bc5d59f342c49a093ef87fc5c79360f17b7fdf7899df73c7a6d27dd5c4ce` | 2025-10-31T00:00:00Z |
-| docs/PROJECT_STATUS.md |  | `425d70399eee784d0fbb7d5c978f80c83df22495e44b98c80f63980bf45a6dad` | 2025-11-01T12:00:00Z |
+| docs/roadmap.md |  | `f34cec435233a4a9604d6afd5600ffb8a680174f64f2f14e2a1bd9cc33f721a6` | 2025-11-02T10:05:00Z |
+| docs/PROJECT_STATUS.md |  | `c7b2fb61b87066d031d11a259ec60654df034b5b7b9ceeace5c44042c7b990cf` | 2025-11-02T10:05:00Z |
+| docs/The_Absolute_Protocol.md | v1.0.111 | `01217d982ef574c57bf87474b8435fffa0dd0d8ee4bcf0b97d518b4511ace6ae` | 2025-11-02T10:05:00Z |
+| docs/documentation_protocol.md |  | `7a1630c22fc044942d36491cb3c80c64cbe8a5f3682ae05f25ed606925bd6300` | 2025-11-02T10:05:00Z |
 | docs/system_blueprint.md |  | `48e5e5e212eb171f4b1e5447d347544cd572c0bbe5c9e4e7d526c3e45ac38172` | 2025-10-31T00:00:00Z |
 | docs/releases/beta_launch_plan.md |  | `fe7f0cf3a0557bf44b00f3502896a8f38e251dcc3f30c8354382e87252be9dcb` | 2025-11-01T12:00:00Z |
 | CODEX/ACTIVATIONS/OATH OF THE VAULT 1de45dfc251d80c9a86fc67dee2f964a.md |  | `d46a551d4e1fb1b3e056bf14f051793e6faaa6191b268f84e3a0e054fe432c60` | 2025-09-21T15:59:59+02:00 |

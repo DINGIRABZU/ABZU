@@ -1,0 +1,28 @@
+{
+  "events": [
+    {
+      "timestamp": "2025-11-02T09:15:02Z",
+      "event": "hardware_replay_started",
+      "details": {
+        "host": "gate-runner-02",
+        "trigger": "operator_api.post:/hardware/stage-g/gate-runner"
+      }
+    },
+    {
+      "timestamp": "2025-11-02T09:18:47Z",
+      "event": "parity_snapshot_captured",
+      "details": {
+        "rest_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8",
+        "grpc_checksum": "30b2c06c4b4ffeb5d403c63fb7a4ee283f9f8f109b3484876fe09d7ec6de56c8"
+      }
+    },
+    {
+      "timestamp": "2025-11-02T09:22:03Z",
+      "event": "rollback_drill_completed",
+      "details": {
+        "command": "scripts/run_alpha_gate.sh --replay-from logs/stage_c/20251001T010101Z-readiness_packet",
+        "status": "sandbox_restored"
+      }
+    }
+  ]
+}

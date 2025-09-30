@@ -1,0 +1,26 @@
+{
+  "sandbox_rotation_windows": [
+    "20250926T183842Z-PT48H",
+    "20250926T222813Z-PT48H",
+    "20250928T173339Z-PT48H"
+  ],
+  "hardware_rotation_window": "20251102T094500Z-PT48H",
+  "rest_trace_checksum": "bb12d7b1bcd3f824d8e87e145e729dffa1ebb690db1d40f1705077a2fd1c4f00",
+  "grpc_trace_checksum": "bb12d7b1bcd3f824d8e87e145e729dffa1ebb690db1d40f1705077a2fd1c4f00",
+  "heartbeat_trace_checksum": "a8cfe23bde01896cc7ce85bca5df903abf72b4fb3f799541bef1497f825aee3d",
+  "diff_summary": "Checksums match Stage B ledger; hardware heartbeat latency improved by 35%.",
+  "fallback_events": [
+    {
+      "timestamp": "2025-11-02T09:49:11Z",
+      "service": "operator_api",
+      "action": "grpc-to-rest-fallback",
+      "result": "success"
+    },
+    {
+      "timestamp": "2025-11-02T09:52:06Z",
+      "service": "operator_upload",
+      "action": "rest-to-grpc-retry",
+      "result": "success"
+    }
+  ]
+}

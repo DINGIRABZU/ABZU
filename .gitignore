@@ -45,6 +45,8 @@ logs/stage_b/**/rehearsals/**/bundles/**
 !logs/stage_f/**/summary.json
 !logs/stage_e/
 !logs/stage_e/**
+!logs/stage_g/
+!logs/stage_g/**
 
 # Ignore Blender files
 *.blend

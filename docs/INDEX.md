@@ -375,7 +375,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [development_workflow.md](development_workflow.md) | Development Workflow | This page outlines the recommended steps for contributing to ABZU. | - |
 | [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | This guide outlines the diagnostic scripts and the self-healing mechanisms used to keep Spiral OS operational. | - |
 | [docker_build_audio_tools.md](docker_build_audio_tools.md) | Docker Image with Audio Tools | This project provides a Docker image that bundles the audio utilities **FFmpeg** and **SoX**. The `Dockerfile` instal... | - |
-| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| docs/roadmap.md \|  \| `e024bc5d59f342c49a093e... | - |
+| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| docs/roadmap.md \|  \| `f34cec435233a4a9604d6a... | - |
 | [documentation_protocol.md](documentation_protocol.md) | Documentation Protocol | Standard workflow for updating documentation and guides. | - |
 | [emotional_memory_matrix.md](emotional_memory_matrix.md) | Emotional Memory Matrix | The emotional memory matrix interconnects the various JSON files that store conversation history and affect metrics.... | - |
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |
@@ -494,6 +494,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [release_process.md](release_process.md) | Release Process | This guide covers signing build artifacts and verifying their integrity. | - |
 | [release_runbook.md](release_runbook.md) | Release Runbook | - | - |
 | [releases/alpha_v0_1_workflow.md](releases/alpha_v0_1_workflow.md) | Alpha v0.1 Workflow Gate | Alpha v0.1 establishes the first end-to-end readiness gate for the Spiral OS stack. This workflow packages the build,... | `../../start_spiral_os.py` |
+| [releases/beta_launch_plan.md](releases/beta_launch_plan.md) | Beta Launch Playbook | Stage E parity enforcement and transport readiness provide the baseline for widening access during the beta window. T... | - |
 | [repository_blueprint.md](repository_blueprint.md) | Repository Blueprint | **Version:** v0.1.0 **Last updated:** 2025-10-05 | - |
 | [reproducibility.md](reproducibility.md) | Reproducibility | This project relies on [DVC](https://dvc.org) for data and model versioning and on `docker compose` for repeatable en... | - |
 | [retraining_log.md](retraining_log.md) | Retraining Log | \| date \| outcome \| model_hash \| \| --- \| --- \| --- \| | - |
@@ -559,6 +560,8 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../logs/stage_c/archive/20250930T210000Z-readiness_packet/readiness_bundle/README.md](../logs/stage_c/archive/20250930T210000Z-readiness_packet/readiness_bundle/README.md) | Readiness Bundle Snapshot — 2025-09-30 | The readiness bundle summarizes Stage A/B/C evidence sourced from live log artifacts. Each entry links directly to th... | - |
 | [../logs/stage_c/archive/20250930T210000Z-readiness_packet/review_minutes.md](../logs/stage_c/archive/20250930T210000Z-readiness_packet/review_minutes.md) | Cross-Team Readiness Review — 2025-09-30 19:00 UTC | **Attendees:** @release-ops, @memory-squad, @integration-guild, @qa-lead, @ops-team | - |
 | [../logs/stage_c/archive/README.md](../logs/stage_c/archive/README.md) | Stage C Readiness Packet Archive | This directory preserves superseded Stage C readiness packets for traceability. The 2025-09-30 packet remains availab... | - |
+| [../logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/rollback_drill.md](../logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/rollback_drill.md) | Gate-Runner Hardware Rollback Drill | - | - |
+| [../logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/rollback_drill.md](../logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/rollback_drill.md) | Neo-APSU Hardware Rollback Drill | - | - |
 | [../monitoring/README.md](../monitoring/README.md) | Monitoring | This stack launches Prometheus, Grafana, Node Exporter, cAdvisor, and an NVIDIA GPU exporter. Metrics include CPU, me... | - |
 | [../monitoring/copresence_dashboard.md](../monitoring/copresence_dashboard.md) | Copresence Dashboard | This Grafana dashboard surfaces real‑time copresence signals for operators. It focuses on boot health, narrative flow... | - |
 | [../monitoring/metrics_catalog.md](../monitoring/metrics_catalog.md) | Metrics Catalog | \| Metric \| Type \| Labels \| Description \| Dashboard \| \| --- \| --- \| --- \| --- \| --- \| \| `service_boot_duration_seconds... | - |

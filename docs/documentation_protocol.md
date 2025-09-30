@@ -29,3 +29,5 @@ Document updates must also cite the aggregated readiness packet (`logs/stage_c/2
 
 11. **Run `python scripts/check_connectors.py`** whenever files in `connectors/` or related modules change. The script fails on placeholder markers or missing MCP adoption. Every connector update must also refresh the corresponding documentation with protocol and heartbeat details.
 
+12. **Stage G doctrine synchronization:** When updating sandbox-to-hardware bridge evidence, align `docs/roadmap.md#stage-g`, `docs/PROJECT_STATUS.md#stage-g`, and `docs/The_Absolute_Protocol.md#stage-gate-alignment` so hardware owners, rollback drills, and approvals stay in lockstep. Reference the latest Stage G parity bundles (`logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/`, `logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/`) and re-run `pre-commit run --files <changed docs>` to refresh doctrine hooks and the index entries they update.【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/summary.json†L1-L13】
+
