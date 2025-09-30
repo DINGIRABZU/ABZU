@@ -36,6 +36,13 @@ from fastapi import (
     WebSocketDisconnect,
 )
 
+try:  # pragma: no cover - optional dependency used for upload route
+    import multipart  # type: ignore[unused-import]
+
+    _HAS_MULTIPART = True
+except Exception:  # pragma: no cover - multipart dependency missing in sandbox
+    _HAS_MULTIPART = False
+
 try:  # pragma: no cover - optional metrics shim
     from opentelemetry import metrics, trace
 except ImportError:  # pragma: no cover - fallback to repo stub without metrics
@@ -200,6 +207,17 @@ _SCRIPTS_DIR = _REPO_ROOT / "scripts"
 _STAGE_A_ROOT = _REPO_ROOT / "logs" / "stage_a"
 _STAGE_B_ROOT = _REPO_ROOT / "logs" / "stage_b"
 _STAGE_C_ROOT = _REPO_ROOT / "logs" / "stage_c"
+_STAGE_E_ROOT = _REPO_ROOT / "logs" / "stage_e"
+
+_STAGE_E_CONNECTORS: tuple[str, ...] = (
+    "operator_api",
+    "operator_upload",
+    "crown_handshake",
+)
+_STAGE_E_DASHBOARD_URL = os.getenv(
+    "ABZU_STAGE_E_DASHBOARD_URL",
+    "https://grafana.ops.abzu.dev/d/operator-transport-parity/continuous-stage-e",
+)
 _STAGE_C_BUNDLE_FILENAME = "readiness_bundle.json"
 _STAGE_C_SUMMARY_FILENAME = "summary.json"
 
@@ -1735,6 +1753,392 @@ def _diff_handshake_payloads(
     return differences
 
 
+def _extract_latency_metric(trace: Mapping[str, Any] | None) -> float | None:
+    """Return a latency metric from ``trace`` when present."""
+
+    if not isinstance(trace, Mapping):
+        return None
+
+    for key in ("latency_ms", "duration_ms", "elapsed_ms", "latency"):
+        value = trace.get(key)
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            try:
+                return float(value)
+            except ValueError:
+                continue
+
+    metrics_section = trace.get("metrics")
+    if isinstance(metrics_section, Mapping):
+        for key in ("latency_ms", "duration_ms", "elapsed_ms"):
+            value = metrics_section.get(key)
+            if isinstance(value, (int, float)):
+                return float(value)
+            if isinstance(value, str):
+                try:
+                    return float(value)
+                except ValueError:
+                    continue
+
+    return None
+
+
+def _publish_stage_e_transport_snapshot(
+    payload: Mapping[str, Any],
+    rest_attachment_path: Path,
+    grpc_attachment_path: Path,
+    diff_attachment_path: Path,
+) -> None:
+    """Write a Stage E transport snapshot under ``logs/stage_e``."""
+
+    generated_at = datetime.now(timezone.utc)
+    stage_e_run_id = (
+        f"{generated_at.strftime('%Y%m%dT%H%M%SZ')}-stage_e_transport_readiness"
+    )
+    log_dir = _STAGE_E_ROOT / stage_e_run_id
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    def _load_json_or_default(path: Path) -> Mapping[str, Any]:
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return {}
+
+    rest_payload = _load_json_or_default(rest_attachment_path)
+    grpc_payload = _load_json_or_default(grpc_attachment_path)
+    diff_payload = _load_json_or_default(diff_attachment_path)
+
+    summary_section = payload.get("summary")
+    metrics_section = payload.get("metrics")
+    if not isinstance(summary_section, Mapping):
+        summary_section = {}
+    if not isinstance(metrics_section, Mapping):
+        metrics_section = {}
+
+    heartbeat_payload: Mapping[str, Any] | None = None
+    heartbeat_payload_candidate = metrics_section.get("heartbeat_payload")
+    if isinstance(heartbeat_payload_candidate, Mapping):
+        heartbeat_payload = heartbeat_payload_candidate
+    else:
+        summary_heartbeat = summary_section.get("heartbeat_payload")
+        if isinstance(summary_heartbeat, Mapping):
+            heartbeat_payload = summary_heartbeat
+
+    heartbeat_emitted = bool(metrics_section.get("heartbeat_emitted")) or bool(
+        summary_section.get("heartbeat_emitted")
+    )
+
+    source_summary_path = payload.get("summary_path")
+    stage_c_run_id = str(payload.get("run_id") or summary_section.get("run_id") or "unknown-stage-c4")
+
+    connectors: dict[str, Any] = {}
+    missing_connectors: list[str] = []
+    parity_failures: list[str] = []
+    heartbeat_gaps: list[str] = []
+    telemetry_hashes: dict[str, dict[str, str | None]] = {}
+    environment_notes: set[str] = set()
+
+    for connector_id in _STAGE_E_CONNECTORS:
+        connector_dir = log_dir / connector_id
+        connector_dir.mkdir(parents=True, exist_ok=True)
+        connector_summary: dict[str, Any] = {
+            "connector_id": connector_id,
+            "rotation_window": None,
+            "rotated_at": None,
+            "parity": False,
+            "checksum_match": False,
+            "rest_checksum": None,
+            "grpc_checksum": None,
+            "latency_ms": {"rest": None, "grpc": None},
+            "monitoring_gaps": [],
+            "artifacts": {},
+        }
+
+        entry = latest_rotation_entry(connector_id)
+        if not isinstance(entry, Mapping):
+            missing_connectors.append(connector_id)
+            telemetry_hashes[connector_id] = {"rest": None, "grpc": None}
+            connector_summary["status"] = "missing_rotation_entry"
+            connector_summary["monitoring_gaps"] = [
+                "rest_latency_missing",
+                "grpc_latency_missing",
+                "heartbeat_missing",
+                "heartbeat_latency_missing",
+            ]
+            heartbeat_gaps.append(connector_id)
+            connectors[connector_id] = connector_summary
+            environment_notes.add(
+                "environment-limited: rotation ledger missing connector parity traces"
+            )
+            continue
+
+        connector_summary["rotated_at"] = entry.get("rotated_at")
+        rotation_window = entry.get("rotation_window")
+        if isinstance(rotation_window, Mapping):
+            connector_summary["rotation_window"] = rotation_window
+
+        traces = entry.get("traces")
+        if not isinstance(traces, Mapping):
+            traces = None
+        rest_trace = None
+        grpc_trace = None
+        if isinstance(traces, Mapping):
+            rest_candidate = traces.get("rest")
+            grpc_candidate = traces.get("grpc")
+            if isinstance(rest_candidate, Mapping):
+                rest_trace = rest_candidate
+            if isinstance(grpc_candidate, Mapping):
+                grpc_trace = grpc_candidate
+
+        rest_handshake_raw: Mapping[str, Any] | None = None
+        grpc_handshake_raw: Mapping[str, Any] | None = None
+        if isinstance(rest_trace, Mapping):
+            if isinstance(rest_trace.get("normalized"), Mapping):
+                rest_handshake_raw = rest_trace["normalized"]  # type: ignore[index]
+            elif isinstance(rest_trace.get("handshake"), Mapping):
+                rest_handshake_raw = rest_trace["handshake"]  # type: ignore[index]
+            else:
+                response_section = rest_trace.get("response")
+                if isinstance(response_section, Mapping):
+                    candidate = response_section.get("handshake")
+                    if isinstance(candidate, Mapping):
+                        rest_handshake_raw = candidate
+
+        if isinstance(grpc_trace, Mapping):
+            if isinstance(grpc_trace.get("handshake_equivalent"), Mapping):
+                grpc_handshake_raw = grpc_trace["handshake_equivalent"]  # type: ignore[index]
+            else:
+                response_section = grpc_trace.get("response")
+                if isinstance(response_section, Mapping):
+                    candidate = response_section.get("handshake_equivalent")
+                    if isinstance(candidate, Mapping):
+                        grpc_handshake_raw = candidate
+                    elif isinstance(response_section.get("handshake"), Mapping):
+                        grpc_handshake_raw = response_section["handshake"]  # type: ignore[index]
+
+        rest_normalized = normalize_handshake_for_trace(rest_handshake_raw)
+        grpc_normalized = normalize_handshake_for_trace(grpc_handshake_raw)
+
+        rest_checksum = None
+        if isinstance(rest_trace, Mapping):
+            checksum_candidate = rest_trace.get("checksum")
+            if isinstance(checksum_candidate, str):
+                rest_checksum = checksum_candidate
+        if rest_checksum is None:
+            rest_checksum = compute_handshake_checksum(rest_handshake_raw)
+
+        grpc_checksum = None
+        grpc_metadata = None
+        if isinstance(grpc_trace, Mapping):
+            checksum_candidate = grpc_trace.get("checksum")
+            if isinstance(checksum_candidate, str):
+                grpc_checksum = checksum_candidate
+            metadata_candidate = grpc_trace.get("metadata")
+            if isinstance(metadata_candidate, Mapping):
+                grpc_metadata = metadata_candidate
+                parity_checksum = metadata_candidate.get("parity_checksum")
+                if isinstance(parity_checksum, str):
+                    grpc_checksum = parity_checksum
+        if grpc_checksum is None:
+            grpc_checksum = compute_handshake_checksum(grpc_handshake_raw)
+
+        telemetry_hashes[connector_id] = {
+            "rest": rest_checksum,
+            "grpc": grpc_checksum,
+        }
+
+        parity = bool(rest_normalized and grpc_normalized and rest_normalized == grpc_normalized)
+        connector_summary["parity"] = parity
+        connector_summary["rest_checksum"] = rest_checksum
+        connector_summary["grpc_checksum"] = grpc_checksum
+        checksum_match = bool(rest_checksum and grpc_checksum and rest_checksum == grpc_checksum)
+        connector_summary["checksum_match"] = checksum_match
+
+        differences: list[dict[str, Any]] = []
+        if parity:
+            differences = []
+        elif rest_normalized and grpc_normalized:
+            differences = _diff_handshake_payloads(rest_normalized, grpc_normalized)
+        connector_summary["differences"] = differences
+        if not parity or not checksum_match:
+            parity_failures.append(connector_id)
+
+        rest_latency = _extract_latency_metric(rest_trace)
+        grpc_latency = _extract_latency_metric(grpc_trace)
+        connector_summary["latency_ms"] = {"rest": rest_latency, "grpc": grpc_latency}
+        monitoring_gaps = connector_summary["monitoring_gaps"]
+        if rest_latency is None:
+            monitoring_gaps.append("rest_latency_missing")
+        if grpc_latency is None:
+            monitoring_gaps.append("grpc_latency_missing")
+        if rest_latency is None or grpc_latency is None:
+            environment_notes.add(
+                "environment-limited: transport latency metrics unavailable in sandbox traces"
+            )
+
+        heartbeat_latency_ms: float | None = None
+        heartbeat_emitted_for_connector = False
+        if connector_id == "operator_api":
+            heartbeat_emitted_for_connector = heartbeat_emitted
+            if not heartbeat_emitted_for_connector:
+                monitoring_gaps.append("heartbeat_missing")
+            if heartbeat_payload is None:
+                environment_notes.add(
+                    "environment-limited: heartbeat payload unavailable for operator_api"
+                )
+            else:
+                heartbeat_path = connector_dir / "heartbeat_payload.json"
+                heartbeat_path.write_text(
+                    json.dumps(
+                        _sanitize_for_json(heartbeat_payload),
+                        indent=2,
+                        ensure_ascii=False,
+                    ),
+                    encoding="utf-8",
+                )
+                connector_summary["heartbeat_payload"] = str(heartbeat_path)
+        else:
+            monitoring_gaps.append("heartbeat_missing")
+            heartbeat_emitted_for_connector = False
+            environment_notes.add(
+                "environment-limited: connector heartbeat instrumentation pending"
+            )
+
+        connector_summary["heartbeat_emitted"] = heartbeat_emitted_for_connector
+        connector_summary["heartbeat_latency_ms"] = heartbeat_latency_ms
+        monitoring_gaps.append("heartbeat_latency_missing")
+        if not heartbeat_emitted_for_connector:
+            heartbeat_gaps.append(connector_id)
+
+        diff_rotation_window = None
+        if connector_id == "operator_api" and isinstance(diff_payload, Mapping):
+            diff_rotation_candidate = diff_payload.get("rotation_window")
+            if isinstance(diff_rotation_candidate, Mapping):
+                diff_rotation_window = diff_rotation_candidate
+        if not isinstance(diff_rotation_window, Mapping) and isinstance(
+            grpc_metadata, Mapping
+        ):
+            diff_rotation_window = grpc_metadata.get("rotation_window")
+
+        artifacts = connector_summary["artifacts"]
+        rest_trace_path = connector_dir / "rest_trace.json"
+        rest_trace_path.write_text(
+            json.dumps(
+                _sanitize_for_json(
+                    {
+                        "protocol": "REST",
+                        "trace": rest_trace,
+                        "normalized": rest_normalized,
+                        "checksum": rest_checksum,
+                    }
+                ),
+                indent=2,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        artifacts["rest"] = str(rest_trace_path)
+
+        grpc_trace_path = connector_dir / "grpc_trace.json"
+        grpc_trace_path.write_text(
+            json.dumps(
+                _sanitize_for_json(
+                    {
+                        "protocol": "gRPC",
+                        "trace": grpc_trace,
+                        "handshake_equivalent": grpc_handshake_raw,
+                        "metadata": grpc_metadata,
+                        "checksum": grpc_checksum,
+                    }
+                ),
+                indent=2,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        artifacts["grpc"] = str(grpc_trace_path)
+
+        diff_trace_path = connector_dir / "rest_grpc_diff.json"
+        diff_trace_payload = {
+            "parity": parity,
+            "differences": differences,
+            "rest_checksum": rest_checksum,
+            "grpc_checksum": grpc_checksum,
+            "checksum_match": checksum_match,
+            "rotation_window": diff_rotation_window,
+        }
+        diff_trace_path.write_text(
+            json.dumps(
+                _sanitize_for_json(diff_trace_payload),
+                indent=2,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        artifacts["diff"] = str(diff_trace_path)
+
+        connectors[connector_id] = connector_summary
+
+    status = "warning"
+    if missing_connectors:
+        status = "requires_attention"
+    elif parity_failures:
+        status = "requires_attention"
+
+    summary_payload = {
+        "status": status,
+        "stage": "stage_e_transport_readiness",
+        "run_id": stage_e_run_id,
+        "generated_at": generated_at.isoformat(),
+        "dashboard": {
+            "url": _STAGE_E_DASHBOARD_URL,
+            "updated_at": generated_at.isoformat(),
+        },
+        "source_stage_c": {
+            "run_id": stage_c_run_id,
+            "summary_path": source_summary_path,
+            "artifacts": {
+                "rest": str(rest_attachment_path),
+                "grpc": str(grpc_attachment_path),
+                "diff": str(diff_attachment_path),
+            },
+        },
+        "connectors": connectors,
+        "missing_connectors": missing_connectors,
+        "parity_failures": parity_failures,
+        "heartbeat_gaps": heartbeat_gaps,
+        "telemetry_hashes": telemetry_hashes,
+    }
+
+    if environment_notes:
+        summary_payload["environment_notes"] = sorted(environment_notes)
+
+    summary_path = log_dir / "summary.json"
+    summary_path.write_text(
+        json.dumps(
+            _sanitize_for_json(summary_payload),
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    if isinstance(payload, dict):
+        stage_e_section = payload.setdefault("stage_e", {})
+        if isinstance(stage_e_section, dict):
+            stage_e_section.update(
+                {
+                    "run_id": stage_e_run_id,
+                    "summary_path": str(summary_path),
+                    "status": status,
+                    "heartbeat_gaps": heartbeat_gaps,
+                }
+            )
+        artifacts_section = payload.setdefault("artifacts", {})
+        if isinstance(artifacts_section, dict):
+            artifacts_section.setdefault("stage_e_snapshot", str(summary_path))
+
 def _attach_rest_grpc_parity(payload: dict[str, Any]) -> None:
     """Persist REST and gRPC handshake parity attachments for Stage C4 runs."""
 
@@ -1888,6 +2292,20 @@ def _attach_rest_grpc_parity(payload: dict[str, Any]) -> None:
             json.dumps(summary_payload, indent=2, ensure_ascii=False),
             encoding="utf-8",
         )
+
+    try:
+        _publish_stage_e_transport_snapshot(
+            payload,
+            rest_path,
+            grpc_path,
+            diff_path,
+        )
+    except Exception:  # pragma: no cover - defensive guard
+        logger.exception("failed to publish Stage E transport snapshot")
+        if isinstance(payload, dict):
+            warnings = payload.setdefault("warnings", [])
+            if isinstance(warnings, list):
+                warnings.append("stage_e_transport_snapshot_failed")
 
 
 @router.on_event("startup")
@@ -2613,100 +3031,103 @@ async def conversation_logs(
     return {"logs": logs}
 
 
-@router.post("/operator/upload")
-async def upload_file(
-    operator: str = Form(...),
-    metadata: str = Form("{}"),
-    files: list[UploadFile] | None = File(None),
-) -> dict[str, object]:
-    """Store uploaded ``files`` and forward ``metadata`` to RAZAR via Crown.
+if _HAS_MULTIPART:
 
-    ``files`` may be empty, allowing metadata-only uploads that are still
-    relayed to Crown for context.
-    """
-    await _ensure_mcp_ready_for_request()
-    command_id = str(uuid4())
-    started_at = datetime.utcnow().isoformat()
+    @router.post("/operator/upload")
+    async def upload_file(
+        operator: str = Form(...),
+        metadata: str = Form("{}"),
+        files: list[UploadFile] | None = File(None),
+    ) -> dict[str, object]:
+        """Store uploaded ``files`` and forward ``metadata`` to RAZAR via Crown.
 
-    try:
-        meta = json.loads(metadata)
-    except json.JSONDecodeError as exc:
-        raise HTTPException(status_code=400, detail="invalid metadata") from exc
+        ``files`` may be empty, allowing metadata-only uploads that are still
+        relayed to Crown for context.
+        """
 
-    upload_dir = Path("uploads") / operator
-    upload_dir.mkdir(parents=True, exist_ok=True)
+        await _ensure_mcp_ready_for_request()
+        command_id = str(uuid4())
+        started_at = datetime.utcnow().isoformat()
 
-    await broadcast_event(
-        {"event": "ack", "command": "upload", "command_id": command_id}
-    )
-
-    stored: list[str] = []
-    for item in files or []:
-        dest = upload_dir / item.filename
         try:
-            with dest.open("wb") as fh:
-                shutil.copyfileobj(item.file, fh)
-            stored.append(str(dest.relative_to(Path("uploads"))))
-            await broadcast_event(
-                {
-                    "event": "progress",
-                    "command": "upload",
-                    "file": item.filename,
-                    "command_id": command_id,
-                }
+            meta = json.loads(metadata)
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail="invalid metadata") from exc
+
+        upload_dir = Path("uploads") / operator
+        upload_dir.mkdir(parents=True, exist_ok=True)
+
+        await broadcast_event(
+            {"event": "ack", "command": "upload", "command_id": command_id}
+        )
+
+        stored: list[str] = []
+        for item in files or []:
+            dest = upload_dir / item.filename
+            try:
+                with dest.open("wb") as fh:
+                    shutil.copyfileobj(item.file, fh)
+                stored.append(str(dest.relative_to(Path("uploads"))))
+                await broadcast_event(
+                    {
+                        "event": "progress",
+                        "command": "upload",
+                        "file": item.filename,
+                        "command_id": command_id,
+                    }
+                )
+            except Exception as exc:  # pragma: no cover - disk failure
+                logger.error("failed to store %s: %s", item.filename, exc)
+                raise HTTPException(status_code=500, detail="failed to store file") from exc
+
+        def _relay(meta: dict[str, object]) -> dict[str, object]:
+            """Crown forwards metadata and stored paths to RAZAR."""
+
+            def _send(m: dict[str, object]) -> dict[str, object]:
+                return {"received": m, "files": stored}
+
+            return _dispatcher.dispatch(
+                "crown", "razar", _send, meta, command_id=command_id
             )
-        except Exception as exc:  # pragma: no cover - disk failure
-            logger.error("failed to store %s: %s", item.filename, exc)
-            raise HTTPException(status_code=500, detail="failed to store file") from exc
 
-    def _relay(meta: dict[str, object]) -> dict[str, object]:
-        """Crown forwards metadata and stored paths to RAZAR."""
+        meta_with_files = {**meta, "files": stored, "command_id": command_id}
 
-        def _send(m: dict[str, object]) -> dict[str, object]:
-            return {"received": m, "files": stored}
+        try:
+            _dispatcher.dispatch(
+                operator, "crown", _relay, meta_with_files, command_id=command_id
+            )
+        except PermissionError as exc:
+            raise HTTPException(status_code=403, detail=str(exc)) from exc
+        except Exception as exc:  # pragma: no cover - dispatcher failure
+            logger.error("metadata relay failed: %s", exc)
+            raise HTTPException(status_code=500, detail="relay failed") from exc
 
-        return _dispatcher.dispatch(
-            "crown", "razar", _send, meta, command_id=command_id
+        completed_at = datetime.utcnow().isoformat()
+        _log_command(
+            {
+                "command_id": command_id,
+                "agent": "crown",
+                "result": {"stored": stored, "metadata": meta_with_files},
+                "started_at": started_at,
+                "completed_at": completed_at,
+            }
         )
 
-    meta_with_files = {**meta, "files": stored, "command_id": command_id}
-
-    try:
-        _dispatcher.dispatch(
-            operator, "crown", _relay, meta_with_files, command_id=command_id
+        await broadcast_event(
+            {
+                "event": "progress",
+                "command": "upload",
+                "percent": 100,
+                "files": stored,
+                "command_id": command_id,
+            }
         )
-    except PermissionError as exc:
-        raise HTTPException(status_code=403, detail=str(exc)) from exc
-    except Exception as exc:  # pragma: no cover - dispatcher failure
-        logger.error("metadata relay failed: %s", exc)
-        raise HTTPException(status_code=500, detail="relay failed") from exc
 
-    completed_at = datetime.utcnow().isoformat()
-    _log_command(
-        {
+        return {
             "command_id": command_id,
-            "agent": "crown",
-            "result": {"stored": stored, "metadata": meta_with_files},
-            "started_at": started_at,
-            "completed_at": completed_at,
+            "stored": stored,
+            "metadata": meta_with_files,
         }
-    )
-
-    await broadcast_event(
-        {
-            "event": "progress",
-            "command": "upload",
-            "percent": 100,
-            "files": stored,
-            "command_id": command_id,
-        }
-    )
-
-    return {
-        "command_id": command_id,
-        "stored": stored,
-        "metadata": meta_with_files,
-    }
 
 
 @router.post("/ingest-ethics")

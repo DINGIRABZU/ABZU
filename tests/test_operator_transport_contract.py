@@ -90,6 +90,16 @@ def _iter_stage_c_summaries() -> Iterator[dict[str, Any]]:
         yield data
 
 
+def _latest_stage_e_summary() -> tuple[Mapping[str, Any], Path]:
+    stage_e_root = Path("logs") / "stage_e"
+    summary_paths = sorted(stage_e_root.glob("*/summary.json"))
+    assert summary_paths, "expected Stage E transport snapshot"
+    latest_path = summary_paths[-1]
+    data = json.loads(latest_path.read_text(encoding="utf-8"))
+    assert isinstance(data, Mapping)
+    return data, latest_path
+
+
 def _rest_client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
     app = FastAPI()
     app.include_router(operator_api.router)
@@ -229,59 +239,65 @@ def test_stage_c_transport_parity_checksums_align() -> None:
 
 
 def test_stage_e_connector_parity_coverage_pending() -> None:
-    connectors_seen: set[str] = set()
-    for data in _iter_stage_c_summaries():
-        handshake_sources = []
-        summary_section = data.get("summary")
-        if isinstance(summary_section, Mapping):
-            handshake_sources.append(summary_section.get("handshake"))
-        handshake_parity = data.get("handshake_parity")
-        if isinstance(handshake_parity, Mapping):
-            handshake_sources.append(handshake_parity.get("rotation_window"))
-        metrics = data.get("metrics")
-        if isinstance(metrics, Mapping):
-            handshake_sources.append(metrics.get("handshake"))
+    summary, summary_path = _latest_stage_e_summary()
+    connectors = summary.get("connectors")
+    assert isinstance(connectors, Mapping), f"missing connectors in {summary_path}"
 
-        for source in handshake_sources:
-            if not isinstance(source, Mapping):
-                continue
-            rotation = source.get("rotation")
-            if isinstance(rotation, Mapping):
-                connector_id = rotation.get("connector_id")
-                if isinstance(connector_id, str):
-                    connectors_seen.add(connector_id)
-            connector_id = source.get("connector_id")
-            if isinstance(connector_id, str):
-                connectors_seen.add(connector_id)
+    missing = sorted({c for c in STAGE_E_CONNECTORS if c not in connectors})
+    assert not missing, f"missing connectors: {missing}"
 
-    missing = sorted({c for c in STAGE_E_CONNECTORS if c not in connectors_seen})
-    assert missing == ["crown_handshake", "operator_upload"], missing
+    telemetry_hashes = summary.get("telemetry_hashes")
+    assert isinstance(telemetry_hashes, Mapping)
+
+    for connector_id in STAGE_E_CONNECTORS:
+        connector_entry = connectors.get(connector_id)
+        assert isinstance(connector_entry, Mapping)
+        assert connector_entry.get("parity") is True
+        assert connector_entry.get("checksum_match") is True
+
+        artifacts = connector_entry.get("artifacts")
+        assert isinstance(artifacts, Mapping)
+        for key in ("rest", "grpc", "diff"):
+            artifact_path = artifacts.get(key)
+            assert isinstance(artifact_path, str) and artifact_path
+            assert Path(artifact_path).exists()
+
+        telemetry = telemetry_hashes.get(connector_id)
+        assert isinstance(telemetry, Mapping)
+        rest_hash = telemetry.get("rest")
+        grpc_hash = telemetry.get("grpc")
+        assert isinstance(rest_hash, str) and rest_hash
+        assert isinstance(grpc_hash, str) and grpc_hash
+        assert rest_hash == connector_entry.get("rest_checksum")
+        assert grpc_hash == connector_entry.get("grpc_checksum")
 
 
 def test_stage_e_transport_monitoring_gaps_acknowledged() -> None:
-    entries = _load_stage_c_trial_entries()
-    assert entries, "expected Stage C transport parity artifacts"
-    latest_summary = entries[-1]["summary"]
-    assert isinstance(latest_summary, Mapping)
+    summary, _summary_path = _latest_stage_e_summary()
+    connectors = summary.get("connectors")
+    assert isinstance(connectors, Mapping)
 
-    trial_trace = latest_summary.get("trial_trace")
-    rest_trace = trial_trace.get("rest") if isinstance(trial_trace, Mapping) else None
-    grpc_trace = trial_trace.get("grpc") if isinstance(trial_trace, Mapping) else None
+    heartbeat_gaps = summary.get("heartbeat_gaps")
+    assert isinstance(heartbeat_gaps, list)
+    gap_set = {item for item in heartbeat_gaps if isinstance(item, str)}
 
-    missing_metrics = set()
-    if not isinstance(rest_trace, Mapping) or rest_trace.get("latency_ms") is None:
-        missing_metrics.add("rest_latency_missing")
-    if not isinstance(grpc_trace, Mapping) or grpc_trace.get("latency_ms") is None:
-        missing_metrics.add("grpc_latency_missing")
-    if not latest_summary.get("heartbeat_emitted"):
-        missing_metrics.add("heartbeat_missing")
-    heartbeat_payload = latest_summary.get("heartbeat_payload")
-    if not heartbeat_payload or not isinstance(heartbeat_payload, Mapping):
-        missing_metrics.add("heartbeat_latency_missing")
+    for connector_id in STAGE_E_CONNECTORS:
+        connector_entry = connectors.get(connector_id)
+        assert isinstance(connector_entry, Mapping)
+        monitoring_gaps = connector_entry.get("monitoring_gaps")
+        assert isinstance(monitoring_gaps, list)
+        gap_labels = {item for item in monitoring_gaps if isinstance(item, str)}
 
-    assert missing_metrics == {
-        "rest_latency_missing",
-        "grpc_latency_missing",
-        "heartbeat_missing",
-        "heartbeat_latency_missing",
-    }
+        if connector_entry.get("heartbeat_emitted"):
+            assert "heartbeat_missing" not in gap_labels
+        else:
+            assert "heartbeat_missing" in gap_labels
+            assert connector_id in gap_set
+
+        assert "rest_latency_missing" in gap_labels
+        assert "grpc_latency_missing" in gap_labels
+        assert "heartbeat_latency_missing" in gap_labels
+
+    dashboard = summary.get("dashboard")
+    assert isinstance(dashboard, Mapping)
+    assert isinstance(dashboard.get("url"), str) and dashboard.get("url")

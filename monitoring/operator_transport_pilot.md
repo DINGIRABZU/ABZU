@@ -39,11 +39,17 @@ Add Stage E panels to the same dashboard:
 
 - **Heartbeat compliance** – a dual-axis panel plotting heartbeat emission
   counts and derived latency for the connectors targeted for Stage E rollout
-  (`operator_api`, `operator_upload`, `crown_handshake`). Leave a prominent
-  annotation while the latency series is empty so weekly reviews see the gap.
+  (`operator_api`, `operator_upload`, `crown_handshake`). The latest sandbox
+  snapshot under `logs/stage_e/20250930T121727Z-stage_e_transport_readiness/`
+  records that all three connectors remain without heartbeat latency metrics,
+  so the panel should pin a red annotation until the sandbox regains those
+  measurements.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L1-L63】
 - **Connector coverage** – a stat panel highlighting which Stage E connectors
   have published REST↔gRPC parity traces; wire it to the contract test output so
-  missing connectors automatically surface ahead of beta sign-off.
+  missing connectors automatically surface ahead of beta sign-off. The parity
+  snapshot copies the Stage B rotation traces into dedicated artifacts for each
+  connector, giving the dashboard a stable feed for checksum validation alongside
+  the REST and gRPC payloads.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_api/rest_trace.json†L1-L55】【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_api/grpc_trace.json†L1-L72】
 
 ## Log correlation and contract tests
 
@@ -60,14 +66,16 @@ monitoring team can follow when the gRPC handler rolls back to REST.【F:operato
 - Stage E promotes the transport dashboard to a standing gate: contract tests
   must remain green, parity diffs stay checksum-matched, and the heartbeat panel
   must light up for every connector before Neo-APSU governance approves beta
-  traffic.【F:docs/connectors/CONNECTOR_INDEX.md†L1-L86】【F:tests/test_operator_transport_contract.py†L1-L210】
-- The latest evidence bundle only captures `operator_api`; keep the dashboard’s
-  connector coverage panel red for `operator_upload` and `crown_handshake` until
-  their REST↔gRPC traces and heartbeat telemetry arrive, and record the gap in
-  the readiness and status ledgers.【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】【F:tests/test_operator_transport_contract.py†L1-L210】
-- Heartbeat payloads remain absent in the Stage C trial, so the heartbeat latency
-  graph should explicitly display “data pending” until the metric lands; copy the
-  annotation into risk reviews so the missing metric remains visible.【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】【F:tests/test_operator_transport_contract.py†L1-L210】
+  traffic.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L1-L87】【F:tests/test_operator_transport_contract.py†L1-L320】
+- The Stage E snapshot now captures REST↔gRPC traces for `operator_api`,
+  `operator_upload`, and `crown_handshake`; keep the dashboard’s heartbeat panel
+  flagged until latency signals arrive and mirror the gap in readiness ledgers
+  so reviewers see the sandbox limitation alongside the telemetry hashes.
+  【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L24-L94】【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_upload/rest_grpc_diff.json†L1-L11】
+- Heartbeat payloads remain absent in the Stage C trial and the Stage E parity
+  snapshot, so the heartbeat latency graph should explicitly display “data
+  pending” until the metric lands; copy the annotation into risk reviews so the
+  missing metric remains visible.【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L31-L63】
 
 
 
