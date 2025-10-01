@@ -3,12 +3,12 @@
   "stage": "stage_b",
   "run_id": "20250921T230434Z",
   "session": "session_02",
-  "generated_at": "2025-09-22T10:38:32Z",
+  "generated_at": "2025-10-01T08:51:15Z",
   "bundle": {
     "name": "session_02_media.tar.gz",
     "artifact_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_02/session_02_media.tar.gz",
-    "sha256": "091e50ec38490a5524e4ff447655a2018f40336db09b8c39f9841c20cc0da2b1",
-    "size_bytes": 841631,
+    "sha256": "784b04e6f1e19f4359056c78fedde546bf1fbd29dc5c77f5a54bd9f62bc33158",
+    "size_bytes": 1321,
     "sources": [
       "audio",
       "video",

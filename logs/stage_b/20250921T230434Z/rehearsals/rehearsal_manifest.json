@@ -6,8 +6,8 @@
     "session_01": {
       "name": "session_01_media.tar.gz",
       "artifact_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
-      "sha256": "0a862de42e7c1564a10cd14d87ffac764b4e9042e5d9cc797951ffdd7e2fb458",
-      "size_bytes": 841661,
+      "sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+      "size_bytes": 1348,
       "sources": [
         "audio",
         "video",
@@ -19,8 +19,8 @@
     "session_02": {
       "name": "session_02_media.tar.gz",
       "artifact_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_02/session_02_media.tar.gz",
-      "sha256": "091e50ec38490a5524e4ff447655a2018f40336db09b8c39f9841c20cc0da2b1",
-      "size_bytes": 841631,
+      "sha256": "784b04e6f1e19f4359056c78fedde546bf1fbd29dc5c77f5a54bd9f62bc33158",
+      "size_bytes": 1321,
       "sources": [
         "audio",
         "video",
@@ -30,5 +30,5 @@
       ]
     }
   },
-  "updated_at": "2025-09-22T10:38:32Z"
+  "updated_at": "2025-10-01T08:51:15Z"
 }

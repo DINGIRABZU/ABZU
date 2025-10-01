@@ -4,6 +4,7 @@
 - Run `20250921T230434Z` completed two scripted sessions seeded `101` and `202`, each finishing three cues with a maximum sync offset of 67 ms and no dropouts.【F:logs/stage_b/20250921T230434Z/rehearsals/summary.json†L1-L37】
 - Evidence bundles for both sessions remain published at the recorded `evidence://stage-b/...` URIs with retained telemetry indexes for quick inspection.【F:logs/stage_b/20250921T230434Z/rehearsals/rehearsal_manifest.json†L1-L32】【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L1-L23】
 - Stage C replays now default to referencing the Stage B bundle instead of copying stems; run `scripts/stage_c_scripted_demo.py --copy-media` if you need local files for audits.【F:scripts/stage_c_scripted_demo.py†L369-L441】【F:scripts/stage_c_scripted_demo.py†L441-L472】【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json†L7-L19】
+- Zero-drop telemetry is preserved through the refreshed evidence manifest: every arrival/handoff/closing cue, the emotion stream, and both Stage B telemetry summaries are enumerated with SHA-256 fingerprints so auditors can validate the bundle without storing binaries in git.【F:evidence_manifests/stage-b-audio.json†L1-L77】【F:logs/stage_b/20250921T230434Z/rehearsals/session_01/telemetry/run_summary.json†L1-L7】
 
 ## Crown modulation preset calibration
 - Tone presets now ingest the telemetry export at `crown_config/settings/modulation_presets.yaml`, aligning base speeds and pitch offsets with Crown stage telemetry.
