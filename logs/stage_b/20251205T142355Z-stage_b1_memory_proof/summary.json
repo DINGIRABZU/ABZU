@@ -1,0 +1,69 @@
+{
+  "status": "success",
+  "stage": "stage_b1_memory_proof",
+  "run_id": "20251205T142355Z-stage_b1_memory_proof",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/memory_load_proof.py",
+    "data/vector_memory_scaling/corpus.jsonl",
+    "--limit",
+    "1000"
+  ],
+  "returncode": 0,
+  "started_at": "2025-12-05T14:23:55.102000+00:00",
+  "completed_at": "2025-12-05T14:23:56.918000+00:00",
+  "duration_seconds": 1.816,
+  "log_dir": "/workspace/ABZU/logs/stage_b/20251205T142355Z-stage_b1_memory_proof",
+  "stdout_path": "/workspace/ABZU/logs/stage_b/20251205T142355Z-stage_b1_memory_proof/stage_b1_memory_proof.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_b/20251205T142355Z-stage_b1_memory_proof/stage_b1_memory_proof.stderr.log",
+  "stdout_lines": 33,
+  "stderr_lines": 22,
+  "stderr_tail": [
+    "2025-12-05 14:23:55,402 WARNING memory.load_proof :: Memory bundle running in stubbed mode – continuing",
+    "2025-12-05 14:23:56,918 INFO memory.load_proof :: Load proof complete: dataset=data/vector_memory_scaling/corpus.jsonl records=1000 stubbed_bundle=True p95=2.287ms p99=3.301ms"
+  ],
+  "summary": {
+    "dataset": "data/vector_memory_scaling/corpus.jsonl",
+    "total_records": 1000,
+    "queries_timed": 995,
+    "init_duration_s": 0.000198,
+    "latency_p50_s": 0.001432,
+    "latency_p95_s": 0.002287,
+    "latency_p99_s": 0.003301,
+    "layers": {
+      "total": 8,
+      "ready": 8,
+      "failed": 0
+    },
+    "query_failures": 0,
+    "stubbed_bundle": true,
+    "pretest_stubbed": true,
+    "fallback_reason": "neoabzu_memory_unavailable",
+    "bundle_source": "memory.optional.neoabzu_bundle",
+    "bundle_mode": "stubbed",
+    "sandbox_overrides": {
+      "crown_decider": "crown_decider: recommendation heuristics simplified",
+      "state_transition_engine": "state_transition_engine: deterministic rotation",
+      "crown_prompt_orchestrator": "crown_prompt_orchestrator: async pipeline stubbed",
+      "emotional_state": "emotional_state: in-memory state used",
+      "neoabzu_memory": "neoabzu_memory: optional bundle shim activated",
+      "servant_model_manager": "servant_model_manager: local registry only",
+      "prometheus_fastapi_instrumentator": "prometheus instrumentation disabled in sandbox",
+      "INANNA_AI.glm_integration": "glm_integration: remote health check bypassed"
+    },
+    "environment_mode": "sandbox",
+    "runtime_stubbed": true,
+    "runtime_stub_reason": "neoabzu_memory: optional bundle shim activated",
+    "bundle": {
+      "stubbed": true,
+      "mode": "stubbed",
+      "source": "memory.optional.neoabzu_bundle",
+      "fallback_reason": "neoabzu_memory_unavailable",
+      "environment_mode": "sandbox",
+      "runtime_stubbed": true,
+      "runtime_stub_reason": "neoabzu_memory: optional bundle shim activated",
+      "pretest_stubbed": true,
+      "stubbed_bundle": true
+    }
+  }
+}

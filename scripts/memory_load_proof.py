@@ -59,6 +59,8 @@ class LoadProofResult:
     bundle_mode: str | None
     sandbox_overrides: dict[str, str]
     environment_mode: str
+    runtime_stubbed: bool
+    runtime_stub_reason: str | None
 
 
 def _collect_sandbox_overrides() -> dict[str, str]:
@@ -227,6 +229,8 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
     bundle_source = getattr(bundle, "bundle_source", None)
     bundle_mode = getattr(bundle, "bundle_mode", None)
     sandbox_overrides = _collect_sandbox_overrides()
+    runtime_stubbed = "neoabzu_memory" in sandbox_overrides
+    runtime_stub_reason = sandbox_overrides.get("neoabzu_memory")
 
     start_init = time.perf_counter()
     statuses = bundle.initialize()
@@ -316,6 +320,8 @@ def run_load_proof(args: argparse.Namespace) -> LoadProofResult:
         bundle_mode=bundle_mode if isinstance(bundle_mode, str) else None,
         sandbox_overrides=sandbox_overrides,
         environment_mode=environment_mode,
+        runtime_stubbed=runtime_stubbed,
+        runtime_stub_reason=runtime_stub_reason if isinstance(runtime_stub_reason, str) else None,
     )
 
 
@@ -347,6 +353,8 @@ def _append_pretest_report(
             stubbed=stubbed,
             overrides=overrides,
         ),
+        "runtime_stubbed": "neoabzu_memory" in overrides,
+        "runtime_stub_reason": overrides.get("neoabzu_memory"),
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -430,6 +438,8 @@ def _append_log(
         "bundle_mode": result.bundle_mode,
         "sandbox_overrides": result.sandbox_overrides,
         "environment_mode": result.environment_mode,
+        "runtime_stubbed": result.runtime_stubbed,
+        "runtime_stub_reason": result.runtime_stub_reason,
     }
     payload["bundle"] = {
         "stubbed": result.stubbed,
@@ -438,6 +448,8 @@ def _append_log(
         "fallback_reason": result.fallback_reason,
         "pretest_stubbed": pretest_stubbed,
         "environment_mode": result.environment_mode,
+        "runtime_stubbed": result.runtime_stubbed,
+        "runtime_stub_reason": result.runtime_stub_reason,
     }
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload))
@@ -472,6 +484,8 @@ def main() -> None:
         "source": result.bundle_source,
         "fallback_reason": result.fallback_reason,
         "environment_mode": result.environment_mode,
+        "runtime_stubbed": result.runtime_stubbed,
+        "runtime_stub_reason": result.runtime_stub_reason,
     }
 
     logger.info(
@@ -506,6 +520,8 @@ def main() -> None:
         "bundle_mode": bundle_mode,
         "sandbox_overrides": result.sandbox_overrides,
         "environment_mode": result.environment_mode,
+        "runtime_stubbed": result.runtime_stubbed,
+        "runtime_stub_reason": result.runtime_stub_reason,
         "bundle": bundle_summary,
     }
     print(json.dumps(summary, indent=2))

@@ -21,9 +21,11 @@ operational procedures that close the Stage B rehearsal loop now live in the
   bundle and rotation ledger, confirming `stage-b-rehearsal` and
   `stage-c-prep` contexts remain accepted while logging the 48-hour window
   `20251001T093213Z-PT48H` for operator, upload, and Crown connectors. The
-  accompanying Stage B3 smoke receipt mirrors the new credential expiry, so the
+  ledger now also records the `20251205T160210Z-PT48H` rehearsal refresh, so
+  reviewers can see the sandbox shim kept the cadence between Stage C reviews.
+  The accompanying Stage B3 smoke receipt mirrors the credential expiry, so the
   connectors are tagged beta-ready once hardware parity closes the remaining
-  risk notes.【F:logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/summary.json†L1-L38】【F:logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json†L1-L33】【F:logs/stage_b_rotation_drills.jsonl†L77-L79】【F:logs/stage_b/20251001T093529Z-stage_b3_connector_rotation/stage_b_smoke.json†L1-L33】
+  risk notes.【F:logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/summary.json†L1-L38】【F:logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json†L1-L33】【F:logs/stage_b_rotation_drills.jsonl†L24-L92】【F:logs/stage_b/20251205T160210Z-stage_b3_connector_rotation/summary.json†L1-L94】
 - The operator connector entries in the
   [Connector Index](CONNECTOR_INDEX.md) remain tagged as “migrating (MCP adapter
   stub)” while the production rollout and monitoring hooks are staged.

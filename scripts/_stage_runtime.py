@@ -451,11 +451,19 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
             """Emergency fallback when both the Rust and Python bundles fail."""
 
             fallback_reason = "neoabzu_memory_unavailable"
+            bundle_source = "scripts._stage_runtime.neoabzu_stub"
+            bundle_mode = "stubbed"
+            runtime_stubbed = True
 
             def __init__(self, *args, **kwargs) -> None:  # pragma: no cover
                 self.args = args
                 self.kwargs = kwargs
                 self.stubbed = True
+                self.bundle_source = getattr(self, "bundle_source", MemoryBundle.bundle_source)
+                self.bundle_mode = getattr(self, "bundle_mode", MemoryBundle.bundle_mode)
+                self.fallback_reason = getattr(
+                    self, "fallback_reason", MemoryBundle.fallback_reason
+                )
 
             def initialize(self) -> dict[str, object]:
                 return {
@@ -463,6 +471,8 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
                     "diagnostics": {},
                     "stubbed": True,
                     "fallback_reason": self.fallback_reason,
+                    "bundle_source": self.bundle_source,
+                    "bundle_mode": self.bundle_mode,
                 }
 
             def query(self, _text: str) -> dict[str, object]:
@@ -473,6 +483,8 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
 
         class MemoryBundle(_fallback_bundle.MemoryBundle):  # type: ignore[misc]
             """Stage sandbox shim delegating to the Python fallback bundle."""
+
+            runtime_stubbed = True
 
             def __init__(
                 self,
@@ -485,11 +497,20 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
                         "neoabzu_memory extension not installed (sandbox shim)"
                     )
                 super().__init__(import_error=import_error)  # type: ignore[arg-type]
+                self.stubbed = True
+                self.bundle_source = getattr(
+                    self, "bundle_source", "memory.optional.neoabzu_bundle"
+                )
+                self.bundle_mode = getattr(self, "bundle_mode", "stubbed")
+                self.fallback_reason = getattr(
+                    self, "fallback_reason", "neoabzu_memory_unavailable"
+                )
 
         MemoryBundle.__module__ = module.__name__
         module.MemoryBundle = MemoryBundle
 
     module.__neoabzu_sandbox__ = True
+    module.__sandbox_runtime__ = "scripts._stage_runtime"
     module.__all__ = ["MemoryBundle"]
     return module
 

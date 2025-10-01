@@ -5,19 +5,22 @@
       "mode": "stage_b1_memory_proof",
       "corpus_size": 1000,
       "query_count": 995,
-      "duration_seconds": 1.784,
+      "duration_seconds": 1.816,
       "query_latency": {
         "count": 995,
-        "p50": 0.001578,
-        "p95": 0.002501,
-        "p99": 0.003579
+        "p50": 0.001432,
+        "p95": 0.002287,
+        "p99": 0.003301
       },
       "layers": {
         "total": 8,
         "ready": 8,
         "failed": 0
       },
-      "query_failures": 0
+      "query_failures": 0,
+      "runtime_stubbed": true,
+      "bundle_source": "memory.optional.neoabzu_bundle",
+      "bundle_mode": "stubbed"
     }
   ]
 }
