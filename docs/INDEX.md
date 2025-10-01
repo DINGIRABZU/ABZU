@@ -16,7 +16,6 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [../.github/ISSUE_TEMPLATE/plugin_proposal.md](../.github/ISSUE_TEMPLATE/plugin_proposal.md) | plugin_proposal.md | - | - |
 | [../.github/ISSUE_TEMPLATE/ritual_proposal.md](../.github/ISSUE_TEMPLATE/ritual_proposal.md) | ritual_proposal.md | - | - |
 | [../.github/pull_request_template.md](../.github/pull_request_template.md) | pull_request_template.md | - | `../scripts/register_task.py` |
-| [../.pytest_cache/README.md](../.pytest_cache/README.md) | pytest cache directory # | This directory contains data from the pytest's cache plugin, which provides the `--lf` and `--ff` options, as well as... | - |
 | [../AGENTS.md](../AGENTS.md) | AGENTS | - Always read [docs/documentation_protocol.md](docs/documentation_protocol.md) before editing documentation. - Comple... | - |
 | [../CHANGELOG.md](../CHANGELOG.md) | Changelog | All notable changes to this project will be documented in this file. | - |
 | [../CHANGELOG_insight_matrix.md](../CHANGELOG_insight_matrix.md) | Changelog for `insight_matrix` | All notable changes to this component will be documented in this file. | - |
@@ -271,7 +270,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [SOCIAL_INVESTOR_ONE_PAGER.md](SOCIAL_INVESTOR_ONE_PAGER.md) | ABZU: Social Investor One-Pager | --- | - |
 | [SOUL_CODE.md](SOUL_CODE.md) | RFA7D Soul Core | The **RFA7D** core represents a seven‑dimensional grid of complex numbers. It serves as the energetic "soul" that INA... | - |
 | [TESTING_REPORT.md](TESTING_REPORT.md) | Testing Report | Summary of recent test results with links to logs and affected components. | `../agents/guardian.py`, `../agents/razar/boot_orchestrator.py`, `../razar/crown_handshake.py` |
-| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.112 **Last updated:** 2025-11-16 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/crown_handshake_stage_b.py`, `../connectors/operator_api_stage_b.py`, `../connectors/operator_upload_stage_b.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py`, `../scripts/verify_blueprint_refs.py` |
+| [The_Absolute_Protocol.md](The_Absolute_Protocol.md) | The Absolute Protocol | **Version:** v1.0.113 **Last updated:** 2025-11-17 | `../agents/guardian.py`, `../connectors/__init__.py`, `../connectors/crown_handshake_stage_b.py`, `../connectors/operator_api_stage_b.py`, `../connectors/operator_upload_stage_b.py`, `../connectors/signal_bus.py`, `../connectors/webrtc_connector.py`, `../scripts/validate_ignition.py`, `../scripts/verify_blueprint_refs.py` |
 | [The_Absolute_Protocol_addendum.md](The_Absolute_Protocol_addendum.md) | The Absolute Protocol Addendum — Stage C Sandbox Review | - | - |
 | [VAST_DEPLOYMENT.md](VAST_DEPLOYMENT.md) | Vast.ai Deployment | This guide explains how to run the SPIRAL_OS tools on a Vast.ai server. | - |
 | [VISION.md](VISION.md) | Vision | - | - |
@@ -377,7 +376,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [development_workflow.md](development_workflow.md) | Development Workflow | This page outlines the recommended steps for contributing to ABZU. | - |
 | [diagnostics.md](diagnostics.md) | Diagnostic Scripts and Self-Healing Plan | This guide outlines the diagnostic scripts and the self-healing mechanisms used to keep Spiral OS operational. | - |
 | [docker_build_audio_tools.md](docker_build_audio_tools.md) | Docker Image with Audio Tools | This project provides a Docker image that bundles the audio utilities **FFmpeg** and **SoX**. The `Dockerfile` instal... | - |
-| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| docs/roadmap.md \|  \| `a4b5cb8929fcc4ca9b2430... | - |
+| [doctrine_index.md](doctrine_index.md) | Doctrine Index | \| File \| Version \| Checksum \| Last Updated \| \| --- \| --- \| --- \| --- \| \| docs/roadmap.md \|  \| `b12a25970142bc8b291485... | - |
 | [documentation_protocol.md](documentation_protocol.md) | Documentation Protocol | Standard workflow for updating documentation and guides. | - |
 | [emotional_memory_matrix.md](emotional_memory_matrix.md) | Emotional Memory Matrix | The emotional memory matrix interconnects the various JSON files that store conversation history and affect metrics.... | - |
 | [environment_setup.md](environment_setup.md) | Environment Setup | - | - |
@@ -476,6 +475,8 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [performance/report.md](performance/report.md) | Memory Query Benchmark Report | This report summarizes the performance of concurrent searches across the cortex, vector, and spiral memory layers as... | - |
 | [performance.md](performance.md) | Performance Profiling Report | - | - |
 | [persona_api_guide.md](persona_api_guide.md) | Persona API Guide | This guide walks developers through the persona utilities that power Albedo interactions.  It shows how to update tru... | - |
+| [pr_templates/stage_d.md](pr_templates/stage_d.md) | Stage D PR & review checklist | Use this template when preparing Stage D bridge changes or reviews. It keeps sandbox evidence, hardware follow-ups, a... | - |
+| [pr_templates/stage_e.md](pr_templates/stage_e.md) | Stage E PR & review checklist | Apply this checklist to Stage E beta-readiness changes and reviews to prevent loops on sandbox-only verifications. | - |
 | [primordials_service.md](primordials_service.md) | Primordials Service | The Primordials service hosts the DeepSeek-V3 language model for internal orchestration tasks. It exposes HTTP endpoi... | - |
 | [project_mission_vision.md](project_mission_vision.md) | ABZU Project Declaration | **Version:** v1.3.2 **Last updated:** 2025-10-05 | - |
 | [project_overview.md](project_overview.md) | Project Overview | For a consolidated reference covering mission, architecture and workflow, see [CRYSTAL_CODEX.md](../CRYSTAL_CODEX.md)... | - |

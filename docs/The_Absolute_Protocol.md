@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.112
-**Last updated:** 2025-11-16
+**Version:** v1.0.113
+**Last updated:** 2025-11-17
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -30,28 +30,46 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
 ### Codex sandbox constraints
 
 Codex-hosted rehearsals intentionally operate inside a constrained sandbox that omits GPU drivers, DAW plug-ins, hardware-only
-telemetry bridges, and production connector credentials. As a result, several recurring tasks are deferred until hardware
-windows reopen:
+telemetry bridges, and production connector credentials. The guardrails below keep doctrine updates honest about what ran, what
+was deferred, and how migration evidence will be replayed on hardware.
 
-- **GPU rendering, DAW-integrated rehearsals, and FFmpeg-dependent exports** fall back to stubbed pipelines until the hardware
-  hosts recorded in the Stage B rotation ledger are available.
+#### Sandbox-only tasks
+
+- **GPU rendering, DAW-integrated rehearsals, and FFmpeg-dependent exports** remain sandbox-only dry runs until the hardware
+  hosts recorded in the Stage B rotation ledger reopen for execution.
 - **Connector credential sweeps and transport parity replays** only run end-to-end on gate-runner hardware where long-lived
-  secrets can be injected and the Grafana dashboards can stream live telemetry.
-- **Neo-APSU crate parity and memory persistence drills** stay in observation mode in the sandbox and rely on the upcoming
-  Stage G hardware bridge slot to replay evidence with the Rust surfaces enabled.
+  secrets can be injected and Grafana dashboards can stream live telemetry.
+- **Neo-APSU crate parity and memory persistence drills** stay in observation mode in the sandbox and rely on the scheduled
+  Stage D/E bridge rehearsals and the Stage G hardware window to replay evidence with the Rust surfaces enabled.【F:docs/roadmap.md†L214-L286】
 
-Mark each deferred step as **environment-limited** in both test suites and doctrine evidence so auditors can distinguish missing
-dependencies from regressions. Use explicit skip reasons such as `pytest.skip("environment-limited: GPU render unavailable in
-Codex sandbox")`, mirror the reason in the command transcript, and archive the transcript under the relevant
-`logs/<gate>/<timestamp>/` bundle. Summaries in change logs, readiness packets, and roadmap updates must repeat the
-environment-limited label so every downstream checklist inherits the same context.
+Document every sandbox-only task with an explicit **environment-limited** marker so auditors can distinguish missing
+dependencies from regressions. Use skip reasons such as `pytest.skip("environment-limited: GPU render unavailable in Codex
+sandbox")`, mirror the wording inside the command transcript, and archive that transcript inside the appropriate
+`logs/<gate>/<timestamp>/` bundle. Summaries in change logs, readiness packets, roadmap updates, and PR templates must repeat the
+environment-limited label and cite the sandbox section so downstream checklists inherit the same context.
+
+#### Tagging environment-limited evidence
+
+When sandbox gaps block a verification, tag the doctrine artifacts and test suites consistently:
+
+1. **Tests and scripts** – Skip with an `environment-limited: <reason>` string that matches the log bundle and roadmap note.
+2. **Doctrine evidence** – Add an `environment-limited` entry to the readiness bundle JSON, change log excerpt, and PR/review
+   template so reviewers see the exact command, timestamp, and owner responsible for closing the gap.
+3. **Status trackers** – Update [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-d-bridge-snapshot) and the Stage D/E roadmap tables to
+   point back to this section whenever a milestone carries sandbox-only steps.
+
+#### Hardware replay for migration evidence
 
 Queue hardware follow-ups through the sandbox-to-hardware bridge workflow documented in
-[roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation). Each deferred item must:
+[roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation) so migration evidence has an auditable lineage. Each
+deferred item must:
 
 1. Reference the owning hardware host, rehearsal window, and remediation lead in the Alpha/Stage C evidence bundle.
-2. Attach the dry-run command sequence that will execute once hardware access is granted, linking to the bundle transcript.
+2. Attach the dry-run command sequence that will execute once hardware access is granted, linking to the bundle transcript and
+   the associated sandbox skip reason.
 3. Log the escalation in the operator risk queue so Stage G planning can confirm the slot before milestone reviews.
+4. Copy the sandbox evidence into the Stage D/E bridge ledger once hardware execution completes, capturing SHA-256 hashes that
+   prove the deferred migration replayed successfully on the appropriate runner.【F:docs/PROJECT_STATUS.md†L172-L215】
 
 ### Stage Gate Alignment
 
