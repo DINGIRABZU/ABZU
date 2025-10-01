@@ -18,6 +18,22 @@ Bi-weekly working sessions align the charter backlog with the roadmap. Squad lea
 | Beta Release | External feedback incorporated with performance and security hardening. | Complete |
 | General Availability | Stable release with complete documentation and long‑term support plan. | Complete |
 
+## Codex sandbox constraints
+
+Roadmap updates must delineate what happened inside the Codex sandbox versus what still needs hardware so
+weekly reviews avoid chasing impossible tests:
+
+- **Sandbox-only tasks.** GPU renders, DAW-assisted rehearsals, FFmpeg exports, and Neo-APSU parity drills
+  remain dry runs until the Stage D/E bridge backlog or the Stage G hardware window replays them on
+  gate-runner hosts. Flag these items directly in the stage tables so owners inherit the constraint.
+- **Environment-limited tagging.** Use the exact `environment-limited: <reason>` phrasing from test skips
+  in each stage summary and link to the supporting bundle under `logs/<gate>/<timestamp>/`. Roadmap callouts
+  should reference [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints) so reviewers
+  can cross-check the policy.
+- **Hardware replay linkage.** Whenever a roadmap item defers evidence, cite the follow-up slot in
+  [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-d-bridge-snapshot) or the Stage G bridge plan so migration work
+  has a visible path from sandbox evidence to hardware approval.
+
 ## General Availability
 
 The GA gate promoted on **2025-11-15** with evidence captured in

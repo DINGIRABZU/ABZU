@@ -2,10 +2,12 @@
 
 | File | Version | Checksum | Last Updated |
 | --- | --- | --- | --- |
-| docs/roadmap.md |  | `a4b5cb8929fcc4ca9b24309c0c371b70f9cd8437db13e9b290ce00033262eed4` | 2025-11-16T00:00:00Z |
-| docs/PROJECT_STATUS.md |  | `03a77f753588c01689876043b6a766545c4c0ef891faa1daa6dfdb0106dd2787` | 2025-11-16T00:00:00Z |
-| docs/The_Absolute_Protocol.md | v1.0.112 | `6fe954592eac4814822617e46a101506c1ca61f69ccd098be19e8d00c001bbdd` | 2025-11-16T00:00:00Z |
-| docs/documentation_protocol.md |  | `a237e8d1689ca6fb1027b998fc7c86e61031d1ee2e0d7a5f9a44d7fd565e19fe` | 2025-11-16T00:00:00Z |
+| docs/roadmap.md |  | `b12a25970142bc8b2914855027d2048608ece0422bae1a5f38f81a076b8624b6` | 2025-11-17T00:00:00Z |
+| docs/PROJECT_STATUS.md |  | `8ff413dfca7f91329d0117dbc7e5df6d35eda9b350664bf239b7034a0d22eea4` | 2025-11-17T00:00:00Z |
+| docs/The_Absolute_Protocol.md | v1.0.113 | `fdbcd5bcf4e758a21c57cb1ea7c5c4d30c92b2d0c0d500bf60ac7f7d4429b19e` | 2025-11-17T00:00:00Z |
+| docs/documentation_protocol.md |  | `24c919f0622c302f3c0b52d7e0bfdb71318079262426cbd22ea1bdeda2adc8ed` | 2025-11-17T00:00:00Z |
+| docs/pr_templates/stage_d.md |  | `5aff00ec6e62f2f0964ea99693e2bef7be70f1628d3d3f4b6e9976237ad7d36c` | 2025-11-17T00:00:00Z |
+| docs/pr_templates/stage_e.md |  | `37624e28a27e1ab9592fc2961b06e2e179d0709e9b743525cd8074f3894f01af` | 2025-11-17T00:00:00Z |
 | docs/system_blueprint.md |  | `48e5e5e212eb171f4b1e5447d347544cd572c0bbe5c9e4e7d526c3e45ac38172` | 2025-10-31T00:00:00Z |
 | docs/releases/beta_launch_plan.md |  | `fe7f0cf3a0557bf44b00f3502896a8f38e251dcc3f30c8354382e87252be9dcb` | 2025-11-01T12:00:00Z |
 | docs/releases/ga_readiness.md |  | `e5308609f1a5dff00e31671f6ade5ec11f3f19be97013bff1527e972b11ff037` | 2025-11-15T12:00:00Z |

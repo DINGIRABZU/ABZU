@@ -20,6 +20,24 @@ Standard workflow for updating documentation and guides.
 10. **Run `python scripts/verify_docs_up_to_date.py`** to confirm the doctrine index timestamps and
     feature references are current before submitting a pull request.
 
+### Codex sandbox constraints
+
+Codex-hosted updates must spell out which verification steps ran inside the sandbox and which remain
+hardware-only so doctrine readers inherit the right expectations:
+
+- **Sandbox-only tasks.** GPUs, DAW integrations, FFmpeg exports, and Neo-APSU parity drills stay in
+  dry-run mode until the Stage D/E bridge rehearsals or the Stage G hardware slot executes them on the
+  designated runner. Record those items as sandbox-only in the doc text and link back to
+  [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints) for the canonical rule set.
+- **Environment-limited tagging.** Mirror the exact `environment-limited: <reason>` phrasing from test
+  skips inside change logs, readiness packets, and doc callouts so auditors can trace why a result was
+  deferred. Cite the evidence bundle path (`logs/<gate>/<timestamp>/`) and owner responsible for closing
+  the loop whenever a page documents a sandbox skip.
+- **Hardware replay narrative.** Reference the follow-up slot in [roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation)
+  or [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-d-bridge-snapshot) when you defer migration evidence. The
+  documentation update must state which hardware window will replay the sandbox output and which ledger
+  (Stage D/E bridge, Stage G parity) will capture the replayed hashes once complete.
+
 > [!IMPORTANT]
 > **Document environment-limited skips.** Follow the guardrails in [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints) whenever the Codex sandbox blocks dependencies or hardware (GPU-only flows, DAW toolchains, connector credentials). Call out the "environment-limited" skip in both the change log excerpt and PR summary, mirroring the skip reason used in tests or gate scripts so reviewers can trace deferred validations. Reference the sandbox-to-hardware bridge workflow in [roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation) when queuing hardware reruns so documentation stays aligned with the gate owner schedule.
 > Change logs and readiness packets must also state when results rely on stubs or deferred hardware validation, naming the affected step, the rehearsal host that will close the gap, and the sign-off trio documented in [The Absolute Protocol](The_Absolute_Protocol.md#sandbox-to-hardware-rehearsal-bridge).
