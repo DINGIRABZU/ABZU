@@ -1,0 +1,14 @@
+{
+  "event": "stage-c4-operator-mcp-drill",
+  "payload": {
+    "event": "stage-c4-operator-mcp-drill",
+    "stage": "C",
+    "session": {
+      "id": "stage-c-session",
+      "credential_expiry": "2025-10-03T09:32:13Z"
+    },
+    "credential_expiry": "2025-10-03T09:32:13Z"
+  },
+  "credential_expiry": "2025-10-03T09:32:13Z",
+  "rotation_window_hours": 48
+}

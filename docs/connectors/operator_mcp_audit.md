@@ -17,6 +17,13 @@ operational procedures that close the Stage B rehearsal loop now live in the
   with `--skip-heartbeat`), evaluates doctrine alignment, and records rotation
   drills for both operator connectors in
   [`logs/stage_b_rotation_drills.jsonl`](../../logs/stage_b_rotation_drills.jsonl).
+- The 2025-10-01 Stage C4 sandbox drill refreshed the MCP handshake/heartbeat
+  bundle and rotation ledger, confirming `stage-b-rehearsal` and
+  `stage-c-prep` contexts remain accepted while logging the 48-hour window
+  `20251001T093213Z-PT48H` for operator, upload, and Crown connectors. The
+  accompanying Stage B3 smoke receipt mirrors the new credential expiry, so the
+  connectors are tagged beta-ready once hardware parity closes the remaining
+  risk notes.【F:logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/summary.json†L1-L38】【F:logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json†L1-L33】【F:logs/stage_b_rotation_drills.jsonl†L77-L79】【F:logs/stage_b/20251001T093529Z-stage_b3_connector_rotation/stage_b_smoke.json†L1-L33】
 - The operator connector entries in the
   [Connector Index](CONNECTOR_INDEX.md) remain tagged as “migrating (MCP adapter
   stub)” while the production rollout and monitoring hooks are staged.
