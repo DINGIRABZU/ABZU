@@ -189,6 +189,21 @@ Stage E extends the Stage C transport pilot: contract tests and dashboards n
 | `memory_store.py` | `neoabzu_memory::MemoryBundle` | Stage D bridge aligns Stage B rotations with Stage C readiness latency metrics before switching hardware writes to the Rust bundle.【F:logs/stage_b_rotation_drills.jsonl†L1-L40】【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】 | Telemetry updates publish memory checksum parity results through Grafana so roadmap/PROJECT_STATUS audiences monitor ingestion gaps during beta prep.【F:tests/test_operator_transport_contract.py†L231-L320】【F:monitoring/operator_transport_pilot.md†L1-L84】【F:docs/PROJECT_STATUS.md†L162-L181】 | Soak cycles document sandbox latency evidence alongside dashboard hashes until hardware metrics converge.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L20-L87】 | Stage G hardware bundle records memory checksum parity and sandbox replay transcripts under Neo-APSU approvals.【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】 | GA cutover retains the memory parity hash from Stage G to prove production readiness.【F:logs/stage_h/20251115T090000Z-ga_hardware_cutover/summary.json†L15-L28】 |
 | `emotional_state.py` | `neoabzu_crown` expression pipeline | Stage D hardware checks replay Stage B rotation history with Stage C sandbox diffs to validate aura persistence under the Neo-APSU expression path.【F:logs/stage_b_rotation_drills.jsonl†L1-L40】【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】 | Beta-facing updates surface expression heartbeat telemetry inside contract dashboards so deferrals stay visible while sandbox evidence feeds hardware replays.【F:tests/test_operator_transport_contract.py†L1-L210】【F:monitoring/operator_transport_pilot.md†L1-L66】【F:docs/PROJECT_STATUS.md†L162-L181】 | Soak tracking references sandbox aura transcripts plus dashboard hashes until Neo-APSU hardware emits continuous heartbeats.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L49-L87】 | Stage G parity approvals append aura diffs that cite sandbox evidence and rollback rehearsals.【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/summary.json†L1-L13】 | GA summary confirms aura telemetry hash continuity from Stage G hardware bundles.【F:logs/stage_h/20251115T090000Z-ga_hardware_cutover/summary.json†L1-L28】 |
 
+### Stage F – Hardware replay soak entry criteria
+
+Stage F promotions remain blocked until sandbox evidence and hardware access
+align. Use this checklist before attempting a Stage F soak handoff:
+
+| Entry requirement | Owner | Evidence bundle | Notes |
+| --- | --- | --- | --- |
+| Sandbox evidence bundle consolidated | @qa-alliance | `logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json` + `logs/stage_b_rotation_drills.jsonl` + `logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json` | Confirm the latest sandbox artifacts are staged together before requesting hardware replay.【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L210】【F:logs/stage_b_rotation_drills.jsonl†L12-L115】【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L1-L142】 |
+| Gate-runner hardware window reserved | @ops-team | Stage C1 exit checklist + readiness minutes | Ensure the scheduled window covers every Neo-APSU module listed in the Stage F hardware replay plan before the soak begins.【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L33】【F:docs/stage_f_hardware_replay_plan.md†L6-L54】 |
+| Automation hook prepared | @neoabzu-core | `scripts/run_stage_f_replay.py` | Script currently emits an environment-limited warning; update with hardware orchestration steps once access is restored to avoid silent promotions.【F:scripts/run_stage_f_replay.py†L1-L36】 |
+
+Document Stage F readiness using the dedicated hardware replay plan so roadmap
+and PROJECT_STATUS stay synchronized on the sandbox inputs, scheduled hardware
+windows, and required Neo-APSU validations before the soak window opens.【F:docs/stage_f_hardware_replay_plan.md†L1-L73】
+
 ### Stage G – Sandbox-to-hardware bridge validation
 
 | Task | Owner | Hardware Validation Owner | Rollback Drill | Evidence Bundling |

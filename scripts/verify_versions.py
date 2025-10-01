@@ -13,15 +13,20 @@ __version__ = "0.4.0"
 VERSION_RE = re.compile(r"^__version__\s*=\s*['\"]([^'\"]+)['\"]", re.MULTILINE)
 
 
-def load_component_versions(index_path: Path) -> dict[Path, str]:
+def load_component_versions(index_path: Path) -> dict[Path, dict[str, str | None]]:
     data = json.loads(index_path.read_text(encoding="utf-8"))
-    mapping: dict[Path, str] = {}
+    mapping: dict[Path, dict[str, str | None]] = {}
     for comp in data.get("components", []):
-        mapping[Path(comp["path"])] = comp["version"]
+        mapping[Path(comp["path"])] = {
+            "version": comp.get("version"),
+            "status": comp.get("status"),
+        }
     return mapping
 
 
-def find_index_version(rel_path: Path, mapping: dict[Path, str]) -> str | None:
+def find_index_entry(
+    rel_path: Path, mapping: dict[Path, dict[str, str | None]]
+) -> dict[str, str | None] | None:
     for comp_path, version in mapping.items():
         if comp_path == rel_path:
             return version
@@ -64,12 +69,15 @@ def main(argv: list[str] | None = None) -> int:
             full_path = full_path / "__init__.py"
         if full_path.suffix != ".py":
             continue
-        source_version = read_source_version(full_path)
         rel = full_path.relative_to(repo_root)
+        index_entry = find_index_entry(rel, index_mapping)
+        if index_entry and index_entry.get("status") == "deprecated":
+            continue
+        source_version = read_source_version(full_path)
         if source_version is None:
             errors.append(f"{rel}: missing __version__")
             continue
-        index_version = find_index_version(rel, index_mapping)
+        index_version = index_entry.get("version") if index_entry else None
         if index_version and index_version != source_version:
             errors.append(
                 f"{rel}: __version__ {source_version} != "
