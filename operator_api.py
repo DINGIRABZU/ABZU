@@ -37,7 +37,7 @@ from fastapi import (
 )
 
 try:  # pragma: no cover - optional dependency used for upload route
-    import multipart  # type: ignore[unused-import]
+    import multipart  # type: ignore[unused-import]  # noqa: F401
 
     _HAS_MULTIPART = True
 except Exception:  # pragma: no cover - multipart dependency missing in sandbox
@@ -220,6 +220,7 @@ _STAGE_E_DASHBOARD_URL = os.getenv(
 )
 _STAGE_C_BUNDLE_FILENAME = "readiness_bundle.json"
 _STAGE_C_SUMMARY_FILENAME = "summary.json"
+_STAGE_C3_SLUG = "stage_c3_readiness_sync"
 
 
 async def _ensure_lock() -> asyncio.Lock:
@@ -1347,6 +1348,25 @@ def _stage_c3_metrics(
         }
     )
 
+    readiness_stage = (
+        bundle_data.get("stage")
+        if isinstance(bundle_data, Mapping) and bundle_data.get("stage")
+        else _STAGE_C3_SLUG
+    )
+    readiness_snapshot = {
+        "stage": readiness_stage,
+        "generated_at": metrics.get("generated_at"),
+        "stage_a": stage_a_section,
+        "stage_b": stage_b_section,
+        "merged": merged_snapshot,
+        "missing": metrics.get("missing", []),
+    }
+    if bundle_path.exists():
+        readiness_snapshot["bundle_path"] = str(bundle_path)
+    if summary_path.exists():
+        readiness_snapshot["summary_path"] = str(summary_path)
+    payload["readiness"] = readiness_snapshot
+
     if bundle_data:
         bundle_data.setdefault("stage_a", stage_a_section)
         bundle_data.setdefault("stage_b", stage_b_section)
@@ -1671,6 +1691,9 @@ async def _stage_c4_metrics(
     if rotation_error:
         metrics["rotation_error"] = rotation_error
 
+    if "credential_window" in metrics:
+        payload["credential_window"] = metrics["credential_window"]
+
     if handshake_error or heartbeat_error or rotation_error:
         payload["status"] = "error"
         payload["error"] = "; ".join(
@@ -1839,8 +1862,6 @@ def _publish_stage_e_transport_snapshot(
         except (OSError, json.JSONDecodeError):
             return {}
 
-    rest_payload = _load_json_or_default(rest_attachment_path)
-    grpc_payload = _load_json_or_default(grpc_attachment_path)
     diff_payload = _load_json_or_default(diff_attachment_path)
 
     summary_section = payload.get("summary")
@@ -2014,7 +2035,8 @@ def _publish_stage_e_transport_snapshot(
             monitoring_gaps.append("grpc_latency_missing")
         if rest_latency is None or grpc_latency is None:
             environment_notes.add(
-                "environment-limited: transport latency metrics unavailable in sandbox traces"
+                "environment-limited: transport latency metrics unavailable "
+                "in sandbox traces"
             )
 
         heartbeat_latency_ms: float | None = None
@@ -2025,7 +2047,8 @@ def _publish_stage_e_transport_snapshot(
                 monitoring_gaps.append("heartbeat_missing")
             if heartbeat_payload is None:
                 environment_notes.add(
-                    "environment-limited: heartbeat payload unavailable for operator_api"
+                    "environment-limited: heartbeat payload unavailable for "
+                    "operator_api"
                 )
             else:
                 heartbeat_path = connector_dir / "heartbeat_payload.json"
@@ -2841,7 +2864,7 @@ def _stage_c3_command(log_dir: Path) -> Sequence[str]:
         logger.exception("stage readiness aggregation crashed: %s", exc)
         fallback_payload = {
             "status": "error",
-            "stage": "stage_c3_readiness_sync",
+            "stage": _STAGE_C3_SLUG,
             "generated_at": generated_at,
             "error": f"stage readiness aggregation failed: {exc}",
         }
@@ -2929,7 +2952,7 @@ async def stage_c3_readiness_sync() -> dict[str, Any]:
 
     result = await _run_stage_workflow(
         _STAGE_C_ROOT,
-        "stage_c3_readiness_sync",
+        _STAGE_C3_SLUG,
         _stage_c3_command,
         metrics_extractor=_stage_c3_metrics,
     )

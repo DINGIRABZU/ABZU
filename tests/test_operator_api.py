@@ -930,6 +930,11 @@ def test_stage_c3_readiness_sync_success(
     assert readiness_bundle.exists()
     assert readiness_summary.exists()
     assert Path(body["summary_path"]) == readiness_summary
+    readiness = body["readiness"]
+    assert readiness["stage"] == operator_api._STAGE_C3_SLUG
+    assert Path(readiness["bundle_path"]) == readiness_bundle
+    assert Path(readiness["summary_path"]) == readiness_summary
+    assert readiness["merged"]["overall_status"] == merged["overall_status"]
 
 
 def test_stage_c3_readiness_sync_missing(
@@ -1039,6 +1044,12 @@ def test_stage_c4_operator_mcp_drill_success(
         "rotated_at": "2024-05-01T00:00:00Z",
         "window_hours": operator_api.ROTATION_WINDOW_HOURS,
         "rotation_window": rotation_window,
+        "credential_window": {
+            "window_id": rotation_window["window_id"],
+            "issued_at": "2024-05-01T00:00:00Z",
+            "expires_at": rotation_window["expires_at"],
+            "credential_expiry": handshake_payload["session"]["credential_expiry"],
+        },
         "traces": {
             "rest": {
                 "method": "POST",
@@ -1117,6 +1128,8 @@ def test_stage_c4_operator_mcp_drill_success(
         assert rest_attachment.exists()
         assert grpc_attachment.exists()
         assert diff_attachment.exists()
+        credential_window_artifact = Path(artifacts["credential_window"])
+        assert credential_window_artifact.exists()
         rotation_payload = json.loads(rotation_artifact.read_text(encoding="utf-8"))
         assert (
             rotation_payload["rotation_window"]["window_id"] == "20240501T000000Z-PT48H"
@@ -1125,6 +1138,9 @@ def test_stage_c4_operator_mcp_drill_success(
         assert isinstance(parity, dict)
         assert parity["parity"] is True
         assert parity["checksum_match"] is True
+        credential_window = body.get("credential_window")
+        assert credential_window is not None
+        assert credential_window["window_id"] == "20240501T000000Z-PT48H"
         summary_payload = _load_summary(body["summary_path"])
         assert summary_payload["handshake_parity"]["parity"] is True
     finally:

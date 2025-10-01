@@ -23,6 +23,7 @@ STAGE_A_ROOT = Path("logs") / "stage_a"
 STAGE_B_ROOT = Path("logs") / "stage_b"
 BUNDLE_FILENAME = "readiness_bundle.json"
 SUMMARY_FILENAME = "summary.json"
+STAGE_C_STAGE_LABEL = "stage_c3_readiness_sync"
 STAGE_A_EXPECTED_SLUGS = ("A1", "A2", "A3")
 STAGE_B_EXPECTED_SLUGS = ("B1", "B2", "B3")
 
@@ -811,8 +812,11 @@ def aggregate(
     merged = _merge_stage_data(stage_a_snapshot, stage_b_snapshot)
     missing = [*stage_a_missing, *stage_b_missing]
 
+    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
     bundle = {
-        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "stage": STAGE_C_STAGE_LABEL,
+        "generated_at": generated_at,
         "stage_a": stage_a_snapshot,
         "stage_b": stage_b_snapshot,
         "merged": merged,
@@ -839,7 +843,8 @@ def aggregate(
 
     summary_payload = {
         "status": status,
-        "generated_at": bundle["generated_at"],
+        "stage": STAGE_C_STAGE_LABEL,
+        "generated_at": generated_at,
         "bundle_path": str(bundle_path),
         "stage_a": stage_a_snapshot,
         "stage_b": stage_b_snapshot,
