@@ -1,0 +1,156 @@
+{
+  "connector": "crown_handshake",
+  "stage": "stage_e",
+  "recorded_at": "2025-10-13T04:08:17Z",
+  "responses": {
+    "legacy": {
+      "rest": {
+        "command_id": "crown-handshake-7781",
+        "status": "ACCEPTED",
+        "payload": {
+          "handshake_token": "crown-token-legacy-001",
+          "expires_at": "2025-10-13T04:18:17Z",
+          "session_hint": "stage-e-crown"
+        },
+        "transport": "rest",
+        "recorded_at": "2025-10-13T04:08:17Z",
+        "revision": "apsu-legacy-r33",
+        "span_chain": [
+          "aa42bc",
+          "aa42bd"
+        ]
+      },
+      "grpc": {
+        "command_id": "crown-handshake-7781",
+        "status": "ACCEPTED",
+        "payload": {
+          "handshake_token": "crown-token-legacy-001",
+          "expires_at": "2025-10-13T04:18:17Z",
+          "session_hint": "stage-e-crown"
+        },
+        "transport": "grpc",
+        "recorded_at": "2025-10-13T04:08:18Z",
+        "revision": "apsu-legacy-r33",
+        "span_chain": [
+          "aa42bc",
+          "aa42be"
+        ]
+      }
+    },
+    "neo": {
+      "rest": {
+        "command_id": "crown-handshake-7781",
+        "status": "ACCEPTED",
+        "payload": {
+          "handshake_token": "crown-token-legacy-001",
+          "expires_at": "2025-10-13T04:18:17Z",
+          "session_hint": "stage-e-crown"
+        },
+        "transport": "rest",
+        "recorded_at": "2025-10-13T04:08:17Z",
+        "neo_revision": "neo-apsu-r03",
+        "span_chain": [
+          "aa42bc",
+          "aa42bf"
+        ]
+      },
+      "grpc": {
+        "command_id": "crown-handshake-7781",
+        "status": "ACCEPTED",
+        "payload": {
+          "handshake_token": "crown-token-legacy-001",
+          "expires_at": "2025-10-13T04:18:17Z",
+          "session_hint": "stage-e-crown"
+        },
+        "transport": "grpc",
+        "recorded_at": "2025-10-13T04:08:18Z",
+        "neo_revision": "neo-apsu-r03",
+        "span_chain": [
+          "aa42bc",
+          "aa42c0"
+        ]
+      }
+    }
+  },
+  "telemetry": {
+    "legacy": {
+      "command_id": "crown-handshake-7781",
+      "latency_ms_p50": 94.0,
+      "latency_ms_p95": 121.0,
+      "latency_ms_p99": 140.0,
+      "error_rate": 0.0,
+      "fallback_invocations": 1,
+      "span_chain": [
+        "aa42bc",
+        "aa42be",
+        "aa42c2"
+      ],
+      "rotation_window": "2025-10-13T04:05Z",
+      "mcp_lease": "stage-e-sandbox"
+    },
+    "neo": {
+      "command_id": "crown-handshake-7781",
+      "latency_ms_p50": 94.0,
+      "latency_ms_p95": 121.0,
+      "latency_ms_p99": 140.0,
+      "error_rate": 0.0,
+      "fallback_invocations": 1,
+      "span_chain": [
+        "aa42bc",
+        "aa42be",
+        "aa42c2"
+      ],
+      "rotation_window": "2025-10-13T04:05Z",
+      "mcp_lease": "stage-e-sandbox",
+      "neo_observer": "crown-ops-02"
+    }
+  },
+  "mcp_rotations": {
+    "legacy": [
+      {
+        "phase": "precheck",
+        "transport": "rest",
+        "status": "completed",
+        "window": "2025-10-13T04:00Z"
+      },
+      {
+        "phase": "handover",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-13T04:03Z"
+      },
+      {
+        "phase": "stabilize",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-13T04:07Z"
+      }
+    ],
+    "neo": [
+      {
+        "phase": "precheck",
+        "transport": "rest",
+        "status": "completed",
+        "window": "2025-10-13T04:00Z"
+      },
+      {
+        "phase": "handover",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-13T04:03Z"
+      },
+      {
+        "phase": "stabilize",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-13T04:07Z"
+      }
+    ]
+  },
+  "evidence": {
+    "parity_checksum": "ab7fb321fafa9e850eb51836322c5867d47adbdbdd789e224e910a4d5ed1795b",
+    "diff_path": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/crown_handshake/rest_grpc_diff.json",
+    "telemetry_log": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/crown_handshake/telemetry.ndjson",
+    "mcp_rotation_log": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/crown_handshake/mcp_rotation.json"
+  }
+}
