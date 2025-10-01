@@ -1,0 +1,123 @@
+{
+  "status": "success",
+  "stage": "stage_c2_demo_storyline",
+  "run_id": "20251001T085114Z-stage_c2_demo_storyline",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/stage_c_scripted_demo.py",
+    "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline",
+    "--seed",
+    "42"
+  ],
+  "returncode": 0,
+  "started_at": "2025-10-01T08:51:14.772317+00:00",
+  "completed_at": "2025-10-01T08:51:15.037440+00:00",
+  "duration_seconds": 0.265123,
+  "log_dir": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline",
+  "stdout_path": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/stage_c2_demo_storyline.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/stage_c2_demo_storyline.stderr.log",
+  "stdout_lines": 0,
+  "stderr_lines": 9,
+  "stderr_tail": [
+    "INFO Extracting Stage B bundle logs/stage_b/20250921T230434Z/rehearsals/session_01/bundles/session_01_media.tar.gz -> /workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/_stage_b_assets/20250921T230434Z/session_01",
+    "/workspace/ABZU/scripts/stage_c_scripted_demo.py:210: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.",
+    "  archive.extract(member, target_dir)",
+    "INFO Using Stage B asset root logs/stage_b/20250921T230434Z/rehearsals/session_01",
+    "INFO Starting Stage C scripted demo replay from Stage B run 20250921T230434Z session session_01",
+    "INFO [arrival] prompt=\"Avatar arrives on stage and greets the operators.\" emotion=anticipatory",
+    "INFO [handoff] prompt=\"Mission handoff with modulation overlay.\" emotion=focused",
+    "INFO [closing] prompt=\"Closing salutation with harmonic swell.\" emotion=resonant",
+    "INFO Session complete: 3 steps replayed from Stage B run 20250921T230434Z/session_01 (max sync offset 0.067s)"
+  ],
+  "stderr": "INFO Extracting Stage B bundle logs/stage_b/20250921T230434Z/rehearsals/session_01/bundles/session_01_media.tar.gz -> /workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/_stage_b_assets/20250921T230434Z/session_01\n/workspace/ABZU/scripts/stage_c_scripted_demo.py:210: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.\n  archive.extract(member, target_dir)\nINFO Using Stage B asset root logs/stage_b/20250921T230434Z/rehearsals/session_01\nINFO Starting Stage C scripted demo replay from Stage B run 20250921T230434Z session session_01\nINFO [arrival] prompt=\"Avatar arrives on stage and greets the operators.\" emotion=anticipatory\nINFO [handoff] prompt=\"Mission handoff with modulation overlay.\" emotion=focused\nINFO [closing] prompt=\"Closing salutation with harmonic swell.\" emotion=resonant\nINFO Session complete: 3 steps replayed from Stage B run 20250921T230434Z/session_01 (max sync offset 0.067s)\n",
+  "artifacts": {
+    "summary": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/telemetry/summary.json",
+    "run_summary": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/telemetry/run_summary.json",
+    "telemetry_events": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/telemetry/events.jsonl",
+    "media_manifest": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/telemetry/media_manifest.json"
+  },
+  "metrics": {
+    "output_dir": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline",
+    "summary": {
+      "timestamp": "2025-10-01T08:51:15.012+00:00",
+      "steps": 3,
+      "max_sync_offset_s": 0.067,
+      "dropouts_detected": false,
+      "source": {
+        "stage": "stage_b",
+        "run_id": "20250921T230434Z",
+        "session": "session_01",
+        "manifest_path": "logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json",
+        "manifest_sha256": "0dbdb84da3a5303ce2e82838fc6f26c2928b740ba51b18aa6aa6648a6364666f",
+        "bundle": {
+          "name": "session_01_media.tar.gz",
+          "artifact_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+          "sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+          "size_bytes": 1348,
+          "sources": [
+            "audio",
+            "video",
+            "emotion",
+            "telemetry/events.jsonl",
+            "telemetry/media_manifest.json"
+          ]
+        },
+        "assets": {
+          "audio_files": 3,
+          "audio_bytes": 926,
+          "audio_available_locally": false,
+          "video_files": 3,
+          "video_bytes": 856,
+          "video_available_locally": false,
+          "emotion_stream": {
+            "source_path": "emotion/stream.jsonl",
+            "size_bytes": 335,
+            "sha256": "c449c184d77e9a6ec08ba37027fc0442bee9e0a34dfa8b0698499094d39ca946",
+            "available_locally": false,
+            "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+            "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+            "bundle_name": "session_01_media.tar.gz",
+            "bundle_size_bytes": 1348,
+            "bundle_member": "emotion/stream.jsonl",
+            "samples": 3
+          },
+          "telemetry_events": {
+            "source_path": "telemetry/events.jsonl",
+            "size_bytes": 832,
+            "sha256": "e1b58697f693ebed3b1ed0a55364a5ada8ddb9ee83d1e96635e4b53b8a8ba9f5",
+            "available_locally": false,
+            "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+            "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+            "bundle_name": "session_01_media.tar.gz",
+            "bundle_size_bytes": 1348,
+            "bundle_member": "telemetry/events.jsonl"
+          },
+          "telemetry_media_manifest": {
+            "source_path": "telemetry/media_manifest.json",
+            "size_bytes": 941,
+            "sha256": "1aa6f2b5342b04456a205d570587a17d1a2d9c750adabb148a8ef36716dcdc6a",
+            "available_locally": false,
+            "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+            "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+            "bundle_name": "session_01_media.tar.gz",
+            "bundle_size_bytes": 1348,
+            "bundle_member": "telemetry/media_manifest.json"
+          }
+        }
+      },
+      "replay": {
+        "events_path": "telemetry/events.jsonl",
+        "events_sha256": "7b47753bab801d5fa5f15692fd853c464dca3a718e4845ffa000c27d3596d31a",
+        "media_manifest_path": "telemetry/media_manifest.json",
+        "media_manifest_sha256": "2298b54b0729f4eeaee62648d41974a159844fd338774b3154ad7fff0db39641"
+      },
+      "configuration": {
+        "copy_media": false
+      }
+    },
+    "telemetry_events": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/telemetry/events.jsonl",
+    "emotion_stream": null,
+    "media_manifest": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/telemetry/media_manifest.json",
+    "run_summary": "/workspace/ABZU/logs/stage_c/20251001T085114Z-stage_c2_demo_storyline/demo_storyline/telemetry/run_summary.json"
+  }
+}
