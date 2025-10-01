@@ -1,0 +1,156 @@
+{
+  "connector": "operator_upload",
+  "stage": "stage_e",
+  "recorded_at": "2025-10-14T09:32:44Z",
+  "responses": {
+    "legacy": {
+      "rest": {
+        "command_id": "upload-req-5521",
+        "status": "QUEUED",
+        "payload": {
+          "upload_id": "legacy-upload-5521",
+          "checksum": "b7a9d4c02c3b1e6f",
+          "expected_segments": 4
+        },
+        "transport": "rest",
+        "recorded_at": "2025-10-14T09:32:44Z",
+        "revision": "apsu-legacy-r33",
+        "span_chain": [
+          "bb17aa",
+          "bb17ab"
+        ]
+      },
+      "grpc": {
+        "command_id": "upload-req-5521",
+        "status": "QUEUED",
+        "payload": {
+          "upload_id": "legacy-upload-5521",
+          "checksum": "b7a9d4c02c3b1e6f",
+          "expected_segments": 4
+        },
+        "transport": "grpc",
+        "recorded_at": "2025-10-14T09:32:45Z",
+        "revision": "apsu-legacy-r33",
+        "span_chain": [
+          "bb17aa",
+          "bb17ac"
+        ]
+      }
+    },
+    "neo": {
+      "rest": {
+        "command_id": "upload-req-5521",
+        "status": "QUEUED",
+        "payload": {
+          "upload_id": "legacy-upload-5521",
+          "checksum": "b7a9d4c02c3b1e6f",
+          "expected_segments": 4
+        },
+        "transport": "rest",
+        "recorded_at": "2025-10-14T09:32:44Z",
+        "neo_revision": "neo-apsu-r04",
+        "span_chain": [
+          "bb17aa",
+          "bb17ad"
+        ]
+      },
+      "grpc": {
+        "command_id": "upload-req-5521",
+        "status": "QUEUED",
+        "payload": {
+          "upload_id": "legacy-upload-5521",
+          "checksum": "b7a9d4c02c3b1e6f",
+          "expected_segments": 4
+        },
+        "transport": "grpc",
+        "recorded_at": "2025-10-14T09:32:45Z",
+        "neo_revision": "neo-apsu-r04",
+        "span_chain": [
+          "bb17aa",
+          "bb17ae"
+        ]
+      }
+    }
+  },
+  "telemetry": {
+    "legacy": {
+      "command_id": "upload-req-5521",
+      "latency_ms_p50": 204.0,
+      "latency_ms_p95": 276.0,
+      "latency_ms_p99": 301.0,
+      "error_rate": 0.0,
+      "fallback_invocations": 0,
+      "span_chain": [
+        "bb17aa",
+        "bb17ac",
+        "bb17b0"
+      ],
+      "rotation_window": "2025-10-14T09:28Z",
+      "mcp_lease": "stage-e-sandbox"
+    },
+    "neo": {
+      "command_id": "upload-req-5521",
+      "latency_ms_p50": 204.0,
+      "latency_ms_p95": 276.0,
+      "latency_ms_p99": 301.0,
+      "error_rate": 0.0,
+      "fallback_invocations": 0,
+      "span_chain": [
+        "bb17aa",
+        "bb17ac",
+        "bb17b0"
+      ],
+      "rotation_window": "2025-10-14T09:28Z",
+      "mcp_lease": "stage-e-sandbox",
+      "neo_observer": "upload-monitor-01"
+    }
+  },
+  "mcp_rotations": {
+    "legacy": [
+      {
+        "phase": "precheck",
+        "transport": "rest",
+        "status": "completed",
+        "window": "2025-10-14T09:25Z"
+      },
+      {
+        "phase": "handover",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-14T09:29Z"
+      },
+      {
+        "phase": "stabilize",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-14T09:31Z"
+      }
+    ],
+    "neo": [
+      {
+        "phase": "precheck",
+        "transport": "rest",
+        "status": "completed",
+        "window": "2025-10-14T09:25Z"
+      },
+      {
+        "phase": "handover",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-14T09:29Z"
+      },
+      {
+        "phase": "stabilize",
+        "transport": "grpc",
+        "status": "completed",
+        "window": "2025-10-14T09:31Z"
+      }
+    ]
+  },
+  "evidence": {
+    "parity_checksum": "38d8a2b9dc5cf3aaf5c6580e0a56e953896f4247db7b5cdddc2cf6c38dd1efdc",
+    "diff_path": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_upload/rest_grpc_diff.json",
+    "telemetry_log": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_upload/telemetry.ndjson",
+    "mcp_rotation_log": "logs/stage_e/20250930T121727Z-stage_e_transport_readiness/operator_upload/mcp_rotation.json"
+  }
+}

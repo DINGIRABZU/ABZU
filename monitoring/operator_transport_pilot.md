@@ -61,6 +61,32 @@ notes describing the pilot.【F:tests/test_operator_transport_contract.py†L1-L
 fallback metadata and INFO/WARN log events provide the breadcrumb trail the
 monitoring team can follow when the gRPC handler rolls back to REST.【F:operator_api.py†L214-L374】【F:operator_api_grpc.py†L45-L92】
 
+## Sandbox dashboard exports
+
+Stage E rehearsals now ship recorded sandbox evidence so reviewers can audit
+parity without hitting live infrastructure. Three JSON exports capture the
+REST↔gRPC payloads, telemetry fields, and MCP rotation windows for the
+Stage E connectors (`operator_api`, `operator_upload`, `crown_handshake`). Each
+file lives under `tests/fixtures/transport_parity/` and mirrors the structure
+of the readiness bundle entries (`responses`, `telemetry`, `mcp_rotations`, and
+`evidence`).【F:tests/fixtures/transport_parity/operator_api_stage_e.json†L1-L138】【F:tests/fixtures/transport_parity/operator_upload_stage_e.json†L1-L138】【F:tests/fixtures/transport_parity/crown_handshake_stage_e.json†L1-L130】
+
+The accompanying contract suite (`tests/transport_parity/test_recorded_contracts.py`)
+validates that each export matches the recorded checksum, that REST and gRPC
+payloads remain interchangeable across legacy APSU and Neo-APSU surfaces, and
+that the telemetry metrics stay aligned for every connector. The tests also
+assert that every MCP rotation list contains the `precheck`, `handover`, and
+`stabilize` phases so Grafana panels and roadmap callouts inherit the same
+rotation guarantees without a live drill.【F:tests/transport_parity/test_recorded_contracts.py†L1-L209】 Contract maintainers can
+pull the JSON into Grafana using the “upload JSON” workflow to seed the
+`operator-transport-parity` dashboard or feed the snapshots into local scripts
+that emulate the dashboard panels during sandbox reviews.
+
+When exporting additional connectors, reuse the same schema and update the
+checksum field so the contract suite enforces parity. Reference the evidence
+paths in the Stage E readiness packet (`logs/stage_e/.../mcp_rotation.json`) so
+the dashboards, roadmap, and status docs point at the same artifact lineage.
+
 ## Stage E rollout checkpoints
 
 - Stage E promotes the transport dashboard to a standing gate: contract tests
