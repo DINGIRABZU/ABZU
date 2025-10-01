@@ -6,6 +6,7 @@ import importlib
 import importlib.machinery
 import importlib.util
 import json
+import logging
 import os
 import shutil
 import sys
@@ -46,12 +47,16 @@ class _SandboxOverride:
 _SANDBOX_OVERRIDES: MutableMapping[str, _SandboxOverride] = {}
 _APPLIED_OVERRIDES: MutableMapping[str, str] = {}
 _DEFAULT_OVERRIDES_REGISTERED = False
-_FORCE_SANDBOX = bool(os.getenv("ABZU_FORCE_STAGE_SANDBOX"))
+_FORCE_SANDBOX_ENV = bool(os.getenv("ABZU_FORCE_STAGE_SANDBOX"))
+_force_sandbox_runtime = _FORCE_SANDBOX_ENV
 _AUDIO_STACK_MISSING = any(shutil.which(binary) is None for binary in ("ffmpeg", "sox"))
 _FORCED_MODULES = {
     "crown_decider",
     "crown_prompt_orchestrator",
     "emotional_state",
+    "neoapsu_crown",
+    "neoapsu_identity",
+    "neoapsu_memory",
     "servant_model_manager",
     "state_transition_engine",
     "INANNA_AI.glm_integration",
@@ -212,6 +217,21 @@ def _register_default_overrides() -> None:
         "neoabzu_memory: optional bundle shim activated",
     )
     register(
+        "neoapsu_memory",
+        _make_neoapsu_memory_stub,
+        "neoapsu_memory: sandbox contract suite shim activated",
+    )
+    register(
+        "neoapsu_crown",
+        _make_neoapsu_crown_stub,
+        "neoapsu_crown: sandbox contract suite shim activated",
+    )
+    register(
+        "neoapsu_identity",
+        _make_neoapsu_identity_stub,
+        "neoapsu_identity: sandbox contract suite shim activated",
+    )
+    register(
         "servant_model_manager",
         _make_servant_model_manager_stub,
         "servant_model_manager: local registry only",
@@ -244,7 +264,7 @@ def _should_force_override(name: str) -> bool:
     """Return ``True`` when ``name`` should always use the sandbox stub."""
 
     if name in _FORCED_MODULES:
-        return _FORCE_SANDBOX or _AUDIO_STACK_MISSING
+        return _force_sandbox_runtime or _AUDIO_STACK_MISSING
     return False
 
 
@@ -313,6 +333,24 @@ def format_sandbox_summary(prefix: str | None = None) -> str:
     return message
 
 
+def _emit_sandbox_log(
+    message: str,
+    logger: logging.Logger | Callable[[str], None] | None,
+) -> None:
+    """Emit ``message`` using ``logger`` or stdout as a fallback."""
+
+    if logger is None:
+        print(message)
+        return
+    if isinstance(logger, logging.Logger):
+        logger.info(message)
+        return
+    try:
+        logger(message)
+    except Exception:  # pragma: no cover - defensive logging fallback
+        logging.getLogger(__name__).info(message)
+
+
 def _publish_environment_metadata() -> None:
     """Expose applied overrides via the environment for subprocesses."""
 
@@ -322,45 +360,72 @@ def _publish_environment_metadata() -> None:
     os.environ["ABZU_SANDBOX_OVERRIDES"] = json.dumps(get_sandbox_overrides())
 
 
-def bootstrap(optional_modules: Iterable[str] | None = None) -> Path:
+def bootstrap(
+    optional_modules: Iterable[str] | None = None,
+    *,
+    sandbox: bool | None = None,
+    log_summary: bool = False,
+    summary_logger: logging.Logger | Callable[[str], None] | None = None,
+) -> Path:
     """Prepare the Stage runtime and return the repository root."""
 
     _register_default_overrides()
 
-    root = _detect_repo_root()
-    _ensure_path(root)
+    global _force_sandbox_runtime
+    original_force = _force_sandbox_runtime
+    if sandbox is not None:
+        _force_sandbox_runtime = sandbox
 
-    for module_name in ("neoabzu_memory", "neoabzu_core"):
-        if _ensure_native_module(module_name, root):
-            continue
+    try:
+        root = _detect_repo_root()
+        _ensure_path(root)
 
-    for candidate in _neoabzu_candidate_dirs(root):
-        if candidate.exists():
-            _ensure_path(candidate)
+        for module_name in (
+            "neoabzu_memory",
+            "neoabzu_core",
+            "neoapsu_memory",
+            "neoapsu_crown",
+            "neoapsu_identity",
+        ):
+            if _ensure_native_module(module_name, root):
+                continue
 
-    src_dir = root / "src"
-    if src_dir.exists():
-        _ensure_path(src_dir)
+        for candidate in _neoabzu_candidate_dirs(root):
+            if candidate.exists():
+                _ensure_path(candidate)
 
-    _prepare_overrides()
+        src_dir = root / "src"
+        if src_dir.exists():
+            _ensure_path(src_dir)
 
-    requested_modules = tuple(optional_modules or ())
-    for name in requested_modules:
-        if name in _SANDBOX_OVERRIDES:
-            if not _ensure_native_module(name, root):
-                _maybe_stub(name, force=True)
-            continue
-        try:
-            importlib.import_module(name)
-        except Exception:  # pragma: no cover - import errors vary per sandbox
-            warnings.warn(
-                f"environment-limited: optional module '{name}' unavailable",
-                EnvironmentLimitedWarning,
-                stacklevel=3,
-            )
+        _prepare_overrides()
 
-    _publish_environment_metadata()
-    return root
+        requested_modules = tuple(optional_modules or ())
+        for name in requested_modules:
+            if name in _SANDBOX_OVERRIDES:
+                if not _ensure_native_module(name, root):
+                    _maybe_stub(name, force=True)
+                continue
+            try:
+                importlib.import_module(name)
+            except Exception:  # pragma: no cover - import errors vary per sandbox
+                warnings.warn(
+                    f"environment-limited: optional module '{name}' unavailable",
+                    EnvironmentLimitedWarning,
+                    stacklevel=3,
+                )
+
+        _publish_environment_metadata()
+
+        overrides = get_sandbox_overrides()
+        should_log = log_summary or (sandbox and overrides)
+        if should_log or (log_summary and not overrides):
+            message = format_sandbox_summary("stage runtime sandbox")
+            _emit_sandbox_log(message, summary_logger)
+
+        return root
+    finally:
+        _force_sandbox_runtime = original_force
 
 
 def _make_env_validation_stub() -> types.ModuleType:
@@ -459,8 +524,12 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
                 self.args = args
                 self.kwargs = kwargs
                 self.stubbed = True
-                self.bundle_source = getattr(self, "bundle_source", MemoryBundle.bundle_source)
-                self.bundle_mode = getattr(self, "bundle_mode", MemoryBundle.bundle_mode)
+                self.bundle_source = getattr(
+                    self, "bundle_source", MemoryBundle.bundle_source
+                )
+                self.bundle_mode = getattr(
+                    self, "bundle_mode", MemoryBundle.bundle_mode
+                )
                 self.fallback_reason = getattr(
                     self, "fallback_reason", MemoryBundle.fallback_reason
                 )
@@ -513,6 +582,63 @@ def _make_neoabzu_memory_stub() -> types.ModuleType:
     module.__sandbox_runtime__ = "scripts._stage_runtime"
     module.__all__ = ["MemoryBundle"]
     return module
+
+
+def _make_neoapsu_contract_stub(name: str, suite: str) -> types.ModuleType:
+    """Create a sandbox contract stub for Neo‑APSU verification modules."""
+
+    module = types.ModuleType(name)
+
+    def run_contract_suite(**kwargs: object) -> dict[str, object]:  # pragma: no cover
+        fixtures: dict[str, object] = {}
+        if kwargs:
+            fixtures = {
+                key: value for key, value in kwargs.items() if value is not None
+            }
+        tests = [
+            {
+                "id": f"{name}-import",
+                "name": "import",
+                "status": "skipped",
+                "reason": "native bindings unavailable in sandbox",
+            },
+            {
+                "id": f"{name}-fixtures",
+                "name": "fixtures",
+                "status": "skipped",
+                "reason": "contract suite stub executed",
+            },
+        ]
+        return {
+            "suite": suite,
+            "status": "stubbed",
+            "sandbox": True,
+            "tests": tests,
+            "notes": [
+                "sandbox stub executed in place of native Neo-APSU bindings",
+            ],
+            "fixtures": fixtures,
+        }
+
+    module.run_contract_suite = run_contract_suite  # type: ignore[attr-defined]
+    module.SUITE_NAME = suite  # type: ignore[attr-defined]
+    module.__neoapsu_sandbox__ = True
+    module.__neoabzu_sandbox__ = True
+    module.__sandbox_runtime__ = "scripts._stage_runtime"
+    module.__all__ = ["run_contract_suite", "SUITE_NAME"]
+    return module
+
+
+def _make_neoapsu_memory_stub() -> types.ModuleType:
+    return _make_neoapsu_contract_stub("neoapsu_memory", "Neo-APSU Memory")
+
+
+def _make_neoapsu_crown_stub() -> types.ModuleType:
+    return _make_neoapsu_contract_stub("neoapsu_crown", "Neo-APSU Crown")
+
+
+def _make_neoapsu_identity_stub() -> types.ModuleType:
+    return _make_neoapsu_contract_stub("neoapsu_identity", "Neo-APSU Identity")
 
 
 def _make_crown_decider_stub() -> types.ModuleType:
