@@ -1,6 +1,6 @@
 # Roadmap
 
-_Last updated: 2025-10-31_
+_Last updated: 2025-11-16_
 
 This roadmap tracks five core milestones on the path to a stable release. Each stage lists its expected outcome so contributors know when to advance to the next phase.
 
@@ -76,7 +76,7 @@ corresponding `operator_api` handlers, keeping the roadmap audit trail anchored 
 `logs/stage_[abc]/<run_id>/` evidence bundles.【F:web_console/game_dashboard/dashboard.js†L180-L356】【F:web_console/game_dashboard/mission_map.js†L1-L144】【F:operator_api.py†L2184-L2421】
 
 > [!IMPORTANT]
-> **Codex sandbox dependency limits.** When Stage A or Stage B rehearsals require GPUs, DAW plugins, or external connectors that the Codex sandbox cannot provide, mark affected tests as `environment-limited`, capture the skipped command output in the alpha bundle, and log the pending validation in change notes. Escalate hardware-required follow-ups through the operator risk queue in [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-c-planning-snapshot) and align messaging with [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment).
+> **Codex sandbox dependency limits.** When Stage A or Stage B rehearsals require GPUs, DAW plugins, or external connectors that the Codex sandbox cannot provide, follow [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints). Mark affected tests as `environment-limited`, capture the skipped command output in the alpha bundle, and log the pending validation in change notes. Escalate hardware-required follow-ups through the operator risk queue in [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-c-planning-snapshot) and align messaging with the sandbox-to-hardware bridge plan documented in [roadmap.md](#stage-g-sandbox-to-hardware-bridge-validation).
 
 > [!NOTE]
 > **Sandbox audit (2025-09-27).** The latest Stage A sweep in `logs/alpha_gate/20250927T235425Z/` recorded missing build tooling, connector probes returning `503`, and `pytest.ini` coverage hooks failing without `pytest-cov`, so coverage gating remains deferred to the reserved hardware rehearsal window.【F:logs/alpha_gate/20250927T235425Z/command_log.md†L1-L9】【F:logs/alpha_gate/20250927T235425Z/health_check_connectors.log†L1-L5】【F:logs/alpha_gate/20250927T235425Z/pytest_coverage.log†L1-L6】

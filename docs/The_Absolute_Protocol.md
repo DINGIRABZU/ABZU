@@ -1,7 +1,7 @@
 # The Absolute Protocol
 
-**Version:** v1.0.111
-**Last updated:** 2025-10-24
+**Version:** v1.0.112
+**Last updated:** 2025-11-16
 
 ## How to Use This Protocol
 This document consolidates ABZU's guiding rules. Review it before contributing to follow required workflows and standards. Every contributor must propose operator-facing improvements alongside system enhancements to honor the operator-first principle. See [Contributor Checklist](contributor_checklist.md) for a quick summary of the triple-reading rule, error index updates, and test requirements. Declare a top-level `__version__` for each module, connector, and service. Every pull request and commit message must include a change-justification statement formatted as "I did X on Y to obtain Z, expecting behavior B" per the [Contributor Guide](CONTRIBUTOR_GUIDE.md#commit-message-format). Agent guides must include sections for **Vision**, **Module Overview**, **Workflow**, **Architecture Diagram**, **Requirements**, **Deployment**, **Config Schemas**, **Version History**, **Cross-links**, **Example Runs**, **Persona & Responsibilities**, and **Component & Link**.
@@ -27,10 +27,36 @@ Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three ti
   collector so Stage B rehearsals log mix, playback, and fallback metrics documented in
   [monitoring/audio_rehearsal_telemetry.md](monitoring/audio_rehearsal_telemetry.md).
 
+### Codex sandbox constraints
+
+Codex-hosted rehearsals intentionally operate inside a constrained sandbox that omits GPU drivers, DAW plug-ins, hardware-only
+telemetry bridges, and production connector credentials. As a result, several recurring tasks are deferred until hardware
+windows reopen:
+
+- **GPU rendering, DAW-integrated rehearsals, and FFmpeg-dependent exports** fall back to stubbed pipelines until the hardware
+  hosts recorded in the Stage B rotation ledger are available.
+- **Connector credential sweeps and transport parity replays** only run end-to-end on gate-runner hardware where long-lived
+  secrets can be injected and the Grafana dashboards can stream live telemetry.
+- **Neo-APSU crate parity and memory persistence drills** stay in observation mode in the sandbox and rely on the upcoming
+  Stage G hardware bridge slot to replay evidence with the Rust surfaces enabled.
+
+Mark each deferred step as **environment-limited** in both test suites and doctrine evidence so auditors can distinguish missing
+dependencies from regressions. Use explicit skip reasons such as `pytest.skip("environment-limited: GPU render unavailable in
+Codex sandbox")`, mirror the reason in the command transcript, and archive the transcript under the relevant
+`logs/<gate>/<timestamp>/` bundle. Summaries in change logs, readiness packets, and roadmap updates must repeat the
+environment-limited label so every downstream checklist inherits the same context.
+
+Queue hardware follow-ups through the sandbox-to-hardware bridge workflow documented in
+[roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation). Each deferred item must:
+
+1. Reference the owning hardware host, rehearsal window, and remediation lead in the Alpha/Stage C evidence bundle.
+2. Attach the dry-run command sequence that will execute once hardware access is granted, linking to the bundle transcript.
+3. Log the escalation in the operator risk queue so Stage G planning can confirm the slot before milestone reviews.
+
 ### Stage Gate Alignment
 
 > [!IMPORTANT]
-> **Codex sandbox dependency limits.** The hosted Codex sandbox lacks many optional system libraries, GPU drivers, audio
+> **Codex sandbox dependency limits.** See [Codex sandbox constraints](#codex-sandbox-constraints). The hosted Codex sandbox lacks many optional system libraries, GPU drivers, audio
 > backends, and connector credentials. Treat missing dependencies as **environment-limited** rather than test regressions by
 > skipping affected checks with an explicit marker such as
 > `pytest.skip("environment-limited: FFmpeg missing in Codex sandbox")` or
