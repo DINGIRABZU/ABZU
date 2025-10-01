@@ -70,10 +70,10 @@ enters rehearsal: it must appear in `component_index.json` and
 align with [schemas/mcp_heartbeat_payload.schema.json](../schemas/mcp_heartbeat_payload.schema.json),
 and its MCP rotation metadata must confirm the credential was refreshed within
 the declared window. The most recent Stage B3 drill logged
-`20250926T180300Z-PT48H` for the operator and Crown connectors (preceded by
-`20250926T180231Z-PT48H`, `20250925T094604Z-PT48H`, the follow-up refresh
+`20251205T160210Z-PT48H` for the operator and Crown connectors (preceded by
+`20250926T180300Z-PT48H`, `20250926T180231Z-PT48H`, `20250925T094604Z-PT48H`, the follow-up refresh
 `20251024T174210Z-PT48H`, and the earlier `20250922T101554Z-PT48H` rehearsal) so auditors
-can see every rotation window in [`logs/stage_b_rotation_drills.jsonl`](../logs/stage_b_rotation_drills.jsonl).【F:logs/stage_b_rotation_drills.jsonl†L24-L45】
+can see every rotation window in [`logs/stage_b_rotation_drills.jsonl`](../logs/stage_b_rotation_drills.jsonl).【F:logs/stage_b_rotation_drills.jsonl†L24-L92】
 The API now annotates those ledger entries with the rotation headline and any
 credential expiry surfaced during the drill, letting Stage C readiness dashboards
 render a human-readable status without scraping raw stdout.【F:operator_api.py†L470-L575】【F:operator_api.py†L640-L713】

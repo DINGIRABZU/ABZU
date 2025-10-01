@@ -12,9 +12,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-from scripts._stage_runtime import bootstrap
+from scripts import _stage_runtime as stage_runtime
 
-bootstrap()
+REPO_ROOT = stage_runtime.bootstrap(optional_modules=["neoabzu_memory"])
 
 from connectors.operator_mcp_adapter import (
     ROTATION_WINDOW_HOURS,
@@ -564,6 +564,14 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
     doctrine_ok, doctrine_failures = evaluate_operator_doctrine()
     results["doctrine_ok"] = doctrine_ok
     results["doctrine_failures"] = doctrine_failures
+
+    overrides = stage_runtime.get_sandbox_overrides()
+    results["sandbox_overrides"] = overrides
+    results["sandbox_summary"] = stage_runtime.format_sandbox_summary(
+        "Stage B smoke runtime"
+    )
+    results["neoabzu_memory_stubbed"] = "neoabzu_memory" in overrides
+    results["repo_root"] = str(REPO_ROOT)
 
     return results
 
