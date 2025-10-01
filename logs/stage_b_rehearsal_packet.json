@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-09-27T21:10:08Z",
+  "generated_at": "2025-10-01T21:43:59Z",
   "stage": "B",
   "context": "stage-b-rehearsal",
   "connectors": {
@@ -28,7 +28,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-27T21:10:08Z",
+          "last_rotated": "2025-10-01T21:43:59Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "operator"
@@ -50,7 +50,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-27T21:10:08Z"
+        "emitted_at": "2025-10-01T21:43:59Z"
       },
       "heartbeat_payload": {
         "status": "aligned",
@@ -58,7 +58,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-27T21:10:08Z"
+        "emitted_at": "2025-10-01T21:43:59Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -98,7 +98,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-27T21:10:08Z",
+          "last_rotated": "2025-10-01T21:43:59Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "operator-upload"
@@ -120,7 +120,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-27T21:10:08Z"
+        "emitted_at": "2025-10-01T21:43:59Z"
       },
       "heartbeat_payload": {
         "status": "aligned",
@@ -128,7 +128,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-12-01T00:00:00Z",
-        "emitted_at": "2025-09-27T21:10:08Z"
+        "emitted_at": "2025-10-01T21:43:59Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -168,7 +168,7 @@
           }
         ],
         "rotation": {
-          "last_rotated": "2025-09-27T21:10:08Z",
+          "last_rotated": "2025-10-01T21:43:59Z",
           "rotation_window": "PT48H",
           "supports_hot_swap": true,
           "token_hint": "crown"
@@ -190,7 +190,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-11-15T00:00:00Z",
-        "emitted_at": "2025-09-27T21:10:08Z"
+        "emitted_at": "2025-10-01T21:43:59Z"
       },
       "heartbeat_payload": {
         "status": "mission-brief-ready",
@@ -198,7 +198,7 @@
         "cycle_count": 0,
         "context": "stage-b-rehearsal",
         "credential_expiry": "2025-11-15T00:00:00Z",
-        "emitted_at": "2025-09-27T21:10:08Z"
+        "emitted_at": "2025-10-01T21:43:59Z"
       },
       "doctrine_ok": true,
       "doctrine_failures": [],
@@ -213,5 +213,39 @@
         "mission-brief"
       ]
     }
-  }
+  },
+  "dependencies": [
+    {
+      "module": "torch",
+      "description": "PyTorch tensor runtime used by audio codecs",
+      "available": true,
+      "stubbed": false,
+      "version": "2.8.0+cu128",
+      "path": "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/__init__.py"
+    },
+    {
+      "module": "simpleaudio",
+      "description": "Simpleaudio playback backend",
+      "available": true,
+      "stubbed": false,
+      "version": null,
+      "path": "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/simpleaudio/__init__.py"
+    },
+    {
+      "module": "clap",
+      "description": "Contrastive Language-Audio Pretraining interface",
+      "available": true,
+      "stubbed": false,
+      "version": "0.7.1.post1",
+      "path": "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/clap/__init__.py"
+    },
+    {
+      "module": "rave",
+      "description": "Realtime Audio Variational autoEncoder shim",
+      "available": true,
+      "stubbed": false,
+      "version": "0.1.0",
+      "path": "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/rave/__init__.py"
+    }
+  ]
 }

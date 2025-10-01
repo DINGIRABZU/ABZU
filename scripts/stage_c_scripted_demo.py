@@ -154,7 +154,11 @@ def _resolve_artifact_url(artifact_uri: str) -> str:
                 "or download the bundle manually."
             )
         prefix = base.rstrip("/")
-        joined = f"{parsed.netloc}/{parsed.path.lstrip('/')}" if parsed.netloc else parsed.path.lstrip("/")
+        joined = (
+            f"{parsed.netloc}/{parsed.path.lstrip('/')}"
+            if parsed.netloc
+            else parsed.path.lstrip("/")
+        )
         return f"{prefix}/{joined}"
     raise StageBAssetError(
         f"Unsupported artifact URI scheme for Stage B bundle: {artifact_uri}"
@@ -181,7 +185,10 @@ def _download_stage_b_bundle(
     url = _resolve_artifact_url(artifact_uri)
     logger.info("Downloading Stage B bundle %s -> %s", artifact_uri, destination)
     try:
-        with urlopen(url) as response, destination.open("wb") as handle:  # noqa: S310,PTH123
+        with (
+            urlopen(url) as response,
+            destination.open("wb") as handle,
+        ):  # noqa: S310,PTH123
             shutil.copyfileobj(response, handle)
     except URLError as exc:  # pragma: no cover - network failures depend on env
         raise StageBAssetError(
@@ -512,6 +519,8 @@ def run_session(
             )
             metadata["path"] = str(copied.destination_rel)
             metadata["available_locally"] = True
+            metadata["local_sha256"] = copied.sha256
+            metadata["local_size_bytes"] = copied.size_bytes
         return metadata
 
     for step in stage_b_session.steps:
@@ -588,6 +597,10 @@ def run_session(
             },
             "source": source_block,
             "media_copy_enabled": copy_media,
+        }
+        entry["stage_c"]["integrity"] = {
+            "audio_sha256": audio_meta.get("local_sha256", audio_meta.get("sha256")),
+            "video_sha256": video_meta.get("local_sha256", video_meta.get("sha256")),
         }
         media_manifest_entries.append(entry)
 
@@ -684,7 +697,7 @@ def main() -> None:
     parser.add_argument("output_dir", type=Path, help="Directory for session evidence")
     parser.add_argument(
         "--stage-b-run",
-        default="logs/stage_b/20250921T230434Z",
+        default="logs/stage_b/20251001T214349Z",
         help="Stage B run ID or path containing rehearsal sessions.",
     )
     parser.add_argument(
@@ -728,11 +741,12 @@ def main() -> None:
         ),
     )
     parser.add_argument(
-        "--copy-media",
-        action="store_true",
+        "--no-copy-media",
+        action="store_false",
+        dest="copy_media",
         help=(
-            "Copy Stage B audio/video assets into the Stage C output directory. "
-            "When omitted, the run emits provenance pointing at the Stage B bundle."
+            "Skip copying Stage B audio/video assets into the Stage C output directory "
+            "and emit provenance that references the Stage B bundle instead."
         ),
     )
     parser.add_argument(
@@ -743,6 +757,7 @@ def main() -> None:
             "accepted for compatibility even when no randomization is required."
         ),
     )
+    parser.set_defaults(copy_media=True)
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")

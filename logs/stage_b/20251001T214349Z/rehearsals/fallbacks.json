@@ -1,0 +1,8 @@
+{
+  "audio_env_check": {
+    "timestamp": "2025-10-01T21:44:00Z",
+    "command": "PYTHONPATH=src python -m audio.check_env --strict",
+    "missing": [],
+    "notes": "Audio backend verified inside Codex sandbox with FFmpeg, simpleaudio, CLAP, and RAVE present."
+  }
+}

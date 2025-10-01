@@ -1,0 +1,31 @@
+{
+  "run_id": "20251001T214349Z",
+  "session_total": 1,
+  "sessions": [
+    {
+      "session_id": "session_01",
+      "seed": 101,
+      "steps": 3,
+      "max_sync_offset_s": 0.067,
+      "dropouts_detected": false,
+      "telemetry": {
+        "run_summary": "session_01/telemetry/run_summary.json",
+        "summary": "session_01/telemetry/summary.json",
+        "events": "session_01/telemetry/events.jsonl",
+        "media_manifest": "session_01/telemetry/media_manifest.json"
+      },
+      "emotion_stream": "session_01/emotion/stream.jsonl",
+      "audio_dir": "session_01/audio",
+      "video_dir": "session_01/video",
+      "run_log": "session_01/run.log"
+    }
+  ],
+  "fallbacks": {
+    "audio_env_check": {
+      "timestamp": "2025-10-01T21:44:00Z",
+      "command": "PYTHONPATH=src python -m audio.check_env --strict",
+      "missing": [],
+      "notes": "Audio backend verified inside Codex sandbox with FFmpeg, simpleaudio, CLAP, and RAVE present."
+    }
+  }
+}
