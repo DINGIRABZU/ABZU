@@ -4,6 +4,10 @@ _Last updated: 2025-10-31_
 
 This roadmap tracks five core milestones on the path to a stable release. Each stage lists its expected outcome so contributors know when to advance to the next phase.
 
+## Charter & roadmap cadence
+
+Bi-weekly working sessions align the charter backlog with the roadmap. Squad leads surface their next three Execution Ladder tasks, confirm interlocks, and record any required sign-offs so dependency owners can prepare before the following sprint checkpoint.【F:docs/alpha_v0_1_charter.md†L74-L88】 The resulting notes should update this roadmap and the companion status trackers so milestone reviews inherit the latest ownership and dependency signals.
+
 ## Milestone Stages
 
 | Stage | Expected Outcome | Status |
