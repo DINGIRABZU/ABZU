@@ -18,6 +18,7 @@ const stageTitles = {
   'stage-a': 'Stage A – Alpha Automation',
   'stage-b': 'Stage B – Mission Ops',
   'stage-c': 'Stage C – Continuity Planning',
+  'stage-d': 'Stage D – Neo-APSU Bridge',
 };
 
 const stageAFallback = {
@@ -98,6 +99,51 @@ const stageBFallback = {
     error: 'stage_b3_connector_rotation exited with code 1',
     metricsError: 'no JSON payload found in command stdout',
     notes: 'Connector rehearsal blocked: connectors package import failed inside smoke script.',
+  },
+};
+
+const stageDFallback = {
+  'stage-d1-neoapsu-memory': {
+    status: 'error',
+    runId: '20250930T120000Z-stage_d1_neoapsu_memory',
+    logDir: 'logs/stage_d/neoapsu_memory/20250930T120000Z-stage_d1_neoapsu_memory',
+    summaryPath:
+      'logs/stage_d/neoapsu_memory/20250930T120000Z-stage_d1_neoapsu_memory/summary.json',
+    stdoutPath:
+      'logs/stage_d/neoapsu_memory/20250930T120000Z-stage_d1_neoapsu_memory/stage_d1_neoapsu_memory.stdout.log',
+    stderrPath:
+      'logs/stage_d/neoapsu_memory/20250930T120000Z-stage_d1_neoapsu_memory/stage_d1_neoapsu_memory.stderr.log',
+    error: 'stage_d1_neoapsu_memory exited with code 1',
+    notes:
+      'Sandbox stub engaged; install neoapsu_memory bindings to clear stubbed warnings.',
+  },
+  'stage-d2-neoapsu-crown': {
+    status: 'error',
+    runId: '20250930T120000Z-stage_d2_neoapsu_crown',
+    logDir: 'logs/stage_d/neoapsu_crown/20250930T120000Z-stage_d2_neoapsu_crown',
+    summaryPath:
+      'logs/stage_d/neoapsu_crown/20250930T120000Z-stage_d2_neoapsu_crown/summary.json',
+    stdoutPath:
+      'logs/stage_d/neoapsu_crown/20250930T120000Z-stage_d2_neoapsu_crown/stage_d2_neoapsu_crown.stdout.log',
+    stderrPath:
+      'logs/stage_d/neoapsu_crown/20250930T120000Z-stage_d2_neoapsu_crown/stage_d2_neoapsu_crown.stderr.log',
+    error: 'stage_d2_neoapsu_crown exited with code 1',
+    notes:
+      'Neo-APSU crown contracts deferred – sandbox summary archived for readiness bundle.',
+  },
+  'stage-d3-neoapsu-identity': {
+    status: 'error',
+    runId: '20250930T120000Z-stage_d3_neoapsu_identity',
+    logDir: 'logs/stage_d/neoapsu_identity/20250930T120000Z-stage_d3_neoapsu_identity',
+    summaryPath:
+      'logs/stage_d/neoapsu_identity/20250930T120000Z-stage_d3_neoapsu_identity/summary.json',
+    stdoutPath:
+      'logs/stage_d/neoapsu_identity/20250930T120000Z-stage_d3_neoapsu_identity/stage_d3_neoapsu_identity.stdout.log',
+    stderrPath:
+      'logs/stage_d/neoapsu_identity/20250930T120000Z-stage_d3_neoapsu_identity/stage_d3_neoapsu_identity.stderr.log',
+    error: 'stage_d3_neoapsu_identity exited with code 1',
+    notes:
+      'Identity bridge verification stubbed – sync native crate to replace sandbox report.',
   },
 };
 
@@ -424,6 +470,9 @@ function GameDashboard() {
     ...stageBFallback,
   }));
   const [stageCResults, setStageCResults] = React.useState({});
+  const [stageDResults, setStageDResults] = React.useState(() => ({
+    ...stageDFallback,
+  }));
 
   const logStreamChunk = React.useCallback(
     (label, chunk) => {
@@ -899,6 +948,224 @@ function GameDashboard() {
     [stageCResults]
   );
 
+  const renderStageDDetails = React.useCallback(
+    (id) => {
+      const entry = stageDResults[id] ?? stageDFallback[id];
+      if (!entry) return null;
+      const elements = [];
+      if (entry.status) {
+        elements.push(
+          React.createElement(
+            'p',
+            {
+              key: 'status',
+              className: `mission-stage__status mission-stage__status--${entry.status}`,
+            },
+            `Status: ${entry.status}`
+          )
+        );
+      }
+      if (entry.responseStatus != null) {
+        elements.push(
+          React.createElement(
+            'p',
+            { key: 'http' },
+            `HTTP status: ${entry.responseStatus}`
+          )
+        );
+      }
+      if (entry.runId) {
+        elements.push(
+          React.createElement('p', { key: 'run' }, `Run ID: ${entry.runId}`)
+        );
+      }
+      if (entry.logDir) {
+        elements.push(
+          React.createElement('p', { key: 'logs' }, `Log dir: ${entry.logDir}`)
+        );
+      }
+      if (entry.summaryPath) {
+        elements.push(
+          React.createElement('p', { key: 'summary' }, `Summary: ${entry.summaryPath}`)
+        );
+      }
+      if (entry.stdoutPath) {
+        elements.push(
+          React.createElement('p', { key: 'stdout' }, `Stdout: ${entry.stdoutPath}`)
+        );
+      }
+      if (entry.stderrPath) {
+        elements.push(
+          React.createElement('p', { key: 'stderr' }, `Stderr: ${entry.stderrPath}`)
+        );
+      }
+      if (entry.startedAt) {
+        elements.push(
+          React.createElement('p', { key: 'started' }, `Started: ${entry.startedAt}`)
+        );
+      }
+      if (entry.completedAt) {
+        elements.push(
+          React.createElement('p', { key: 'completed' }, `Completed: ${entry.completedAt}`)
+        );
+      }
+      if (entry.sandboxSummary) {
+        elements.push(
+          React.createElement('p', { key: 'sandbox' }, entry.sandboxSummary)
+        );
+      }
+      if (entry.sandboxOverrides && Object.keys(entry.sandboxOverrides).length) {
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'overrides' },
+            [
+              React.createElement('p', { key: 'overrides-label' }, 'Sandbox overrides:'),
+              React.createElement(
+                'ul',
+                { key: 'overrides-list' },
+                Object.entries(entry.sandboxOverrides).map(([key, value]) =>
+                  React.createElement('li', { key }, `${key}: ${value}`)
+                )
+              ),
+            ]
+          )
+        );
+      }
+      if (Array.isArray(entry.warnings) && entry.warnings.length) {
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'warnings' },
+            [
+              React.createElement('p', { key: 'warnings-label' }, 'Warnings:'),
+              React.createElement(
+                'ul',
+                { key: 'warnings-list' },
+                entry.warnings.map((warning, index) =>
+                  React.createElement('li', { key: `${index}-${warning}` }, warning)
+                )
+              ),
+            ]
+          )
+        );
+      }
+      if (entry.contract) {
+        const contract = entry.contract;
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'contract' },
+            [
+              React.createElement(
+                'p',
+                { key: 'contract-summary' },
+                `Contract suite: ${contract.suite} (${contract.status})`
+              ),
+              React.createElement(
+                'p',
+                { key: 'contract-counts' },
+                `Tests: ${contract.passed}/${contract.total} passed, ${contract.failed} failed, ${contract.skipped} skipped`
+              ),
+              contract.sandboxed
+                ? React.createElement(
+                    'p',
+                    { key: 'contract-sandboxed', className: 'mission-stage__warning' },
+                    'Sandbox contract stub executed'
+                  )
+                : null,
+              Array.isArray(contract.notes) && contract.notes.length
+                ? React.createElement(
+                    'ul',
+                    { key: 'contract-notes' },
+                    contract.notes.map((note, index) =>
+                      React.createElement('li', { key: `${index}-note` }, note)
+                    )
+                  )
+                : null,
+              Array.isArray(contract.tests) && contract.tests.length
+                ? React.createElement(
+                    'ul',
+                    { key: 'contract-tests', className: 'mission-stage__list' },
+                    contract.tests.map((test, index) => {
+                      const name = test.name || test.id || `test-${index + 1}`;
+                      const reason = test.reason ? ` – ${test.reason}` : '';
+                      return React.createElement(
+                        'li',
+                        { key: test.id || `${name}-${index}` },
+                        `${name}: ${test.status}${reason}`
+                      );
+                    })
+                  )
+                : null,
+              contract.fixtures
+                ? React.createElement(
+                    'pre',
+                    { key: 'contract-fixtures', className: 'mission-stage__metrics' },
+                    JSON.stringify(contract.fixtures, null, 2)
+                  )
+                : null,
+            ].filter(Boolean)
+          )
+        );
+      }
+      if (Array.isArray(entry.migrationEntries) && entry.migrationEntries.length) {
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'migration' },
+            [
+              React.createElement('p', { key: 'migration-label' }, 'Migration entries:'),
+              React.createElement(
+                'ul',
+                { key: 'migration-list' },
+                entry.migrationEntries.map((item, index) => {
+                  const legacy = item?.legacy_entry ?? 'unknown';
+                  const neo = item?.neo_module ?? 'unknown';
+                  const status = item?.status ? ` (${item.status})` : '';
+                  return React.createElement(
+                    'li',
+                    { key: `${index}-${legacy}` },
+                    `${legacy} → ${neo}${status}`
+                  );
+                })
+              ),
+            ]
+          )
+        );
+      }
+      if (entry.artifacts && Object.keys(entry.artifacts).length) {
+        elements.push(
+          React.createElement(
+            'div',
+            { key: 'artifacts' },
+            [
+              React.createElement('p', { key: 'artifacts-label' }, 'Artifacts:'),
+              React.createElement(
+                'ul',
+                { key: 'artifacts-list' },
+                Object.entries(entry.artifacts).map(([key, value]) =>
+                  React.createElement('li', { key }, `${key}: ${value}`)
+                )
+              ),
+            ]
+          )
+        );
+      }
+      if (entry.notes) {
+        elements.push(
+          React.createElement('p', { key: 'notes' }, `Notes: ${entry.notes}`)
+        );
+      }
+      return React.createElement(
+        'div',
+        { className: 'mission-stage__details', key: `${id}-details` },
+        elements
+      );
+    },
+    [stageDResults]
+  );
+
   const createStageCAction = React.useCallback(
     ({ id, label, endpoint }) => {
       const execute = async () => {
@@ -1025,6 +1292,189 @@ function GameDashboard() {
       };
     },
     [appendLog, createLoggedAction, formatStageABlock, renderStageCDetails, stageCResults]
+  );
+
+  const createStageDAction = React.useCallback(
+    ({ id, label, endpoint }) => {
+      const execute = async () => {
+        const startedAt = new Date().toISOString();
+        setStageDResults((prev) => ({
+          ...prev,
+          [id]: {
+            ...(prev[id] ?? stageDFallback[id] ?? {}),
+            status: 'running',
+            startedAt,
+            completedAt: null,
+            responseStatus: null,
+            error: null,
+            sandboxSummary: null,
+            sandboxOverrides: null,
+            warnings: null,
+            contract: null,
+            migrationEntries: null,
+            artifacts: null,
+          },
+        }));
+        const { response, data, raw, parseError } = await streamJsonPost(
+          endpoint,
+          label
+        );
+        if (parseError) {
+          const message = `Failed to parse response JSON: ${parseError.message}`;
+          const completedAt = new Date().toISOString();
+          setStageDResults((prev) => ({
+            ...prev,
+            [id]: {
+              ...(prev[id] ?? stageDFallback[id] ?? {}),
+              status: 'error',
+              startedAt,
+              completedAt,
+              error: message,
+              responseStatus: response?.status ?? null,
+              warnings: null,
+              artifacts:
+                (prev[id] ?? stageDFallback[id] ?? {}).artifacts ?? null,
+            },
+          }));
+          appendLog(
+            formatStageABlock(label, {
+              status: 'error',
+              error: message,
+              raw,
+            })
+          );
+          throw new Error(message);
+        }
+        const payload = {
+          status: response.ok ? 'success' : 'error',
+          status_code: response.status,
+          ...(data ?? {}),
+        };
+        appendLog(formatStageABlock(label, payload));
+        const completedAt = new Date().toISOString();
+        const fallback = stageDFallback[id] ?? {};
+        const summary =
+          payload.summary && typeof payload.summary === 'object'
+            ? payload.summary
+            : {};
+        const contractSuite =
+          summary.contract_suite && typeof summary.contract_suite === 'object'
+            ? summary.contract_suite
+            : null;
+        const contract = contractSuite
+          ? {
+              suite: contractSuite.suite ?? label,
+              status: contractSuite.status ?? 'unknown',
+              passed: contractSuite.passed ?? 0,
+              failed: contractSuite.failed ?? 0,
+              skipped: contractSuite.skipped ?? 0,
+              total:
+                contractSuite.total ??
+                (Array.isArray(contractSuite.tests)
+                  ? contractSuite.tests.length
+                  : 0),
+              sandboxed: Boolean(contractSuite.sandboxed),
+              notes: Array.isArray(contractSuite.notes)
+                ? contractSuite.notes
+                : contractSuite.notes
+                ? [contractSuite.notes]
+                : [],
+              tests: Array.isArray(contractSuite.tests)
+                ? contractSuite.tests
+                : [],
+              fixtures:
+                typeof contractSuite.fixtures === 'object'
+                  ? contractSuite.fixtures
+                  : null,
+            }
+          : null;
+        const warnings = Array.isArray(summary.warnings)
+          ? summary.warnings
+          : [];
+        const sandboxOverrides =
+          summary.sandbox_overrides &&
+          typeof summary.sandbox_overrides === 'object'
+            ? summary.sandbox_overrides
+            : null;
+        const baseUpdate = {
+          status: payload.status,
+          startedAt,
+          completedAt,
+          responseStatus: response.status,
+          runId: payload.run_id ?? summary.run_id ?? fallback.runId ?? null,
+          logDir: payload.log_dir ?? summary.log_dir ?? fallback.logDir ?? null,
+          summaryPath:
+            payload.summary_path ?? summary.summary_path ?? fallback.summaryPath ?? null,
+          stdoutPath:
+            payload.stdout_path ?? summary.stdout_path ?? fallback.stdoutPath ?? null,
+          stderrPath:
+            payload.stderr_path ?? summary.stderr_path ?? fallback.stderrPath ?? null,
+          sandboxSummary: summary.sandbox_summary ?? null,
+          sandboxOverrides,
+          warnings,
+          contract,
+          migrationEntries: Array.isArray(summary.migration_entries)
+            ? summary.migration_entries
+            : null,
+          artifacts:
+            payload.artifacts ?? summary.artifacts ?? fallback.artifacts ?? null,
+          error: null,
+          notes: fallback.notes ?? null,
+        };
+        if (payload.status !== 'success') {
+          baseUpdate.error =
+            payload.error ||
+            payload.detail ||
+            (warnings && warnings.length ? warnings.join('; ') : null) ||
+            `HTTP ${response.status}`;
+          setStageDResults((prev) => ({ ...prev, [id]: baseUpdate }));
+          const error = new Error(baseUpdate.error ?? `${label} failed`);
+          error.stageResult = payload;
+          throw error;
+        }
+        setStageDResults((prev) => ({ ...prev, [id]: baseUpdate }));
+        return payload;
+      };
+
+      const action = createLoggedAction(id, label, execute, {
+        onError: (error) => {
+          if (error?.stageResult) {
+            return;
+          }
+          setStageDResults((prev) => ({
+            ...prev,
+            [id]: {
+              ...(prev[id] ?? stageDFallback[id] ?? {}),
+              status: 'error',
+              completedAt: new Date().toISOString(),
+              error: error?.message ?? String(error),
+              artifacts:
+                (prev[id] ?? stageDFallback[id] ?? {}).artifacts ?? null,
+            },
+          }));
+          appendLog(
+            formatStageABlock(label, {
+              status: 'error',
+              error: error?.message ?? String(error),
+            })
+          );
+        },
+      });
+
+      return {
+        ...action,
+        status: stageDResults[id]?.status ?? stageDFallback[id]?.status ?? null,
+        renderDetails: () => renderStageDDetails(id),
+      };
+    },
+    [
+      appendLog,
+      createLoggedAction,
+      formatStageABlock,
+      renderStageDDetails,
+      stageDResults,
+      streamJsonPost,
+    ]
   );
 
   const logSuccess = React.useCallback(
@@ -1176,12 +1626,40 @@ function GameDashboard() {
           },
         ],
       },
+      {
+        id: 'stage-d',
+        title: stageTitles['stage-d'],
+        groups: [
+          {
+            id: 'stage-d-verification',
+            title: 'Neo-APSU Sandbox',
+            actions: [
+              createStageDAction({
+                id: 'stage-d1-neoapsu-memory',
+                label: 'Stage D1 – Neo-APSU Memory',
+                endpoint: '/alpha/stage-d1-neoapsu-memory',
+              }),
+              createStageDAction({
+                id: 'stage-d2-neoapsu-crown',
+                label: 'Stage D2 – Neo-APSU Crown',
+                endpoint: '/alpha/stage-d2-neoapsu-crown',
+              }),
+              createStageDAction({
+                id: 'stage-d3-neoapsu-identity',
+                label: 'Stage D3 – Neo-APSU Identity',
+                endpoint: '/alpha/stage-d3-neoapsu-identity',
+              }),
+            ],
+          },
+        ],
+      },
     ],
     [
       createLoggedAction,
       createStageAAction,
       createStageBAction,
       createStageCAction,
+      createStageDAction,
       logSuccess,
     ]
   );

@@ -207,7 +207,14 @@ _SCRIPTS_DIR = _REPO_ROOT / "scripts"
 _STAGE_A_ROOT = _REPO_ROOT / "logs" / "stage_a"
 _STAGE_B_ROOT = _REPO_ROOT / "logs" / "stage_b"
 _STAGE_C_ROOT = _REPO_ROOT / "logs" / "stage_c"
+_STAGE_D_ROOT = _REPO_ROOT / "logs" / "stage_d"
 _STAGE_E_ROOT = _REPO_ROOT / "logs" / "stage_e"
+
+_STAGE_D_SERVICES = {
+    "neoapsu_memory": _STAGE_D_ROOT / "neoapsu_memory",
+    "neoapsu_crown": _STAGE_D_ROOT / "neoapsu_crown",
+    "neoapsu_identity": _STAGE_D_ROOT / "neoapsu_identity",
+}
 
 _STAGE_E_CONNECTORS: tuple[str, ...] = (
     "operator_api",
@@ -551,6 +558,43 @@ def _attach_summary_artifacts(payload: dict[str, Any]) -> dict[str, Any]:
     if normalised:
         payload["artifacts"] = normalised
     return payload
+
+
+def _stage_d_command(script_name: str) -> CommandBuilder:
+    """Return a command builder for Stage D verification scripts."""
+
+    script_path = _SCRIPTS_DIR / script_name
+
+    def builder(log_dir: Path) -> Sequence[str]:
+        run_id = log_dir.name
+        return [
+            sys.executable,
+            str(script_path),
+            "--sandbox",
+            "--log-dir",
+            str(log_dir),
+            "--run-id",
+            run_id,
+        ]
+
+    return builder
+
+
+def _stage_d_failure_detail(result: Mapping[str, Any], default: str) -> str:
+    """Compose an informative error message for Stage D verifications."""
+
+    summary = result.get("summary")
+    warnings: list[str] = []
+    if isinstance(summary, Mapping):
+        warn_block = summary.get("warnings")
+        if isinstance(warn_block, Sequence) and not isinstance(
+            warn_block, (str, bytes, bytearray)
+        ):
+            warnings = [str(item) for item in warn_block if str(item).strip()]
+    detail = str(result.get("error") or result.get("detail") or default)
+    if warnings:
+        detail = f"{detail}: " + "; ".join(warnings)
+    return detail
 
 
 def _extract_json_from_stdout(text: str) -> dict[str, Any]:
@@ -2984,6 +3028,63 @@ async def stage_c4_operator_mcp_drill() -> dict[str, Any]:
             status_code=500,
             detail=result.get("error", "Stage C4 operator MCP drill failed"),
         )
+    return result
+
+
+@router.post("/alpha/stage-d1-neoapsu-memory")
+async def stage_d1_neoapsu_memory() -> dict[str, Any]:
+    """Run the Stage D Neo-APSU memory verification workflow."""
+
+    command = _stage_d_command("verify_neoapsu_memory.py")
+    result = await _run_stage_workflow(
+        _STAGE_D_SERVICES["neoapsu_memory"],
+        "stage_d1_neoapsu_memory",
+        command,
+    )
+    result = _attach_summary_artifacts(result)
+    if result.get("status") != "success":
+        detail = _stage_d_failure_detail(
+            result, "Stage D1 Neo-APSU memory verification failed"
+        )
+        raise HTTPException(status_code=500, detail=detail)
+    return result
+
+
+@router.post("/alpha/stage-d2-neoapsu-crown")
+async def stage_d2_neoapsu_crown() -> dict[str, Any]:
+    """Run the Stage D Neo-APSU crown verification workflow."""
+
+    command = _stage_d_command("verify_neoapsu_crown.py")
+    result = await _run_stage_workflow(
+        _STAGE_D_SERVICES["neoapsu_crown"],
+        "stage_d2_neoapsu_crown",
+        command,
+    )
+    result = _attach_summary_artifacts(result)
+    if result.get("status") != "success":
+        detail = _stage_d_failure_detail(
+            result, "Stage D2 Neo-APSU crown verification failed"
+        )
+        raise HTTPException(status_code=500, detail=detail)
+    return result
+
+
+@router.post("/alpha/stage-d3-neoapsu-identity")
+async def stage_d3_neoapsu_identity() -> dict[str, Any]:
+    """Run the Stage D Neo-APSU identity verification workflow."""
+
+    command = _stage_d_command("verify_neoapsu_identity.py")
+    result = await _run_stage_workflow(
+        _STAGE_D_SERVICES["neoapsu_identity"],
+        "stage_d3_neoapsu_identity",
+        command,
+    )
+    result = _attach_summary_artifacts(result)
+    if result.get("status") != "success":
+        detail = _stage_d_failure_detail(
+            result, "Stage D3 Neo-APSU identity verification failed"
+        )
+        raise HTTPException(status_code=500, detail=detail)
     return result
 
 
