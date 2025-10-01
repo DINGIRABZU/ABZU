@@ -40,9 +40,13 @@
 
 ## Notes
 
-- Checklist attachments continue to reference
-  `logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/` until the hardware
-  rerun closes the open items.
+- Checklist revalidated on 2025-10-01 via
+  `logs/stage_c/20251001T082811Z-stage_c1_exit_checklist/summary.json`; the
+  attachments from `logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/`
+  remain authoritative until the hardware rerun closes the open items, and the
+  rollback drill JSON is mirrored under
+  `logs/stage_c/20251003T010101Z-readiness_packet/rollback_validation/20250930T210000Z-razar_chaos_drill.json` for go/no-go
+  reference.
 - The readiness bundle now links directly to the rotation ledger snapshot and
   credential window artifacts so reviewers can align the MCP handshake evidence
   with Stage B rotations without scraping the JSONL ledger manually.

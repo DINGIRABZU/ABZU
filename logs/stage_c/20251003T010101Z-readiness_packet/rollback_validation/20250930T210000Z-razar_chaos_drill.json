@@ -1,0 +1,12 @@
+{
+  "drill_id": "20250930T204200Z-razar-chaos",
+  "status": "success",
+  "rotation_window": "20250928T173339Z-PT48H",
+  "operator_context": "stage-c-prep",
+  "actions": [
+    "Simulated MCP disconnect",
+    "Verified rollback script execution",
+    "Restored connector contexts"
+  ],
+  "notes": "Parity traces stored with gRPC pilot trial; see readiness packet for diff artifact."
+}

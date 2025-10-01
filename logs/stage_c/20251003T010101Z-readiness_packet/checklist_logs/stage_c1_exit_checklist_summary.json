@@ -1,11 +1,12 @@
 {
-  "run_id": "20250930T210000Z-stage_c1_exit_checklist",
-  "captured_at": "2025-09-30T21:00:00Z",
+  "run_id": "20251001T082811Z-stage_c1_exit_checklist",
+  "captured_at": "2025-10-01T08:28:11Z",
   "status": "success",
   "sources": {
     "checklist_export": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/checklist_export.md",
     "pytest_log": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/pytest.log",
-    "rollback_drill": "logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/razar_chaos_drill.json"
+    "rollback_drill": "logs/stage_c/20251003T010101Z-readiness_packet/rollback_validation/20250930T210000Z-razar_chaos_drill.json",
+    "summary_json": "logs/stage_c/20251001T082811Z-stage_c1_exit_checklist/summary.json"
   },
   "environment_limited": [
     {
@@ -13,24 +14,28 @@
       "reason": "pytest-cov unavailable in sandbox",
       "impact": "coverage export deferred to hardware run",
       "scheduled_rerun": "2025-10-02T18:00:00Z",
-      "host": "gate-runner-02"
+      "host": "gate-runner-02",
+      "notes": "2025-10-02 gate-runner-02 sandbox attempt blocked; see Stage A3 summary.",
+      "attempt_log": "logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json"
     },
     {
       "phase": "build",
       "reason": "python -m build missing",
       "impact": "wheel packaging requires hardware toolchain",
       "scheduled_rerun": "2025-10-02T18:00:00Z",
-      "host": "gate-runner-02"
+      "host": "gate-runner-02",
+      "notes": "Packaging rerun requires hardware toolchain; sandbox capture recorded at 2025-10-02 gate window.",
+      "attempt_log": "logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.json"
     }
   ],
   "checklist_alignment": {
     "absolute_protocol_checklist": "docs/absolute_protocol_checklist.md",
     "status": "complete",
-    "notes": "All checklist items reviewed with cross-team stakeholders; deferred items logged with hardware schedule."
+    "notes": "Checklist revalidated via 20251001 run; deferred items tracked with hardware follow-ups and archived rollback artifacts."
   },
   "next_steps": [
-    "Execute hardware coverage and packaging rerun on gate-runner-02",
-    "Distribute gRPC pilot trace pack to integration guild for beta rehearsal",
-    "Reconfirm rollback drill parity after hardware validation"
+    "Execute hardware coverage and packaging rerun on gate-runner-02 (2025-10-02 sandbox attempt blocked; see logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json).",
+    "Distribute gRPC pilot trace pack to integration guild for beta rehearsal.",
+    "Reconfirm rollback drill parity after hardware validation and retain archived log at logs/stage_c/20251003T010101Z-readiness_packet/rollback_validation/20250930T210000Z-razar_chaos_drill.json."
   ]
 }
