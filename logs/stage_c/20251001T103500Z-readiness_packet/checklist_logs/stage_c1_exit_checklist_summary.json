@@ -1,0 +1,42 @@
+{
+  "run_id": "20251001T103012Z-stage_c1_exit_checklist",
+  "captured_at": "2025-10-01T10:30:12Z",
+  "status": "error",
+  "sources": {
+    "checklist_markdown": "docs/absolute_protocol_checklist.md",
+    "summary_json": "logs/stage_c/20251001T103012Z-stage_c1_exit_checklist/summary.json",
+    "stage_a3_attempt": "logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json",
+    "coverage_baseline": "monitoring/alpha_gate_summary.json"
+  },
+  "failures": [
+    "Stage\u202fA3 hardware rehearsal blocked pytest+coverage: sandbox missing python -m build, Docker, pytest-cov, FFmpeg, SoX.",
+    "Coverage exports deferred until gate-runner-02 hardware rerun closes the tooling gap."
+  ],
+  "environment_limited": [
+    {
+      "phase": "tests",
+      "reason": "pytest-cov unavailable in sandbox",
+      "impact": "coverage-enforced pytest suite pending hardware replay",
+      "scheduled_rerun": "2025-10-02T18:00:00Z",
+      "host": "gate-runner-02",
+      "attempt_log": "logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json"
+    },
+    {
+      "phase": "coverage",
+      "reason": "FFmpeg/SoX toolchain missing",
+      "impact": "media pipeline checks waiting for hardware tooling",
+      "scheduled_rerun": "2025-10-02T18:00:00Z",
+      "host": "gate-runner-02",
+      "attempt_log": "logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json"
+    }
+  ],
+  "checklist_alignment": {
+    "absolute_protocol_checklist": "docs/absolute_protocol_checklist.md",
+    "status": "requires_attention",
+    "notes": "Checklist updated with Status: blocked items for pytest and coverage; sandbox evidence archived with readiness packet."
+  },
+  "next_steps": [
+    "Provision missing build/test tooling in sandbox or execute scheduled gate-runner hardware rerun to clear pytest coverage gate.",
+    "Mirror hardware coverage artifacts back into readiness bundle and checklist once rerun completes."
+  ]
+}

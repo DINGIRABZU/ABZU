@@ -1,0 +1,167 @@
+[
+  {
+    "step_id": "arrival",
+    "audio_path": "audio/2025-09-21T17:35:46.557+00:00_arrival.json",
+    "video_path": "video/2025-09-21T17:35:46.557+00:00_arrival.json",
+    "prompt": "Avatar arrives on stage and greets the operators.",
+    "emotion": "anticipatory",
+    "timestamp": "2025-09-21T17:35:46.557+00:00",
+    "stage_c": {
+      "prompt": "Avatar arrives on stage and greets the operators.",
+      "emotion": "anticipatory",
+      "timestamp": "2025-09-21T17:35:46.557+00:00",
+      "telemetry": {
+        "audio_duration_s": 1.0,
+        "video_duration_s": 1.0,
+        "sync_offset_s": 0.0,
+        "dropout": false,
+        "event_sha256": "733a1a62a4866bc814ec41eccb6e152da9f3c44051036ec0da539860ea66bc19"
+      },
+      "assets": {
+        "audio": {
+          "source_path": "audio/2025-09-21T17:35:46.557+00:00_arrival.json",
+          "size_bytes": 85438,
+          "sha256": "bce83c8d43a4f2f33b756314b1c2a059c87e70a99270f24711ed30ffa7b59666",
+          "available_locally": false,
+          "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+          "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+          "bundle_name": "session_01_media.tar.gz",
+          "bundle_size_bytes": 1348,
+          "bundle_member": "audio/2025-09-21T17:35:46.557+00:00_arrival.json"
+        },
+        "video": {
+          "source_path": "video/2025-09-21T17:35:46.557+00:00_arrival.json",
+          "size_bytes": 196679,
+          "sha256": "d812763b3f2dd456e3bca6fc818f6482eab27491c606de492dda0ca2de30572d",
+          "available_locally": false,
+          "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+          "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+          "bundle_name": "session_01_media.tar.gz",
+          "bundle_size_bytes": 1348,
+          "bundle_member": "video/2025-09-21T17:35:46.557+00:00_arrival.json"
+        }
+      },
+      "source": {
+        "stage": "stage_b",
+        "run_id": "20250921T230434Z",
+        "session": "session_01",
+        "audio_path": "audio/2025-09-21T17:35:46.557+00:00_arrival.json",
+        "video_path": "video/2025-09-21T17:35:46.557+00:00_arrival.json",
+        "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+        "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+        "bundle_name": "session_01_media.tar.gz"
+      },
+      "media_copy_enabled": false
+    }
+  },
+  {
+    "step_id": "handoff",
+    "audio_path": "audio/2025-09-21T17:35:46.582+00:00_handoff.json",
+    "video_path": "video/2025-09-21T17:35:46.582+00:00_handoff.json",
+    "prompt": "Mission handoff with modulation overlay.",
+    "emotion": "focused",
+    "timestamp": "2025-09-21T17:35:46.582+00:00",
+    "stage_c": {
+      "prompt": "Mission handoff with modulation overlay.",
+      "emotion": "focused",
+      "timestamp": "2025-09-21T17:35:46.582+00:00",
+      "telemetry": {
+        "audio_duration_s": 1.4,
+        "video_duration_s": 1.333,
+        "sync_offset_s": 0.067,
+        "dropout": false,
+        "event_sha256": "3bbd1c37142b4b6380369e3029f839b6f5fae1b70a1f7e70811169a406bfbb43"
+      },
+      "assets": {
+        "audio": {
+          "source_path": "audio/2025-09-21T17:35:46.582+00:00_handoff.json",
+          "size_bytes": 119570,
+          "sha256": "4b7d877ff93efeeb057bf2fc71c393c675f0e0cec5c42c028b3510dea62dd1f8",
+          "available_locally": false,
+          "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+          "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+          "bundle_name": "session_01_media.tar.gz",
+          "bundle_size_bytes": 1348,
+          "bundle_member": "audio/2025-09-21T17:35:46.582+00:00_handoff.json"
+        },
+        "video": {
+          "source_path": "video/2025-09-21T17:35:46.582+00:00_handoff.json",
+          "size_bytes": 262215,
+          "sha256": "b668eeec2e3f6bb669b0be933933f5a39cac8581772aec6f918509d265afd5fd",
+          "available_locally": false,
+          "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+          "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+          "bundle_name": "session_01_media.tar.gz",
+          "bundle_size_bytes": 1348,
+          "bundle_member": "video/2025-09-21T17:35:46.582+00:00_handoff.json"
+        }
+      },
+      "source": {
+        "stage": "stage_b",
+        "run_id": "20250921T230434Z",
+        "session": "session_01",
+        "audio_path": "audio/2025-09-21T17:35:46.582+00:00_handoff.json",
+        "video_path": "video/2025-09-21T17:35:46.582+00:00_handoff.json",
+        "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+        "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+        "bundle_name": "session_01_media.tar.gz"
+      },
+      "media_copy_enabled": false
+    }
+  },
+  {
+    "step_id": "closing",
+    "audio_path": "audio/2025-09-21T17:35:46.591+00:00_closing.json",
+    "video_path": "video/2025-09-21T17:35:46.591+00:00_closing.json",
+    "prompt": "Closing salutation with harmonic swell.",
+    "emotion": "resonant",
+    "timestamp": "2025-09-21T17:35:46.591+00:00",
+    "stage_c": {
+      "prompt": "Closing salutation with harmonic swell.",
+      "emotion": "resonant",
+      "timestamp": "2025-09-21T17:35:46.591+00:00",
+      "telemetry": {
+        "audio_duration_s": 1.6,
+        "video_duration_s": 1.583,
+        "sync_offset_s": 0.017,
+        "dropout": false,
+        "event_sha256": "e6927a4e1b45fc9d4917ad3a96a104edbd8654fb85552e7e760377967c800c8e"
+      },
+      "assets": {
+        "audio": {
+          "source_path": "audio/2025-09-21T17:35:46.591+00:00_closing.json",
+          "size_bytes": 136638,
+          "sha256": "5a7dc1b5e8ad9770d72fcab1efdbbea93d7f2ef71411753870581cf0b6a0366b",
+          "available_locally": false,
+          "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+          "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+          "bundle_name": "session_01_media.tar.gz",
+          "bundle_size_bytes": 1348,
+          "bundle_member": "audio/2025-09-21T17:35:46.591+00:00_closing.json"
+        },
+        "video": {
+          "source_path": "video/2025-09-21T17:35:46.591+00:00_closing.json",
+          "size_bytes": 311367,
+          "sha256": "b14fed3bc371c7376e93b3b3e955faec1e9848bcfc4994b12544a066b638463c",
+          "available_locally": false,
+          "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+          "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+          "bundle_name": "session_01_media.tar.gz",
+          "bundle_size_bytes": 1348,
+          "bundle_member": "video/2025-09-21T17:35:46.591+00:00_closing.json"
+        }
+      },
+      "source": {
+        "stage": "stage_b",
+        "run_id": "20250921T230434Z",
+        "session": "session_01",
+        "audio_path": "audio/2025-09-21T17:35:46.591+00:00_closing.json",
+        "video_path": "video/2025-09-21T17:35:46.591+00:00_closing.json",
+        "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+        "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+        "bundle_name": "session_01_media.tar.gz"
+      },
+      "media_copy_enabled": false
+    }
+  }
+]
