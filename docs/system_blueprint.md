@@ -88,6 +88,8 @@ Stage readiness reviews rely on shared evidence ledgers so operators and auditor
 
 ### Neo-APSU migration crosswalk (Stage D prep)
 
+The [APSU Migration Matrix](apsu_migration_matrix.md) pairs with the `component_index.json` `apsu_migration` array to summarize which APSU entry points are already ported, which remain wrapped behind sandbox shims, and which still require full Rust rewrites before the Stage D hardware bridge.【F:docs/apsu_migration_matrix.md†L1-L20】【F:component_index.json†L1-L75】 Use the matrix to prioritize contract evidence for pending rewrites while confirming that ported paths (`crown_router`, `identity_loader.py`) continue to pass sandbox parity tests.
+
 | Legacy APSU module | Neo-APSU target | Stage C findings | Stage D migration notes |
 | --- | --- | --- | --- |
 | [crown_decider.py](../crown_decider.py) | [`neoabzu_crown::route_decision`](../NEOABZU/crown/src/lib.rs) | Stage C readiness replay loaded the sandbox stub (`recommendation heuristics simplified`) instead of real heuristics.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log†L3-L15】 | Promote the Rust decider so MoGE orchestration, validator gating, and doctrine-linked migration steps replace the stubbed Python path.【F:NEOABZU/crown/src/lib.rs†L86-L210】【F:docs/documentation_protocol.md†L5-L28】【F:NEOABZU/docs/migration_crosswalk.md†L10-L18】 |

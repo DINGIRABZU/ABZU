@@ -186,6 +186,8 @@ sandbox skips while still persisting the summary bundle.【F:logs/stage_a/202511
 - **memory_store.py → `neoabzu_memory::MemoryBundle`.** Stage C readiness reported `cortex layer empty`, forcing optional memory stubs; Stage D must close the gap by porting persistence and verification to the Rust bundle so all eight layers report ready.【F:logs/stage_c/20250927T201020Z-stage_c3_readiness_sync/summary.json†L590-L627】【F:NEOABZU/memory/src/lib.rs†L12-L120】
 - **emotional_state.py → `neoabzu_crown` expression pipeline.** The in-memory sandbox shim suppressed persisted aura updates; Stage D must align emotional telemetry with the Rust expression options and doctrine logging expectations.【F:logs/stage_c/20250928T202834Z-stage_c3_readiness_sync/stage_b-b1-artifact1.stderr.log†L9-L15】【F:NEOABZU/crown/src/lib.rs†L60-L197】
 
+Matrix status: the [APSU Migration Matrix](apsu_migration_matrix.md) lists `crown_router` and `identity_loader.py` as ported bridges, keeps `crown_decider.py`, `crown_prompt_orchestrator.py`, `state_transition_engine.py`, `servant_model_manager.py`, and `emotional_state.py` in the pending-rewrite queue, and tracks `memory_store.py` plus `connectors/operator_mcp_adapter.py` as wrapped shims awaiting hardware parity evidence.【F:docs/apsu_migration_matrix.md†L1-L15】【F:component_index.json†L1-L75】 Stage D owners should update the matrix in lockstep with readiness packets so Stage E/G reviewers inherit the same status ledger.
+
 #### Stage D risk register
 
 | Risk | Owner | Impact | Mitigation | Status |
