@@ -1,0 +1,77 @@
+{
+  "timestamp": "2025-10-01T10:31:51.509+00:00",
+  "steps": 3,
+  "max_sync_offset_s": 0.067,
+  "dropouts_detected": false,
+  "source": {
+    "stage": "stage_b",
+    "run_id": "20250921T230434Z",
+    "session": "session_01",
+    "manifest_path": "logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json",
+    "manifest_sha256": "17edafb9195348e1c8f501965a68ef3e05ddf63cc378f302f8ac6db0ce92bc8c",
+    "bundle": {
+      "name": "session_01_media.tar.gz",
+      "artifact_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+      "sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+      "size_bytes": 1348,
+      "sources": [
+        "audio",
+        "video",
+        "emotion",
+        "telemetry/events.jsonl",
+        "telemetry/media_manifest.json"
+      ]
+    },
+    "assets": {
+      "audio_files": 3,
+      "audio_bytes": 341646,
+      "audio_available_locally": false,
+      "video_files": 3,
+      "video_bytes": 770261,
+      "video_available_locally": false,
+      "emotion_stream": {
+        "source_path": "emotion/stream.jsonl",
+        "size_bytes": 279,
+        "sha256": "7554a1e451cb46a14109f988ab9a767339f841646b2a610e7f8ad59ec3e48826",
+        "available_locally": false,
+        "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+        "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+        "bundle_name": "session_01_media.tar.gz",
+        "bundle_size_bytes": 1348,
+        "bundle_member": "emotion/stream.jsonl",
+        "samples": 3
+      },
+      "telemetry_events": {
+        "source_path": "telemetry/events.jsonl",
+        "size_bytes": 817,
+        "sha256": "4997c1f0b55f90c14cf9fc0967f820d470988be577940ed86936fd557a9beb8e",
+        "available_locally": false,
+        "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+        "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+        "bundle_name": "session_01_media.tar.gz",
+        "bundle_size_bytes": 1348,
+        "bundle_member": "telemetry/events.jsonl"
+      },
+      "telemetry_media_manifest": {
+        "source_path": "telemetry/media_manifest.json",
+        "size_bytes": 524,
+        "sha256": "5f814756bbda2923edaafdedc29850e771368a6fbf674e02eb485e335aa5907f",
+        "available_locally": false,
+        "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz",
+        "bundle_sha256": "7d7e5f8fbe1068562b87933ee0db844e94acf1cce9dd25bbdbd20251e46f1db4",
+        "bundle_name": "session_01_media.tar.gz",
+        "bundle_size_bytes": 1348,
+        "bundle_member": "telemetry/media_manifest.json"
+      }
+    }
+  },
+  "replay": {
+    "events_path": "telemetry/events.jsonl",
+    "events_sha256": "54b4c77e7280b17997d5f7f410128f03cc3b934ed24ba7de160d37cf65cd8a37",
+    "media_manifest_path": "telemetry/media_manifest.json",
+    "media_manifest_sha256": "968240b394ea6f4bdf96e500f1a01cc73e470bdf65db52cee95778a5e0e60427"
+  },
+  "configuration": {
+    "copy_media": false
+  }
+}

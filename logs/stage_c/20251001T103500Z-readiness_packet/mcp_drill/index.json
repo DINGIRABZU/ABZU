@@ -1,0 +1,14 @@
+{
+  "run_id": "20251001T103349Z-stage_c4_operator_mcp_drill",
+  "summary_path": "logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/summary.json",
+  "handshake_path": "logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+  "heartbeat_path": "logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/heartbeat.json",
+  "rotation_window_id": null,
+  "artifacts": {
+    "handshake": "logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+    "heartbeat": "logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/heartbeat.json",
+    "rotation_metadata": "logs/stage_c/20251001T103500Z-readiness_packet/mcp_drill/rotation_metadata.json",
+    "credential_window": "logs/stage_c/20251001T103500Z-readiness_packet/mcp_drill/credential_window.json"
+  },
+  "notes": "Stage C4 MCP drill executed with sandbox stub adapter to capture handshake and heartbeat artifacts for go/no-go review."
+}

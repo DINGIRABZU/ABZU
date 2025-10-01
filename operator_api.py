@@ -884,18 +884,52 @@ def _stage_c1_metrics(
     _log_dir: Path,
     payload: dict[str, Any],
 ) -> dict[str, Any]:
-    lines = [line.strip() for line in stdout_text.splitlines() if line.strip()]
+    stdout_lines = [line.strip() for line in stdout_text.splitlines() if line.strip()]
+    checklist_path_value = os.environ.get("ABSOLUTE_PROTOCOL_CHECKLIST_PATH")
+    if checklist_path_value:
+        checklist_path = Path(checklist_path_value)
+        if not checklist_path.is_absolute():
+            checklist_path = (_REPO_ROOT / checklist_path).resolve()
+    else:
+        checklist_path = _REPO_ROOT / "docs" / "absolute_protocol_checklist.md"
+
+    checklist_lines: list[str] = []
+    try:
+        if checklist_path.exists():
+            checklist_lines = [
+                line.strip()
+                for line in checklist_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+    except OSError:
+        checklist_lines = []
+
+    lines = stdout_lines + checklist_lines
     unchecked = [line for line in lines if line.startswith("- [ ]")]
     status_failure_pattern = re.compile(r"status:\s*(failed|blocked)\b", re.IGNORECASE)
     failing: list[str] = []
-    for line in lines:
-        if not line.startswith("- ["):
+    seen_failures: set[str] = set()
+    for index, line in enumerate(lines):
+        if not status_failure_pattern.search(line):
             continue
-        if status_failure_pattern.search(line):
+        if line.startswith("- ["):
+            if line not in seen_failures:
+                failing.append(line)
+                seen_failures.add(line)
+            continue
+
+        if line not in seen_failures:
             failing.append(line)
+            seen_failures.add(line)
+
+        if index > 0:
+            parent = lines[index - 1]
+            if parent.startswith("- [") and parent not in seen_failures:
+                failing.append(parent)
+                seen_failures.add(parent)
     completed = not unchecked and not failing
     summary_line = next(
-        (line for line in reversed(lines) if not line.startswith("- [ ]")), ""
+        (line for line in reversed(stdout_lines) if not line.startswith("- [ ]")), ""
     )
     metrics = {
         "completed": completed,
@@ -1830,7 +1864,9 @@ def _publish_stage_e_transport_snapshot(
     )
 
     source_summary_path = payload.get("summary_path")
-    stage_c_run_id = str(payload.get("run_id") or summary_section.get("run_id") or "unknown-stage-c4")
+    stage_c_run_id = str(
+        payload.get("run_id") or summary_section.get("run_id") or "unknown-stage-c4"
+    )
 
     connectors: dict[str, Any] = {}
     missing_connectors: list[str] = []
@@ -1948,11 +1984,15 @@ def _publish_stage_e_transport_snapshot(
             "grpc": grpc_checksum,
         }
 
-        parity = bool(rest_normalized and grpc_normalized and rest_normalized == grpc_normalized)
+        parity = bool(
+            rest_normalized and grpc_normalized and rest_normalized == grpc_normalized
+        )
         connector_summary["parity"] = parity
         connector_summary["rest_checksum"] = rest_checksum
         connector_summary["grpc_checksum"] = grpc_checksum
-        checksum_match = bool(rest_checksum and grpc_checksum and rest_checksum == grpc_checksum)
+        checksum_match = bool(
+            rest_checksum and grpc_checksum and rest_checksum == grpc_checksum
+        )
         connector_summary["checksum_match"] = checksum_match
 
         differences: list[dict[str, Any]] = []
@@ -2138,6 +2178,7 @@ def _publish_stage_e_transport_snapshot(
         artifacts_section = payload.setdefault("artifacts", {})
         if isinstance(artifacts_section, dict):
             artifacts_section.setdefault("stage_e_snapshot", str(summary_path))
+
 
 def _attach_rest_grpc_parity(payload: dict[str, Any]) -> None:
     """Persist REST and gRPC handshake parity attachments for Stage C4 runs."""
@@ -3078,7 +3119,9 @@ if _HAS_MULTIPART:
                 )
             except Exception as exc:  # pragma: no cover - disk failure
                 logger.error("failed to store %s: %s", item.filename, exc)
-                raise HTTPException(status_code=500, detail="failed to store file") from exc
+                raise HTTPException(
+                    status_code=500, detail="failed to store file"
+                ) from exc
 
         def _relay(meta: dict[str, object]) -> dict[str, object]:
             """Crown forwards metadata and stored paths to RAZAR."""

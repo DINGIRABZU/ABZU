@@ -1,0 +1,533 @@
+{
+  "status": "success",
+  "stage": "stage_c4_operator_mcp_drill",
+  "run_id": "20251001T103349Z-stage_c4_operator_mcp_drill",
+  "command": [
+    "/root/.pyenv/versions/3.12.10/bin/python",
+    "/workspace/ABZU/scripts/stage_c_mcp_drill.py",
+    "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill",
+    "--json"
+  ],
+  "returncode": 0,
+  "started_at": "2025-10-01T10:33:49.017352+00:00",
+  "completed_at": "2025-10-01T10:34:00.664412+00:00",
+  "duration_seconds": 11.64706,
+  "log_dir": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill",
+  "stdout_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/stage_c4_operator_mcp_drill.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/stage_c4_operator_mcp_drill.stderr.log",
+  "stdout_lines": 217,
+  "stderr_lines": 18,
+  "stderr_tail": [
+    "/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)",
+    "  warnings.warn(",
+    "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)",
+    "  _prepare_overrides()",
+    "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)",
+    "  _prepare_overrides()"
+  ],
+  "summary": {
+    "status": "success",
+    "event": "stage-c4-operator-mcp-drill",
+    "handshake_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+    "heartbeat_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/heartbeat.json",
+    "rotation_window_hours": 48,
+    "credential_expiry": "2025-10-03T10:33:59Z",
+    "heartbeat_emitted": true,
+    "handshake": {
+      "authenticated": true,
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-10-03T10:33:59Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        }
+      ],
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-10-01T10:33:59Z",
+        "rotation_window": "PT48H",
+        "window_id": "20251001T103359Z-PT48H"
+      },
+      "echo": {
+        "rotation": {
+          "connector_id": "operator_api",
+          "last_rotated": "2025-10-01T10:33:59Z",
+          "rotation_window": "PT48H",
+          "window_id": "20251001T103359Z-PT48H"
+        }
+      }
+    },
+    "heartbeat_payload": {
+      "event": "stage-c4-operator-mcp-drill",
+      "stage": "C",
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-10-03T10:33:59Z"
+      },
+      "credential_expiry": "2025-10-03T10:33:59Z"
+    },
+    "trial_trace": {
+      "rest": {
+        "method": "POST",
+        "endpoint": "http://localhost:8001/handshake",
+        "request": {
+          "identity": {
+            "connector_id": "operator_api",
+            "version": "0.1.0",
+            "instance": "local"
+          },
+          "supported_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "channels": [
+                "handshake",
+                "heartbeat",
+                "command"
+              ],
+              "capabilities": [
+                "register",
+                "telemetry",
+                "command"
+              ]
+            }
+          ],
+          "rotation": {
+            "last_rotated": "2025-10-01T10:33:59Z",
+            "rotation_window": "PT48H",
+            "supports_hot_swap": true,
+            "token_hint": "operator"
+          }
+        },
+        "response": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-10-03T10:33:59Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted",
+              "accepted_via": "stage-c4-operator-mcp-drill",
+              "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted",
+              "accepted_via": "stage-c4-operator-mcp-drill",
+              "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-10-01T10:33:59Z",
+            "rotation_window": "PT48H",
+            "window_id": "20251001T103359Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-10-01T10:33:59Z",
+              "rotation_window": "PT48H",
+              "window_id": "20251001T103359Z-PT48H"
+            }
+          }
+        },
+        "normalized": {
+          "authenticated": true,
+          "session": {
+            "id": "stage-c-session",
+            "credential_expiry": "2025-10-03T10:33:59Z"
+          },
+          "accepted_contexts": [
+            {
+              "name": "stage-b-rehearsal",
+              "status": "accepted",
+              "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+            },
+            {
+              "name": "stage-c-prep",
+              "status": "accepted",
+              "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+            }
+          ],
+          "rotation": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-10-01T10:33:59Z",
+            "rotation_window": "PT48H",
+            "window_id": "20251001T103359Z-PT48H"
+          },
+          "echo": {
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-10-01T10:33:59Z",
+              "rotation_window": "PT48H",
+              "window_id": "20251001T103359Z-PT48H"
+            }
+          }
+        },
+        "checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771"
+      },
+      "grpc": {
+        "service": "neoabzu.vector.VectorService",
+        "method": "Init",
+        "rpc": "neoabzu.vector.VectorService/Init",
+        "request": {
+          "stage": "C",
+          "connector_id": "operator_api",
+          "contexts": [
+            "stage-b-rehearsal",
+            "stage-c-prep"
+          ]
+        },
+        "response": {
+          "message": "stage C trial handshake parity",
+          "handshake_equivalent": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-10-03T10:33:59Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted",
+                "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted",
+                "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-10-01T10:33:59Z",
+              "rotation_window": "PT48H",
+              "window_id": "20251001T103359Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-10-01T10:33:59Z",
+                "rotation_window": "PT48H",
+                "window_id": "20251001T103359Z-PT48H"
+              }
+            }
+          }
+        },
+        "metadata": {
+          "parity_checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771",
+          "credential_expiry": "2025-10-03T10:33:59Z",
+          "rotation_window": {
+            "connector_id": "operator_api",
+            "last_rotated": "2025-10-01T10:33:59Z",
+            "rotation_window": "PT48H",
+            "window_id": "20251001T103359Z-PT48H"
+          },
+          "recorded_at": "2025-10-01T10:33:59.368723+00:00",
+          "mode": "trial"
+        }
+      }
+    },
+    "rest_handshake_with_expiry": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/rest_handshake_with_expiry.json",
+    "grpc_trial_handshake": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/grpc_trial_handshake.json",
+    "rest_grpc_diff": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/rest_grpc_handshake_diff.json",
+    "rest_grpc_parity": true,
+    "rest_checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771",
+    "grpc_checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771"
+  },
+  "stderr": "/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_decider' (crown_decider: recommendation heuristics simplified)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:251: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  module = override.factory()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'crown_prompt_orchestrator' (crown_prompt_orchestrator: async pipeline stubbed)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'emotional_state' (emotional_state: in-memory state used)\n  _prepare_overrides()\n/root/.pyenv/versions/3.12.10/lib/python3.12/site-packages/torch/nn/modules/transformer.py:392: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)\n  warnings.warn(\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'neoabzu_memory' (neoabzu_memory: optional bundle shim activated)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'servant_model_manager' (servant_model_manager: local registry only)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'state_transition_engine' (state_transition_engine: deterministic rotation)\n  _prepare_overrides()\n/workspace/ABZU/scripts/_stage_runtime.py:337: EnvironmentLimitedWarning: environment-limited: activated sandbox stub for 'INANNA_AI.glm_integration' (glm_integration: remote health check bypassed)\n  _prepare_overrides()\n",
+  "artifacts": {
+    "mcp_handshake": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+    "heartbeat": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/heartbeat.json",
+    "heartbeat_payload": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/heartbeat_payload.json",
+    "rotation_metadata": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/rotation_metadata.json",
+    "credential_window": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/credential_window.json"
+  },
+  "metrics": {
+    "handshake": {
+      "authenticated": true,
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-10-03T10:33:59Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        }
+      ],
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-10-01T10:33:59Z",
+        "rotation_window": "PT48H",
+        "window_id": "20251001T103359Z-PT48H"
+      },
+      "echo": {
+        "rotation": {
+          "connector_id": "operator_api",
+          "last_rotated": "2025-10-01T10:33:59Z",
+          "rotation_window": "PT48H",
+          "window_id": "20251001T103359Z-PT48H"
+        }
+      }
+    },
+    "credential_expiry": "2025-10-03T10:33:59Z",
+    "heartbeat_active": false,
+    "heartbeat_emitted": true,
+    "rotation_window_hours": 48,
+    "heartbeat_payload": {
+      "event": "stage-c4-operator-mcp-drill",
+      "stage": "C",
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-10-03T10:33:59Z"
+      },
+      "credential_expiry": "2025-10-03T10:33:59Z"
+    },
+    "credential_window": {
+      "issued_at": "2025-10-01T10:33:59Z",
+      "expires_at": "2025-10-03T10:33:59Z",
+      "duration": "P2D",
+      "rotation_window_id": "20251001T103359Z-PT48H"
+    },
+    "rotation_metadata": {
+      "connector_id": "operator_api",
+      "rotated_at": "2025-10-01T10:33:59Z",
+      "window_hours": 48,
+      "rotation_window": {
+        "window_id": "20251001T103359Z-PT48H",
+        "started_at": "2025-10-01T10:33:59Z",
+        "expires_at": "2025-10-03T10:33:59Z",
+        "duration": "PT48H"
+      },
+      "credential_window": {
+        "issued_at": "2025-10-01T10:33:59Z",
+        "expires_at": "2025-10-03T10:33:59Z",
+        "duration": "P2D",
+        "rotation_window_id": "20251001T103359Z-PT48H"
+      },
+      "context_status": {
+        "stage-b-rehearsal": {
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        },
+        "stage-c-prep": {
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        }
+      },
+      "traces": {
+        "rest": {
+          "method": "POST",
+          "endpoint": "http://localhost:8001/handshake",
+          "request": {
+            "identity": {
+              "connector_id": "operator_api",
+              "version": "0.1.0",
+              "instance": "local"
+            },
+            "supported_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "channels": [
+                  "handshake",
+                  "heartbeat",
+                  "command"
+                ],
+                "capabilities": [
+                  "register",
+                  "telemetry",
+                  "command"
+                ]
+              }
+            ],
+            "rotation": {
+              "last_rotated": "2025-10-01T10:33:59Z",
+              "rotation_window": "PT48H",
+              "supports_hot_swap": true,
+              "token_hint": "operator"
+            }
+          },
+          "response": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-10-03T10:33:59Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted",
+                "accepted_via": "stage-c4-operator-mcp-drill",
+                "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted",
+                "accepted_via": "stage-c4-operator-mcp-drill",
+                "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-10-01T10:33:59Z",
+              "rotation_window": "PT48H",
+              "window_id": "20251001T103359Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-10-01T10:33:59Z",
+                "rotation_window": "PT48H",
+                "window_id": "20251001T103359Z-PT48H"
+              }
+            }
+          },
+          "normalized": {
+            "authenticated": true,
+            "session": {
+              "id": "stage-c-session",
+              "credential_expiry": "2025-10-03T10:33:59Z"
+            },
+            "accepted_contexts": [
+              {
+                "name": "stage-b-rehearsal",
+                "status": "accepted",
+                "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+              },
+              {
+                "name": "stage-c-prep",
+                "status": "accepted",
+                "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+              }
+            ],
+            "rotation": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-10-01T10:33:59Z",
+              "rotation_window": "PT48H",
+              "window_id": "20251001T103359Z-PT48H"
+            },
+            "echo": {
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-10-01T10:33:59Z",
+                "rotation_window": "PT48H",
+                "window_id": "20251001T103359Z-PT48H"
+              }
+            }
+          },
+          "checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771"
+        },
+        "grpc": {
+          "service": "neoabzu.vector.VectorService",
+          "method": "Init",
+          "rpc": "neoabzu.vector.VectorService/Init",
+          "request": {
+            "stage": "C",
+            "connector_id": "operator_api",
+            "contexts": [
+              "stage-b-rehearsal",
+              "stage-c-prep"
+            ]
+          },
+          "response": {
+            "message": "stage C trial handshake parity",
+            "handshake_equivalent": {
+              "authenticated": true,
+              "session": {
+                "id": "stage-c-session",
+                "credential_expiry": "2025-10-03T10:33:59Z"
+              },
+              "accepted_contexts": [
+                {
+                  "name": "stage-b-rehearsal",
+                  "status": "accepted",
+                  "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+                },
+                {
+                  "name": "stage-c-prep",
+                  "status": "accepted",
+                  "evidence_path": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+                }
+              ],
+              "rotation": {
+                "connector_id": "operator_api",
+                "last_rotated": "2025-10-01T10:33:59Z",
+                "rotation_window": "PT48H",
+                "window_id": "20251001T103359Z-PT48H"
+              },
+              "echo": {
+                "rotation": {
+                  "connector_id": "operator_api",
+                  "last_rotated": "2025-10-01T10:33:59Z",
+                  "rotation_window": "PT48H",
+                  "window_id": "20251001T103359Z-PT48H"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "parity_checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771",
+            "credential_expiry": "2025-10-03T10:33:59Z",
+            "rotation_window": {
+              "connector_id": "operator_api",
+              "last_rotated": "2025-10-01T10:33:59Z",
+              "rotation_window": "PT48H",
+              "window_id": "20251001T103359Z-PT48H"
+            },
+            "recorded_at": "2025-10-01T10:33:59.368723+00:00",
+            "mode": "trial"
+          }
+        }
+      }
+    },
+    "ledger_window_id": "20251001T103359Z-PT48H",
+    "rotation_window_id": "20251001T103359Z-PT48H",
+    "rotation_window_verified": true
+  },
+  "handshake_artifacts": {
+    "rest": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/rest_handshake_with_expiry.json",
+    "grpc": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/grpc_trial_handshake.json",
+    "diff": "/workspace/ABZU/logs/stage_c/20251001T103349Z-stage_c4_operator_mcp_drill/rest_grpc_handshake_diff.json"
+  },
+  "handshake_parity": {
+    "parity": true,
+    "differences": [],
+    "rest_checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771",
+    "grpc_checksum": "7661f6a0b2b637229cf98cb0374d75fa236ceb1c191c29dfe3d668fb7fe23771",
+    "checksum_match": true,
+    "rotation_window": {
+      "connector_id": "operator_api",
+      "last_rotated": "2025-10-01T10:33:59Z",
+      "rotation_window": "PT48H",
+      "window_id": "20251001T103359Z-PT48H"
+    }
+  }
+}

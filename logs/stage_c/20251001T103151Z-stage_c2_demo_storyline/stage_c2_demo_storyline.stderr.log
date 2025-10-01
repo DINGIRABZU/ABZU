@@ -1,0 +1,9 @@
+INFO Extracting Stage B bundle logs/stage_b/20250921T230434Z/rehearsals/session_01/bundles/session_01_media.tar.gz -> /workspace/ABZU/logs/stage_c/20251001T103151Z-stage_c2_demo_storyline/demo_storyline/_stage_b_assets/20250921T230434Z/session_01
+/workspace/ABZU/scripts/stage_c_scripted_demo.py:210: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  archive.extract(member, target_dir)
+INFO Using Stage B asset root /workspace/ABZU/logs/stage_c/20251001T103151Z-stage_c2_demo_storyline/demo_storyline/_stage_b_assets/20250921T230434Z/session_01
+INFO Starting Stage C scripted demo replay from Stage B run 20250921T230434Z session session_01
+INFO [arrival] prompt="Avatar arrives on stage and greets the operators." emotion=anticipatory
+INFO [handoff] prompt="Mission handoff with modulation overlay." emotion=focused
+INFO [closing] prompt="Closing salutation with harmonic swell." emotion=resonant
+INFO Session complete: 3 steps replayed from Stage B run 20250921T230434Z/session_01 (max sync offset 0.067s)

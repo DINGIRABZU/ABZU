@@ -1,0 +1,23 @@
+{
+  "run_id": "20251001T103151Z-stage_c2_demo_storyline",
+  "captured_at": "2025-10-01T10:31:51.534364Z",
+  "status": "success",
+  "replay": {
+    "steps": 3,
+    "max_sync_offset_s": 0.067,
+    "dropouts_detected": false
+  },
+  "stage_b_source": {
+    "run_id": "20250921T230434Z",
+    "session": "session_01",
+    "manifest_path": "logs/stage_b/20250921T230434Z/rehearsals/session_01/session_manifest.json",
+    "bundle_name": "session_01_media.tar.gz",
+    "bundle_uri": "evidence://stage-b/stage_b/20250921T230434Z/session_01/session_01_media.tar.gz"
+  },
+  "artifacts": {
+    "summary_json": "logs/stage_c/20251001T103151Z-stage_c2_demo_storyline/summary.json",
+    "telemetry_summary": "logs/stage_c/20251001T103151Z-stage_c2_demo_storyline/demo_storyline/telemetry/summary.json",
+    "telemetry_events": "logs/stage_c/20251001T103151Z-stage_c2_demo_storyline/demo_storyline/telemetry/events.jsonl",
+    "media_manifest": "logs/stage_c/20251001T103151Z-stage_c2_demo_storyline/demo_storyline/telemetry/media_manifest.json"
+  }
+}

@@ -781,8 +781,19 @@ def test_stage_c1_exit_checklist_checked_failure(
     assert body["error"] == "checklist contains failing items"
 
 
-def test_stage_c1_metrics_marks_failing_status(tmp_path: Path) -> None:
+def test_stage_c1_metrics_marks_failing_status(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     payload: dict[str, Any] = {"status": "success"}
+    checklist = tmp_path / "checklist.md"
+    checklist.write_text(
+        """
+        - [x] item one (Status: blocked)
+        - [x] item two (status: failed)
+        """.strip(),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("ABSOLUTE_PROTOCOL_CHECKLIST_PATH", str(checklist))
     stdout = """
     - [x] item one (Status: blocked)
     - [x] item two (status: failed)
@@ -795,6 +806,32 @@ def test_stage_c1_metrics_marks_failing_status(tmp_path: Path) -> None:
     assert payload["failures"] == [
         "- [x] item one (Status: blocked)",
         "- [x] item two (status: failed)",
+    ]
+
+
+def test_stage_c1_metrics_detects_status_only_lines(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    payload: dict[str, Any] = {"status": "success"}
+    checklist = tmp_path / "checklist.md"
+    checklist.write_text(
+        """
+        - [x] Pytest executed via Stage A hardware replay
+        - Status: blocked (sandbox lacks pytest, coverage, FFmpeg, SoX)
+        """.strip(),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("ABSOLUTE_PROTOCOL_CHECKLIST_PATH", str(checklist))
+    stdout = "All checklist items are marked complete."
+    metrics = operator_api._stage_c1_metrics(stdout, "", tmp_path, payload)
+    assert metrics["failing_count"] == 2
+    assert metrics["unchecked_count"] == 0
+    assert metrics["completed"] is False
+    assert payload["status"] == "error"
+    assert payload["error"] == "checklist contains failing items"
+    assert payload["failures"] == [
+        "- Status: blocked (sandbox lacks pytest, coverage, FFmpeg, SoX)",
+        "- [x] Pytest executed via Stage A hardware replay",
     ]
 
 
