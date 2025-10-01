@@ -216,6 +216,17 @@ Matrix status: the [APSU Migration Matrix](apsu_migration_matrix.md) lists `crow
 | Telemetry schemas diverge across rehearsal bundles. | @monitoring-guild | Grafana dashboards drop fields during beta rehearsals. | Validate schemas against readiness packet structure before exporting the beta rehearsal bundle. | ⚠️ Watch list 【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】 |
 | Beta comms lack signed transport approvals. | @release-ops | External announcement slips without documented sign-off. | Capture signatures in the beta readiness packet and archive alongside Stage D bridge sign-offs. | 🔄 Pending approval 【F:logs/stage_c/20251031T000000Z-test/grpc_trial_handshake.json†L1-L71】 |
 
+### Stage F soak entry controls
+
+Stage F entry requires both the sandbox evidence bundle and a confirmed
+hardware schedule to prevent promotions without live replay coverage:
+
+| Control | Owner | Evidence | Status |
+| --- | --- | --- | --- |
+| Sandbox bundle attached to Stage F ticket | @qa-alliance | `logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json`, `logs/stage_b_rotation_drills.jsonl`, `logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json` | ⚠️ Environment-limited – bundle assembled but awaiting hardware execution.【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L210】【F:logs/stage_b_rotation_drills.jsonl†L12-L115】【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L1-L142】 |
+| Gate-runner window confirmed in readiness minutes | @ops-team | `logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json`, `logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md` | ✅ Scheduled – window reserved for Stage F hardware replay per Absolute Protocol bridge rules.【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L33】【F:logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md†L14-L44】【F:docs/The_Absolute_Protocol.md†L54-L114】 |
+| Automation hook aligned with hardware plan | @neoabzu-core | `scripts/run_stage_f_replay.py`, `docs/stage_f_hardware_replay_plan.md` | ⚠️ Environment-limited – script currently emits placeholder notice pending hardware access.【F:scripts/run_stage_f_replay.py†L1-L36】【F:docs/stage_f_hardware_replay_plan.md†L1-L73】 |
+
 ### Stage G
 
 | Run | Operator Lead | Hardware/Service Owner | QA Reviewer | Approvals | Evidence |
