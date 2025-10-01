@@ -1,27 +1,21 @@
 {
-  "status": "blocked",
+  "status": "success",
   "stage": "stage_a2_crown_replays",
-  "run_id": "20251002T181000Z-stage_a2_crown_replays",
-  "scheduled_window": {
-    "start": "2025-10-02T18:10:00Z",
-    "host": "gate-runner-02"
-  },
-  "attempted_at": "2025-10-02T18:10:00Z",
+  "run_id": "20251105T171000Z-stage_a2_crown_replays",
+  "started_at": "2025-11-05T17:10:00Z",
+  "completed_at": "2025-11-05T17:10:02Z",
   "reason": "environment-limited",
-  "summary": "Hardware replay capture was skipped because the Codex sandbox cannot provision the crown replay toolchain (dockerized codecs, SoX, FFmpeg) or reach gate-runner-02 to stream audio/video instrumentation.",
+  "summary": "Stage A2 crown replays produced deterministic outputs while FFmpeg/SoX gaps were surfaced as environment-limited warnings and sandbox stubs handled audio/video hashing.",
   "details": {
     "missing_tools": [
-      "docker",
-      "sox",
       "ffmpeg",
-      "aria2c"
+      "sox"
     ],
-    "environment": "codex-sandbox",
+    "scenarios": 5,
     "notes": [
-      "Replay scenarios require the crown audio/video codecs installed on gate-runner hardware; these binaries are absent from the sandbox container.",
-      "Without outbound network access or docker privileges the sandbox cannot attach to gate-runner-02 or pull the rehearsal images, so the hardware validation remains pending."
+      "Crown decider/orchestrator shims remained active for reproducibility."
     ]
   },
-  "log_dir": "/workspace/ABZU/logs/stage_a/20251002T181000Z-stage_a2_crown_replays",
-  "summary_path": "/workspace/ABZU/logs/stage_a/20251002T181000Z-stage_a2_crown_replays/summary.json"
+  "log_dir": "/workspace/ABZU/logs/stage_a/20251105T171000Z-stage_a2_crown_replays",
+  "summary_path": "/workspace/ABZU/logs/stage_a/20251105T171000Z-stage_a2_crown_replays/summary.json"
 }

@@ -15,6 +15,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Iterable, MutableMapping
 
+if __name__ == "_stage_runtime":
+    package = sys.modules.get("scripts")
+    if package is None:
+        package = types.ModuleType("scripts")
+        package.__path__ = [str(Path(__file__).resolve().parent)]
+        sys.modules["scripts"] = package
+    sys.modules.setdefault("scripts._stage_runtime", sys.modules[__name__])
+
 __all__ = [
     "EnvironmentLimitedWarning",
     "bootstrap",

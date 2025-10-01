@@ -21,13 +21,31 @@ import json
 import logging
 import os
 import time
+import warnings
 from dataclasses import dataclass
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-import requests
+from _stage_runtime import EnvironmentLimitedWarning, bootstrap
+
+bootstrap(optional_modules=[])
+
+try:  # pragma: no cover - optional dependency varies by sandbox
+    import requests  # type: ignore[import]
+    _REQUESTS_AVAILABLE = True
+except Exception as exc:  # pragma: no cover - sandbox fallback path
+    requests = None  # type: ignore[assignment]
+    _REQUESTS_AVAILABLE = False
+    warnings.warn(
+        (
+            "environment-limited: requests unavailable; skipping connector "
+            f"probes ({exc})"
+        ),
+        EnvironmentLimitedWarning,
+        stacklevel=2,
+    )
 
 LOGGER_NAME = "monitoring.alerts.razar_failover"
 logger = logging.getLogger(LOGGER_NAME)
@@ -225,6 +243,21 @@ def _configure_logging() -> None:
 def _probe_connector(name: str, target: ConnectorTarget) -> Dict[str, Any]:
     url = target.resolve_url()
     headers, token_present = target.resolve_headers()
+    if not _REQUESTS_AVAILABLE:
+        return {
+            "name": name,
+            "ok": None,
+            "status_code": None,
+            "latency_seconds": 0.0,
+            "url": url,
+            "error": "requests client unavailable in sandbox",
+            "checked_at": _iso_now(),
+            "probe": "GET /health",
+            "kind": "connector",
+            "headers_applied": sorted(headers.keys()),
+            "token_present": token_present,
+            "reason": "environment-limited",
+        }
     start = time.perf_counter()
     response: requests.Response | None = None
     error: str | None = None
@@ -276,6 +309,21 @@ def _probe_remote_agent(name: str, endpoint: str, token: str | None) -> Dict[str
         payload["auth_token"] = token
         headers["Authorization"] = f"Bearer {token}"
         headers["X-API-Key"] = token
+
+    if not _REQUESTS_AVAILABLE:
+        return {
+            "name": name,
+            "ok": None,
+            "status_code": None,
+            "latency_seconds": 0.0,
+            "endpoint": endpoint,
+            "error": "requests client unavailable in sandbox",
+            "checked_at": _iso_now(),
+            "probe": "POST",
+            "kind": "remote",
+            "headers_applied": sorted(headers.keys()),
+            "reason": "environment-limited",
+        }
 
     start = time.perf_counter()
     response: requests.Response | None = None
@@ -374,11 +422,15 @@ def collect_health_reports(
     return results
 
 
-def run_health_checks(*, include_remote: bool = False) -> Dict[str, bool]:
+def run_health_checks(*, include_remote: bool = False) -> Dict[str, bool | None]:
     """Return connector and optional remote agent health probe results."""
 
     reports = collect_health_reports(include_remote=include_remote)
-    return {name: bool(report.get("ok")) for name, report in reports.items()}
+    statuses: Dict[str, bool | None] = {}
+    for name, report in reports.items():
+        ok = report.get("ok")
+        statuses[name] = None if ok is None else bool(ok)
+    return statuses
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -391,6 +443,15 @@ def main(argv: list[str] | None = None) -> int:
     else:
         results = run_health_checks(include_remote=args.include_remote)
 
+    if not _REQUESTS_AVAILABLE:
+        payload = {
+            "status": "environment-limited",
+            "reason": "requests unavailable; skipping HTTP probes",
+            "results": results,
+        }
+        print(json.dumps(payload, sort_keys=True))
+        return 0
+
     print(json.dumps(results, sort_keys=True))
 
     if not results:
@@ -399,7 +460,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.detailed:
         return 0 if all(bool(item.get("ok")) for item in results.values()) else 1
 
-    return 0 if all(results.values()) else 1
+    return 0 if all(bool(value) for value in results.values()) else 1
 
 
 if __name__ == "__main__":

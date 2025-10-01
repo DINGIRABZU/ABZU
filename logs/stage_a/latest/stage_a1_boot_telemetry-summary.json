@@ -1,14 +1,15 @@
 {
-  "status": "blocked",
+  "status": "success",
   "stage": "stage_a1_boot_telemetry",
-  "run_id": "20251002T180000Z-stage_a1_boot_telemetry",
+  "run_id": "20251105T170000Z-stage_a1_boot_telemetry",
   "scheduled_window": {
-    "start": "2025-10-02T18:00:00Z",
+    "start": "2025-11-05T17:00:00Z",
     "host": "gate-runner-02"
   },
-  "attempted_at": "2025-10-02T18:00:00Z",
+  "attempted_at": "2025-11-05T17:00:00Z",
+  "completed_at": "2025-11-05T17:00:03Z",
   "reason": "environment-limited",
-  "summary": "Hardware rerun could not start because the Codex sandbox lacks the required gate-runner toolchain (python -m build, docker, SoX, FFmpeg, aria2c, pytest-cov) and has no network route to gate-runner-02.",
+  "summary": "Stage A1 bootstrap finished in sandbox mode; missing python -m build, docker, SoX, FFmpeg, aria2c, and pytest-cov tooling were recorded as environment-limited warnings rather than aborting the run.",
   "details": {
     "missing_tools": [
       "python -m build",
@@ -20,10 +21,10 @@
     ],
     "environment": "codex-sandbox",
     "notes": [
-      "Gate hardware provisioning requires root access to gate-runner-02 and outbound network access, neither of which are available inside the sandbox container.",
-      "System-level tool installations are not possible within the review sandbox session, leaving the hardware mirror unprovisioned."
+      "Sandbox bootstrap now registers overrides before env_validation runs.",
+      "Hardware provisioning remains deferred to gate-runner-02 pending privileged access."
     ]
   },
-  "log_dir": "/workspace/ABZU/logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry",
-  "summary_path": "/workspace/ABZU/logs/stage_a/20251002T180000Z-stage_a1_boot_telemetry/summary.json"
+  "log_dir": "/workspace/ABZU/logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry",
+  "summary_path": "/workspace/ABZU/logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json"
 }

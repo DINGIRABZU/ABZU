@@ -12,11 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR.parent) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR.parent))
-
-from scripts._stage_runtime import (
+from _stage_runtime import (
     EnvironmentLimitedWarning,
     bootstrap,
 )
