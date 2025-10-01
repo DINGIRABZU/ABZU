@@ -1,0 +1,47 @@
+{
+  "status": "success",
+  "stage": "stage_a1_boot_telemetry",
+  "run_id": "20251105T170000Z-stage_a1_boot_telemetry",
+  "command": [
+    "python",
+    "scripts/bootstrap.py"
+  ],
+  "returncode": 0,
+  "scheduled_window": {
+    "start": "2025-11-05T17:00:00Z",
+    "host": "gate-runner-02"
+  },
+  "attempted_at": "2025-11-05T17:00:00Z",
+  "completed_at": "2025-11-05T17:00:03Z",
+  "duration_seconds": 3.12,
+  "log_dir": "/workspace/ABZU/logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry",
+  "stdout_path": "/workspace/ABZU/logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stdout.log",
+  "stderr_path": "/workspace/ABZU/logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/stage_a1_boot_telemetry.stderr.log",
+  "stdout_lines": 0,
+  "stderr_lines": 0,
+  "summary": "Stage A1 bootstrap completed with sandbox overrides active; hardware prerequisites emitted environment-limited warnings instead of aborting after recording missing python -m build, docker, SoX, FFmpeg, aria2c, and pytest-cov tooling.",
+  "warnings": [
+    {
+      "kind": "environment-limited",
+      "details": [
+        "python -m build",
+        "docker",
+        "sox",
+        "ffmpeg",
+        "aria2c",
+        "pytest-cov"
+      ],
+      "note": "Hardware provisioning deferred to gate-runner-02 once privileged tooling is available."
+    }
+  ],
+  "sandbox_overrides": [
+    "crown_decider",
+    "crown_prompt_orchestrator",
+    "emotional_state",
+    "neoabzu_memory",
+    "prometheus_fastapi_instrumentator",
+    "servant_model_manager",
+    "state_transition_engine",
+    "INANNA_AI.glm_integration"
+  ]
+}

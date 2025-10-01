@@ -9,11 +9,7 @@ import warnings
 from pathlib import Path
 from typing import Dict
 
-_SCRIPT_DIR = Path(__file__).resolve().parent
-if str(_SCRIPT_DIR.parent) not in sys.path:
-    sys.path.insert(0, str(_SCRIPT_DIR.parent))
-
-from scripts._stage_runtime import (
+from _stage_runtime import (
     EnvironmentLimitedWarning,
     bootstrap,
     format_sandbox_summary,

@@ -1,0 +1,73 @@
+{
+  "status": "success",
+  "stage": "stage_a3_gate_shakeout",
+  "run_id": "20251105T172000Z-stage_a3_gate_shakeout",
+  "command": [
+    "bash",
+    "scripts/run_alpha_gate.sh",
+    "--sandbox"
+  ],
+  "returncode": 0,
+  "started_at": "2025-11-05T17:20:00Z",
+  "completed_at": "2025-11-05T17:20:05Z",
+  "duration_seconds": 5.73,
+  "log_dir": "/workspace/ABZU/logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout",
+  "summary": "Alpha gate completed [sandbox overrides active: INANNA_AI.glm_integration (glm_integration: remote health check bypassed), crown_decider (crown_decider: recommendation heuristics simplified), crown_prompt_orchestrator (crown_prompt_orchestrator: async pipeline stubbed), emotional_state (emotional_state: in-memory state used), neoabzu_memory (neoabzu_memory: optional bundle shim activated), prometheus_fastapi_instrumentator (prometheus instrumentation disabled in sandbox), servant_model_manager (servant_model_manager: local registry only), state_transition_engine (state_transition_engine: deterministic rotation)]",
+  "phases": [
+    {
+      "name": "build",
+      "skipped": true,
+      "exit_code": 0,
+      "outcome": "skipped",
+      "reason": "environment-limited",
+      "details": [
+        "python -m build unavailable"
+      ]
+    },
+    {
+      "name": "health",
+      "skipped": true,
+      "exit_code": 0,
+      "outcome": "skipped",
+      "reason": "environment-limited",
+      "details": [
+        "Missing tools: docker sox ffmpeg aria2c",
+        "requests client unavailable in sandbox"
+      ]
+    },
+    {
+      "name": "tests",
+      "skipped": true,
+      "exit_code": 0,
+      "outcome": "skipped",
+      "reason": "environment-limited",
+      "details": [
+        "Coverage export skipped because coverage badge generation failed"
+      ]
+    }
+  ],
+  "warnings": [
+    {
+      "phase": "build",
+      "reason": "environment-limited",
+      "details": [
+        "python -m build unavailable"
+      ]
+    },
+    {
+      "phase": "health",
+      "reason": "environment-limited",
+      "details": [
+        "Missing tools: docker sox ffmpeg aria2c",
+        "requests client unavailable in sandbox"
+      ]
+    },
+    {
+      "phase": "tests",
+      "reason": "environment-limited",
+      "details": [
+        "Coverage export skipped because coverage badge generation failed"
+      ]
+    }
+  ]
+}

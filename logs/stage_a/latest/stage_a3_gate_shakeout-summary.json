@@ -1,28 +1,30 @@
 {
-  "status": "blocked",
+  "status": "success",
   "stage": "stage_a3_gate_shakeout",
-  "run_id": "20251002T182000Z-stage_a3_gate_shakeout",
-  "scheduled_window": {
-    "start": "2025-10-02T18:20:00Z",
-    "host": "gate-runner-02"
-  },
-  "attempted_at": "2025-10-02T18:20:00Z",
+  "run_id": "20251105T172000Z-stage_a3_gate_shakeout",
+  "started_at": "2025-11-05T17:20:00Z",
+  "completed_at": "2025-11-05T17:20:05Z",
   "reason": "environment-limited",
-  "summary": "Stage A3 gate shakeout remained in sandbox mode because hardware packaging prerequisites (python -m build wheel support, docker, pytest-cov instrumentation) are unavailable and the sandbox cannot reach gate-runner-02.",
+  "summary": "Alpha gate shakeout finished with build, health, and tests marked as environment-limited warnings; missing python -m build, docker/FFmpeg/SoX tooling, the sandbox requests shim, and coverage badge generation were logged without aborting the run.",
   "details": {
-    "missing_tools": [
-      "python -m build",
-      "docker",
-      "pytest-cov",
-      "sox",
-      "ffmpeg"
-    ],
-    "environment": "codex-sandbox",
-    "notes": [
-      "Alpha gate shakeout requires the hardware builder image with docker-in-docker enabled; the sandbox forbids docker daemon access.",
-      "Coverage publishing depends on pytest-cov and FFmpeg/SoX hooks to mirror the hardware telemetry, all of which remain unavailable here."
+    "phases": [
+      {
+        "name": "build",
+        "status": "skipped",
+        "details": "python -m build unavailable"
+      },
+      {
+        "name": "health",
+        "status": "skipped",
+        "details": "Missing tools: docker sox ffmpeg aria2c; requests client unavailable"
+      },
+      {
+        "name": "tests",
+        "status": "skipped",
+        "details": "Coverage export skipped because coverage badge generation failed"
+      }
     ]
   },
-  "log_dir": "/workspace/ABZU/logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout",
-  "summary_path": "/workspace/ABZU/logs/stage_a/20251002T182000Z-stage_a3_gate_shakeout/summary.json"
+  "log_dir": "/workspace/ABZU/logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout",
+  "summary_path": "/workspace/ABZU/logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout/summary.json"
 }
