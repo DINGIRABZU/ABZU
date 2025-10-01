@@ -54,9 +54,11 @@ def test_run_stage_b_smoke_invokes_rotation(monkeypatch):
             return payload
 
     rotations: list[str] = []
+    context_payloads: dict[str, object] = {}
 
     def _fake_record(connector_id: str, **kwargs):
         rotations.append(connector_id)
+        context_payloads[connector_id] = kwargs.get("context_status")
         return {
             "connector_id": connector_id,
             "rotated_at": "2025-10-24T17:42:10Z",
@@ -100,6 +102,91 @@ def test_run_stage_b_smoke_invokes_rotation(monkeypatch):
         assert trace["grpc"]["metadata"]["mode"] == "trial"
         assert trace["rest"]["method"] == "POST"
     assert heartbeat_calls, "Heartbeat emission should be triggered"
+    for connector_id in stage_b_smoke.STAGE_B_TARGET_SERVICES:
+        payload = context_payloads[connector_id]
+        assert isinstance(payload, dict)
+        assert payload.get("stage-b-rehearsal", {}).get("status") == "accepted"
+
+
+def test_stage_c_contexts_promoted_in_rotation_ledger(monkeypatch, tmp_path):
+    handshake_payload = {
+        "session": {"id": "sess"},
+        "accepted_contexts": [
+            {"name": "stage-b-rehearsal", "status": "accepted"},
+            {"name": "stage-c-prep", "status": "pending"},
+        ],
+        "echo": {
+            "rotation": {
+                "last_rotated": "2025-12-05T16:02:10Z",
+                "rotation_window": "PT48H",
+            }
+        },
+    }
+
+    class DummyAdapter:
+        async def ensure_handshake(self):
+            return handshake_payload
+
+        async def emit_stage_b_heartbeat(self, payload, credential_expiry=None):
+            return payload
+
+    stage_c_handshake = {
+        "session": {"id": "stage-c", "credential_expiry": "2025-12-07T16:02:10Z"},
+        "rotation": {
+            "last_rotated": "2025-12-05T16:02:10Z",
+            "rotation_window": "PT48H",
+        },
+        "accepted_contexts": [
+            {
+                "name": "stage-c-prep",
+                "status": "accepted",
+                "promoted_at": "2025-12-05T16:05:00Z",
+            }
+        ],
+    }
+    stage_c_metadata = {
+        "summary_path": str(tmp_path / "summary.json"),
+        "handshake_path": None,
+        "completed_at": "2025-12-05T16:05:00Z",
+    }
+
+    context_payloads: dict[str, object] = {}
+
+    def _fake_record(connector_id: str, **kwargs):
+        context_payloads[connector_id] = kwargs.get("context_status")
+        return {
+            "connector_id": connector_id,
+            "rotated_at": "2025-12-05T16:02:10Z",
+            "window_hours": stage_b_smoke.ROTATION_WINDOW_HOURS,
+            "rotation_window": {
+                "window_id": "20251205T160210Z-PT48H",
+                "started_at": "2025-12-05T16:02:10Z",
+                "expires_at": "2025-12-07T16:02:10Z",
+                "duration": "PT48H",
+            },
+        }
+
+    monkeypatch.setattr(stage_b_smoke, "OperatorMCPAdapter", DummyAdapter)
+    monkeypatch.setattr(stage_b_smoke, "stage_b_context_enabled", lambda: True)
+    monkeypatch.setattr(stage_b_smoke, "record_rotation_drill", _fake_record)
+    monkeypatch.setattr(stage_b_smoke, "evaluate_operator_doctrine", lambda: (True, []))
+    monkeypatch.setattr(
+        stage_b_smoke,
+        "_collect_crown_metadata",
+        lambda: {"version": "0.0", "module": "stub"},
+    )
+    monkeypatch.setattr(
+        stage_b_smoke,
+        "load_latest_stage_c_handshake",
+        lambda: (stage_c_handshake, stage_c_metadata),
+    )
+
+    results = asyncio.run(stage_b_smoke.run_stage_b_smoke())
+    assert results["context_promotions"]["stage-c-prep"]["status"].lower() == "accepted"
+    payload = context_payloads["operator_api"]
+    assert isinstance(payload, dict)
+    assert payload["stage-c-prep"]["status"].lower() == "accepted"
+    assert payload["stage-c-prep"].get("promoted_at") == "2025-12-05T16:05:00Z"
 
 
 def test_main_invokes_async_runner(monkeypatch):

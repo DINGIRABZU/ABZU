@@ -1,0 +1,6 @@
+{
+  "status": "not-captured",
+  "environment_limited": "Heartbeat emission blocked without MCP gateway access",
+  "expected_rotation_window": "PT48H",
+  "notes": "Re-export alongside stage-c4 drill replay."
+}

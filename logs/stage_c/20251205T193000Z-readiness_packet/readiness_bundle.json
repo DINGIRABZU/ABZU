@@ -1,0 +1,48 @@
+{
+  "generated_at": "2025-10-01T22:36:31.459577Z",
+  "stage_b": {
+    "rotation_ledger": {
+      "path": "logs/stage_b_rotation_drills.jsonl",
+      "context_status_expected": {
+        "stage-b-rehearsal": {
+          "status": "accepted"
+        },
+        "stage-c-prep": {
+          "status": "accepted",
+          "notes": "Requires rerun of /alpha/stage-b3-connector-rotation outside Codex sandbox"
+        }
+      },
+      "verification": {
+        "status": "environment-limited",
+        "reason": "MCP gateway and /alpha/stage-b3-connector-rotation unavailable in Codex sandbox"
+      }
+    }
+  },
+  "stage_c": {
+    "mcp_artifacts": {
+      "handshake": "logs/stage_c/20251205T193000Z-readiness_packet/mcp_artifacts/handshake.json",
+      "heartbeat": "logs/stage_c/20251205T193000Z-readiness_packet/mcp_artifacts/heartbeat.json"
+    },
+    "demo_telemetry": "logs/stage_c/20251205T193000Z-readiness_packet/demo_telemetry/summary.json",
+    "exit_checklist": "logs/stage_c/20251205T193000Z-readiness_packet/exit_checklist/summary.json",
+    "notes": "Sandbox run captured metadata only; full replay queued for hardware slot."
+  },
+  "merged": {
+    "status": "pending-review",
+    "owner": "@release-ops",
+    "next_review": "2025-12-08T16:00:00Z",
+    "review_agenda": "logs/stage_c/20251205T193000Z-readiness_packet/review_schedule.md"
+  },
+  "missing": [
+    {
+      "item": "/alpha/stage-b3-connector-rotation",
+      "status": "environment-limited",
+      "details": "Command not available in sandbox; schedule hardware replay to refresh ledger contexts."
+    },
+    {
+      "item": "/alpha/stage-c4-operator-mcp-drill",
+      "status": "environment-limited",
+      "details": "Requires MCP credentials and gateway."
+    }
+  ]
+}
