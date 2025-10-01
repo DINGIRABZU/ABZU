@@ -1,5 +1,79 @@
 {
   "$schema": "./docs/schemas/component_index.json",
+  "apsu_migration": [
+    {
+      "legacy_entry": "crown_router",
+      "neo_module": "neoabzu_crown",
+      "status": "ported",
+      "defects": [
+        "Parity suite NEOABZU/crown/tests/razar_legacy_parity.rs verifies the Rust bridge; no open issues recorded."
+      ]
+    },
+    {
+      "legacy_entry": "identity_loader.py",
+      "neo_module": "neoabzu_crown::load_identity",
+      "status": "ported",
+      "defects": [
+        "PyO3 bridge runs at Crown boot with readiness parity; no outstanding defects logged."
+      ]
+    },
+    {
+      "legacy_entry": "crown_decider.py",
+      "neo_module": "neoabzu_crown::route_decision",
+      "status": "pending_rewrite",
+      "defects": [
+        "Stage C readiness injected the sandbox stub, blocking MoGE orchestrator parity until Stage D wires the Rust engine and validator gating."
+      ]
+    },
+    {
+      "legacy_entry": "crown_prompt_orchestrator.py",
+      "neo_module": "neoabzu_rag::MoGEOrchestrator",
+      "status": "pending_rewrite",
+      "defects": [
+        "Async pipeline remained stubbed during Stage C evidence capture; Rust orchestrator routing pending for telemetry parity."
+      ]
+    },
+    {
+      "legacy_entry": "state_transition_engine.py",
+      "neo_module": "neoabzu_crown::route_inevitability",
+      "status": "pending_rewrite",
+      "defects": [
+        "Deterministic sandbox rotations left ritual gating untested; inevitability journeys must be emitted from the Rust bridge."
+      ]
+    },
+    {
+      "legacy_entry": "servant_model_manager.py",
+      "neo_module": "neoabzu_crown",
+      "status": "pending_rewrite",
+      "defects": [
+        "Local registry stub hides servant telemetry; migration to the Rust-managed registry remains outstanding."
+      ]
+    },
+    {
+      "legacy_entry": "emotional_state.py",
+      "neo_module": "neoabzu_crown",
+      "status": "pending_rewrite",
+      "defects": [
+        "In-memory sandbox shim suppresses aura persistence; expression telemetry must be driven by the Rust pipeline."
+      ]
+    },
+    {
+      "legacy_entry": "memory_store.py",
+      "neo_module": "neoabzu_memory::MemoryBundle",
+      "status": "wrapped",
+      "defects": [
+        "Stage C readiness logged 'cortex layer empty', forcing optional bundle shims until Rust persistence closes the gap."
+      ]
+    },
+    {
+      "legacy_entry": "connectors/operator_mcp_adapter.py",
+      "neo_module": "operator_api / operator_api_grpc",
+      "status": "wrapped",
+      "defects": [
+        "Transport parity achieved in sandbox, but hardware telemetry and heartbeat metrics remain deferred in Stage D/E risk logs."
+      ]
+    }
+  ],
   "components": [
     {
       "id": "INANNA_AI",

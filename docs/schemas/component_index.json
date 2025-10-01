@@ -15,6 +15,44 @@
     "index_version": {
       "type": "number"
     },
+    "apsu_migration": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "legacy_entry",
+          "neo_module",
+          "status",
+          "defects"
+        ],
+        "properties": {
+          "legacy_entry": {
+            "type": "string"
+          },
+          "neo_module": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ported",
+              "wrapped",
+              "pending_rewrite"
+            ]
+          },
+          "defects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
     "components": {
       "type": "array",
       "items": {
