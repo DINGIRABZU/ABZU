@@ -166,8 +166,14 @@ def _normalize_contexts(value: Any) -> list[dict[str, Any]]:
     return contexts
 
 
-def _load_stage_c_handshake_artifact(metadata: Mapping[str, Any]) -> dict[str, Any] | None:
-    """Return the Stage C handshake artifact referenced by ``metadata`` when available."""
+def _load_stage_c_handshake_artifact(
+    metadata: Mapping[str, Any]
+) -> dict[str, Any] | None:
+    """Return the Stage C handshake artifact for ``metadata``.
+
+    The helper gracefully returns ``None`` when the metadata does not point to a
+    readable JSON document on disk.
+    """
 
     handshake_path = metadata.get("handshake_path")
     if not isinstance(handshake_path, str) or not handshake_path:
@@ -197,7 +203,9 @@ def _annotate_contexts(
 ) -> list[dict[str, Any]]:
     """Return accepted contexts annotated with Stage C evidence paths."""
 
-    contexts = _normalize_contexts(handshake.get("accepted_contexts") if handshake else [])
+    contexts = _normalize_contexts(
+        handshake.get("accepted_contexts") if handshake else []
+    )
     if not contexts:
         return []
 
@@ -229,6 +237,23 @@ def _index_context_status(contexts: list[dict[str, Any]]) -> dict[str, dict[str,
         details = {key: value for key, value in entry.items() if key != "name"}
         indexed[name] = details
     return indexed
+
+
+def _merge_context_status(
+    *candidates: Mapping[str, Mapping[str, Any]] | None,
+) -> dict[str, dict[str, Any]]:
+    """Return a merged context status mapping from ``candidates``."""
+
+    merged: dict[str, dict[str, Any]] = {}
+    for candidate in candidates:
+        if not isinstance(candidate, Mapping):
+            continue
+        for name, details in candidate.items():
+            if not isinstance(name, str):
+                continue
+            if isinstance(details, Mapping):
+                merged[name] = {key: value for key, value in details.items()}
+    return merged
 
 
 def _extract_stage_c_promotion(
@@ -538,14 +563,21 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
             "credential_expiry": heartbeat_expiry,
         }
 
+    handshake_context_status = {}
+    if isinstance(handshake, dict):
+        handshake_context_status = _index_context_status(
+            _normalize_contexts(handshake.get("accepted_contexts"))
+        )
+
     rotation_receipts: Dict[str, Any] = {}
     trace_captures: Dict[str, Any] = {}
     for connector_id in STAGE_B_TARGET_SERVICES:
-        context_status = None
+        overlay: Mapping[str, Mapping[str, Any]] | None = None
         if connector_id == "operator_api":
-            context_status = (
+            overlay = (
                 stage_c_context_status if stage_c_context_status else promotion_metadata
             )
+        context_status = _merge_context_status(handshake_context_status, overlay)
         trace_bundle = _build_trace_bundle(
             connector_id,
             handshake if isinstance(handshake, dict) else None,
@@ -555,7 +587,7 @@ async def run_stage_b_smoke(*, emit_heartbeat: bool = True) -> Dict[str, Any]:
         rotation_receipts[connector_id] = record_rotation_drill(
             connector_id,
             handshake=handshake,
-            context_status=context_status,
+            context_status=context_status or None,
             traces=trace_bundle,
         )
     results["rotation_ledger"] = rotation_receipts

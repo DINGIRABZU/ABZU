@@ -1,0 +1,5 @@
+{
+  "status": "environment-limited",
+  "details": "Demo telemetry export deferred; awaiting sandbox-to-hardware replay window.",
+  "bundle_path": "logs/stage_c/20251205T193000Z-readiness_packet/demo_telemetry"
+}

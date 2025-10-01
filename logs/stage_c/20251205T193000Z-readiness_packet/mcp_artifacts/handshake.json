@@ -1,0 +1,15 @@
+{
+  "status": "not-captured",
+  "environment_limited": "MCP gateway unavailable in Codex sandbox",
+  "expected_contexts": [
+    {
+      "name": "stage-b-rehearsal",
+      "status": "accepted"
+    },
+    {
+      "name": "stage-c-prep",
+      "status": "accepted"
+    }
+  ],
+  "notes": "Populate with live handshake output during hardware replay."
+}
