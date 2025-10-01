@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "stage": "stage_b",
+  "run_id": "20251001T214349Z",
+  "sessions": {
+    "session_01": {
+      "name": "session_01_media.tar.gz",
+      "artifact_uri": "file:///workspace/ABZU/logs/stage_b/20251001T214349Z/rehearsals/session_01/bundles/session_01_media.tar.gz",
+      "sha256": "5588ec5e098dd909016f35b4eaa57b9aa12fbeea6166db438bf566cd5088a747",
+      "size_bytes": 840461,
+      "sources": [
+        "audio",
+        "video",
+        "emotion",
+        "telemetry/events.jsonl",
+        "telemetry/media_manifest.json"
+      ]
+    }
+  },
+  "updated_at": "2025-10-01T21:44:01Z"
+}

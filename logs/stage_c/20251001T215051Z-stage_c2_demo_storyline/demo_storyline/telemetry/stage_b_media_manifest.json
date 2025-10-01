@@ -1,0 +1,17 @@
+[
+  {
+    "step_id": "arrival",
+    "audio_path": "audio/2025-09-21T17:35:46.557+00:00_arrival.json",
+    "video_path": "video/2025-09-21T17:35:46.557+00:00_arrival.json"
+  },
+  {
+    "step_id": "handoff",
+    "audio_path": "audio/2025-09-21T17:35:46.582+00:00_handoff.json",
+    "video_path": "video/2025-09-21T17:35:46.582+00:00_handoff.json"
+  },
+  {
+    "step_id": "closing",
+    "audio_path": "audio/2025-09-21T17:35:46.591+00:00_closing.json",
+    "video_path": "video/2025-09-21T17:35:46.591+00:00_closing.json"
+  }
+]

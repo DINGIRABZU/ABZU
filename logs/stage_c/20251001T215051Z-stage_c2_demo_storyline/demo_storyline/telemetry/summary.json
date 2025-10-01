@@ -1,0 +1,86 @@
+{
+  "timestamp": "2025-10-01T21:50:51.920+00:00",
+  "steps": 3,
+  "max_sync_offset_s": 0.067,
+  "dropouts_detected": false,
+  "source": {
+    "stage": "stage_b",
+    "run_id": "20251001T214349Z",
+    "session": "session_01",
+    "manifest_path": "logs/stage_b/20251001T214349Z/rehearsals/session_01/session_manifest.json",
+    "manifest_sha256": "e7ddee4be67bc7951aaa747a33b39e3efdb2cdbf2ef4162e04cc59687514ced6",
+    "bundle": {
+      "name": "session_01_media.tar.gz",
+      "artifact_uri": "file:///workspace/ABZU/logs/stage_b/20251001T214349Z/rehearsals/session_01/bundles/session_01_media.tar.gz",
+      "sha256": "5588ec5e098dd909016f35b4eaa57b9aa12fbeea6166db438bf566cd5088a747",
+      "size_bytes": 840461,
+      "sources": [
+        "audio",
+        "video",
+        "emotion",
+        "telemetry/events.jsonl",
+        "telemetry/media_manifest.json"
+      ]
+    },
+    "assets": {
+      "audio_files": 3,
+      "audio_bytes": 341646,
+      "audio_available_locally": true,
+      "video_files": 3,
+      "video_bytes": 770261,
+      "video_available_locally": true,
+      "emotion_stream": {
+        "source_path": "emotion/stream.jsonl",
+        "size_bytes": 279,
+        "sha256": "7554a1e451cb46a14109f988ab9a767339f841646b2a610e7f8ad59ec3e48826",
+        "available_locally": true,
+        "bundle_uri": "file:///workspace/ABZU/logs/stage_b/20251001T214349Z/rehearsals/session_01/bundles/session_01_media.tar.gz",
+        "bundle_sha256": "5588ec5e098dd909016f35b4eaa57b9aa12fbeea6166db438bf566cd5088a747",
+        "bundle_name": "session_01_media.tar.gz",
+        "bundle_size_bytes": 840461,
+        "bundle_member": "emotion/stream.jsonl",
+        "path": "emotion/stream.jsonl",
+        "local_sha256": "7554a1e451cb46a14109f988ab9a767339f841646b2a610e7f8ad59ec3e48826",
+        "local_size_bytes": 279,
+        "samples": 3
+      },
+      "telemetry_events": {
+        "source_path": "telemetry/events.jsonl",
+        "size_bytes": 817,
+        "sha256": "4997c1f0b55f90c14cf9fc0967f820d470988be577940ed86936fd557a9beb8e",
+        "available_locally": true,
+        "bundle_uri": "file:///workspace/ABZU/logs/stage_b/20251001T214349Z/rehearsals/session_01/bundles/session_01_media.tar.gz",
+        "bundle_sha256": "5588ec5e098dd909016f35b4eaa57b9aa12fbeea6166db438bf566cd5088a747",
+        "bundle_name": "session_01_media.tar.gz",
+        "bundle_size_bytes": 840461,
+        "bundle_member": "telemetry/events.jsonl",
+        "path": "telemetry/stage_b_events.jsonl",
+        "local_sha256": "4997c1f0b55f90c14cf9fc0967f820d470988be577940ed86936fd557a9beb8e",
+        "local_size_bytes": 817
+      },
+      "telemetry_media_manifest": {
+        "source_path": "telemetry/media_manifest.json",
+        "size_bytes": 524,
+        "sha256": "5f814756bbda2923edaafdedc29850e771368a6fbf674e02eb485e335aa5907f",
+        "available_locally": true,
+        "bundle_uri": "file:///workspace/ABZU/logs/stage_b/20251001T214349Z/rehearsals/session_01/bundles/session_01_media.tar.gz",
+        "bundle_sha256": "5588ec5e098dd909016f35b4eaa57b9aa12fbeea6166db438bf566cd5088a747",
+        "bundle_name": "session_01_media.tar.gz",
+        "bundle_size_bytes": 840461,
+        "bundle_member": "telemetry/media_manifest.json",
+        "path": "telemetry/stage_b_media_manifest.json",
+        "local_sha256": "5f814756bbda2923edaafdedc29850e771368a6fbf674e02eb485e335aa5907f",
+        "local_size_bytes": 524
+      }
+    }
+  },
+  "replay": {
+    "events_path": "telemetry/events.jsonl",
+    "events_sha256": "881b2f201f9f011e355c8a590da55b100ee65d0c84a32ec59d06a4007bcb49b5",
+    "media_manifest_path": "telemetry/media_manifest.json",
+    "media_manifest_sha256": "79c456f77b668d62b96e904e344bc7c19f83d3933efd2de9ebcb83dbbbd415cc"
+  },
+  "configuration": {
+    "copy_media": true
+  }
+}

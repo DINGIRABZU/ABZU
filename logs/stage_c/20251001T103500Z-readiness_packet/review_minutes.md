@@ -9,9 +9,9 @@
   - Checklist rerun (`logs/stage_c/20251001T103012Z-stage_c1_exit_checklist/`)
     marks pytest/coverage as **Status: blocked**, aligning with
     `docs/absolute_protocol_checklist.md` updates.
-  - Scripted demo replay (`logs/stage_c/20251001T103151Z-stage_c2_demo_storyline/`)
-    confirms parity against Stage B session `20250921T230434Z/session_01`
-    with max sync offset 0.067 s.
+  - Scripted demo replay (`logs/stage_c/20251001T215051Z-stage_c2_demo_storyline/`)
+    confirms parity against Stage B session `20251001T214349Z/session_01`
+    with zero dropouts and max sync offset 0.067 s.
   - Readiness bundle (`logs/stage_c/20251001T103221Z-stage_c3_readiness_sync/`)
     still reports Stage A risk notes; bundle copied into this packet for
     downstream bridge teams.
