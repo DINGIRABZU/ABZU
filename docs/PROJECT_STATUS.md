@@ -77,7 +77,7 @@ The replay regression writes `monitoring/crown_replay_summary.json` so contribut
 - Doctrine drift is now gated by `python scripts/check_identity_sync.py`. If the check reports that `data/identity.json` predates updates to the mission, persona, Absolute Protocol, ABZU blueprint, or awakening overview doctrine, rerun `python scripts/refresh_crown_identity.py --use-stub` before continuing the gate.
 
 > [!IMPORTANT]
-> **Codex sandbox dependency limits.** Alpha rehearsals inside the Codex sandbox may lack GPUs, DAW backends, database drivers, or external credentials. Mark blocked steps with an `environment-limited` skip (mirroring the reason in test output), attach the command transcript to the relevant `logs/` bundle, and record the escalation in the operator risk queue before requesting hardware validation outside the sandbox. Follow the routing codified in [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment) and update change logs accordingly.
+> **Codex sandbox dependency limits.** Alpha rehearsals inside the Codex sandbox may lack GPUs, DAW backends, database drivers, or external credentials. Follow the guardrails in [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints): mark blocked steps with an `environment-limited` skip (mirroring the reason in test output), attach the command transcript to the relevant `logs/` bundle, and record the escalation in the operator risk queue before requesting hardware validation outside the sandbox. Coordinate follow-ups with the sandbox-to-hardware bridge plan in [roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation) so sprint reviews see when hardware remediation will execute, and update change logs accordingly.
 
 ### Stage A evidence register
 
