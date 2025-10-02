@@ -1,0 +1,35 @@
+{
+  "authenticated": true,
+  "session": {
+    "id": "stage-c-session",
+    "credential_expiry": "2025-10-03T09:32:13Z"
+  },
+  "accepted_contexts": [
+    {
+      "name": "stage-b-rehearsal",
+      "status": "accepted",
+      "accepted_via": "stage-c4-operator-mcp-drill",
+      "evidence_path": "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+    },
+    {
+      "name": "stage-c-prep",
+      "status": "accepted",
+      "accepted_via": "stage-c4-operator-mcp-drill",
+      "evidence_path": "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+    }
+  ],
+  "rotation": {
+    "connector_id": "operator_api",
+    "last_rotated": "2025-10-01T09:32:13Z",
+    "rotation_window": "PT48H",
+    "window_id": "20251001T093213Z-PT48H"
+  },
+  "echo": {
+    "rotation": {
+      "connector_id": "operator_api",
+      "last_rotated": "2025-10-01T09:32:13Z",
+      "rotation_window": "PT48H",
+      "window_id": "20251001T093213Z-PT48H"
+    }
+  }
+}

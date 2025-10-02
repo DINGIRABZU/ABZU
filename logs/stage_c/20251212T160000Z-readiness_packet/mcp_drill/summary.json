@@ -1,0 +1,71 @@
+{
+  "status": "success",
+  "stage": "stage_c4_operator_mcp_drill",
+  "run_id": "20251001T093206Z-stage_c4_operator_mcp_drill",
+  "command": [
+    "python",
+    "scripts/stage_c_mcp_drill.py",
+    "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill",
+    "--json"
+  ],
+  "returncode": 0,
+  "started_at": "2025-10-01T09:32:13Z",
+  "completed_at": "2025-10-01T09:32:13Z",
+  "duration_seconds": 0.0,
+  "log_dir": "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill",
+  "artifacts": {
+    "mcp_handshake": "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json",
+    "heartbeat": "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/heartbeat.json"
+  },
+  "metrics": {
+    "handshake": {
+      "authenticated": true,
+      "session": {
+        "id": "stage-c-session",
+        "credential_expiry": "2025-10-03T09:32:13Z"
+      },
+      "accepted_contexts": [
+        {
+          "name": "stage-b-rehearsal",
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        },
+        {
+          "name": "stage-c-prep",
+          "status": "accepted",
+          "accepted_via": "stage-c4-operator-mcp-drill",
+          "evidence_path": "logs/stage_c/20251001T093206Z-stage_c4_operator_mcp_drill/mcp_handshake.json"
+        }
+      ],
+      "rotation": {
+        "connector_id": "operator_api",
+        "last_rotated": "2025-10-01T09:32:13Z",
+        "rotation_window": "PT48H",
+        "window_id": "20251001T093213Z-PT48H"
+      },
+      "echo": {
+        "rotation": {
+          "connector_id": "operator_api",
+          "last_rotated": "2025-10-01T09:32:13Z",
+          "rotation_window": "PT48H",
+          "window_id": "20251001T093213Z-PT48H"
+        }
+      }
+    },
+    "heartbeat": {
+      "event": "stage-c4-operator-mcp-drill",
+      "payload": {
+        "event": "stage-c4-operator-mcp-drill",
+        "stage": "C",
+        "session": {
+          "id": "stage-c-session",
+          "credential_expiry": "2025-10-03T09:32:13Z"
+        },
+        "credential_expiry": "2025-10-03T09:32:13Z"
+      },
+      "credential_expiry": "2025-10-03T09:32:13Z",
+      "rotation_window_hours": 48
+    }
+  }
+}
