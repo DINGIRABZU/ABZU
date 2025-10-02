@@ -364,3 +364,5 @@ Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`
 - 2025-09-30: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
 
 - 2025-10-01: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+
+- 2025-10-02: ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
