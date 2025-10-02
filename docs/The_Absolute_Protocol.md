@@ -57,6 +57,10 @@ When sandbox gaps block a verification, tag the doctrine artifacts and test suit
    template so reviewers see the exact command, timestamp, and owner responsible for closing the gap.
 3. **Status trackers** – Update [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-d-bridge-snapshot) and the Stage D/E roadmap tables to
    point back to this section whenever a milestone carries sandbox-only steps.
+4. **Readiness minutes** – Link cross-team review minutes stored beside the readiness packet so the hardware replay window and
+   `environment-limited` follow-ups are discoverable during audits. The 2025-12-08 minutes attach to
+   `logs/stage_c/20251205T193000Z-readiness_packet/` and document the gate-runner-02 replay scheduled for 2025-12-12 plus the
+   mandate to reuse the Stage A/B sandbox skip strings in every downstream update.【F:logs/stage_c/20251205T193000Z-readiness_packet/review_minutes.md†L1-L39】
 
 #### Hardware replay for migration evidence
 
@@ -70,6 +74,11 @@ deferred item must:
 3. Log the escalation in the operator risk queue so Stage G planning can confirm the slot before milestone reviews.
 4. Copy the sandbox evidence into the Stage D/E bridge ledger once hardware execution completes, capturing SHA-256 hashes that
    prove the deferred migration replayed successfully on the appropriate runner.【F:docs/PROJECT_STATUS.md†L172-L215】
+
+Document every escalation with the concrete sandbox warnings captured in the latest Stage A and Stage B artifacts so auditors can
+map the deferment back to observable evidence. Cite the 2025-11-05 Stage A bootstrap/replay/gate shakeout summaries and the
+2025-12-05 memory proof and connector rotation outputs when recording why Codex could not execute the full flow and what
+hardware slot will close the gap.【F:logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json†L1-L41】【F:logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout/summary.json†L1-L62】【F:logs/stage_b/20251205T142355Z-stage_b1_memory_proof/summary.json†L1-L63】【F:logs/stage_b/20251205T160210Z-stage_b3_connector_rotation/summary.json†L1-L129】
 
 ### Stage Gate Alignment
 
