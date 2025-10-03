@@ -193,10 +193,26 @@ Stage E extends the Stage C transport pilot: contract tests and dashboards n
 | `memory_store.py` | `neoabzu_memory::MemoryBundle` | Stage D bridge aligns Stage B rotations with Stage C readiness latency metrics before switching hardware writes to the Rust bundle.【F:logs/stage_b_rotation_drills.jsonl†L1-L40】【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L185】 | Telemetry updates publish memory checksum parity results through Grafana so roadmap/PROJECT_STATUS audiences monitor ingestion gaps during beta prep.【F:tests/test_operator_transport_contract.py†L231-L320】【F:monitoring/operator_transport_pilot.md†L1-L84】【F:docs/PROJECT_STATUS.md†L162-L181】 | Soak cycles document sandbox latency evidence alongside dashboard hashes until hardware metrics converge.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L20-L87】 | Stage G hardware bundle records memory checksum parity and sandbox replay transcripts under Neo-APSU approvals.【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】 | GA cutover retains the memory parity hash from Stage G to prove production readiness.【F:logs/stage_h/20251115T090000Z-ga_hardware_cutover/summary.json†L15-L28】 |
 | `emotional_state.py` | `neoabzu_crown` expression pipeline | Stage D hardware checks replay Stage B rotation history with Stage C sandbox diffs to validate aura persistence under the Neo-APSU expression path.【F:logs/stage_b_rotation_drills.jsonl†L1-L40】【F:logs/stage_c/20251031T000000Z-test/summary.json†L1-L120】 | Beta-facing updates surface expression heartbeat telemetry inside contract dashboards so deferrals stay visible while sandbox evidence feeds hardware replays.【F:tests/test_operator_transport_contract.py†L1-L210】【F:monitoring/operator_transport_pilot.md†L1-L66】【F:docs/PROJECT_STATUS.md†L162-L181】 | Soak tracking references sandbox aura transcripts plus dashboard hashes until Neo-APSU hardware emits continuous heartbeats.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L49-L87】 | Stage G parity approvals append aura diffs that cite sandbox evidence and rollback rehearsals.【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/summary.json†L1-L13】 | GA summary confirms aura telemetry hash continuity from Stage G hardware bundles.【F:logs/stage_h/20251115T090000Z-ga_hardware_cutover/summary.json†L1-L28】 |
 
-### Stage F – Hardware replay soak entry criteria
+### Stage F – Hardware replay soak alignment
 
 Stage F promotions remain blocked until sandbox evidence and hardware access
-align. Use this checklist before attempting a Stage F soak handoff:
+align. Consult the [Stage F+ execution plan](stage_f_plus_plan.md#stagef--hardware-replay-soak-alignment)
+for the full set of goals, exit criteria, and evidence bundles that weekly
+reviews should rehearse. Each checkpoint below cites the consolidated
+[readiness ledger](readiness_ledger.md) and sandbox policy guardrails in
+[The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints) so
+contributors know which ledger rows and policy clauses to update when hardware
+access opens up.
+
+| Focus | Details |
+| --- | --- |
+| Goal | Coordinate a soak window that replays the Stage C readiness packet, Stage E transport traces, and Stage B rotation ledger on hardware without losing traceability to sandbox-only skips. |
+| Entry criteria | Readiness ledger rows for the Stage B rotation ledger, Stage C readiness packet, and Stage E parity traces are stitched together with owners and remediation notes; the gate-runner slot is booked in readiness minutes; automation hooks log sandbox policy references for every `environment-limited` skip. |
+| Exit criteria | Hardware replays export checksum-matched bundles tagged with their readiness ledger row IDs and explicitly cite The Absolute Protocol sandbox policy section for each retired skip. |
+| Required evidence | Gate-runner parity diffs, MCP handshake/heartbeat captures, Stage E dashboard hash confirmation, and signed readiness minutes linking back to ledger rows and sandbox policy citations. |
+| Responsible teams | @ops-team orchestrates hardware access, @neoabzu-core manages service parity, and @qa-alliance stitches the evidence across roadmap, PROJECT_STATUS, and the readiness ledger. |
+
+Use this checklist before attempting a Stage F soak handoff:
 
 | Entry requirement | Owner | Evidence bundle | Notes |
 | --- | --- | --- | --- |
@@ -208,7 +224,13 @@ Document Stage F readiness using the dedicated hardware replay plan so roadmap
 and PROJECT_STATUS stay synchronized on the sandbox inputs, scheduled hardware
 windows, and required Neo-APSU validations before the soak window opens.【F:docs/stage_f_hardware_replay_plan.md†L1-L73】
 
-### Stage G – Sandbox-to-hardware bridge validation
+### Stage G – Sandbox-to-hardware bridge validation
+
+Stage G extends the soak outputs recorded in the [Stage F+ execution plan](stage_f_plus_plan.md#stageg--sandbox-to-hardware-bridge-validation)
+and the readiness ledger by replaying sandbox parity bundles on hardware under
+the sandbox policy guardrails defined in [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment).
+Reference the readiness ledger rows when updating rollback scripts or parity
+hashes so reviewers can map each hardware approval to the sandbox evidence trail.
 
 | Task | Owner | Hardware Validation Owner | Rollback Drill | Evidence Bundling |
 | --- | --- | --- | --- | --- |
@@ -216,7 +238,22 @@ windows, and required Neo-APSU validations before the soak window opens.【F:doc
 | **G2. Neo-APSU services parity** | @neoabzu-core | @neoabzu-core | `logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/rollback_drill.md` walks the control-plane/workspace rollback using `scripts/stage_b_smoke.py` against the Stage B rotation ledger before re-enabling hardware. | `logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/parity_diff.json` and `transport_contract.json` capture checksum matches, fallback events, and heartbeat recovery with signatures in `approvals.yaml`. |
 | **G3. Evidence bundle stitching** | @qa-alliance | @ops-team | Rollback confirmation references the operator console export and sandbox replay noted in the Stage A/C readiness bundles to ensure gate-runner and Neo-APSU drills fall back to sandbox telemetry without data loss. | `logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json` and `logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/summary.json` enumerate bundle hashes aligned with [The Absolute Protocol](The_Absolute_Protocol.md#stage-gate-alignment). |
 
-Stage G maps the sandbox-to-hardware bridge directives from The Absolute Protocol directly into the roadmap. Hardware rehearsals must cite the Stage C readiness minutes and bundle hashes, attach rollback transcripts, and archive approvals from the operator lead, hardware owner, and QA reviewer before promoting later bridges.【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/approvals.yaml†L1-L12】【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/summary.json†L1-L13】【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/approvals.yaml†L1-L12】【F:docs/The_Absolute_Protocol.md†L54-L114】 Weekly reviews should confirm the `parity_diff.json` artifacts stay in sync with `logs/stage_c/20251001T010101Z-readiness_packet/` references and that rollback drills remain current before opening the production bridge window.
+Stage G maps the sandbox-to-hardware bridge directives from The Absolute Protocol directly into the roadmap. Hardware rehearsals must cite the Stage C readiness minutes and bundle hashes, attach rollback transcripts, reference the relevant readiness ledger rows, and archive approvals from the operator lead, hardware owner, and QA reviewer before promoting later bridges.【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/approvals.yaml†L1-L12】【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/summary.json†L1-L13】【F:logs/stage_g/20251102T094500Z-stage_g_neo_apsu_parity/approvals.yaml†L1-L12】【F:docs/The_Absolute_Protocol.md†L54-L114】【F:docs/readiness_ledger.md†L9-L27】 Weekly reviews should confirm the `parity_diff.json` artifacts stay in sync with `logs/stage_c/20251001T010101Z-readiness_packet/` references and that rollback drills remain current before opening the production bridge window.
+
+### Stage H – Production adoption and LTS cutover
+
+Stage H closes out the Stage F+ plan with the GA bridge described in the
+[Stage F+ execution plan](stage_f_plus_plan.md#stageh--production-adoption-and-lts-cutover).
+Production adoption must maintain lineage to the readiness ledger and sandbox
+policy directives so future hardware reviews can replay the same evidence trail.
+
+| Focus | Details |
+| --- | --- |
+| Goal | Promote the GA cutover with verifiable lineage from Stage G approvals, readiness ledger closures, and sandbox policy compliance. |
+| Entry criteria | Stage G bridge report archived in the readiness ledger with sandbox deferrals resolved or migrated; incident response, rollback, and telemetry playbooks refreshed to cite The Absolute Protocol sandbox policy and bridge clauses. |
+| Exit criteria | GA readiness packet logs final hardware telemetry hashes alongside readiness ledger closure notes and sandbox policy references; LTS cadence documentation confirms future audits can replay retired sandbox skips. |
+| Required evidence | GA hardware cutover bundle, readiness ledger closure entries, LTS governance checklist with sandbox policy citations, and signed approvals from production, operations, and QA leads. |
+| Responsible teams | @release-ops leads GA governance, @operations-lead manages production telemetry, @qa-alliance maintains doctrine integrity, and @neoabzu-core stewards Neo-APSU services. |
 
 ## Maintenance
 
