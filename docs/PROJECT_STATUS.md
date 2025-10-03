@@ -247,7 +247,7 @@ with the [readiness ledger](readiness_ledger.md) and sandbox policy rules in
 
 | Stage | Status summary | Upcoming evidence | Responsible teams |
 | --- | --- | --- | --- |
-| Stage F – Hardware replay soak alignment | Waiting on gate-runner access; readiness ledger rows for Stage B rotation, Stage C readiness bundle, and Stage E transport traces stitched together with sandbox policy references for each deferred skip.【F:docs/roadmap.md†L209-L247】【F:docs/stage_f_plus_plan.md†L11-L40】【F:docs/readiness_ledger.md†L9-L27】 | Gate-runner parity diffs, MCP handshake refresh, and Stage E dashboard hash confirmation recorded with sandbox policy citations once hardware replay executes.【F:docs/roadmap.md†L209-L247】【F:docs/stage_f_plus_plan.md†L31-L40】 | @ops-team, @neoabzu-core, @qa-alliance |
+| Stage F – Hardware replay soak alignment | Waiting on gate-runner access; readiness ledger rows for Stage B rotation, Stage C readiness bundle, and Stage E transport traces stitched together with sandbox policy references for each deferred skip while the Stage F hardware replay plan governs entry work.【F:docs/roadmap.md†L209-L247】【F:docs/stage_f_plus_plan.md†L11-L40】【F:docs/stage_f_hardware_replay_plan.md†L1-L162】【F:docs/readiness_ledger.md†L9-L27】 | Gate-runner parity diffs, MCP handshake refresh, and Stage E dashboard hash confirmation recorded with sandbox policy citations once hardware replay executes per the Stage F hardware replay plan.【F:docs/roadmap.md†L209-L247】【F:docs/stage_f_plus_plan.md†L31-L40】【F:docs/stage_f_hardware_replay_plan.md†L74-L162】 | @ops-team, @neoabzu-core, @qa-alliance |
 | Stage G – Sandbox-to-hardware bridge validation | Bridge scripts prepped; readiness ledger rows linked to rollback drills and parity bundles per sandbox policy guardrails while awaiting hardware slot execution.【F:docs/roadmap.md†L248-L273】【F:docs/stage_f_plus_plan.md†L42-L64】【F:docs/readiness_ledger.md†L9-L27】 | Stage G hardware parity diffs and rollback transcripts signed with readiness ledger IDs and sandbox policy references.【F:docs/roadmap.md†L248-L273】【F:docs/stage_f_plus_plan.md†L55-L64】 | @ops-team, @neoabzu-core, @qa-alliance, @release-ops |
 | Stage H – Production adoption & LTS cutover | GA cutover prep anchored to Stage G approvals; readiness ledger closures drafted with sandbox policy callouts awaiting final hardware telemetry and governance signatures.【F:docs/roadmap.md†L274-L299】【F:docs/stage_f_plus_plan.md†L66-L94】【F:docs/readiness_ledger.md†L9-L27】 | GA hardware cutover bundle, readiness ledger closure notes, and LTS governance checklist citing The Absolute Protocol sandbox policy.【F:docs/roadmap.md†L274-L299】【F:docs/stage_f_plus_plan.md†L74-L94】 | @release-ops, @operations-lead, @qa-alliance, @neoabzu-core |
 
@@ -290,13 +290,16 @@ with the [readiness ledger](readiness_ledger.md) and sandbox policy rules in
 ### Stage F soak entry controls
 
 Stage F entry requires both the sandbox evidence bundle and a confirmed
-hardware schedule to prevent promotions without live replay coverage:
+hardware schedule to prevent promotions without live replay coverage.
+Follow the [Stage F hardware replay plan](stage_f_hardware_replay_plan.md)
+before approving the soak handoff so operators, QA, and Neo-APSU owners
+execute the same checklist and evidence capture cadence.【F:docs/stage_f_hardware_replay_plan.md†L74-L162】
 
 | Control | Owner | Evidence | Status |
 | --- | --- | --- | --- |
 | Sandbox bundle attached to Stage F ticket | @qa-alliance | `logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json`, `logs/stage_b_rotation_drills.jsonl`, `logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json` | ⚠️ Environment-limited – bundle assembled but awaiting hardware execution.【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L210】【F:logs/stage_b_rotation_drills.jsonl†L12-L115】【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L1-L142】 |
 | Gate-runner window confirmed in readiness minutes | @ops-team | `logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json`, `logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md` | ✅ Scheduled – window reserved for Stage F hardware replay per Absolute Protocol bridge rules.【F:logs/stage_c/20250930T210000Z-stage_c1_exit_checklist/summary.json†L1-L33】【F:logs/stage_c/20251001T010101Z-readiness_packet/review_minutes.md†L14-L44】【F:docs/The_Absolute_Protocol.md†L54-L114】 |
-| Automation hook aligned with hardware plan | @neoabzu-core | `scripts/run_stage_f_replay.py`, `docs/stage_f_hardware_replay_plan.md` | ⚠️ Environment-limited – script currently emits placeholder notice pending hardware access.【F:scripts/run_stage_f_replay.py†L1-L36】【F:docs/stage_f_hardware_replay_plan.md†L1-L73】 |
+| Automation hook aligned with hardware plan | @neoabzu-core | `scripts/run_stage_f_replay.py`, `docs/stage_f_hardware_replay_plan.md` | ⚠️ Environment-limited – script currently emits placeholder notice pending hardware access.【F:scripts/run_stage_f_replay.py†L1-L36】【F:docs/stage_f_hardware_replay_plan.md†L1-L162】 |
 
 ### Stage G
 
