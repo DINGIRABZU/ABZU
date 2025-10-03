@@ -9,6 +9,43 @@ See [component_maturity.md](component_maturity.md) for per-component maturity me
 
 This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets.
 
+## Codex sandbox constraints
+
+Stage owners must review the sandbox limitations before planning new work so the roadmap, readiness packets, and doctrine stay
+aligned with what Codex can execute.
+
+### Deferred hardware tasks
+
+- **GPU, DAW, FFmpeg, and Neo-APSU parity workflows** remain dry runs until the Stage D/E bridge or Stage G hardware window replays
+  them on gate-runner hosts, recording parity hashes for audit.【F:docs/roadmap.md†L214-L286】
+- **Connector credential sweeps and transport parity exports** only complete end-to-end on hardware with long-lived secrets and live
+  telemetry. Track the gate-runner-02 slot captured in the 2025-12-08 readiness minutes for these follow-ups.【F:logs/stage_c/20251205T193000Z-readiness_packet/review_minutes.md†L1-L39】
+- **Sandbox readiness bundles** must enumerate every deferred checklist item so hardware reviewers know which ledger (Stage D/E bridge,
+  Stage G parity) will store the replayed evidence.【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L195】
+
+### Required tooling and data
+
+- Capture missing dependencies—`python -m build`, FFmpeg, SoX, aria2c, DAW plug-ins, GPU drivers, `pytest-cov`—using the same wording logged
+  in the Stage A1–A3 and Stage B rehearsal summaries.【F:logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json†L1-L41】【F:logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout/summary.json†L1-L62】【F:logs/stage_b/20251205T142355Z-stage_b1_memory_proof/summary.json†L1-L63】
+- Reference the specific readiness packet directory (for example `logs/stage_c/20251205T193000Z-readiness_packet/`) and itemize required datasets,
+  connector credentials, and MCP heartbeat payloads so hardware owners can replay them verbatim.【F:logs/stage_c/20251205T193000Z-readiness_packet/readiness_bundle.json†L1-L33】
+
+### Tagging conventions
+
+- Propagate the exact `environment-limited: <reason>` strings from test skips into roadmap notes, change logs, readiness packets, and PR summaries so
+  audits see one consistent justification.【F:logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout/summary.json†L1-L62】
+- Link back to this section plus [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints) and
+  [documentation_protocol.md](documentation_protocol.md#codex-sandbox-constraints) whenever a task remains blocked in Codex, ensuring reviewers encounter
+  the warning before scheduling hardware.【F:docs/documentation_protocol.md†L1-L73】
+- Attach the relevant readiness minutes or risk queue entry documenting the gate-runner replay window (2025-12-12 gate-runner-02) for traceability.【F:logs/stage_c/20251205T193000Z-readiness_packet/review_minutes.md†L1-L39】
+
+### Hardware replay pointers
+
+- Align roadmap, PROJECT_STATUS, and readiness packets with the sandbox-to-hardware bridge plan in [roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation)
+  and the Stage D bridge snapshot so teams know where replay hashes will land.【F:docs/PROJECT_STATUS.md†L172-L215】
+- Quote the sandbox skip strings from the Stage A and Stage B bundles (`python -m build unavailable`, `environment-limited: MCP gateway offline`, etc.) to show exactly
+  what hardware must prove out.【F:logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json†L1-L41】【F:logs/stage_b/20251205T160210Z-stage_b3_connector_rotation/summary.json†L1-L129】
+
 ## Repository Structure
 
 - **INANNA_AI/** – Core modules including adaptive learning, ethical validation, and audio analysis.
