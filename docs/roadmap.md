@@ -201,7 +201,8 @@ Stage E extends the Stage C transport pilot: contract tests and dashboards n
 ### Stage F – Hardware replay soak alignment
 
 Stage F promotions remain blocked until sandbox evidence and hardware access
-align. Consult the [Stage F+ execution plan](stage_f_plus_plan.md#stagef--hardware-replay-soak-alignment)
+align. Use the [Stage F hardware replay plan](stage_f_hardware_replay_plan.md)
+as the authoritative entry playbook, and consult the [Stage F+ execution plan](stage_f_plus_plan.md#stagef--hardware-replay-soak-alignment)
 for the full set of goals, exit criteria, and evidence bundles that weekly
 reviews should rehearse. Each checkpoint below cites the consolidated
 [readiness ledger](readiness_ledger.md) and sandbox policy guardrails in
@@ -227,7 +228,7 @@ Use this checklist before attempting a Stage F soak handoff:
 
 Document Stage F readiness using the dedicated hardware replay plan so roadmap
 and PROJECT_STATUS stay synchronized on the sandbox inputs, scheduled hardware
-windows, and required Neo-APSU validations before the soak window opens.【F:docs/stage_f_hardware_replay_plan.md†L1-L73】
+windows, and required Neo-APSU validations before the soak window opens.【F:docs/stage_f_hardware_replay_plan.md†L1-L162】
 
 ### Stage G – Sandbox-to-hardware bridge validation
 
