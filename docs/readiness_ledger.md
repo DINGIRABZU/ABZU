@@ -6,6 +6,11 @@ on 2025-12-05, and the accompanying demo telemetry stub. Use it alongside the
 Stage C review minutes when updating doctrine so sandbox deferrals stay aligned
 with the hardware replay queue.
 
+> [!INFO]
+> Before recording new ledger entries, review the sandbox history in
+> [`docs/knowledge_base/codex_lessons.md`](knowledge_base/codex_lessons.md). The knowledge base highlights known gaps,
+> failed attempts, and agreed workarounds so ledger updates inherit the full context.
+
 ## Artifact overview
 
 | Artifact | Path | Owner(s) | Sandbox caveat | Hardware follow-up |
