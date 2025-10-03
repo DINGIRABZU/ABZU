@@ -238,6 +238,19 @@ sandbox skips while still persisting the summary bundle.【F:logs/stage_a/202511
 
 Matrix status: the [APSU Migration Matrix](apsu_migration_matrix.md) now surfaces fixture links and Stage runtime shims, showing `crown_router` and `identity_loader.py` as ready (`ported`), the servant/decider/orchestrator/state/emotion stack as in-progress (`pending_rewrite` with sandbox stubs), and `memory_store.py` plus `connectors/operator_mcp_adapter.py` as hardware-validation rows (`wrapped`).【F:docs/apsu_migration_matrix.md†L7-L46】【F:component_index.json†L4-L98】 Stage D owners should refresh the matrix alongside readiness packets so Stage E/G reviewers inherit synchronized parity evidence and prototype pointers.
 
+### Stage F+ status rollup
+
+Weekly reviews track Stage F through Stage H using the consolidated
+[Stage F+ execution plan](stage_f_plus_plan.md) so hardware adoption stays aligned
+with the [readiness ledger](readiness_ledger.md) and sandbox policy rules in
+[The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints).
+
+| Stage | Status summary | Upcoming evidence | Responsible teams |
+| --- | --- | --- | --- |
+| Stage F – Hardware replay soak alignment | Waiting on gate-runner access; readiness ledger rows for Stage B rotation, Stage C readiness bundle, and Stage E transport traces stitched together with sandbox policy references for each deferred skip.【F:docs/roadmap.md†L209-L247】【F:docs/stage_f_plus_plan.md†L11-L40】【F:docs/readiness_ledger.md†L9-L27】 | Gate-runner parity diffs, MCP handshake refresh, and Stage E dashboard hash confirmation recorded with sandbox policy citations once hardware replay executes.【F:docs/roadmap.md†L209-L247】【F:docs/stage_f_plus_plan.md†L31-L40】 | @ops-team, @neoabzu-core, @qa-alliance |
+| Stage G – Sandbox-to-hardware bridge validation | Bridge scripts prepped; readiness ledger rows linked to rollback drills and parity bundles per sandbox policy guardrails while awaiting hardware slot execution.【F:docs/roadmap.md†L248-L273】【F:docs/stage_f_plus_plan.md†L42-L64】【F:docs/readiness_ledger.md†L9-L27】 | Stage G hardware parity diffs and rollback transcripts signed with readiness ledger IDs and sandbox policy references.【F:docs/roadmap.md†L248-L273】【F:docs/stage_f_plus_plan.md†L55-L64】 | @ops-team, @neoabzu-core, @qa-alliance, @release-ops |
+| Stage H – Production adoption & LTS cutover | GA cutover prep anchored to Stage G approvals; readiness ledger closures drafted with sandbox policy callouts awaiting final hardware telemetry and governance signatures.【F:docs/roadmap.md†L274-L299】【F:docs/stage_f_plus_plan.md†L66-L94】【F:docs/readiness_ledger.md†L9-L27】 | GA hardware cutover bundle, readiness ledger closure notes, and LTS governance checklist citing The Absolute Protocol sandbox policy.【F:docs/roadmap.md†L274-L299】【F:docs/stage_f_plus_plan.md†L74-L94】 | @release-ops, @operations-lead, @qa-alliance, @neoabzu-core |
+
 #### Hardware replay prerequisites queue
 
 - **Toolchains ready for gate-runner execution.** Stage F requires the Rust toolchain, Python bridge headers, and build prerequisites called out in the Neo-APSU onboarding and blueprint host prerequisites so hardware binaries match sandbox builds; queue installation tasks now so the window can start immediately when access resumes.【F:docs/stage_f_hardware_replay_plan.md†L42-L47】【F:docs/system_blueprint.md†L625-L627】【F:NEOABZU/docs/onboarding.md†L1-L36】
