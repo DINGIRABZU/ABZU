@@ -189,6 +189,9 @@ Stage E extends the Stage C transport pilot: contract tests and dashboards n
 
 #### Stage D–H Neo-APSU adoption matrix
 
+Consult the [Neo-APSU terminology glossary](glossary/neo_apsu_terms.md) while reviewing this matrix so legacy APSU names, Rust
+targets, and doctrine links remain synchronized during planning.【F:docs/glossary/neo_apsu_terms.md†L1-L55】
+
 | Legacy APSU component | Neo-APSU surface | Stage D hardware bridge | Stage E telemetry & contract gating | Stage F soak checkpoints | Stage G parity replay | Stage H production adoption |
 | --- | --- | --- | --- | --- | --- | --- |
 | `crown_decider.py` | `neoabzu_crown::route_decision` | Replay Stage B rotation windows and Stage C readiness hashes on gate-runner hardware before declaring the Rust decider ready, capturing parity diffs in the bridge ledger.【F:logs/stage_b_rotation_drills.jsonl†L1-L40】【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L47】 | Publish contract test results and Grafana parity status beside roadmap/PROJECT_STATUS updates so beta owners monitor continuous telemetry feed health.【F:tests/test_operator_transport_contract.py†L1-L210】【F:monitoring/operator_transport_pilot.md†L1-L66】【F:docs/PROJECT_STATUS.md†L162-L181】 | Track soak-week telemetry using the Stage E dashboard hash while calling out sandbox heartbeat deferrals until hardware metrics land.【F:logs/stage_e/20250930T121727Z-stage_e_transport_readiness/summary.json†L1-L48】 | Include Rust decider parity diffs in Stage G hardware bundles with rollback transcripts and approvals.【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】 | Confirm GA cutover inherits the Stage G ledger hash and parity lineage when promoting the Rust decider into production.【F:logs/stage_h/20251115T090000Z-ga_hardware_cutover/summary.json†L1-L28】 |

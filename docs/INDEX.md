@@ -408,6 +408,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [figures/rust_crate_boundaries.mmd](figures/rust_crate_boundaries.mmd) | rust_crate_boundaries.mmd | - | - |
 | [figures/system_tear_matrix.mmd](figures/system_tear_matrix.mmd) | system_tear_matrix.mmd | - | - |
 | [frontend_dependencies.md](frontend_dependencies.md) | Frontend Dependencies | This page outlines the core libraries used by the `floor_client` interface. Refer to each project's documentation for... | - |
+| [glossary/neo_apsu_terms.md](glossary/neo_apsu_terms.md) | Neo-APSU Terminology Glossary | This glossary crosswalks legacy APSU module names to their Neo-APSU equivalents so reviewers can track migration stat... | - |
 | [great_tomb_of_nazarick.md](great_tomb_of_nazarick.md) | Great Tomb of Nazarick | The foundational design for ABZU's servant hierarchy. For guiding principles see the [Nazarick Manifesto](nazarick_ma... | - |
 | [hardware_support.md](hardware_support.md) | Hardware Support | - | - |
 | [how_to_use.md](how_to_use.md) | How to Use Spiral OS Avatar | 1. Run `python start_spiral_os.py` to launch the orchestration engine. This loads the core modules, starts a local Fa... | - |
