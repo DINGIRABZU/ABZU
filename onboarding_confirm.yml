@@ -176,8 +176,8 @@ documents:
       purpose: Comprehensive RAZAR agent guide.
       scope: RAZAR agent workflows and deployment.
   docs/The_Absolute_Protocol.md:
-    commit: a13e0380e902fac060ad13cff61d8d93d01f2f0f
-    sha256: fdbcd5bcf4e758a21c57cb1ea7c5c4d30c92b2d0c0d500bf60ac7f7d4429b19e
+    commit: worktree
+    sha256: 81e39a35934ac80c9f04ec3e8620f36009d17336eba3003f646c65626fa151bb
     summary:
       insight: Central doctrine coordinates versioning, MCP governance, and documentation
         duties for every subsystem.
