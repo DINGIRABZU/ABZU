@@ -33,6 +33,11 @@ Codex-hosted rehearsals intentionally operate inside a constrained sandbox that 
 telemetry bridges, and production connector credentials. The guardrails below keep doctrine updates honest about what ran, what
 was deferred, and how migration evidence will be replayed on hardware.
 
+> [!INFO]
+> Review the consolidated lessons in [`docs/knowledge_base/codex_lessons.md`](knowledge_base/codex_lessons.md) before
+> scheduling work. The knowledge base captures failed sandbox attempts, workarounds, and policy rationale so contributors enter
+> reviews with the latest context.
+
 #### Deferred hardware tasks
 
 - **GPU rendering, DAW-integrated rehearsals, and FFmpeg-dependent exports** remain sandbox-only dry runs until the hardware

@@ -23,6 +23,11 @@ Bi-weekly working sessions align the charter backlog with the roadmap. Squad lea
 Roadmap updates must delineate what happened inside the Codex sandbox versus what still needs hardware so
 weekly reviews avoid chasing impossible tests:
 
+> [!INFO]
+> Consult the sandbox lessons captured in [`docs/knowledge_base/codex_lessons.md`](knowledge_base/codex_lessons.md) before
+> editing roadmap entries. The knowledge base records prior failures, deferred evidence, and approved workarounds so planning
+> notes stay aligned with Codex limitations.
+
 - **Sandbox-only tasks.** GPU renders, DAW-assisted rehearsals, FFmpeg exports, and Neo-APSU parity drills
   remain dry runs until the Stage D/E bridge backlog or the Stage G hardware window replays them on
   gate-runner hosts. Flag these items directly in the stage tables so owners inherit the constraint.
