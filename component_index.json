@@ -7,7 +7,8 @@
       "status": "ported",
       "defects": [
         "Parity suite NEOABZU/crown/tests/razar_legacy_parity.rs verifies the Rust bridge; no open issues recorded."
-      ]
+      ],
+      "notes": "Rust implementation in NEOABZU/crown/src/lib.rs with sandbox shim registered by scripts/_stage_runtime.py (neoapsu_crown); routing fixtures live in tests/crown/test_router_memory.py."
     },
     {
       "legacy_entry": "identity_loader.py",
@@ -15,7 +16,8 @@
       "status": "ported",
       "defects": [
         "PyO3 bridge runs at Crown boot with readiness parity; no outstanding defects logged."
-      ]
+      ],
+      "notes": "Boot parity covered by tests/apsu_migration/test_identity_loader_parity.py and init_crown_agent.py; sandbox shim for neoapsu_identity exposed through scripts/_stage_runtime.py."
     },
     {
       "legacy_entry": "crown_decider.py",
@@ -23,7 +25,8 @@
       "status": "pending_rewrite",
       "defects": [
         "Stage C readiness injected the sandbox stub, blocking MoGE orchestrator parity until Stage D wires the Rust engine and validator gating."
-      ]
+      ],
+      "notes": "Deterministic sandbox stub registered in scripts/_stage_runtime.py; behavioral coverage referenced by tests/crown/test_decider.py while Rust implementation resides in NEOABZU/crown/src/lib.rs."
     },
     {
       "legacy_entry": "crown_prompt_orchestrator.py",
@@ -31,7 +34,8 @@
       "status": "pending_rewrite",
       "defects": [
         "Async pipeline remained stubbed during Stage C evidence capture; Rust orchestrator routing pending for telemetry parity."
-      ]
+      ],
+      "notes": "Sandbox async stub provided by scripts/_stage_runtime.py; orchestrator behavior validated through tests/crown/test_prompt_orchestrator.py while MoGE pipeline lives in NEOABZU crates."
     },
     {
       "legacy_entry": "state_transition_engine.py",
@@ -39,7 +43,8 @@
       "status": "pending_rewrite",
       "defects": [
         "Deterministic sandbox rotations left ritual gating untested; inevitability journeys must be emitted from the Rust bridge."
-      ]
+      ],
+      "notes": "Stage runtime registers deterministic sandbox engine in scripts/_stage_runtime.py; regression fixtures remain in tests/test_state_transition_engine.py while Rust spans expected from neoabzu_crown bindings."
     },
     {
       "legacy_entry": "servant_model_manager.py",
@@ -47,7 +52,8 @@
       "status": "pending_rewrite",
       "defects": [
         "Local registry stub hides servant telemetry; migration to the Rust-managed registry remains outstanding."
-      ]
+      ],
+      "notes": "Sandbox registry stub implemented via scripts/_stage_runtime.py; servant lifecycle tests located in tests/test_servant_model_manager.py and crown servant suites."
     },
     {
       "legacy_entry": "emotional_state.py",
@@ -55,7 +61,8 @@
       "status": "pending_rewrite",
       "defects": [
         "In-memory sandbox shim suppresses aura persistence; expression telemetry must be driven by the Rust pipeline."
-      ]
+      ],
+      "notes": "Sandbox aura shim generated in scripts/_stage_runtime.py with persistence regression coverage in tests/test_emotion_state.py; Rust pipeline to emit telemetry from neoabzu_crown once ported."
     },
     {
       "legacy_entry": "memory_store.py",
@@ -63,7 +70,8 @@
       "status": "wrapped",
       "defects": [
         "Stage C readiness logged 'cortex layer empty', forcing optional bundle shims until Rust persistence closes the gap."
-      ]
+      ],
+      "notes": "Optional bundle shim provided by scripts/_stage_runtime.py (neoabzu_memory); persistence and migration behavior asserted in tests/test_memory_store.py."
     },
     {
       "legacy_entry": "connectors/operator_mcp_adapter.py",
@@ -71,7 +79,8 @@
       "status": "wrapped",
       "defects": [
         "Transport parity achieved in sandbox, but hardware telemetry and heartbeat metrics remain deferred in Stage D/E risk logs."
-      ]
+      ],
+      "notes": "Transport contract coverage in tests/test_operator_transport_contract.py and tests/scripts/test_stage_b_smoke.py; hardware telemetry pending until credentials permit non-sandbox probes."
     }
   ],
   "components": [
