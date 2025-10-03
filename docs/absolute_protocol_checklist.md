@@ -2,6 +2,8 @@
 
 Complete this checklist before tagging a release. Mark each item with `[x]` once satisfied.
 
+- [x] Review the Codex sandbox constraint overviews in [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints), [documentation_protocol.md](documentation_protocol.md#codex-sandbox-constraints), and [PROJECT_STATUS.md](PROJECT_STATUS.md#codex-sandbox-constraints) so release planning inherits the deferred hardware, tooling, and tagging expectations.
+
 Review the [Sandbox-to-Hardware Rehearsal Bridge](The_Absolute_Protocol.md#sandbox-to-hardware-rehearsal-bridge) before finalizing the readiness packet so deferred hardware steps, rehearsal hosts, and operator/hardware/QA sign-offs are embedded alongside the environment-limited evidence bundle.
 
 - [x] `docs/INDEX.md` regenerated and committed — regenerated with `python tools/doc_indexer.py` on 2025-01-22 and verified the file updated.

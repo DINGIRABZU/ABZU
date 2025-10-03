@@ -7,6 +7,7 @@ This checklist distills mandatory practices for ABZU contributors.
 
 ## Documentation Doctrine
 - Run `python scripts/audit_doctrine.py` to confirm key docs exist, required index entries are present, and doctrine rules remain intact. The pre-commit hook executes this automatically when documentation changes.
+- Re-read the Codex sandbox constraint sections in [The Absolute Protocol](The_Absolute_Protocol.md#codex-sandbox-constraints), [documentation_protocol.md](documentation_protocol.md#codex-sandbox-constraints), and [PROJECT_STATUS.md](PROJECT_STATUS.md#codex-sandbox-constraints) before proposing roadmap or readiness updates so deferred hardware work is tagged consistently.
 - Review [chakra_metrics.md](chakra_metrics.md) to ensure monitoring aligns with chakra standards.
 - Document connector protocol and heartbeat metadata in relevant guides. Every connector change must update these docs and pass `python scripts/check_connectors.py`.
 

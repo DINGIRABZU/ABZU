@@ -33,38 +33,36 @@ Codex-hosted rehearsals intentionally operate inside a constrained sandbox that 
 telemetry bridges, and production connector credentials. The guardrails below keep doctrine updates honest about what ran, what
 was deferred, and how migration evidence will be replayed on hardware.
 
-#### Sandbox-only tasks
+#### Deferred hardware tasks
 
 - **GPU rendering, DAW-integrated rehearsals, and FFmpeg-dependent exports** remain sandbox-only dry runs until the hardware
-  hosts recorded in the Stage B rotation ledger reopen for execution.
+  hosts recorded in the Stage B rotation ledger reopen for execution and collect native telemetry.【F:docs/roadmap.md†L214-L286】
 - **Connector credential sweeps and transport parity replays** only run end-to-end on gate-runner hardware where long-lived
-  secrets can be injected and Grafana dashboards can stream live telemetry.
-- **Neo-APSU crate parity and memory persistence drills** stay in observation mode in the sandbox and rely on the scheduled
-  Stage D/E bridge rehearsals and the Stage G hardware window to replay evidence with the Rust surfaces enabled.【F:docs/roadmap.md†L214-L286】
+  secrets can be injected and Grafana dashboards can stream live telemetry. The 2025-12-08 review minutes confirm the
+  gate-runner-02 slot that will replay these flows outside Codex.【F:logs/stage_c/20251205T193000Z-readiness_packet/review_minutes.md†L1-L39】
+- **Neo-APSU crate parity and memory persistence drills** stay in observation mode until the Stage D/E bridge and Stage G window
+  replay the sandbox captures with Rust surfaces enabled and parity hashes logged for audit.【F:docs/PROJECT_STATUS.md†L172-L215】
 
-Document every sandbox-only task with an explicit **environment-limited** marker so auditors can distinguish missing
-dependencies from regressions. Use skip reasons such as `pytest.skip("environment-limited: GPU render unavailable in Codex
-sandbox")`, mirror the wording inside the command transcript, and archive that transcript inside the appropriate
-`logs/<gate>/<timestamp>/` bundle. Summaries in change logs, readiness packets, roadmap updates, and PR templates must repeat the
-environment-limited label and cite the sandbox section so downstream checklists inherit the same context.
+#### Required tooling and data
 
-#### Tagging environment-limited evidence
+- Sandbox runs routinely lack `python -m build`, FFmpeg, SoX, aria2c, DAW plug-ins, GPU drivers, and `pytest-cov`, triggering the
+  `environment-limited` skips recorded in the 2025-11-05 Stage A1–A3 bundles and the Stage B rehearsal evidence.【F:logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json†L1-L41】【F:logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout/summary.json†L1-L62】【F:logs/stage_b/20251205T142355Z-stage_b1_memory_proof/summary.json†L1-L63】
+- Readiness packets must catalogue the missing datasets, connector credentials, and MCP heartbeat payloads so hardware owners
+  inherit the exact artifacts to replay. Stage C bundles already pin the sandbox manifests, scheduled hardware windows, and
+  checklist attachments that will be mirrored on the gate runner.【F:logs/stage_c/20251001T010101Z-readiness_packet/readiness_bundle/readiness_bundle.json†L1-L195】【F:logs/stage_c/20251205T193000Z-readiness_packet/readiness_bundle.json†L1-L33】
 
-When sandbox gaps block a verification, tag the doctrine artifacts and test suites consistently:
+#### Tagging conventions
 
-1. **Tests and scripts** – Skip with an `environment-limited: <reason>` string that matches the log bundle and roadmap note.
-2. **Doctrine evidence** – Add an `environment-limited` entry to the readiness bundle JSON, change log excerpt, and PR/review
-   template so reviewers see the exact command, timestamp, and owner responsible for closing the gap.
-3. **Status trackers** – Update [PROJECT_STATUS.md](PROJECT_STATUS.md#stage-d-bridge-snapshot) and the Stage D/E roadmap tables to
-   point back to this section whenever a milestone carries sandbox-only steps.
-4. **Readiness minutes** – Link cross-team review minutes stored beside the readiness packet so the hardware replay window and
-   `environment-limited` follow-ups are discoverable during audits. The 2025-12-08 minutes attach to
-   `logs/stage_c/20251205T193000Z-readiness_packet/` and document the gate-runner-02 replay scheduled for 2025-12-12 plus the
-   mandate to reuse the Stage A/B sandbox skip strings in every downstream update.【F:logs/stage_c/20251205T193000Z-readiness_packet/review_minutes.md†L1-L39】
+- **Tests and scripts** must call `pytest.skip("environment-limited: <reason>")` (or equivalent) so transcripts and change logs
+  echo the same skip string recorded in the evidence bundle.【F:logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout/summary.json†L1-L62】
+- **Doctrine updates** must call out the sandbox gap with the `environment-limited` marker, cite the relevant log bundle, and
+  link to this section plus the PROJECT_STATUS sandbox synopsis so planners encounter the warning before scheduling work.【F:docs/PROJECT_STATUS.md†L1-L205】
+- **Readiness minutes and risk queues** must reference the sandbox constraint verbatim, pointing at the gate-runner replay slot
+  (2025-12-12) recorded in the Stage C minutes so hardware follow-ups stay traceable.【F:logs/stage_c/20251205T193000Z-readiness_packet/review_minutes.md†L1-L39】
 
-#### Hardware replay for migration evidence
+#### Hardware replay workflow
 
-Queue hardware follow-ups through the sandbox-to-hardware bridge workflow documented in
+Queue hardware follow-ups through the sandbox-to-hardware bridge documented in
 [roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation) so migration evidence has an auditable lineage. Each
 deferred item must:
 
@@ -79,7 +77,6 @@ Document every escalation with the concrete sandbox warnings captured in the lat
 map the deferment back to observable evidence. Cite the 2025-11-05 Stage A bootstrap/replay/gate shakeout summaries and the
 2025-12-05 memory proof and connector rotation outputs when recording why Codex could not execute the full flow and what
 hardware slot will close the gap.【F:logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json†L1-L41】【F:logs/stage_a/20251105T172000Z-stage_a3_gate_shakeout/summary.json†L1-L62】【F:logs/stage_b/20251205T142355Z-stage_b1_memory_proof/summary.json†L1-L63】【F:logs/stage_b/20251205T160210Z-stage_b3_connector_rotation/summary.json†L1-L129】
-
 ### Stage Gate Alignment
 
 > [!IMPORTANT]
