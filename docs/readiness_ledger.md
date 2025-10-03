@@ -39,3 +39,18 @@ with the hardware replay queue.
    doctrine update, matching the documentation protocol requirements.
 3. Once hardware captures land, update the ledger with refreshed hashes and
    owners’ sign-offs before clearing risks from the roadmap or PROJECT_STATUS.
+
+## Walkthrough references
+
+Operators can follow the stage-specific walkthroughs for reproducible API
+invocations, evidence capture, and environment-limited note taking:
+
+- [Stage A Endpoint Walkthrough](walkthroughs/stage_a.md) — boot telemetry,
+  Crown replays, and gate shakeout instructions aligned with the Stage A
+  evidence bundles.
+- [Stage B Endpoint Walkthrough](walkthroughs/stage_b.md) — memory proof,
+  sonic rehearsal, and connector rotation guidance with sandbox stub
+  checkpoints.
+- [Stage C Endpoint Walkthrough](walkthroughs/stage_c.md) — exit checklist,
+  demo storyline, readiness sync, and MCP drill procedures tied to the Stage C
+  readiness packet.
