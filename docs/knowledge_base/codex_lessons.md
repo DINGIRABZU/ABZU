@@ -4,9 +4,11 @@ The Codex sandbox forces contributors to operate with constrained tooling and
 hardware. This knowledge base entry captures the recurring limitations,
 experiments that failed inside the sandbox, the workarounds we rely on, and the
 policies that evolved from those lessons. Review this page alongside
-[`docs/documentation_protocol.md`](../documentation_protocol.md) and
-[`docs/The_Absolute_Protocol.md`](../The_Absolute_Protocol.md#codex-sandbox-constraints)
-before planning any new effort so the sandbox context is fully understood.
+[`docs/documentation_protocol.md`](../documentation_protocol.md),
+[`docs/The_Absolute_Protocol.md`](../The_Absolute_Protocol.md#codex-sandbox-constraints),
+and the [Neo-APSU terminology glossary](../glossary/neo_apsu_terms.md) before
+planning any new effort so the sandbox context and migration vocabulary are
+fully understood.【F:docs/glossary/neo_apsu_terms.md†L1-L55】
 
 ## Sandbox limitations
 

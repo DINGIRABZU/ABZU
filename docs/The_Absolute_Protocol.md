@@ -8,6 +8,8 @@ This document consolidates ABZU's guiding rules. Review it before contributing t
 
 Align contributions with the overarching goals in [project_mission_vision.md](project_mission_vision.md) and the servant ethics defined in the [nazarick_manifesto.md](nazarick_manifesto.md).
 For implementation references, see the [NEOABZU documentation index](../NEOABZU/docs/index.md).
+Keep the [Neo-APSU terminology glossary](glossary/neo_apsu_terms.md) nearby when staging migrations so legacy names, Rust surfaces,
+and doctrine anchors stay aligned with the migration matrix and rollout checkpoints.【F:docs/glossary/neo_apsu_terms.md†L1-L55】
 
 Before touching any code, read [blueprint_spine.md](blueprint_spine.md) three times to internalize the project's structure and intent.
 
