@@ -7,7 +7,7 @@ The badge above is generated via `scripts/export_coverage.py`, which runs
 
 See [component_maturity.md](component_maturity.md) for per-component maturity metrics.
 
-This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets.
+This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets. Use the consolidated [readiness ledger](readiness_ledger.md) to track sandbox evidence owners, outstanding risks, and the remediation steps required before hardware promotion.【F:docs/readiness_ledger.md†L1-L32】
 
 ## Codex sandbox constraints
 
@@ -43,8 +43,18 @@ aligned with what Codex can execute.
 
 - Align roadmap, PROJECT_STATUS, and readiness packets with the sandbox-to-hardware bridge plan in [roadmap.md](roadmap.md#stage-g-sandbox-to-hardware-bridge-validation)
   and the Stage D bridge snapshot so teams know where replay hashes will land.【F:docs/PROJECT_STATUS.md†L172-L215】
-- Quote the sandbox skip strings from the Stage A and Stage B bundles (`python -m build unavailable`, `environment-limited: MCP gateway offline`, etc.) to show exactly
-  what hardware must prove out.【F:logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json†L1-L41】【F:logs/stage_b/20251205T160210Z-stage_b3_connector_rotation/summary.json†L1-L129】
+  - Quote the sandbox skip strings from the Stage A and Stage B bundles (`python -m build unavailable`, `environment-limited: MCP gateway offline`, etc.) to show exactly
+    what hardware must prove out.【F:logs/stage_a/20251105T170000Z-stage_a1_boot_telemetry/summary.json†L1-L41】【F:logs/stage_b/20251205T160210Z-stage_b3_connector_rotation/summary.json†L1-L129】
+
+### Readiness ledger watch items
+
+- **Stage B rotation ledger** — Owner: @neoabzu-core. Risk: credential window evidence is frozen under an `environment-limited`
+  tag because the MCP gateway and connector rotation command are unavailable in the sandbox. Remediation: replay `/alpha/stage-b3-connector-rotation`
+  on gate-runner-02 during the 2025-12-12 hardware slot and publish refreshed hashes in the readiness packet.【F:docs/readiness_ledger.md†L9-L27】
+- **Stage C readiness snapshot (2025-12-05)** — Owner: @release-ops. Risk: bundle remains metadata-only while MCP handshake/heartbeat artifacts are stubbed
+  and Stage B contexts await hardware verification. Remediation: coordinate the 2025-12-08 review to stage MCP exports, then update the bundle after the gate-runner replay closes the deferrals.【F:docs/readiness_ledger.md†L9-L27】
+- **Demo telemetry stub (2025-12-05)** — Owners: @audio-lab, @qa-lead. Risk: scripted demo telemetry is a placeholder marked `environment-limited`
+  until hardware captures replace it. Remediation: record live media/telemetry during the gate-runner session and push signed exports into the readiness packet before clearing roadmap/status risks.【F:docs/readiness_ledger.md†L9-L27】
 
 ## Repository Structure
 
