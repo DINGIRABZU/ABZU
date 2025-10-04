@@ -81,7 +81,67 @@ This playbook explains how to exercise legacy Python APSU modules and their Neo-
 3. Sandbox skips marked `environment-limited: <reason>` matching readiness packets.
 4. Harness output attached to the readiness ledger entry that tracks the corresponding migration gate.
 
+## Service runbooks
+
+Each runbook below maps the simulation harness to the operator CLI, fixture repositories, and log validation snippets so reviewers can jump from doctrine to runnable examples. Cross-links point to the [APSU migration matrix](apsu_migration_matrix.md) rows that anchor each parity check and the sandbox contract suites that enforce transport evidence.【F:docs/apsu_migration_matrix.md†L5-L20】【F:tests/transport_parity/test_recorded_contracts.py†L1-L209】
+
+### Memory service
+
+- **CLI entry point.** `python scripts/bootstrap_memory.py --harness memory_store --fixtures tests/fixtures/memory/ --export logs/simulation_harness/memory_store/` replays the Codex harness snapshot for FAISS and SQLite shims before delegating to the Neo memory bundle.
+- **Fixture paths.** Vector embeddings and FAISS shims live in `tests/fixtures/memory/`, while optional Stage C parity exports are catalogued beside the matrix row for [`memory_store.py`](apsu_migration_matrix.md#legacy-apsu-module-memory_storepy).【F:tests/test_memory_store.py†L12-L93】
+- **Expected logs.** `memory_snapshot.json` should show identical `vector_ids`, `checksum`, and `environment-limited` fields for both Python and Neo-APSU executions. A passing run includes entries such as:
+
+  ```json
+  {"phase": "neo", "vector_ids": [101, 102], "checksum": "8f6c", "environment-limited": false}
+  ```
+
+  Any shimmed FAISS segments echo the environment limitation reason logged in Stage C readiness packets.
+
+### Crown service
+
+- **CLI entry point.** `python scripts/run_crown_harness.py --module crown_router --matrix docs/apsu_migration_matrix.md --log-root logs/simulation_harness/crown/` exercises `crown_router`, `crown_decider.py`, and servant routing in one pass, then shells out to the Neo PyO3 bindings referenced in the migration matrix.
+- **Fixture paths.** Use dialog transcripts from `tests/fixtures/crown/transcripts/` and servant manifests from `tests/crown/fixtures/` to keep emotion scores, memory rows, and servant selection deterministic.【F:tests/crown/test_router_memory.py†L48-L91】【F:tests/crown/test_decider.py†L26-L74】
+- **Expected logs.** Look for `expression_decision` and `servant_choice` records in `logs/simulation_harness/crown/harness.log`. A healthy run emits snippets like:
+
+  ```json
+  {"module": "crown_decider", "phase": "neo", "chosen_model": "moge.alpha", "affect_score": 0.82}
+  ```
+
+  Divergences trigger `environment-limited` markers and reference the migration matrix row for follow-up hardware validation.
+
+### Identity service
+
+- **CLI entry point.** `python scripts/run_crown_harness.py --module identity_loader --fixtures tests/fixtures/identity/ --log-root logs/simulation_harness/identity/` mirrors the Stage C identity rehearsal by bootstrapping persona, doctrine, and mission files before invoking `neoabzu_crown::load_identity`.
+- **Fixture paths.** Mission/identity YAML lives under `tests/fixtures/identity/`, and parity-ready prompt bundles mirror `tests/apsu_migration/test_identity_loader_parity.py`.【F:tests/apsu_migration/test_identity_loader_parity.py†L35-L115】
+- **Expected logs.** `identity_run.json` must contain `CROWN-IDENTITY-ACK`, matching fingerprint hashes, and GLM prompt sequences for both paths:
+
+  ```json
+  {"phase": "legacy", "fingerprint": "f9ad", "ack": "CROWN-IDENTITY-ACK"}
+  ```
+
+  Any missing acknowledgements signal a failed harness run and should be reflected in the readiness ledger.
+
+### Transport service
+
+- **CLI entry point.** `python scripts/run_transport_contracts.py --suite sandbox --log-root logs/simulation_harness/transport/` replays the REST↔gRPC contract suite referenced throughout the transport migration rows and beta rehearsal templates.【F:docs/releases/beta_rehearsal_template.md†L1-L120】
+- **Fixture paths.** Recorded payloads reside in `tests/fixtures/transport_parity/`, and the orchestrator parity contracts are implemented in `tests/transport_parity/test_recorded_contracts.py`.【F:tests/transport_parity/test_recorded_contracts.py†L1-L209】
+- **Expected logs.** `contract_suite.log` should log paired entries:
+
+  ```json
+  {"phase": "sandbox", "endpoint": "stage-c1-exit-checklist", "checksum_match": true}
+  ```
+
+  Failures surface `checksum_match: false` with diff paths so reviewers can jump to the recorded suites and replay them locally.
+
 ## Future hardware replay
 
 Stage F soak alignment will replay this same harness with native binaries during the gate-runner hardware window. The Stage F plan calls for checksum-matched exports, MCP heartbeat captures, and sandbox skip retirements once the Neo binaries execute on hardware, so archive the Codex harness outputs now to streamline that replay.【F:docs/stage_f_plus_plan.md†L11-L33】
+
+## Appendix: Gate-runner hardware replay workflow
+
+Once Neo binaries are available, rerun the simulation harness on gate-runner hardware to retire `environment-limited` skips and align doctrine with the Stage G parity packets.
+
+1. **Tooling.** Provision the gate-runner image with the same CLI entry points listed above plus hardware-only dependencies (`faiss-gpu`, DAW plug-ins, MCP credential bundles) recorded in the Stage F readiness plan.【F:docs/stage_f_plus_plan.md†L11-L33】【F:logs/stage_c/20251205T193000Z-readiness_packet/readiness_bundle.json†L1-L33】 Install `python scripts/run_transport_contracts.py --suite hardware` to capture GPU-backed transport diffs.
+2. **Datasets.** Sync sandbox fixtures from `tests/fixtures/` and merge with hardware telemetry exports archived in `logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/`. The migration matrix row for each service lists the exact readiness packet bundle to replay so auditors can trace lineage from Codex to hardware.【F:docs/apsu_migration_matrix.md†L5-L36】【F:logs/stage_g/20251102T090000Z-stage_g_gate_runner_hardware/summary.json†L1-L13】
+3. **Approval workflow.** Submit the replay results through the Stage D/E bridge review captured in the readiness minutes, attach contract suite logs, and request sign-off from the gate captain, telemetry lead, and doctrine steward before merging updates to roadmap/status trackers.【F:docs/PROJECT_STATUS.md†L162-L205】【F:logs/stage_c/20251205T193000Z-readiness_packet/review_minutes.md†L1-L39】 Hardware approvals must reference the updated doctrine entry and include checksum hashes for every contract suite artifact replayed.
 
