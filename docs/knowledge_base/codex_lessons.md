@@ -62,6 +62,24 @@ fully understood.【F:docs/glossary/neo_apsu_terms.md†L1-L55】
    debugging attempts and gives future agents immediate context before modifying
    automation, connectors, or media tooling.
 
+## Review cadence
+
+Quarterly reviews replace the previous ad-hoc check-ins so the sandbox lessons
+stay synchronized with planning milestones. The rhythm keeps doctrine updates
+predictable and gives facilitators enough runway to collect evidence from the
+readiness ledger.
+
+- **Quarter kickoff (Week 1).** Confirm facilitators, share the review
+  checklist, and flag any sandbox skips that will require hardware follow-up.
+- **Pre-review sync (Week 5).** Reconcile outstanding action items, refresh the
+  readiness ledger, and identify doctrine pages that need updates before the
+  formal review.
+- **Formal review (Week 6).** Host the quarterly session, capture lessons, and
+  schedule hardware replays for any unresolved sandbox gaps.
+- **Quarter close-out (Week 11).** Publish the review summary, link the
+  readiness ledger updates, and queue any doctrine revisions that slipped past
+  the formal meeting.
+
 ## Review summaries
 
 Document each quarterly review using the checklist in
