@@ -424,6 +424,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [ip_registry.md](ip_registry.md) | IP Registry | The following modules are tagged with `@ip-sensitive` and require tracking in this registry. | - |
 | [knowledge_base/change_log.md](knowledge_base/change_log.md) | Knowledge Base Change Log | Use this ledger to append weekly summaries, decision records, and notable documentation updates. Each entry should: | - |
 | [knowledge_base/codex_lessons.md](knowledge_base/codex_lessons.md) | Codex Lessons | The Codex sandbox forces contributors to operate with constrained tooling and hardware. This knowledge base entry cap... | - |
+| [knowledge_base/review_checklist.md](knowledge_base/review_checklist.md) | Quarterly Lessons Review Checklist | The Codex knowledge base review happens once per quarter to capture the latest sandbox lessons and align roadmap deci... | - |
 | [learning_pipeline.md](learning_pipeline.md) | Learning Pipeline | The learning pipeline pairs two utilities: | - |
 | [logging_guidelines.md](logging_guidelines.md) | RAZAR Logging Guidelines | The mission logger records component activity in `logs/razar.log` using one JSON object per line. Each entry contains: | - |
 | [lts/ga_lts_plan.md](lts/ga_lts_plan.md) | GA Long-Term Support Plan | The GA long-term support (LTS) plan anchors the maintenance cadence, doctrine ownership, and rollback governance for... | - |
@@ -530,6 +531,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [sonic_core_harmonics.md](sonic_core_harmonics.md) | Sonic Core Harmonics | The Sonic Core layers audio synthesis and expression modules on top of Spiral OS. It transforms QNL phrases into audi... | - |
 | [spiral_cortex_terminal.md](spiral_cortex_terminal.md) | Spiral Cortex Terminal | `spiral_cortex_terminal.py` provides a small command line interface for exploring `data/cortex_memory_spiral.jsonl`.... | - |
 | [spiritual_architecture.md](spiritual_architecture.md) | Spiritual Architecture | Spiral OS organizes its components into seven chakra layers, mirroring the energetic centers of the body. Each layer... | - |
+| [stage_d_execution_ladder.md](stage_d_execution_ladder.md) | Stage D Execution Ladder | The Stage D bridge now runs against a four-rung execution ladder so weekly reviews can trace exactly how sandbox evid... | - |
 | [stage_f_hardware_replay_plan.md](stage_f_hardware_replay_plan.md) | Stage F Hardware Replay Plan | Stage F hardens Neo-APSU adoption by replaying sandbox evidence on gate-runner hardware before the soak completes. Th... | - |
 | [stage_f_plus_plan.md](stage_f_plus_plan.md) | Stage F+ Execution Plan | _Updated: 2025-12-18_ | - |
 | [style_guides/arcade_theme.md](style_guides/arcade_theme.md) | Arcade Theme Style Guide | The arcade theme evokes classic 8-bit aesthetics with neon accents and pixelated typography. Use these guidelines whe... | - |
@@ -540,6 +542,7 @@ Use `python scripts/verify_doctrine_refs.py` to validate doctrine references.
 | [testing/failure_inventory.md](testing/failure_inventory.md) | Failure Inventory | Failures from `pytest` runs are appended via [`scripts/capture_failing_tests.py`](../../scripts/capture_failing_tests... | `../../scripts/capture_failing_tests.py` |
 | [testing.md](testing.md) | Testing | ```mermaid flowchart LR D[Developer] --> T[pytest] T --> R[Report] ``` | - |
 | [testing_music_pipeline.md](testing_music_pipeline.md) | Testing Music Pipeline | To run the unit tests for the ritual music pipeline: | - |
+| [testing_strategy.md](testing_strategy.md) | Testing Strategy | - | - |
 | [the_absolute_pytest.md](the_absolute_pytest.md) | The Absolute Pytest | > **Note:** Before writing tests, review [blueprint_spine.md](blueprint_spine.md) and consult the [Code Index](code_i... | - |
 | [tools/kimi_integration.md](tools/kimi_integration.md) | Kimi Integration | Opencode can delegate code generation to the Kimi-K2 model when the service is available. | - |
 | [troubleshooting.md](troubleshooting.md) | Troubleshooting | This guide addresses frequent setup problems, driver issues, and environment pitfalls. Refer to [installation](instal... | `../download_models.py`, `../env_validation.py`, `../scripts/bootstrap.py` |
