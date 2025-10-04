@@ -8,6 +8,11 @@ This roadmap tracks five core milestones on the path to a stable release. Each s
 
 Bi-weekly working sessions align the charter backlog with the roadmap. Squad leads surface their next three Execution Ladder tasks, confirm interlocks, and record any required sign-offs so dependency owners can prepare before the following sprint checkpoint.【F:docs/alpha_v0_1_charter.md†L74-L88】 The resulting notes should update this roadmap and the companion status trackers so milestone reviews inherit the latest ownership and dependency signals.
 
+> [!TIP]
+> Add a standing agenda item to confirm the quarterly Codex lessons review is on track.
+> Reference [`docs/knowledge_base/review_checklist.md`](knowledge_base/review_checklist.md)
+> when reconciling roadmap or charter updates that emerge from the lessons cadence.
+
 ## Milestone Stages
 
 | Stage | Expected Outcome | Status |
