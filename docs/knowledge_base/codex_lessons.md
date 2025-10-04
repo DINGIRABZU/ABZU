@@ -62,6 +62,37 @@ fully understood.【F:docs/glossary/neo_apsu_terms.md†L1-L55】
    debugging attempts and gives future agents immediate context before modifying
    automation, connectors, or media tooling.
 
+## Quarterly review cadence
+
+The sandbox council meets once per quarter to reconcile Codex lessons with the
+broader doctrine. The session is led by the Release Ops owner and includes the
+Ops lead, Memory lead, Connector steward, QA representative, and the current
+scribe for [`docs/knowledge_base/change_log.md`](change_log.md). Each review is
+booked alongside the readiness sync so status owners can align the sandbox
+findings with hardware follow-up plans.
+
+**Deliverables**
+
+- Updated lesson entries here and in the linked doctrine references so auditors
+  inherit the latest mitigations without rereading archived bundles.
+- Decision log updates capturing accepted trade-offs, deferred items, and the
+  bridge window chosen for hardware validation.
+- Adjusted roadmap checkpoints (see [`docs/roadmap.md`](../roadmap.md)) that
+  reflect any timeline shifts triggered by new lessons or risk discoveries.
+
+**Timeline**
+
+- Pre-work: attendees collect new lessons, open questions, and outstanding
+  skips. Consolidate sandbox stubs and readiness ledger deltas at least one
+  week before the meeting and circulate the agenda so owners can flag missing
+  evidence.
+- Review meeting: walk through the consolidated lessons, capture follow-ups in
+  the decision log, and tag roadmap items that require schedule changes or
+  additional hardware validation.
+- Post-work: publish the refreshed lessons and update doctrine references,
+  ensuring the readiness ledger and roadmap link to any new decision log
+  entries or deferred hardware tasks.
+
 ## How to contribute updates
 
 - Append weekly summaries or decision records to

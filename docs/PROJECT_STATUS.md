@@ -9,6 +9,12 @@ See [component_maturity.md](component_maturity.md) for per-component maturity me
 
 This document summarizes the current state of the ABZU codebase. It serves as a living roadmap covering repository layout, milestones, open issues, and release targets. Use the consolidated [readiness ledger](readiness_ledger.md) to track sandbox evidence owners, outstanding risks, and the remediation steps required before hardware promotion.【F:docs/readiness_ledger.md†L1-L32】
 
+## Upcoming reviews
+
+- **Next quarterly Codex lessons review:** 2026-03-10 — Owner: @release-ops. Use the
+  [quarterly checklist](knowledge_base/review_checklist.md) to prep and capture
+  outcomes so roadmap and doctrine updates land within three business days.
+
 ## Codex sandbox constraints
 
 Stage owners must review the sandbox limitations before planning new work so the roadmap, readiness packets, and doctrine stay
