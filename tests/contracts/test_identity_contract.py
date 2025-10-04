@@ -1,26 +1,24 @@
-"""Stub coverage for the identity contract bootstrap evidence.
+"""Identity contract placeholder validations.
 
-These checks mirror ``docs/contracts/identity.md`` and the
-``identity_loader.py`` entry in ``docs/apsu_migration_matrix.md``. When the
-Neo-APSU identity bindings are available, extend the tests to verify the
-PyO3 bridge, handshake acknowledgements, and telemetry hashes.
+Entry point:
+    pytest tests/contracts/test_identity_contract.py
+
+Anchored to ``docs/contracts/identity.md`` and the ``identity_loader.py``
+row in ``docs/apsu_migration_matrix.md``. TODO hardware replay once the
+Neo-APSU identity bindings stream telemetry from the hardware runner.
 """
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 import pytest
 
-_FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
-_BASELINE = _FIXTURES / "chroma_baseline" / "baseline.json"
+from .utils import HARDWARE_TODO_NOTE, load_contract_fixture
 
 
 def test_identity_vector_fixture_shape() -> None:
     """Check the vector baseline used by identity ingestion."""
 
-    payload = json.loads(_BASELINE.read_text(encoding="utf-8"))
+    payload = load_contract_fixture("chroma_baseline", "baseline.json")
     assert payload["collection"] == "spiral_vectors"
     records = payload["records"]
     assert isinstance(records, list) and records
@@ -33,10 +31,12 @@ def test_identity_vector_fixture_shape() -> None:
 @pytest.mark.skip(
     reason=(
         "environment-limited: requires Neo-APSU identity handshake and vector "
-        "ingestion on hardware"
+        "ingestion on hardware; " + HARDWARE_TODO_NOTE
     )
 )
 def test_identity_contract_hardware_path_placeholder() -> None:
     """Placeholder for the hardware-backed identity handshake validation."""
 
-    pytest.skip("Identity contract handshake requires Neo-APSU hardware replay.")
+    pytest.skip(
+        "TODO hardware replay: identity handshake requires Neo-APSU hardware replay."
+    )
