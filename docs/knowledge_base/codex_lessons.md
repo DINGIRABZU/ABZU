@@ -62,6 +62,17 @@ fully understood.【F:docs/glossary/neo_apsu_terms.md†L1-L55】
    debugging attempts and gives future agents immediate context before modifying
    automation, connectors, or media tooling.
 
+## Review summaries
+
+Document each quarterly review using the checklist in
+[`review_checklist.md`](review_checklist.md). Capture the date, facilitators,
+key takeaways, and any roadmap or doctrine updates triggered by new insights so
+future planning sessions inherit the latest context.
+
+| Date | Facilitator(s) | Key takeaways | Roadmap/doctrine updates |
+| --- | --- | --- | --- |
+| _TBD_ | _TBD_ | _Populate after the first quarterly review._ | _List follow-up updates and owners._ |
+
 ## How to contribute updates
 
 - Append weekly summaries or decision records to
